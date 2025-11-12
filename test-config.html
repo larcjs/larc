@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LARC Config System Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+      line-height: 1.6;
+    }
+    .section {
+      margin: 2rem 0;
+      padding: 1rem;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+    .success { background: #d4edda; color: #155724; }
+    .error { background: #f8d7da; color: #721c24; }
+    pre {
+      background: #fff;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+    code {
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 0.9em;
+    }
+    .test-result {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-left: 3px solid #007bff;
+      background: white;
+    }
+    pan-card {
+      display: block;
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 LARC Configuration System Test</h1>
+
+  <div class="section">
+    <h2>1. Configuration Loaded</h2>
+    <div id="config-status">⏳ Loading...</div>
+  </div>
+
+  <div class="section">
+    <h2>2. Path Resolution Tests</h2>
+    <div id="path-tests"></div>
+  </div>
+
+  <div class="section">
+    <h2>3. Alias Resolution Tests</h2>
+    <div id="alias-tests"></div>
+  </div>
+
+  <div class="section">
+    <h2>4. Component Path Tests</h2>
+    <div id="component-tests"></div>
+  </div>
+
+  <div class="section">
+    <h2>5. Auto-Loading Test</h2>
+    <p>The card below should auto-load if pan-card is configured:</p>
+    <pan-card>
+      <h3>Test Card</h3>
+      <p>If you can see this styled card, auto-loading works! ✅</p>
+    </pan-card>
+  </div>
+
+  <div class="section">
+    <h2>6. Dynamic Import Test</h2>
+    <button onclick="testDynamicImport()">Test Dynamic Import</button>
+    <div id="import-result"></div>
+  </div>
+
+  <!-- Step 1: Load configuration -->
+  <script type="module" src="/larc-config.mjs"></script>
+
+  <!-- Step 2: Load autoloader (will use config) -->
+  <script type="module" src="/core/src/pan.mjs"></script>
+
+  <!-- Step 3: Run tests -->
+  <script type="module">
+    // Wait a bit for config to load
+    setTimeout(() => runTests(), 500);
+
+    function runTests() {
+      // Test 1: Check if config loaded
+      const configLoaded = typeof window.panAutoload !== 'undefined' &&
+                          typeof window.larcResolve === 'function';
+
+      document.getElementById('config-status').innerHTML = configLoaded
+        ? '<div class="test-result success">✅ Config loaded successfully!</div>'
+        : '<div class="test-result error">❌ Config not loaded</div>';
+
+      if (!configLoaded) {
+        console.error('Config not loaded');
+        return;
+      }
+
+      // Test 2: Path resolution
+      testPathResolution();
+
+      // Test 3: Alias resolution
+      testAliasResolution();
+
+      // Test 4: Component paths
+      testComponentPaths();
+
+      // Display config
+      console.group('📋 LARC Configuration');
+      console.log('Aliases:', window.panAutoload.aliases);
+      console.log('Component Paths:', window.panAutoload.componentPaths);
+      console.log('Paths API:', window.panAutoload.paths);
+      console.log('Autoload Config:', window.panAutoload.config);
+      console.groupEnd();
+    }
+
+    function testPathResolution() {
+      const tests = [
+        {
+          name: 'Resolve @larc/core',
+          test: () => window.larcResolve('@larc/core'),
+          expected: './core/src'
+        },
+        {
+          name: 'Resolve @larc/core with subpath',
+          test: () => window.larcResolve('@larc/core', 'components/pan-bus.mjs'),
+          expected: './core/src/components/pan-bus.mjs'
+        },
+        {
+          name: 'Resolve @larc/components',
+          test: () => window.larcResolve('@larc/components'),
+          expected: './components/src'
+        }
+      ];
+
+      let html = '';
+      tests.forEach(({ name, test, expected }) => {
+        const result = test();
+        const passed = result === expected;
+        html += `
+          <div class="test-result ${passed ? 'success' : 'error'}">
+            ${passed ? '✅' : '❌'} ${name}<br>
+            <code>Result: ${result}</code><br>
+            <code>Expected: ${expected}</code>
+          </div>
+        `;
+      });
+
+      document.getElementById('path-tests').innerHTML = html;
+    }
+
+    function testAliasResolution() {
+      const aliases = window.panAutoload.aliases || {};
+      let html = '';
+
+      Object.entries(aliases).forEach(([alias, path]) => {
+        html += `
+          <div class="test-result success">
+            ✅ <strong>${alias}</strong> → <code>${path}</code>
+          </div>
+        `;
+      });
+
+      document.getElementById('alias-tests').innerHTML = html || '<div class="test-result">No aliases configured</div>';
+    }
+
+    function testComponentPaths() {
+      const componentPaths = window.panAutoload.componentPaths || {};
+      const testComponents = ['pan-bus', 'pan-card', 'pan-data-table'];
+
+      let html = '';
+      testComponents.forEach(comp => {
+        const configured = componentPaths[comp];
+        const resolved = window.panAutoload.paths?.component(comp);
+
+        if (configured) {
+          html += `
+            <div class="test-result success">
+              ✅ <strong>${comp}</strong><br>
+              <code>Configured: ${configured}</code><br>
+              <code>Resolved: ${resolved}</code>
+            </div>
+          `;
+        } else {
+          html += `
+            <div class="test-result">
+              ⚠️ <strong>${comp}</strong> - Not explicitly configured (will use default)<br>
+              <code>Resolved: ${resolved}</code>
+            </div>
+          `;
+        }
+      });
+
+      document.getElementById('component-tests').innerHTML = html;
+    }
+
+    // Test dynamic import
+    window.testDynamicImport = async function() {
+      const resultDiv = document.getElementById('import-result');
+      resultDiv.innerHTML = '⏳ Importing PanClient...';
+
+      try {
+        const path = window.larcResolve('@larc/core', 'components/pan-client.mjs');
+        console.log('Importing from:', path);
+
+        const module = await import(path);
+        const PanClient = module.PanClient || module.default;
+
+        if (PanClient) {
+          resultDiv.innerHTML = `
+            <div class="test-result success">
+              ✅ Successfully imported PanClient!<br>
+              <code>From: ${path}</code><br>
+              <code>Type: ${typeof PanClient}</code>
+            </div>
+          `;
+        } else {
+          resultDiv.innerHTML = `
+            <div class="test-result error">
+              ❌ Module loaded but PanClient not found<br>
+              <code>Module exports: ${Object.keys(module).join(', ')}</code>
+            </div>
+          `;
+        }
+      } catch (err) {
+        resultDiv.innerHTML = `
+          <div class="test-result error">
+            ❌ Import failed: ${err.message}<br>
+            <pre>${err.stack}</pre>
+          </div>
+        `;
+      }
+    };
+  </script>
+</body>
+</html>
