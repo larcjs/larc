@@ -1,0 +1,15 @@
+[submodule "core"]
+	path = core
+	url = git@github.com:larcjs/core.git
+[submodule "components"]
+	path = components
+	url = git@github.com:larcjs/components.git
+[submodule "examples"]
+	path = examples
+	url = git@github.com:larcjs/examples.git
+[submodule "site"]
+	path = site
+	url = git@github.com:larcjs/site.git
+[submodule "devtools"]
+	path = devtools
+	url = git@github.com:larcjs/devtools.git

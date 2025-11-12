@@ -16,23 +16,37 @@ This is the **meta-repository** containing shared configuration. Each component 
 
 ## 🚀 Quick Start
 
-### Clone Everything
+### Option 1: Automated Setup (Recommended)
 
 ```bash
-git clone https://github.com/larcjs/larc-repos.git
-cd larc-repos
+# Clone with submodules
+git clone --recurse-submodules https://github.com/larcjs/larc.git
+cd larc
 
-# Clone each repository
-git clone https://github.com/larcjs/core.git
-git clone https://github.com/larcjs/components.git
-git clone https://github.com/larcjs/examples.git
-git clone https://github.com/larcjs/site.git
-git clone https://github.com/larcjs/devtools.git
+# Run setup script
+./setup.sh         # Mac/Linux
+# OR
+setup.bat          # Windows
 
 # Start a local server
 python3 -m http.server 8000
 
-# Open http://localhost:8000/examples/
+# Open http://localhost:8000/test-config.html
+```
+
+### Option 2: Manual Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/larcjs/larc.git
+cd larc
+
+# Initialize and update submodules
+git submodule init
+git submodule update --recursive
+
+# Start a local server
+python3 -m http.server 8000
 ```
 
 ### Use the Configuration System
