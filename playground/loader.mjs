@@ -1,14 +1,9 @@
 /**
  * Playground Loader
  *
- * Conditionally loads pan-bus only if not already registered
- * (e.g., by browser extension)
+ * Loads playground components
+ * Note: pan-bus will be loaded on-demand when <pan-bus> element is encountered
  */
 
-// Only load pan-bus if not already defined
-if (!customElements.get('pan-bus')) {
-  await import('../core/src/components/pan-bus.mjs');
-}
-
-// Now load playground components
+// Just load playground components - let pan-bus load naturally
 import('./playground.mjs');
