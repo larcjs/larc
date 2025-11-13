@@ -169,10 +169,15 @@ async function analyzeComponent(filePath) {
   const icon = COMPONENT_ICONS[componentName] || '📦';
 
   // Generate display name
-  const displayName = componentName
+  let displayName = componentName
     .split('-')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
+
+  // Remove "Pan " prefix for cleaner UI
+  if (displayName.startsWith('Pan ')) {
+    displayName = displayName.substring(4);
+  }
 
   return {
     name: componentName,

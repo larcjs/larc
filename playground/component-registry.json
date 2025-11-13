@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "generated": "2025-11-13T06:20:39.980Z",
+  "generated": "2025-11-13T11:41:29.960Z",
   "components": [
     {
       "name": "drag-drop-list",
@@ -198,7 +198,7 @@
     },
     {
       "name": "pan-auth",
-      "displayName": "Pan Auth",
+      "displayName": "Auth",
       "description": "Pan Auth component",
       "category": "auth",
       "path": "../components/src/components/pan-auth.mjs",
@@ -272,7 +272,7 @@
     },
     {
       "name": "pan-bus",
-      "displayName": "Pan Bus",
+      "displayName": "Bus",
       "description": "PAN Bus - Central message bus for Page Area Network communication",
       "category": "advanced",
       "path": "../components/src/components/pan-bus-legacy.mjs",
@@ -296,7 +296,7 @@
     },
     {
       "name": "pan-bus-enhanced",
-      "displayName": "Pan Bus Enhanced",
+      "displayName": "Bus Enhanced",
       "description": "PAN Bus (Enhanced) - Central message bus with memory management and security",
       "category": "advanced",
       "path": "../components/src/components/pan-bus-enhanced.mjs",
@@ -370,7 +370,7 @@
     },
     {
       "name": "pan-card",
-      "displayName": "Pan Card",
+      "displayName": "Card",
       "description": "Pan Card component",
       "category": "ui",
       "path": "../components/src/components/pan-card.mjs",
@@ -430,7 +430,7 @@
     },
     {
       "name": "pan-chart",
-      "displayName": "Pan Chart",
+      "displayName": "Chart",
       "description": "Pan Chart component",
       "category": "ui",
       "path": "../components/src/components/pan-chart.mjs",
@@ -504,7 +504,7 @@
     },
     {
       "name": "pan-data-connector",
-      "displayName": "Pan Data Connector",
+      "displayName": "Data Connector",
       "description": "Pan Data Connector component",
       "category": "data",
       "path": "../components/src/components/pan-data-connector.mjs",
@@ -528,7 +528,7 @@
     },
     {
       "name": "pan-data-provider",
-      "displayName": "Pan Data Provider",
+      "displayName": "Data Provider",
       "description": "Pan Data Provider component",
       "category": "data",
       "path": "../components/src/components/pan-data-provider-mock.mjs",
@@ -552,7 +552,7 @@
     },
     {
       "name": "pan-data-provider",
-      "displayName": "Pan Data Provider",
+      "displayName": "Data Provider",
       "description": "Pan Data Provider component",
       "category": "data",
       "path": "../components/src/components/pan-data-provider.mjs",
@@ -576,7 +576,7 @@
     },
     {
       "name": "pan-data-table",
-      "displayName": "Pan Data Table",
+      "displayName": "Data Table",
       "description": "Pan Data Table component",
       "category": "ui",
       "path": "../components/src/components/pan-data-table.mjs",
@@ -629,7 +629,7 @@
     },
     {
       "name": "pan-date-picker",
-      "displayName": "Pan Date Picker",
+      "displayName": "Date Picker",
       "description": "Pan Date Picker component",
       "category": "forms",
       "path": "../components/src/components/pan-date-picker.mjs",
@@ -696,7 +696,7 @@
     },
     {
       "name": "pan-dropdown",
-      "displayName": "Pan Dropdown",
+      "displayName": "Dropdown",
       "description": "Pan Dropdown component",
       "category": "forms",
       "path": "../components/src/components/pan-dropdown.mjs",
@@ -749,7 +749,7 @@
     },
     {
       "name": "pan-fetch",
-      "displayName": "Pan Fetch",
+      "displayName": "Fetch",
       "description": "Pan Fetch component",
       "category": "data",
       "path": "../components/src/components/pan-fetch.mjs",
@@ -773,7 +773,7 @@
     },
     {
       "name": "pan-files",
-      "displayName": "Pan Files",
+      "displayName": "Files",
       "description": "Pan Files component",
       "category": "content",
       "path": "../components/src/components/pan-files.mjs",
@@ -797,7 +797,7 @@
     },
     {
       "name": "pan-form",
-      "displayName": "Pan Form",
+      "displayName": "Form",
       "description": "Pan Form component",
       "category": "forms",
       "path": "../components/src/components/pan-form.mjs",
@@ -850,7 +850,7 @@
     },
     {
       "name": "pan-forwarder",
-      "displayName": "Pan Forwarder",
+      "displayName": "Forwarder",
       "description": "Pan Forwarder component",
       "category": "devtools",
       "path": "../components/src/components/pan-forwarder.mjs",
@@ -917,7 +917,7 @@
     },
     {
       "name": "pan-graphql-connector",
-      "displayName": "Pan Graphql Connector",
+      "displayName": "Graphql Connector",
       "description": "Pan Graphql Connector component",
       "category": "data",
       "path": "../components/src/components/pan-graphql-connector.mjs",
@@ -963,7 +963,7 @@
     },
     {
       "name": "pan-idb",
-      "displayName": "Pan Idb",
+      "displayName": "Idb",
       "description": "Pan Idb component",
       "category": "state",
       "path": "../components/src/components/pan-idb.mjs",
@@ -1030,7 +1030,7 @@
     },
     {
       "name": "pan-inspector",
-      "displayName": "Pan Inspector",
+      "displayName": "Inspector",
       "description": "Pan Inspector component",
       "category": "devtools",
       "path": "../components/src/components/pan-inspector.mjs",
@@ -1054,7 +1054,7 @@
     },
     {
       "name": "pan-invoice-store",
-      "displayName": "Pan Invoice Store",
+      "displayName": "Invoice Store",
       "description": "Pan Invoice Store component",
       "category": "advanced",
       "path": "../components/src/components/pan-invoice-store.mjs",
@@ -1078,7 +1078,7 @@
     },
     {
       "name": "pan-jwt",
-      "displayName": "Pan Jwt",
+      "displayName": "Jwt",
       "description": "PAN JWT Component - JSON Web Token authentication handler",
       "category": "auth",
       "path": "../components/src/components/pan-jwt.mjs",
@@ -1102,7 +1102,7 @@
     },
     {
       "name": "pan-link",
-      "displayName": "Pan Link",
+      "displayName": "Link",
       "description": "Pan Link component",
       "category": "routing",
       "path": "../components/src/components/pan-link.mjs",
@@ -1155,7 +1155,7 @@
     },
     {
       "name": "pan-markdown-editor",
-      "displayName": "Pan Markdown Editor",
+      "displayName": "Markdown Editor",
       "description": "Pan Markdown Editor component",
       "category": "content",
       "path": "../components/src/components/pan-markdown-editor.mjs",
@@ -1179,7 +1179,7 @@
     },
     {
       "name": "pan-markdown-renderer",
-      "displayName": "Pan Markdown Renderer",
+      "displayName": "Markdown Renderer",
       "description": "Pan Markdown Renderer component",
       "category": "content",
       "path": "../components/src/components/pan-markdown-renderer.mjs",
@@ -1203,7 +1203,7 @@
     },
     {
       "name": "pan-modal",
-      "displayName": "Pan Modal",
+      "displayName": "Modal",
       "description": "Pan Modal component",
       "category": "ui",
       "path": "../components/src/components/pan-modal.mjs",
@@ -1263,7 +1263,7 @@
     },
     {
       "name": "pan-pagination",
-      "displayName": "Pan Pagination",
+      "displayName": "Pagination",
       "description": "Pan Pagination component",
       "category": "ui",
       "path": "../components/src/components/pan-pagination.mjs",
@@ -1337,7 +1337,7 @@
     },
     {
       "name": "pan-php-connector",
-      "displayName": "Pan Php Connector",
+      "displayName": "Php Connector",
       "description": "Pan Php Connector component",
       "category": "data",
       "path": "../components/src/components/pan-php-connector.mjs",
@@ -1397,7 +1397,7 @@
     },
     {
       "name": "pan-query",
-      "displayName": "Pan Query",
+      "displayName": "Query",
       "description": "Pan Query component",
       "category": "data",
       "path": "../components/src/components/pan-query.mjs",
@@ -1457,7 +1457,7 @@
     },
     {
       "name": "pan-router",
-      "displayName": "Pan Router",
+      "displayName": "Router",
       "description": "Pan Router component",
       "category": "routing",
       "path": "../components/src/components/pan-router.mjs",
@@ -1503,7 +1503,7 @@
     },
     {
       "name": "pan-schema",
-      "displayName": "Pan Schema",
+      "displayName": "Schema",
       "description": "Pan Schema component",
       "category": "advanced",
       "path": "../components/src/components/pan-schema.mjs",
@@ -1542,7 +1542,7 @@
     },
     {
       "name": "pan-schema-form",
-      "displayName": "Pan Schema Form",
+      "displayName": "Schema Form",
       "description": "Pan Schema Form component",
       "category": "forms",
       "path": "../components/src/components/pan-schema-form.mjs",
@@ -1588,7 +1588,7 @@
     },
     {
       "name": "pan-search-bar",
-      "displayName": "Pan Search Bar",
+      "displayName": "Search Bar",
       "description": "Pan Search Bar component",
       "category": "forms",
       "path": "../components/src/components/pan-search-bar.mjs",
@@ -1648,7 +1648,7 @@
     },
     {
       "name": "pan-security",
-      "displayName": "Pan Security",
+      "displayName": "Security",
       "description": "PAN Security Utilities",
       "category": "auth",
       "path": "../components/src/components/pan-security.mjs",
@@ -1672,7 +1672,7 @@
     },
     {
       "name": "pan-sse",
-      "displayName": "Pan Sse",
+      "displayName": "Sse",
       "description": "Pan Sse component",
       "category": "data",
       "path": "../components/src/components/pan-sse.mjs",
@@ -1732,7 +1732,7 @@
     },
     {
       "name": "pan-store",
-      "displayName": "Pan Store",
+      "displayName": "Store",
       "description": "Pan Store component",
       "category": "state",
       "path": "../components/src/components/pan-store.mjs",
@@ -1756,7 +1756,7 @@
     },
     {
       "name": "pan-store-pan",
-      "displayName": "Pan Store Pan",
+      "displayName": "Store Pan",
       "description": "Pan Store Pan component",
       "category": "state",
       "path": "../components/src/components/pan-store-pan.mjs",
@@ -1780,7 +1780,7 @@
     },
     {
       "name": "pan-table",
-      "displayName": "Pan Table",
+      "displayName": "Table",
       "description": "Pan Table component",
       "category": "ui",
       "path": "../components/src/components/pan-table.mjs",
@@ -1804,7 +1804,7 @@
     },
     {
       "name": "pan-tabs",
-      "displayName": "Pan Tabs",
+      "displayName": "Tabs",
       "description": "Pan Tabs component",
       "category": "ui",
       "path": "../components/src/components/pan-tabs.mjs",
@@ -1850,7 +1850,7 @@
     },
     {
       "name": "pan-theme-provider",
-      "displayName": "Pan Theme Provider",
+      "displayName": "Theme Provider",
       "description": "Pan Theme Provider component",
       "category": "theme",
       "path": "../components/src/components/pan-theme-provider.mjs",
@@ -1874,7 +1874,7 @@
     },
     {
       "name": "pan-theme-toggle",
-      "displayName": "Pan Theme Toggle",
+      "displayName": "Theme Toggle",
       "description": "Pan Theme Toggle component",
       "category": "theme",
       "path": "../components/src/components/pan-theme-toggle.mjs",
@@ -1898,7 +1898,7 @@
     },
     {
       "name": "pan-validation",
-      "displayName": "Pan Validation",
+      "displayName": "Validation",
       "description": "PAN Validation Utilities",
       "category": "forms",
       "path": "../components/src/components/pan-validation.mjs",
@@ -1922,7 +1922,7 @@
     },
     {
       "name": "pan-websocket",
-      "displayName": "Pan Websocket",
+      "displayName": "Websocket",
       "description": "Pan Websocket component",
       "category": "data",
       "path": "../components/src/components/pan-websocket.mjs",
@@ -2003,7 +2003,7 @@
     },
     {
       "name": "pan-worker",
-      "displayName": "Pan Worker",
+      "displayName": "Worker",
       "description": "Pan Worker component",
       "category": "advanced",
       "path": "../components/src/components/pan-worker.mjs",
