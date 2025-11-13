@@ -1,11 +1,8 @@
 /**
  * LARC Playground - Main Entry Point
- * 
+ *
  * Loads all playground components and sets up the main UI
  */
-
-// Import pan-bus for PAN communication
-import '../core/src/components/pan-bus.mjs';
 
 // Import playground components
 import './components/pg-palette.mjs';
@@ -13,6 +10,8 @@ import './components/pg-canvas.mjs';
 import './components/pg-properties.mjs';
 import './components/pg-exporter.mjs';
 import './components/pg-bus-monitor.mjs';
+
+// Pan-bus is loaded via the <pan-bus> element in index.html
 
 // Setup header button functionality
 document.addEventListener('DOMContentLoaded', () => {
