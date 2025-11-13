@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LARC Playground</title>
+  <link rel="stylesheet" href="./styles/playground.css">
+  <script type="module" src="./playground.mjs"></script>
+</head>
+<body>
+  <div class="playground">
+    <!-- Header -->
+    <header class="pg-header">
+      <h1>🎨 LARC Playground</h1>
+      <div class="pg-actions">
+        <button id="toggle-bus-monitor">PAN Monitor</button>
+        <button id="toggle-code">View Code</button>
+      </div>
+    </header>
+
+    <!-- Main Layout -->
+    <div class="pg-main">
+      <!-- Left: Component Palette -->
+      <aside class="pg-sidebar">
+        <pg-palette></pg-palette>
+      </aside>
+
+      <!-- Center: Canvas -->
+      <main class="pg-canvas-area">
+        <pg-canvas></pg-canvas>
+      </main>
+
+      <!-- Right: Properties Panel -->
+      <aside class="pg-properties-area">
+        <pg-properties></pg-properties>
+      </aside>
+    </div>
+
+    <!-- Bottom: Code Export / Bus Monitor (toggleable) -->
+    <div class="pg-bottom" id="bottom-panel" hidden>
+      <pg-exporter id="code-panel"></pg-exporter>
+      <pg-bus-monitor id="bus-panel" hidden></pg-bus-monitor>
+    </div>
+  </div>
+
+  <pan-bus debug="true"></pan-bus>
+</body>
+</html>

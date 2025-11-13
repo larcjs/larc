@@ -1,0 +1,525 @@
+/**
+ * LARC Playground Styles
+ */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.playground {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+.pg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pg-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.pg-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.pg-actions button {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.pg-actions button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Main Layout */
+.pg-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.pg-sidebar {
+  width: 280px;
+  background: white;
+  border-right: 1px solid #e0e0e0;
+  overflow-y: auto;
+}
+
+.pg-canvas-area {
+  flex: 1;
+  background: #fafafa;
+  overflow-y: auto;
+}
+
+.pg-properties-area {
+  width: 320px;
+  background: white;
+  border-left: 1px solid #e0e0e0;
+  overflow-y: auto;
+}
+
+/* Bottom Panel */
+.pg-bottom {
+  height: 300px;
+  border-top: 1px solid #e0e0e0;
+  background: white;
+  overflow-y: auto;
+}
+
+/* Component Palette */
+.palette {
+  padding: 1rem;
+}
+
+.palette .search {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.palette .search:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.palette details {
+  margin-bottom: 0.5rem;
+}
+
+.palette summary {
+  padding: 0.75rem;
+  background: #f5f5f5;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  user-select: none;
+}
+
+.palette summary:hover {
+  background: #e8e8e8;
+}
+
+.palette .components {
+  padding: 0.5rem 0;
+}
+
+.component-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.component-item:hover {
+  background: #f0f4ff;
+  border-color: #667eea;
+  transform: translateX(4px);
+}
+
+.component-item .icon {
+  font-size: 1.25rem;
+}
+
+.component-item .name {
+  font-size: 0.875rem;
+  color: #333;
+}
+
+/* Canvas */
+.canvas {
+  padding: 1rem;
+}
+
+.canvas-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.btn-clear {
+  padding: 0.5rem 1rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-clear:hover {
+  background: #dc2626;
+}
+
+.viewport-size {
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.canvas-content {
+  min-height: 400px;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  color: #999;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* Viewport sizes */
+.viewport-tablet {
+  max-width: 768px;
+  margin: 0 auto;
+}
+
+.viewport-mobile {
+  max-width: 375px;
+  margin: 0 auto;
+}
+
+/* Component selection */
+.pg-component {
+  position: relative;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.pg-component:hover {
+  border-color: #667eea33;
+  background: #667eea05;
+}
+
+.pg-component.selected {
+  border-color: #667eea;
+  background: #667eea10;
+}
+
+/* Properties Panel */
+.properties {
+  padding: 1rem;
+}
+
+.properties-header {
+  margin-bottom: 1rem;
+}
+
+.properties-header h3 {
+  font-size: 1.125rem;
+  color: #333;
+}
+
+.no-selection {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.component-info {
+  padding: 1rem;
+  background: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.component-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.component-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.component-desc {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.properties-section {
+  margin-bottom: 1.5rem;
+}
+
+.properties-section h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.property {
+  margin-bottom: 1rem;
+}
+
+.property label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.property-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.property-type {
+  font-size: 0.75rem;
+  color: #999;
+  font-style: italic;
+}
+
+.property input[type="text"],
+.property input[type="number"],
+.property select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.property input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.property-desc {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.no-attributes {
+  padding: 1rem;
+  text-align: center;
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.properties-actions {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.btn-delete {
+  width: 100%;
+  padding: 0.75rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-delete:hover {
+  background: #dc2626;
+}
+
+/* Code Exporter */
+.exporter {
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.exporter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.exporter-header h3 {
+  font-size: 1rem;
+  color: #333;
+}
+
+.exporter-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-copy,
+.btn-download {
+  padding: 0.5rem 1rem;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-copy:hover,
+.btn-download:hover {
+  background: #5568d3;
+}
+
+.exporter pre {
+  flex: 1;
+  padding: 1rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  border-radius: 6px;
+  overflow: auto;
+  font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.exporter code {
+  font-family: inherit;
+}
+
+/* Bus Monitor */
+.bus-monitor {
+  padding: 1rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.bus-monitor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.bus-monitor-header h3 {
+  font-size: 1rem;
+  color: #333;
+}
+
+.btn-clear-logs {
+  padding: 0.5rem 1rem;
+  background: #f59e0b;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.btn-clear-logs:hover {
+  background: #d97706;
+}
+
+.bus-messages {
+  flex: 1;
+  overflow-y: auto;
+  background: #f5f5f5;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+.bus-message {
+  padding: 0.75rem;
+  background: white;
+  border-left: 3px solid #667eea;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.bus-message-topic {
+  font-weight: 600;
+  color: #667eea;
+  margin-bottom: 0.25rem;
+}
+
+.bus-message-data {
+  color: #666;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.bus-message-time {
+  color: #999;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
