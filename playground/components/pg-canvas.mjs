@@ -106,7 +106,9 @@ class PgCanvas extends HTMLElement {
 
     // Try to load the component
     try {
-      const componentPath = componentMeta.path.replace('../components/src/components/', '../components/src/components/');
+      // Registry paths are relative to playground/ directory
+      // We're in playground/components/, so add one more ../
+      const componentPath = componentMeta.path.replace('../', '../../');
       await import(componentPath);
     } catch (err) {
       console.warn(`Failed to load component ${componentMeta.name}:`, err);
