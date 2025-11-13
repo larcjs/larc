@@ -9,10 +9,13 @@ This is the **meta-repository** containing shared configuration. Each component 
 | Repository | Description | Links |
 |------------|-------------|-------|
 | **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
+| **[@larcjs/core-types](https://github.com/larcjs/core-types)** | TypeScript types for core | [NPM](https://npmjs.com/package/@larcjs/core-types) |
 | **[@larcjs/components](https://github.com/larcjs/components)** | UI components library | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
+| **[@larcjs/components-types](https://github.com/larcjs/components-types)** | TypeScript types for components | [NPM](https://npmjs.com/package/@larcjs/components-types) |
 | **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | [Examples](https://larcjs.github.io/examples/) |
 | **[@larcjs/site](https://github.com/larcjs/site)** | Documentation website | [Live Site](https://larcjs.github.io/site/) |
 | **[@larcjs/devtools](https://github.com/larcjs/devtools)** | Chrome DevTools extension | [Docs](https://github.com/larcjs/devtools) |
+| **[Playground](./playground/)** | Interactive component explorer | [Local](http://localhost:8080/playground/) · [Docs](./playground/README.md) |
 
 ## 🚀 Quick Start
 
@@ -75,6 +78,8 @@ This repository contains the centralized configuration system for path managemen
 - ✅ **PAN Messaging** - DOM-native pub/sub for component communication
 - ✅ **Config System** - Centralized path management with environment detection
 - ✅ **CDN Ready** - Automatically switches dev/prod paths
+- ✅ **TypeScript Support** - Optional type definitions for full IDE support
+- ✅ **Interactive Playground** - Explore and test 49+ components visually
 
 ## 📖 Configuration System
 
@@ -128,7 +133,13 @@ larc-repos/                   # This repository (config)
 ├── QUICK-START-CONFIG.md    # Quick reference
 ├── test-config.html         # Configuration test page
 ├── core/                    # @larcjs/core (separate repo)
+├── core-types/              # @larcjs/core-types (separate repo)
 ├── components/              # @larcjs/components (separate repo)
+├── components-types/        # @larcjs/components-types (separate repo)
+├── playground/              # Interactive component explorer
+│   ├── components/          # Playground UI components
+│   ├── component-registry.json  # Auto-generated metadata
+│   └── scripts/             # Registry generator
 ├── examples/                # @larcjs/examples (separate repo)
 ├── site/                    # @larcjs/site (separate repo)
 └── devtools/                # @larcjs/devtools (separate repo)
