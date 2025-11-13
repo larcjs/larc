@@ -1,0 +1,2242 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-11-13T05:39:29.319Z",
+  "components": [
+    {
+      "name": "drag-drop-list",
+      "displayName": "Drag Drop List",
+      "description": "Drag Drop List component",
+      "category": "ui",
+      "path": "../components/src/components/drag-drop-list.mjs",
+      "icon": "📝",
+      "tags": [
+        "ui",
+        "drag"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "items",
+          "type": "string",
+          "default": "",
+          "description": "items attribute",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "string",
+          "default": "",
+          "description": "disabled attribute",
+          "required": false
+        },
+        {
+          "name": "handle",
+          "type": "string",
+          "default": "",
+          "description": "handle attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "editable-cell",
+      "displayName": "Editable Cell",
+      "description": "Editable Cell component",
+      "category": "forms",
+      "path": "../components/src/components/editable-cell.mjs",
+      "icon": "📦",
+      "tags": [
+        "forms",
+        "editable"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": "",
+          "description": "value attribute",
+          "required": false
+        },
+        {
+          "name": "type",
+          "type": "string",
+          "default": "",
+          "description": "type attribute",
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "",
+          "description": "placeholder attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "cell-id",
+          "type": "string",
+          "default": "",
+          "description": "cell-id attribute",
+          "required": false
+        },
+        {
+          "name": "editable",
+          "type": "string",
+          "default": "",
+          "description": "editable attribute",
+          "required": false
+        },
+        {
+          "name": "multiline",
+          "type": "string",
+          "default": "",
+          "description": "multiline attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "file-upload",
+      "displayName": "File Upload",
+      "description": "File Upload component",
+      "category": "forms",
+      "path": "../components/src/components/file-upload.mjs",
+      "icon": "📤",
+      "tags": [
+        "forms",
+        "file"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "accept",
+          "type": "string",
+          "default": "",
+          "description": "accept attribute",
+          "required": false
+        },
+        {
+          "name": "multiple",
+          "type": "string",
+          "default": "",
+          "description": "multiple attribute",
+          "required": false
+        },
+        {
+          "name": "max-size",
+          "type": "string",
+          "default": "",
+          "description": "max-size attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "preview",
+          "type": "string",
+          "default": "",
+          "description": "preview attribute",
+          "required": false
+        },
+        {
+          "name": "drag-drop",
+          "type": "string",
+          "default": "",
+          "description": "drag-drop attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-auth",
+      "displayName": "Pan Auth",
+      "description": "Pan Auth component",
+      "category": "auth",
+      "path": "../components/src/components/pan-auth.mjs",
+      "icon": "🔑",
+      "tags": [
+        "auth",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "storage",
+          "type": "string",
+          "default": "",
+          "description": "storage attribute",
+          "required": false
+        },
+        {
+          "name": "token-key",
+          "type": "string",
+          "default": "",
+          "description": "token-key attribute",
+          "required": false
+        },
+        {
+          "name": "refresh-key",
+          "type": "string",
+          "default": "",
+          "description": "refresh-key attribute",
+          "required": false
+        },
+        {
+          "name": "auto-refresh",
+          "type": "string",
+          "default": "",
+          "description": "auto-refresh attribute",
+          "required": false
+        },
+        {
+          "name": "refresh-before",
+          "type": "string",
+          "default": "",
+          "description": "refresh-before attribute",
+          "required": false
+        },
+        {
+          "name": "login-endpoint",
+          "type": "string",
+          "default": "",
+          "description": "login-endpoint attribute",
+          "required": false
+        },
+        {
+          "name": "refresh-endpoint",
+          "type": "string",
+          "default": "",
+          "description": "refresh-endpoint attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-bus",
+      "displayName": "Pan Bus",
+      "description": "PAN Bus - Central message bus for Page Area Network communication",
+      "category": "advanced",
+      "path": "../components/src/components/pan-bus-legacy.mjs",
+      "icon": "📦",
+      "tags": [
+        "advanced",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-bus-enhanced",
+      "displayName": "Pan Bus Enhanced",
+      "description": "PAN Bus (Enhanced) - Central message bus with memory management and security",
+      "category": "advanced",
+      "path": "../components/src/components/pan-bus-enhanced.mjs",
+      "icon": "📦",
+      "tags": [
+        "advanced",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "max-retained",
+          "type": "string",
+          "default": "",
+          "description": "max-retained attribute",
+          "required": false
+        },
+        {
+          "name": "max-message-size",
+          "type": "string",
+          "default": "",
+          "description": "max-message-size attribute",
+          "required": false
+        },
+        {
+          "name": "max-payload-size",
+          "type": "string",
+          "default": "",
+          "description": "max-payload-size attribute",
+          "required": false
+        },
+        {
+          "name": "cleanup-interval",
+          "type": "string",
+          "default": "",
+          "description": "cleanup-interval attribute",
+          "required": false
+        },
+        {
+          "name": "rate-limit",
+          "type": "string",
+          "default": "",
+          "description": "rate-limit attribute",
+          "required": false
+        },
+        {
+          "name": "allow-global-wildcard",
+          "type": "string",
+          "default": "",
+          "description": "allow-global-wildcard attribute",
+          "required": false
+        },
+        {
+          "name": "debug",
+          "type": "string",
+          "default": "",
+          "description": "debug attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-card",
+      "displayName": "Pan Card",
+      "description": "Pan Card component",
+      "category": "ui",
+      "path": "../components/src/components/pan-card.mjs",
+      "icon": "🃏",
+      "tags": [
+        "ui",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "header",
+          "type": "string",
+          "default": "",
+          "description": "header attribute",
+          "required": false
+        },
+        {
+          "name": "footer",
+          "type": "string",
+          "default": "",
+          "description": "footer attribute",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "default": "",
+          "description": "variant attribute",
+          "required": false
+        },
+        {
+          "name": "elevation",
+          "type": "string",
+          "default": "",
+          "description": "elevation attribute",
+          "required": false
+        },
+        {
+          "name": "hoverable",
+          "type": "string",
+          "default": "",
+          "description": "hoverable attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-chart",
+      "displayName": "Pan Chart",
+      "description": "Pan Chart component",
+      "category": "ui",
+      "path": "../components/src/components/pan-chart.mjs",
+      "icon": "📈",
+      "tags": [
+        "ui",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "type",
+          "type": "string",
+          "default": "",
+          "description": "type attribute",
+          "required": false
+        },
+        {
+          "name": "data",
+          "type": "string",
+          "default": "",
+          "description": "data attribute",
+          "required": false
+        },
+        {
+          "name": "options",
+          "type": "string",
+          "default": "",
+          "description": "options attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "library",
+          "type": "string",
+          "default": "",
+          "description": "library attribute",
+          "required": false
+        },
+        {
+          "name": "width",
+          "type": "string",
+          "default": "",
+          "description": "width attribute",
+          "required": false
+        },
+        {
+          "name": "height",
+          "type": "string",
+          "default": "",
+          "description": "height attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-data-connector",
+      "displayName": "Pan Data Connector",
+      "description": "Pan Data Connector component",
+      "category": "data",
+      "path": "../components/src/components/pan-data-connector.mjs",
+      "icon": "📦",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-data-provider",
+      "displayName": "Pan Data Provider",
+      "description": "Pan Data Provider component",
+      "category": "data",
+      "path": "../components/src/components/pan-data-provider-mock.mjs",
+      "icon": "📦",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-data-provider",
+      "displayName": "Pan Data Provider",
+      "description": "Pan Data Provider component",
+      "category": "data",
+      "path": "../components/src/components/pan-data-provider.mjs",
+      "icon": "📦",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-data-table",
+      "displayName": "Pan Data Table",
+      "description": "Pan Data Table component",
+      "category": "ui",
+      "path": "../components/src/components/pan-data-table.mjs",
+      "icon": "📋",
+      "tags": [
+        "ui",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "default": "",
+          "description": "resource attribute",
+          "required": false
+        },
+        {
+          "name": "columns",
+          "type": "string",
+          "default": "",
+          "description": "columns attribute",
+          "required": false
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "default": "",
+          "description": "key attribute",
+          "required": false
+        },
+        {
+          "name": "live",
+          "type": "string",
+          "default": "",
+          "description": "live attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-date-picker",
+      "displayName": "Pan Date Picker",
+      "description": "Pan Date Picker component",
+      "category": "forms",
+      "path": "../components/src/components/pan-date-picker.mjs",
+      "icon": "📅",
+      "tags": [
+        "forms",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "value",
+          "type": "string",
+          "default": "",
+          "description": "value attribute",
+          "required": false
+        },
+        {
+          "name": "format",
+          "type": "string",
+          "default": "",
+          "description": "format attribute",
+          "required": false
+        },
+        {
+          "name": "min",
+          "type": "string",
+          "default": "",
+          "description": "min attribute",
+          "required": false
+        },
+        {
+          "name": "max",
+          "type": "string",
+          "default": "",
+          "description": "max attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "",
+          "description": "placeholder attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-dropdown",
+      "displayName": "Pan Dropdown",
+      "description": "Pan Dropdown component",
+      "category": "forms",
+      "path": "../components/src/components/pan-dropdown.mjs",
+      "icon": "⬇️",
+      "tags": [
+        "forms",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "label",
+          "type": "string",
+          "default": "",
+          "description": "label attribute",
+          "required": false
+        },
+        {
+          "name": "position",
+          "type": "string",
+          "default": "",
+          "description": "position attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "items",
+          "type": "string",
+          "default": "",
+          "description": "items attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-fetch",
+      "displayName": "Pan Fetch",
+      "description": "Pan Fetch component",
+      "category": "data",
+      "path": "../components/src/components/pan-fetch.mjs",
+      "icon": "🌐",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-files",
+      "displayName": "Pan Files",
+      "description": "Pan Files component",
+      "category": "content",
+      "path": "../components/src/components/pan-files.mjs",
+      "icon": "📦",
+      "tags": [
+        "content",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-form",
+      "displayName": "Pan Form",
+      "description": "Pan Form component",
+      "category": "forms",
+      "path": "../components/src/components/pan-form.mjs",
+      "icon": "📝",
+      "tags": [
+        "forms",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "default": "",
+          "description": "resource attribute",
+          "required": false
+        },
+        {
+          "name": "fields",
+          "type": "string",
+          "default": "",
+          "description": "fields attribute",
+          "required": false
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "default": "",
+          "description": "key attribute",
+          "required": false
+        },
+        {
+          "name": "live",
+          "type": "string",
+          "default": "",
+          "description": "live attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-forwarder",
+      "displayName": "Pan Forwarder",
+      "description": "Pan Forwarder component",
+      "category": "devtools",
+      "path": "../components/src/components/pan-forwarder.mjs",
+      "icon": "📦",
+      "tags": [
+        "devtools",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "dest",
+          "type": "string",
+          "default": "",
+          "description": "dest attribute",
+          "required": false
+        },
+        {
+          "name": "topics",
+          "type": "string",
+          "default": "",
+          "description": "topics attribute",
+          "required": false
+        },
+        {
+          "name": "headers",
+          "type": "string",
+          "default": "",
+          "description": "headers attribute",
+          "required": false
+        },
+        {
+          "name": "method",
+          "type": "string",
+          "default": "",
+          "description": "method attribute",
+          "required": false
+        },
+        {
+          "name": "with-credentials",
+          "type": "string",
+          "default": "",
+          "description": "with-credentials attribute",
+          "required": false
+        },
+        {
+          "name": "enabled",
+          "type": "string",
+          "default": "",
+          "description": "enabled attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-graphql-connector",
+      "displayName": "Pan Graphql Connector",
+      "description": "Pan Graphql Connector component",
+      "category": "data",
+      "path": "../components/src/components/pan-graphql-connector.mjs",
+      "icon": "📦",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "default": "",
+          "description": "resource attribute",
+          "required": false
+        },
+        {
+          "name": "endpoint",
+          "type": "string",
+          "default": "",
+          "description": "endpoint attribute",
+          "required": false
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "default": "",
+          "description": "key attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-idb",
+      "displayName": "Pan Idb",
+      "description": "Pan Idb component",
+      "category": "state",
+      "path": "../components/src/components/pan-idb.mjs",
+      "icon": "🗄️",
+      "tags": [
+        "state",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "database",
+          "type": "string",
+          "default": "",
+          "description": "database attribute",
+          "required": false
+        },
+        {
+          "name": "version",
+          "type": "string",
+          "default": "",
+          "description": "version attribute",
+          "required": false
+        },
+        {
+          "name": "store",
+          "type": "string",
+          "default": "",
+          "description": "store attribute",
+          "required": false
+        },
+        {
+          "name": "key-path",
+          "type": "string",
+          "default": "",
+          "description": "key-path attribute",
+          "required": false
+        },
+        {
+          "name": "auto-increment",
+          "type": "string",
+          "default": "",
+          "description": "auto-increment attribute",
+          "required": false
+        },
+        {
+          "name": "indexes",
+          "type": "string",
+          "default": "",
+          "description": "indexes attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-inspector",
+      "displayName": "Pan Inspector",
+      "description": "Pan Inspector component",
+      "category": "devtools",
+      "path": "../components/src/components/pan-inspector.mjs",
+      "icon": "🔍",
+      "tags": [
+        "devtools",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-invoice-store",
+      "displayName": "Pan Invoice Store",
+      "description": "Pan Invoice Store component",
+      "category": "advanced",
+      "path": "../components/src/components/pan-invoice-store.mjs",
+      "icon": "📦",
+      "tags": [
+        "advanced",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-jwt",
+      "displayName": "Pan Jwt",
+      "description": "PAN JWT Component - JSON Web Token authentication handler",
+      "category": "auth",
+      "path": "../components/src/components/pan-jwt.mjs",
+      "icon": "🔐",
+      "tags": [
+        "auth",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-link",
+      "displayName": "Pan Link",
+      "description": "Pan Link component",
+      "category": "routing",
+      "path": "../components/src/components/pan-link.mjs",
+      "icon": "🔗",
+      "tags": [
+        "routing",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "to",
+          "type": "string",
+          "default": "",
+          "description": "to attribute",
+          "required": false
+        },
+        {
+          "name": "replace",
+          "type": "string",
+          "default": "",
+          "description": "replace attribute",
+          "required": false
+        },
+        {
+          "name": "active-class",
+          "type": "string",
+          "default": "",
+          "description": "active-class attribute",
+          "required": false
+        },
+        {
+          "name": "exact",
+          "type": "string",
+          "default": "",
+          "description": "exact attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-markdown-editor",
+      "displayName": "Pan Markdown Editor",
+      "description": "Pan Markdown Editor component",
+      "category": "content",
+      "path": "../components/src/components/pan-markdown-editor.mjs",
+      "icon": "✏️",
+      "tags": [
+        "content",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-markdown-renderer",
+      "displayName": "Pan Markdown Renderer",
+      "description": "Pan Markdown Renderer component",
+      "category": "content",
+      "path": "../components/src/components/pan-markdown-renderer.mjs",
+      "icon": "📄",
+      "tags": [
+        "content",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-modal",
+      "displayName": "Pan Modal",
+      "description": "Pan Modal component",
+      "category": "ui",
+      "path": "../components/src/components/pan-modal.mjs",
+      "icon": "📦",
+      "tags": [
+        "ui",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "modal-id",
+          "type": "string",
+          "default": "",
+          "description": "modal-id attribute",
+          "required": false
+        },
+        {
+          "name": "title",
+          "type": "string",
+          "default": "",
+          "description": "title attribute",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "default": "",
+          "description": "size attribute",
+          "required": false
+        },
+        {
+          "name": "closable",
+          "type": "string",
+          "default": "",
+          "description": "closable attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-pagination",
+      "displayName": "Pan Pagination",
+      "description": "Pan Pagination component",
+      "category": "ui",
+      "path": "../components/src/components/pan-pagination.mjs",
+      "icon": "⏭️",
+      "tags": [
+        "ui",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "current-page",
+          "type": "string",
+          "default": "",
+          "description": "current-page attribute",
+          "required": false
+        },
+        {
+          "name": "total-pages",
+          "type": "string",
+          "default": "",
+          "description": "total-pages attribute",
+          "required": false
+        },
+        {
+          "name": "total-items",
+          "type": "string",
+          "default": "",
+          "description": "total-items attribute",
+          "required": false
+        },
+        {
+          "name": "page-size",
+          "type": "string",
+          "default": "",
+          "description": "page-size attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "show-info",
+          "type": "string",
+          "default": "",
+          "description": "show-info attribute",
+          "required": false
+        },
+        {
+          "name": "show-jump",
+          "type": "string",
+          "default": "",
+          "description": "show-jump attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-php-connector",
+      "displayName": "Pan Php Connector",
+      "description": "Pan Php Connector component",
+      "category": "data",
+      "path": "../components/src/components/pan-php-connector.mjs",
+      "icon": "📦",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "default": "",
+          "description": "resource attribute",
+          "required": false
+        },
+        {
+          "name": "api-url",
+          "type": "string",
+          "default": "",
+          "description": "api-url attribute",
+          "required": false
+        },
+        {
+          "name": "fields",
+          "type": "string",
+          "default": "",
+          "description": "fields attribute",
+          "required": false
+        },
+        {
+          "name": "page-size",
+          "type": "string",
+          "default": "",
+          "description": "page-size attribute",
+          "required": false
+        },
+        {
+          "name": "start-param",
+          "type": "string",
+          "default": "",
+          "description": "start-param attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-query",
+      "displayName": "Pan Query",
+      "description": "Pan Query component",
+      "category": "data",
+      "path": "../components/src/components/pan-query.mjs",
+      "icon": "📦",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "default": "",
+          "description": "resource attribute",
+          "required": false
+        },
+        {
+          "name": "defaults",
+          "type": "string",
+          "default": "",
+          "description": "defaults attribute",
+          "required": false
+        },
+        {
+          "name": "sync-url",
+          "type": "string",
+          "default": "",
+          "description": "sync-url attribute",
+          "required": false
+        },
+        {
+          "name": "debounce-ms",
+          "type": "string",
+          "default": "",
+          "description": "debounce-ms attribute",
+          "required": false
+        },
+        {
+          "name": "auto-request",
+          "type": "string",
+          "default": "",
+          "description": "auto-request attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-router",
+      "displayName": "Pan Router",
+      "description": "Pan Router component",
+      "category": "routing",
+      "path": "../components/src/components/pan-router.mjs",
+      "icon": "🧭",
+      "tags": [
+        "routing",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "base",
+          "type": "string",
+          "default": "",
+          "description": "base attribute",
+          "required": false
+        },
+        {
+          "name": "mode",
+          "type": "string",
+          "default": "",
+          "description": "mode attribute",
+          "required": false
+        },
+        {
+          "name": "auth-topic",
+          "type": "string",
+          "default": "",
+          "description": "auth-topic attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-schema",
+      "displayName": "Pan Schema",
+      "description": "Pan Schema component",
+      "category": "advanced",
+      "path": "../components/src/components/pan-schema.mjs",
+      "icon": "📦",
+      "tags": [
+        "advanced",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "default": "",
+          "description": "resource attribute",
+          "required": false
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "default": "",
+          "description": "src attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-schema-form",
+      "displayName": "Pan Schema Form",
+      "description": "Pan Schema Form component",
+      "category": "forms",
+      "path": "../components/src/components/pan-schema-form.mjs",
+      "icon": "📦",
+      "tags": [
+        "forms",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "default": "",
+          "description": "resource attribute",
+          "required": false
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "default": "",
+          "description": "key attribute",
+          "required": false
+        },
+        {
+          "name": "live",
+          "type": "string",
+          "default": "",
+          "description": "live attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-search-bar",
+      "displayName": "Pan Search Bar",
+      "description": "Pan Search Bar component",
+      "category": "forms",
+      "path": "../components/src/components/pan-search-bar.mjs",
+      "icon": "🔍",
+      "tags": [
+        "forms",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "placeholder",
+          "type": "string",
+          "default": "",
+          "description": "placeholder attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "debounce",
+          "type": "string",
+          "default": "",
+          "description": "debounce attribute",
+          "required": false
+        },
+        {
+          "name": "filters",
+          "type": "string",
+          "default": "",
+          "description": "filters attribute",
+          "required": false
+        },
+        {
+          "name": "show-filters",
+          "type": "string",
+          "default": "",
+          "description": "show-filters attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-security",
+      "displayName": "Pan Security",
+      "description": "PAN Security Utilities",
+      "category": "auth",
+      "path": "../components/src/components/pan-security.mjs",
+      "icon": "📦",
+      "tags": [
+        "auth",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-sse",
+      "displayName": "Pan Sse",
+      "description": "Pan Sse component",
+      "category": "data",
+      "path": "../components/src/components/pan-sse.mjs",
+      "icon": "📡",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "src",
+          "type": "string",
+          "default": "",
+          "description": "src attribute",
+          "required": false
+        },
+        {
+          "name": "topics",
+          "type": "string",
+          "default": "",
+          "description": "topics attribute",
+          "required": false
+        },
+        {
+          "name": "with-credentials",
+          "type": "string",
+          "default": "",
+          "description": "with-credentials attribute",
+          "required": false
+        },
+        {
+          "name": "persist-last-event",
+          "type": "string",
+          "default": "",
+          "description": "persist-last-event attribute",
+          "required": false
+        },
+        {
+          "name": "backoff",
+          "type": "string",
+          "default": "",
+          "description": "backoff attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-store",
+      "displayName": "Pan Store",
+      "description": "Pan Store component",
+      "category": "state",
+      "path": "../components/src/components/pan-store.mjs",
+      "icon": "💾",
+      "tags": [
+        "state",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-store-pan",
+      "displayName": "Pan Store Pan",
+      "description": "Pan Store Pan component",
+      "category": "state",
+      "path": "../components/src/components/pan-store-pan.mjs",
+      "icon": "📦",
+      "tags": [
+        "state",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-table",
+      "displayName": "Pan Table",
+      "description": "Pan Table component",
+      "category": "ui",
+      "path": "../components/src/components/pan-table.mjs",
+      "icon": "📊",
+      "tags": [
+        "ui",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-tabs",
+      "displayName": "Pan Tabs",
+      "description": "Pan Tabs component",
+      "category": "ui",
+      "path": "../components/src/components/pan-tabs.mjs",
+      "icon": "📑",
+      "tags": [
+        "ui",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "active",
+          "type": "string",
+          "default": "",
+          "description": "active attribute",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "topic attribute",
+          "required": false
+        },
+        {
+          "name": "tabs",
+          "type": "string",
+          "default": "",
+          "description": "tabs attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-theme-provider",
+      "displayName": "Pan Theme Provider",
+      "description": "Pan Theme Provider component",
+      "category": "theme",
+      "path": "../components/src/components/pan-theme-provider.mjs",
+      "icon": "🎨",
+      "tags": [
+        "theme",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-theme-toggle",
+      "displayName": "Pan Theme Toggle",
+      "description": "Pan Theme Toggle component",
+      "category": "theme",
+      "path": "../components/src/components/pan-theme-toggle.mjs",
+      "icon": "🌓",
+      "tags": [
+        "theme",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-validation",
+      "displayName": "Pan Validation",
+      "description": "PAN Validation Utilities",
+      "category": "forms",
+      "path": "../components/src/components/pan-validation.mjs",
+      "icon": "📦",
+      "tags": [
+        "forms",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-websocket",
+      "displayName": "Pan Websocket",
+      "description": "Pan Websocket component",
+      "category": "data",
+      "path": "../components/src/components/pan-websocket.mjs",
+      "icon": "🔌",
+      "tags": [
+        "data",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "url",
+          "type": "string",
+          "default": "",
+          "description": "url attribute",
+          "required": false
+        },
+        {
+          "name": "protocols",
+          "type": "string",
+          "default": "",
+          "description": "protocols attribute",
+          "required": false
+        },
+        {
+          "name": "outbound-topics",
+          "type": "string",
+          "default": "",
+          "description": "outbound-topics attribute",
+          "required": false
+        },
+        {
+          "name": "inbound-topics",
+          "type": "string",
+          "default": "",
+          "description": "inbound-topics attribute",
+          "required": false
+        },
+        {
+          "name": "auto-reconnect",
+          "type": "string",
+          "default": "",
+          "description": "auto-reconnect attribute",
+          "required": false
+        },
+        {
+          "name": "reconnect-delay",
+          "type": "string",
+          "default": "",
+          "description": "reconnect-delay attribute",
+          "required": false
+        },
+        {
+          "name": "heartbeat",
+          "type": "string",
+          "default": "",
+          "description": "heartbeat attribute",
+          "required": false
+        },
+        {
+          "name": "heartbeat-topic",
+          "type": "string",
+          "default": "",
+          "description": "heartbeat-topic attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "pan-worker",
+      "displayName": "Pan Worker",
+      "description": "Pan Worker component",
+      "category": "advanced",
+      "path": "../components/src/components/pan-worker.mjs",
+      "icon": "⚙️",
+      "tags": [
+        "advanced",
+        "pan"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "topics",
+          "type": "string",
+          "default": "",
+          "description": "topics attribute",
+          "required": false
+        },
+        {
+          "name": "src",
+          "type": "string",
+          "default": "",
+          "description": "src attribute",
+          "required": false
+        },
+        {
+          "name": "worker-type",
+          "type": "string",
+          "default": "",
+          "description": "worker-type attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "todo-list",
+      "displayName": "Todo List",
+      "description": "Todo List component",
+      "category": "advanced",
+      "path": "../components/src/components/todo-list.mjs",
+      "icon": "✅",
+      "tags": [
+        "advanced",
+        "todo"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "todo-provider",
+      "displayName": "Todo Provider",
+      "description": "Todo Provider component",
+      "category": "advanced",
+      "path": "../components/src/components/todo-provider.mjs",
+      "icon": "📦",
+      "tags": [
+        "advanced",
+        "todo"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "user-avatar",
+      "displayName": "User Avatar",
+      "description": "User Avatar component",
+      "category": "ui",
+      "path": "../components/src/components/user-avatar.mjs",
+      "icon": "👤",
+      "tags": [
+        "ui",
+        "user"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [
+        {
+          "name": "name",
+          "type": "string",
+          "default": "",
+          "description": "name attribute",
+          "required": false
+        },
+        {
+          "name": "image",
+          "type": "string",
+          "default": "",
+          "description": "image attribute",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "default": "",
+          "description": "size attribute",
+          "required": false
+        },
+        {
+          "name": "status",
+          "type": "string",
+          "default": "",
+          "description": "status attribute",
+          "required": false
+        },
+        {
+          "name": "show-status",
+          "type": "string",
+          "default": "",
+          "description": "show-status attribute",
+          "required": false
+        },
+        {
+          "name": "color",
+          "type": "string",
+          "default": "",
+          "description": "color attribute",
+          "required": false
+        }
+      ],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    },
+    {
+      "name": "x-counter",
+      "displayName": "X Counter",
+      "description": "X Counter component",
+      "category": "advanced",
+      "path": "../components/src/components/x-counter.mjs",
+      "icon": "🔢",
+      "tags": [
+        "advanced",
+        "x"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "attributes": [],
+      "properties": [],
+      "methods": [],
+      "events": [],
+      "slots": [],
+      "examples": [],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": []
+    }
+  ],
+  "categories": [
+    {
+      "id": "routing",
+      "name": "Routing & Navigation",
+      "icon": "🧭"
+    },
+    {
+      "id": "state",
+      "name": "State Management",
+      "icon": "💾"
+    },
+    {
+      "id": "forms",
+      "name": "Forms & Input",
+      "icon": "📝"
+    },
+    {
+      "id": "data",
+      "name": "Data & Connectivity",
+      "icon": "🔌"
+    },
+    {
+      "id": "ui",
+      "name": "UI Components",
+      "icon": "🎨"
+    },
+    {
+      "id": "content",
+      "name": "Content & Media",
+      "icon": "📄"
+    },
+    {
+      "id": "auth",
+      "name": "Authentication",
+      "icon": "🔐"
+    },
+    {
+      "id": "theme",
+      "name": "Theming",
+      "icon": "🎭"
+    },
+    {
+      "id": "devtools",
+      "name": "Developer Tools",
+      "icon": "🔧"
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "icon": "⚙️"
+    }
+  ]
+}
