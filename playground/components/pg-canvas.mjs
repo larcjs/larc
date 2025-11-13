@@ -77,6 +77,9 @@ class PgCanvas extends HTMLElement {
       }
     });
 
+    // Add demo content for better visibility
+    this.addDemoContent(element, componentMeta);
+
     // Make it selectable
     element.classList.add('pg-component');
     element.dataset.componentId = crypto.randomUUID();
@@ -96,6 +99,51 @@ class PgCanvas extends HTMLElement {
     this.dispatchEvent(new CustomEvent('canvas-changed', {
       bubbles: true
     }));
+  }
+
+  addDemoContent(element, componentMeta) {
+    const name = componentMeta.name;
+
+    // Add a label showing the component name for easy identification
+    const label = document.createElement('div');
+    label.className = 'pg-component-label';
+    label.textContent = componentMeta.displayName;
+    label.style.cssText = 'padding: 8px; background: #f0f0f0; border-bottom: 1px solid #ddd; font-size: 12px; font-weight: 600; color: #666;';
+    element.appendChild(label);
+
+    // Add type-specific demo content
+    if (name === 'pan-card') {
+      element.setAttribute('header', 'Card Header');
+      const content = document.createElement('p');
+      content.textContent = 'This is card content. Edit attributes in the properties panel.';
+      content.style.padding = '16px';
+      element.appendChild(content);
+    } else if (name === 'pan-table') {
+      const placeholder = document.createElement('div');
+      placeholder.innerHTML = '<p style="padding: 16px;">Table component - configure data source in properties</p>';
+      element.appendChild(placeholder);
+    } else if (name === 'pan-tabs') {
+      const placeholder = document.createElement('div');
+      placeholder.innerHTML = '<p style="padding: 16px;">Tabs component - add tab content as children</p>';
+      element.appendChild(placeholder);
+    } else if (name === 'pan-modal') {
+      const placeholder = document.createElement('div');
+      placeholder.innerHTML = '<p style="padding: 16px;">Modal component - set "open" attribute to show</p>';
+      element.appendChild(placeholder);
+    } else if (name === 'pan-form') {
+      const placeholder = document.createElement('div');
+      placeholder.innerHTML = '<p style="padding: 16px;">Form component - add form inputs as children</p>';
+      element.appendChild(placeholder);
+    } else {
+      // Generic placeholder for other components
+      const placeholder = document.createElement('div');
+      placeholder.style.cssText = 'padding: 16px; min-height: 60px; background: #fafafa;';
+      placeholder.innerHTML = `<p style="color: #999; font-size: 14px;">${componentMeta.displayName} component<br><small>${componentMeta.description}</small></p>`;
+      element.appendChild(placeholder);
+    }
+
+    // Add minimum sizing so it's visible
+    element.style.cssText = 'display: block; min-width: 200px; min-height: 80px; margin: 8px; border: 1px solid #ddd; border-radius: 4px; background: white;';
   }
 
   async ensureComponentLoaded(componentMeta) {
