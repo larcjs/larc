@@ -220,6 +220,63 @@ class PgCanvas extends HTMLElement {
   getComponents() {
     return this.components;
   }
+
+  async loadExample(example) {
+    // Clear existing components first
+    this.clearAll();
+
+    // Load the component registry to get metadata
+    const registryResponse = await fetch('./component-registry.json');
+    const registry = await registryResponse.json();
+
+    // Add each component from the example
+    for (const exampleComp of example.components) {
+      // Find the component metadata
+      const componentMeta = registry.components.find(c => c.name === exampleComp.name);
+      if (!componentMeta) {
+        console.warn(`Component ${exampleComp.name} not found in registry`);
+        continue;
+      }
+
+      // Wait for component to be added
+      await this.ensureComponentLoaded(componentMeta);
+
+      // Create the element
+      const element = document.createElement(componentMeta.name);
+
+      // Apply example-specific attributes
+      Object.entries(exampleComp.attributes || {}).forEach(([key, value]) => {
+        element.setAttribute(key, value);
+      });
+
+      // Add demo content
+      this.addDemoContent(element, componentMeta);
+
+      // Make it selectable
+      element.classList.add('pg-component');
+      element.dataset.componentId = crypto.randomUUID();
+      element.dataset.componentMeta = JSON.stringify(componentMeta);
+
+      // Click to select
+      element.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.selectComponent(element);
+      });
+
+      // Add to canvas
+      const previewArea = this.querySelector('#preview-area');
+      const emptyState = previewArea.querySelector('.empty-state');
+      if (emptyState) emptyState.remove();
+
+      previewArea.appendChild(element);
+      this.components.push(element);
+    }
+
+    // Notify canvas changed
+    this.dispatchEvent(new CustomEvent('canvas-changed', {
+      bubbles: true
+    }));
+  }
 }
 
 customElements.define('pg-canvas', PgCanvas);

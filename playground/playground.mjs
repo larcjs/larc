@@ -11,6 +11,9 @@ import './components/pg-properties.mjs';
 import './components/pg-exporter.mjs';
 import './components/pg-bus-monitor.mjs';
 
+// Import examples
+import { getAllExamples, getExample } from './examples.mjs';
+
 // Pan-bus is loaded via the <pan-bus> element in index.html
 
 // Setup header button functionality
@@ -20,6 +23,30 @@ document.addEventListener('DOMContentLoaded', () => {
   const busPanel = document.getElementById('bus-panel');
   const toggleCodeBtn = document.getElementById('toggle-code');
   const toggleBusBtn = document.getElementById('toggle-bus-monitor');
+  const exampleSelect = document.getElementById('load-example');
+  const canvas = document.querySelector('pg-canvas');
+
+  // Populate examples dropdown
+  getAllExamples().forEach(example => {
+    const option = document.createElement('option');
+    option.value = example.id;
+    option.textContent = `${example.name} - ${example.description}`;
+    exampleSelect.appendChild(option);
+  });
+
+  // Load example when selected
+  exampleSelect.addEventListener('change', async (e) => {
+    const exampleId = e.target.value;
+    if (!exampleId) return;
+
+    const example = getExample(exampleId);
+    if (example && canvas) {
+      await canvas.loadExample(example);
+    }
+
+    // Reset dropdown
+    e.target.value = '';
+  });
 
   // Toggle code exporter
   toggleCodeBtn.addEventListener('click', () => {
