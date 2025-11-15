@@ -2,6 +2,84 @@
 
 **Zero-build, browser-native web component framework with PAN (Page Area Network) messaging.**
 
+---
+
+## 💡 The PAN Philosophy
+
+**One line. Zero builds. Pure standards.**
+
+```html
+<script type="module" src="/src/pan.mjs"></script>
+
+<!-- That's it. Now just use components declaratively: -->
+<pan-theme-provider theme="auto"></pan-theme-provider>
+<pan-card title="Hello World">
+  <pan-button>Click me</pan-button>
+</pan-card>
+```
+
+### How It Works
+
+**No imports. No bundlers. No lock-in.**
+
+1. **Include the autoloader** - One `<script>` tag
+2. **Use HTML elements** - Write components declaratively in markup
+3. **Configure with attributes** - All settings via HTML attributes
+4. **Components auto-load** - Discovered and loaded automatically as they enter the viewport
+
+The autoloader:
+- Scans your page for undefined custom elements
+- Loads the corresponding `.mjs` file automatically (`<pan-card>` → `pan-card.mjs`)
+- Uses IntersectionObserver for progressive loading
+- Watches for dynamically added elements with MutationObserver
+
+### Why PAN?
+
+**Built with web standards. Interoperable. Loosely coupled. Zero lock-in.**
+
+- ✨ **Standards-based** - Native Web Components, ES Modules, no proprietary tooling
+- 🎯 **Declarative** - Components are HTML elements with attributes, not JavaScript APIs
+- 🔌 **Loosely coupled** - PAN message bus coordinates components without tight dependencies
+- 🌐 **Interoperable** - Works with React, Vue, Angular, Svelte, or vanilla JS
+- 🚫 **No lock-in** - Use one component or all of them, mix with anything
+- 💾 **No build step** - Write code, refresh browser, see changes instantly
+- ❤️ **Built with love** - For developers who love the web platform
+
+### The Architecture
+
+**Two layers. Infinite possibilities.**
+
+1. **`core/`** - PAN messaging bus and infrastructure
+   - `pan-bus` - DOM-native pub/sub for component communication
+   - Progressive loading system
+   - Zero dependencies
+
+2. **`components/`** (soon: `ui/`) - Reusable UI components
+   - Theme system, forms, data tables, charts
+   - File system, markdown editor, routing
+   - All loosely coupled via PAN messages
+
+3. **Your app** - Just HTML, attributes, and optional JavaScript
+   - No framework required
+   - No build configuration
+   - No package.json gymnastics
+
+```html
+<!-- Components communicate via PAN bus without knowing about each other -->
+<pan-bus></pan-bus>
+
+<!-- This publishes theme changes -->
+<pan-theme-toggle></pan-theme-toggle>
+
+<!-- These subscribe and react to theme changes -->
+<pan-card>I change themes automatically</pan-card>
+<pan-data-table>Me too!</pan-data-table>
+```
+
+**This is web development as it should be.**
+
+---
+
 ## 📦 Repositories
 
 This is the **meta-repository** containing shared configuration. Each component is in its own repository:
