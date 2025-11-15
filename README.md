@@ -54,7 +54,7 @@ The autoloader:
    - Progressive loading system
    - Zero dependencies
 
-2. **`components/`** (soon: `ui/`) - Reusable UI components
+2. **`ui/`** - Reusable UI components
    - Theme system, forms, data tables, charts
    - File system, markdown editor, routing
    - All loosely coupled via PAN messages
@@ -88,8 +88,8 @@ This is the **meta-repository** containing shared configuration. Each component 
 |------------|-------------|-------|
 | **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
 | **[@larcjs/core-types](https://github.com/larcjs/core-types)** | TypeScript types for core | [NPM](https://npmjs.com/package/@larcjs/core-types) |
-| **[@larcjs/components](https://github.com/larcjs/components)** | UI components library | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
-| **[@larcjs/components-types](https://github.com/larcjs/components-types)** | TypeScript types for components | [NPM](https://npmjs.com/package/@larcjs/components-types) |
+| **[@larcjs/ui](https://github.com/larcjs/components)** | UI components library | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
+| **[@larcjs/ui-types](https://github.com/larcjs/components-types)** | TypeScript types for UI components | [NPM](https://npmjs.com/package/@larcjs/components-types) |
 | **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | [Examples](https://larcjs.github.io/examples/) |
 | **[@larcjs/site](https://github.com/larcjs/site)** | Documentation website | [Live Site](https://larcjs.github.io/site/) |
 | **[@larcjs/devtools](https://github.com/larcjs/devtools)** | Chrome DevTools extension | [Docs](https://github.com/larcjs/devtools) |
@@ -163,7 +163,7 @@ This repository contains the centralized configuration system for path managemen
 
 The `larc-config.mjs` file provides:
 
-- **Path Aliases**: `@larc/core`, `@larc/components`, etc.
+- **Path Aliases**: `@larc/core`, `@larc/ui`, etc.
 - **Environment Detection**: Auto-switches between local dev and CDN
 - **Component Mappings**: Pre-configured paths for all components
 - **Path Resolver**: Utilities for dynamic imports
@@ -199,7 +199,7 @@ In production, the config automatically uses CDN URLs:
 
 ```javascript
 '@larc/core': 'https://unpkg.com/@larcjs/core@1.0.0/src'
-'@larc/components': 'https://unpkg.com/@larcjs/components@1.0.0/src'
+'@larc/ui': 'https://unpkg.com/@larcjs/ui@1.0.0/src'
 ```
 
 ## 📂 Structure
@@ -212,8 +212,8 @@ larc-repos/                   # This repository (config)
 ├── test-config.html         # Configuration test page
 ├── core/                    # @larcjs/core (separate repo)
 ├── core-types/              # @larcjs/core-types (separate repo)
-├── components/              # @larcjs/components (separate repo)
-├── components-types/        # @larcjs/components-types (separate repo)
+├── ui/                      # @larcjs/ui (separate repo)
+├── ui-types/                # @larcjs/ui-types (separate repo)
 ├── playground/              # Interactive component explorer
 │   ├── components/          # Playground UI components
 │   ├── component-registry.json  # Auto-generated metadata
@@ -228,7 +228,7 @@ larc-repos/                   # This repository (config)
 Each repository has its own contribution guidelines:
 
 - [core/CONTRIBUTING.md](https://github.com/larcjs/core/blob/main/CONTRIBUTING.md)
-- [components/CONTRIBUTING.md](https://github.com/larcjs/components/blob/main/CONTRIBUTING.md)
+- [ui/CONTRIBUTING.md](https://github.com/larcjs/components/blob/main/CONTRIBUTING.md)
 - [examples/CONTRIBUTING.md](https://github.com/larcjs/examples/blob/main/CONTRIBUTING.md)
 
 ## 📄 License
