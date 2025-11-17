@@ -38,9 +38,11 @@ jobs:
       - name: Create deployment directory
         run: |
           mkdir -p _site
-          cp -r playground/* _site/
+          cp -r playground _site/
           cp -r core _site/
           cp -r ui _site/
+          cp -r examples _site/
+          cp larc-config.mjs _site/ 2>/dev/null || echo "No larc-config.mjs found"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
