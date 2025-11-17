@@ -7,7 +7,7 @@ on:
     paths:
       - 'playground/**'
       - 'core/**'
-      - 'components/**'
+      - 'ui/**'
       - '.github/workflows/deploy-playground.yml'
   workflow_dispatch:
 
@@ -40,7 +40,7 @@ jobs:
           mkdir -p _site
           cp -r playground/* _site/
           cp -r core _site/
-          cp -r components _site/
+          cp -r ui _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
