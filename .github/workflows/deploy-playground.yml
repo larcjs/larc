@@ -38,11 +38,12 @@ jobs:
       - name: Create deployment directory
         run: |
           mkdir -p _site
-          cp -r playground _site/
-          cp -r core _site/
-          cp -r ui _site/
-          cp -r examples _site/
-          cp larc-config.mjs _site/ 2>/dev/null || echo "No larc-config.mjs found"
+          # Copy directories using rsync to handle symlinks and nested structures
+          rsync -av --exclude='.git' --exclude='.github' playground/ _site/playground/
+          rsync -av --exclude='.git' core/ _site/core/
+          rsync -av --exclude='.git' ui/ _site/ui/
+          # Copy config if it exists
+          [ -f larc-config.mjs ] && cp larc-config.mjs _site/ || echo "No larc-config.mjs found"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
