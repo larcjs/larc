@@ -1,0 +1,65 @@
+{
+  "name": "@larcjs/react-adapter",
+  "version": "1.0.0",
+  "description": "React hooks for LARC PAN bus integration",
+  "type": "module",
+  "main": "./src/index.js",
+  "module": "./src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.cjs"
+    }
+  },
+  "files": [
+    "src/**/*.js",
+    "src/**/*.d.ts",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "larc",
+    "pan",
+    "react",
+    "hooks",
+    "web-components",
+    "message-bus",
+    "pubsub"
+  ],
+  "author": "LARC",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/react-adapter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/larcjs/react-adapter/issues"
+  },
+  "homepage": "https://github.com/larcjs/react-adapter#readme",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "@larcjs/core": "^1.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@larcjs/core": {
+      "optional": false
+    }
+  },
+  "devDependencies": {
+    "@larcjs/core-types": "^1.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/react-hooks": "^8.0.1",
+    "@vitejs/plugin-react": "^4.2.0",
+    "jsdom": "^23.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0"
+  }
+}
