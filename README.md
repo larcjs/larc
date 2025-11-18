@@ -145,8 +145,8 @@ This repository contains the centralized configuration system for path managemen
 <pan-card>Hello World</pan-card>
 ```
 
-📚 **Full documentation:** [`README-CONFIG.md`](./README-CONFIG.md)
-🚀 **Quick start:** [`QUICK-START-CONFIG.md`](./QUICK-START-CONFIG.md)
+📚 **Full documentation:** [`README-CONFIG.md`](./docs/README-CONFIG.md)
+🚀 **Quick start:** [`QUICK-START-CONFIG.md`](./docs/QUICK-START-CONFIG.md)
 🧪 **Test page:** [`test-config.html`](./test-config.html)
 
 ## 🎯 Key Features
@@ -207,9 +207,11 @@ In production, the config automatically uses CDN URLs:
 ```
 larc-repos/                   # This repository (config)
 ├── larc-config.mjs          # Central configuration
-├── README-CONFIG.md         # Config documentation
-├── QUICK-START-CONFIG.md    # Quick reference
 ├── test-config.html         # Configuration test page
+├── docs/                    # Documentation
+│   ├── README-CONFIG.md     # Config documentation
+│   ├── QUICK-START-CONFIG.md # Quick reference
+│   └── ...                  # Other docs
 ├── core/                    # @larcjs/core (separate repo)
 ├── core-types/              # @larcjs/core-types (separate repo)
 ├── ui/                      # @larcjs/ui (separate repo)
