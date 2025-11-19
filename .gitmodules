@@ -16,3 +16,9 @@
 [submodule "apps"]
 	path = apps
 	url = git@github.com:larcjs/apps.git
+[submodule "components-types"]
+	path = components-types
+	url = git@github.com:larcjs/components-types.git
+[submodule "core-types"]
+	path = core-types
+	url = git@github.com:larcjs/core-types.git
