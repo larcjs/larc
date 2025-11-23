@@ -104,46 +104,106 @@ class PgCanvas extends HTMLElement {
   addDemoContent(element, componentMeta) {
     const name = componentMeta.name;
 
-    // Add a label showing the component name for easy identification
-    const label = document.createElement('div');
-    label.className = 'pg-component-label';
-    label.textContent = componentMeta.displayName;
-    label.style.cssText = 'padding: 8px; background: #f0f0f0; border-bottom: 1px solid #ddd; font-size: 12px; font-weight: 600; color: #666;';
-    element.appendChild(label);
+    // Add a subtle badge showing the component name for easy identification
+    const badge = document.createElement('div');
+    badge.className = 'pg-component-badge';
+    badge.textContent = `${componentMeta.icon} ${componentMeta.displayName}`;
+    element.appendChild(badge);
 
-    // Add type-specific demo content
+    // Add sensible default content for common components
     if (name === 'pan-card') {
-      element.setAttribute('header', 'Card Header');
-      const content = document.createElement('p');
-      content.textContent = 'This is card content. Edit attributes in the properties panel.';
-      content.style.padding = '16px';
+      if (!element.getAttribute('header')) {
+        element.setAttribute('header', 'Card Title');
+      }
+      const content = document.createElement('div');
+      content.style.padding = '1rem';
+      content.innerHTML = '<p>Card content goes here. Select this component to edit its properties.</p>';
       element.appendChild(content);
-    } else if (name === 'pan-table') {
-      const placeholder = document.createElement('div');
-      placeholder.innerHTML = '<p style="padding: 16px;">Table component - configure data source in properties</p>';
-      element.appendChild(placeholder);
+    } else if (name === 'pan-button' || name.includes('button')) {
+      if (!element.textContent.trim()) {
+        element.textContent = 'Button';
+      }
+    } else if (name === 'pan-input' || name.includes('input')) {
+      if (!element.getAttribute('placeholder')) {
+        element.setAttribute('placeholder', 'Enter text...');
+      }
     } else if (name === 'pan-tabs') {
-      const placeholder = document.createElement('div');
-      placeholder.innerHTML = '<p style="padding: 16px;">Tabs component - add tab content as children</p>';
-      element.appendChild(placeholder);
-    } else if (name === 'pan-modal') {
-      const placeholder = document.createElement('div');
-      placeholder.innerHTML = '<p style="padding: 16px;">Modal component - set "open" attribute to show</p>';
-      element.appendChild(placeholder);
+      const content = document.createElement('div');
+      content.style.padding = '1rem';
+      content.innerHTML = `
+        <div style="display: flex; gap: 0.5rem; border-bottom: 2px solid #e0e0e0; padding-bottom: 0.5rem; margin-bottom: 1rem;">
+          <button style="padding: 0.5rem 1rem; border: none; background: #667eea; color: white; border-radius: 4px; cursor: pointer;">Tab 1</button>
+          <button style="padding: 0.5rem 1rem; border: none; background: #f0f0f0; color: #666; border-radius: 4px; cursor: pointer;">Tab 2</button>
+          <button style="padding: 0.5rem 1rem; border: none; background: #f0f0f0; color: #666; border-radius: 4px; cursor: pointer;">Tab 3</button>
+        </div>
+        <div style="padding: 1rem;">
+          <p>Tab content will appear here.</p>
+        </div>
+      `;
+      element.appendChild(content);
+    } else if (name === 'pan-table' || name === 'pan-data-table') {
+      const table = document.createElement('div');
+      table.style.padding = '1rem';
+      table.innerHTML = `
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: #f5f5f5; border-bottom: 2px solid #e0e0e0;">
+              <th style="padding: 0.75rem; text-align: left;">Column 1</th>
+              <th style="padding: 0.75rem; text-align: left;">Column 2</th>
+              <th style="padding: 0.75rem; text-align: left;">Column 3</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+              <td style="padding: 0.75rem;">Data 1</td>
+              <td style="padding: 0.75rem;">Data 2</td>
+              <td style="padding: 0.75rem;">Data 3</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+              <td style="padding: 0.75rem;">Data 4</td>
+              <td style="padding: 0.75rem;">Data 5</td>
+              <td style="padding: 0.75rem;">Data 6</td>
+            </tr>
+          </tbody>
+        </table>
+      `;
+      element.appendChild(table);
     } else if (name === 'pan-form') {
-      const placeholder = document.createElement('div');
-      placeholder.innerHTML = '<p style="padding: 16px;">Form component - add form inputs as children</p>';
-      element.appendChild(placeholder);
+      const form = document.createElement('div');
+      form.style.padding = '1rem';
+      form.innerHTML = `
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Name</label>
+          <input type="text" placeholder="Enter name" style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px;">
+        </div>
+        <div style="margin-bottom: 1rem;">
+          <label style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Email</label>
+          <input type="email" placeholder="Enter email" style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px;">
+        </div>
+        <button style="padding: 0.5rem 1.5rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">Submit</button>
+      `;
+      element.appendChild(form);
+    } else if (name === 'pan-modal') {
+      const modal = document.createElement('div');
+      modal.style.cssText = 'border: 2px solid #667eea; border-radius: 8px; padding: 1.5rem; background: white;';
+      modal.innerHTML = `
+        <h3 style="margin: 0 0 1rem 0; color: #333;">Modal Title</h3>
+        <p style="margin: 0 0 1rem 0; color: #666;">This is a modal dialog. Set the "open" attribute to show it.</p>
+        <button style="padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
+      `;
+      element.appendChild(modal);
     } else {
-      // Generic placeholder for other components
-      const placeholder = document.createElement('div');
-      placeholder.style.cssText = 'padding: 16px; min-height: 60px; background: #fafafa;';
-      placeholder.innerHTML = `<p style="color: #999; font-size: 14px;">${componentMeta.displayName} component<br><small>${componentMeta.description}</small></p>`;
-      element.appendChild(placeholder);
+      // For components without specific content, just add a hint
+      const hint = document.createElement('div');
+      hint.className = 'pg-component-hint';
+      hint.style.cssText = 'padding: 1.5rem; color: #999; font-size: 0.875rem; text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem;';
+      hint.innerHTML = `
+        <div style="font-weight: 500;">${componentMeta.displayName}</div>
+        <div style="font-size: 0.75rem; color: #bbb;">${componentMeta.description}</div>
+        <div style="font-size: 0.75rem; color: #bbb;">Configure in properties panel →</div>
+      `;
+      element.appendChild(hint);
     }
-
-    // Add minimum sizing so it's visible
-    element.style.cssText = 'display: block; min-width: 200px; min-height: 80px; margin: 8px; border: 1px solid #ddd; border-radius: 4px; background: white;';
   }
 
   async ensureComponentLoaded(componentMeta) {

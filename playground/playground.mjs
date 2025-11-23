@@ -17,7 +17,7 @@ import { getAllExamples, getExample } from './examples.mjs';
 // Pan-bus is loaded via the <pan-bus> element in index.html
 
 // Setup header button functionality
-document.addEventListener('DOMContentLoaded', () => {
+function setupPlayground() {
   const bottomPanel = document.getElementById('bottom-panel');
   const codePanel = document.getElementById('code-panel');
   const busPanel = document.getElementById('bus-panel');
@@ -26,8 +26,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const exampleSelect = document.getElementById('load-example');
   const canvas = document.querySelector('pg-canvas');
 
+  if (!exampleSelect || !canvas) {
+    console.log('Waiting for DOM elements...');
+    return;
+  }
+
   // Populate examples dropdown
-  getAllExamples().forEach(example => {
+  console.log('Loading examples into dropdown...');
+  const allExamples = getAllExamples();
+  console.log(`Found ${allExamples.length} examples`);
+
+  allExamples.forEach(example => {
     const option = document.createElement('option');
     option.value = example.id;
     option.textContent = `${example.name} - ${example.description}`;
@@ -77,4 +86,12 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleBusBtn.textContent = 'PAN Monitor';
     }
   });
-});
+}
+
+// Call setup when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', setupPlayground);
+} else {
+  // DOM already loaded (module scripts are deferred)
+  setupPlayground();
+}

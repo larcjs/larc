@@ -29,19 +29,19 @@ const isDevelopment = window.location.hostname === 'localhost' ||
  */
 export const aliases = {
   '@larc/core': isDevelopment
-    ? './core/src'
+    ? '/core/src'
     : 'https://unpkg.com/@larcjs/core@1.0.0/src',
 
   '@larc/components': isDevelopment
-    ? './components/src'
+    ? '/ui/src'
     : 'https://unpkg.com/@larcjs/components@1.0.0/src',
 
   '@larc/examples': isDevelopment
-    ? './examples'
+    ? '/examples'
     : 'https://unpkg.com/@larcjs/examples@1.0.0',
 
   '@larc/site': isDevelopment
-    ? './site'
+    ? '/site'
     : 'https://larcjs.github.io/site',
 };
 
@@ -50,11 +50,11 @@ export const aliases = {
  */
 export const basePaths = {
   root: '/',
-  core: './core/src',
-  components: './components/src',
-  examples: './examples',
-  site: './site',
-  assets: './examples/assets',
+  core: '/core/src',
+  components: '/ui/src',
+  examples: '/examples',
+  site: '/site',
+  assets: '/examples/assets',
 };
 
 /**
@@ -177,7 +177,7 @@ export const paths = {
  */
 export const autoloadConfig = {
   baseUrl: null,  // Use relative paths
-  componentsPath: aliases['@larc/components'] + '/components/',
+  componentsPath: '/ui/src/components/',
   extension: '.mjs',
   rootMargin: 600,
 
