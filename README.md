@@ -46,8 +46,11 @@ Web standards give you 80% of what you need (Custom Elements, Shadow DOM, ES Mod
 - 🔌 **Loosely coupled** - PAN message bus solves the Web Component "silo problem"
 - 🌐 **True interoperability** - Mix React, Vue, and LARC components on the same page
 - 🚫 **No lock-in** - Use one component or all of them, mix with anything
-- 💾 **No build step** - Write code, refresh browser, see changes instantly
+- 💾 **Zero-build development** - Write code, refresh browser, see changes instantly
+- 🚀 **Production-ready builds** - Optimize with your preferred build tools when deploying
 - ❤️ **Built for pragmatists** - Solve real problems without dogma
+
+> **Philosophy:** LARC is designed for zero-build **development** while fully supporting optimized builds for **production**. Fast iteration during development, optimized delivery in production. See [Development Philosophy](./DEVELOPMENT_PHILOSOPHY.md) for details.
 
 **Without PAN, Web Components are silos.** Every component needs custom integration code, negating reusability. PAN provides standardized messaging so components coordinate without knowing about each other.
 
