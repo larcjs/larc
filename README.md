@@ -160,11 +160,12 @@ This repository contains the centralized configuration system for path managemen
 - ✅ **Zero Build** - No webpack, no babel, just native ES modules
 - ✅ **Auto-Loading** - Components load on-demand as they enter viewport
 - ✅ **PAN Messaging** - DOM-native pub/sub for component communication
+- ✅ **Advanced State Management** - Cross-tab sync, offline-first, persistence, validation, undo/redo
 - ✅ **Framework Friendly** - Use with React, Vue, Angular - reduce your bundle by 60%+
 - ✅ **Config System** - Centralized path management with environment detection
 - ✅ **CDN Ready** - Automatically switches dev/prod paths
 - ✅ **TypeScript Support** - Optional type definitions for full IDE support
-- ✅ **Interactive Playground** - Explore and test 49+ components visually
+- ✅ **Interactive Playground** - Explore and test 57+ components visually
 - ✅ **Wide Browser Support** - Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ ([compatibility matrix](./docs/BROWSER-COMPATIBILITY.md))
 
 ## 💡 Use Cases
@@ -218,6 +219,67 @@ In production, the config automatically uses CDN URLs:
 '@larc/core': 'https://unpkg.com/@larcjs/core@1.0.0/src'
 '@larc/ui': 'https://unpkg.com/@larcjs/ui@1.0.0/src'
 ```
+
+## 🔄 State Management
+
+LARC includes a comprehensive suite of state management components for building modern, offline-first applications:
+
+### Core Components
+
+- **`<pan-state-sync>`** - Cross-tab state synchronization via BroadcastChannel
+- **`<pan-computed-state>`** - Derived state with automatic dependency tracking
+- **`<pan-offline-sync>`** - Offline-first with automatic queue and sync
+- **`<pan-persistence-strategy>`** - Declarative persistence routing (memory, localStorage, sessionStorage, IndexedDB)
+- **`<pan-schema-validator>`** - Runtime JSON Schema validation (no build tools)
+- **`<pan-undo-redo>`** - Time-travel debugging with history management
+- **Enhanced `<pan-inspector>`** - State tree visualization, metrics, and debugging
+
+### Features
+
+✨ **Cross-Tab Sync** - State stays synchronized across browser tabs automatically
+📡 **Offline-First** - Queue mutations when offline, sync when reconnected
+💾 **Flexible Persistence** - Route state to different storage backends with TTL support
+✓ **Runtime Validation** - JSON Schema validation without build tooling
+↶↷ **Undo/Redo** - Built-in time-travel debugging
+🎯 **Zero Build** - Everything works directly in browsers
+
+### Quick Example
+
+```html
+<script type="module" src="/core/src/pan.mjs"></script>
+
+<pan-bus></pan-bus>
+
+<!-- Persistence -->
+<pan-persistence-strategy auto-hydrate>
+  <strategy topics="todos.*" storage="localStorage"></strategy>
+</pan-persistence-strategy>
+
+<!-- Cross-tab sync -->
+<pan-state-sync channel="myapp" topics="todos.*"></pan-state-sync>
+
+<!-- Offline support -->
+<pan-offline-sync topics="todos.*" endpoints='{"todos.*": "/api/todos"}'></pan-offline-sync>
+
+<!-- Computed state -->
+<pan-computed-state sources="todos.list" output="todos.stats" retain>
+  <script>
+    (todos) => ({
+      total: todos.length,
+      completed: todos.filter(t => t.completed).length
+    })
+  </script>
+</pan-computed-state>
+
+<!-- Undo/redo -->
+<pan-undo-redo topics="todos.*" max-history="50" channel="history"></pan-undo-redo>
+```
+
+### Documentation
+
+📖 **[State Management Patterns Guide](./STATE_MANAGEMENT_README.md)** - Complete documentation and patterns
+📘 **[API Reference](./site/docs/state-management-api.md)** - Detailed API documentation
+🎮 **[Live Demo](./examples/offline-todo-app.html)** - Offline-first todo app with all features
 
 ## 📂 Structure
 
