@@ -41,6 +41,9 @@
     "url": "https://github.com/larcjs/react-adapter/issues"
   },
   "homepage": "https://github.com/larcjs/react-adapter#readme",
+  "publishConfig": {
+    "access": "public"
+  },
   "peerDependencies": {
     "react": "^18.0.0",
     "@larcjs/core": "^1.1.0"
