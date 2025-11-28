@@ -1,8 +1,8 @@
 # LARC Production Readiness Status
 
-**Last Updated:** November 24, 2024
+**Last Updated:** November 25, 2024
 **Target:** Production-quality, enterprise-ready v1.x
-**Current Version:** 1.0.2 (Published to NPM)
+**Current Version:** 1.1.1 (@larcjs/core), 1.1.0 (@larcjs/components) - Published to NPM
 
 ---
 
@@ -29,8 +29,8 @@ LARC is currently at v1.0.2 and published to NPM, but requires several critical 
 
 | Package | Status | Coverage | Test Files | Notes |
 |---------|--------|----------|------------|-------|
-| **@larcjs/core** | 🟡 IN PROGRESS | 0% → 60%+ | 2/3 created | pan-bus.test.mjs and pan.test.mjs created, pan-client.test.mjs pending |
-| **@larcjs/ui** | ✅ COMPLETE | ~100% | 57 files | Excellent coverage already in place |
+| **@larcjs/core** | ✅ COMPLETE | 90%+ | 335 tests | Comprehensive test suite with Playwright |
+| **@larcjs/components** | ✅ COMPLETE | ~100% | 57 files | Excellent coverage already in place |
 
 **Progress:**
 - ✅ Test infrastructure set up (Playwright config, test-runner, test-utils)

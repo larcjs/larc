@@ -95,10 +95,10 @@ This is the **meta-repository** containing shared configuration. Each component 
 
 | Repository | Description | Links |
 |------------|-------------|-------|
-| **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
-| **[@larcjs/core-types](https://github.com/larcjs/core-types)** | TypeScript types for core | [NPM](https://npmjs.com/package/@larcjs/core-types) |
-| **[@larcjs/ui](https://github.com/larcjs/components)** | UI components library | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
-| **[@larcjs/ui-types](https://github.com/larcjs/components-types)** | TypeScript types for UI components | [NPM](https://npmjs.com/package/@larcjs/components-types) |
+| **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus (v1.1.1) | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
+| **[@larcjs/core-types](https://github.com/larcjs/core-types)** | TypeScript types for core (v1.1.0) | [NPM](https://npmjs.com/package/@larcjs/core-types) |
+| **[@larcjs/components](https://github.com/larcjs/components)** | UI components library (v1.1.0) | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
+| **[@larcjs/components-types](https://github.com/larcjs/components-types)** | TypeScript types for UI components (v1.0.1) | [NPM](https://npmjs.com/package/@larcjs/components-types) |
 | **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | [Examples](https://larcjs.github.io/examples/) |
 | **[@larcjs/site](https://github.com/larcjs/site)** | Documentation website | [Live Site](https://larcjs.github.io/site/) |
 | **[@larcjs/devtools](https://github.com/larcjs/devtools)** | Chrome DevTools extension | [Docs](https://github.com/larcjs/devtools) |
@@ -219,8 +219,8 @@ All imports use relative paths in development.
 In production, the config automatically uses CDN URLs:
 
 ```javascript
-'@larc/core': 'https://unpkg.com/@larcjs/core@1.0.0/src'
-'@larc/ui': 'https://unpkg.com/@larcjs/ui@1.0.0/src'
+'@larc/core': 'https://unpkg.com/@larcjs/core@1.1.1/src'
+'@larc/components': 'https://unpkg.com/@larcjs/components@1.1.0/src'
 ```
 
 ## 🔄 State Management

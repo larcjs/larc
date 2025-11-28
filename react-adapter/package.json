@@ -43,7 +43,7 @@
   "homepage": "https://github.com/larcjs/react-adapter#readme",
   "peerDependencies": {
     "react": "^18.0.0",
-    "@larcjs/core": "^1.0.0"
+    "@larcjs/core": "^1.1.0"
   },
   "peerDependenciesMeta": {
     "@larcjs/core": {
@@ -51,9 +51,8 @@
     }
   },
   "devDependencies": {
-    "@larcjs/core-types": "^1.0.0",
+    "@larcjs/core-types": "^1.1.0",
     "@testing-library/react": "^14.0.0",
-    "@testing-library/react-hooks": "^8.0.1",
     "@vitejs/plugin-react": "^4.2.0",
     "jsdom": "^23.0.0",
     "react": "^18.2.0",

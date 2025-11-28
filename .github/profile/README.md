@@ -1,6 +1,6 @@
 # LARC — Lightweight Asynchronous Relay Core
 
-[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/larcjs/core)
+[![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)](https://github.com/larcjs/core)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/larcjs/core/blob/main/LICENSE)
 [![Status](https://img.shields.io/badge/status-production--ready-brightgreen.svg)](https://github.com/larcjs/core)
 
@@ -13,8 +13,8 @@ LARC implements the PAN (Page Area Network) messaging protocol — a framework-a
 ## 🌟 Key Features
 
 - 🚀 **Zero Build Required** — Drop-in `<pan-bus>` element, no bundler needed
-- 🔌 **Framework Agnostic** — Works with vanilla JS, React, Vue, Lit, Angular
-- 🎯 **Lightweight** — ~12KB core, components load on demand
+- 🔌 **Framework Complement** — Reduce React/Vue bundles by 60%+, keep frameworks for complex UIs
+- 🎯 **Lightweight** — ~5KB core, components load on demand
 - ⚡ **High Performance** — 300k+ messages/second, zero memory leaks
 - 🔒 **Security Audited** — Production-ready with comprehensive security review
 - 🛠️ **DevTools** — Chrome extension for debugging message flows
@@ -25,10 +25,10 @@ LARC implements the PAN (Page Area Network) messaging protocol — a framework-a
 
 | Package | Description | Version | Links |
 |---------|-------------|---------|-------|
-| **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | 1.0.0 | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
-| **[@larcjs/components](https://github.com/larcjs/components)** | UI components library | 1.0.0 | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
+| **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | 1.1.1 | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
+| **[@larcjs/components](https://github.com/larcjs/components)** | UI components library | 1.1.0 | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
 | **[@larcjs/devtools](https://github.com/larcjs/devtools)** | Chrome DevTools extension | 1.0.0 | [Chrome Store](https://chrome.google.com/webstore) · [Docs](https://github.com/larcjs/devtools) |
-| **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | 1.0.0 | [Examples](https://larcjs.github.io/examples/) · [Apps](https://github.com/larcjs/examples/tree/main/apps) |
+| **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | 1.0.1 | [Examples](https://larcjs.github.io/examples/) · [Apps](https://github.com/larcjs/examples/tree/main/apps) |
 | **[@larcjs/site](https://github.com/larcjs/site)** | Documentation website | 1.0.0 | [Live Site](https://larcjs.github.io/site/) |
 
 ---
@@ -42,7 +42,7 @@ LARC implements the PAN (Page Area Network) messaging protocol — a framework-a
 <html>
 <head>
   <meta charset="utf-8">
-  <script type="module" src="https://unpkg.com/@larcjs/core/src/pan.js"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.js"></script>
 </head>
 <body>
   <!-- Components load automatically -->
@@ -196,7 +196,6 @@ All packages are licensed under the MIT License. See individual repositories for
 - 📖 [Documentation](https://larcjs.github.io/site/)
 - 💬 [Discussions](https://github.com/orgs/larcjs/discussions)
 - 🐛 [Issue Tracker](https://github.com/larcjs/core/issues)
-- 📧 [Email](mailto:support@larc.dev)
 
 ---
 
