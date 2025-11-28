@@ -53,12 +53,37 @@ if [ ! -d ".git" ]; then
     exit 1
 fi
 
+# Check if .gitmodules uses SSH URLs and convert to HTTPS if needed
+if [ -f ".gitmodules" ]; then
+    if grep -q "git@github.com" .gitmodules; then
+        print_warning "Found SSH URLs in .gitmodules. Converting to HTTPS for better compatibility..."
+        sed -i.bak 's|git@github.com:|https://github.com/|g' .gitmodules
+        rm -f .gitmodules.bak
+        print_success "Converted submodule URLs to HTTPS"
+    fi
+fi
+
+# Sync submodule URLs with .gitmodules
+print_status "Syncing submodule URLs..."
+git submodule sync --recursive
+
 # Initialize and update submodules
 print_status "Initializing submodules..."
 git submodule init
 
 print_status "Updating submodules to latest commits..."
-git submodule update --remote --recursive
+if ! git submodule update --remote --recursive; then
+    print_error "Failed to update submodules."
+    echo ""
+    print_warning "Troubleshooting tips:"
+    echo "  1. Check your internet connection"
+    echo "  2. Verify you have access to the GitHub repositories"
+    echo "  3. If using SSH, ensure your SSH keys are configured:"
+    echo "     ${YELLOW}ssh -T git@github.com${NC}"
+    echo "  4. Try using HTTPS URLs instead (automatically done by this script)"
+    echo ""
+    exit 1
+fi
 
 print_success "All submodules updated!"
 

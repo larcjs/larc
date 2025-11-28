@@ -28,6 +28,21 @@ if not exist ".git" (
     exit /b 1
 )
 
+REM Check if .gitmodules uses SSH URLs and convert to HTTPS if needed
+if exist ".gitmodules" (
+    findstr /C:"git@github.com" .gitmodules >nul
+    if %ERRORLEVEL% EQU 0 (
+        echo [WARNING] Found SSH URLs in .gitmodules. Converting to HTTPS...
+        powershell -Command "(gc .gitmodules) -replace 'git@github.com:', 'https://github.com/' | Out-File -encoding ASCII .gitmodules"
+        echo [OK] Converted submodule URLs to HTTPS
+    )
+)
+
+REM Sync submodule URLs with .gitmodules
+echo.
+echo [*] Syncing submodule URLs...
+git submodule sync --recursive
+
 REM Initialize and update submodules
 echo.
 echo [*] Initializing submodules...
@@ -35,6 +50,18 @@ git submodule init
 
 echo [*] Updating submodules to latest commits...
 git submodule update --remote --recursive
+if %ERRORLEVEL% NEQ 0 (
+    echo.
+    echo [ERROR] Failed to update submodules.
+    echo.
+    echo Troubleshooting tips:
+    echo   1. Check your internet connection
+    echo   2. Verify you have access to the GitHub repositories
+    echo   3. If using SSH, ensure your SSH keys are configured
+    echo   4. Try using HTTPS URLs instead (automatically done by this script^)
+    echo.
+    exit /b 1
+)
 
 echo.
 echo [OK] All submodules updated!
