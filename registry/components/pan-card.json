@@ -1,0 +1,144 @@
+{
+  "name": "pan-card",
+  "displayName": "Card",
+  "description": "A flexible card component for displaying content with optional header and footer sections",
+  "category": "ui",
+  "icon": "🃏",
+  "tags": ["ui", "card", "container"],
+  "status": "stable",
+  "since": "1.0.0",
+
+  "npm": {
+    "package": "@larcjs/ui",
+    "version": "1.0.0",
+    "url": "https://www.npmjs.com/package/@larcjs/ui"
+  },
+
+  "cdn": {
+    "jsdelivr": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1.0.0/dist/index.js",
+    "unpkg": "https://unpkg.com/@larcjs/ui@1.0.0/dist/index.js",
+    "esm": "https://esm.sh/@larcjs/ui@1.0.0"
+  },
+
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/larcjs/ui"
+  },
+
+  "demo": "https://larcjs.com/playground/?component=pan-card",
+
+  "author": {
+    "name": "LARC Team",
+    "github": "larcjs"
+  },
+
+  "license": "MIT",
+
+  "verified": true,
+
+  "panTopics": [],
+
+  "attributes": [
+    {
+      "name": "header",
+      "type": "string",
+      "default": "",
+      "description": "Header text or content",
+      "required": false
+    },
+    {
+      "name": "footer",
+      "type": "string",
+      "default": "",
+      "description": "Footer text or content",
+      "required": false
+    },
+    {
+      "name": "variant",
+      "type": "string",
+      "default": "default",
+      "description": "Card variant: default, outlined, elevated",
+      "required": false
+    },
+    {
+      "name": "hoverable",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether card has hover effect",
+      "required": false
+    }
+  ],
+
+  "slots": [
+    {
+      "name": "default",
+      "description": "Main card content"
+    },
+    {
+      "name": "header",
+      "description": "Custom header content"
+    },
+    {
+      "name": "footer",
+      "description": "Custom footer content"
+    }
+  ],
+
+  "cssProperties": [
+    {
+      "name": "--card-bg",
+      "description": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "name": "--card-padding",
+      "description": "Internal padding",
+      "default": "1rem"
+    },
+    {
+      "name": "--card-border",
+      "description": "Border style",
+      "default": "1px solid #e5e7eb"
+    },
+    {
+      "name": "--card-radius",
+      "description": "Border radius",
+      "default": "0.5rem"
+    }
+  ],
+
+  "examples": [
+    {
+      "title": "Basic Card",
+      "description": "Simple card with content",
+      "code": "<pan-card>\n  <p>Card content goes here</p>\n</pan-card>"
+    },
+    {
+      "title": "Card with Header and Footer",
+      "description": "Card with header and footer sections",
+      "code": "<pan-card header=\"Card Title\" footer=\"Footer info\">\n  <p>Main content</p>\n</pan-card>"
+    },
+    {
+      "title": "Elevated Hoverable Card",
+      "description": "Card with elevation and hover effect",
+      "code": "<pan-card variant=\"elevated\" hoverable>\n  <p>Hover me!</p>\n</pan-card>"
+    }
+  ],
+
+  "dependencies": [
+    "@larcjs/core"
+  ],
+
+  "related": [
+    "pan-modal",
+    "pan-tabs"
+  ],
+
+  "quality": {
+    "score": "A",
+    "tests": true,
+    "types": true,
+    "docs": true,
+    "examples": true
+  }
+}

@@ -1,0 +1,458 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LARC Component Registry Schema",
+  "description": "Schema for LARC component registry entries",
+  "type": "object",
+  "required": ["version", "components", "categories"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "description": "Registry schema version"
+    },
+    "generated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of registry generation"
+    },
+    "components": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/component"
+      }
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/category"
+      }
+    }
+  },
+  "definitions": {
+    "component": {
+      "type": "object",
+      "required": ["name", "displayName", "category", "status"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Component tag name (e.g., 'pan-card')",
+          "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)+$"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Human-readable component name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Component description"
+        },
+        "category": {
+          "type": "string",
+          "description": "Component category ID"
+        },
+        "path": {
+          "type": "string",
+          "description": "Local file path (for internal components)"
+        },
+        "npm": {
+          "type": "object",
+          "description": "NPM package information",
+          "properties": {
+            "package": {
+              "type": "string",
+              "description": "NPM package name"
+            },
+            "version": {
+              "type": "string",
+              "description": "Package version"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "description": "NPM package URL"
+            }
+          }
+        },
+        "cdn": {
+          "type": "object",
+          "description": "CDN information",
+          "properties": {
+            "jsdelivr": {
+              "type": "string",
+              "format": "uri"
+            },
+            "unpkg": {
+              "type": "string",
+              "format": "uri"
+            },
+            "esm": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "repository": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["git", "github", "gitlab", "bitbucket"]
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            }
+          }
+        },
+        "demo": {
+          "type": "string",
+          "format": "uri",
+          "description": "Live demo URL"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Component icon (emoji or URL)"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Search tags"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["experimental", "beta", "stable", "deprecated"],
+          "description": "Component maturity status"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "Whether component is verified by LARC team",
+          "default": false
+        },
+        "quality": {
+          "type": "object",
+          "description": "Quality metrics",
+          "properties": {
+            "score": {
+              "type": "string",
+              "enum": ["A", "B", "C", "D", "F"],
+              "description": "Overall quality score"
+            },
+            "tests": {
+              "type": "boolean",
+              "description": "Has tests"
+            },
+            "types": {
+              "type": "boolean",
+              "description": "Has TypeScript types"
+            },
+            "docs": {
+              "type": "boolean",
+              "description": "Has documentation"
+            },
+            "examples": {
+              "type": "boolean",
+              "description": "Has examples"
+            }
+          }
+        },
+        "since": {
+          "type": "string",
+          "description": "Version when component was added"
+        },
+        "author": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "github": {
+              "type": "string"
+            }
+          }
+        },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier"
+        },
+        "panTopics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "PAN bus topics this component uses"
+        },
+        "attributes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attribute"
+          }
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/property"
+          }
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/method"
+          }
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
+          }
+        },
+        "slots": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/slot"
+          }
+        },
+        "cssProperties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cssProperty"
+          },
+          "description": "CSS custom properties"
+        },
+        "cssParts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/cssPart"
+          },
+          "description": "CSS shadow parts"
+        },
+        "examples": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/example"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Component dependencies"
+        },
+        "related": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Related component names"
+        },
+        "stats": {
+          "type": "object",
+          "properties": {
+            "downloads": {
+              "type": "integer",
+              "description": "Monthly NPM downloads"
+            },
+            "stars": {
+              "type": "integer",
+              "description": "GitHub stars"
+            },
+            "lastUpdated": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    },
+    "attribute": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["string", "number", "boolean", "object", "array"]
+        },
+        "default": {
+          "description": "Default value"
+        },
+        "description": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean",
+          "default": false
+        },
+        "deprecated": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "property": {
+      "type": "object",
+      "required": ["name", "type"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "readonly": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "method": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "returns": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "slot": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "cssProperty": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "default": {
+          "type": "string"
+        }
+      }
+    },
+    "cssPart": {
+      "type": "object",
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "required": ["title", "code"],
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string"
+        }
+      }
+    },
+    "category": {
+      "type": "object",
+      "required": ["id", "name"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

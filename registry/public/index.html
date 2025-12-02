@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LARC Component Registry</title>
+  <meta name="description" content="Browse and discover LARC web components">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <h1 class="logo">
+          <span class="logo-icon">📦</span>
+          <span class="logo-text">LARC Registry</span>
+        </h1>
+        <nav class="nav">
+          <a href="#components" class="nav-link">Components</a>
+          <a href="https://larcjs.com/docs" class="nav-link">Docs</a>
+          <a href="https://larcjs.com/playground" class="nav-link">Playground</a>
+          <a href="https://github.com/larcjs/registry" class="nav-link">GitHub</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="main">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="container">
+        <h2 class="hero-title">Discover LARC Components</h2>
+        <p class="hero-subtitle">Browse and use high-quality web components for the LARC framework</p>
+
+        <!-- Search -->
+        <div class="search-box">
+          <input
+            type="text"
+            id="search"
+            class="search-input"
+            placeholder="Search components..."
+            autocomplete="off"
+          >
+          <span class="search-icon">🔍</span>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats" id="stats">
+          <div class="stat-item">
+            <div class="stat-value" id="totalComponents">-</div>
+            <div class="stat-label">Components</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="totalCategories">-</div>
+            <div class="stat-label">Categories</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="verifiedCount">-</div>
+            <div class="stat-label">Verified</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters-section">
+      <div class="container">
+        <div class="filters">
+          <div class="filter-group">
+            <label class="filter-label">Category</label>
+            <div class="filter-buttons" id="categoryFilters">
+              <button class="filter-btn active" data-category="all">All</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <div class="filter-buttons" id="statusFilters">
+              <button class="filter-btn active" data-status="all">All</button>
+              <button class="filter-btn" data-status="stable">Stable</button>
+              <button class="filter-btn" data-status="beta">Beta</button>
+              <button class="filter-btn" data-status="experimental">Experimental</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Quality</label>
+            <div class="filter-buttons" id="qualityFilters">
+              <button class="filter-btn active" data-quality="all">All</button>
+              <button class="filter-btn" data-quality="A">A Grade</button>
+              <button class="filter-btn" data-quality="B">B Grade</button>
+              <button class="filter-btn" data-quality="C">C Grade</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Components Grid -->
+    <section class="components-section">
+      <div class="container">
+        <div class="components-header">
+          <h3 class="components-title">All Components</h3>
+          <div class="view-toggle">
+            <button class="view-btn active" data-view="grid">
+              <span>⊞</span> Grid
+            </button>
+            <button class="view-btn" data-view="list">
+              <span>☰</span> List
+            </button>
+          </div>
+        </div>
+
+        <div class="components-grid" id="componentsGrid">
+          <!-- Components will be loaded here -->
+        </div>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p>Loading components...</p>
+        </div>
+
+        <div class="empty-state" id="emptyState" style="display: none;">
+          <p>No components found matching your criteria</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Component Detail Modal -->
+  <div class="modal" id="componentModal">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">×</button>
+      <div id="modalBody">
+        <!-- Component details will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2025 LARC. Open source under MIT License.</p>
+      <p>
+        <a href="https://github.com/larcjs/registry" target="_blank">Contribute on GitHub</a>
+      </p>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

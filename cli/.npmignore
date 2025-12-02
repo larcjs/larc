@@ -1,0 +1,19 @@
+# Development files
+node_modules
+.DS_Store
+*.log
+.eslintrc*
+.prettierrc*
+
+# Test files
+test
+tests
+*.test.js
+*.spec.js
+
+# Documentation
+docs
+
+# Git
+.git
+.gitignore

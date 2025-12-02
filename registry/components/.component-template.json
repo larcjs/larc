@@ -1,0 +1,134 @@
+{
+  "name": "your-component-name",
+  "displayName": "Your Component Name",
+  "description": "A brief, clear description of what your component does (max 200 chars)",
+  "category": "ui",
+  "icon": "🎨",
+  "tags": ["tag1", "tag2", "tag3"],
+  "status": "stable",
+  "since": "1.0.0",
+
+  "npm": {
+    "package": "@your-username/your-component-name",
+    "version": "1.0.0",
+    "url": "https://www.npmjs.com/package/@your-username/your-component-name"
+  },
+
+  "cdn": {
+    "jsdelivr": "https://cdn.jsdelivr.net/npm/@your-username/your-component-name@1.0.0/dist/index.js",
+    "unpkg": "https://unpkg.com/@your-username/your-component-name@1.0.0/dist/index.js",
+    "esm": "https://esm.sh/@your-username/your-component-name@1.0.0"
+  },
+
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/your-username/your-component-name"
+  },
+
+  "demo": "https://your-username.github.io/your-component-name",
+
+  "author": {
+    "name": "Your Name",
+    "email": "you@example.com",
+    "url": "https://yourwebsite.com",
+    "github": "your-username"
+  },
+
+  "license": "MIT",
+
+  "panTopics": [
+    "component:event1",
+    "component:event2"
+  ],
+
+  "attributes": [
+    {
+      "name": "attribute-name",
+      "type": "string",
+      "default": "default-value",
+      "description": "Description of the attribute",
+      "required": false
+    }
+  ],
+
+  "properties": [
+    {
+      "name": "propertyName",
+      "type": "boolean",
+      "description": "Description of the property",
+      "readonly": false
+    }
+  ],
+
+  "methods": [
+    {
+      "name": "methodName",
+      "description": "Description of what the method does",
+      "parameters": [
+        {
+          "name": "param1",
+          "type": "string",
+          "description": "Parameter description"
+        }
+      ],
+      "returns": {
+        "type": "void",
+        "description": "Return value description"
+      }
+    }
+  ],
+
+  "events": [
+    {
+      "name": "custom-event",
+      "description": "Fired when something happens",
+      "detail": {
+        "type": "{ data: any }",
+        "description": "Event detail structure"
+      }
+    }
+  ],
+
+  "slots": [
+    {
+      "name": "default",
+      "description": "Main content slot"
+    }
+  ],
+
+  "cssProperties": [
+    {
+      "name": "--component-color",
+      "description": "Main color of the component",
+      "default": "#000000"
+    }
+  ],
+
+  "cssParts": [
+    {
+      "name": "container",
+      "description": "Main container element"
+    }
+  ],
+
+  "examples": [
+    {
+      "title": "Basic Usage",
+      "description": "Simple example with default settings",
+      "code": "<your-component-name></your-component-name>"
+    }
+  ],
+
+  "dependencies": [
+    "@larcjs/core"
+  ],
+
+  "related": [],
+
+  "quality": {
+    "tests": false,
+    "types": false,
+    "docs": true,
+    "examples": true
+  }
+}

@@ -1,0 +1,366 @@
+{
+  "version": "1.0.0",
+  "generated": "2025-12-01T00:48:19.456Z",
+  "components": [
+    {
+      "name": "pan-button",
+      "displayName": "Button",
+      "description": "A customizable button component with multiple variants and sizes",
+      "category": "ui",
+      "icon": "🔘",
+      "tags": [
+        "ui",
+        "button",
+        "interactive"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "npm": {
+        "package": "@larcjs/ui",
+        "version": "1.0.0",
+        "url": "https://www.npmjs.com/package/@larcjs/ui"
+      },
+      "cdn": {
+        "jsdelivr": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1.0.0/dist/index.js",
+        "unpkg": "https://unpkg.com/@larcjs/ui@1.0.0/dist/index.js",
+        "esm": "https://esm.sh/@larcjs/ui@1.0.0"
+      },
+      "repository": {
+        "type": "github",
+        "url": "https://github.com/larcjs/ui"
+      },
+      "demo": "https://larcjs.com/playground/?component=pan-button",
+      "author": {
+        "name": "LARC Team",
+        "github": "larcjs"
+      },
+      "license": "MIT",
+      "verified": true,
+      "panTopics": [
+        "button:click"
+      ],
+      "attributes": [
+        {
+          "name": "variant",
+          "type": "string",
+          "default": "primary",
+          "description": "Button variant: primary, secondary, outline, ghost",
+          "required": false
+        },
+        {
+          "name": "size",
+          "type": "string",
+          "default": "medium",
+          "description": "Button size: small, medium, large",
+          "required": false
+        },
+        {
+          "name": "disabled",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether button is disabled",
+          "required": false
+        },
+        {
+          "name": "loading",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether button shows loading state",
+          "required": false
+        },
+        {
+          "name": "topic",
+          "type": "string",
+          "default": "",
+          "description": "PAN bus topic to publish click events",
+          "required": false
+        }
+      ],
+      "events": [
+        {
+          "name": "click",
+          "description": "Fired when button is clicked",
+          "detail": {
+            "type": "MouseEvent",
+            "description": "Native click event"
+          }
+        }
+      ],
+      "slots": [
+        {
+          "name": "default",
+          "description": "Button content"
+        },
+        {
+          "name": "icon",
+          "description": "Optional icon slot"
+        }
+      ],
+      "cssProperties": [
+        {
+          "name": "--button-bg",
+          "description": "Background color",
+          "default": "#3b82f6"
+        },
+        {
+          "name": "--button-color",
+          "description": "Text color",
+          "default": "#ffffff"
+        },
+        {
+          "name": "--button-padding",
+          "description": "Internal padding",
+          "default": "0.5rem 1rem"
+        },
+        {
+          "name": "--button-radius",
+          "description": "Border radius",
+          "default": "0.375rem"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic Button",
+          "description": "Simple primary button",
+          "code": "<pan-button>Click me</pan-button>"
+        },
+        {
+          "title": "Button Variants",
+          "description": "Different button styles",
+          "code": "<pan-button variant=\"primary\">Primary</pan-button>\n<pan-button variant=\"secondary\">Secondary</pan-button>\n<pan-button variant=\"outline\">Outline</pan-button>"
+        },
+        {
+          "title": "Button Sizes",
+          "description": "Different button sizes",
+          "code": "<pan-button size=\"small\">Small</pan-button>\n<pan-button size=\"medium\">Medium</pan-button>\n<pan-button size=\"large\">Large</pan-button>"
+        },
+        {
+          "title": "With PAN Bus",
+          "description": "Button that publishes to PAN bus",
+          "code": "<pan-button topic=\"form:submit\">Submit Form</pan-button>"
+        }
+      ],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": [
+        "pan-form",
+        "pan-modal"
+      ],
+      "quality": {
+        "score": "A",
+        "tests": true,
+        "types": true,
+        "docs": true,
+        "examples": true
+      }
+    },
+    {
+      "name": "pan-card",
+      "displayName": "Card",
+      "description": "A flexible card component for displaying content with optional header and footer sections",
+      "category": "ui",
+      "icon": "🃏",
+      "tags": [
+        "ui",
+        "card",
+        "container"
+      ],
+      "status": "stable",
+      "since": "1.0.0",
+      "npm": {
+        "package": "@larcjs/ui",
+        "version": "1.0.0",
+        "url": "https://www.npmjs.com/package/@larcjs/ui"
+      },
+      "cdn": {
+        "jsdelivr": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1.0.0/dist/index.js",
+        "unpkg": "https://unpkg.com/@larcjs/ui@1.0.0/dist/index.js",
+        "esm": "https://esm.sh/@larcjs/ui@1.0.0"
+      },
+      "repository": {
+        "type": "github",
+        "url": "https://github.com/larcjs/ui"
+      },
+      "demo": "https://larcjs.com/playground/?component=pan-card",
+      "author": {
+        "name": "LARC Team",
+        "github": "larcjs"
+      },
+      "license": "MIT",
+      "verified": true,
+      "panTopics": [],
+      "attributes": [
+        {
+          "name": "header",
+          "type": "string",
+          "default": "",
+          "description": "Header text or content",
+          "required": false
+        },
+        {
+          "name": "footer",
+          "type": "string",
+          "default": "",
+          "description": "Footer text or content",
+          "required": false
+        },
+        {
+          "name": "variant",
+          "type": "string",
+          "default": "default",
+          "description": "Card variant: default, outlined, elevated",
+          "required": false
+        },
+        {
+          "name": "hoverable",
+          "type": "boolean",
+          "default": "false",
+          "description": "Whether card has hover effect",
+          "required": false
+        }
+      ],
+      "slots": [
+        {
+          "name": "default",
+          "description": "Main card content"
+        },
+        {
+          "name": "header",
+          "description": "Custom header content"
+        },
+        {
+          "name": "footer",
+          "description": "Custom footer content"
+        }
+      ],
+      "cssProperties": [
+        {
+          "name": "--card-bg",
+          "description": "Background color",
+          "default": "#ffffff"
+        },
+        {
+          "name": "--card-padding",
+          "description": "Internal padding",
+          "default": "1rem"
+        },
+        {
+          "name": "--card-border",
+          "description": "Border style",
+          "default": "1px solid #e5e7eb"
+        },
+        {
+          "name": "--card-radius",
+          "description": "Border radius",
+          "default": "0.5rem"
+        }
+      ],
+      "examples": [
+        {
+          "title": "Basic Card",
+          "description": "Simple card with content",
+          "code": "<pan-card>\n  <p>Card content goes here</p>\n</pan-card>"
+        },
+        {
+          "title": "Card with Header and Footer",
+          "description": "Card with header and footer sections",
+          "code": "<pan-card header=\"Card Title\" footer=\"Footer info\">\n  <p>Main content</p>\n</pan-card>"
+        },
+        {
+          "title": "Elevated Hoverable Card",
+          "description": "Card with elevation and hover effect",
+          "code": "<pan-card variant=\"elevated\" hoverable>\n  <p>Hover me!</p>\n</pan-card>"
+        }
+      ],
+      "dependencies": [
+        "@larcjs/core"
+      ],
+      "related": [
+        "pan-modal",
+        "pan-tabs"
+      ],
+      "quality": {
+        "score": "A",
+        "tests": true,
+        "types": true,
+        "docs": true,
+        "examples": true
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "routing",
+      "name": "Routing & Navigation",
+      "icon": "🧭",
+      "description": "Client-side routing solutions"
+    },
+    {
+      "id": "state",
+      "name": "State Management",
+      "icon": "💾",
+      "description": "Data persistence and state handling"
+    },
+    {
+      "id": "forms",
+      "name": "Forms & Input",
+      "icon": "📝",
+      "description": "Form handling and validation"
+    },
+    {
+      "id": "data",
+      "name": "Data & Connectivity",
+      "icon": "🔌",
+      "description": "API integration and data fetching"
+    },
+    {
+      "id": "ui",
+      "name": "UI Components",
+      "icon": "🎨",
+      "description": "Interface building blocks"
+    },
+    {
+      "id": "content",
+      "name": "Content & Media",
+      "icon": "📄",
+      "description": "Content display and editing"
+    },
+    {
+      "id": "auth",
+      "name": "Authentication",
+      "icon": "🔐",
+      "description": "Security and authentication"
+    },
+    {
+      "id": "theme",
+      "name": "Theming",
+      "icon": "🎭",
+      "description": "Theme management"
+    },
+    {
+      "id": "devtools",
+      "name": "Developer Tools",
+      "icon": "🔧",
+      "description": "Debugging utilities"
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "icon": "⚙️",
+      "description": "Advanced functionality"
+    }
+  ],
+  "stats": {
+    "totalComponents": 2,
+    "byCategory": {
+      "ui": 2
+    },
+    "byStatus": {
+      "stable": 2
+    },
+    "byQuality": {
+      "A": 2
+    }
+  }
+}

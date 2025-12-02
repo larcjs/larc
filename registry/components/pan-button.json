@@ -1,0 +1,165 @@
+{
+  "name": "pan-button",
+  "displayName": "Button",
+  "description": "A customizable button component with multiple variants and sizes",
+  "category": "ui",
+  "icon": "🔘",
+  "tags": ["ui", "button", "interactive"],
+  "status": "stable",
+  "since": "1.0.0",
+
+  "npm": {
+    "package": "@larcjs/ui",
+    "version": "1.0.0",
+    "url": "https://www.npmjs.com/package/@larcjs/ui"
+  },
+
+  "cdn": {
+    "jsdelivr": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1.0.0/dist/index.js",
+    "unpkg": "https://unpkg.com/@larcjs/ui@1.0.0/dist/index.js",
+    "esm": "https://esm.sh/@larcjs/ui@1.0.0"
+  },
+
+  "repository": {
+    "type": "github",
+    "url": "https://github.com/larcjs/ui"
+  },
+
+  "demo": "https://larcjs.com/playground/?component=pan-button",
+
+  "author": {
+    "name": "LARC Team",
+    "github": "larcjs"
+  },
+
+  "license": "MIT",
+
+  "verified": true,
+
+  "panTopics": [
+    "button:click"
+  ],
+
+  "attributes": [
+    {
+      "name": "variant",
+      "type": "string",
+      "default": "primary",
+      "description": "Button variant: primary, secondary, outline, ghost",
+      "required": false
+    },
+    {
+      "name": "size",
+      "type": "string",
+      "default": "medium",
+      "description": "Button size: small, medium, large",
+      "required": false
+    },
+    {
+      "name": "disabled",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether button is disabled",
+      "required": false
+    },
+    {
+      "name": "loading",
+      "type": "boolean",
+      "default": "false",
+      "description": "Whether button shows loading state",
+      "required": false
+    },
+    {
+      "name": "topic",
+      "type": "string",
+      "default": "",
+      "description": "PAN bus topic to publish click events",
+      "required": false
+    }
+  ],
+
+  "events": [
+    {
+      "name": "click",
+      "description": "Fired when button is clicked",
+      "detail": {
+        "type": "MouseEvent",
+        "description": "Native click event"
+      }
+    }
+  ],
+
+  "slots": [
+    {
+      "name": "default",
+      "description": "Button content"
+    },
+    {
+      "name": "icon",
+      "description": "Optional icon slot"
+    }
+  ],
+
+  "cssProperties": [
+    {
+      "name": "--button-bg",
+      "description": "Background color",
+      "default": "#3b82f6"
+    },
+    {
+      "name": "--button-color",
+      "description": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "name": "--button-padding",
+      "description": "Internal padding",
+      "default": "0.5rem 1rem"
+    },
+    {
+      "name": "--button-radius",
+      "description": "Border radius",
+      "default": "0.375rem"
+    }
+  ],
+
+  "examples": [
+    {
+      "title": "Basic Button",
+      "description": "Simple primary button",
+      "code": "<pan-button>Click me</pan-button>"
+    },
+    {
+      "title": "Button Variants",
+      "description": "Different button styles",
+      "code": "<pan-button variant=\"primary\">Primary</pan-button>\n<pan-button variant=\"secondary\">Secondary</pan-button>\n<pan-button variant=\"outline\">Outline</pan-button>"
+    },
+    {
+      "title": "Button Sizes",
+      "description": "Different button sizes",
+      "code": "<pan-button size=\"small\">Small</pan-button>\n<pan-button size=\"medium\">Medium</pan-button>\n<pan-button size=\"large\">Large</pan-button>"
+    },
+    {
+      "title": "With PAN Bus",
+      "description": "Button that publishes to PAN bus",
+      "code": "<pan-button topic=\"form:submit\">Submit Form</pan-button>"
+    }
+  ],
+
+  "dependencies": [
+    "@larcjs/core"
+  ],
+
+  "related": [
+    "pan-form",
+    "pan-modal"
+  ],
+
+  "quality": {
+    "score": "A",
+    "tests": true,
+    "types": true,
+    "docs": true,
+    "examples": true
+  }
+}

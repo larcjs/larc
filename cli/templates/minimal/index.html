@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LARC App</title>
+  <link rel="stylesheet" href="public/styles.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@latest/dist/index.js"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <header class="header">
+      <h1>Welcome to LARC</h1>
+      <p>Start building amazing web applications</p>
+    </header>
+
+    <main class="main">
+      <div class="card">
+        <h2>🚀 Quick Start</h2>
+        <p>Edit <code>src/app.js</code> to get started</p>
+        <ul>
+          <li>No build step required</li>
+          <li>Native ES modules</li>
+          <li>PAN bus for communication</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>📦 Add Components</h2>
+        <p>Install components from the registry:</p>
+        <pre>larc add @larcjs/ui</pre>
+      </div>
+
+      <div class="card">
+        <h2>📚 Learn More</h2>
+        <ul>
+          <li><a href="https://larcjs.com/docs">Documentation</a></li>
+          <li><a href="https://larcjs.com/components">Component Registry</a></li>
+          <li><a href="https://larcjs.com/playground">Playground</a></li>
+        </ul>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

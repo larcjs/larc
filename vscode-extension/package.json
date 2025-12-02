@@ -1,0 +1,95 @@
+{
+  "name": "larc-vscode",
+  "displayName": "LARC",
+  "description": "LARC framework support for Visual Studio Code",
+  "version": "1.0.0",
+  "publisher": "larcjs",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets",
+    "Formatters"
+  ],
+  "keywords": [
+    "larc",
+    "web-components",
+    "pan-bus"
+  ],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:html"
+  ],
+  "main": "./src/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "larc-component",
+        "aliases": ["LARC Component", "larc"],
+        "extensions": [".larc.js"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "javascript",
+        "path": "./snippets/larc-component.json"
+      },
+      {
+        "language": "html",
+        "path": "./snippets/larc-html.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "larc.newComponent",
+        "title": "LARC: New Component"
+      },
+      {
+        "command": "larc.addFromRegistry",
+        "title": "LARC: Add Component from Registry"
+      },
+      {
+        "command": "larc.viewDocs",
+        "title": "LARC: View Documentation"
+      }
+    ],
+    "configuration": {
+      "title": "LARC",
+      "properties": {
+        "larc.autoImport": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically add imports for LARC components"
+        },
+        "larc.snippetsEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable LARC code snippets"
+        },
+        "larc.registryUrl": {
+          "type": "string",
+          "default": "https://raw.githubusercontent.com/larcjs/registry/main/registry.json",
+          "description": "URL to the LARC component registry"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^2.22.0",
+    "eslint": "^8.54.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/vscode-extension.git"
+  },
+  "license": "MIT"
+}

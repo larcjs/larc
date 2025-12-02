@@ -1,0 +1,42 @@
+{
+  "LARC Import Map": {
+    "prefix": "larc-importmap",
+    "body": [
+      "<script type=\"importmap\">",
+      "{",
+      "  \"imports\": {",
+      "    \"@larcjs/core\": \"https://cdn.jsdelivr.net/npm/@larcjs/core@latest/dist/index.js\",",
+      "    \"${1:package}\": \"${2:url}\"",
+      "  }",
+      "}",
+      "</script>"
+    ],
+    "description": "Add LARC import map"
+  },
+  "LARC Module Import": {
+    "prefix": "larc-import",
+    "body": [
+      "<script type=\"module\">",
+      "  import '${1:@larcjs/core}';",
+      "  ${0}",
+      "</script>"
+    ],
+    "description": "Import LARC module"
+  },
+  "PAN Bus": {
+    "prefix": "pan-bus",
+    "body": [
+      "<pan-bus></pan-bus>"
+    ],
+    "description": "Add PAN bus element"
+  },
+  "LARC Component": {
+    "prefix": "larc-comp",
+    "body": [
+      "<${1:component-name} ${2:attribute}=\"${3:value}\">",
+      "  ${0}",
+      "</${1:component-name}>"
+    ],
+    "description": "LARC component element"
+  }
+}

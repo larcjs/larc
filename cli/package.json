@@ -1,0 +1,51 @@
+{
+  "name": "create-larc-app",
+  "version": "1.0.0",
+  "description": "CLI tool for creating and managing LARC applications",
+  "type": "module",
+  "bin": {
+    "create-larc-app": "./bin/create-larc-app.js",
+    "larc": "./bin/larc.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "templates",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "lint": "eslint bin lib"
+  },
+  "keywords": [
+    "larc",
+    "cli",
+    "web-components",
+    "scaffolding",
+    "generator"
+  ],
+  "author": "LARC Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/create-larc-app.git"
+  },
+  "homepage": "https://larcjs.com",
+  "bugs": {
+    "url": "https://github.com/larcjs/create-larc-app/issues"
+  },
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
+    "prompts": "^2.4.2",
+    "node-fetch": "^3.3.2",
+    "chokidar": "^3.5.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.54.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
