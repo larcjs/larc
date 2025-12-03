@@ -9,11 +9,13 @@ One of LARC's strengths is minimal setup requirements. You don't need complex to
 ### Requirements
 
 **Essential:**
+
 - **Modern browser** — Chrome, Firefox, Safari, or Edge (latest version)
 - **Text editor** — VS Code, Sublime Text, Atom, or any editor you prefer
 - **Local web server** — Python's SimpleHTTPServer, Node's `http-server`, or VS Code's Live Server extension
 
 **Optional but Recommended:**
+
 - **VS Code** with the LARC extension for snippets and IntelliSense
 - **Browser DevTools** familiarity for debugging
 - **Git** for version control
@@ -152,6 +154,7 @@ Open `http://localhost:3000` and you should see "Hello, LARC!" displayed.
 Install these extensions for the best experience:
 
 **LARC Extension:**
+
 - Snippets for components and PAN patterns
 - IntelliSense for LARC APIs
 - Commands for creating components
@@ -159,6 +162,7 @@ Install these extensions for the best experience:
 Install: Search "LARC" in VS Code extensions marketplace
 
 **Live Server:**
+
 - Auto-reload when files change
 - Simple local web server
 - Right-click HTML file to start
@@ -166,6 +170,7 @@ Install: Search "LARC" in VS Code extensions marketplace
 Install: Search "Live Server" by Ritwick Dey
 
 **ES6 String HTML:**
+
 - Syntax highlighting for template literals
 - Makes component templates more readable
 
@@ -176,21 +181,25 @@ Install: Search "ES6 String HTML"
 Learn these DevTools features for LARC development:
 
 **Elements Panel:**
+
 - Inspect shadow DOM (enable "Show user agent shadow DOM" in settings)
 - View Custom Elements with their properties
 - Debug CSS in shadow roots
 
 **Console:**
+
 - Subscribe to all PAN messages: `pan.subscribe('*', console.log)`
 - Test components directly: `document.querySelector('my-component')`
 - Check Custom Elements registry: `customElements.get('my-component')`
 
 **Network Panel:**
+
 - Verify ES modules load correctly
 - Check import map resolution
 - Monitor API calls
 
 **Sources Panel:**
+
 - Set breakpoints in your source code (no source maps needed!)
 - Step through component lifecycle
 - Watch variables and state
@@ -202,6 +211,7 @@ Let's build something more interesting than "Hello World"—a simple counter app
 ### Project Goal
 
 We'll create:
+
 - A counter display component
 - Increment and decrement buttons
 - A reset button
@@ -473,6 +483,7 @@ Start your local server and open the page. You should see:
 - A reset button
 
 Click the buttons. Notice how:
+
 - Components update immediately
 - State is managed centrally in `app.js`
 - Components don't reference each other directly
@@ -551,21 +562,25 @@ my-app/
 ### File Organization Principles
 
 **Components:**
+
 - One component per file
 - File name matches component name: `user-profile.js` defines `<user-profile>`
 - Keep related components together in subdirectories
 
 **Lib:**
+
 - Utilities that don't render UI
 - API clients, helpers, formatters
 - Pure functions when possible
 
 **Pages:**
+
 - Top-level route components
 - Compose smaller components
 - Handle page-specific logic
 
 **Styles:**
+
 - Global styles in `styles/`
 - Component-specific styles in Shadow DOM
 - CSS custom properties for theming
@@ -1003,23 +1018,27 @@ You now have a solid foundation for building LARC applications. The next chapter
 ## Exercises
 
 **1. Enhance the Counter App:**
+
 - Add a history component that shows past values
 - Add increment/decrement by custom amounts
 - Persist count to localStorage
 
 **2. Build a Todo List:**
+
 - Add/remove todos
 - Mark as complete/incomplete
 - Filter by status (all/active/completed)
 - Use PAN bus for state management
 
 **3. Create a Theme Switcher:**
+
 - Light/dark theme toggle
 - Publish theme changes via PAN
 - Multiple components respond to theme changes
 - Persist theme preference
 
 **4. Experiment with Import Maps:**
+
 - Try different CDNs (jsDelivr, unpkg, esm.sh)
 - Add path aliases for your components
 - Import an external library (lodash, dayjs, etc.)

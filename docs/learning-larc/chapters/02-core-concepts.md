@@ -31,6 +31,7 @@ customElements.define('hello-world', HelloWorld);
 Now you can use `<hello-world></hello-world>` in your HTML, and it works like any built-in element.
 
 **Key Points:**
+
 - Element names must contain a hyphen (e.g., `my-component`, not `mycomponent`)
 - Custom elements inherit from `HTMLElement` or another HTML element
 - They have lifecycle callbacks for creation, connection, and removal
@@ -84,6 +85,7 @@ The styles inside Shadow DOM don't leak out, and external styles don't leak in:
 ```
 
 **Key Points:**
+
 - Shadow DOM creates an isolated scope for styles and DOM
 - Use `<slot>` elements to project content from light DOM into shadow DOM
 - `mode: 'open'` makes shadow root accessible via `element.shadowRoot`
@@ -126,6 +128,7 @@ Templates define reusable chunks of markup that aren't rendered until activated:
 ```
 
 **Key Points:**
+
 - Template content is inert (scripts don't run, images don't load)
 - Templates can be defined in HTML or created programmatically
 - Clone template content before using it
@@ -373,16 +376,19 @@ class SearchResults extends HTMLElement {
 ### When to Use Each
 
 **Use DOM Events when:**
+
 - Handling user interactions (click, input, focus, etc.)
 - Communication is parent-child relationship
 - Following HTML semantics matters
 
 **Use Custom Events when:**
+
 - Component needs to notify parent/ancestors
 - Event should bubble up the DOM tree
 - Mimicking native element behavior
 
 **Use PAN Bus when:**
+
 - Components are not in parent-child relationship
 - Multiple unrelated components need the same data
 - Decoupling is more important than DOM semantics
@@ -684,6 +690,7 @@ class MyComponent extends HTMLElement {
 ```
 
 **Best practices:**
+
 - Always call `super()` first
 - Initialize instance properties
 - Attach shadow DOM
@@ -714,6 +721,7 @@ connectedCallback() {
 ```
 
 **Best practices:**
+
 - Render initial content
 - Add event listeners
 - Subscribe to events
@@ -747,6 +755,7 @@ disconnectedCallback() {
 ```
 
 **Best practices:**
+
 - Remove event listeners to prevent memory leaks
 - Unsubscribe from PAN events
 - Cancel pending async operations
@@ -774,6 +783,7 @@ attributeChangedCallback(name, oldValue, newValue) {
 ```
 
 **Best practices:**
+
 - Only observe attributes you actually use
 - Convert string values to appropriate types
 - Handle null/undefined values

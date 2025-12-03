@@ -284,6 +284,7 @@ larc publish ./components/my-component.js
 
 ### Case Study 1: E-Commerce Platform
 **Features:**
+
 - Product catalog with search and filters
 - Shopping cart with persistence
 - Checkout flow with payment integration
@@ -291,6 +292,7 @@ larc publish ./components/my-component.js
 - Order history and tracking
 
 **Architecture:**
+
 - Components: product-card, cart-widget, checkout-form
 - State: IndexedDB for cart, localStorage for preferences
 - API: REST backend with Stripe integration
@@ -298,6 +300,7 @@ larc publish ./components/my-component.js
 
 ### Case Study 2: Dashboard Application
 **Features:**
+
 - Real-time data visualization
 - User permissions and roles
 - Data export functionality
@@ -305,6 +308,7 @@ larc publish ./components/my-component.js
 - Dark mode support
 
 **Architecture:**
+
 - Components: chart-widget, data-table, filter-bar
 - State: Reactive store with WebSocket updates
 - API: GraphQL for flexible queries
@@ -312,6 +316,7 @@ larc publish ./components/my-component.js
 
 ### Case Study 3: Blog/CMS
 **Features:**
+
 - Markdown editor
 - Draft auto-save
 - Media library
@@ -319,6 +324,7 @@ larc publish ./components/my-component.js
 - Static site generation
 
 **Architecture:**
+
 - Components: markdown-editor, media-upload, post-list
 - State: IndexedDB for drafts
 - API: Headless CMS (Contentful/Strapi)
@@ -419,6 +425,7 @@ unsubscribe()
 ### From React
 
 **Concepts:**
+
 - JSX → Template literals
 - Props → Attributes/properties
 - State → Instance properties
@@ -474,6 +481,7 @@ class UserCard extends HTMLElement {
 ### From Vue
 
 **Concepts:**
+
 - Templates → Template literals
 - v-model → Two-way binding patterns
 - Computed → Getters
@@ -483,6 +491,7 @@ class UserCard extends HTMLElement {
 ### From Angular
 
 **Concepts:**
+
 - Decorators → Static properties
 - Dependency Injection → Constructor patterns
 - Services → Modules

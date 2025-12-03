@@ -1315,6 +1315,7 @@ When integrating business logic into LARC applications:
 6. **Keep components dumb** - they publish events, business logic handles the rest
 
 This separation of concerns makes your application:
+
 - **Easier to test** - business logic without rendering components
 - **More maintainable** - business rules in one place
 - **More flexible** - easy to change rules without touching UI

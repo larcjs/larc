@@ -785,6 +785,7 @@ customElements.define('hello-world', HelloWorld);
 Now you can use `<hello-world></hello-world>` in your HTML, and it works like any built-in element.
 
 **Key Points:**
+
 - Element names must contain a hyphen (e.g., `my-component`, not `mycomponent`)
 - Custom elements inherit from `HTMLElement` or another HTML element
 - They have lifecycle callbacks for creation, connection, and removal
@@ -838,6 +839,7 @@ The styles inside Shadow DOM don't leak out, and external styles don't leak in:
 ```
 
 **Key Points:**
+
 - Shadow DOM creates an isolated scope for styles and DOM
 - Use `<slot>` elements to project content from light DOM into shadow DOM
 - `mode: 'open'` makes shadow root accessible via `element.shadowRoot`
@@ -880,6 +882,7 @@ Templates define reusable chunks of markup that aren't rendered until activated:
 ```
 
 **Key Points:**
+
 - Template content is inert (scripts don't run, images don't load)
 - Templates can be defined in HTML or created programmatically
 - Clone template content before using it
@@ -1127,16 +1130,19 @@ class SearchResults extends HTMLElement {
 ### When to Use Each
 
 **Use DOM Events when:**
+
 - Handling user interactions (click, input, focus, etc.)
 - Communication is parent-child relationship
 - Following HTML semantics matters
 
 **Use Custom Events when:**
+
 - Component needs to notify parent/ancestors
 - Event should bubble up the DOM tree
 - Mimicking native element behavior
 
 **Use PAN Bus when:**
+
 - Components are not in parent-child relationship
 - Multiple unrelated components need the same data
 - Decoupling is more important than DOM semantics
@@ -1438,6 +1444,7 @@ class MyComponent extends HTMLElement {
 ```
 
 **Best practices:**
+
 - Always call `super()` first
 - Initialize instance properties
 - Attach shadow DOM
@@ -1468,6 +1475,7 @@ connectedCallback() {
 ```
 
 **Best practices:**
+
 - Render initial content
 - Add event listeners
 - Subscribe to events
@@ -1501,6 +1509,7 @@ disconnectedCallback() {
 ```
 
 **Best practices:**
+
 - Remove event listeners to prevent memory leaks
 - Unsubscribe from PAN events
 - Cancel pending async operations
@@ -1528,6 +1537,7 @@ attributeChangedCallback(name, oldValue, newValue) {
 ```
 
 **Best practices:**
+
 - Only observe attributes you actually use
 - Convert string values to appropriate types
 - Handle null/undefined values
@@ -1710,11 +1720,13 @@ One of LARC's strengths is minimal setup requirements. You don't need complex to
 ### Requirements
 
 **Essential:**
+
 - **Modern browser** — Chrome, Firefox, Safari, or Edge (latest version)
 - **Text editor** — VS Code, Sublime Text, Atom, or any editor you prefer
 - **Local web server** — Python's SimpleHTTPServer, Node's `http-server`, or VS Code's Live Server extension
 
 **Optional but Recommended:**
+
 - **VS Code** with the LARC extension for snippets and IntelliSense
 - **Browser DevTools** familiarity for debugging
 - **Git** for version control
@@ -1853,6 +1865,7 @@ Open `http://localhost:3000` and you should see "Hello, LARC!" displayed.
 Install these extensions for the best experience:
 
 **LARC Extension:**
+
 - Snippets for components and PAN patterns
 - IntelliSense for LARC APIs
 - Commands for creating components
@@ -1860,6 +1873,7 @@ Install these extensions for the best experience:
 Install: Search "LARC" in VS Code extensions marketplace
 
 **Live Server:**
+
 - Auto-reload when files change
 - Simple local web server
 - Right-click HTML file to start
@@ -1867,6 +1881,7 @@ Install: Search "LARC" in VS Code extensions marketplace
 Install: Search "Live Server" by Ritwick Dey
 
 **ES6 String HTML:**
+
 - Syntax highlighting for template literals
 - Makes component templates more readable
 
@@ -1877,21 +1892,25 @@ Install: Search "ES6 String HTML"
 Learn these DevTools features for LARC development:
 
 **Elements Panel:**
+
 - Inspect shadow DOM (enable "Show user agent shadow DOM" in settings)
 - View Custom Elements with their properties
 - Debug CSS in shadow roots
 
 **Console:**
+
 - Subscribe to all PAN messages: `pan.subscribe('*', console.log)`
 - Test components directly: `document.querySelector('my-component')`
 - Check Custom Elements registry: `customElements.get('my-component')`
 
 **Network Panel:**
+
 - Verify ES modules load correctly
 - Check import map resolution
 - Monitor API calls
 
 **Sources Panel:**
+
 - Set breakpoints in your source code (no source maps needed!)
 - Step through component lifecycle
 - Watch variables and state
@@ -1903,6 +1922,7 @@ Let's build something more interesting than "Hello World"—a simple counter app
 ### Project Goal
 
 We'll create:
+
 - A counter display component
 - Increment and decrement buttons
 - A reset button
@@ -2174,6 +2194,7 @@ Start your local server and open the page. You should see:
 - A reset button
 
 Click the buttons. Notice how:
+
 - Components update immediately
 - State is managed centrally in `app.js`
 - Components don't reference each other directly
@@ -2252,21 +2273,25 @@ my-app/
 ### File Organization Principles
 
 **Components:**
+
 - One component per file
 - File name matches component name: `user-profile.js` defines `<user-profile>`
 - Keep related components together in subdirectories
 
 **Lib:**
+
 - Utilities that don't render UI
 - API clients, helpers, formatters
 - Pure functions when possible
 
 **Pages:**
+
 - Top-level route components
 - Compose smaller components
 - Handle page-specific logic
 
 **Styles:**
+
 - Global styles in `styles/`
 - Component-specific styles in Shadow DOM
 - CSS custom properties for theming
@@ -2704,23 +2729,27 @@ You now have a solid foundation for building LARC applications. The next chapter
 ## Exercises
 
 **1. Enhance the Counter App:**
+
 - Add a history component that shows past values
 - Add increment/decrement by custom amounts
 - Persist count to localStorage
 
 **2. Build a Todo List:**
+
 - Add/remove todos
 - Mark as complete/incomplete
 - Filter by status (all/active/completed)
 - Use PAN bus for state management
 
 **3. Create a Theme Switcher:**
+
 - Light/dark theme toggle
 - Publish theme changes via PAN
 - Multiple components respond to theme changes
 - Persist theme preference
 
 **4. Experiment with Import Maps:**
+
 - Try different CDNs (jsDelivr, unpkg, esm.sh)
 - Add path aliases for your components
 - Import an external library (lodash, dayjs, etc.)
@@ -3079,36 +3108,43 @@ export default UserCard;
 ### Component Structure Breakdown
 
 **1. Documentation:**
+
 - JSDoc comments explain usage
 - Attribute, property, event, and slot documentation
 - Helps other developers understand the component
 
 **2. Static Properties:**
+
 - `observedAttributes` defines which attributes trigger `attributeChangedCallback`
 - Keep this list minimal for performance
 
 **3. Constructor:**
+
 - Initialize instance variables
 - Attach shadow DOM
 - Bind methods (for event handlers)
 - Don't access attributes or DOM here
 
 **4. Lifecycle Methods:**
+
 - `connectedCallback`: Setup when added to DOM
 - `disconnectedCallback`: Cleanup when removed
 - `attributeChangedCallback`: Respond to attribute changes
 
 **5. Properties:**
+
 - Use private fields (`_user`) for internal state
 - Provide getters/setters for public API
 - Setters can trigger re-renders
 
 **6. Methods:**
+
 - Public methods for external use
 - Private methods (conventionally start with `_` or use `#` private fields)
 - Keep methods focused and single-purpose
 
 **7. Rendering:**
+
 - Separate render logic from state management
 - Multiple render methods for different states
 - Extract styles to a separate method
@@ -3162,6 +3198,7 @@ class MyComponent extends HTMLElement {
 ```
 
 **Result:**
+
 - Light DOM (`<p>Visible content</p>`) is projected into the `<slot>`
 - Shadow DOM provides the structure and styling
 - Styles in shadow DOM don't leak out
@@ -3197,6 +3234,7 @@ class StyledButton extends HTMLElement {
 ```
 
 **Key Points:**
+
 - Styles inside shadow DOM are scoped
 - No conflicts with global styles
 - No CSS class name collisions
@@ -3324,12 +3362,14 @@ Understanding the difference between attributes and properties is crucial for co
 ### Attributes vs Properties
 
 **Attributes:**
+
 - HTML attributes (`<my-el foo="bar">`)
 - Always strings
 - Visible in HTML
 - Trigger `attributeChangedCallback`
 
 **Properties:**
+
 - JavaScript properties (`element.foo = 123`)
 - Any type (string, number, object, etc.)
 - Not visible in HTML
@@ -3404,12 +3444,14 @@ class ToggleButton extends HTMLElement {
 ### When to Use Each
 
 **Use Attributes for:**
+
 - Simple configuration (strings, numbers, booleans)
 - Values that should be visible in HTML
 - Initial configuration from HTML
 - Values that need to work with CSS selectors
 
 **Use Properties for:**
+
 - Complex data (objects, arrays, functions)
 - Data that changes frequently
 - Large data that shouldn't serialize to HTML
@@ -3524,6 +3566,7 @@ class CardComponent extends HTMLElement {
 ```
 
 **Benefits:**
+
 - Styles parsed once, shared across instances
 - Better performance with many components
 - Modify shared styles dynamically
@@ -3909,6 +3952,7 @@ class LoginButton {
 ```
 
 **Problems:**
+
 - LoginButton must know about all dependent components
 - Adding new components requires modifying LoginButton
 - Components can't work independently
@@ -3956,6 +4000,7 @@ class Notification {
 ```
 
 **Benefits:**
+
 - LoginButton doesn't know about consumers
 - Add new subscribers without changing publishers
 - Components work independently
@@ -4073,6 +4118,7 @@ pan.subscribe('*', (topic, data) => {
 ```
 
 **Wildcard Patterns:**
+
 - `user.*` - All user events (user.login, user.logout, etc.)
 - `*.created` - All create events (user.created, post.created, etc.)
 - `user.*.updated` - All user update events (user.profile.updated, user.settings.updated, etc.)
@@ -4445,6 +4491,7 @@ pan.subscribe('settings.saved', (settings) => {
 ```
 
 **Use when:**
+
 - Multiple components may react
 - You don't need confirmation
 - Action is non-critical
@@ -4510,6 +4557,7 @@ class PAN {
 ```
 
 **Use when:**
+
 - Need data from another component
 - Waiting for response is acceptable
 - Asynchronous operations
@@ -4535,6 +4583,7 @@ pan.subscribe('modal.open', ({ component, props }) => {
 ```
 
 **Use when:**
+
 - Triggering actions in other components
 - Implementing undo/redo
 - Building command palette UIs
@@ -4573,6 +4622,7 @@ function getEventHistory(topic) {
 ```
 
 **Use when:**
+
 - Debugging complex interactions
 - Implementing undo/redo
 - Auditing user actions
@@ -4614,6 +4664,7 @@ class DataAggregator extends HTMLElement {
 ```
 
 **Use when:**
+
 - Avoiding excessive updates
 - Batching API requests
 - Debouncing rapid events
@@ -4677,6 +4728,7 @@ class CheckoutSaga {
 ```
 
 **Use when:**
+
 - Complex multi-step workflows
 - Need to handle failures and rollbacks
 - Coordinating multiple services
@@ -5054,11 +5106,13 @@ class ToggleSwitch extends HTMLElement {
 ```
 
 **When to use:**
+
 - UI state (expanded/collapsed, selected, etc.)
 - Temporary values (search input, form drafts)
 - Component-specific configuration
 
 **Advantages:**
+
 - Simple and straightforward
 - No dependencies on external state
 - Easy to reason about
@@ -5118,6 +5172,7 @@ class Counter extends HTMLElement {
 ```
 
 **Benefits:**
+
 - True privacy (can't access from outside)
 - Validation at setter boundaries
 - Clear public API
@@ -5184,6 +5239,7 @@ class UserProfile extends HTMLElement {
 ```
 
 **Benefits:**
+
 - Organized state structure
 - Single method to update state
 - Clear state shape
@@ -5504,6 +5560,7 @@ LARC provides a built-in component for state management:
 ```
 
 **Features:**
+
 - Declarative state initialization
 - Optional persistence to localStorage
 - Integrates with PAN bus
@@ -8719,6 +8776,7 @@ When integrating business logic into LARC applications:
 6. **Keep components dumb** - they publish events, business logic handles the rest
 
 This separation of concerns makes your application:
+
 - **Easier to test** - business logic without rendering components
 - **More maintainable** - business rules in one place
 - **More flexible** - easy to change rules without touching UI
@@ -9144,6 +9202,7 @@ updateQuery({ q: 'web components', page: '2' });
 ## Summary
 
 LARC routing provides:
+
 - Client-side navigation without page reloads
 - Declarative route configuration
 - Route parameters and guards
@@ -9784,6 +9843,7 @@ customElements.define('smart-form', SmartForm);
 ## Summary
 
 This chapter covered:
+
 - Building accessible form components
 - Two-way data binding patterns
 - Validation strategies (native and custom)
@@ -10090,6 +10150,7 @@ larc publish ./components/my-component.js
 
 ### Case Study 1: E-Commerce Platform
 **Features:**
+
 - Product catalog with search and filters
 - Shopping cart with persistence
 - Checkout flow with payment integration
@@ -10097,6 +10158,7 @@ larc publish ./components/my-component.js
 - Order history and tracking
 
 **Architecture:**
+
 - Components: product-card, cart-widget, checkout-form
 - State: IndexedDB for cart, localStorage for preferences
 - API: REST backend with Stripe integration
@@ -10104,6 +10166,7 @@ larc publish ./components/my-component.js
 
 ### Case Study 2: Dashboard Application
 **Features:**
+
 - Real-time data visualization
 - User permissions and roles
 - Data export functionality
@@ -10111,6 +10174,7 @@ larc publish ./components/my-component.js
 - Dark mode support
 
 **Architecture:**
+
 - Components: chart-widget, data-table, filter-bar
 - State: Reactive store with WebSocket updates
 - API: GraphQL for flexible queries
@@ -10118,6 +10182,7 @@ larc publish ./components/my-component.js
 
 ### Case Study 3: Blog/CMS
 **Features:**
+
 - Markdown editor
 - Draft auto-save
 - Media library
@@ -10125,6 +10190,7 @@ larc publish ./components/my-component.js
 - Static site generation
 
 **Architecture:**
+
 - Components: markdown-editor, media-upload, post-list
 - State: IndexedDB for drafts
 - API: Headless CMS (Contentful/Strapi)
@@ -10225,6 +10291,7 @@ unsubscribe()
 ### From React
 
 **Concepts:**
+
 - JSX → Template literals
 - Props → Attributes/properties
 - State → Instance properties
@@ -10280,6 +10347,7 @@ class UserCard extends HTMLElement {
 ### From Vue
 
 **Concepts:**
+
 - Templates → Template literals
 - v-model → Two-way binding patterns
 - Computed → Getters
@@ -10289,6 +10357,7 @@ class UserCard extends HTMLElement {
 ### From Angular
 
 **Concepts:**
+
 - Decorators → Static properties
 - Dependency Injection → Constructor patterns
 - Services → Modules

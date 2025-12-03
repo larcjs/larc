@@ -348,36 +348,43 @@ export default UserCard;
 ### Component Structure Breakdown
 
 **1. Documentation:**
+
 - JSDoc comments explain usage
 - Attribute, property, event, and slot documentation
 - Helps other developers understand the component
 
 **2. Static Properties:**
+
 - `observedAttributes` defines which attributes trigger `attributeChangedCallback`
 - Keep this list minimal for performance
 
 **3. Constructor:**
+
 - Initialize instance variables
 - Attach shadow DOM
 - Bind methods (for event handlers)
 - Don't access attributes or DOM here
 
 **4. Lifecycle Methods:**
+
 - `connectedCallback`: Setup when added to DOM
 - `disconnectedCallback`: Cleanup when removed
 - `attributeChangedCallback`: Respond to attribute changes
 
 **5. Properties:**
+
 - Use private fields (`_user`) for internal state
 - Provide getters/setters for public API
 - Setters can trigger re-renders
 
 **6. Methods:**
+
 - Public methods for external use
 - Private methods (conventionally start with `_` or use `#` private fields)
 - Keep methods focused and single-purpose
 
 **7. Rendering:**
+
 - Separate render logic from state management
 - Multiple render methods for different states
 - Extract styles to a separate method
@@ -431,6 +438,7 @@ class MyComponent extends HTMLElement {
 ```
 
 **Result:**
+
 - Light DOM (`<p>Visible content</p>`) is projected into the `<slot>`
 - Shadow DOM provides the structure and styling
 - Styles in shadow DOM don't leak out
@@ -466,6 +474,7 @@ class StyledButton extends HTMLElement {
 ```
 
 **Key Points:**
+
 - Styles inside shadow DOM are scoped
 - No conflicts with global styles
 - No CSS class name collisions
@@ -593,12 +602,14 @@ Understanding the difference between attributes and properties is crucial for co
 ### Attributes vs Properties
 
 **Attributes:**
+
 - HTML attributes (`<my-el foo="bar">`)
 - Always strings
 - Visible in HTML
 - Trigger `attributeChangedCallback`
 
 **Properties:**
+
 - JavaScript properties (`element.foo = 123`)
 - Any type (string, number, object, etc.)
 - Not visible in HTML
@@ -673,12 +684,14 @@ class ToggleButton extends HTMLElement {
 ### When to Use Each
 
 **Use Attributes for:**
+
 - Simple configuration (strings, numbers, booleans)
 - Values that should be visible in HTML
 - Initial configuration from HTML
 - Values that need to work with CSS selectors
 
 **Use Properties for:**
+
 - Complex data (objects, arrays, functions)
 - Data that changes frequently
 - Large data that shouldn't serialize to HTML
@@ -793,6 +806,7 @@ class CardComponent extends HTMLElement {
 ```
 
 **Benefits:**
+
 - Styles parsed once, shared across instances
 - Better performance with many components
 - Modify shared styles dynamically

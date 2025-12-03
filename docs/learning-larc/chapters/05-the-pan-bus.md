@@ -27,6 +27,7 @@ class LoginButton {
 ```
 
 **Problems:**
+
 - LoginButton must know about all dependent components
 - Adding new components requires modifying LoginButton
 - Components can't work independently
@@ -74,6 +75,7 @@ class Notification {
 ```
 
 **Benefits:**
+
 - LoginButton doesn't know about consumers
 - Add new subscribers without changing publishers
 - Components work independently
@@ -191,6 +193,7 @@ pan.subscribe('*', (topic, data) => {
 ```
 
 **Wildcard Patterns:**
+
 - `user.*` - All user events (user.login, user.logout, etc.)
 - `*.created` - All create events (user.created, post.created, etc.)
 - `user.*.updated` - All user update events (user.profile.updated, user.settings.updated, etc.)
@@ -563,6 +566,7 @@ pan.subscribe('settings.saved', (settings) => {
 ```
 
 **Use when:**
+
 - Multiple components may react
 - You don't need confirmation
 - Action is non-critical
@@ -628,6 +632,7 @@ class PAN {
 ```
 
 **Use when:**
+
 - Need data from another component
 - Waiting for response is acceptable
 - Asynchronous operations
@@ -653,6 +658,7 @@ pan.subscribe('modal.open', ({ component, props }) => {
 ```
 
 **Use when:**
+
 - Triggering actions in other components
 - Implementing undo/redo
 - Building command palette UIs
@@ -691,6 +697,7 @@ function getEventHistory(topic) {
 ```
 
 **Use when:**
+
 - Debugging complex interactions
 - Implementing undo/redo
 - Auditing user actions
@@ -732,6 +739,7 @@ class DataAggregator extends HTMLElement {
 ```
 
 **Use when:**
+
 - Avoiding excessive updates
 - Batching API requests
 - Debouncing rapid events
@@ -795,6 +803,7 @@ class CheckoutSaga {
 ```
 
 **Use when:**
+
 - Complex multi-step workflows
 - Need to handle failures and rollbacks
 - Coordinating multiple services

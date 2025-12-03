@@ -619,6 +619,7 @@ customElements.define('smart-form', SmartForm);
 ## Summary
 
 This chapter covered:
+
 - Building accessible form components
 - Two-way data binding patterns
 - Validation strategies (native and custom)

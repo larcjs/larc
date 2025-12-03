@@ -55,11 +55,13 @@ class ToggleSwitch extends HTMLElement {
 ```
 
 **When to use:**
+
 - UI state (expanded/collapsed, selected, etc.)
 - Temporary values (search input, form drafts)
 - Component-specific configuration
 
 **Advantages:**
+
 - Simple and straightforward
 - No dependencies on external state
 - Easy to reason about
@@ -119,6 +121,7 @@ class Counter extends HTMLElement {
 ```
 
 **Benefits:**
+
 - True privacy (can't access from outside)
 - Validation at setter boundaries
 - Clear public API
@@ -185,6 +188,7 @@ class UserProfile extends HTMLElement {
 ```
 
 **Benefits:**
+
 - Organized state structure
 - Single method to update state
 - Clear state shape
@@ -505,6 +509,7 @@ LARC provides a built-in component for state management:
 ```
 
 **Features:**
+
 - Declarative state initialization
 - Optional persistence to localStorage
 - Integrates with PAN bus

@@ -414,6 +414,7 @@ updateQuery({ q: 'web components', page: '2' });
 ## Summary
 
 LARC routing provides:
+
 - Client-side navigation without page reloads
 - Declarative route configuration
 - Route parameters and guards

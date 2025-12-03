@@ -1598,10 +1598,15 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>customElements<span class="op">.</span><span class="fu">define</span>(<span class="st">&#39;hello-world&#39;</span><span class="op">,</span> HelloWorld)<span class="op">;</span></span></code></pre></div>
 <p>Now you can use <code>&lt;hello-world&gt;&lt;/hello-world&gt;</code>
 in your HTML, and it works like any built-in element.</p>
-<p><strong>Key Points:</strong> - Element names must contain a hyphen
-(e.g., <code>my-component</code>, not <code>mycomponent</code>) - Custom
-elements inherit from <code>HTMLElement</code> or another HTML element -
-They have lifecycle callbacks for creation, connection, and removal</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Element names must contain a hyphen (e.g.,
+<code>my-component</code>, not <code>mycomponent</code>)</li>
+<li>Custom elements inherit from <code>HTMLElement</code> or another
+HTML element</li>
+<li>They have lifecycle callbacks for creation, connection, and
+removal</li>
+</ul>
 <h4 id="shadow-dom">2. Shadow DOM</h4>
 <p>Shadow DOM provides style and markup encapsulation:</p>
 <div class="sourceCode" id="cb10"><pre
@@ -1644,10 +1649,14 @@ class="sourceCode html"><code class="sourceCode html"><span id="cb11-1"><a href=
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* This won&#39;t affect fancy-button&#39;s internal button */</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  button { <span class="kw">background</span><span class="ch">:</span> <span class="cn">red</span><span class="op">;</span> }</span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">style</span><span class="dt">&gt;</span></span></code></pre></div>
-<p><strong>Key Points:</strong> - Shadow DOM creates an isolated scope
-for styles and DOM - Use <code>&lt;slot&gt;</code> elements to project
-content from light DOM into shadow DOM - <code>mode: 'open'</code> makes
-shadow root accessible via <code>element.shadowRoot</code></p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Shadow DOM creates an isolated scope for styles and DOM</li>
+<li>Use <code>&lt;slot&gt;</code> elements to project content from light
+DOM into shadow DOM</li>
+<li><code>mode: 'open'</code> makes shadow root accessible via
+<code>element.shadowRoot</code></li>
+</ul>
 <h4 id="html-templates">3. HTML Templates</h4>
 <p>Templates define reusable chunks of markup that aren’t rendered until
 activated:</p>
@@ -1682,9 +1691,13 @@ class="sourceCode html"><code class="sourceCode html"><span id="cb12-1"><a href=
 <span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  customElements<span class="op">.</span><span class="fu">define</span>(<span class="st">&#39;simple-card&#39;</span><span class="op">,</span> SimpleCard)<span class="op">;</span></span>
 <span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div>
-<p><strong>Key Points:</strong> - Template content is inert (scripts
-don’t run, images don’t load) - Templates can be defined in HTML or
-created programmatically - Clone template content before using it</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Template content is inert (scripts don’t run, images don’t
+load)</li>
+<li>Templates can be defined in HTML or created programmatically</li>
+<li>Clone template content before using it</li>
+</ul>
 <h3 id="web-components-vs-framework-components">Web Components vs
 Framework Components</h3>
 <p>It’s worth understanding how Web Components differ from framework
@@ -1910,16 +1923,25 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb23
 <span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <h3 id="when-to-use-each">When to Use Each</h3>
-<p><strong>Use DOM Events when:</strong> - Handling user interactions
-(click, input, focus, etc.) - Communication is parent-child relationship
-- Following HTML semantics matters</p>
-<p><strong>Use Custom Events when:</strong> - Component needs to notify
-parent/ancestors - Event should bubble up the DOM tree - Mimicking
-native element behavior</p>
-<p><strong>Use PAN Bus when:</strong> - Components are not in
-parent-child relationship - Multiple unrelated components need the same
-data - Decoupling is more important than DOM semantics - Building
-cross-cutting concerns (logging, analytics, etc.)</p>
+<p><strong>Use DOM Events when:</strong></p>
+<ul>
+<li>Handling user interactions (click, input, focus, etc.)</li>
+<li>Communication is parent-child relationship</li>
+<li>Following HTML semantics matters</li>
+</ul>
+<p><strong>Use Custom Events when:</strong></p>
+<ul>
+<li>Component needs to notify parent/ancestors</li>
+<li>Event should bubble up the DOM tree</li>
+<li>Mimicking native element behavior</li>
+</ul>
+<p><strong>Use PAN Bus when:</strong></p>
+<ul>
+<li>Components are not in parent-child relationship</li>
+<li>Multiple unrelated components need the same data</li>
+<li>Decoupling is more important than DOM semantics</li>
+<li>Building cross-cutting concerns (logging, analytics, etc.)</li>
+</ul>
 <h2 id="state-management-philosophy">State Management Philosophy</h2>
 <p>LARC takes a pragmatic approach to state management: use the simplest
 solution that works, then scale up if needed.</p>
@@ -2165,10 +2187,14 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb34
 <span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// They might not be set yet</span></span>
 <span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Best practices:</strong> - Always call <code>super()</code>
-first - Initialize instance properties - Attach shadow DOM - Don’t
-access attributes, children, or parent elements - Don’t render here (use
-<code>connectedCallback</code> instead)</p>
+<p><strong>Best practices:</strong></p>
+<ul>
+<li>Always call <code>super()</code> first</li>
+<li>Initialize instance properties</li>
+<li>Attach shadow DOM</li>
+<li>Don’t access attributes, children, or parent elements</li>
+<li>Don’t render here (use <code>connectedCallback</code> instead)</li>
+</ul>
 <h4 id="connectedcallback">connectedCallback()</h4>
 <p>Called when the element is inserted into the DOM:</p>
 <div class="sourceCode" id="cb35"><pre
@@ -2188,9 +2214,14 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb35
 <span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Subscribe to PAN events</span></span>
 <span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">this</span><span class="op">.</span><span class="at">unsubscribe</span> <span class="op">=</span> pan<span class="op">.</span><span class="fu">subscribe</span>(<span class="st">&#39;data.update&#39;</span><span class="op">,</span> <span class="kw">this</span><span class="op">.</span><span class="at">handleUpdate</span>)<span class="op">;</span></span>
 <span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Best practices:</strong> - Render initial content - Add event
-listeners - Subscribe to events - Fetch initial data - Can be called
-multiple times if element is moved</p>
+<p><strong>Best practices:</strong></p>
+<ul>
+<li>Render initial content</li>
+<li>Add event listeners</li>
+<li>Subscribe to events</li>
+<li>Fetch initial data</li>
+<li>Can be called multiple times if element is moved</li>
+</ul>
 <h4 id="disconnectedcallback">disconnectedCallback()</h4>
 <p>Called when the element is removed from the DOM:</p>
 <div class="sourceCode" id="cb36"><pre
@@ -2213,9 +2244,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb36
 <span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>    <span class="pp">clearInterval</span>(<span class="kw">this</span><span class="op">.</span><span class="at">timer</span>)<span class="op">;</span></span>
 <span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Best practices:</strong> - Remove event listeners to prevent
-memory leaks - Unsubscribe from PAN events - Cancel pending async
-operations - Clear timers and intervals</p>
+<p><strong>Best practices:</strong></p>
+<ul>
+<li>Remove event listeners to prevent memory leaks</li>
+<li>Unsubscribe from PAN events</li>
+<li>Cancel pending async operations</li>
+<li>Clear timers and intervals</li>
+</ul>
 <h4
 id="attributechangedcallbackname-oldvalue-newvalue">attributeChangedCallback(name,
 oldValue, newValue)</h4>
@@ -2235,10 +2270,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb37
 <span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">updateActive</span>(newValue <span class="op">!==</span> <span class="kw">null</span>)<span class="op">;</span></span>
 <span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Best practices:</strong> - Only observe attributes you
-actually use - Convert string values to appropriate types - Handle
-null/undefined values - Update only what changed (don’t re-render
-everything)</p>
+<p><strong>Best practices:</strong></p>
+<ul>
+<li>Only observe attributes you actually use</li>
+<li>Convert string values to appropriate types</li>
+<li>Handle null/undefined values</li>
+<li>Update only what changed (don’t re-render everything)</li>
+</ul>
 <h4 id="adoptedcallback">adoptedCallback()</h4>
 <p>Called when the element is moved to a new document (rare):</p>
 <div class="sourceCode" id="cb38"><pre
@@ -2412,15 +2450,22 @@ Development Environment</h2>
 complex tooling or configuration—just a browser, a text editor, and a
 way to serve files.</p>
 <h3 id="requirements">Requirements</h3>
-<p><strong>Essential:</strong> - <strong>Modern browser</strong> —
-Chrome, Firefox, Safari, or Edge (latest version) - <strong>Text
-editor</strong> — VS Code, Sublime Text, Atom, or any editor you prefer
-- <strong>Local web server</strong> — Python’s SimpleHTTPServer, Node’s
-<code>http-server</code>, or VS Code’s Live Server extension</p>
-<p><strong>Optional but Recommended:</strong> - <strong>VS Code</strong>
-with the LARC extension for snippets and IntelliSense - <strong>Browser
-DevTools</strong> familiarity for debugging - <strong>Git</strong> for
-version control</p>
+<p><strong>Essential:</strong></p>
+<ul>
+<li><strong>Modern browser</strong> — Chrome, Firefox, Safari, or Edge
+(latest version)</li>
+<li><strong>Text editor</strong> — VS Code, Sublime Text, Atom, or any
+editor you prefer</li>
+<li><strong>Local web server</strong> — Python’s SimpleHTTPServer,
+Node’s <code>http-server</code>, or VS Code’s Live Server extension</li>
+</ul>
+<p><strong>Optional but Recommended:</strong></p>
+<ul>
+<li><strong>VS Code</strong> with the LARC extension for snippets and
+IntelliSense</li>
+<li><strong>Browser DevTools</strong> familiarity for debugging</li>
+<li><strong>Git</strong> for version control</li>
+</ul>
 <h3 id="quick-start-with-create-larc-app">Quick Start with
 create-larc-app</h3>
 <p>The fastest way to start is using the LARC CLI:</p>
@@ -2533,38 +2578,68 @@ bundling. Just HTML, CSS, and JavaScript.</p>
 <h3 id="development-tools">Development Tools</h3>
 <h4 id="vs-code-extensions">VS Code Extensions</h4>
 <p>Install these extensions for the best experience:</p>
-<p><strong>LARC Extension:</strong> - Snippets for components and PAN
-patterns - IntelliSense for LARC APIs - Commands for creating
-components</p>
+<p><strong>LARC Extension:</strong></p>
+<ul>
+<li>Snippets for components and PAN patterns</li>
+<li>IntelliSense for LARC APIs</li>
+<li>Commands for creating components</li>
+</ul>
 <p>Install: Search “LARC” in VS Code extensions marketplace</p>
-<p><strong>Live Server:</strong> - Auto-reload when files change -
-Simple local web server - Right-click HTML file to start</p>
+<p><strong>Live Server:</strong></p>
+<ul>
+<li>Auto-reload when files change</li>
+<li>Simple local web server</li>
+<li>Right-click HTML file to start</li>
+</ul>
 <p>Install: Search “Live Server” by Ritwick Dey</p>
-<p><strong>ES6 String HTML:</strong> - Syntax highlighting for template
-literals - Makes component templates more readable</p>
+<p><strong>ES6 String HTML:</strong></p>
+<ul>
+<li>Syntax highlighting for template literals</li>
+<li>Makes component templates more readable</li>
+</ul>
 <p>Install: Search “ES6 String HTML”</p>
 <h4 id="browser-devtools">Browser DevTools</h4>
 <p>Learn these DevTools features for LARC development:</p>
-<p><strong>Elements Panel:</strong> - Inspect shadow DOM (enable “Show
-user agent shadow DOM” in settings) - View Custom Elements with their
-properties - Debug CSS in shadow roots</p>
-<p><strong>Console:</strong> - Subscribe to all PAN messages:
-<code>pan.subscribe('*', console.log)</code> - Test components directly:
-<code>document.querySelector('my-component')</code> - Check Custom
-Elements registry: <code>customElements.get('my-component')</code></p>
-<p><strong>Network Panel:</strong> - Verify ES modules load correctly -
-Check import map resolution - Monitor API calls</p>
-<p><strong>Sources Panel:</strong> - Set breakpoints in your source code
-(no source maps needed!) - Step through component lifecycle - Watch
-variables and state</p>
+<p><strong>Elements Panel:</strong></p>
+<ul>
+<li>Inspect shadow DOM (enable “Show user agent shadow DOM” in
+settings)</li>
+<li>View Custom Elements with their properties</li>
+<li>Debug CSS in shadow roots</li>
+</ul>
+<p><strong>Console:</strong></p>
+<ul>
+<li>Subscribe to all PAN messages:
+<code>pan.subscribe('*', console.log)</code></li>
+<li>Test components directly:
+<code>document.querySelector('my-component')</code></li>
+<li>Check Custom Elements registry:
+<code>customElements.get('my-component')</code></li>
+</ul>
+<p><strong>Network Panel:</strong></p>
+<ul>
+<li>Verify ES modules load correctly</li>
+<li>Check import map resolution</li>
+<li>Monitor API calls</li>
+</ul>
+<p><strong>Sources Panel:</strong></p>
+<ul>
+<li>Set breakpoints in your source code (no source maps needed!)</li>
+<li>Step through component lifecycle</li>
+<li>Watch variables and state</li>
+</ul>
 <h2 id="your-first-larc-application">Your First LARC Application</h2>
 <p>Let’s build something more interesting than “Hello World”—a simple
 counter application with multiple components communicating via the PAN
 bus.</p>
 <h3 id="project-goal">Project Goal</h3>
-<p>We’ll create: - A counter display component - Increment and decrement
-buttons - A reset button - Communication via PAN bus (no prop
-drilling!)</p>
+<p>We’ll create:</p>
+<ul>
+<li>A counter display component</li>
+<li>Increment and decrement buttons</li>
+<li>A reset button</li>
+<li>Communication via PAN bus (no prop drilling!)</li>
+</ul>
 <h3 id="step-1-update-index.html">Step 1: Update index.html</h3>
 <div class="sourceCode" id="cb46"><pre
 class="sourceCode html"><code class="sourceCode html"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;!DOCTYPE</span> html<span class="dt">&gt;</span></span>
@@ -2819,10 +2894,14 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb49
 <li>Increment and decrement buttons</li>
 <li>A reset button</li>
 </ul>
-<p>Click the buttons. Notice how: - Components update immediately -
-State is managed centrally in <code>app.js</code> - Components don’t
-reference each other directly - Adding new components is trivial (just
-subscribe to <code>counter.updated</code>)</p>
+<p>Click the buttons. Notice how:</p>
+<ul>
+<li>Components update immediately</li>
+<li>State is managed centrally in <code>app.js</code></li>
+<li>Components don’t reference each other directly</li>
+<li>Adding new components is trivial (just subscribe to
+<code>counter.updated</code>)</li>
+</ul>
 <h3 id="what-just-happened">What Just Happened?</h3>
 <p>Let’s examine the architecture:</p>
 <p><strong>Data Flow:</strong></p>
@@ -2889,17 +2968,31 @@ recommended structure:</p>
     ├── components/
     └── integration/</code></pre>
 <h3 id="file-organization-principles">File Organization Principles</h3>
-<p><strong>Components:</strong> - One component per file - File name
-matches component name: <code>user-profile.js</code> defines
-<code>&lt;user-profile&gt;</code> - Keep related components together in
-subdirectories</p>
-<p><strong>Lib:</strong> - Utilities that don’t render UI - API clients,
-helpers, formatters - Pure functions when possible</p>
-<p><strong>Pages:</strong> - Top-level route components - Compose
-smaller components - Handle page-specific logic</p>
-<p><strong>Styles:</strong> - Global styles in <code>styles/</code> -
-Component-specific styles in Shadow DOM - CSS custom properties for
-theming</p>
+<p><strong>Components:</strong></p>
+<ul>
+<li>One component per file</li>
+<li>File name matches component name: <code>user-profile.js</code>
+defines <code>&lt;user-profile&gt;</code></li>
+<li>Keep related components together in subdirectories</li>
+</ul>
+<p><strong>Lib:</strong></p>
+<ul>
+<li>Utilities that don’t render UI</li>
+<li>API clients, helpers, formatters</li>
+<li>Pure functions when possible</li>
+</ul>
+<p><strong>Pages:</strong></p>
+<ul>
+<li>Top-level route components</li>
+<li>Compose smaller components</li>
+<li>Handle page-specific logic</li>
+</ul>
+<p><strong>Styles:</strong></p>
+<ul>
+<li>Global styles in <code>styles/</code></li>
+<li>Component-specific styles in Shadow DOM</li>
+<li>CSS custom properties for theming</li>
+</ul>
 <h2 id="import-maps-explained">Import Maps Explained</h2>
 <p>Import Maps are a browser standard that replaces the need for
 bundlers to resolve module paths.</p>
@@ -3266,18 +3359,32 @@ next chapter dives deeper into creating sophisticated Web Components
 with proper lifecycle management, styling, and interactivity.</p>
 <hr />
 <h2 id="exercises">Exercises</h2>
-<p><strong>1. Enhance the Counter App:</strong> - Add a history
-component that shows past values - Add increment/decrement by custom
-amounts - Persist count to localStorage</p>
-<p><strong>2. Build a Todo List:</strong> - Add/remove todos - Mark as
-complete/incomplete - Filter by status (all/active/completed) - Use PAN
-bus for state management</p>
-<p><strong>3. Create a Theme Switcher:</strong> - Light/dark theme
-toggle - Publish theme changes via PAN - Multiple components respond to
-theme changes - Persist theme preference</p>
-<p><strong>4. Experiment with Import Maps:</strong> - Try different CDNs
-(jsDelivr, unpkg, esm.sh) - Add path aliases for your components -
-Import an external library (lodash, dayjs, etc.)</p>
+<p><strong>1. Enhance the Counter App:</strong></p>
+<ul>
+<li>Add a history component that shows past values</li>
+<li>Add increment/decrement by custom amounts</li>
+<li>Persist count to localStorage</li>
+</ul>
+<p><strong>2. Build a Todo List:</strong></p>
+<ul>
+<li>Add/remove todos</li>
+<li>Mark as complete/incomplete</li>
+<li>Filter by status (all/active/completed)</li>
+<li>Use PAN bus for state management</li>
+</ul>
+<p><strong>3. Create a Theme Switcher:</strong></p>
+<ul>
+<li>Light/dark theme toggle</li>
+<li>Publish theme changes via PAN</li>
+<li>Multiple components respond to theme changes</li>
+<li>Persist theme preference</li>
+</ul>
+<p><strong>4. Experiment with Import Maps:</strong></p>
+<ul>
+<li>Try different CDNs (jsDelivr, unpkg, esm.sh)</li>
+<li>Add path aliases for your components</li>
+<li>Import an external library (lodash, dayjs, etc.)</li>
+</ul>
 <p>Take your time with these exercises. Understanding these patterns now
 will make the rest of the book much easier.</p>
 <h1 id="chapter-4-creating-web-components">Chapter 4: Creating Web
@@ -3629,30 +3736,51 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb70
 <span id="cb70-334"><a href="#cb70-334" aria-hidden="true" tabindex="-1"></a><span class="im">export</span> <span class="im">default</span> UserCard<span class="op">;</span></span></code></pre></div>
 <h3 id="component-structure-breakdown">Component Structure
 Breakdown</h3>
-<p><strong>1. Documentation:</strong> - JSDoc comments explain usage -
-Attribute, property, event, and slot documentation - Helps other
-developers understand the component</p>
-<p><strong>2. Static Properties:</strong> -
-<code>observedAttributes</code> defines which attributes trigger
-<code>attributeChangedCallback</code> - Keep this list minimal for
-performance</p>
-<p><strong>3. Constructor:</strong> - Initialize instance variables -
-Attach shadow DOM - Bind methods (for event handlers) - Don’t access
-attributes or DOM here</p>
-<p><strong>4. Lifecycle Methods:</strong> -
-<code>connectedCallback</code>: Setup when added to DOM -
-<code>disconnectedCallback</code>: Cleanup when removed -
-<code>attributeChangedCallback</code>: Respond to attribute changes</p>
-<p><strong>5. Properties:</strong> - Use private fields
-(<code>_user</code>) for internal state - Provide getters/setters for
-public API - Setters can trigger re-renders</p>
-<p><strong>6. Methods:</strong> - Public methods for external use -
-Private methods (conventionally start with <code>_</code> or use
-<code>#</code> private fields) - Keep methods focused and
-single-purpose</p>
-<p><strong>7. Rendering:</strong> - Separate render logic from state
-management - Multiple render methods for different states - Extract
-styles to a separate method</p>
+<p><strong>1. Documentation:</strong></p>
+<ul>
+<li>JSDoc comments explain usage</li>
+<li>Attribute, property, event, and slot documentation</li>
+<li>Helps other developers understand the component</li>
+</ul>
+<p><strong>2. Static Properties:</strong></p>
+<ul>
+<li><code>observedAttributes</code> defines which attributes trigger
+<code>attributeChangedCallback</code></li>
+<li>Keep this list minimal for performance</li>
+</ul>
+<p><strong>3. Constructor:</strong></p>
+<ul>
+<li>Initialize instance variables</li>
+<li>Attach shadow DOM</li>
+<li>Bind methods (for event handlers)</li>
+<li>Don’t access attributes or DOM here</li>
+</ul>
+<p><strong>4. Lifecycle Methods:</strong></p>
+<ul>
+<li><code>connectedCallback</code>: Setup when added to DOM</li>
+<li><code>disconnectedCallback</code>: Cleanup when removed</li>
+<li><code>attributeChangedCallback</code>: Respond to attribute
+changes</li>
+</ul>
+<p><strong>5. Properties:</strong></p>
+<ul>
+<li>Use private fields (<code>_user</code>) for internal state</li>
+<li>Provide getters/setters for public API</li>
+<li>Setters can trigger re-renders</li>
+</ul>
+<p><strong>6. Methods:</strong></p>
+<ul>
+<li>Public methods for external use</li>
+<li>Private methods (conventionally start with <code>_</code> or use
+<code>#</code> private fields)</li>
+<li>Keep methods focused and single-purpose</li>
+</ul>
+<p><strong>7. Rendering:</strong></p>
+<ul>
+<li>Separate render logic from state management</li>
+<li>Multiple render methods for different states</li>
+<li>Extract styles to a separate method</li>
+</ul>
 <h2 id="shadow-dom-deep-dive">Shadow DOM Deep Dive</h2>
 <p>Shadow DOM is one of the most powerful features of Web Components. It
 provides true encapsulation for both markup and styles.</p>
@@ -3694,11 +3822,14 @@ class="sourceCode html"><code class="sourceCode html"><span id="cb72-1"><a href=
 <span id="cb72-21"><a href="#cb72-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb72-22"><a href="#cb72-22" aria-hidden="true" tabindex="-1"></a>  customElements<span class="op">.</span><span class="fu">define</span>(<span class="st">&#39;my-component&#39;</span><span class="op">,</span> MyComponent)<span class="op">;</span></span>
 <span id="cb72-23"><a href="#cb72-23" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div>
-<p><strong>Result:</strong> - Light DOM
-(<code>&lt;p&gt;Visible content&lt;/p&gt;</code>) is projected into the
-<code>&lt;slot&gt;</code> - Shadow DOM provides the structure and
-styling - Styles in shadow DOM don’t leak out - Styles from light DOM
-don’t leak in</p>
+<p><strong>Result:</strong></p>
+<ul>
+<li>Light DOM (<code>&lt;p&gt;Visible content&lt;/p&gt;</code>) is
+projected into the <code>&lt;slot&gt;</code></li>
+<li>Shadow DOM provides the structure and styling</li>
+<li>Styles in shadow DOM don’t leak out</li>
+<li>Styles from light DOM don’t leak in</li>
+</ul>
 <h3 id="style-encapsulation">Style Encapsulation</h3>
 <div class="sourceCode" id="cb73"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> StyledButton <span class="kw">extends</span> <span class="bu">HTMLElement</span> {</span>
@@ -3725,9 +3856,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb73
 <span id="cb73-22"><a href="#cb73-22" aria-hidden="true" tabindex="-1"></a><span class="vs">    `</span><span class="op">;</span></span>
 <span id="cb73-23"><a href="#cb73-23" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb73-24"><a href="#cb73-24" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Key Points:</strong> - Styles inside shadow DOM are scoped -
-No conflicts with global styles - No CSS class name collisions - True
-component encapsulation</p>
+<p><strong>Key Points:</strong></p>
+<ul>
+<li>Styles inside shadow DOM are scoped</li>
+<li>No conflicts with global styles</li>
+<li>No CSS class name collisions</li>
+<li>True component encapsulation</li>
+</ul>
 <h3 id="the-host-selector">The :host Selector</h3>
 <p>Style the component itself:</p>
 <div class="sourceCode" id="cb74"><pre
@@ -3831,12 +3966,20 @@ encapsulation.</p>
 <p>Understanding the difference between attributes and properties is
 crucial for component design.</p>
 <h3 id="attributes-vs-properties">Attributes vs Properties</h3>
-<p><strong>Attributes:</strong> - HTML attributes
-(<code>&lt;my-el foo="bar"&gt;</code>) - Always strings - Visible in
-HTML - Trigger <code>attributeChangedCallback</code></p>
-<p><strong>Properties:</strong> - JavaScript properties
-(<code>element.foo = 123</code>) - Any type (string, number, object,
-etc.) - Not visible in HTML - Direct access, no callback</p>
+<p><strong>Attributes:</strong></p>
+<ul>
+<li>HTML attributes (<code>&lt;my-el foo="bar"&gt;</code>)</li>
+<li>Always strings</li>
+<li>Visible in HTML</li>
+<li>Trigger <code>attributeChangedCallback</code></li>
+</ul>
+<p><strong>Properties:</strong></p>
+<ul>
+<li>JavaScript properties (<code>element.foo = 123</code>)</li>
+<li>Any type (string, number, object, etc.)</li>
+<li>Not visible in HTML</li>
+<li>Direct access, no callback</li>
+</ul>
 <h3 id="reflecting-properties-to-attributes">Reflecting Properties to
 Attributes</h3>
 <div class="sourceCode" id="cb79"><pre
@@ -3900,13 +4043,20 @@ class="sourceCode html"><code class="sourceCode html"><span id="cb80-1"><a href=
 <span id="cb80-14"><a href="#cb80-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(toggle<span class="op">.</span><span class="fu">hasAttribute</span>(<span class="st">&#39;checked&#39;</span>))<span class="op">;</span> <span class="co">// true</span></span>
 <span id="cb80-15"><a href="#cb80-15" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div>
 <h3 id="when-to-use-each-1">When to Use Each</h3>
-<p><strong>Use Attributes for:</strong> - Simple configuration (strings,
-numbers, booleans) - Values that should be visible in HTML - Initial
-configuration from HTML - Values that need to work with CSS
-selectors</p>
-<p><strong>Use Properties for:</strong> - Complex data (objects, arrays,
-functions) - Data that changes frequently - Large data that shouldn’t
-serialize to HTML - Callback functions</p>
+<p><strong>Use Attributes for:</strong></p>
+<ul>
+<li>Simple configuration (strings, numbers, booleans)</li>
+<li>Values that should be visible in HTML</li>
+<li>Initial configuration from HTML</li>
+<li>Values that need to work with CSS selectors</li>
+</ul>
+<p><strong>Use Properties for:</strong></p>
+<ul>
+<li>Complex data (objects, arrays, functions)</li>
+<li>Data that changes frequently</li>
+<li>Large data that shouldn’t serialize to HTML</li>
+<li>Callback functions</li>
+</ul>
 <h3 id="type-conversion">Type Conversion</h3>
 <p>Attributes are always strings, so convert appropriately:</p>
 <div class="sourceCode" id="cb81"><pre
@@ -3994,9 +4144,12 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb85
 <span id="cb85-23"><a href="#cb85-23" aria-hidden="true" tabindex="-1"></a><span class="vs">    `</span><span class="op">;</span></span>
 <span id="cb85-24"><a href="#cb85-24" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb85-25"><a href="#cb85-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Benefits:</strong> - Styles parsed once, shared across
-instances - Better performance with many components - Modify shared
-styles dynamically</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Styles parsed once, shared across instances</li>
+<li>Better performance with many components</li>
+<li>Modify shared styles dynamically</li>
+</ul>
 <h3 id="theming-strategies">Theming Strategies</h3>
 <p><strong>Strategy 1: CSS Custom Properties</strong></p>
 <div class="sourceCode" id="cb86"><pre
@@ -4354,10 +4507,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb95
 <span id="cb95-9"><a href="#cb95-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">&#39;notification&#39;</span>)<span class="op">.</span><span class="fu">show</span>(<span class="st">&#39;Welcome!&#39;</span>)<span class="op">;</span></span>
 <span id="cb95-10"><a href="#cb95-10" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb95-11"><a href="#cb95-11" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Problems:</strong> - LoginButton must know about all
-dependent components - Adding new components requires modifying
-LoginButton - Components can’t work independently - Testing requires
-mocking all dependencies</p>
+<p><strong>Problems:</strong></p>
+<ul>
+<li>LoginButton must know about all dependent components</li>
+<li>Adding new components requires modifying LoginButton</li>
+<li>Components can’t work independently</li>
+<li>Testing requires mocking all dependencies</li>
+</ul>
 <h3 id="pubsub-communication">Pub/Sub Communication</h3>
 <p>With the PAN bus:</p>
 <div class="sourceCode" id="cb96"><pre
@@ -4395,9 +4551,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb96
 <span id="cb96-32"><a href="#cb96-32" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
 <span id="cb96-33"><a href="#cb96-33" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb96-34"><a href="#cb96-34" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Benefits:</strong> - LoginButton doesn’t know about consumers
-- Add new subscribers without changing publishers - Components work
-independently - Easy to test in isolation</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>LoginButton doesn’t know about consumers</li>
+<li>Add new subscribers without changing publishers</li>
+<li>Components work independently</li>
+<li>Easy to test in isolation</li>
+</ul>
 <h3 id="the-pan-bus-api">The PAN Bus API</h3>
 <p>The PAN bus provides three core operations:</p>
 <div class="sourceCode" id="cb97"><pre
@@ -4481,12 +4641,16 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10
 <span id="cb103-12"><a href="#cb103-12" aria-hidden="true" tabindex="-1"></a>pan<span class="op">.</span><span class="fu">subscribe</span>(<span class="st">&#39;*&#39;</span><span class="op">,</span> (topic<span class="op">,</span> data) <span class="kw">=&gt;</span> {</span>
 <span id="cb103-13"><a href="#cb103-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[</span><span class="sc">${</span>topic<span class="sc">}</span><span class="vs">]`</span><span class="op">,</span> data)<span class="op">;</span></span>
 <span id="cb103-14"><a href="#cb103-14" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
-<p><strong>Wildcard Patterns:</strong> - <code>user.*</code> - All user
-events (user.login, user.logout, etc.) - <code>*.created</code> - All
-create events (user.created, post.created, etc.) -
-<code>user.*.updated</code> - All user update events
-(user.profile.updated, user.settings.updated, etc.) - <code>*</code> -
-All events</p>
+<p><strong>Wildcard Patterns:</strong></p>
+<ul>
+<li><code>user.*</code> - All user events (user.login, user.logout,
+etc.)</li>
+<li><code>*.created</code> - All create events (user.created,
+post.created, etc.)</li>
+<li><code>user.*.updated</code> - All user update events
+(user.profile.updated, user.settings.updated, etc.)</li>
+<li><code>*</code> - All events</li>
+</ul>
 <h3 id="topic-best-practices">Topic Best Practices</h3>
 <p><strong>1. Be Specific:</strong></p>
 <div class="sourceCode" id="cb104"><pre
@@ -4802,8 +4966,12 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11
 <span id="cb118-9"><a href="#cb118-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;Settings updated:&#39;</span><span class="op">,</span> settings)<span class="op">;</span></span>
 <span id="cb118-10"><a href="#cb118-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">updateUI</span>(settings)<span class="op">;</span></span>
 <span id="cb118-11"><a href="#cb118-11" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
-<p><strong>Use when:</strong> - Multiple components may react - You
-don’t need confirmation - Action is non-critical</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>Multiple components may react</li>
+<li>You don’t need confirmation</li>
+<li>Action is non-critical</li>
+</ul>
 <h3 id="requestresponse-1">2. Request/Response</h3>
 <p>Request data and wait for a response:</p>
 <div class="sourceCode" id="cb119"><pre
@@ -4857,8 +5025,12 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12
 <span id="cb120-38"><a href="#cb120-38" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
 <span id="cb120-39"><a href="#cb120-39" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb120-40"><a href="#cb120-40" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Use when:</strong> - Need data from another component -
-Waiting for response is acceptable - Asynchronous operations</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>Need data from another component</li>
+<li>Waiting for response is acceptable</li>
+<li>Asynchronous operations</li>
+</ul>
 <h3 id="command-pattern">3. Command Pattern</h3>
 <p>Issue commands that components execute:</p>
 <div class="sourceCode" id="cb121"><pre
@@ -4875,8 +5047,12 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12
 <span id="cb121-11"><a href="#cb121-11" aria-hidden="true" tabindex="-1"></a>  modal<span class="op">.</span><span class="at">props</span> <span class="op">=</span> props<span class="op">;</span></span>
 <span id="cb121-12"><a href="#cb121-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="fu">appendChild</span>(modal)<span class="op">;</span></span>
 <span id="cb121-13"><a href="#cb121-13" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
-<p><strong>Use when:</strong> - Triggering actions in other components -
-Implementing undo/redo - Building command palette UIs</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>Triggering actions in other components</li>
+<li>Implementing undo/redo</li>
+<li>Building command palette UIs</li>
+</ul>
 <h3 id="event-sourcing">4. Event Sourcing</h3>
 <p>Store events for replay or auditing:</p>
 <div class="sourceCode" id="cb122"><pre
@@ -4906,9 +5082,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12
 <span id="cb122-24"><a href="#cb122-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">event</span><span class="op">.</span><span class="at">topic</span> <span class="op">===</span> topic <span class="op">||</span> <span class="bu">event</span><span class="op">.</span><span class="at">topic</span><span class="op">.</span><span class="fu">startsWith</span>(topic <span class="op">+</span> <span class="st">&#39;.&#39;</span>)</span>
 <span id="cb122-25"><a href="#cb122-25" aria-hidden="true" tabindex="-1"></a>  )<span class="op">;</span></span>
 <span id="cb122-26"><a href="#cb122-26" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Use when:</strong> - Debugging complex interactions -
-Implementing undo/redo - Auditing user actions - Syncing state across
-sessions</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>Debugging complex interactions</li>
+<li>Implementing undo/redo</li>
+<li>Auditing user actions</li>
+<li>Syncing state across sessions</li>
+</ul>
 <h3 id="aggregation-pattern">5. Aggregation Pattern</h3>
 <p>Collect multiple events before acting:</p>
 <div class="sourceCode" id="cb123"><pre
@@ -4940,8 +5120,12 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12
 <span id="cb123-26"><a href="#cb123-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">render</span>(items)<span class="op">;</span></span>
 <span id="cb123-27"><a href="#cb123-27" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb123-28"><a href="#cb123-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Use when:</strong> - Avoiding excessive updates - Batching
-API requests - Debouncing rapid events</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>Avoiding excessive updates</li>
+<li>Batching API requests</li>
+<li>Debouncing rapid events</li>
+</ul>
 <h3 id="saga-pattern">6. Saga Pattern</h3>
 <p>Coordinate multi-step processes:</p>
 <div class="sourceCode" id="cb124"><pre
@@ -4996,8 +5180,12 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12
 <span id="cb124-49"><a href="#cb124-49" aria-hidden="true" tabindex="-1"></a>    pan<span class="op">.</span><span class="fu">publish</span>(<span class="st">&#39;checkout.completed&#39;</span><span class="op">,</span> { order })<span class="op">;</span></span>
 <span id="cb124-50"><a href="#cb124-50" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb124-51"><a href="#cb124-51" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Use when:</strong> - Complex multi-step workflows - Need to
-handle failures and rollbacks - Coordinating multiple services</p>
+<p><strong>Use when:</strong></p>
+<ul>
+<li>Complex multi-step workflows</li>
+<li>Need to handle failures and rollbacks</li>
+<li>Coordinating multiple services</li>
+</ul>
 <h2 id="debugging-pan-communication">Debugging PAN Communication</h2>
 <p>Debugging event-driven systems requires different techniques than
 traditional debugging.</p>
@@ -5357,11 +5545,19 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13
 <span id="cb130-37"><a href="#cb130-37" aria-hidden="true" tabindex="-1"></a><span class="vs">    `</span><span class="op">;</span></span>
 <span id="cb130-38"><a href="#cb130-38" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb130-39"><a href="#cb130-39" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>When to use:</strong> - UI state (expanded/collapsed,
-selected, etc.) - Temporary values (search input, form drafts) -
-Component-specific configuration</p>
-<p><strong>Advantages:</strong> - Simple and straightforward - No
-dependencies on external state - Easy to reason about - Easy to test</p>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>UI state (expanded/collapsed, selected, etc.)</li>
+<li>Temporary values (search input, form drafts)</li>
+<li>Component-specific configuration</li>
+</ul>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>Simple and straightforward</li>
+<li>No dependencies on external state</li>
+<li>Easy to reason about</li>
+<li>Easy to test</li>
+</ul>
 <h3 id="private-fields">Private Fields</h3>
 <p>Use private fields (with <code>#</code>) for true encapsulation:</p>
 <div class="sourceCode" id="cb131"><pre
@@ -5411,8 +5607,12 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13
 <span id="cb131-44"><a href="#cb131-44" aria-hidden="true" tabindex="-1"></a><span class="vs">    `</span><span class="op">;</span></span>
 <span id="cb131-45"><a href="#cb131-45" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb131-46"><a href="#cb131-46" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Benefits:</strong> - True privacy (can’t access from outside)
-- Validation at setter boundaries - Clear public API</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>True privacy (can’t access from outside)</li>
+<li>Validation at setter boundaries</li>
+<li>Clear public API</li>
+</ul>
 <h3 id="state-objects">State Objects</h3>
 <p>Organize related state in objects:</p>
 <div class="sourceCode" id="cb132"><pre
@@ -5470,9 +5670,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13
 <span id="cb132-52"><a href="#cb132-52" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb132-53"><a href="#cb132-53" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb132-54"><a href="#cb132-54" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
-<p><strong>Benefits:</strong> - Organized state structure - Single
-method to update state - Clear state shape - Easier debugging (log
-entire state)</p>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Organized state structure</li>
+<li>Single method to update state</li>
+<li>Clear state shape</li>
+<li>Easier debugging (log entire state)</li>
+</ul>
 <h2 id="shared-state-patterns">Shared State Patterns</h2>
 <p>When multiple components need access to the same data, you need
 shared state.</p>
@@ -5761,9 +5965,14 @@ class="sourceCode html"><code class="sourceCode html"><span id="cb139-1"><a href
 <span id="cb139-31"><a href="#cb139-31" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;State via PAN:&#39;</span><span class="op">,</span> state)<span class="op">;</span></span>
 <span id="cb139-32"><a href="#cb139-32" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
 <span id="cb139-33"><a href="#cb139-33" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div>
-<p><strong>Features:</strong> - Declarative state initialization -
-Optional persistence to localStorage - Integrates with PAN bus -
-Supports nested state updates - Time-travel debugging in dev mode</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Declarative state initialization</li>
+<li>Optional persistence to localStorage</li>
+<li>Integrates with PAN bus</li>
+<li>Supports nested state updates</li>
+<li>Time-travel debugging in dev mode</li>
+</ul>
 <p><strong>Advanced usage:</strong></p>
 <div class="sourceCode" id="cb140"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Get nested state</span></span>
@@ -8862,12 +9071,17 @@ code</li>
 <li><strong>Keep components dumb</strong> - they publish events,
 business logic handles the rest</li>
 </ol>
-<p>This separation of concerns makes your application: - <strong>Easier
-to test</strong> - business logic without rendering components -
-<strong>More maintainable</strong> - business rules in one place -
-<strong>More flexible</strong> - easy to change rules without touching
-UI - <strong>More reusable</strong> - logic can be shared across
-components</p>
+<p>This separation of concerns makes your application:</p>
+<ul>
+<li><strong>Easier to test</strong> - business logic without rendering
+components</li>
+<li><strong>More maintainable</strong> - business rules in one
+place</li>
+<li><strong>More flexible</strong> - easy to change rules without
+touching UI</li>
+<li><strong>More reusable</strong> - logic can be shared across
+components</li>
+</ul>
 <p>In the next chapter, we’ll explore routing and navigation, building
 on these patterns to create complete single-page applications.</p>
 <h1 id="chapter-8-routing-and-navigation">Chapter 8: Routing and
@@ -9247,9 +9461,15 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb21
 <span id="cb210-11"><a href="#cb210-11" aria-hidden="true" tabindex="-1"></a><span class="co">// Usage</span></span>
 <span id="cb210-12"><a href="#cb210-12" aria-hidden="true" tabindex="-1"></a><span class="fu">updateQuery</span>({ <span class="dt">q</span><span class="op">:</span> <span class="st">&#39;web components&#39;</span><span class="op">,</span> <span class="dt">page</span><span class="op">:</span> <span class="st">&#39;2&#39;</span> })<span class="op">;</span></span></code></pre></div>
 <h2 id="summary-8">Summary</h2>
-<p>LARC routing provides: - Client-side navigation without page reloads
-- Declarative route configuration - Route parameters and guards - Nested
-routing support - Browser history integration - PAN bus integration</p>
+<p>LARC routing provides:</p>
+<ul>
+<li>Client-side navigation without page reloads</li>
+<li>Declarative route configuration</li>
+<li>Route parameters and guards</li>
+<li>Nested routing support</li>
+<li>Browser history integration</li>
+<li>PAN bus integration</li>
+</ul>
 <hr />
 <h2 id="best-practices-5">Best Practices</h2>
 <ol type="1">
@@ -9854,10 +10074,15 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb21
 <span id="cb218-98"><a href="#cb218-98" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb218-99"><a href="#cb218-99" aria-hidden="true" tabindex="-1"></a>customElements<span class="op">.</span><span class="fu">define</span>(<span class="st">&#39;smart-form&#39;</span><span class="op">,</span> SmartForm)<span class="op">;</span></span></code></pre></div>
 <h2 id="summary-9">Summary</h2>
-<p>This chapter covered: - Building accessible form components - Two-way
-data binding patterns - Validation strategies (native and custom) -
-Error handling and display - File upload with progress tracking - Form
-submission with loading states</p>
+<p>This chapter covered:</p>
+<ul>
+<li>Building accessible form components</li>
+<li>Two-way data binding patterns</li>
+<li>Validation strategies (native and custom)</li>
+<li>Error handling and display</li>
+<li>File upload with progress tracking</li>
+<li>Form submission with loading states</li>
+</ul>
 <hr />
 <h2 id="best-practices-6">Best Practices</h2>
 <ol type="1">
@@ -10179,29 +10404,54 @@ class="sourceCode json"><code class="sourceCode json"><span id="cb225-1"><a href
 Applications</h2>
 <h3 id="case-study-1-e-commerce-platform">Case Study 1: E-Commerce
 Platform</h3>
-<p><strong>Features:</strong> - Product catalog with search and filters
-- Shopping cart with persistence - Checkout flow with payment
-integration - User authentication and profiles - Order history and
-tracking</p>
-<p><strong>Architecture:</strong> - Components: product-card,
-cart-widget, checkout-form - State: IndexedDB for cart, localStorage for
-preferences - API: REST backend with Stripe integration - Routing:
-/products, /cart, /checkout, /orders</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Product catalog with search and filters</li>
+<li>Shopping cart with persistence</li>
+<li>Checkout flow with payment integration</li>
+<li>User authentication and profiles</li>
+<li>Order history and tracking</li>
+</ul>
+<p><strong>Architecture:</strong></p>
+<ul>
+<li>Components: product-card, cart-widget, checkout-form</li>
+<li>State: IndexedDB for cart, localStorage for preferences</li>
+<li>API: REST backend with Stripe integration</li>
+<li>Routing: /products, /cart, /checkout, /orders</li>
+</ul>
 <h3 id="case-study-2-dashboard-application">Case Study 2: Dashboard
 Application</h3>
-<p><strong>Features:</strong> - Real-time data visualization - User
-permissions and roles - Data export functionality - Responsive layout -
-Dark mode support</p>
-<p><strong>Architecture:</strong> - Components: chart-widget,
-data-table, filter-bar - State: Reactive store with WebSocket updates -
-API: GraphQL for flexible queries - Real-time: WebSocket for live
-updates</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Real-time data visualization</li>
+<li>User permissions and roles</li>
+<li>Data export functionality</li>
+<li>Responsive layout</li>
+<li>Dark mode support</li>
+</ul>
+<p><strong>Architecture:</strong></p>
+<ul>
+<li>Components: chart-widget, data-table, filter-bar</li>
+<li>State: Reactive store with WebSocket updates</li>
+<li>API: GraphQL for flexible queries</li>
+<li>Real-time: WebSocket for live updates</li>
+</ul>
 <h3 id="case-study-3-blogcms">Case Study 3: Blog/CMS</h3>
-<p><strong>Features:</strong> - Markdown editor - Draft auto-save -
-Media library - SEO optimization - Static site generation</p>
-<p><strong>Architecture:</strong> - Components: markdown-editor,
-media-upload, post-list - State: IndexedDB for drafts - API: Headless
-CMS (Contentful/Strapi) - Build: Optional SSG for production</p>
+<p><strong>Features:</strong></p>
+<ul>
+<li>Markdown editor</li>
+<li>Draft auto-save</li>
+<li>Media library</li>
+<li>SEO optimization</li>
+<li>Static site generation</li>
+</ul>
+<p><strong>Architecture:</strong></p>
+<ul>
+<li>Components: markdown-editor, media-upload, post-list</li>
+<li>State: IndexedDB for drafts</li>
+<li>API: Headless CMS (Contentful/Strapi)</li>
+<li>Build: Optional SSG for production</li>
+</ul>
 <h3 id="lessons-learned">Lessons Learned:</h3>
 <ol type="1">
 <li>Start simple, add complexity as needed</li>
@@ -10286,10 +10536,15 @@ Topics: <code>router.navigate</code>, <code>router.back</code>,
 <code>auth-changed</code></p>
 <h2 id="appendix-d-migration-guides">Appendix D: Migration Guides</h2>
 <h3 id="from-react">From React</h3>
-<p><strong>Concepts:</strong> - JSX → Template literals - Props →
-Attributes/properties - State → Instance properties - Context → PAN bus
-or Context API pattern - Hooks → Lifecycle callbacks - Redux → pan-store
-or custom store</p>
+<p><strong>Concepts:</strong></p>
+<ul>
+<li>JSX → Template literals</li>
+<li>Props → Attributes/properties</li>
+<li>State → Instance properties</li>
+<li>Context → PAN bus or Context API pattern</li>
+<li>Hooks → Lifecycle callbacks</li>
+<li>Redux → pan-store or custom store</li>
+</ul>
 <p><strong>Example:</strong></p>
 <div class="sourceCode" id="cb227"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb227-1"><a href="#cb227-1" aria-hidden="true" tabindex="-1"></a><span class="co">// React</span></span>
@@ -10334,13 +10589,23 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb22
 <span id="cb227-40"><a href="#cb227-40" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb227-41"><a href="#cb227-41" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <h3 id="from-vue">From Vue</h3>
-<p><strong>Concepts:</strong> - Templates → Template literals - v-model
-→ Two-way binding patterns - Computed → Getters - Watch → Observe
-patterns - Vuex → pan-store</p>
+<p><strong>Concepts:</strong></p>
+<ul>
+<li>Templates → Template literals</li>
+<li>v-model → Two-way binding patterns</li>
+<li>Computed → Getters</li>
+<li>Watch → Observe patterns</li>
+<li>Vuex → pan-store</li>
+</ul>
 <h3 id="from-angular">From Angular</h3>
-<p><strong>Concepts:</strong> - Decorators → Static properties -
-Dependency Injection → Constructor patterns - Services → Modules - RxJS
-→ PAN bus observables - NgRx → pan-store</p>
+<p><strong>Concepts:</strong></p>
+<ul>
+<li>Decorators → Static properties</li>
+<li>Dependency Injection → Constructor patterns</li>
+<li>Services → Modules</li>
+<li>RxJS → PAN bus observables</li>
+<li>NgRx → pan-store</li>
+</ul>
 <h2 id="appendix-e-resources">Appendix E: Resources</h2>
 <h3 id="official-documentation">Official Documentation</h3>
 <ul>
