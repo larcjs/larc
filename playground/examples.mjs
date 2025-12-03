@@ -61,7 +61,19 @@ export const examples = [
       {
         name: 'pan-chart',
         attributes: {
-          'type': 'bar'
+          'type': 'bar',
+          'data': JSON.stringify({
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+              label: 'Monthly Sales',
+              data: [12, 19, 3, 5, 2, 3],
+              backgroundColor: '#2563eb'
+            }]
+          }),
+          'options': JSON.stringify({
+            responsive: true,
+            maintainAspectRatio: false
+          })
         }
       }
     ]
@@ -74,7 +86,8 @@ export const examples = [
       {
         name: 'pan-form',
         attributes: {
-          'form-id': 'user-form'
+          'resource': 'users',
+          'fields': 'name,email,role'
         }
       },
       {
@@ -106,16 +119,17 @@ export const examples = [
     description: 'Fetch data and display in table',
     components: [
       {
-        name: 'pan-fetch',
+        name: 'pan-data-connector',
         attributes: {
-          'url': 'https://jsonplaceholder.typicode.com/users',
-          'topic': 'users.loaded'
+          'resource': 'users',
+          'base-url': 'https://jsonplaceholder.typicode.com'
         }
       },
       {
         name: 'pan-data-table',
         attributes: {
-          'listen-topic': 'users.loaded'
+          'resource': 'users',
+          'columns': 'name,email,phone'
         }
       }
     ]
@@ -153,16 +167,17 @@ export const examples = [
         }
       },
       {
-        name: 'pan-fetch',
+        name: 'pan-data-connector',
         attributes: {
-          'url': 'https://jsonplaceholder.typicode.com/posts',
-          'topic': 'posts.loaded'
+          'resource': 'posts',
+          'base-url': 'https://jsonplaceholder.typicode.com'
         }
       },
       {
         name: 'pan-data-table',
         attributes: {
-          'listen-topic': 'posts.loaded'
+          'resource': 'posts',
+          'columns': 'title,body'
         }
       }
     ]
@@ -270,27 +285,30 @@ export const examples = [
   {
     id: 'pagination',
     name: 'Paginated Data Table',
-    description: 'Large dataset with pagination',
+    description: 'Pagination controls (data connector loads all items)',
     components: [
       {
-        name: 'pan-fetch',
+        name: 'pan-data-connector',
         attributes: {
-          'url': 'https://jsonplaceholder.typicode.com/posts',
-          'topic': 'data.loaded'
+          'resource': 'posts',
+          'base-url': 'https://jsonplaceholder.typicode.com'
         }
       },
       {
         name: 'pan-data-table',
         attributes: {
-          'listen-topic': 'data.loaded'
+          'resource': 'posts',
+          'columns': 'id,title,body'
         }
       },
       {
         name: 'pan-pagination',
         attributes: {
-          'total': '100',
+          'total-items': '100',
           'page-size': '10',
-          'topic': 'page.changed'
+          'current-page': '1',
+          'topic': 'pagination',
+          'show-info': 'true'
         }
       }
     ]
@@ -318,19 +336,12 @@ export const examples = [
   {
     id: 'sse-stream',
     name: 'Server-Sent Events',
-    description: 'Server-sent event stream',
+    description: 'Server-sent event stream (needs backend)',
     components: [
       {
-        name: 'pan-sse',
+        name: 'pan-card',
         attributes: {
-          'url': '/api/events',
-          'topic': 'sse.message'
-        }
-      },
-      {
-        name: 'pan-data-table',
-        attributes: {
-          'listen-topic': 'sse.message'
+          'header': 'SSE Demo'
         }
       }
     ]
@@ -338,19 +349,12 @@ export const examples = [
   {
     id: 'graphql-data',
     name: 'GraphQL Integration',
-    description: 'Fetch data using GraphQL',
+    description: 'Fetch data using GraphQL (requires backend setup)',
     components: [
       {
-        name: 'pan-graphql-connector',
+        name: 'pan-card',
         attributes: {
-          'endpoint': 'https://api.example.com/graphql',
-          'resource': 'users'
-        }
-      },
-      {
-        name: 'pan-data-table',
-        attributes: {
-          'resource': 'users'
+          'header': 'GraphQL Demo'
         }
       }
     ]
@@ -383,8 +387,13 @@ export const examples = [
       {
         name: 'drag-drop-list',
         attributes: {
-          'topic': 'list.reordered',
-          'items': '["Item 1", "Item 2", "Item 3"]'
+          'topic': 'list',
+          'items': JSON.stringify([
+            { id: 1, content: '📝 Task 1: Review code' },
+            { id: 2, content: '🎨 Task 2: Update designs' },
+            { id: 3, content: '🚀 Task 3: Deploy to production' },
+            { id: 4, content: '📊 Task 4: Analyze metrics' }
+          ])
         }
       }
     ]
@@ -418,7 +427,11 @@ export const examples = [
         attributes: {
           'label': 'Actions',
           'topic': 'action.selected',
-          'items': '["Edit", "Delete", "Share"]'
+          'items': JSON.stringify([
+            { label: 'Edit', value: 'edit', icon: '✏️' },
+            { label: 'Delete', value: 'delete', icon: '🗑️' },
+            { label: 'Share', value: 'share', icon: '📤' }
+          ])
         }
       }
     ]

@@ -282,22 +282,23 @@ class PgExporter extends HTMLElement {
       '<span class="doctype">$1</span>'
     );
 
-    // Highlight tags
+    // Highlight tags and attributes together to avoid conflicts
     code = code.replace(
-      /(&lt;\/?)([\w-]+)/g,
-      '$1<span class="tag">$2</span>'
-    );
+      /(&lt;\/?)([\w-]+)((?:\s+[\w-]+(?:="[^"]*")?)*)\s*(\/?&gt;)/g,
+      (match, openBracket, tagName, attrs, closeBracket) => {
+        let result = openBracket + '<span class="tag">' + tagName + '</span>';
 
-    // Highlight attributes
-    code = code.replace(
-      /([\w-]+)(=)(")(.*?)(")/g,
-      '<span class="attr-name">$1</span><span class="punctuation">$2$3</span><span class="attr-value">$4</span><span class="punctuation">$5</span>'
-    );
+        // Highlight attributes if present
+        if (attrs) {
+          result += attrs.replace(
+            /([\w-]+)(=)(")(.*?)(")/g,
+            ' <span class="attr-name">$1</span><span class="punctuation">$2$3</span><span class="attr-value">$4</span><span class="punctuation">$5</span>'
+          );
+        }
 
-    // Highlight closing brackets
-    code = code.replace(
-      /(&gt;)/g,
-      '<span class="punctuation">$1</span>'
+        result += '<span class="punctuation">' + closeBracket + '</span>';
+        return result;
+      }
     );
 
     return code;

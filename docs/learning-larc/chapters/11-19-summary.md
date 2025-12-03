@@ -3,6 +3,7 @@
 ## Chapter 11: Data Fetching and APIs
 
 ### Key Topics:
+
 - **REST API Integration**: Using fetch() with proper error handling
 - **GraphQL Support**: Query/mutation patterns with LARC
 - **WebSocket Communication**: Real-time bi-directional communication
@@ -42,6 +43,7 @@ class ApiClient {
 ## Chapter 12: Authentication and Security
 
 ### Key Topics:
+
 - **JWT Token Management**: Storing, refreshing, and validating tokens
 - **The pan-auth Component**: Centralized authentication state
 - **Protected Routes**: Route guards for authenticated pages
@@ -86,6 +88,7 @@ class AuthService {
 ## Chapter 13: Server Integration
 
 ### Key Topics:
+
 - **Node.js/Express Backend**: RESTful API design for LARC
 - **PHP Integration**: Connecting LARC to PHP backends
 - **Python/Django**: Django REST framework integration
@@ -118,6 +121,7 @@ app.listen(3000);
 ## Chapter 14: Testing
 
 ### Key Topics:
+
 - **Unit Testing**: Testing components in isolation with Web Test Runner
 - **Integration Testing**: Testing component interactions
 - **E2E Testing**: Playwright/Puppeteer for full user flows
@@ -159,6 +163,7 @@ describe('UserCard', () => {
 ## Chapter 15: Performance and Optimization
 
 ### Key Topics:
+
 - **Code Splitting**: Dynamic imports for lazy loading
 - **Tree Shaking**: Removing unused code
 - **Lazy Loading**: Intersection Observer patterns
@@ -192,6 +197,7 @@ document.querySelectorAll('img[data-src]').forEach(img => {
 ## Chapter 16: Deployment
 
 ### Key Topics:
+
 - **Static Hosting**: Netlify, Vercel, GitHub Pages
 - **CDN Configuration**: CloudFlare, AWS CloudFront
 - **Environment Variables**: Managing config across environments
@@ -200,6 +206,7 @@ document.querySelectorAll('img[data-src]').forEach(img => {
 - **Monitoring**: Error tracking and analytics
 
 ### Deployment Checklist:
+
 - [ ] Minify JavaScript (optional but recommended)
 - [ ] Optimize images
 - [ ] Set up CDN for assets
@@ -213,6 +220,7 @@ document.querySelectorAll('img[data-src]').forEach(img => {
 ## Chapter 17: Component Library
 
 ### Key Topics:
+
 - **Using the Registry**: Finding and installing components
 - **Contributing Components**: Publishing to the registry
 - **Component Quality**: Tests, types, documentation
@@ -232,6 +240,7 @@ larc publish ./components/my-component.js
 ## Chapter 18: Tooling
 
 ### Key Topics:
+
 - **LARC CLI**: create-larc-app, dev server, generators
 - **VS Code Extension**: Snippets, IntelliSense, commands
 - **Browser DevTools**: Debugging Web Components and Shadow DOM
@@ -316,6 +325,7 @@ larc publish ./components/my-component.js
 - Build: Optional SSG for production
 
 ### Lessons Learned:
+
 1. Start simple, add complexity as needed
 2. Use the PAN bus for cross-component communication
 3. Implement offline-first for better UX
@@ -334,12 +344,14 @@ larc publish ./components/my-component.js
 ## Appendix A: Web Components API Reference
 
 ### Custom Elements
+
 - `customElements.define(name, constructor, options)`
 - `customElements.get(name)`
 - `customElements.whenDefined(name)`
 - `customElements.upgrade(root)`
 
 ### Lifecycle Callbacks
+
 - `constructor()`
 - `connectedCallback()`
 - `disconnectedCallback()`
@@ -347,6 +359,7 @@ larc publish ./components/my-component.js
 - `adoptedCallback()`
 
 ### Shadow DOM
+
 - `element.attachShadow({ mode: 'open'|'closed' })`
 - `element.shadowRoot`
 - `slot.assignedNodes()`
@@ -371,6 +384,7 @@ unsubscribe()
 ```
 
 ### Topic Patterns
+
 - `user.login` - Specific event
 - `user.*` - All user events
 - `*.error` - All error events
@@ -478,31 +492,37 @@ class UserCard extends HTMLElement {
 ## Appendix E: Resources
 
 ### Official Documentation
+
 - LARC Docs: https://larcjs.com/docs
 - Component Registry: https://components.larcjs.com
 - GitHub: https://github.com/larcjs
 
 ### Web Standards
+
 - MDN Web Components: https://developer.mozilla.org/en-US/docs/Web/Web_Components
 - Custom Elements Spec: https://html.spec.whatwg.org/multipage/custom-elements.html
 - Shadow DOM Spec: https://dom.spec.whatwg.org/#shadow-trees
 
 ### Community
+
 - Discord: https://discord.gg/larcjs
 - Forum: https://forum.larcjs.com
 - Twitter: @larcjs
 
 ### Learning Resources
+
 - Web Components Tutorial: https://webcomponents.org
 - ES Modules Guide: https://javascript.info/modules
 - IndexedDB Tutorial: https://javascript.info/indexeddb
 
 ### Tools
+
 - LARC CLI: https://www.npmjs.com/package/create-larc-app
 - VS Code Extension: Search "LARC" in marketplace
 - Component Analyzer: https://github.com/larcjs/analyzer
 
 ### Example Projects
+
 - TodoMVC: https://github.com/larcjs/todomvc
 - E-Commerce: https://github.com/larcjs/ecommerce-example
 - Dashboard: https://github.com/larcjs/dashboard-example

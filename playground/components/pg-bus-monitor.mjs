@@ -41,28 +41,44 @@ class PgBusMonitor extends HTMLElement {
   }
 
   startMonitoring() {
-    // Hook into the PAN bus to intercept messages
-    const bus = document.querySelector('pan-bus');
-    if (!bus) {
-      console.warn('PAN bus not found');
-      return;
-    }
+    console.log('[pg-bus-monitor] Starting monitoring...');
 
-    // Listen to all PAN messages by subscribing to wildcard
-    this.originalDispatchEvent = bus.dispatchEvent.bind(bus);
-    bus.dispatchEvent = (event) => {
-      // Capture message events
-      if (event.type === 'pan-message') {
-        this.logMessage(event.detail);
+    // Listen to pan:publish events to catch all published messages
+    this.publishHandler = (event) => {
+      console.log('[pg-bus-monitor] pan:publish event received:', event.detail);
+      if (event.detail && event.detail.topic) {
+        this.logMessage({
+          topic: event.detail.topic,
+          data: event.detail.data,
+          type: 'publish'
+        });
       }
-      return this.originalDispatchEvent(event);
     };
+
+    // Listen to pan:deliver events to catch all delivered messages
+    this.deliverHandler = (event) => {
+      console.log('[pg-bus-monitor] pan:deliver event received:', event.detail);
+      if (event.detail && event.detail.topic) {
+        this.logMessage({
+          topic: event.detail.topic,
+          data: event.detail.data,
+          type: 'deliver'
+        });
+      }
+    };
+
+    document.addEventListener('pan:publish', this.publishHandler, true);
+    document.addEventListener('pan:deliver', this.deliverHandler, true);
+
+    console.log('[pg-bus-monitor] Event listeners attached');
   }
 
   stopMonitoring() {
-    const bus = document.querySelector('pan-bus');
-    if (bus && this.originalDispatchEvent) {
-      bus.dispatchEvent = this.originalDispatchEvent;
+    if (this.publishHandler) {
+      document.removeEventListener('pan:publish', this.publishHandler, true);
+    }
+    if (this.deliverHandler) {
+      document.removeEventListener('pan:deliver', this.deliverHandler, true);
     }
   }
 
@@ -84,7 +100,7 @@ class PgBusMonitor extends HTMLElement {
 
   render() {
     const container = this.querySelector('#messages-container');
-    
+
     if (this.messages.length === 0) {
       container.innerHTML = `
         <p style="text-align: center; color: #999; padding: 2rem;">
@@ -94,13 +110,20 @@ class PgBusMonitor extends HTMLElement {
       return;
     }
 
-    container.innerHTML = this.messages.map(msg => `
-      <div class="bus-message">
-        <div class="bus-message-topic">${this.escapeHtml(msg.topic || 'unknown')}</div>
-        <div class="bus-message-data">${this.formatData(msg.data)}</div>
-        <div class="bus-message-time">${msg.timestamp}</div>
-      </div>
-    `).join('');
+    container.innerHTML = this.messages.map(msg => {
+      const typeIcon = msg.type === 'publish' ? '📤' : '📥';
+      const typeClass = msg.type === 'publish' ? 'publish' : 'deliver';
+      return `
+        <div class="bus-message bus-message-${typeClass}">
+          <div class="bus-message-header">
+            <span class="bus-message-type">${typeIcon} ${msg.type || 'message'}</span>
+            <span class="bus-message-time">${msg.timestamp}</span>
+          </div>
+          <div class="bus-message-topic">${this.escapeHtml(msg.topic || 'unknown')}</div>
+          <div class="bus-message-data">${this.formatData(msg.data)}</div>
+        </div>
+      `;
+    }).join('');
   }
 
   formatData(data) {

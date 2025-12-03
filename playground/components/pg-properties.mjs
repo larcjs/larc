@@ -54,6 +54,16 @@ class PgProperties extends HTMLElement {
         <div class="component-icon">${meta.icon}</div>
         <div class="component-name">${meta.displayName}</div>
         <div class="component-desc">${meta.description}</div>
+        ${meta.helpText ? `
+          <details class="component-help" style="margin-top: 1rem; padding: 0.75rem; background: #f0f9ff; border: 1px solid #bfdbfe; border-radius: 6px;">
+            <summary style="cursor: pointer; font-weight: 500; color: #1e40af; font-size: 0.875rem;">
+              💡 Usage Guide
+            </summary>
+            <div style="margin-top: 0.75rem; font-size: 0.875rem; color: #1e3a8a; line-height: 1.6;">
+              ${meta.helpText}
+            </div>
+          </details>
+        ` : ''}
       </div>
 
       <div class="properties-tabs">
@@ -222,9 +232,23 @@ box-shadow: 0 4px 20px rgba(0,0,0,0.1);"
           </label>
           ${this.renderInput(attr, currentValue)}
           <small class="property-desc">${attr.description}</small>
+          ${attr.helpText ? `
+            <details class="attr-help" style="margin-top: 0.5rem;">
+              <summary style="cursor: pointer; font-size: 0.75rem; color: #667eea;">Show example</summary>
+              <div style="margin-top: 0.5rem; padding: 0.5rem; background: #f5f5f5; border-radius: 4px; font-family: monospace; font-size: 0.75rem; white-space: pre-wrap; overflow-x: auto;">
+                ${this.escapeHtml(attr.helpText)}
+              </div>
+            </details>
+          ` : ''}
         </div>
       `;
     }).join('');
+  }
+
+  escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   renderInput(attr, value) {
@@ -253,10 +277,29 @@ box-shadow: 0 4px 20px rgba(0,0,0,0.1);"
                        value="${value}"
                        placeholder="${attr.default || ''}">`;
 
+      case 'json':
+      case 'object':
+      case 'array':
+        // Use textarea for complex JSON/object attributes
+        return `<textarea
+                  data-attr="${attr.name}"
+                  rows="5"
+                  placeholder="${attr.default || 'Enter JSON...'}"
+                  style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px; font-family: monospace; font-size: 0.875rem;"
+                >${this.escapeHtml(value)}</textarea>`;
+
+      case 'textarea':
+        return `<textarea
+                  data-attr="${attr.name}"
+                  rows="4"
+                  placeholder="${attr.default || ''}"
+                  style="width: 100%; padding: 0.5rem; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 0.875rem;"
+                >${this.escapeHtml(value)}</textarea>`;
+
       default:
         return `<input type="text"
                        data-attr="${attr.name}"
-                       value="${value}"
+                       value="${this.escapeHtml(value)}"
                        placeholder="${attr.default || ''}">`;
     }
   }
@@ -297,7 +340,15 @@ box-shadow: 0 4px 20px rgba(0,0,0,0.1);"
   attachPropertyListeners() {
     // Listen for property changes
     this.querySelectorAll('[data-attr]').forEach(input => {
-      const eventType = input.type === 'checkbox' ? 'change' : 'input';
+      // Use 'change' for checkboxes and selects, 'blur' for textareas (to avoid too frequent updates), 'input' for text inputs
+      let eventType = 'input';
+      if (input.type === 'checkbox') {
+        eventType = 'change';
+      } else if (input.tagName === 'TEXTAREA') {
+        eventType = 'blur'; // Update on blur for textareas to avoid constant updates while typing
+      } else if (input.tagName === 'SELECT') {
+        eventType = 'change';
+      }
 
       input.addEventListener(eventType, (e) => {
         const attrName = e.target.dataset.attr;
@@ -305,19 +356,39 @@ box-shadow: 0 4px 20px rgba(0,0,0,0.1);"
 
         if (e.target.type === 'checkbox') {
           value = e.target.checked;
+          // For booleans, set/remove attribute
+          if (this.selectedElement) {
+            if (value) {
+              this.selectedElement.setAttribute(attrName, '');
+            } else {
+              this.selectedElement.removeAttribute(attrName);
+            }
+          }
         } else {
           value = e.target.value;
+          // Update the actual component
+          if (this.selectedElement) {
+            if (value === '') {
+              this.selectedElement.removeAttribute(attrName);
+            } else {
+              this.selectedElement.setAttribute(attrName, value);
+            }
+
+            // For properties that might need explicit setter
+            if (attrName in this.selectedElement) {
+              try {
+                this.selectedElement[attrName] = value;
+              } catch (err) {
+                // Some properties might be read-only, that's okay
+              }
+            }
+          }
         }
 
-        // Update the actual component
-        if (this.selectedElement) {
-          this.selectedElement.setAttribute(attrName, value);
-
-          // Notify canvas that something changed
-          document.dispatchEvent(new CustomEvent('canvas-changed', {
-            bubbles: true
-          }));
-        }
+        // Notify canvas that something changed
+        document.dispatchEvent(new CustomEvent('canvas-changed', {
+          bubbles: true
+        }));
       });
     });
 

@@ -89,9 +89,57 @@ Web standards give you 80% of what you need (Custom Elements, Shadow DOM, ES Mod
 
 ---
 
-## 📦 Repositories
+## 🛠️ Ecosystem Tools
 
-This is the **meta-repository** containing shared configuration. Each component is in its own repository:
+LARC includes a complete developer ecosystem for building, sharing, and discovering components:
+
+### 🚀 CLI Tooling
+
+**Create LARC apps instantly:**
+```bash
+# Create a new project
+npx create-larc-app my-app
+cd my-app
+npm run dev
+
+# Add components from registry
+larc add pan-card
+
+# Generate custom components
+larc generate component my-widget
+```
+
+Features:
+- ⚡ **Zero-config dev server** with hot reload
+- 📦 **Component installation** from registry
+- 🎨 **Code generation** for new components
+- 🎯 **Multiple templates** (minimal, dashboard, blog)
+
+### 🗂️ Component Registry
+
+**Discover and share components:**
+- 🌐 **Web UI** for browsing components
+- ✓ **Quality scoring** and verification badges
+- 📋 **Rich metadata** (npm, CDN, demos, docs)
+- 🤝 **Open submission** process for community components
+
+Browse the registry at the [Component Registry](./registry/)
+
+### 🎨 VS Code Extension
+
+**Enhanced development experience:**
+- ⚡ **Code snippets** for components and PAN bus
+- 🔍 **IntelliSense** with component auto-completion
+- 📦 **Registry integration** - browse and install from VS Code
+- 🎯 **Commands** for creating and managing components
+
+[Install the extension](./vscode-extension/)
+
+---
+
+## 📦 Core Repositories
+
+This is the **meta-repository** containing shared configuration and ecosystem tools. Each core package is in its own repository:
 
 | Repository | Description | Links |
 |------------|-------------|-------|
@@ -106,7 +154,18 @@ This is the **meta-repository** containing shared configuration. Each component 
 
 ## 🚀 Quick Start
 
-### Option 1: Automated Setup (Recommended)
+### Option 1: Create New Project (Fastest)
+
+```bash
+# Create a new LARC app
+npx create-larc-app my-app
+cd my-app
+npm run dev
+
+# Start building with components
+```
+
+### Option 2: Automated Setup (Full Repository)
 
 ```bash
 # Clone with submodules
@@ -124,7 +183,7 @@ python3 -m http.server 8000
 # Open http://localhost:8000/test-config.html
 ```
 
-### Option 2: Manual Setup
+### Option 3: Manual Setup
 
 ```bash
 # Clone the repository

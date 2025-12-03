@@ -25,10 +25,11 @@
         },
         {
           "name": "items",
-          "type": "string",
+          "type": "json",
           "default": "",
           "description": "items attribute",
-          "required": false
+          "required": false,
+          "helpText": "[{\"id\":1,\"text\":\"Item 1\"},{\"id\":2,\"text\":\"Item 2\"}]"
         },
         {
           "name": "disabled",
@@ -53,7 +54,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Reorderable list with drag and drop:</p>\n<pre>&lt;drag-drop-list\n  topic=\"todos\"\n  items='[\n    {\"id\": 1, \"text\": \"First item\"},\n    {\"id\": 2, \"text\": \"Second item\"},\n    {\"id\": 3, \"text\": \"Third item\"}\n  ]'&gt;\n&lt;/drag-drop-list&gt;</pre>\n<p>Publishes <code>{topic}.reorder</code> when items are reordered.</p>"
     },
     {
       "name": "editable-cell",
@@ -194,7 +196,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>File upload with drag-drop and preview:</p>\n<pre>&lt;file-upload\n  accept=\"image/*\"\n  multiple\n  max-size=\"5242880\"\n  preview\n  drag-drop\n  topic=\"files\"&gt;\n&lt;/file-upload&gt;</pre>\n<p>max-size in bytes (5242880 = 5MB)</p>\n<p>Publishes <code>{topic}.upload</code> with file data.</p>"
     },
     {
       "name": "pan-auth",
@@ -451,17 +454,19 @@
         },
         {
           "name": "data",
-          "type": "string",
+          "type": "json",
           "default": "",
           "description": "data attribute",
-          "required": false
+          "required": false,
+          "helpText": "{\"labels\":[\"Q1\",\"Q2\",\"Q3\"],\"datasets\":[{\"label\":\"Revenue\",\"data\":[100,150,200]}]}"
         },
         {
           "name": "options",
-          "type": "string",
+          "type": "json",
           "default": "",
           "description": "options attribute",
-          "required": false
+          "required": false,
+          "helpText": "{\"responsive\":true,\"maintainAspectRatio\":false}"
         },
         {
           "name": "topic",
@@ -500,7 +505,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Render charts with JSON data:</p>\n<pre>&lt;pan-chart\n  type=\"bar\"\n  data='{\n    \"labels\": [\"Jan\", \"Feb\", \"Mar\"],\n    \"datasets\": [{\n      \"label\": \"Sales\",\n      \"data\": [12, 19, 3]\n    }]\n  }'\n  options='{\"responsive\": true}'&gt;\n&lt;/pan-chart&gt;</pre>"
     },
     {
       "name": "pan-computed-state",
@@ -524,12 +530,13 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Create derived state from other topics:</p>\n<pre>&lt;pan-computed-state\n  sources=\"todos.list\"\n  output=\"todos.stats\"\n  retain&gt;\n  &lt;script&gt;\n    (todos) =&gt; ({\n      total: todos.length,\n      completed: todos.filter(t =&gt; t.completed).length,\n      remaining: todos.filter(t =&gt; !t.completed).length\n    })\n  &lt;/script&gt;\n&lt;/pan-computed-state&gt;</pre>\n<p>The function receives topic data and returns computed result.</p>"
     },
     {
       "name": "pan-data-connector",
       "displayName": "Data Connector",
-      "description": "Pan Data Connector component",
+      "description": "REST data connector for PAN CRUD operations. Listens to {resource}.list.get, {resource}.item.get, {resource}.item.save, {resource}.item.delete and publishes {resource}.list.state",
       "category": "data",
       "path": "../ui/src/components/pan-data-connector.mjs",
       "icon": "📦",
@@ -539,7 +546,60 @@
       ],
       "status": "stable",
       "since": "1.0.0",
-      "attributes": [],
+      "helpText": "<p>Connects REST APIs to PAN topics for CRUD operations:</p><pre>&lt;pan-data-connector\n  resource=\"users\"\n  base-url=\"https://api.example.com\"\n  key=\"id\"&gt;\n&lt;/pan-data-connector&gt;\n\n&lt;pan-data-table\n  resource=\"users\"\n  columns=\"name,email,role\"&gt;\n&lt;/pan-data-table&gt;</pre><p>The connector listens to <code>{resource}.list.get</code> and publishes <code>{resource}.list.state</code> (retained). Works with <code>pan-data-table</code> and <code>pan-form</code>.</p>",
+      "attributes": [
+        {
+          "name": "resource",
+          "type": "string",
+          "description": "Logical resource name (e.g., 'users', 'posts')",
+          "required": true,
+          "helpText": "users"
+        },
+        {
+          "name": "base-url",
+          "type": "string",
+          "description": "Base URL for the API (e.g., '/api' or 'https://api.example.com')",
+          "required": true,
+          "helpText": "https://api.example.com"
+        },
+        {
+          "name": "key",
+          "type": "string",
+          "description": "Identifier field name (default: 'id')",
+          "default": "id",
+          "required": false,
+          "helpText": "id"
+        },
+        {
+          "name": "list-path",
+          "type": "string",
+          "description": "Override for list endpoint (default: /{resource})",
+          "required": false,
+          "helpText": "/users"
+        },
+        {
+          "name": "item-path",
+          "type": "string",
+          "description": "Override for item endpoint (default: /{resource}/:id)",
+          "required": false,
+          "helpText": "/users/:id"
+        },
+        {
+          "name": "update-method",
+          "type": "select",
+          "description": "HTTP method for updates (default: PUT)",
+          "default": "PUT",
+          "options": ["PUT", "PATCH"],
+          "required": false
+        },
+        {
+          "name": "credentials",
+          "type": "select",
+          "description": "Fetch credentials mode",
+          "options": ["omit", "same-origin", "include"],
+          "required": false
+        }
+      ],
       "properties": [],
       "methods": [],
       "events": [],
@@ -548,7 +608,7 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": ["pan-data-table", "pan-form"]
     },
     {
       "name": "pan-data-provider",
@@ -617,14 +677,16 @@
           "type": "string",
           "default": "",
           "description": "resource attribute",
-          "required": false
+          "required": false,
+          "helpText": "users"
         },
         {
           "name": "columns",
           "type": "string",
           "default": "",
           "description": "columns attribute",
-          "required": false
+          "required": false,
+          "helpText": "name,email,created_at"
         },
         {
           "name": "key",
@@ -649,7 +711,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Subscribes to <code>{resource}.list.state</code> for data:</p>\n<pre>&lt;pan-data-table\n  resource=\"users\"\n  columns=\"name,email,role\"\n  key=\"id\"&gt;\n&lt;/pan-data-table&gt;</pre>\n<p>Expected data format:</p>\n<pre>{\n  \"data\": {\n    \"items\": [\n      { \"id\": 1, \"name\": \"Alice\", \"email\": \"alice@example.com\", \"role\": \"Admin\" },\n      { \"id\": 2, \"name\": \"Bob\", \"email\": \"bob@example.com\", \"role\": \"User\" }\n    ]\n  }\n}</pre>\n<p>Click rows to publish <code>{resource}.item.select</code></p>"
     },
     {
       "name": "pan-date-picker",
@@ -838,14 +901,16 @@
           "type": "string",
           "default": "",
           "description": "resource attribute",
-          "required": false
+          "required": false,
+          "helpText": "users"
         },
         {
           "name": "fields",
           "type": "string",
           "default": "",
           "description": "fields attribute",
-          "required": false
+          "required": false,
+          "helpText": "name,email,role"
         },
         {
           "name": "key",
@@ -870,7 +935,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>CRUD form that subscribes to selection events:</p>\n<pre>&lt;pan-form\n  resource=\"users\"\n  fields=\"name,email,role\"\n  key=\"id\"&gt;\n&lt;/pan-form&gt;</pre>\n<p>Listens to <code>{resource}.item.select</code> and requests data via <code>{resource}.item.get</code>.</p>\n<p>Submits via <code>{resource}.item.save</code> and deletes via <code>{resource}.item.delete</code>.</p>"
     },
     {
       "name": "pan-forwarder",
@@ -1123,10 +1189,11 @@
         },
         {
           "name": "schema",
-          "type": "string",
+          "type": "json",
           "default": "",
           "description": "schema attribute",
-          "required": false
+          "required": false,
+          "helpText": "{\"fields\":[{\"name\":\"email\",\"type\":\"email\",\"label\":\"Email\",\"required\":true}]}"
         },
         {
           "name": "url",
@@ -1137,7 +1204,7 @@
         },
         {
           "name": "data",
-          "type": "string",
+          "type": "json",
           "default": "",
           "description": "data attribute",
           "required": false
@@ -1172,7 +1239,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Generate forms from JSON schemas:</p>\n<pre>{\n  \"fields\": [\n    {\n      \"name\": \"email\",\n      \"type\": \"email\",\n      \"label\": \"Email Address\",\n      \"required\": true,\n      \"placeholder\": \"you@example.com\"\n    },\n    {\n      \"name\": \"message\",\n      \"type\": \"textarea\",\n      \"label\": \"Message\",\n      \"rows\": 5\n    }\n  ]\n}</pre>\n<p>Supports all HTML5 input types plus custom styling.</p>"
     },
     {
       "name": "pan-jwt",
@@ -1381,7 +1449,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Queue operations when offline and sync when reconnected:</p>\n<pre>&lt;pan-offline-sync\n  topics=\"todos.*\"\n  endpoints='{\n    \"todos.create\": \"/api/todos\",\n    \"todos.update\": \"/api/todos/:id\",\n    \"todos.delete\": \"/api/todos/:id\"\n  }'&gt;\n&lt;/pan-offline-sync&gt;</pre>\n<p>Automatically queues mutations when offline and retries on reconnection.</p>"
     },
     {
       "name": "pan-pagination",
@@ -1479,7 +1548,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Route state to different storage backends:</p>\n<pre>&lt;pan-persistence-strategy auto-hydrate&gt;\n  &lt;strategy topics=\"user.prefs\" storage=\"localStorage\"&gt;&lt;/strategy&gt;\n  &lt;strategy topics=\"session.*\" storage=\"sessionStorage\"&gt;&lt;/strategy&gt;\n  &lt;strategy topics=\"cart.*\" storage=\"indexedDB\" ttl=\"3600000\"&gt;&lt;/strategy&gt;\n&lt;/pan-persistence-strategy&gt;</pre>\n<p>Supports: localStorage, sessionStorage, indexedDB, memory</p>"
     },
     {
       "name": "pan-php-connector",
@@ -1754,7 +1824,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Runtime JSON Schema validation:</p>\n<pre>&lt;pan-schema-validator\n  topics=\"user.profile\"\n  schema='{\n    \"type\": \"object\",\n    \"required\": [\"email\", \"name\"],\n    \"properties\": {\n      \"email\": {\"type\": \"string\", \"format\": \"email\"},\n      \"name\": {\"type\": \"string\", \"minLength\": 2},\n      \"age\": {\"type\": \"number\", \"minimum\": 0}\n    }\n  }'&gt;\n&lt;/pan-schema-validator&gt;</pre>\n<p>Publishes <code>{topic}.validation</code> with errors if invalid.</p>"
     },
     {
       "name": "pan-search-bar",
@@ -1922,7 +1993,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Synchronize state across browser tabs:</p>\n<pre>&lt;pan-state-sync\n  channel=\"myapp\"\n  topics=\"user.*,cart.*\"&gt;\n&lt;/pan-state-sync&gt;</pre>\n<p>Uses BroadcastChannel API to mirror messages across tabs.</p>\n<p>Wildcard patterns supported: <code>*</code> and <code>**</code></p>"
     },
     {
       "name": "pan-store",
@@ -2026,10 +2098,11 @@
         },
         {
           "name": "tabs",
-          "type": "string",
+          "type": "json",
           "default": "",
           "description": "tabs attribute",
-          "required": false
+          "required": false,
+          "helpText": "[{\"label\":\"Home\",\"id\":\"home\"},{\"label\":\"Profile\",\"id\":\"profile\",\"icon\":\"👤\"}]"
         }
       ],
       "properties": [],
@@ -2040,7 +2113,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>To add tabs, use the <code>tabs</code> attribute with a JSON array:</p>\n<pre>[\n  { \"label\": \"Tab 1\", \"id\": \"tab1\" },\n  { \"label\": \"Tab 2\", \"id\": \"tab2\", \"disabled\": true },\n  { \"label\": \"Tab 3\", \"id\": \"tab3\", \"icon\": \"🎨\" }\n]</pre>\n<p>Or add content as slotted children:</p>\n<pre>&lt;pan-tabs&gt;\n  &lt;div slot=\"tab-0\" data-label=\"First\"&gt;Content 1&lt;/div&gt;\n  &lt;div slot=\"tab-1\" data-label=\"Second\"&gt;Content 2&lt;/div&gt;\n&lt;/pan-tabs&gt;</pre>"
     },
     {
       "name": "pan-theme-provider",
@@ -2200,7 +2274,8 @@
       "dependencies": [
         "@larcjs/core"
       ],
-      "related": []
+      "related": [],
+      "helpText": "<p>Time-travel debugging for state management:</p>\n<pre>&lt;pan-undo-redo\n  topics=\"editor.*\"\n  max-history=\"50\"\n  channel=\"editor-history\"&gt;\n&lt;/pan-undo-redo&gt;</pre>\n<p>Listens to: <code>{channel}.undo</code>, <code>{channel}.redo</code>, <code>{channel}.clear</code></p>\n<p>Maintains history of mutations for undo/redo operations.</p>"
     },
     {
       "name": "pan-validation",

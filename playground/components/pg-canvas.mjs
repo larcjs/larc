@@ -15,7 +15,10 @@ class PgCanvas extends HTMLElement {
     this.innerHTML = `
       <div class="canvas">
         <div class="canvas-toolbar">
-          <button class="btn-clear">Clear All</button>
+          <div class="toolbar-left">
+            <button class="btn-clear">Clear All</button>
+            <div class="non-ui-badges" id="non-ui-badges"></div>
+          </div>
           <select class="viewport-size" aria-label="Viewport size">
             <option value="desktop">Desktop</option>
             <option value="tablet">Tablet</option>
@@ -77,9 +80,6 @@ class PgCanvas extends HTMLElement {
       }
     });
 
-    // Add demo content for better visibility
-    this.addDemoContent(element, componentMeta);
-
     // Make it selectable
     element.classList.add('pg-component');
     element.dataset.componentId = crypto.randomUUID();
@@ -91,6 +91,20 @@ class PgCanvas extends HTMLElement {
       this.selectComponent(element);
     });
 
+    // Check if it's a non-UI component
+    const nonUICategories = ['state', 'routing', 'data', 'devtools', 'advanced', 'auth'];
+    const isNonUIComponent = nonUICategories.includes(componentMeta.category);
+
+    if (isNonUIComponent) {
+      // Add badge to toolbar but keep element hidden
+      this.addNonUIBadge(element, componentMeta);
+      // Still append to DOM (needed for component to function) but hide it
+      element.style.display = 'none';
+    } else {
+      // Add demo content for UI components
+      this.addDemoContent(element, componentMeta);
+    }
+
     previewArea.appendChild(element);
     this.components.push(element);
     this.selectComponent(element);
@@ -101,16 +115,48 @@ class PgCanvas extends HTMLElement {
     }));
   }
 
+  addNonUIBadge(element, componentMeta) {
+    const badgeContainer = this.querySelector('#non-ui-badges');
+    if (!badgeContainer) return;
+
+    // Create badge element
+    const badge = document.createElement('div');
+    badge.className = 'non-ui-badge';
+    badge.textContent = `${componentMeta.icon} ${componentMeta.displayName}`;
+    badge.dataset.componentId = element.dataset.componentId;
+    badge.title = componentMeta.description;
+
+    // Click badge to select component
+    badge.addEventListener('click', () => {
+      this.selectComponent(element);
+    });
+
+    badgeContainer.appendChild(badge);
+  }
+
+  removeNonUIBadge(componentId) {
+    const badgeContainer = this.querySelector('#non-ui-badges');
+    if (!badgeContainer) return;
+
+    const badge = badgeContainer.querySelector(`[data-component-id="${componentId}"]`);
+    if (badge) badge.remove();
+  }
+
   addDemoContent(element, componentMeta) {
     const name = componentMeta.name;
+    const category = componentMeta.category;
 
-    // Add a subtle badge showing the component name for easy identification
-    const badge = document.createElement('div');
-    badge.className = 'pg-component-badge';
-    badge.textContent = `${componentMeta.icon} ${componentMeta.displayName}`;
-    element.appendChild(badge);
+    // Only show badge for non-UI components (infrastructure, state management, etc.)
+    const nonUICategories = ['state', 'routing', 'data', 'devtools', 'advanced', 'auth'];
+    const isNonUIComponent = nonUICategories.includes(category);
 
-    // Add sensible default content for common components
+    if (isNonUIComponent) {
+      // Add badge to toolbar instead of canvas
+      this.addNonUIBadge(element, componentMeta);
+      return; // Don't add any content to canvas for non-UI components
+    }
+
+    // Add sensible default content for common UI components
     if (name === 'pan-card') {
       if (!element.getAttribute('header')) {
         element.setAttribute('header', 'Card Title');
@@ -192,18 +238,9 @@ class PgCanvas extends HTMLElement {
         <button style="padding: 0.5rem 1rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">Close</button>
       `;
       element.appendChild(modal);
-    } else {
-      // For components without specific content, just add a hint
-      const hint = document.createElement('div');
-      hint.className = 'pg-component-hint';
-      hint.style.cssText = 'padding: 1.5rem; color: #999; font-size: 0.875rem; text-align: center; min-height: 60px; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 0.5rem;';
-      hint.innerHTML = `
-        <div style="font-weight: 500;">${componentMeta.displayName}</div>
-        <div style="font-size: 0.75rem; color: #bbb;">${componentMeta.description}</div>
-        <div style="font-size: 0.75rem; color: #bbb;">Configure in properties panel →</div>
-      `;
-      element.appendChild(hint);
     }
+    // For other UI components, don't add any default content - let them render naturally
+    // or add minimal placeholder text if needed
   }
 
   async ensureComponentLoaded(componentMeta) {
@@ -260,6 +297,11 @@ class PgCanvas extends HTMLElement {
         Click a component from the sidebar to add it here
       </div>
     `;
+
+    // Clear badges
+    const badgeContainer = this.querySelector('#non-ui-badges');
+    if (badgeContainer) badgeContainer.innerHTML = '';
+
     this.components = [];
     this.selectedComponent = null;
 
@@ -309,9 +351,6 @@ class PgCanvas extends HTMLElement {
         element.setAttribute(key, value);
       });
 
-      // Add demo content
-      this.addDemoContent(element, componentMeta);
-
       // Make it selectable
       element.classList.add('pg-component');
       element.dataset.componentId = crypto.randomUUID();
@@ -322,6 +361,20 @@ class PgCanvas extends HTMLElement {
         e.stopPropagation();
         this.selectComponent(element);
       });
+
+      // Check if it's a non-UI component
+      const nonUICategories = ['state', 'routing', 'data', 'devtools', 'advanced', 'auth'];
+      const isNonUIComponent = nonUICategories.includes(componentMeta.category);
+
+      if (isNonUIComponent) {
+        // Add badge to toolbar but keep element hidden
+        this.addNonUIBadge(element, componentMeta);
+        // Still append to DOM (needed for component to function) but hide it
+        element.style.display = 'none';
+      } else {
+        // Add demo content for UI components
+        this.addDemoContent(element, componentMeta);
+      }
 
       // Add to canvas
       const previewArea = this.querySelector('#preview-area');
