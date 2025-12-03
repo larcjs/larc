@@ -70,6 +70,14 @@ echo "" >> "$COMBINED_MD"
 echo "\\pagebreak" >> "$COMBINED_MD"
 echo "" >> "$COMBINED_MD"
 
+# Add foreword
+if [ -f "foreword.md" ]; then
+    cat foreword.md >> "$COMBINED_MD"
+    echo "" >> "$COMBINED_MD"
+    echo "\\pagebreak" >> "$COMBINED_MD"
+    echo "" >> "$COMBINED_MD"
+fi
+
 # Add all chapters in order
 CHAPTERS=(
     "chapters/01-philosophy-and-background.md"
@@ -79,9 +87,10 @@ CHAPTERS=(
     "chapters/05-the-pan-bus.md"
     "chapters/06-state-management.md"
     "chapters/07-advanced-component-patterns.md"
-    "chapters/08-routing-and-navigation.md"
-    "chapters/09-forms-and-validation.md"
-    "chapters/10-18-summary.md"
+    "chapters/08-business-logic-patterns.md"
+    "chapters/09-routing-and-navigation.md"
+    "chapters/10-forms-and-validation.md"
+    "chapters/11-19-summary.md"
 )
 
 for chapter in "${CHAPTERS[@]}"; do

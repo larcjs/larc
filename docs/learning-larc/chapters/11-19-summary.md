@@ -1,6 +1,6 @@
-# Chapters 10-18: Summary Outlines
+# Chapters 11-19: Summary Outlines
 
-## Chapter 10: Data Fetching and APIs
+## Chapter 11: Data Fetching and APIs
 
 ### Key Topics:
 - **REST API Integration**: Using fetch() with proper error handling
@@ -39,7 +39,7 @@ class ApiClient {
 }
 ```
 
-## Chapter 11: Authentication and Security
+## Chapter 12: Authentication and Security
 
 ### Key Topics:
 - **JWT Token Management**: Storing, refreshing, and validating tokens
@@ -83,7 +83,7 @@ class AuthService {
 }
 ```
 
-## Chapter 12: Server Integration
+## Chapter 13: Server Integration
 
 ### Key Topics:
 - **Node.js/Express Backend**: RESTful API design for LARC
@@ -115,7 +115,7 @@ app.post('/api/users', async (req, res) => {
 app.listen(3000);
 ```
 
-## Chapter 13: Testing
+## Chapter 14: Testing
 
 ### Key Topics:
 - **Unit Testing**: Testing components in isolation with Web Test Runner
@@ -156,7 +156,7 @@ describe('UserCard', () => {
 });
 ```
 
-## Chapter 14: Performance and Optimization
+## Chapter 15: Performance and Optimization
 
 ### Key Topics:
 - **Code Splitting**: Dynamic imports for lazy loading
@@ -189,7 +189,7 @@ document.querySelectorAll('img[data-src]').forEach(img => {
 });
 ```
 
-## Chapter 15: Deployment
+## Chapter 16: Deployment
 
 ### Key Topics:
 - **Static Hosting**: Netlify, Vercel, GitHub Pages
@@ -210,7 +210,7 @@ document.querySelectorAll('img[data-src]').forEach(img => {
 - [ ] Test in all target browsers
 - [ ] Set up automated deployments
 
-## Chapter 16: Component Library
+## Chapter 17: Component Library
 
 ### Key Topics:
 - **Using the Registry**: Finding and installing components
@@ -229,7 +229,7 @@ larc add @larcjs/ui
 larc publish ./components/my-component.js
 ```
 
-## Chapter 17: Tooling
+## Chapter 18: Tooling
 
 ### Key Topics:
 - **LARC CLI**: create-larc-app, dev server, generators
@@ -271,7 +271,7 @@ larc publish ./components/my-component.js
 }
 ```
 
-## Chapter 18: Real-World Applications
+## Chapter 19: Real-World Applications
 
 ### Case Study 1: E-Commerce Platform
 **Features:**
