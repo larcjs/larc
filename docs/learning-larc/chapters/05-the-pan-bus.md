@@ -6,6 +6,11 @@ In this chapter, you'll master the PAN bus: from basic publish/subscribe pattern
 
 ## Understanding Pub/Sub Architecture
 
+![**Figure 5.1:** PAN Bus Pub/Sub Architecture](./build/images/05-pan-bus-1.png)
+
+***Figure 5.1:** PAN Bus Pub/Sub Architecture*
+
+
 Publish/Subscribe (pub/sub) is a messaging pattern where senders (publishers) don't directly target specific receivers (subscribers). Instead, messages are sent to topics, and any component interested in those topics receives them.
 
 ### Traditional Communication
@@ -104,6 +109,11 @@ That's the foundation. Everything else builds on these three operations.
 
 ## Topics and Namespaces
 
+![**Figure 5.3:** Topic Namespace Structure](./build/images/05-pan-bus-3.png)
+
+***Figure 5.3:** Topic Namespace Structure*
+
+
 Topics are the routing keys for messages. Well-designed topics make your application's data flow clear and maintainable.
 
 ### Topic Naming Conventions
@@ -172,6 +182,11 @@ app.modal.close
 ```
 
 ### Wildcards
+
+![**Figure 5.4:** Wildcard Subscription Matching](./build/images/05-pan-bus-4.png)
+
+***Figure 5.4:** Wildcard Subscription Matching*
+
 
 Subscribe to multiple topics using wildcards:
 
@@ -243,6 +258,15 @@ pan.publish('app.domain.user.entity.profile.action.updated', { user });
 ```
 
 ## Publishing Messages
+
+![**Figure 5.2:** Message Flow Sequence](./build/images/05-pan-bus-2.png)
+
+***Figure 5.2:** Message Flow Sequence*
+
+
+![**Figure 5.2:** Message Flow Sequence](./build/images/05-pan-bus-2.png)
+***Figure 5.2:** Message Flow Sequence*
+
 
 Publishing is straightforward, but there are patterns and options to understand.
 
@@ -545,6 +569,11 @@ pan.subscribe('notification.*', (notification) => {
 
 ## Message Patterns
 
+![**Figure 5.6:** Event Pattern Comparison](./build/images/05-pan-bus-6.png)
+
+***Figure 5.6:** Event Pattern Comparison*
+
+
 The PAN bus supports several messaging patterns for different use cases.
 
 ### 1. Fire and Forget
@@ -572,6 +601,11 @@ pan.subscribe('settings.saved', (settings) => {
 - Action is non-critical
 
 ### 2. Request/Response
+
+![**Figure 5.5:** Request/Response Pattern](./build/images/05-pan-bus-5.png)
+
+***Figure 5.5:** Request/Response Pattern*
+
 
 Request data and wait for a response:
 
@@ -809,6 +843,11 @@ class CheckoutSaga {
 - Coordinating multiple services
 
 ## Debugging PAN Communication
+
+![**Figure 5.7:** PAN Bus Internal Architecture](./build/images/05-pan-bus-10.png)
+
+***Figure 5.7:** PAN Bus Internal Architecture*
+
 
 Debugging event-driven systems requires different techniques than traditional debugging.
 

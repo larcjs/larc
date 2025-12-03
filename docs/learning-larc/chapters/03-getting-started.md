@@ -516,6 +516,11 @@ Display component receives update and re-renders
 
 ## Project Structure
 
+![**Figure 3.2:** LARC Deployment Architecture](./build/images/01-architecture-overview-5.png)
+
+***Figure 3.2:** LARC Deployment Architecture*
+
+
 As your application grows, organization becomes important. Here's a recommended structure:
 
 ```
@@ -586,6 +591,11 @@ my-app/
     - CSS custom properties for theming
 
 ## Import Maps Explained
+
+![**Figure 3.1:** Module Loading with Import Maps](./build/images/01-architecture-overview-4.png)
+
+***Figure 3.1:** Module Loading with Import Maps*
+
 
 Import Maps are a browser standard that replaces the need for bundlers to resolve module paths.
 

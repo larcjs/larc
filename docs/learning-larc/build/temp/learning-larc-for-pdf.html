@@ -1109,6 +1109,18 @@ open it directly in a browser. No build step. No toolchain. No
 configuration. Just code that runs.</p>
 <p>What happened?</p>
 <h3 id="the-rise-of-complexity">The Rise of Complexity</h3>
+<figure>
+<img src="./build/images/12-traditional-vs-larc-1.png"
+alt="Figure 1.1: Development Workflow - Traditional vs LARC" />
+<figcaption aria-hidden="true"><strong>Figure 1.1:</strong> Development
+Workflow - Traditional vs LARC</figcaption>
+</figure>
+<p><em><strong>Figure 1.1:</strong> Development Workflow - Traditional
+vs LARC</em></p>
+<p><img src="./build/images/12-traditional-vs-larc-1.png"
+alt="Figure 1.1: Development Workflow - Traditional vs LARC" />
+<em><strong>Figure 1.1:</strong> Development Workflow - Traditional vs
+LARC</em></p>
 <p>The web platform evolved, but it didn’t evolve fast enough for
 ambitious developers. We wanted:</p>
 <ul>
@@ -1139,6 +1151,23 @@ layers</li>
 the web platform itself was evolving to support many of the features we
 wanted natively.</p>
 <h3 id="the-platform-has-caught-up">The Platform Has Caught Up</h3>
+<figure>
+<img src="./build/images/12-traditional-vs-larc-3.png"
+alt="Figure 1.3: Bundle Size Comparison" />
+<figcaption aria-hidden="true"><strong>Figure 1.3:</strong> Bundle Size
+Comparison</figcaption>
+</figure>
+<p><em><strong>Figure 1.3:</strong> Bundle Size Comparison</em></p>
+<figure>
+<img src="./build/images/01-architecture-overview-3.png"
+alt="Figure 1.2: LARC No-Build Architecture" />
+<figcaption aria-hidden="true"><strong>Figure 1.2:</strong> LARC
+No-Build Architecture</figcaption>
+</figure>
+<p><em><strong>Figure 1.2:</strong> LARC No-Build Architecture</em></p>
+<p><img src="./build/images/01-architecture-overview-3.png"
+alt="Figure 1.3: LARC No-Build Architecture" /> <em><strong>Figure
+1.3:</strong> LARC No-Build Architecture</em></p>
 <p>Today’s web platform is remarkably capable. Modern browsers
 support:</p>
 <ul>
@@ -1577,6 +1606,14 @@ bus, event-driven architecture, and the component lifecycle.</p>
 understanding progressively, starting with the basics and working toward
 more sophisticated patterns.</p>
 <h2 id="web-components-refresher">Web Components Refresher</h2>
+<figure>
+<img src="./build/images/01-architecture-overview-1.png"
+alt="Figure 2.1: LARC High-Level Architecture" />
+<figcaption aria-hidden="true"><strong>Figure 2.1:</strong> LARC
+High-Level Architecture</figcaption>
+</figure>
+<p><em><strong>Figure 2.1:</strong> LARC High-Level
+Architecture</em></p>
 <p>Web Components are a suite of browser APIs that let you create
 custom, reusable HTML elements. Unlike framework components, Web
 Components are browser standards supported natively across all modern
@@ -1584,6 +1621,13 @@ browsers.</p>
 <h3 id="the-three-pillars">The Three Pillars</h3>
 <p>Web Components rest on three main technologies:</p>
 <h4 id="custom-elements">1. Custom Elements</h4>
+<figure>
+<img src="./build/images/02-component-structure-2.png"
+alt="Figure 2.2: Web Component Anatomy" />
+<figcaption aria-hidden="true"><strong>Figure 2.2:</strong> Web
+Component Anatomy</figcaption>
+</figure>
+<p><em><strong>Figure 2.2:</strong> Web Component Anatomy</em></p>
 <p>Custom Elements let you define new HTML tags with custom
 behavior:</p>
 <div class="sourceCode" id="cb9"><pre
@@ -1608,6 +1652,16 @@ HTML element</li>
 removal</li>
 </ul>
 <h4 id="shadow-dom">2. Shadow DOM</h4>
+<figure>
+<img src="./build/images/02-component-structure-4.png"
+alt="Figure 2.3: Shadow DOM Tree Structure" />
+<figcaption aria-hidden="true"><strong>Figure 2.3:</strong> Shadow DOM
+Tree Structure</figcaption>
+</figure>
+<p><em><strong>Figure 2.3:</strong> Shadow DOM Tree Structure</em></p>
+<p><img src="./build/images/02-component-structure-4.png"
+alt="Figure 2.4: Shadow DOM Tree Structure" /> <em><strong>Figure
+2.4:</strong> Shadow DOM Tree Structure</em></p>
 <p>Shadow DOM provides style and markup encapsulation:</p>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FancyButton <span class="kw">extends</span> <span class="bu">HTMLElement</span> {</span>
@@ -1749,6 +1803,14 @@ provide better ergonomics within their specific ecosystem.</p>
 <p>LARC chooses Web Components because they align with the “standards
 first” principle.</p>
 <h2 id="the-page-area-network-pan">The Page Area Network (PAN)</h2>
+<figure>
+<img src="./build/images/01-architecture-overview-2.png"
+alt="Figure 2.4: Component Communication Flow" />
+<figcaption aria-hidden="true"><strong>Figure 2.4:</strong> Component
+Communication Flow</figcaption>
+</figure>
+<p><em><strong>Figure 2.4:</strong> Component Communication
+Flow</em></p>
 <p>The Page Area Network, or PAN bus, is LARC’s event-driven
 communication system. It’s inspired by microservices architecture but
 designed for browser components.</p>
@@ -2908,6 +2970,14 @@ bus topics</li>
 isolation</li>
 </ol>
 <h2 id="project-structure">Project Structure</h2>
+<figure>
+<img src="./build/images/01-architecture-overview-5.png"
+alt="Figure 3.2: LARC Deployment Architecture" />
+<figcaption aria-hidden="true"><strong>Figure 3.2:</strong> LARC
+Deployment Architecture</figcaption>
+</figure>
+<p><em><strong>Figure 3.2:</strong> LARC Deployment
+Architecture</em></p>
 <p>As your application grows, organization becomes important. Here’s a
 recommended structure:</p>
 <pre><code>my-app/
@@ -2966,6 +3036,14 @@ recommended structure:</p>
 - Component-specific styles in Shadow DOM
 - CSS custom properties for theming</code></pre>
 <h2 id="import-maps-explained">Import Maps Explained</h2>
+<figure>
+<img src="./build/images/01-architecture-overview-4.png"
+alt="Figure 3.1: Module Loading with Import Maps" />
+<figcaption aria-hidden="true"><strong>Figure 3.1:</strong> Module
+Loading with Import Maps</figcaption>
+</figure>
+<p><em><strong>Figure 3.1:</strong> Module Loading with Import
+Maps</em></p>
 <p>Import Maps are a browser standard that replaces the need for
 bundlers to resolve module paths.</p>
 <h3 id="basic-import-map">Basic Import Map</h3>
@@ -3359,6 +3437,13 @@ composition, slots, and performance optimization.</p>
 production-quality components that are maintainable, testable, and
 performant.</p>
 <h2 id="anatomy-of-a-larc-component">Anatomy of a LARC Component</h2>
+<figure>
+<img src="./build/images/02-component-structure-3.png"
+alt="Figure 4.1: Component Lifecycle Flow" />
+<figcaption aria-hidden="true"><strong>Figure 4.1:</strong> Component
+Lifecycle Flow</figcaption>
+</figure>
+<p><em><strong>Figure 4.1:</strong> Component Lifecycle Flow</em></p>
 <p>Let’s dissect a well-structured LARC component to understand its
 parts:</p>
 <div class="sourceCode" id="cb86"><pre
@@ -3744,6 +3829,14 @@ changes</li>
 <li>Extract styles to a separate method</li>
 </ul>
 <h2 id="shadow-dom-deep-dive">Shadow DOM Deep Dive</h2>
+<figure>
+<img src="./build/images/02-component-structure-6.png"
+alt="Figure 4.2: Slots and Content Projection" />
+<figcaption aria-hidden="true"><strong>Figure 4.2:</strong> Slots and
+Content Projection</figcaption>
+</figure>
+<p><em><strong>Figure 4.2:</strong> Slots and Content
+Projection</em></p>
 <p>Shadow DOM is one of the most powerful features of Web Components. It
 provides true encapsulation for both markup and styles.</p>
 <h3 id="creating-shadow-dom">Creating Shadow DOM</h3>
@@ -4049,6 +4142,14 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb98
 <span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Remove boolean attribute</span></span>
 <span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a><span class="kw">this</span><span class="op">.</span><span class="fu">removeAttribute</span>(<span class="st">&#39;disabled&#39;</span>)<span class="op">;</span></span></code></pre></div>
 <h2 id="component-styling">Component Styling</h2>
+<figure>
+<img src="./build/images/02-component-structure-7.png"
+alt="Figure 4.3: CSS Encapsulation with Shadow DOM" />
+<figcaption aria-hidden="true"><strong>Figure 4.3:</strong> CSS
+Encapsulation with Shadow DOM</figcaption>
+</figure>
+<p><em><strong>Figure 4.3:</strong> CSS Encapsulation with Shadow
+DOM</em></p>
 <h3 id="internal-styles">Internal Styles</h3>
 <p>Most styles should be in shadow DOM:</p>
 <div class="sourceCode" id="cb99"><pre
@@ -4451,6 +4552,14 @@ applications where components communicate seamlessly without tight
 coupling.</p>
 <h2 id="understanding-pubsub-architecture">Understanding Pub/Sub
 Architecture</h2>
+<figure>
+<img src="./build/images/05-pan-bus-1.png"
+alt="Figure 5.1: PAN Bus Pub/Sub Architecture" />
+<figcaption aria-hidden="true"><strong>Figure 5.1:</strong> PAN Bus
+Pub/Sub Architecture</figcaption>
+</figure>
+<p><em><strong>Figure 5.1:</strong> PAN Bus Pub/Sub
+Architecture</em></p>
 <p>Publish/Subscribe (pub/sub) is a messaging pattern where senders
 (publishers) don’t directly target specific receivers (subscribers).
 Instead, messages are sent to topics, and any component interested in
@@ -4538,6 +4647,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb11
 <p>That’s the foundation. Everything else builds on these three
 operations.</p>
 <h2 id="topics-and-namespaces">Topics and Namespaces</h2>
+<figure>
+<img src="./build/images/05-pan-bus-3.png"
+alt="Figure 5.3: Topic Namespace Structure" />
+<figcaption aria-hidden="true"><strong>Figure 5.3:</strong> Topic
+Namespace Structure</figcaption>
+</figure>
+<p><em><strong>Figure 5.3:</strong> Topic Namespace Structure</em></p>
 <p>Topics are the routing keys for messages. Well-designed topics make
 your application’s data flow clear and maintainable.</p>
 <h3 id="topic-naming-conventions">Topic Naming Conventions</h3>
@@ -4587,6 +4703,14 @@ app.theme.change
 app.modal.open
 app.modal.close</code></pre>
 <h3 id="wildcards">Wildcards</h3>
+<figure>
+<img src="./build/images/05-pan-bus-4.png"
+alt="Figure 5.4: Wildcard Subscription Matching" />
+<figcaption aria-hidden="true"><strong>Figure 5.4:</strong> Wildcard
+Subscription Matching</figcaption>
+</figure>
+<p><em><strong>Figure 5.4:</strong> Wildcard Subscription
+Matching</em></p>
 <p>Subscribe to multiple topics using wildcards:</p>
 <div class="sourceCode" id="cb119"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb119-1"><a href="#cb119-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Subscribe to all user events</span></span>
@@ -4648,6 +4772,16 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb12
 <span id="cb123-4"><a href="#cb123-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Bad - too nested</span></span>
 <span id="cb123-5"><a href="#cb123-5" aria-hidden="true" tabindex="-1"></a>pan<span class="op">.</span><span class="fu">publish</span>(<span class="st">&#39;app.domain.user.entity.profile.action.updated&#39;</span><span class="op">,</span> { user })<span class="op">;</span></span></code></pre></div>
 <h2 id="publishing-messages">Publishing Messages</h2>
+<figure>
+<img src="./build/images/05-pan-bus-2.png"
+alt="Figure 5.2: Message Flow Sequence" />
+<figcaption aria-hidden="true"><strong>Figure 5.2:</strong> Message Flow
+Sequence</figcaption>
+</figure>
+<p><em><strong>Figure 5.2:</strong> Message Flow Sequence</em></p>
+<p><img src="./build/images/05-pan-bus-2.png"
+alt="Figure 5.2: Message Flow Sequence" /> <em><strong>Figure
+5.2:</strong> Message Flow Sequence</em></p>
 <p>Publishing is straightforward, but there are patterns and options to
 understand.</p>
 <h3 id="basic-publishing">Basic Publishing</h3>
@@ -4912,6 +5046,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13
 <span id="cb133-12"><a href="#cb133-12" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb133-13"><a href="#cb133-13" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
 <h2 id="message-patterns-1">Message Patterns</h2>
+<figure>
+<img src="./build/images/05-pan-bus-6.png"
+alt="Figure 5.6: Event Pattern Comparison" />
+<figcaption aria-hidden="true"><strong>Figure 5.6:</strong> Event
+Pattern Comparison</figcaption>
+</figure>
+<p><em><strong>Figure 5.6:</strong> Event Pattern Comparison</em></p>
 <p>The PAN bus supports several messaging patterns for different use
 cases.</p>
 <h3 id="fire-and-forget-1">1. Fire and Forget</h3>
@@ -4935,6 +5076,13 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb13
 <li>Action is non-critical</li>
 </ul>
 <h3 id="requestresponse-1">2. Request/Response</h3>
+<figure>
+<img src="./build/images/05-pan-bus-5.png"
+alt="Figure 5.5: Request/Response Pattern" />
+<figcaption aria-hidden="true"><strong>Figure 5.5:</strong>
+Request/Response Pattern</figcaption>
+</figure>
+<p><em><strong>Figure 5.5:</strong> Request/Response Pattern</em></p>
 <p>Request data and wait for a response:</p>
 <div class="sourceCode" id="cb135"><pre
 class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Responder</span></span>
@@ -5149,6 +5297,14 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb14
 <li>Coordinating multiple services</li>
 </ul>
 <h2 id="debugging-pan-communication">Debugging PAN Communication</h2>
+<figure>
+<img src="./build/images/05-pan-bus-10.png"
+alt="Figure 5.7: PAN Bus Internal Architecture" />
+<figcaption aria-hidden="true"><strong>Figure 5.7:</strong> PAN Bus
+Internal Architecture</figcaption>
+</figure>
+<p><em><strong>Figure 5.7:</strong> PAN Bus Internal
+Architecture</em></p>
 <p>Debugging event-driven systems requires different techniques than
 traditional debugging.</p>
 <h3 id="logging-all-events">Logging All Events</h3>
@@ -5454,6 +5610,13 @@ collaborate without tight coupling.</p>
 </ul></li>
 </ol>
 <h1 id="chapter-6-state-management">Chapter 6: State Management</h1>
+<figure>
+<img src="./build/images/06-state-management-3.png"
+alt="Figure 6.1: State Management Hierarchy" />
+<figcaption aria-hidden="true"><strong>Figure 6.1:</strong> State
+Management Hierarchy</figcaption>
+</figure>
+<p><em><strong>Figure 6.1:</strong> State Management Hierarchy</em></p>
 <p>State management is one of the most critical aspects of application
 development. Poor state management leads to bugs, performance issues,
 and maintenance nightmares. Good state management makes applications
@@ -5892,6 +6055,16 @@ class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb15
 <span id="cb154-36"><a href="#cb154-36" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb154-37"><a href="#cb154-37" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
 <h2 id="the-pan-store-component">The pan-store Component</h2>
+<figure>
+<img src="./build/images/06-state-management-9.png"
+alt="Figure 6.2: pan-store Architecture" />
+<figcaption aria-hidden="true"><strong>Figure 6.2:</strong> pan-store
+Architecture</figcaption>
+</figure>
+<p><em><strong>Figure 6.2:</strong> pan-store Architecture</em></p>
+<p><img src="./build/images/06-state-management-9.png"
+alt="Figure 6.2: pan-store Architecture" /> <em><strong>Figure
+6.2:</strong> pan-store Architecture</em></p>
 <p>LARC provides a built-in component for state management:</p>
 <div class="sourceCode" id="cb155"><pre
 class="sourceCode html"><code class="sourceCode html"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">pan-store</span><span class="ot"> id</span><span class="op">=</span><span class="st">&quot;app-store&quot;</span><span class="ot"> persist</span><span class="op">=</span><span class="st">&quot;true&quot;</span><span class="dt">&gt;</span></span>

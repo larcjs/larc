@@ -21,6 +21,15 @@ What happened?
 
 ### The Rise of Complexity
 
+![**Figure 1.1:** Development Workflow - Traditional vs LARC](./build/images/12-traditional-vs-larc-1.png)
+
+***Figure 1.1:** Development Workflow - Traditional vs LARC*
+
+
+![**Figure 1.1:** Development Workflow - Traditional vs LARC](./build/images/12-traditional-vs-larc-1.png)
+***Figure 1.1:** Development Workflow - Traditional vs LARC*
+
+
 The web platform evolved, but it didn't evolve fast enough for ambitious developers. We wanted:
 
 - **Component-based architecture** — but HTML didn't have custom elements yet
@@ -39,6 +48,20 @@ Frameworks filled these gaps by building abstractions on top of the web platform
 The irony? While we were busy building these elaborate toolchains, the web platform itself was evolving to support many of the features we wanted natively.
 
 ### The Platform Has Caught Up
+
+![**Figure 1.3:** Bundle Size Comparison](./build/images/12-traditional-vs-larc-3.png)
+
+***Figure 1.3:** Bundle Size Comparison*
+
+
+![**Figure 1.2:** LARC No-Build Architecture](./build/images/01-architecture-overview-3.png)
+
+***Figure 1.2:** LARC No-Build Architecture*
+
+
+![**Figure 1.3:** LARC No-Build Architecture](./build/images/01-architecture-overview-3.png)
+***Figure 1.3:** LARC No-Build Architecture*
+
 
 Today's web platform is remarkably capable. Modern browsers support:
 

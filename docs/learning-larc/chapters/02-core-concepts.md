@@ -6,6 +6,11 @@ Don't worry if some of these concepts are new to you. We'll build understanding 
 
 ## Web Components Refresher
 
+![**Figure 2.1:** LARC High-Level Architecture](./build/images/01-architecture-overview-1.png)
+
+***Figure 2.1:** LARC High-Level Architecture*
+
+
 Web Components are a suite of browser APIs that let you create custom, reusable HTML elements. Unlike framework components, Web Components are browser standards supported natively across all modern browsers.
 
 ### The Three Pillars
@@ -13,6 +18,11 @@ Web Components are a suite of browser APIs that let you create custom, reusable 
 Web Components rest on three main technologies:
 
 #### 1. Custom Elements
+
+![**Figure 2.2:** Web Component Anatomy](./build/images/02-component-structure-2.png)
+
+***Figure 2.2:** Web Component Anatomy*
+
 
 Custom Elements let you define new HTML tags with custom behavior:
 
@@ -37,6 +47,15 @@ Now you can use `<hello-world></hello-world>` in your HTML, and it works like an
 - They have lifecycle callbacks for creation, connection, and removal
 
 #### 2. Shadow DOM
+
+![**Figure 2.3:** Shadow DOM Tree Structure](./build/images/02-component-structure-4.png)
+
+***Figure 2.3:** Shadow DOM Tree Structure*
+
+
+![**Figure 2.4:** Shadow DOM Tree Structure](./build/images/02-component-structure-4.png)
+***Figure 2.4:** Shadow DOM Tree Structure*
+
 
 Shadow DOM provides style and markup encapsulation:
 
@@ -151,6 +170,11 @@ Both approaches have their place. Web Components excel at true reusability and s
 LARC chooses Web Components because they align with the "standards first" principle.
 
 ## The Page Area Network (PAN)
+
+![**Figure 2.4:** Component Communication Flow](./build/images/01-architecture-overview-2.png)
+
+***Figure 2.4:** Component Communication Flow*
+
 
 The Page Area Network, or PAN bus, is LARC's event-driven communication system. It's inspired by microservices architecture but designed for browser components.
 
