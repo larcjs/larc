@@ -1893,27 +1893,27 @@ Learn these DevTools features for LARC development:
 
 **Elements Panel:**
 
-- Inspect shadow DOM (enable "Show user agent shadow DOM" in settings)
-- View Custom Elements with their properties
-- Debug CSS in shadow roots
+    - Inspect shadow DOM (enable "Show user agent shadow DOM" in settings)
+    - View Custom Elements with their properties
+    - Debug CSS in shadow roots
 
 **Console:**
 
-- Subscribe to all PAN messages: `pan.subscribe('*', console.log)`
-- Test components directly: `document.querySelector('my-component')`
-- Check Custom Elements registry: `customElements.get('my-component')`
+    - Subscribe to all PAN messages: `pan.subscribe('*', console.log)`
+    - Test components directly: `document.querySelector('my-component')`
+    - Check Custom Elements registry: `customElements.get('my-component')`
 
 **Network Panel:**
 
-- Verify ES modules load correctly
-- Check import map resolution
-- Monitor API calls
+    - Verify ES modules load correctly
+    - Check import map resolution
+    - Monitor API calls
 
 **Sources Panel:**
 
-- Set breakpoints in your source code (no source maps needed!)
-- Step through component lifecycle
-- Watch variables and state
+    - Set breakpoints in your source code (no source maps needed!)
+    - Step through component lifecycle
+    - Watch variables and state
 
 ## Your First LARC Application
 
@@ -1923,10 +1923,10 @@ Let's build something more interesting than "Hello World"—a simple counter app
 
 We'll create:
 
-- A counter display component
-- Increment and decrement buttons
-- A reset button
-- Communication via PAN bus (no prop drilling!)
+    - A counter display component
+    - Increment and decrement buttons
+    - A reset button
+    - Communication via PAN bus (no prop drilling!)
 
 ### Step 1: Update index.html
 
@@ -2189,16 +2189,16 @@ customElements.define('counter-controls', CounterControls);
 
 Start your local server and open the page. You should see:
 
-- A large counter display showing "0"
-- Increment and decrement buttons
-- A reset button
+    - A large counter display showing "0"
+    - Increment and decrement buttons
+    - A reset button
 
 Click the buttons. Notice how:
 
-- Components update immediately
-- State is managed centrally in `app.js`
-- Components don't reference each other directly
-- Adding new components is trivial (just subscribe to `counter.updated`)
+    - Components update immediately
+    - State is managed centrally in `app.js`
+    - Components don't reference each other directly
+    - Adding new components is trivial (just subscribe to `counter.updated`)
 
 ### What Just Happened?
 
@@ -2274,27 +2274,27 @@ my-app/
 
 **Components:**
 
-- One component per file
-- File name matches component name: `user-profile.js` defines `<user-profile>`
-- Keep related components together in subdirectories
+    - One component per file
+    - File name matches component name: `user-profile.js` defines `<user-profile>`
+    - Keep related components together in subdirectories
 
 **Lib:**
 
-- Utilities that don't render UI
-- API clients, helpers, formatters
-- Pure functions when possible
+    - Utilities that don't render UI
+    - API clients, helpers, formatters
+    - Pure functions when possible
 
 **Pages:**
 
-- Top-level route components
-- Compose smaller components
-- Handle page-specific logic
+    - Top-level route components
+    - Compose smaller components
+    - Handle page-specific logic
 
 **Styles:**
 
-- Global styles in `styles/`
-- Component-specific styles in Shadow DOM
-- CSS custom properties for theming
+    - Global styles in `styles/`
+    - Component-specific styles in Shadow DOM
+    - CSS custom properties for theming
 
 ## Import Maps Explained
 
@@ -2715,12 +2715,12 @@ class TodoList extends HTMLElement {
 
 In this chapter, you:
 
-- Set up a LARC development environment (CLI or manual)
-- Built your first multi-component application
-- Learned project structure best practices
-- Mastered Import Maps for dependency management
-- Established an efficient development workflow
-- Explored common component patterns
+    - Set up a LARC development environment (CLI or manual)
+    - Built your first multi-component application
+    - Learned project structure best practices
+    - Mastered Import Maps for dependency management
+    - Established an efficient development workflow
+    - Explored common component patterns
 
 You now have a solid foundation for building LARC applications. The next chapter dives deeper into creating sophisticated Web Components with proper lifecycle management, styling, and interactivity.
 
@@ -2730,29 +2730,29 @@ You now have a solid foundation for building LARC applications. The next chapter
 
 **1. Enhance the Counter App:**
 
-- Add a history component that shows past values
-- Add increment/decrement by custom amounts
-- Persist count to localStorage
+    - Add a history component that shows past values
+    - Add increment/decrement by custom amounts
+    - Persist count to localStorage
 
 **2. Build a Todo List:**
 
-- Add/remove todos
-- Mark as complete/incomplete
-- Filter by status (all/active/completed)
-- Use PAN bus for state management
+    - Add/remove todos
+    - Mark as complete/incomplete
+    - Filter by status (all/active/completed)
+    - Use PAN bus for state management
 
 **3. Create a Theme Switcher:**
 
-- Light/dark theme toggle
-- Publish theme changes via PAN
-- Multiple components respond to theme changes
-- Persist theme preference
+    - Light/dark theme toggle
+    - Publish theme changes via PAN
+    - Multiple components respond to theme changes
+    - Persist theme preference
 
 **4. Experiment with Import Maps:**
 
-- Try different CDNs (jsDelivr, unpkg, esm.sh)
-- Add path aliases for your components
-- Import an external library (lodash, dayjs, etc.)
+    - Try different CDNs (jsDelivr, unpkg, esm.sh)
+    - Add path aliases for your components
+    - Import an external library (lodash, dayjs, etc.)
 
 Take your time with these exercises. Understanding these patterns now will make the rest of the book much easier.
 
