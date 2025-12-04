@@ -307,12 +307,12 @@ What happened?
 
 ### The Rise of Complexity
 
-![**Figure 1.1:** Development Workflow - Traditional vs LARC](./build/images/12-traditional-vs-larc-1.png)
+![**Figure 1.1:** Development Workflow - Traditional vs LARC](../images/12-traditional-vs-larc-1.png)
 
 ***Figure 1.1:** Development Workflow - Traditional vs LARC*
 
 
-![**Figure 1.1:** Development Workflow - Traditional vs LARC](./build/images/12-traditional-vs-larc-1.png)
+![**Figure 1.1:** Development Workflow - Traditional vs LARC](../images/12-traditional-vs-larc-1.png)
 ***Figure 1.1:** Development Workflow - Traditional vs LARC*
 
 
@@ -335,17 +335,17 @@ The irony? While we were busy building these elaborate toolchains, the web platf
 
 ### The Platform Has Caught Up
 
-![**Figure 1.3:** Bundle Size Comparison](./build/images/12-traditional-vs-larc-3.png)
+![**Figure 1.3:** Bundle Size Comparison](../images/12-traditional-vs-larc-3.png)
 
 ***Figure 1.3:** Bundle Size Comparison*
 
 
-![**Figure 1.2:** LARC No-Build Architecture](./build/images/01-architecture-overview-3.png)
+![**Figure 1.2:** LARC No-Build Architecture](../images/01-architecture-overview-3.png)
 
 ***Figure 1.2:** LARC No-Build Architecture*
 
 
-![**Figure 1.3:** LARC No-Build Architecture](./build/images/01-architecture-overview-3.png)
+![**Figure 1.3:** LARC No-Build Architecture](../images/01-architecture-overview-3.png)
 ***Figure 1.3:** LARC No-Build Architecture*
 
 
@@ -783,7 +783,7 @@ Don't worry if some of these concepts are new to you. We'll build understanding 
 
 ## Web Components Refresher
 
-![**Figure 2.1:** LARC High-Level Architecture](./build/images/01-architecture-overview-1.png)
+![**Figure 2.1:** LARC High-Level Architecture](../images/01-architecture-overview-1.png)
 
 ***Figure 2.1:** LARC High-Level Architecture*
 
@@ -796,7 +796,7 @@ Web Components rest on three main technologies:
 
 #### 1. Custom Elements
 
-![**Figure 2.2:** Web Component Anatomy](./build/images/02-component-structure-2.png)
+![**Figure 2.2:** Web Component Anatomy](../images/02-component-structure-2.png)
 
 ***Figure 2.2:** Web Component Anatomy*
 
@@ -825,12 +825,12 @@ Now you can use `<hello-world></hello-world>` in your HTML, and it works like an
 
 #### 2. Shadow DOM
 
-![**Figure 2.3:** Shadow DOM Tree Structure](./build/images/02-component-structure-4.png)
+![**Figure 2.3:** Shadow DOM Tree Structure](../images/02-component-structure-4.png)
 
 ***Figure 2.3:** Shadow DOM Tree Structure*
 
 
-![**Figure 2.4:** Shadow DOM Tree Structure](./build/images/02-component-structure-4.png)
+![**Figure 2.4:** Shadow DOM Tree Structure](../images/02-component-structure-4.png)
 ***Figure 2.4:** Shadow DOM Tree Structure*
 
 
@@ -948,7 +948,7 @@ LARC chooses Web Components because they align with the "standards first" princi
 
 ## The Page Area Network (PAN)
 
-![**Figure 2.4:** Component Communication Flow](./build/images/01-architecture-overview-2.png)
+![**Figure 2.4:** Component Communication Flow](../images/01-architecture-overview-2.png)
 
 ***Figure 2.4:** Component Communication Flow*
 
@@ -2274,7 +2274,7 @@ Display component receives update and re-renders
 
 ## Project Structure
 
-![**Figure 3.2:** LARC Deployment Architecture](./build/images/01-architecture-overview-5.png)
+![**Figure 3.2:** LARC Deployment Architecture](../images/01-architecture-overview-5.png)
 
 ***Figure 3.2:** LARC Deployment Architecture*
 
@@ -2350,7 +2350,7 @@ my-app/
 
 ## Import Maps Explained
 
-![**Figure 3.1:** Module Loading with Import Maps](./build/images/01-architecture-overview-4.png)
+![**Figure 3.1:** Module Loading with Import Maps](../images/01-architecture-overview-4.png)
 
 ***Figure 3.1:** Module Loading with Import Maps*
 
@@ -2823,7 +2823,7 @@ By the end of this chapter, you'll be able to build production-quality component
 
 ## Anatomy of a LARC Component
 
-![**Figure 4.1:** Component Lifecycle Flow](./build/images/02-component-structure-3.png)
+![**Figure 4.1:** Component Lifecycle Flow](../images/02-component-structure-3.png)
 
 ***Figure 4.1:** Component Lifecycle Flow*
 
@@ -3213,7 +3213,7 @@ export default UserCard;
 
 ## Shadow DOM Deep Dive
 
-![**Figure 4.2:** Slots and Content Projection](./build/images/02-component-structure-6.png)
+![**Figure 4.2:** Slots and Content Projection](../images/02-component-structure-6.png)
 
 ***Figure 4.2:** Slots and Content Projection*
 
@@ -3563,7 +3563,7 @@ this.removeAttribute('disabled');
 
 ## Component Styling
 
-![**Figure 4.3:** CSS Encapsulation with Shadow DOM](./build/images/02-component-structure-7.png)
+![**Figure 4.3:** CSS Encapsulation with Shadow DOM](../images/02-component-structure-7.png)
 
 ***Figure 4.3:** CSS Encapsulation with Shadow DOM*
 
@@ -4003,7 +4003,7 @@ In this chapter, you'll master the PAN bus: from basic publish/subscribe pattern
 
 ## Understanding Pub/Sub Architecture
 
-![**Figure 5.1:** PAN Bus Pub/Sub Architecture](./build/images/05-pan-bus-1.png)
+![**Figure 5.1:** PAN Bus Pub/Sub Architecture](../images/05-pan-bus-1.png)
 
 ***Figure 5.1:** PAN Bus Pub/Sub Architecture*
 
@@ -4106,7 +4106,7 @@ That's the foundation. Everything else builds on these three operations.
 
 ## Topics and Namespaces
 
-![**Figure 5.3:** Topic Namespace Structure](./build/images/05-pan-bus-3.png)
+![**Figure 5.3:** Topic Namespace Structure](../images/05-pan-bus-3.png)
 
 ***Figure 5.3:** Topic Namespace Structure*
 
@@ -4180,7 +4180,7 @@ app.modal.close
 
 ### Wildcards
 
-![**Figure 5.4:** Wildcard Subscription Matching](./build/images/05-pan-bus-4.png)
+![**Figure 5.4:** Wildcard Subscription Matching](../images/05-pan-bus-4.png)
 
 ***Figure 5.4:** Wildcard Subscription Matching*
 
@@ -4256,12 +4256,12 @@ pan.publish('app.domain.user.entity.profile.action.updated', { user });
 
 ## Publishing Messages
 
-![**Figure 5.2:** Message Flow Sequence](./build/images/05-pan-bus-2.png)
+![**Figure 5.2:** Message Flow Sequence](../images/05-pan-bus-2.png)
 
 ***Figure 5.2:** Message Flow Sequence*
 
 
-![**Figure 5.2:** Message Flow Sequence](./build/images/05-pan-bus-2.png)
+![**Figure 5.2:** Message Flow Sequence](../images/05-pan-bus-2.png)
 ***Figure 5.2:** Message Flow Sequence*
 
 
@@ -4566,7 +4566,7 @@ pan.subscribe('notification.*', (notification) => {
 
 ## Message Patterns
 
-![**Figure 5.6:** Event Pattern Comparison](./build/images/05-pan-bus-6.png)
+![**Figure 5.6:** Event Pattern Comparison](../images/05-pan-bus-6.png)
 
 ***Figure 5.6:** Event Pattern Comparison*
 
@@ -4599,7 +4599,7 @@ pan.subscribe('settings.saved', (settings) => {
 
 ### 2. Request/Response
 
-![**Figure 5.5:** Request/Response Pattern](./build/images/05-pan-bus-5.png)
+![**Figure 5.5:** Request/Response Pattern](../images/05-pan-bus-5.png)
 
 ***Figure 5.5:** Request/Response Pattern*
 
@@ -4841,7 +4841,7 @@ class CheckoutSaga {
 
 ## Debugging PAN Communication
 
-![**Figure 5.7:** PAN Bus Internal Architecture](./build/images/05-pan-bus-10.png)
+![**Figure 5.7:** PAN Bus Internal Architecture](../images/05-pan-bus-10.png)
 
 ***Figure 5.7:** PAN Bus Internal Architecture*
 
@@ -5162,7 +5162,7 @@ The PAN bus is central to LARC applications. Mastering it enables you to build s
 
 # Chapter 6: State Management
 
-![**Figure 6.1:** State Management Hierarchy](./build/images/06-state-management-3.png)
+![**Figure 6.1:** State Management Hierarchy](../images/06-state-management-3.png)
 
 ***Figure 6.1:** State Management Hierarchy*
 
@@ -5637,12 +5637,12 @@ class UserMenu extends HTMLElement {
 
 ## The pan-store Component
 
-![**Figure 6.2:** pan-store Architecture](./build/images/06-state-management-9.png)
+![**Figure 6.2:** pan-store Architecture](../images/06-state-management-9.png)
 
 ***Figure 6.2:** pan-store Architecture*
 
 
-![**Figure 6.2:** pan-store Architecture](./build/images/06-state-management-9.png)
+![**Figure 6.2:** pan-store Architecture](../images/06-state-management-9.png)
 ***Figure 6.2:** pan-store Architecture*
 
 

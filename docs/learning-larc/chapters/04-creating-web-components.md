@@ -6,7 +6,7 @@ By the end of this chapter, you'll be able to build production-quality component
 
 ## Anatomy of a LARC Component
 
-![**Figure 4.1:** Component Lifecycle Flow](./build/images/02-component-structure-3.png)
+![**Figure 4.1:** Component Lifecycle Flow](../images/02-component-structure-3.png)
 
 ***Figure 4.1:** Component Lifecycle Flow*
 
@@ -396,7 +396,7 @@ export default UserCard;
 
 ## Shadow DOM Deep Dive
 
-![**Figure 4.2:** Slots and Content Projection](./build/images/02-component-structure-6.png)
+![**Figure 4.2:** Slots and Content Projection](../images/02-component-structure-6.png)
 
 ***Figure 4.2:** Slots and Content Projection*
 
@@ -746,7 +746,7 @@ this.removeAttribute('disabled');
 
 ## Component Styling
 
-![**Figure 4.3:** CSS Encapsulation with Shadow DOM](./build/images/02-component-structure-7.png)
+![**Figure 4.3:** CSS Encapsulation with Shadow DOM](../images/02-component-structure-7.png)
 
 ***Figure 4.3:** CSS Encapsulation with Shadow DOM*
 

@@ -106,6 +106,13 @@ done
 echo "✅ Chapters combined"
 echo ""
 
+# Copy images to output directory for HTML
+echo "🖼️  Copying images to output directory..."
+mkdir -p "$OUTPUT_DIR/images"
+cp -r "$IMAGES_DIR"/* "$OUTPUT_DIR/images/" 2>/dev/null || true
+echo "✅ Images copied"
+echo ""
+
 # Create CSS for HTML output
 echo "🎨 Creating HTML styles..."
 
@@ -325,10 +332,14 @@ pandoc "$COMBINED_MD" \
     --highlight-style=tango \
     --metadata title="Learning LARC" \
     --metadata author="LARC Community" \
+    --resource-path=".:$BUILD_DIR" \
     -o "$OUTPUT_DIR/learning-larc.html"
 
 # Copy CSS to output
 cp "$TEMP_DIR/styles.css" "$OUTPUT_DIR/"
+
+# Fix image paths in HTML (from ../images/ to images/)
+sed -i '' 's|src="../images/|src="images/|g' "$OUTPUT_DIR/learning-larc.html"
 
 echo "✅ HTML version created: $OUTPUT_DIR/learning-larc.html"
 echo ""
@@ -342,6 +353,7 @@ pandoc "$COMBINED_MD" \
     --pdf-engine=pdflatex \
     --toc \
     --toc-depth=3 \
+    --resource-path=".:$BUILD_DIR" \
     --highlight-style=tango \
     --variable geometry:margin=1in \
     --variable fontsize=11pt \
@@ -399,6 +411,7 @@ pandoc "$COMBINED_MD" \
     --metadata title="Learning LARC" \
     --metadata author="LARC Community" \
     --metadata lang=en \
+    --resource-path=".:$BUILD_DIR" \
     --epub-cover-image=cover.png \
     -o "$OUTPUT_DIR/learning-larc.epub" 2>/dev/null || {
         echo "⚠️  Creating ePub without cover image..."
@@ -411,6 +424,7 @@ pandoc "$COMBINED_MD" \
             --metadata title="Learning LARC" \
             --metadata author="LARC Community" \
             --metadata lang=en \
+            --resource-path=".:$BUILD_DIR" \
             -o "$OUTPUT_DIR/learning-larc.epub"
     }
 

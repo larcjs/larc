@@ -1,6 +1,6 @@
 # Chapter 6: State Management
 
-![**Figure 6.1:** State Management Hierarchy](./build/images/06-state-management-3.png)
+![**Figure 6.1:** State Management Hierarchy](../images/06-state-management-3.png)
 
 ***Figure 6.1:** State Management Hierarchy*
 
@@ -475,12 +475,12 @@ class UserMenu extends HTMLElement {
 
 ## The pan-store Component
 
-![**Figure 6.2:** pan-store Architecture](./build/images/06-state-management-9.png)
+![**Figure 6.2:** pan-store Architecture](../images/06-state-management-9.png)
 
 ***Figure 6.2:** pan-store Architecture*
 
 
-![**Figure 6.2:** pan-store Architecture](./build/images/06-state-management-9.png)
+![**Figure 6.2:** pan-store Architecture](../images/06-state-management-9.png)
 ***Figure 6.2:** pan-store Architecture*
 
 

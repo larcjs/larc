@@ -516,7 +516,7 @@ Display component receives update and re-renders
 
 ## Project Structure
 
-![**Figure 3.2:** LARC Deployment Architecture](./build/images/01-architecture-overview-5.png)
+![**Figure 3.2:** LARC Deployment Architecture](../images/01-architecture-overview-5.png)
 
 ***Figure 3.2:** LARC Deployment Architecture*
 
@@ -592,7 +592,7 @@ my-app/
 
 ## Import Maps Explained
 
-![**Figure 3.1:** Module Loading with Import Maps](./build/images/01-architecture-overview-4.png)
+![**Figure 3.1:** Module Loading with Import Maps](../images/01-architecture-overview-4.png)
 
 ***Figure 3.1:** Module Loading with Import Maps*
 
