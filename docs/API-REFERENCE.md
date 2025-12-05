@@ -372,6 +372,8 @@ Use the `data-module` attribute to override the default module path for a specif
 
 The central message bus for publish/subscribe communication between components. Provides memory-safe, secure message delivery with advanced features.
 
+> **Note:** As of v1.1.1, the PAN bus is **automatically instantiated** when you load `pan.mjs`. You no longer need to include a `<pan-bus>` element in your HTML. The bus is created and ready to use as soon as the script loads.
+
 ### Overview
 
 - Publish/subscribe messaging with topic patterns
@@ -382,11 +384,32 @@ The central message bus for publish/subscribe communication between components. 
 - Automatic cleanup of dead subscriptions
 - Debug mode with comprehensive logging
 - Security policies for wildcard subscriptions
+- **Automatic instantiation** — No manual setup required
 
-### HTML Element
+### Automatic Instantiation
+
+When you load `pan.mjs`, the PAN bus is automatically created and made available globally:
 
 ```html
-<!-- Basic usage -->
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="module" src="/core/src/pan.mjs"></script>
+</head>
+<body>
+  <!-- No <pan-bus> tag needed! -->
+  <!-- Bus is automatically ready -->
+  <my-component></my-component>
+</body>
+</html>
+```
+
+### HTML Element (Legacy)
+
+The `<pan-bus>` element is still supported for backwards compatibility, but is no longer required:
+
+```html
+<!-- This still works, but is no longer necessary -->
 <pan-bus></pan-bus>
 
 <!-- With configuration -->
