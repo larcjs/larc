@@ -13,13 +13,13 @@
 ## Praise for Learning LARC
 
 *"LARC represents a return to web fundamentals while embracing modern capabilities. This book beautifully explains why that matters."*
-— **Future Web Developer**
+— **David B. - Software Engineer**
 
 *"Finally, a framework that respects the browser. Learning LARC shows you how to build without fighting the platform."*
-— **Another Developer**
+— **Jon W. - App Developer**
 
 *"The PAN bus architecture is elegant and powerful. This book makes it accessible to everyone."*
-— **Yet Another Developer**
+— **Mary S. - Designer / Artist**
 
 ---
 

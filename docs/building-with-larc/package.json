@@ -1,0 +1,33 @@
+{
+  "name": "building-with-larc-book",
+  "version": "1.0.0",
+  "description": "Building with LARC: A Reference Manual - Build scripts and tooling",
+  "scripts": {
+    "build": "./build-book.sh all",
+    "build:html": "./build-book.sh html",
+    "build:pdf": "./build-book.sh pdf",
+    "build:epub": "./build-book.sh epub",
+    "clean": "./build-book.sh clean",
+    "view:html": "open output/html/building-with-larc.html",
+    "view:pdf": "open output/pdf/building-with-larc.pdf",
+    "view:epub": "open output/epub/building-with-larc.epub",
+    "prebuild": "chmod +x build-book.sh",
+    "watch": "npm run build:html && fswatch -o *.md | xargs -n1 -I{} npm run build:html"
+  },
+  "keywords": [
+    "larc",
+    "documentation",
+    "book",
+    "reference",
+    "manual",
+    "web-components"
+  ],
+  "author": "LARC Project Contributors",
+  "license": "MIT",
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/larc-repos.git"
+  }
+}

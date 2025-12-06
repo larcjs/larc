@@ -2,8 +2,31 @@
 
 ## Building Modern Web Applications with the Page Area Network Architecture
 
-**By the LARC Team**
+**By Christopher Robison**
 *First Edition, 2025*
+
+---
+
+## 📦 Building the Book
+
+This book can be built in multiple formats with your beautiful hand-drawn Lark cover!
+
+- **[QUICKSTART.md](QUICKSTART.md)** - Get started in 3 easy steps
+- **Build Script**: `./build-book.sh` - Generates HTML, PDF, and EPUB
+
+```bash
+# Quick build (all formats)
+./build-book.sh
+
+# Or use Make/npm
+make
+npm run build
+```
+
+**Output Formats**:
+- 📄 **HTML** - `build/output/learning-larc.html`
+- 📕 **PDF** - `build/output/learning-larc.pdf`
+- 📱 **EPUB** - `build/output/learning-larc.epub` (with your Lark cover!)
 
 ---
 

@@ -1,0 +1,25 @@
+{
+  "name": "learning-larc-book",
+  "version": "1.0.0",
+  "description": "Learning LARC: A Hands-On Guide - Build scripts and tooling",
+  "scripts": {
+    "build": "./build-book.sh all",
+    "build:html": "./build-book.sh html",
+    "build:pdf": "./build-book.sh pdf",
+    "build:epub": "./build-book.sh epub",
+    "clean": "./build-book.sh clean",
+    "view:html": "open build/output/learning-larc.html",
+    "view:pdf": "open build/output/learning-larc.pdf",
+    "view:epub": "open build/output/learning-larc.epub",
+    "prebuild": "chmod +x build-book.sh"
+  },
+  "keywords": [
+    "larc",
+    "tutorial",
+    "book",
+    "web-components",
+    "guide"
+  ],
+  "author": "Christopher Robison",
+  "license": "MIT"
+}

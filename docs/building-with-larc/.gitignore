@@ -1,0 +1,24 @@
+# Build artifacts
+build/
+output/
+
+# Generated CSS (if you want to track custom CSS, remove these lines)
+book-style.css
+book-style-print.css
+
+# Optional cover image (uncomment if you don't want to track it)
+# cover.png
+
+# Node modules (if using npm scripts)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
