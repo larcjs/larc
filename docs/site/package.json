@@ -1,0 +1,31 @@
+{
+  "name": "@larcjs/site",
+  "version": "1.0.0",
+  "description": "LARC Documentation - Official documentation website and showcase for the LARC/PAN ecosystem",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "node render-markdown.mjs && node generate-docs.mjs",
+    "build:docs": "node render-markdown.mjs",
+    "build:api": "node generate-docs.mjs",
+    "serve": "python3 -m http.server 8080",
+    "dev": "npm run build && npm run serve"
+  },
+  "keywords": [
+    "larc",
+    "pan",
+    "documentation",
+    "website",
+    "showcase"
+  ],
+  "author": "Chris Robison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/site.git"
+  },
+  "bugs": {
+    "url": "https://github.com/larcjs/site/issues"
+  },
+  "homepage": "https://larcjs.github.io/site/"
+}
