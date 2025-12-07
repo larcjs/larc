@@ -10,3 +10,6 @@
 [submodule "apps"]
 	path = apps
 	url = https://github.com/larcjs/apps.git
+[submodule "devtools"]
+	path = devtools
+	url = https://github.com/larcjs/devtools.git
