@@ -1,0 +1,65 @@
+{
+  "name": "@larcjs/core-types",
+  "version": "1.1.1",
+  "description": "TypeScript type definitions for @larcjs/core",
+  "types": "index.d.ts",
+  "type": "module",
+  "files": [
+    "**/*.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts"
+    },
+    "./types/message": {
+      "types": "./types/message.d.ts"
+    },
+    "./types/subscription": {
+      "types": "./types/subscription.d.ts"
+    },
+    "./types/config": {
+      "types": "./types/config.d.ts"
+    },
+    "./types/routing": {
+      "types": "./types/routing.d.ts"
+    },
+    "./components/pan-client": {
+      "types": "./components/pan-client.d.ts"
+    },
+    "./components/pan-bus": {
+      "types": "./components/pan-bus.d.ts"
+    },
+    "./components/pan-autoload": {
+      "types": "./components/pan-autoload.d.ts"
+    }
+  },
+  "peerDependencies": {
+    "@larcjs/core": "^1.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@larcjs/core": {
+      "optional": true
+    }
+  },
+  "keywords": [
+    "typescript",
+    "types",
+    "larc",
+    "pan",
+    "web-components",
+    "message-bus",
+    "pubsub",
+    "routing",
+    "zero-build"
+  ],
+  "author": "LARC Contributors",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/core-types.git"
+  },
+  "bugs": {
+    "url": "https://github.com/larcjs/core-types/issues"
+  },
+  "homepage": "https://github.com/larcjs/core-types#readme"
+}
