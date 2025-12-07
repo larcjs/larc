@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Demo · PAN Bus + Todo Stack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./examples/assets/grail.css">
+</head>
+<body>
+  <pan-bus id="bus" version="0.1"></pan-bus>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>PAN Demo Suite</span>
+      </div>
+      <nav class="nav-content">
+        <a class="nav-item active" aria-current="page" href="./demo.html"><span>Overview Demo</span><span class="hint">00</span></a>
+        <a class="nav-item" href="./examples/01-hello.html"><span>Hello Counter</span><span class="hint">01</span></a>
+        <a class="nav-item" href="./examples/02-todos-and-inspector.html"><span>Todos + Inspector</span><span class="hint">02</span></a>
+        <a class="nav-item" href="./examples/03-broadcastchannel.html"><span>Cross-tab Sync</span><span class="hint">03</span></a>
+        <a class="nav-item" href="./examples/04-react-wrapper.html"><span>React Wrapper</span><span class="hint">04</span></a>
+        <a class="nav-item" href="./examples/05-lit-wrapper.html"><span>Lit Wrapper</span><span class="hint">05</span></a>
+        <a class="nav-item" href="./examples/06-crud.html"><span>CRUD (Mock Provider)</span><span class="hint">06</span></a>
+        <a class="nav-item" href="./examples/07-rest-connector.html"><span>REST Connector</span><span class="hint">07</span></a>
+        <a class="nav-item" href="./examples/08-workers.html"><span>Workers</span><span class="hint">08</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <strong>PAN</strong> is the Page Area Network: a DOM-native message bus for web components and micro-frontends.
+      </div>
+    </aside>
+
+    <main class="main-region">
+      <header class="main-header">
+        <h1>LARC · PAN Reference Demo</h1>
+        <p>
+          A lightweight PAN bus powers a todo stack, retained state, and a mini inspector. Watch components publish
+          <code>todos.*</code> topics while the bus logs deliveries and request/reply traffic.
+        </p>
+        <div class="badge-row">
+          <span class="badge" id="status">starting…</span>
+          <span class="badge">topics: <code>todos.*</code></span>
+          <span class="badge">retained snapshots</span>
+          <span class="badge">request / reply</span>
+        </div>
+        <div class="meta-label" style="margin-top:0.6rem;">
+          Tip: open DevTools → Elements and listen for <span class="badge">pan:*</span> events to inspect traffic.
+        </div>
+      </header>
+
+      <section class="content-area">
+        <div class="split-vertical" style="grid-template-rows: minmax(280px, 1fr) minmax(260px, 1fr);">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>&lt;todo-list&gt; Component</h2>
+                <div class="subtitle">Publishes <code>todos.change</code>, <code>todos.toggle</code>, <code>todos.remove</code> and listens to <code>todos.state</code>.</div>
+              </div>
+              <div class="toolbar">
+                <a class="button-link" href="./README.md">Docs</a>
+              </div>
+            </div>
+            <div class="panel-body">
+              <todo-list></todo-list>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Bus Inspector</h2>
+                <div class="subtitle">Live stream of <code>pan:publish</code>, <code>pan:subscribe</code>, and retained deliveries.</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="log" class="small" style="height:100%;overflow:auto;white-space:pre-wrap;line-height:1.4;background:rgba(15,23,42,0.08);padding:1rem;border-radius:1rem;"></div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PAN Client helper (minimal) -->
+  <script type="module" id="pan-client">
+    export class PanClient {
+      /** @param {HTMLElement|Document} host */
+      constructor(host = document, busSelector = 'pan-bus') {
+        this.host = host;
+        this.bus = /** @type {HTMLElement|null} */(document.querySelector(busSelector));
+        if (!this.bus) throw new Error('PAN bus not found');
+        this.clientId = `${(host instanceof HTMLElement && (host.tagName.toLowerCase()+ (host.id?('#'+host.id):''))) || 'doc'}#${Math.random().toString(36).slice(2,8)}`;
+        this._ready = new Promise(res => {
+          const onReady = () => { document.removeEventListener('pan:sys.ready', onReady, true); res(); };
+          if (window.__panReady) return res();
+          document.addEventListener('pan:sys.ready', onReady, true);
+        });
+        // say hello once ready
+        this._ready.then(()=>{
+          this._dispatch('pan:hello', { id:this.clientId, caps:['client'] });
+        });
+      }
+      ready(){ return this._ready; }
+      /** @param {string} type @param {any} detail */
+      _dispatch(type, detail){
+        this.host.dispatchEvent(new CustomEvent(type, { detail, bubbles:true, composed:true }));
+      }
+      /** @param {import('./types').PanMessage} msg */
+      publish(msg){ this._dispatch('pan:publish', msg); }
+      /** @param {string|string[]} topics @param {(m:any)=>void} handler */
+      subscribe(topics, handler, opts={}){
+        topics = Array.isArray(topics)? topics : [topics];
+        const onDeliver = (ev) => {
+          const m = ev.detail;
+          if (!m || !m.topic) return;
+          // naive topic match for direct delivery; bus filters too
+          if (topics.some(t=> PanClient.matches(m.topic, t))) handler(m);
+        };
+        this.host.addEventListener('pan:deliver', onDeliver);
+        this._dispatch('pan:subscribe', { clientId:this.clientId, topics, options: { retained: !!opts.retained } });
+        return () => {
+          this.host.removeEventListener('pan:deliver', onDeliver);
+          this._dispatch('pan:unsubscribe', { clientId:this.clientId, topics });
+        };
+      }
+      /** request/response sugar */
+      request(topic, data, { timeoutMs=5000 }={}){
+        const correlationId = crypto.randomUUID();
+        const replyTo = `pan:$reply:${this.clientId}:${correlationId}`;
+        return new Promise((resolve, reject)=>{
+          const timer = setTimeout(()=>{ off(); reject(new Error('PAN request timeout')); }, timeoutMs);
+          const off = this.subscribe(replyTo, (m)=>{ clearTimeout(timer); off(); resolve(m); });
+          this.publish({ topic, data, replyTo, correlationId });
+        });
+      }
+      /** topic pattern matcher */
+      static matches(topic, pattern){
+        if (pattern === '*' || topic === pattern) return true;
+        if (!pattern || !pattern.includes('*')) return false;
+        const esc = (s)=>s.replace(/[|\\{}()\[\]^$+?.]/g,'\\$&').replace(/\*/g,'[^.]+' );
+        return new RegExp(`^${esc(pattern)}$`).test(topic);
+      }
+    }
+
+    window.PanClient = PanClient;
+
+    // Minimal PAN bus with logging
+    class PanBus extends HTMLElement {
+      constructor(){
+        super();
+        this.subs = [];
+        this.retained = new Map();
+        this.clients = new Map();
+        this.onPublish = this.onPublish.bind(this);
+        this.onReply = this.onReply.bind(this);
+        this.onSubscribe = this.onSubscribe.bind(this);
+        this.onUnsubscribe = this.onUnsubscribe.bind(this);
+        this.onHello = this.onHello.bind(this);
+      }
+      connectedCallback(){
+        document.addEventListener('pan:publish', this.onPublish, true);
+        document.addEventListener('pan:request', this.onPublish, true);
+        document.addEventListener('pan:reply', this.onReply, true);
+        document.addEventListener('pan:subscribe', this.onSubscribe, true);
+        document.addEventListener('pan:unsubscribe', this.onUnsubscribe, true);
+        document.addEventListener('pan:hello', this.onHello, true);
+        // announce ready
+        window.__panReady = true;
+        document.dispatchEvent(new CustomEvent('pan:sys.ready', { bubbles:true, composed:true }));
+      }
+      disconnectedCallback(){
+        document.removeEventListener('pan:publish', this.onPublish, true);
+        document.removeEventListener('pan:request', this.onPublish, true);
+        document.removeEventListener('pan:reply', this.onReply, true);
+        document.removeEventListener('pan:subscribe', this.onSubscribe, true);
+        document.removeEventListener('pan:unsubscribe', this.onUnsubscribe, true);
+        document.removeEventListener('pan:hello', this.onHello, true);
+      }
+      // subscription registry: array of { pattern, el, retained }
+      subs; retained; clients = new Map();
+      log(ev, payload){ document.getElementById('log')?.prepend(`[${new Date().toLocaleTimeString()}] ${ev} ${JSON.stringify(payload)}\n`); }
+      onHello = (e)=>{ const d = e.detail||{}; if(d.id) this.clients.set(d.id, { el: e.composedPath?.()[0], caps:d.caps }); this.log('HELLO', d); };
+      onSubscribe = (e)=>{
+        const { topics=[], options={}, clientId } = e.detail||{};
+        const el = e.composedPath?.()[0];
+        for (const pattern of topics){ this.subs.push({ pattern, el, clientId, retained: !!options.retained }); }
+        // deliver retained if asked
+        if (options.retained){
+          for (const [topic,msg] of this.retained){ if (topics.some(p=>PanBus.matches(topic,p))) this.deliver(el, msg); }
+        }
+        this.log('SUB', { clientId, topics });
+      }
+      onUnsubscribe = (e)=>{
+        const { topics=[], clientId } = e.detail||{};
+        this.subs = this.subs.filter(s=> !(s.clientId===clientId && topics.includes(s.pattern)));
+        this.log('UNSUB', { clientId, topics });
+      }
+      onPublish = (e)=>{
+        const msg = Object.assign({ ts:Date.now(), id:crypto.randomUUID() }, e.detail||{});
+        if (msg.retain) this.retained.set(msg.topic, msg);
+        // deliver to matching subs
+        for (const s of this.subs){ if (PanBus.matches(msg.topic, s.pattern)) this.deliver(s.el, msg); }
+        this.log('PUB', { topic: msg.topic, id: msg.id });
+      }
+      onReply = (e)=>{ const msg = e.detail||{}; for (const s of this.subs){ if (PanBus.matches(msg.topic, s.pattern)) this.deliver(s.el, msg); } this.log('REPLY', { topic: msg.topic }); }
+      deliver(target, msg){ try { target.dispatchEvent(new CustomEvent('pan:deliver', { detail: msg })); } catch(err) { /* ignore */ } }
+      static matches(topic, pattern){ return window.PanClient?.matches(topic, pattern) || topic===pattern; }
+    }
+    customElements.define('pan-bus', PanBus);
+  </script>
+
+  <!-- <todo-list> component using PAN -->
+  <script type="module" id="todo-list">
+    class TodoList extends HTMLElement {
+      constructor(){ super(); this.attachShadow({mode:'open'}); this.pc = new window.PanClient(this); this.todos = []; }
+      async connectedCallback(){
+        this.render();
+        await this.pc.ready();
+        // subscribe to todos
+        this.off = this.pc.subscribe(['todos.change','todos.remove','todos.toggle','todos.state'], (m)=>{
+          if (m.topic === 'todos.state') { this.todos = m.data.items; this.render(); return; }
+          if (m.topic === 'todos.change') { this.todos.push(m.data.item); }
+          if (m.topic === 'todos.remove') { this.todos = this.todos.filter(t=> t.id!==m.data.id); }
+          if (m.topic === 'todos.toggle') { const t = this.todos.find(x=>x.id===m.data.id); if (t) t.done = !!m.data.done; }
+          this.render();
+        }, { retained:true });
+        // request initial state (in case there is a provider)
+        this.pc.publish({ topic:'todos:get', data:{} , replyTo:'todos.state' });
+      }
+      disconnectedCallback(){ this.off && this.off(); }
+      render(){
+        const html = String.raw;
+        this.shadowRoot.innerHTML = html`
+          <style>
+            :host{ display:block; font:15px/1.5 var(--font,"Lexend",system-ui,sans-serif); }
+            form{ display:flex; gap:0.65rem; margin-bottom:1rem; }
+            input[type=text]{ flex:1; padding:0.65rem 0.75rem; border-radius:0.9rem; border:1px solid rgba(15,23,42,0.12); }
+            button{ padding:0.65rem 1.1rem; border-radius:0.9rem; border:none; background:var(--color-accent,#2563eb); color:#fff; font-weight:600; cursor:pointer; }
+            button:hover{ background:#1d4ed8; }
+            ul{ list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.55rem; }
+            li{ display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0.75rem; border:1px solid rgba(15,23,42,0.1); border-radius:1rem; background:rgba(255,255,255,0.94); }
+            li.done .title{ text-decoration:line-through; color:var(--color-muted,#5f6b84); }
+            .muted{ color:var(--color-muted,#5f6b84); }
+            .spacer{ flex:1; }
+            .del{ border:none; background:transparent; color:#ef4444; font-size:1.1rem; cursor:pointer; }
+          </style>
+          <form id="f">
+            <input id="title" type="text" placeholder="Add a task…" autocomplete="off" />
+            <button type="submit">Add</button>
+          </form>
+          ${this.todos.length? '' : '<div class="muted">No tasks yet.</div>'}
+          <ul>
+            ${this.todos.map(t=>`
+              <li class="${t.done?'done':''}" data-id="${t.id}">
+                <input type="checkbox" ${t.done?'checked':''} aria-label="toggle" />
+                <span class="title">${this.escape(t.title)}</span>
+                <span class="spacer"></span>
+                <button class="del" title="Remove">✕</button>
+              </li>`).join('')}
+          </ul>
+        `;
+        const form = this.shadowRoot.getElementById('f');
+        const title = this.shadowRoot.getElementById('title');
+        form.onsubmit = (ev)=>{ ev.preventDefault(); const v = title.value.trim(); if(!v) return; title.value=''; this.pc.publish({ topic:'todos.change', data:{ item:{ id:crypto.randomUUID(), title:v, done:false } }, retain:true }); };
+        this.shadowRoot.querySelectorAll('li input[type=checkbox]').forEach(cb=>{
+          cb.addEventListener('change', (e)=>{
+            const li = e.target.closest('li'); const id = li.getAttribute('data-id');
+            this.pc.publish({ topic:'todos.toggle', data:{ id, done: e.target.checked }, retain:true });
+          });
+        });
+        this.shadowRoot.querySelectorAll('li button.del').forEach(btn=>{
+          btn.addEventListener('click', (e)=>{ const li = e.target.closest('li'); const id = li.getAttribute('data-id'); this.pc.publish({ topic:'todos.remove', data:{ id }, retain:true }); });
+        });
+      }
+      escape(s){ return s.replace(/[&<>"']/g, c=> ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+    }
+    customElements.define('todo-list', TodoList);
+  </script>
+
+  <!-- Minimal provider that retains state on the bus -->
+  <script type="module" id="todo-provider">
+    class TodoProvider extends HTMLElement{
+      constructor(){ super(); this.pc = new window.PanClient(this); this.items = []; }
+      async connectedCallback(){
+        await this.pc.ready();
+        this.pc.subscribe(['todos.change','todos.remove','todos.toggle','todos:get'], (m)=>{
+          if (m.topic === 'todos.change') this.items.push(m.data.item);
+          if (m.topic === 'todos.remove') this.items = this.items.filter(t=> t.id!==m.data.id);
+          if (m.topic === 'todos.toggle') { const t=this.items.find(x=>x.id===m.data.id); if (t) t.done = !!m.data.done; }
+          this.pc.publish({ topic:'todos.state', data:{ items:this.items }, retain:true });
+        }, { retained:false });
+      }
+    }
+    customElements.define('todo-provider', TodoProvider);
+    // instantiate a provider
+    document.body.appendChild(document.createElement('todo-provider'));
+  </script>
+
+  <script>
+    // simple status chip
+    document.addEventListener('pan:sys.ready', ()=>{
+      const s = document.getElementById('status'); if (s) s.textContent = 'ready';
+    }, { once:true });
+  </script>
+</body>
+</html>
