@@ -8,17 +8,17 @@
 
 ## 📊 Executive Summary
 
-Successfully migrated the LARC ecosystem from a complex 10-repository submodule structure to a clean 3-repository architecture, maintaining architectural integrity while dramatically improving developer experience.
+Successfully migrated the LARC ecosystem from a complex 10-repository submodule structure to a clean 4-repository architecture, maintaining architectural integrity while dramatically improving developer experience.
 
 ### Before → After
 
 | Metric | Before | After | Improvement |
 |--------|--------|-------|-------------|
-| Total Repositories | 10 | 3 | **70% reduction** |
-| Submodules | 8 | 4 | **50% reduction** |
+| Total Repositories | 10 | 4 | **60% reduction** |
+| Submodules | 8 | 5 | **38% reduction** |
 | Clone Commands | Multiple | Single | **Simpler** |
 | Setup Time | 30-45 min | 5 min | **9x faster** |
-| Workspace Packages | N/A | 3 | **Auto-linked** |
+| Workspace Packages | N/A | 2 | **Auto-linked** |
 
 ---
 
@@ -36,15 +36,20 @@ Successfully migrated the LARC ecosystem from a complex 10-repository submodule 
 - Peer dependency: `@larcjs/core ^1.1.0`
 - Status: Remains independent repository
 
-### 3. `github.com/larcjs/larc` ✅ (Transformed - Monorepo)
+### 3. `github.com/larcjs/devtools` ✅ (Separate - Independent)
+**Chrome DevTools extension for debugging PAN**
+- Chrome extension for inspecting LARC/PAN message bus
+- Standalone developer tool
+- Status: Independent repository (restored from monorepo)
+
+### 4. `github.com/larcjs/larc` ✅ (Transformed - Monorepo)
 **Development workspace & published types**
 
 ```
 larc/
 ├── packages/                 (Published to npm)
 │   ├── core-types/          → @larcjs/core-types v1.1.1
-│   ├── components-types/    → @larcjs/components-types v1.0.2
-│   └── devtools/            → @larcjs/devtools v1.0.0
+│   └── components-types/    → @larcjs/components-types v1.0.2
 ├── docs/
 │   ├── site/                (Documentation website)
 │   ├── API-REFERENCE.md
@@ -53,6 +58,7 @@ larc/
 ├── apps/                    (Demo applications - submodule)
 ├── core/                    (Core submodule → @larcjs/core)
 ├── ui/                      (UI submodule → @larcjs/components)
+├── devtools/                (DevTools submodule → @larcjs/devtools)
 ├── cli/
 ├── playground/
 ├── react-adapter/
@@ -77,20 +83,16 @@ larc/
   - package.json updated with monorepo links
   - Published as `@larcjs/components-types`
 
-- ✅ `devtools/` → `packages/devtools/`
-  - 25 files migrated
-  - Chrome extension for PAN debugging
-  - Published as `@larcjs/devtools`
-
 ### Moved to `docs/`
 - ✅ `site/` → `docs/site/`
   - 143 files migrated
   - Documentation website
   - Hosted at https://larcjs.github.io/larc/docs/site/
 
-### Preserved as Submodules
+### Preserved/Restored as Submodules
 - ✅ `core/` - Remains submodule to @larcjs/core
 - ✅ `ui/` - Remains submodule to @larcjs/components
+- ✅ `devtools/` - Restored as submodule to @larcjs/devtools (Dec 7, 2025)
 - ✅ `examples/` - Remains submodule
 - ✅ `apps/` - Remains submodule
 
@@ -114,13 +116,17 @@ larc/
 [submodule "apps"]
 	path = apps
 	url = https://github.com/larcjs/apps.git
+[submodule "devtools"]
+	path = devtools
+	url = https://github.com/larcjs/devtools.git
 ```
 
-**Removed from .gitmodules:**
+**Removed from .gitmodules (consolidated into monorepo):**
 - `site` (now in docs/site/)
-- `devtools` (now in packages/devtools/)
 - `core-types` (now in packages/core-types/)
 - `components-types` (now in packages/components-types/)
+
+**Note:** `devtools` was initially moved to packages/ but later restored as a separate submodule (Dec 7, 2025) to maintain architectural consistency with core and components.
 
 ### 2. npm Workspaces Configuration
 
@@ -147,6 +153,10 @@ packages:
   - 'packages/*'
 ```
 
+This currently includes only type definition packages:
+- `@larcjs/core-types`
+- `@larcjs/components-types`
+
 ### 3. Package.json Updates
 
 All packages in `packages/` updated with:
@@ -160,15 +170,14 @@ All packages in `packages/` updated with:
 ```bash
 npm install
 # Output:
-# add @larcjs/devtools 1.0.0
 # add @larcjs/core-types 1.1.1
 # add @larcjs/components-types 1.0.2
 #
-# added 3 packages, and audited 7 packages in 1s
+# added 2 packages, and audited 6 packages in 1s
 # found 0 vulnerabilities
 ```
 
-✅ All packages automatically symlinked in `node_modules/@larcjs/`
+✅ Type packages automatically symlinked in `node_modules/@larcjs/`
 
 ---
 
