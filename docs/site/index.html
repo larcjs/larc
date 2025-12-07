@@ -1,0 +1,702 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC — Lightweight Asynchronous Relay Core</title>
+  <meta name="description" content="A lightweight DOM-native message bus for building loosely-coupled web UIs. Zero build, framework-agnostic, batteries included.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    @supports not (color: color-mix(in srgb, white, black)) {
+      .header {
+        background: var(--color-bg);
+        opacity: 0.95;
+      }
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    .logo img {
+      width: 32px;
+      height: 32px;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--color-primary);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--color-bg-alt);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      border-color: var(--color-primary);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 0.375rem 0.875rem;
+      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+      color: white;
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #1e293b 0%, #6366f1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: var(--color-text-muted);
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 4rem;
+    }
+
+    /* Features Grid */
+    .features {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .features h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--color-text);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .feature-card {
+      padding: 2rem;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-primary);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .feature-card p {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    /* Code Example Section */
+    .code-section {
+      background: var(--color-bg-alt);
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+    }
+
+    .code-section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .code-section h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .code-section-subtitle {
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 1.125rem;
+      margin-bottom: 3rem;
+    }
+
+    .code-example {
+      background: var(--color-code-bg);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-xl);
+    }
+
+    .code-example pre {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    .code-section-note {
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .code-section-note code {
+      background: rgba(99, 102, 241, 0.1);
+      padding: 0.125rem 0.375rem;
+      border-radius: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--color-primary);
+    }
+
+    .code-comment {
+      color: #64748b;
+    }
+
+    .code-tag {
+      color: #06b6d4;
+    }
+
+    .code-attr {
+      color: #a78bfa;
+    }
+
+    .code-string {
+      color: #34d399;
+    }
+
+    .code-keyword {
+      color: #f472b6;
+    }
+
+    /* Use Cases */
+    .use-cases {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .use-cases h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .use-case-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .use-case {
+      padding: 1.5rem;
+      background: white;
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .use-case h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-primary);
+    }
+
+    .use-case p {
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      margin: 4rem 0 0;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-light {
+      background: white;
+      color: var(--color-primary);
+    }
+
+    .btn-light:hover {
+      background: var(--color-bg-alt);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--color-bg-alt);
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: var(--color-text);
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .footer-section a:hover {
+      color: var(--color-primary);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 2rem auto 0;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.125rem;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .features h2,
+      .code-section h2,
+      .use-cases h2,
+      .cta-section h2 {
+        font-size: 2rem;
+      }
+
+      .hero {
+        padding: 4rem 1.5rem 2rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero,
+    .features-grid,
+    .code-example {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    .feature-card {
+      animation: fadeInUp 0.6s ease-out;
+      animation-fill-mode: both;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.2s; }
+    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+    .feature-card:nth-child(4) { animation-delay: 0.4s; }
+    .feature-card:nth-child(5) { animation-delay: 0.5s; }
+    .feature-card:nth-child(6) { animation-delay: 0.6s; }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="/" class="logo">
+        
+        <span>LARC</span>
+      </a>
+      <nav class="nav">
+        <a href="#features">Features</a>
+        <a href="examples.html">Examples</a>
+        <a href="apps.html">Apps</a>
+        <a href="docs/index.html">Docs</a>
+        <a href="https://github.com/larcjs" target="_blank">GitHub</a>
+        <pan-theme-toggle variant="icon"></pan-theme-toggle>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">v1.1.1 · PAN v1 Compliant · Production Ready</div>
+    <h1>Build Loosely-Coupled<br>Web Applications</h1>
+    <p class="hero-subtitle">
+      A production-ready messaging bus for coordinating web components, micro-frontends, and framework integrations.<br>
+      Zero dependencies. Framework agnostic. 5KB core. 60+ components ready to use.
+    </p>
+    <div class="hero-cta">
+      <a href="examples.html" class="btn btn-primary">View Examples</a>
+      <a href="apps.html" class="btn btn-secondary">Demo Apps</a>
+      <a href="docs/index.html" class="btn btn-secondary">Read Docs</a>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features" id="features">
+    <h2>Why LARC?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Framework Integration</h3>
+        <p>Use alongside React, Vue, Angular, or vanilla JS. PAN messaging enables seamless coordination without tight coupling. Reduce your framework footprint by 60%+.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔌</div>
+        <h3>Component Coordination</h3>
+        <p>PAN messaging protocol enables web components to communicate effectively without prop drilling or tight coupling. Build truly reusable component libraries.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>True Interoperability</h3>
+        <p>Mix React, Vue, and LARC components on the same page. They all speak PAN. One design system, every framework.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🪶</div>
+        <h3>Tiny Bundle Size</h3>
+        <p>5KB core vs 500KB+ for React+MUI. Load components on-demand. Only pay for what you use.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🚀</div>
+        <h3>Zero Build Required</h3>
+        <p>Drop a script tag and start building. Works from file://, no webpack, no bundlers, no configuration.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Rich Component Library</h3>
+        <p>60+ production-ready components: data tables, forms, charts, modals, authentication flows. Enterprise-grade UI elements that work anywhere.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔐</div>
+        <h3>Built-in Authentication</h3>
+        <p>JWT authentication with auto-header injection. Developers never write Authorization headers. Auto-refresh tokens.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>DevTools Included</h3>
+        <p>Built-in Inspector component lets you watch message flow, filter topics, and debug in real-time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Code Example -->
+  <section class="code-section" id="examples">
+    <div class="code-section-inner">
+      <h2>Get Started in Seconds</h2>
+      <p class="code-section-subtitle">Drop a script tag and start building. No build tools required.</p>
+      <div class="code-example">
+<pre><code><span class="code-comment">&lt;!doctype html&gt;</span>
+<span class="code-comment">&lt;!-- Drop one script tag, then use any component. That's it! --&gt;</span>
+<span class="code-tag">&lt;script</span> <span class="code-attr">type</span>=<span class="code-string">"module"</span> <span class="code-attr">src</span>=<span class="code-string">"https://cdn.jsdelivr.net/npm/@larcjs/components@1/src/pan-autoload.mjs"</span><span class="code-tag">&gt;&lt;/script&gt;</span>
+
+<span class="code-comment">&lt;!-- Components load automatically (including pan-bus!) --&gt;</span>
+<span class="code-tag">&lt;x-counter&gt;&lt;/x-counter&gt;</span>
+<span class="code-tag">&lt;pan-inspector&gt;&lt;/pan-inspector&gt;</span></code></pre>
+      </div>
+      <p class="code-section-note">
+        ✨ All components load automatically when they appear in the DOM.
+        The <code>&lt;pan-bus&gt;</code> is automatically created for you.
+        No imports, no <code>customElements.define()</code>, no bundler.
+      </p>
+    </div>
+  </section>
+
+  <!-- Use Cases -->
+  <section class="use-cases">
+    <h2>Perfect For</h2>
+    <div class="use-case-grid">
+      <div class="use-case">
+        <h3>Reducing Bundle Size</h3>
+        <p>Replace Material-UI/Ant Design with LARC components. Save 400-500KB instantly.</p>
+      </div>
+      <div class="use-case">
+        <h3>Design Systems</h3>
+        <p>Build once, use in React apps, Vue apps, Angular apps. One codebase, every framework.</p>
+      </div>
+      <div class="use-case">
+        <h3>Micro-Frontends</h3>
+        <p>Different teams, different frameworks, coordinating via PAN without tight coupling.</p>
+      </div>
+      <div class="use-case">
+        <h3>Legacy Modernization</h3>
+        <p>Incrementally upgrade jQuery/Backbone apps. Drop in LARC components, no rewrite needed.</p>
+      </div>
+      <div class="use-case">
+        <h3>Progressive Enhancement</h3>
+        <p>Layer interactive features onto existing pages without heavy frameworks.</p>
+      </div>
+      <div class="use-case">
+        <h3>Rapid Prototyping</h3>
+        <p>Build and iterate quickly without build tooling or configuration overhead.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2>Ready to Build?</h2>
+    <p>Explore 20+ progressive examples and 6 production-ready demo applications</p>
+    <div class="cta-buttons">
+      <a href="examples.html" class="btn btn-light">Browse Examples</a>
+      <a href="apps.html" class="btn btn-light">Try Demo Apps</a>
+      <a href="docs/index.html" class="btn btn-outline">Read the Docs</a>
+      <a href="https://github.com/larcjs" target="_blank" class="btn btn-outline">View on GitHub</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Documentation</h4>
+        <ul>
+          <li><a href="docs/README.html">Getting Started</a></li>
+          <li><a href="docs/QUICK_START.html">Quick Start</a></li>
+          <li><a href="docs/PAN_SPEC.v1.html">PAN v1 Spec</a></li>
+          <li><a href="docs/TYPESCRIPT.html">TypeScript Guide</a></li>
+          <li><a href="docs/AUTHENTICATION.html">Authentication</a></li>
+          <li><a href="docs/SECURITY.html">Security</a></li>
+          <li><a href="docs/index.html">All Docs →</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Examples</h4>
+        <ul>
+          <li><a href="../examples/01-hello.html">Hello Counter</a></li>
+          <li><a href="../examples/02-todos-and-inspector.html">Todo List</a></li>
+          <li><a href="../examples/06-crud.html">CRUD Stack</a></li>
+          <li><a href="../examples/17-enhanced-security.html">Security</a></li>
+          <li><a href="../examples/18-typescript-usage.ts">TypeScript</a></li>
+          <li><a href="examples.html">All Examples →</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Applications</h4>
+        <ul>
+          <li><a href="../apps/invoice-studio/index.html">Invoice Studio</a></li>
+          <li><a href="../apps/contact-manager/index.html">Contact Manager</a></li>
+          <li><a href="../apps/markdown-notes/index.html">Markdown Notes</a></li>
+          <li><a href="../apps/data-browser/index.html">Data Browser</a></li>
+          <li><a href="apps.html">All Apps →</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/larcjs" target="_blank">GitHub Organization</a></li>
+          <li><a href="https://github.com/larcjs/core" target="_blank">Core Repository</a></li>
+          <li><a href="https://github.com/larcjs/components" target="_blank">Components</a></li>
+          <li><a href="https://github.com/larcjs/core/issues" target="_blank">Issues</a></li>
+          <li><a href="rfcs/README.md">RFCs</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>LARC (Lightweight Asynchronous Relay Core) · PAN (Page Area Network) · MIT License</p>
+    </div>
+  </footer>
+
+  <!-- Theme System -->
+  <pan-theme-provider theme="auto"></pan-theme-provider>
+
+  <script type="module">
+    import '../ui/src/components/pan-theme-provider.mjs';
+    import '../ui/src/components/pan-theme-toggle.mjs';
+  </script>
+</body>
+</html>

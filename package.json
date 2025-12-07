@@ -1,0 +1,33 @@
+{
+  "name": "larc",
+  "version": "2.0.0",
+  "private": true,
+  "description": "LARC Development Monorepo - Documentation, examples, and developer tools",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "dev": "pnpm -r --parallel dev",
+    "clean": "pnpm -r clean",
+    "lint": "pnpm -r lint",
+    "publish-types": "pnpm --filter '@larcjs/core-types' publish && pnpm --filter '@larcjs/components-types' publish",
+    "serve": "python3 -m http.server 8000"
+  },
+  "keywords": [
+    "larc",
+    "pan",
+    "message-bus",
+    "web-components",
+    "monorepo"
+  ],
+  "author": "Chris Robison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/larcjs/larc.git"
+  },
+  "devDependencies": {}
+}
