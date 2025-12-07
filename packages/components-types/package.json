@@ -34,10 +34,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/larcjs/components-types.git"
+    "url": "https://github.com/larcjs/larc.git",
+    "directory": "packages/components-types"
   },
   "bugs": {
-    "url": "https://github.com/larcjs/components-types/issues"
+    "url": "https://github.com/larcjs/larc/issues"
   },
-  "homepage": "https://github.com/larcjs/components-types#readme"
+  "homepage": "https://github.com/larcjs/larc/tree/main/packages/components-types#readme"
 }
