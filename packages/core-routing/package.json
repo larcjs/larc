@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core-routing",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Dynamic message routing system for LARC Core (8KB add-on)",
   "type": "module",
   "main": "./src/pan-routes.mjs",
@@ -28,7 +28,7 @@
     "url": "https://github.com/larcjs/larc.git",
     "directory": "packages/core-routing"
   },
-  "homepage": "https://github.com/larcjs/larc/tree/main/packages/core-routing#readme",
+  "homepage": "https://larcjs.com",
   "bugs": {
     "url": "https://github.com/larcjs/larc/issues"
   },

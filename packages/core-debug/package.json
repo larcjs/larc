@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core-debug",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Debug and tracing tools for LARC Core (3KB add-on)",
   "type": "module",
   "main": "./src/pan-debug.mjs",
@@ -28,7 +28,7 @@
     "url": "https://github.com/larcjs/larc.git",
     "directory": "packages/core-debug"
   },
-  "homepage": "https://github.com/larcjs/larc/tree/main/packages/core-debug#readme",
+  "homepage": "https://larcjs.com",
   "bugs": {
     "url": "https://github.com/larcjs/larc/issues"
   },
