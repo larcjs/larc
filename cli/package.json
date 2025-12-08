@@ -29,11 +29,15 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/larcjs/create-larc-app.git"
+    "url": "https://github.com/larcjs/larc.git",
+    "directory": "cli"
   },
   "homepage": "https://larcjs.com",
   "bugs": {
-    "url": "https://github.com/larcjs/create-larc-app/issues"
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "chalk": "^5.3.0",

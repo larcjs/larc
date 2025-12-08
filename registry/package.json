@@ -17,7 +17,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/larcjs/registry.git"
+    "url": "https://github.com/larcjs/larc.git",
+    "directory": "registry"
+  },
+  "homepage": "https://larcjs.com",
+  "bugs": {
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "keywords": [
     "larc",
