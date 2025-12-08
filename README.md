@@ -14,19 +14,29 @@ This repository contains the development assets for the LARC ecosystem:
 
 ```
 larc/
-├── packages/
-│   ├── core-lite/         → @larcjs/core-lite (npm) - 9KB ⭐
-│   ├── core-routing/      → @larcjs/core-routing (npm) - 8KB
-│   ├── core-debug/        → @larcjs/core-debug (npm) - 3KB
-│   ├── core-types/        → @larcjs/core-types (npm)
-│   ├── components-types/  → @larcjs/components-types (npm)
-│   └── devtools/          → @larcjs/devtools (Chrome extension)
-├── docs/
-│   └── site/              → larcjs.github.io
-├── examples/              → Example applications
-├── apps/                  → Demo applications
-└── core/                  → @larcjs/core (submodule) - 40KB full version
-    ui/                    → @larcjs/components (submodule)
+├── packages/                   (Published npm packages)
+│   ├── core-lite/              → @larcjs/core-lite - 9KB ⭐
+│   ├── core-routing/           → @larcjs/core-routing - 8KB
+│   ├── core-debug/             → @larcjs/core-debug - 3KB
+│   ├── core-types/             → @larcjs/core-types
+│   └── components-types/       → @larcjs/components-types
+├── docs/                       (Documentation & guides)
+│   ├── site/                   → larcjs.github.io
+│   ├── guides/                 → Technical guides & FAQs
+│   ├── migration/              → Migration documentation
+│   └── processes/              → Development processes
+├── scripts/                    → Build & utility scripts
+├── archive/                    → Historical migration files
+├── core/                       → @larcjs/core (submodule)
+├── ui/                         → @larcjs/components (submodule)
+├── examples/                   → Example apps (submodule)
+├── apps/                       → Demo apps (submodule)
+├── devtools/                   → DevTools (submodule)
+├── cli/                        → CLI tool
+├── playground/                 → Interactive playground
+├── react-adapter/              → React integration
+├── registry/                   → Component registry
+└── vscode-extension/           → VS Code extension
 ```
 
 ## 🚀 Quick Start
@@ -97,9 +107,9 @@ These packages are published to npm from this monorepo:
 ### Supporting Packages
 - `@larcjs/core-types` - TypeScript types for @larcjs/core
 - `@larcjs/components-types` - TypeScript types for @larcjs/components
-- `@larcjs/devtools` - Chrome DevTools extension
+- `@larcjs/devtools` - Chrome DevTools extension (submodule)
 
-See [PACKAGES.md](./PACKAGES.md) for complete package selection guide.
+See [docs/guides/PACKAGES.md](./docs/guides/PACKAGES.md) for complete package selection guide.
 
 ## 🔗 Related Repositories
 
@@ -112,7 +122,10 @@ The core products are maintained separately:
 
 - [Live Documentation](https://larcjs.github.io/larc/docs/site/)
 - [Examples](https://larcjs.github.io/larc/examples/)
-- [API Reference](https://larcjs.github.io/larc/docs/site/docs/API_REFERENCE.html)
+- [API Reference](./docs/API-REFERENCE.md)
+- [Quick Start Guide](./docs/guides/QUICK-START-GUIDE.md)
+- [HN FAQ](./docs/guides/HN_FAQ.md)
+- [Migration Documentation](./docs/migration/)
 
 ## 🤝 Contributing
 
@@ -124,5 +137,11 @@ MIT © LARC Contributors
 
 ---
 
-**Note:** This repository was migrated from a submodules structure to a monorepo on 2025-12-06.
-See `MIGRATION.md` for details.
+## 🔧 Development Tools
+
+This monorepo includes several utilities:
+- **Scripts**: Build and utility scripts in `scripts/`
+- **Archive**: Historical migration files in `archive/`
+
+**Note:** This repository was migrated from a submodules structure to a hybrid monorepo on 2025-12-06.
+See [docs/migration/MIGRATION-COMPLETE.md](./docs/migration/MIGRATION-COMPLETE.md) for details.
