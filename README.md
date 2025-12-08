@@ -2,6 +2,9 @@
 
 This repository contains the development assets for the LARC ecosystem:
 
+- **Core Lite** (`@larcjs/core-lite`) - 9KB lightweight messaging bus ⭐
+- **Routing Add-on** (`@larcjs/core-routing`) - 8KB dynamic routing system
+- **Debug Add-on** (`@larcjs/core-debug`) - 3KB debugging tools
 - **Type definitions** (`@larcjs/core-types`, `@larcjs/components-types`)
 - **Developer tools** (`@larcjs/devtools`)
 - **Documentation** (docs/site/)
@@ -12,6 +15,9 @@ This repository contains the development assets for the LARC ecosystem:
 ```
 larc/
 ├── packages/
+│   ├── core-lite/         → @larcjs/core-lite (npm) - 9KB ⭐
+│   ├── core-routing/      → @larcjs/core-routing (npm) - 8KB
+│   ├── core-debug/        → @larcjs/core-debug (npm) - 3KB
 │   ├── core-types/        → @larcjs/core-types (npm)
 │   ├── components-types/  → @larcjs/components-types (npm)
 │   └── devtools/          → @larcjs/devtools (Chrome extension)
@@ -19,7 +25,7 @@ larc/
 │   └── site/              → larcjs.github.io
 ├── examples/              → Example applications
 ├── apps/                  → Demo applications
-└── core/                  → @larcjs/core (submodule)
+└── core/                  → @larcjs/core (submodule) - 40KB full version
     ui/                    → @larcjs/components (submodule)
 ```
 
@@ -83,9 +89,17 @@ cd examples
 
 These packages are published to npm from this monorepo:
 
+### Core Packages (NEW)
+- **`@larcjs/core-lite`** - Lightweight messaging bus (9KB) ⭐ **Start here!**
+- `@larcjs/core-routing` - Dynamic routing add-on (8KB)
+- `@larcjs/core-debug` - Debugging tools add-on (3KB)
+
+### Supporting Packages
 - `@larcjs/core-types` - TypeScript types for @larcjs/core
 - `@larcjs/components-types` - TypeScript types for @larcjs/components
 - `@larcjs/devtools` - Chrome DevTools extension
+
+See [PACKAGES.md](./PACKAGES.md) for complete package selection guide.
 
 ## 🔗 Related Repositories
 

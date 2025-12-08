@@ -20,7 +20,9 @@ LARC complements React/Vue rather than replacing them. Use React for complex UIs
 **Bundle size comparison:**
 - React: ~140KB (React + ReactDOM + ecosystem)
 - Vue: ~90KB (core + ecosystem)
-- LARC: ~5KB core + ~2-5KB per component
+- **LARC Core Lite:** 9KB minified (~3KB gzipped) ✅
+- **LARC Core (full):** 40KB minified (12KB gzipped)
+- **LARC Components:** ~7KB per component minified
 
 ### "How does PAN compare to Redux/Zustand/other state management?"
 
@@ -163,8 +165,9 @@ npm install @larcjs/components-types
 - esbuild (optional build)
 
 **Total installed size:**
-- @larcjs/core: ~100KB (including source maps and types)
-- Runtime: ~5KB gzipped
+- **@larcjs/core-lite:** 9KB minified (~3KB gzipped) ← Start here!
+- @larcjs/core: 40KB minified (~12KB gzipped) - includes routing & debug
+- @larcjs/components: 396KB minified (~110KB gzipped) - 57 components
 
 ### "Why should I add another framework?"
 
@@ -176,13 +179,14 @@ npm install @larcjs/components-types
 
 **With LARC:**
 - React (complex UI): 350KB
-- LARC (cards, modals, tables): 25KB
-- Total: 375KB (-25%)
+- LARC (core + 8 components): ~100KB minified
+- Total: 450KB (-10% from pure React approach)
 
-**Plus:**
+**Real savings come from:**
 - Components work in Vue, Svelte, vanilla JS
 - No lock-in to React version
 - Easier to migrate frameworks later
+- Use only what you need (57 components available, load on demand)
 
 ---
 
@@ -301,14 +305,14 @@ Email: (use GitHub Security Advisories)
 
 **Metrics:**
 - ⚡ **First load:** <50ms (core)
-- 📦 **Bundle size:** ~5KB core (gzipped)
-- 🎯 **Per component:** 2-5KB each
+- 📦 **Bundle size:** 9KB core-lite minified (~3KB gzipped) ✅
+- 🎯 **Per component:** ~7KB each minified (~2KB gzipped)
 - 🔄 **Autoload time:** <5ms per component
 
 **Compared to frameworks:**
 - **React:** ~140KB initial bundle
 - **Vue:** ~90KB initial bundle
-- **LARC:** ~5KB + components used
+- **LARC Core Lite:** 9KB + components used (94% smaller than React!)
 
 **Progressive loading:**
 Components load as they enter viewport (IntersectionObserver). Only pay for what you use.
@@ -421,10 +425,10 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 > Web Components are the only way to build truly framework-agnostic components. LARC solves the coordination problem that makes them practical for real applications.
 
 ### For "Production ready?"
-> Yes: 261 tests passing, 0 vulnerabilities, v1.1 on npm. Young ecosystem (Nov 2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
+> Yes: 335 tests passing, 0 vulnerabilities, v1.1 on npm. Young ecosystem (Nov 2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
 
 ### For "Performance?"
-> 5KB core (gzipped) vs 140KB React. Progressive loading—only pay for what you use. Test it: https://larcjs.github.io/larc/playground/
+> 9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.github.io/larc/playground/
 
 ### For "Learning curve?"
 > If you know HTML + vanilla JS, you're ready. No JSX, no new syntax. 5 min to use components, 1 hour to build custom ones.

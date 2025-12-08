@@ -1,0 +1,43 @@
+{
+  "name": "@larcjs/core-debug",
+  "version": "1.0.0",
+  "description": "Debug and tracing tools for LARC Core (3KB add-on)",
+  "type": "module",
+  "main": "./src/pan-debug.mjs",
+  "exports": {
+    ".": "./src/pan-debug.mjs"
+  },
+  "files": [
+    "src/**/*.mjs",
+    "src/**/*.min.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "larc",
+    "pan",
+    "debug",
+    "debugging",
+    "tracing",
+    "devtools"
+  ],
+  "author": "Chris Robison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/larc.git",
+    "directory": "packages/core-debug"
+  },
+  "homepage": "https://github.com/larcjs/larc/tree/main/packages/core-debug#readme",
+  "bugs": {
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "peerDependencies": {
+    "@larcjs/core": "^1.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@larcjs/core": {
+      "optional": false
+    }
+  }
+}

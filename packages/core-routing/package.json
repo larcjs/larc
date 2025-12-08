@@ -1,0 +1,43 @@
+{
+  "name": "@larcjs/core-routing",
+  "version": "1.0.0",
+  "description": "Dynamic message routing system for LARC Core (8KB add-on)",
+  "type": "module",
+  "main": "./src/pan-routes.mjs",
+  "exports": {
+    ".": "./src/pan-routes.mjs"
+  },
+  "files": [
+    "src/**/*.mjs",
+    "src/**/*.min.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "larc",
+    "pan",
+    "routing",
+    "message-routing",
+    "event-routing",
+    "declarative-routing"
+  ],
+  "author": "Chris Robison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/larc.git",
+    "directory": "packages/core-routing"
+  },
+  "homepage": "https://github.com/larcjs/larc/tree/main/packages/core-routing#readme",
+  "bugs": {
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "peerDependencies": {
+    "@larcjs/core": "^1.1.0"
+  },
+  "peerDependenciesMeta": {
+    "@larcjs/core": {
+      "optional": false
+    }
+  }
+}

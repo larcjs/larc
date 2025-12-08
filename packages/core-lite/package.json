@@ -1,0 +1,50 @@
+{
+  "name": "@larcjs/core-lite",
+  "version": "1.2.0",
+  "description": "LARC Core Lite - Lightweight PAN messaging bus (9KB minified, no routing/debug)",
+  "type": "module",
+  "main": "./src/pan.mjs",
+  "exports": {
+    ".": "./src/pan.mjs",
+    "./pan-bus": "./src/components/pan-bus.mjs",
+    "./pan-client": "./src/components/pan-client.mjs",
+    "./pan-storage": "./src/components/pan-storage.mjs"
+  },
+  "files": [
+    "src/**/*.mjs",
+    "src/**/*.min.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "web-components",
+    "custom-elements",
+    "messaging",
+    "pubsub",
+    "event-bus",
+    "pan",
+    "larc",
+    "lightweight",
+    "zero-dependencies"
+  ],
+  "author": "Chris Robison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/larcjs/larc.git",
+    "directory": "packages/core-lite"
+  },
+  "homepage": "https://github.com/larcjs/larc/tree/main/packages/core-lite#readme",
+  "bugs": {
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "scripts": {
+    "build:minify": "node scripts/build-minified.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.27.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -9,6 +9,8 @@
   ],
   "scripts": {
     "build": "pnpm -r build",
+    "build:minify": "node scripts/build-minified.js",
+    "build:all": "pnpm build && pnpm build:minify",
     "test": "pnpm -r test",
     "dev": "pnpm -r --parallel dev",
     "clean": "pnpm -r clean",

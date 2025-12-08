@@ -46,7 +46,7 @@ This is architecturally correct. The problem is the **10 OTHER repos** around th
 │  └── README.md             (Core-focused docs)          │
 │                                                          │
 │  Published: @larcjs/core                                │
-│  Size: ~5KB, Zero dependencies                          │
+│  Size: 40KB minified (128KB unminified), Zero dependencies │
 └─────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────┐

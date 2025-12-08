@@ -130,7 +130,7 @@
 ### Performance Check
 
 - [ ] Playground loads in <3 seconds on 3G
-- [ ] Core bundle size: ~5KB (verify on unpkg.com)
+- [ ] Core bundle size: 40KB minified (128KB unminified) (verify on unpkg.com)
 - [ ] No console errors on any page
 - [ ] No 404s in network tab
 - [ ] Lighthouse score >90 (optional but nice)
