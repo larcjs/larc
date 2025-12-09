@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/apps",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "LARC Demo Applications - Professional demo apps showcasing PAN messaging architecture",
   "type": "module",
   "scripts": {
