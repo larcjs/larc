@@ -1,0 +1,33 @@
+{
+  "name": "larc-nodejs-backends",
+  "version": "1.0.0",
+  "description": "Node.js backend implementations for LARC/PAN examples",
+  "type": "commonjs",
+  "scripts": {
+    "api-legacy": "node api-legacy.js",
+    "api": "node apps/api.js",
+    "auth": "node auth.js",
+    "sse": "node sse.js",
+    "all": "concurrently \"npm:api-legacy\" \"npm:api\" \"npm:auth\" \"npm:sse\""
+  },
+  "keywords": [
+    "larc",
+    "pan",
+    "api",
+    "sse",
+    "authentication"
+  ],
+  "author": "LARC Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "mysql2": "^3.6.5",
+    "better-sqlite3": "^9.2.2",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

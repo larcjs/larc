@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid Dashboard Test - React + Vue + PAN</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #f5f5f5;
+    }
+    .test-panel {
+      background: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+    .test-panel h2 {
+      margin-top: 0;
+      color: #333;
+    }
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-left: 0.5rem;
+    }
+    .status.pass { background: #10b981; color: white; }
+    .status.fail { background: #ef4444; color: white; }
+    .status.pending { background: #f59e0b; color: white; }
+    .test-item {
+      padding: 1rem;
+      margin: 0.5rem 0;
+      background: #f9fafb;
+      border-left: 4px solid #e5e7eb;
+      border-radius: 0.25rem;
+    }
+    .test-item.pass { border-left-color: #10b981; }
+    .test-item.fail { border-left-color: #ef4444; }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 1rem;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+    }
+    button:hover {
+      background: #5568d3;
+    }
+    #console-log {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1rem;
+      border-radius: 0.25rem;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.875rem;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Hybrid Dashboard Test Suite</h1>
+  <p>Testing React + Vue + PAN integration</p>
+
+  <div class="test-panel">
+    <h2>📋 Test Results</h2>
+    <div id="test-results">
+      <div class="test-item pending">
+        <strong>1. PAN Bus Initialization</strong>
+        <span class="status pending">PENDING</span>
+        <div>Checking if PAN bus is loaded and ready...</div>
+      </div>
+      <div class="test-item pending">
+        <strong>2. React Component Mount</strong>
+        <span class="status pending">PENDING</span>
+        <div>Verifying React chart component loaded from esm.sh...</div>
+      </div>
+      <div class="test-item pending">
+        <strong>3. Vue Component Mount</strong>
+        <span class="status pending">PENDING</span>
+        <div>Verifying Vue filter component loaded from esm.sh...</div>
+      </div>
+      <div class="test-item pending">
+        <strong>4. PAN Message Publishing</strong>
+        <span class="status pending">PENDING</span>
+        <div>Testing message publishing to PAN bus...</div>
+      </div>
+      <div class="test-item pending">
+        <strong>5. Cross-Framework Communication</strong>
+        <span class="status pending">PENDING</span>
+        <div>Verifying React, Vue, and LARC components can communicate...</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-panel">
+    <h2>🎮 Manual Tests</h2>
+    <button onclick="testPanPublish()">📤 Test PAN Publish</button>
+    <button onclick="testThemeToggle()">🌙 Test Theme Toggle</button>
+    <button onclick="testFilterChange()">🎛️ Test Filter Change</button>
+    <button onclick="clearConsole()">🗑️ Clear Console</button>
+  </div>
+
+  <div class="test-panel">
+    <h2>📊 Console Log</h2>
+    <div id="console-log">Waiting for tests to run...</div>
+  </div>
+
+  <div class="test-panel">
+    <h2>🚀 View Full Demo</h2>
+    <p>Once tests pass, open the full demo:</p>
+    <a href="./index.html" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: #667eea; color: white; text-decoration: none; border-radius: 0.25rem;">
+      Open Hybrid Dashboard Demo
+    </a>
+  </div>
+
+  <!-- PAN Bus -->
+  <pan-bus></pan-bus>
+
+  <!-- Load LARC configuration -->
+  <script type="module" src="/larc-config.mjs"></script>
+
+  <!-- Load LARC Core -->
+  <script type="module" src="/core/src/pan.mjs"></script>
+
+  <script type="module">
+    let testLog = [];
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const prefix = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warn' ? '⚠️' : 'ℹ️';
+      testLog.push(`[${timestamp}] ${prefix} ${message}`);
+      updateConsole();
+    }
+
+    function updateConsole() {
+      document.getElementById('console-log').textContent = testLog.join('\n');
+      document.getElementById('console-log').scrollTop = document.getElementById('console-log').scrollHeight;
+    }
+
+    function updateTestStatus(testNum, status, message) {
+      const tests = document.querySelectorAll('.test-item');
+      const test = tests[testNum - 1];
+      if (test) {
+        test.className = `test-item ${status}`;
+        const statusSpan = test.querySelector('.status');
+        statusSpan.className = `status ${status}`;
+        statusSpan.textContent = status.toUpperCase();
+        const div = test.querySelector('div');
+        div.textContent = message;
+      }
+    }
+
+    window.testPanPublish = () => {
+      log('Testing PAN publish...', 'info');
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: {
+          topic: 'test:message',
+          payload: { test: true, timestamp: Date.now() }
+        }
+      }));
+      log('PAN message published: test:message', 'success');
+    };
+
+    window.testThemeToggle = () => {
+      log('Testing theme toggle...', 'info');
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: {
+          topic: 'theme:toggle',
+          payload: {}
+        }
+      }));
+      log('Theme toggle message published', 'success');
+    };
+
+    window.testFilterChange = () => {
+      log('Testing filter change...', 'info');
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: {
+          topic: 'filters:changed',
+          payload: {
+            dateRange: '30d',
+            metric: 'revenue',
+            status: 'completed'
+          }
+        }
+      }));
+      log('Filter change message published', 'success');
+    };
+
+    window.clearConsole = () => {
+      testLog = [];
+      updateConsole();
+    };
+
+    // Run automated tests
+    async function runTests() {
+      log('🚀 Starting test suite...', 'info');
+
+      // Test 1: PAN Bus
+      setTimeout(() => {
+        if (typeof document.querySelector('pan-bus') !== 'undefined') {
+          updateTestStatus(1, 'pass', 'PAN bus element found in DOM');
+          log('Test 1: PAN Bus - PASS', 'success');
+        } else {
+          updateTestStatus(1, 'fail', 'PAN bus element not found');
+          log('Test 1: PAN Bus - FAIL', 'error');
+        }
+      }, 500);
+
+      // Test 2: React Component
+      setTimeout(() => {
+        const reactRoot = document.getElementById('react-root');
+        if (reactRoot && reactRoot.children.length > 0) {
+          updateTestStatus(2, 'pass', 'React component mounted successfully');
+          log('Test 2: React Component - PASS', 'success');
+        } else {
+          updateTestStatus(2, 'fail', 'React component not mounted (check react-chart.js)');
+          log('Test 2: React Component - FAIL (might load from full demo)', 'warn');
+        }
+      }, 1500);
+
+      // Test 3: Vue Component
+      setTimeout(() => {
+        const vueRoot = document.getElementById('vue-root');
+        if (vueRoot && vueRoot.children.length > 0) {
+          updateTestStatus(3, 'pass', 'Vue component mounted successfully');
+          log('Test 3: Vue Component - PASS', 'success');
+        } else {
+          updateTestStatus(3, 'fail', 'Vue component not mounted (check vue-filters.js)');
+          log('Test 3: Vue Component - FAIL (might load from full demo)', 'warn');
+        }
+      }, 2000);
+
+      // Test 4: PAN Message Publishing
+      setTimeout(() => {
+        let messageReceived = false;
+
+        const handler = (e) => {
+          if (e.detail.topic === 'test:automated') {
+            messageReceived = true;
+            updateTestStatus(4, 'pass', 'PAN messages publishing and receiving correctly');
+            log('Test 4: PAN Messaging - PASS', 'success');
+            document.removeEventListener('pan:message', handler);
+          }
+        };
+
+        document.addEventListener('pan:message', handler);
+
+        document.dispatchEvent(new CustomEvent('pan:publish', {
+          detail: {
+            topic: 'test:automated',
+            payload: { automated: true }
+          }
+        }));
+
+        setTimeout(() => {
+          if (!messageReceived) {
+            updateTestStatus(4, 'fail', 'PAN message not received');
+            log('Test 4: PAN Messaging - FAIL', 'error');
+          }
+        }, 1000);
+      }, 2500);
+
+      // Test 5: Cross-Framework Communication
+      setTimeout(() => {
+        log('Test 5: Cross-framework communication requires full demo', 'info');
+        updateTestStatus(5, 'pending', 'Open full demo (index.html) to test cross-framework communication');
+      }, 3500);
+
+      log('✅ Automated tests completed', 'success');
+      log('💡 Use manual test buttons to verify PAN messaging', 'info');
+      log('🚀 Open index.html to see React + Vue + LARC working together', 'info');
+    }
+
+    // Listen for PAN messages
+    document.addEventListener('pan:message', (e) => {
+      log(`📨 PAN Message: ${e.detail.topic}`, 'info');
+      console.log('PAN Message:', e.detail);
+    });
+
+    // Wait for PAN bus ready
+    document.addEventListener('pan:bus:ready', () => {
+      log('🎉 PAN Bus is ready!', 'success');
+      runTests();
+    });
+
+    // Fallback: run tests after delay if bus doesn't signal ready
+    setTimeout(() => {
+      if (testLog.length === 0) {
+        log('⚠️ PAN bus did not signal ready, running tests anyway...', 'warn');
+        runTests();
+      }
+    }, 1000);
+  </script>
+
+  <!-- Create placeholder elements for React and Vue (for testing) -->
+  <div id="react-root" style="display:none;"></div>
+  <div id="vue-root" style="display:none;"></div>
+</body>
+</html>

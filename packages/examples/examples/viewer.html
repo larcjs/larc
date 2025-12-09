@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Examples Viewer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: white;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --active-bg: #eff6ff;
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+      --active-bg: #1e3a5f;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .header-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      background: rgba(255, 255, 255, 0.1);
+      transition: background 0.2s;
+    }
+
+    .header-links a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 300px;
+      background: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .search-box {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-tertiary);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #06b6d4;
+      box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    }
+
+    .examples-list {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .example-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      cursor: pointer;
+      border-bottom: 1px solid var(--border-color);
+      transition: all 0.2s;
+      text-decoration: none;
+      color: var(--text-primary);
+    }
+
+    .example-item:hover {
+      background: var(--bg-tertiary);
+      padding-left: 1.25rem;
+    }
+
+    .example-item.active {
+      background: var(--active-bg);
+      border-left: 3px solid #06b6d4;
+      font-weight: 600;
+    }
+
+    .example-number {
+      font-weight: 700;
+      color: #06b6d4;
+      font-size: 0.875rem;
+      min-width: 2rem;
+    }
+
+    .example-name {
+      font-size: 0.875rem;
+      color: var(--text-primary);
+    }
+
+    .example-item.active .example-name {
+      color: #06b6d4;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+    }
+
+    .iframe-toolbar {
+      padding: 0.75rem 1rem;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .current-example {
+      flex: 1;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .toolbar-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .toolbar-btn {
+      padding: 0.375rem 0.75rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+      color: var(--text-primary);
+    }
+
+    .toolbar-btn:hover {
+      background: #06b6d4;
+      color: white;
+      border-color: #06b6d4;
+    }
+
+    iframe {
+      flex: 1;
+      border: none;
+      background: var(--bg-primary);
+    }
+
+    .no-selection {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
+      color: var(--text-secondary);
+      font-size: 1.125rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📚 LARC Examples Viewer</h1>
+    <div class="header-links">
+      <a href="index.html">Gallery View</a>
+      <a href="/apps/index.html">Demo Apps</a>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <aside class="sidebar">
+      <div class="search-box">
+        <input type="text" id="search" placeholder="Search examples...">
+      </div>
+      <div class="examples-list" id="examplesList">
+        <!-- Examples will be inserted here -->
+      </div>
+    </aside>
+
+    <main class="content">
+      <div class="iframe-toolbar">
+        <div class="current-example" id="currentExample">Select an example from the sidebar</div>
+        <div class="toolbar-buttons">
+          <button class="toolbar-btn" onclick="reloadIframe()">🔄 Reload</button>
+          <button class="toolbar-btn" onclick="openInNewTab()">🔗 Open in New Tab</button>
+        </div>
+      </div>
+      <iframe id="exampleFrame"></iframe>
+    </main>
+  </div>
+
+  <script>
+    const examples = [
+      { number: '00', name: 'Introduction', file: '00-intro.html' },
+      { number: '01', name: 'Hello Counter', file: '01-hello.html' },
+      { number: '02', name: 'Todos & Inspector', file: '02-todos-and-inspector.html' },
+      { number: '03', name: 'BroadcastChannel', file: '03-broadcastchannel.html' },
+      { number: '04', name: 'React Integration', file: '04-react-wrapper.html' },
+      { number: '05', name: 'Lit Integration', file: '05-lit-wrapper.html' },
+      { number: '06', name: 'CRUD Stack', file: '06-crud.html' },
+      { number: '07', name: 'REST API', file: '07-rest-connector.html' },
+      { number: '08', name: 'Web Workers', file: '08-workers.html' },
+      { number: '09', name: 'Schema Forms', file: '09-schema-form.html' },
+      { number: '10', name: 'SSE Store', file: '10-sse-store.html' },
+      { number: '11', name: 'GraphQL', file: '11-graphql-connector.html' },
+      { number: '12', name: 'PHP Backend', file: '12-php-connector.html' },
+      { number: '13', name: 'SSE Bridge', file: '13-sse-pan.html' },
+      { number: '14', name: 'Message Forwarder', file: '14-forwarder.html' },
+      { number: '15', name: 'Client Routing', file: '15-router.html' },
+      { number: '16', name: 'WebSocket', file: '16-websocket.html' },
+      { number: '17a', name: 'Security', file: '17-enhanced-security.html' },
+      { number: '17b', name: 'IndexedDB', file: '17-indexeddb.html' },
+      { number: '18', name: 'JWT Auth', file: '18-jwt-auth.html' },
+      { number: '🔐', name: 'Authentication Demo', file: 'auth-demo.html' },
+      { number: '📝', name: 'Markdown Components', file: 'markdown-components.html' }
+    ];
+
+    let currentFile = '';
+
+    function renderExamples(filter = '') {
+      const list = document.getElementById('examplesList');
+      const filteredExamples = examples.filter(ex =>
+        ex.name.toLowerCase().includes(filter.toLowerCase()) ||
+        ex.number.toLowerCase().includes(filter.toLowerCase())
+      );
+
+      list.innerHTML = filteredExamples.map(example => `
+        <a href="#${example.file}"
+           class="example-item"
+           data-file="${example.file}"
+           onclick="loadExample('${example.file}', '${example.name}'); return false;">
+          <span class="example-number">${example.number}</span>
+          <span class="example-name">${example.name}</span>
+        </a>
+      `).join('');
+    }
+
+    function loadExample(file, name) {
+      currentFile = file;
+      const iframe = document.getElementById('exampleFrame');
+      const currentExampleDiv = document.getElementById('currentExample');
+
+      iframe.src = file;
+      currentExampleDiv.textContent = name;
+
+      // Update active state
+      document.querySelectorAll('.example-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.dataset.file === file) {
+          item.classList.add('active');
+        }
+      });
+    }
+
+    function reloadIframe() {
+      const iframe = document.getElementById('exampleFrame');
+      if (iframe.src) {
+        iframe.src = iframe.src;
+      }
+    }
+
+    function openInNewTab() {
+      if (currentFile) {
+        window.open(currentFile, '_blank');
+      }
+    }
+
+    // Search functionality
+    document.getElementById('search').addEventListener('input', (e) => {
+      renderExamples(e.target.value);
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const items = Array.from(document.querySelectorAll('.example-item'));
+        const currentIndex = items.findIndex(item => item.classList.contains('active'));
+
+        let nextIndex;
+        if (e.key === 'ArrowDown') {
+          nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+        } else {
+          nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+        }
+
+        if (items[nextIndex]) {
+          const file = items[nextIndex].dataset.file;
+          const name = items[nextIndex].querySelector('.example-name').textContent;
+          loadExample(file, name);
+          items[nextIndex].scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }
+      }
+    });
+
+    // Theme toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      const themeToggle = document.getElementById('themeToggle');
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Initialize theme from localStorage or system preference
+    function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      const themeToggle = document.getElementById('themeToggle');
+
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+      }
+    }
+
+    // Load from hash on page load
+    window.addEventListener('load', () => {
+      initTheme();
+      renderExamples();
+
+      const hash = window.location.hash.slice(1);
+      if (hash) {
+        const example = examples.find(ex => ex.file === hash);
+        if (example) {
+          loadExample(example.file, example.name);
+        }
+      } else {
+        // Load first example by default
+        loadExample(examples[0].file, examples[0].name);
+      }
+    });
+  </script>
+</body>
+</html>

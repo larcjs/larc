@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes App with Tree Navigation</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      background: #f5f5f5;
+    }
+
+    .app-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      grid-template-rows: 60px 1fr;
+      height: 100vh;
+    }
+
+    .header {
+      grid-column: 1 / -1;
+      background: #2196f3;
+      color: white;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .header h1 {
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .sidebar {
+      background: white;
+      border-right: 1px solid #ddd;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 15px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-header h2 {
+      font-size: 16px;
+      color: #333;
+    }
+
+    .tree-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      background: white;
+      margin: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .editor-header {
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .editor-title {
+      font-size: 18px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .editor-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .note-placeholder {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+
+    .note-placeholder-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      resize: none;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .status-bar {
+      padding: 8px 20px;
+      background: #f9f9f9;
+      border-top: 1px solid #eee;
+      font-size: 12px;
+      color: #666;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .btn-icon {
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      color: #666;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-primary {
+      background: #2196f3;
+      color: white;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-primary:hover {
+      background: #1976d2;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .modal h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- PAN Message Bus with debug enabled -->
+  <pan-bus debug="true"></pan-bus>
+
+  <script type="module" src="../core/src/pan.mjs"></script>
+  <script type="module" src="../ui/src/components/pan-tree.mjs"></script>
+
+  <div class="app-container">
+    <!-- Header -->
+    <div class="header">
+      <h1>📝 Notes App</h1>
+      <div class="header-actions">
+        <button class="btn" id="btn-new-note">+ New Note</button>
+        <button class="btn" id="btn-new-folder">+ New Folder</button>
+      </div>
+    </div>
+
+    <!-- Sidebar with Tree -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <h2>📁 My Notes</h2>
+        <button class="btn-icon" id="btn-collapse-all" title="Collapse All">⊟</button>
+      </div>
+      <div class="tree-container">
+        <pan-tree
+          id="notes-tree"
+          resource="notes"
+          editable
+          expanded
+          icon-open="📂"
+          icon-closed="📁"
+          icon-leaf="📄">
+        </pan-tree>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <div class="editor-header">
+        <div class="editor-title" id="note-title">Select a note</div>
+        <div class="editor-actions">
+          <button class="btn-icon" id="btn-delete" title="Delete Note" style="display: none;">🗑️</button>
+          <button class="btn-primary" id="btn-save" style="display: none;">Save</button>
+        </div>
+      </div>
+      <div class="editor-container" id="editor-container">
+        <div class="note-placeholder">
+          <div class="note-placeholder-icon">📝</div>
+          <p>Select a note from the tree or create a new one</p>
+        </div>
+      </div>
+      <div class="status-bar">
+        <span id="status-message">Ready</span>
+        <span id="word-count">0 words</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Note Modal -->
+  <div class="modal-overlay" id="new-note-modal">
+    <div class="modal">
+      <h3>Create New Note</h3>
+      <div class="form-group">
+        <label>Note Name</label>
+        <input type="text" id="note-name" placeholder="My new note">
+      </div>
+      <div class="form-group">
+        <label>Parent Folder</label>
+        <select id="parent-folder">
+          <option value="">Root</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="btn-cancel-note">Cancel</button>
+        <button class="btn-primary" id="btn-create-note">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Folder Modal -->
+  <div class="modal-overlay" id="new-folder-modal">
+    <div class="modal">
+      <h3>Create New Folder</h3>
+      <div class="form-group">
+        <label>Folder Name</label>
+        <input type="text" id="folder-name" placeholder="My folder">
+      </div>
+      <div class="form-group">
+        <label>Parent Folder</label>
+        <select id="folder-parent">
+          <option value="">Root</option>
+        </select>
+      </div>
+      <div class="modal-actions">
+        <button class="btn" id="btn-cancel-folder">Cancel</button>
+        <button class="btn-primary" id="btn-create-folder">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { PanClient } from '../core/src/components/pan-client.mjs';
+
+    const pc = new PanClient();
+
+    // App State
+    let currentNote = null;
+    let notesData = [];
+    let noteContents = new Map();
+
+    // Initialize with sample data
+    notesData = [
+      {
+        id: 'work',
+        label: 'Work',
+        icon: '💼',
+        children: [
+          { id: 'meeting-notes', label: 'Meeting Notes', icon: '📋', children: [] },
+          { id: 'project-ideas', label: 'Project Ideas', icon: '💡', children: [] },
+        ]
+      },
+      {
+        id: 'personal',
+        label: 'Personal',
+        icon: '🏠',
+        children: [
+          { id: 'shopping-list', label: 'Shopping List', icon: '🛒', children: [] },
+          { id: 'book-notes', label: 'Book Notes', icon: '📚', children: [] },
+        ]
+      },
+      {
+        id: 'archive',
+        label: 'Archive',
+        icon: '📦',
+        children: []
+      }
+    ];
+
+    // Sample note contents
+    noteContents.set('meeting-notes', 'Meeting Notes\n\n2024-01-15: Q1 Planning\n- Discuss project roadmap\n- Review budget\n- Set milestones');
+    noteContents.set('project-ideas', 'Project Ideas\n\n1. Mobile app redesign\n2. API documentation portal\n3. Customer dashboard');
+    noteContents.set('shopping-list', 'Shopping List\n\n- Milk\n- Eggs\n- Bread\n- Coffee');
+    noteContents.set('book-notes', 'Book Notes\n\n"Atomic Habits" by James Clear\n\nKey takeaways:\n- Small habits compound over time\n- Focus on systems, not goals');
+
+    // Initialize tree
+    pc.publish({ topic: 'notes.data.set', data: { tree: notesData } });
+
+    // Listen for node selection
+    pc.subscribe('notes.node.select', (msg) => {
+      const node = msg.data.node;
+
+      // Only open leaf nodes (notes)
+      if (!node.children || node.children.length === 0) {
+        openNote(node);
+      }
+    });
+
+    // Listen for node edits
+    pc.subscribe('notes.node.edit', (msg) => {
+      setStatus(`Renamed "${msg.data.oldLabel}" to "${msg.data.newLabel}"`);
+      updateFolderLists();
+    });
+
+    // Listen for node moves
+    pc.subscribe('notes.node.move', (msg) => {
+      setStatus(`Moved "${msg.data.node.label}"`);
+    });
+
+    function openNote(node) {
+      currentNote = node;
+
+      const editorContainer = document.getElementById('editor-container');
+      const noteTitle = document.getElementById('note-title');
+      const btnSave = document.getElementById('btn-save');
+      const btnDelete = document.getElementById('btn-delete');
+
+      noteTitle.textContent = node.icon ? `${node.icon} ${node.label}` : node.label;
+
+      const content = noteContents.get(node.id) || '';
+
+      editorContainer.innerHTML = `<textarea id="note-editor">${content}</textarea>`;
+
+      btnSave.style.display = 'block';
+      btnDelete.style.display = 'block';
+
+      const editor = document.getElementById('note-editor');
+      editor.focus();
+
+      // Update word count
+      editor.addEventListener('input', updateWordCount);
+      updateWordCount();
+
+      setStatus(`Opened "${node.label}"`);
+    }
+
+    function updateWordCount() {
+      const editor = document.getElementById('note-editor');
+      if (!editor) return;
+
+      const text = editor.value.trim();
+      const words = text ? text.split(/\s+/).length : 0;
+      document.getElementById('word-count').textContent = `${words} words`;
+    }
+
+    function setStatus(message) {
+      const statusMsg = document.getElementById('status-message');
+      statusMsg.textContent = message;
+
+      setTimeout(() => {
+        statusMsg.textContent = 'Ready';
+      }, 3000);
+    }
+
+    function saveCurrentNote() {
+      if (!currentNote) return;
+
+      const editor = document.getElementById('note-editor');
+      if (editor) {
+        noteContents.set(currentNote.id, editor.value);
+        setStatus(`Saved "${currentNote.label}"`);
+      }
+    }
+
+    function deleteCurrentNote() {
+      if (!currentNote) return;
+
+      if (confirm(`Delete "${currentNote.label}"?`)) {
+        noteContents.delete(currentNote.id);
+
+        // Remove from tree
+        const removeNode = (nodes, id) => {
+          for (let i = 0; i < nodes.length; i++) {
+            if (nodes[i].id === id) {
+              nodes.splice(i, 1);
+              return true;
+            }
+            if (nodes[i].children) {
+              if (removeNode(nodes[i].children, id)) return true;
+            }
+          }
+          return false;
+        };
+
+        removeNode(notesData, currentNote.id);
+        pc.publish({ topic: 'notes.data.set', data: { tree: notesData } });
+
+        // Clear editor
+        document.getElementById('editor-container').innerHTML = `
+          <div class="note-placeholder">
+            <div class="note-placeholder-icon">📝</div>
+            <p>Select a note from the tree or create a new one</p>
+          </div>
+        `;
+        document.getElementById('note-title').textContent = 'Select a note';
+        document.getElementById('btn-save').style.display = 'none';
+        document.getElementById('btn-delete').style.display = 'none';
+
+        currentNote = null;
+        setStatus('Note deleted');
+      }
+    }
+
+    function updateFolderLists() {
+      const parentFolder = document.getElementById('parent-folder');
+      const folderParent = document.getElementById('folder-parent');
+
+      const getFolders = (nodes, prefix = '') => {
+        let folders = [];
+        nodes.forEach(node => {
+          if (node.children) {
+            folders.push({ id: node.id, label: prefix + node.label });
+            if (node.children.length > 0) {
+              folders = folders.concat(getFolders(node.children, prefix + node.label + ' / '));
+            }
+          }
+        });
+        return folders;
+      };
+
+      const folders = getFolders(notesData);
+      const options = folders.map(f => `<option value="${f.id}">${f.label}</option>`).join('');
+
+      parentFolder.innerHTML = '<option value="">Root</option>' + options;
+      folderParent.innerHTML = '<option value="">Root</option>' + options;
+    }
+
+    // UI Event Handlers
+    document.getElementById('btn-save').addEventListener('click', saveCurrentNote);
+    document.getElementById('btn-delete').addEventListener('click', deleteCurrentNote);
+
+    document.getElementById('btn-collapse-all').addEventListener('click', () => {
+      const tree = document.getElementById('notes-tree');
+      tree.expandedNodes.clear();
+      tree.render();
+    });
+
+    document.getElementById('btn-new-note').addEventListener('click', () => {
+      updateFolderLists();
+      document.getElementById('new-note-modal').classList.add('active');
+      document.getElementById('note-name').focus();
+    });
+
+    document.getElementById('btn-new-folder').addEventListener('click', () => {
+      updateFolderLists();
+      document.getElementById('new-folder-modal').classList.add('active');
+      document.getElementById('folder-name').focus();
+    });
+
+    document.getElementById('btn-cancel-note').addEventListener('click', () => {
+      document.getElementById('new-note-modal').classList.remove('active');
+    });
+
+    document.getElementById('btn-cancel-folder').addEventListener('click', () => {
+      document.getElementById('new-folder-modal').classList.remove('active');
+    });
+
+    document.getElementById('btn-create-note').addEventListener('click', () => {
+      const name = document.getElementById('note-name').value.trim();
+      const parentId = document.getElementById('parent-folder').value;
+
+      if (!name) {
+        alert('Please enter a note name');
+        return;
+      }
+
+      const newNote = {
+        id: `note-${Date.now()}`,
+        label: name,
+        icon: '📄',
+        children: []
+      };
+
+      if (parentId) {
+        const findParent = (nodes, id) => {
+          for (const node of nodes) {
+            if (node.id === id) return node;
+            if (node.children) {
+              const found = findParent(node.children, id);
+              if (found) return found;
+            }
+          }
+          return null;
+        };
+
+        const parent = findParent(notesData, parentId);
+        if (parent && parent.children) {
+          parent.children.push(newNote);
+        }
+      } else {
+        notesData.push(newNote);
+      }
+
+      // Send updated tree
+      pc.publish({ topic: 'notes.data.set', data: { tree: notesData } });
+      document.getElementById('new-note-modal').classList.remove('active');
+      document.getElementById('note-name').value = '';
+
+      setStatus(`Created note "${name}"`);
+    });
+
+    document.getElementById('btn-create-folder').addEventListener('click', () => {
+      const name = document.getElementById('folder-name').value.trim();
+      const parentId = document.getElementById('folder-parent').value;
+
+      if (!name) {
+        alert('Please enter a folder name');
+        return;
+      }
+
+      const newFolder = {
+        id: `folder-${Date.now()}`,
+        label: name,
+        icon: '📁',
+        children: []
+      };
+
+      if (parentId) {
+        const findParent = (nodes, id) => {
+          for (const node of nodes) {
+            if (node.id === id) return node;
+            if (node.children) {
+              const found = findParent(node.children, id);
+              if (found) return found;
+            }
+          }
+          return null;
+        };
+
+        const parent = findParent(notesData, parentId);
+        if (parent && parent.children) {
+          parent.children.push(newFolder);
+        }
+      } else {
+        notesData.push(newFolder);
+      }
+
+      // Send updated tree
+      pc.publish({ topic: 'notes.data.set', data: { tree: notesData } });
+      document.getElementById('new-folder-modal').classList.remove('active');
+      document.getElementById('folder-name').value = '';
+
+      setStatus(`Created folder "${name}"`);
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      // Ctrl+S or Cmd+S to save
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        saveCurrentNote();
+      }
+
+      // Ctrl+N or Cmd+N for new note
+      if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+        e.preventDefault();
+        document.getElementById('btn-new-note').click();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAN Tree Component Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .intro {
+      margin-bottom: 30px;
+      color: #666;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .demo-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .demo-card h2 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #333;
+      border-bottom: 2px solid #2196f3;
+      padding-bottom: 8px;
+    }
+
+    .demo-card p {
+      margin-bottom: 15px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .controls {
+      margin-bottom: 15px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 8px 16px;
+      background: #2196f3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #1976d2;
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    .event-log {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    .event-log h3 {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .event-item {
+      padding: 6px 8px;
+      margin-bottom: 4px;
+      background: white;
+      border-left: 3px solid #2196f3;
+      border-radius: 2px;
+    }
+
+    .event-time {
+      color: #999;
+      font-size: 11px;
+    }
+
+    .event-topic {
+      color: #2196f3;
+      font-weight: bold;
+    }
+
+    .event-data {
+      color: #666;
+      margin-top: 4px;
+    }
+
+    pan-tree {
+      min-height: 200px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      background: white;
+    }
+
+    .code-section {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+
+    .code-section h2 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    pre {
+      background: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <!-- PAN Message Bus with debug enabled -->
+  <pan-bus debug="true"></pan-bus>
+
+  <!-- Load LARC Core -->
+  <script type="module" src="../core/src/pan.mjs"></script>
+
+  <!-- Load pan-tree component -->
+  <script type="module" src="../ui/src/components/pan-tree.mjs"></script>
+
+  <div class="container">
+    <h1>🌳 PAN Tree Component Demo</h1>
+    <p class="intro">
+      A collapsible tree component with drag-and-drop reordering and inline editing.
+      Built with the PAN messaging bus for loose coupling.
+    </p>
+
+    <div class="demo-grid">
+      <!-- Demo 1: Basic Tree -->
+      <div class="demo-card">
+        <h2>📁 Basic Tree (Read-Only)</h2>
+        <p>Simple collapsible tree with document structure</p>
+        <pan-tree
+          id="basic-tree"
+          resource="documents"
+          expanded>
+        </pan-tree>
+      </div>
+
+      <!-- Demo 2: Editable Tree -->
+      <div class="demo-card">
+        <h2>✏️ Editable Tree</h2>
+        <p>Drag to reorder, click labels to edit inline</p>
+        <pan-tree
+          id="editable-tree"
+          resource="notes"
+          editable
+          expanded>
+        </pan-tree>
+      </div>
+
+      <!-- Demo 3: Custom Icons -->
+      <div class="demo-card">
+        <h2>🎨 Custom Icons</h2>
+        <p>Tree with custom icons and indentation</p>
+        <pan-tree
+          id="icon-tree"
+          resource="projects"
+          editable
+          indent="30"
+          icon-open="📂"
+          icon-closed="📁"
+          icon-leaf="📄">
+        </pan-tree>
+      </div>
+
+      <!-- Demo 4: Programmatic Control -->
+      <div class="demo-card">
+        <h2>🎮 Programmatic Control</h2>
+        <p>Control tree via PAN messages</p>
+        <div class="controls">
+          <button id="btn-expand-all">Expand All</button>
+          <button id="btn-collapse-all">Collapse All</button>
+          <button id="btn-add-node">Add Node</button>
+          <button id="btn-reload">Reload Data</button>
+        </div>
+        <pan-tree
+          id="control-tree"
+          resource="api">
+        </pan-tree>
+      </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="demo-card">
+      <div class="event-log">
+        <h3>📊 PAN Message Log (last 20 events)</h3>
+        <div id="event-list"></div>
+      </div>
+    </div>
+
+    <!-- Code Examples -->
+    <div class="code-section">
+      <h2>💻 Usage Examples</h2>
+
+      <h3 style="margin: 20px 0 10px 0;">Basic HTML Usage</h3>
+      <pre><code>&lt;!-- Load components --&gt;
+&lt;script type="module" src="@larcjs/core/src/pan.mjs"&gt;&lt;/script&gt;
+&lt;script type="module" src="@larcjs/components/src/components/pan-tree.mjs"&gt;&lt;/script&gt;
+
+&lt;!-- Basic tree --&gt;
+&lt;pan-tree resource="documents" expanded&gt;&lt;/pan-tree&gt;
+
+&lt;!-- Editable tree with custom icons --&gt;
+&lt;pan-tree
+  resource="notes"
+  editable
+  icon-open="📂"
+  icon-closed="📁"
+  icon-leaf="📄"&gt;
+&lt;/pan-tree&gt;</code></pre>
+
+      <h3 style="margin: 20px 0 10px 0;">JavaScript API</h3>
+      <pre><code>import { PanClient } from '@larcjs/core/components/pan-client.mjs';
+
+const pc = new PanClient();
+
+// Set tree data
+pc.publish({
+  topic: 'documents.data.set',
+  data: {
+    tree: [
+      {
+        id: '1',
+        label: 'Projects',
+        children: [
+          { id: '1-1', label: 'Website Redesign', children: [] },
+          { id: '1-2', label: 'Mobile App', children: [] }
+        ]
+      }
+    ]
+  }
+});
+
+// Expand a node
+pc.publish({ topic: 'documents.node.expand', data: { id: '1' } });
+
+// Listen for selections
+pc.subscribe('documents.node.select', (msg) => {
+  console.log('Selected:', msg.data.node.label);
+});
+
+// Listen for edits
+pc.subscribe('documents.node.edit', (msg) => {
+  console.log('Renamed:', msg.data.oldLabel, '→', msg.data.newLabel);
+});
+
+// Listen for moves
+pc.subscribe('documents.node.move', (msg) => {
+  console.log('Moved:', msg.data.node.label);
+});</code></pre>
+
+      <h3 style="margin: 20px 0 10px 0;">Data Structure</h3>
+      <pre><code>const treeData = [
+  {
+    id: 'unique-id',          // Required: unique identifier
+    label: 'Node Label',      // Required: display text
+    icon: '📁',               // Optional: custom icon
+    children: [               // Optional: child nodes
+      { id: '2', label: 'Child 1', children: [] },
+      { id: '3', label: 'Child 2', children: [] }
+    ],
+    data: {                   // Optional: custom data
+      type: 'folder',
+      path: '/projects/web'
+    }
+  }
+];</code></pre>
+    </div>
+  </div>
+
+  <script type="module">
+    import { PanClient } from '../core/src/components/pan-client.mjs';
+
+    const pc = new PanClient();
+    const eventList = document.getElementById('event-list');
+    const events = [];
+
+    // Sample data
+    const documentsData = [
+      {
+        id: 'docs',
+        label: 'Documents',
+        children: [
+          {
+            id: 'work',
+            label: 'Work',
+            children: [
+              { id: 'invoice-1', label: 'Invoice #001.pdf' },
+              { id: 'invoice-2', label: 'Invoice #002.pdf' },
+              { id: 'proposal', label: 'Project Proposal.docx' }
+            ]
+          },
+          {
+            id: 'personal',
+            label: 'Personal',
+            children: [
+              { id: 'resume', label: 'Resume.pdf' },
+              { id: 'photo', label: 'Family Photo.jpg' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 'downloads',
+        label: 'Downloads',
+        children: [
+          { id: 'file1', label: 'setup.exe' },
+          { id: 'file2', label: 'archive.zip' }
+        ]
+      }
+    ];
+
+    const notesData = [
+      {
+        id: 'n1',
+        label: 'Meeting Notes',
+        children: [
+          { id: 'n1-1', label: 'Q1 Planning' },
+          { id: 'n1-2', label: 'Team Standup' }
+        ]
+      },
+      {
+        id: 'n2',
+        label: 'Ideas',
+        children: [
+          { id: 'n2-1', label: 'Product Features' },
+          { id: 'n2-2', label: 'Marketing Campaign' }
+        ]
+      }
+    ];
+
+    const projectsData = [
+      {
+        id: 'p1',
+        label: 'Website Redesign',
+        icon: '🌐',
+        children: [
+          { id: 'p1-1', label: 'Design Mockups', icon: '🎨' },
+          { id: 'p1-2', label: 'Component Library', icon: '📦' },
+          { id: 'p1-3', label: 'API Documentation', icon: '📚' }
+        ]
+      },
+      {
+        id: 'p2',
+        label: 'Mobile App',
+        icon: '📱',
+        children: [
+          { id: 'p2-1', label: 'User Research', icon: '🔍' },
+          { id: 'p2-2', label: 'Wireframes', icon: '📐' }
+        ]
+      }
+    ];
+
+    const apiData = [
+      {
+        id: 'api1',
+        label: 'REST API',
+        children: [
+          { id: 'api1-1', label: 'GET /users' },
+          { id: 'api1-2', label: 'POST /users' },
+          { id: 'api1-3', label: 'PUT /users/:id' },
+          { id: 'api1-4', label: 'DELETE /users/:id' }
+        ]
+      },
+      {
+        id: 'api2',
+        label: 'GraphQL',
+        children: [
+          { id: 'api2-1', label: 'Query: users' },
+          { id: 'api2-2', label: 'Mutation: createUser' }
+        ]
+      }
+    ];
+
+    // Initialize trees
+    pc.publish({ topic: 'documents.data.set', data: { tree: documentsData } });
+    pc.publish({ topic: 'notes.data.set', data: { tree: notesData } });
+    pc.publish({ topic: 'projects.data.set', data: { tree: projectsData } });
+    pc.publish({ topic: 'api.data.set', data: { tree: apiData } });
+
+    // Event logging
+    function logEvent(topic, data) {
+      const time = new Date().toLocaleTimeString();
+      events.unshift({ time, topic, data });
+
+      // Keep only last 20 events
+      if (events.length > 20) events.pop();
+
+      renderEvents();
+    }
+
+    function renderEvents() {
+      eventList.innerHTML = events.map(e => `
+        <div class="event-item">
+          <div class="event-time">${e.time}</div>
+          <div class="event-topic">${e.topic}</div>
+          <div class="event-data">${JSON.stringify(e.data, null, 2)}</div>
+        </div>
+      `).join('');
+    }
+
+    // Subscribe to all tree events
+    const resources = ['documents', 'notes', 'projects', 'api'];
+    resources.forEach(resource => {
+      pc.subscribe(`${resource}.node.select`, (msg) => {
+        logEvent(msg.topic, { id: msg.data.id, label: msg.data.node.label });
+      });
+
+      pc.subscribe(`${resource}.node.edit`, (msg) => {
+        logEvent(msg.topic, {
+          id: msg.data.id,
+          from: msg.data.oldLabel,
+          to: msg.data.newLabel
+        });
+      });
+
+      pc.subscribe(`${resource}.node.move`, (msg) => {
+        logEvent(msg.topic, {
+          node: msg.data.node.label,
+          from: msg.data.fromPath,
+          to: msg.data.toPath
+        });
+      });
+
+      pc.subscribe(`${resource}.node.expanded`, (msg) => {
+        logEvent(msg.topic, { id: msg.data.id });
+      });
+
+      pc.subscribe(`${resource}.node.collapsed`, (msg) => {
+        logEvent(msg.topic, { id: msg.data.id });
+      });
+    });
+
+    // Control buttons
+    document.getElementById('btn-expand-all').addEventListener('click', () => {
+      ['api1', 'api2'].forEach(id => {
+        pc.publish({ topic: 'api.node.expand', data: { id } });
+      });
+    });
+
+    document.getElementById('btn-collapse-all').addEventListener('click', () => {
+      ['api1', 'api2'].forEach(id => {
+        pc.publish({ topic: 'api.node.collapse', data: { id } });
+      });
+    });
+
+    let nodeCounter = 1;
+    document.getElementById('btn-add-node').addEventListener('click', () => {
+      const newData = [
+        ...apiData,
+        {
+          id: `new-${nodeCounter}`,
+          label: `New Endpoint ${nodeCounter}`,
+          children: []
+        }
+      ];
+      nodeCounter++;
+      pc.publish({ topic: 'api.data.set', data: { tree: newData } });
+    });
+
+    document.getElementById('btn-reload').addEventListener('click', () => {
+      pc.publish({ topic: 'api.data.set', data: { tree: apiData } });
+      nodeCounter = 1;
+    });
+  </script>
+</body>
+</html>

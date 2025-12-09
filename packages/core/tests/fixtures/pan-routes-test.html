@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PAN Routes Test</title>
+  <script type="module">
+    // Import pan-bus component (auto-registers)
+    await import('../../src/components/pan-bus.mjs');
+
+    // Wait for custom element to be defined
+    await customElements.whenDefined('pan-bus');
+
+    // Set ready flag
+    window.__testReady = true;
+
+    // Listen for pan ready event
+    document.addEventListener('pan:sys.ready', () => {
+      window.__panReady = true;
+    });
+  </script>
+</head>
+<body>
+  <pan-bus id="bus" enable-routing="true"></pan-bus>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>LARC Integration Test</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      padding: 20px;
+    }
+    #status {
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LARC Integration Test Page</h1>
+  <div id="status">Ready for testing...</div>
+  <div id="test-container">
+    <!-- Components will be dynamically loaded here -->
+  </div>
+
+  <script>
+    // Test helpers will be injected by tests
+    window.testResults = [];
+    window.testLog = (message) => {
+      console.log('[TEST]', message);
+      window.testResults.push({ timestamp: Date.now(), message });
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAN Routing - Filtered Routes</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .output {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .log-entry {
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      border-left: 3px solid #0066cc;
+      background: white;
+    }
+    .alert {
+      border-left-color: #ff6600 !important;
+      background: #fff5f0 !important;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      cursor: pointer;
+    }
+    input {
+      padding: 0.5rem;
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <h1>PAN Routing - Filtered Routes</h1>
+
+  <p>This example demonstrates filtered routing: alert when temperature exceeds threshold.</p>
+
+  <div>
+    <label>
+      Temperature:
+      <input type="number" id="tempInput" value="25" step="5">°C
+    </label>
+    <button id="sendBtn">Send Sensor Update</button>
+    <button id="clearBtn">Clear Logs</button>
+  </div>
+
+  <div class="output" id="output"></div>
+
+  <pan-bus enable-routing="true" debug="true"></pan-bus>
+
+  <script type="module">
+    import '../../src/pan.mjs';
+
+    const output = document.getElementById('output');
+    const tempInput = document.getElementById('tempInput');
+
+    function log(message, isAlert = false) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry' + (isAlert ? ' alert' : '');
+      entry.innerHTML = `<small>${new Date().toLocaleTimeString()}</small><br>${message}`;
+      output.appendChild(entry);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    document.addEventListener('pan:sys.ready', () => {
+      log('✅ PAN Bus ready with routing enabled');
+
+      // Add high temperature alert route
+      window.pan.routes.add({
+        name: 'High Temperature Alert',
+        enabled: true,
+        match: {
+          type: 'sensor.update',
+          where: {
+            op: 'gt',
+            path: 'payload.temperature',
+            value: 30
+          }
+        },
+        transform: {
+          op: 'pick',
+          paths: ['payload.temperature', 'payload.sensorId']
+        },
+        actions: [
+          {
+            type: 'EMIT',
+            message: {
+              type: 'ui.alert.highTemp'
+            },
+            inherit: ['payload']
+          },
+          {
+            type: 'LOG',
+            level: 'warn',
+            template: '🌡️ High temperature alert: {{payload.temperature}}°C from sensor {{payload.sensorId}}'
+          }
+        ]
+      });
+
+      log('✅ Route added: "High Temperature Alert" (triggers when > 30°C)');
+
+      // Subscribe to alerts
+      document.addEventListener('pan:deliver', (e) => {
+        const { type, payload } = e.detail;
+
+        if (type === 'ui.alert.highTemp') {
+          log(`⚠️ HIGH TEMPERATURE ALERT: ${payload?.temperature}°C`, true);
+        } else if (type === 'sensor.update') {
+          log(`📊 Sensor update: ${payload?.temperature}°C from ${payload?.sensorId}`);
+        }
+      });
+    });
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const temperature = parseFloat(tempInput.value);
+
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: {
+          type: 'sensor.update',
+          topic: 'sensors',
+          payload: {
+            temperature,
+            sensorId: 'sensor-001',
+            timestamp: Date.now()
+          }
+        }
+      }));
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      output.innerHTML = '';
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{
+  "name": "@larcjs/apps",
+  "version": "1.0.0",
+  "description": "LARC Demo Applications - Professional demo apps showcasing PAN messaging architecture",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 8080",
+    "dev": "python3 -m http.server 8080",
+    "test": "echo \"Tests coming soon\" && exit 0"
+  },
+  "keywords": [
+    "larc",
+    "pan",
+    "demo",
+    "examples",
+    "contact-manager",
+    "invoice",
+    "markdown",
+    "web-components",
+    "message-bus",
+    "applications"
+  ],
+  "author": "Chris Robison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/larcjs/larc.git",
+    "directory": "packages/apps"
+  },
+  "bugs": {
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "homepage": "https://larcjs.com",
+  "peerDependencies": {
+    "@larcjs/core": "^1.1.0",
+    "@larcjs/components": "^1.1.0"
+  },
+  "files": [
+    "contact-manager/**/*",
+    "data-browser/**/*",
+    "invoice/**/*",
+    "invoice-studio/**/*",
+    "markdown-notes/**/*",
+    "src/**/*",
+    "assets/**/*",
+    "index.html",
+    "api.php",
+    "setup-demo-db.sql",
+    "setup-demo-db.sqlite.sql",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

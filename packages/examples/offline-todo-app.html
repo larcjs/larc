@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline-First Todo App - LARC State Management Demo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      color: white;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+
+    .status-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .status-dot.offline {
+      background: #ef4444;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .badge {
+      background: #f3f4f6;
+      color: #6b7280;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #1f2937;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.2s;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    button {
+      padding: 12px 24px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button:hover {
+      background: #5568d3;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.secondary {
+      background: #6b7280;
+    }
+
+    button.secondary:hover {
+      background: #4b5563;
+    }
+
+    button.danger {
+      background: #ef4444;
+    }
+
+    button.danger:hover {
+      background: #dc2626;
+    }
+
+    .todo-list {
+      list-style: none;
+    }
+
+    .todo-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+
+    .todo-item:hover {
+      background: #f3f4f6;
+    }
+
+    .todo-item.completed {
+      opacity: 0.6;
+    }
+
+    .todo-item.completed .todo-text {
+      text-decoration: line-through;
+    }
+
+    .todo-item.syncing {
+      background: #fef3c7;
+      border-left: 3px solid #f59e0b;
+    }
+
+    input[type="checkbox"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .todo-text {
+      flex: 1;
+      font-size: 15px;
+      color: #1f2937;
+    }
+
+    .todo-meta {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #9ca3af;
+    }
+
+    .empty-state svg {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .inspector-wrapper {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      height: 400px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      background: #f3f4f6;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab.active {
+      background: #667eea;
+      color: white;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .feature {
+      background: #f9fafb;
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid #667eea;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 5px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>📝 Offline-First Todo App</h1>
+      <p>Demonstrating LARC's advanced state management capabilities</p>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-item">
+        <span class="status-dot" id="networkStatus"></span>
+        <span id="networkText">Online</span>
+      </div>
+      <div class="status-item">
+        <span class="badge" id="queueBadge">Queue: 0</span>
+        <span class="badge" id="todoBadge">Todos: 0</span>
+      </div>
+    </div>
+
+    <!-- Main Todo Card -->
+    <div class="card">
+      <div class="card-title">Your Todos</div>
+
+      <div class="input-group">
+        <input type="text" id="todoInput" placeholder="What needs to be done?" />
+        <button id="addBtn">Add Todo</button>
+      </div>
+
+      <ul class="todo-list" id="todoList">
+        <li class="empty-state">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+          </svg>
+          <p>No todos yet. Add one above!</p>
+        </li>
+      </ul>
+
+      <div class="controls">
+        <button id="undoBtn" class="secondary">↶ Undo</button>
+        <button id="redoBtn" class="secondary">↷ Redo</button>
+        <button id="clearBtn" class="danger">Clear All</button>
+        <button id="syncBtn">Force Sync</button>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="card">
+      <div class="card-title">✨ State Management Features</div>
+      <div class="features">
+        <div class="feature">
+          <div class="feature-title">🌐 Cross-Tab Sync</div>
+          <div class="feature-desc">Open in multiple tabs - changes sync automatically</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">📡 Offline-First</div>
+          <div class="feature-desc">Works offline, syncs when reconnected</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">💾 Auto-Persistence</div>
+          <div class="feature-desc">State saved to localStorage automatically</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">↶↷ Undo/Redo</div>
+          <div class="feature-desc">Time-travel debugging with history</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">✓ Validation</div>
+          <div class="feature-desc">Runtime schema validation</div>
+        </div>
+        <div class="feature">
+          <div class="feature-title">🔄 Computed State</div>
+          <div class="feature-desc">Auto-calculated totals and counters</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inspector -->
+    <div class="inspector-wrapper">
+      <div class="card-title">🔍 State Inspector</div>
+      <pan-inspector></pan-inspector>
+    </div>
+  </div>
+
+  <!-- LARC Components -->
+  <script type="module">
+    import '../../core/src/pan.mjs';
+  </script>
+
+  <pan-bus debug></pan-bus>
+
+  <!-- State Management Components -->
+  <pan-persistence-strategy auto-hydrate>
+    <strategy topics="todos.*" storage="localStorage"></strategy>
+  </pan-persistence-strategy>
+
+  <pan-state-sync
+    channel="todo-sync"
+    topics="todos.*"
+    strategy="last-write-wins"
+    debug>
+  </pan-state-sync>
+
+  <pan-offline-sync
+    storage="todo-offline"
+    topics="todos.item.*"
+    retry-max="3"
+    debug>
+  </pan-offline-sync>
+
+  <pan-schema-validator topic="todos.item.add">
+    <script type="application/json">
+    {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "text": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "completed": { "type": "boolean" }
+      },
+      "required": ["id", "text", "completed"]
+    }
+    </script>
+  </pan-schema-validator>
+
+  <pan-computed-state
+    sources="todos.list.state"
+    output="todos.stats"
+    retain>
+    <script>
+      (todos) => {
+        if (!todos || !Array.isArray(todos)) return { total: 0, completed: 0, pending: 0 };
+        return {
+          total: todos.length,
+          completed: todos.filter(t => t.completed).length,
+          pending: todos.filter(t => !t.completed).length
+        };
+      }
+    </script>
+  </pan-computed-state>
+
+  <pan-undo-redo
+    topics="todos.*"
+    max-history="50"
+    channel="history"
+    auto-snapshot
+    snapshot-interval="2000"
+    debug>
+  </pan-undo-redo>
+
+  <!-- Application Logic -->
+  <script type="module">
+    import { PanClient } from '../../core/src/components/pan-client.mjs';
+
+    const panClient = new PanClient();
+    let todos = [];
+
+    // UI Elements
+    const todoInput = document.getElementById('todoInput');
+    const addBtn = document.getElementById('addBtn');
+    const todoList = document.getElementById('todoList');
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const syncBtn = document.getElementById('syncBtn');
+    const networkStatus = document.getElementById('networkStatus');
+    const networkText = document.getElementById('networkText');
+    const queueBadge = document.getElementById('queueBadge');
+    const todoBadge = document.getElementById('todoBadge');
+
+    // Subscribe to todos state
+    panClient.subscribe('todos.list.state', ({ data }) => {
+      todos = data || [];
+      renderTodos();
+      updateBadges();
+    });
+
+    // Subscribe to stats
+    panClient.subscribe('todos.stats', ({ data }) => {
+      todoBadge.textContent = `Todos: ${data.total} (${data.pending} pending)`;
+    });
+
+    // Subscribe to history state
+    panClient.subscribe('history.state', ({ data }) => {
+      undoBtn.disabled = !data.canUndo;
+      redoBtn.disabled = !data.canRedo;
+    });
+
+    // Subscribe to offline sync events
+    panClient.subscribe('todo-offline.queue.add', ({ data }) => {
+      queueBadge.textContent = `Queue: ${data.queueLength}`;
+    });
+
+    panClient.subscribe('todo-offline.queue.success', () => {
+      const offlineSync = document.querySelector('pan-offline-sync');
+      queueBadge.textContent = `Queue: ${offlineSync.queueLength}`;
+    });
+
+    panClient.subscribe('todo-offline.network.online', () => {
+      networkStatus.classList.remove('offline');
+      networkText.textContent = 'Online';
+    });
+
+    panClient.subscribe('todo-offline.network.offline', () => {
+      networkStatus.classList.add('offline');
+      networkText.textContent = 'Offline';
+    });
+
+    // Add todo
+    addBtn.addEventListener('click', addTodo);
+    todoInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') addTodo();
+    });
+
+    function addTodo() {
+      const text = todoInput.value.trim();
+      if (!text) return;
+
+      const newTodo = {
+        id: crypto.randomUUID(),
+        text,
+        completed: false,
+        createdAt: Date.now()
+      };
+
+      // Validation happens via pan-schema-validator
+      panClient.publish('todos.item.add', newTodo);
+
+      todos.push(newTodo);
+      panClient.publish('todos.list.state', todos, { retain: true });
+
+      todoInput.value = '';
+      renderTodos();
+    }
+
+    // Toggle todo
+    function toggleTodo(id) {
+      const todo = todos.find(t => t.id === id);
+      if (todo) {
+        todo.completed = !todo.completed;
+        panClient.publish('todos.item.update', todo);
+        panClient.publish('todos.list.state', todos, { retain: true });
+        renderTodos();
+      }
+    }
+
+    // Delete todo
+    function deleteTodo(id) {
+      todos = todos.filter(t => t.id !== id);
+      panClient.publish('todos.item.delete', { id });
+      panClient.publish('todos.list.state', todos, { retain: true });
+      renderTodos();
+    }
+
+    // Render todos
+    function renderTodos() {
+      if (todos.length === 0) {
+        todoList.innerHTML = `
+          <li class="empty-state">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+            </svg>
+            <p>No todos yet. Add one above!</p>
+          </li>
+        `;
+        return;
+      }
+
+      todoList.innerHTML = todos.map(todo => `
+        <li class="todo-item ${todo.completed ? 'completed' : ''}" data-id="${todo.id}">
+          <input type="checkbox" ${todo.completed ? 'checked' : ''} onchange="toggleTodo('${todo.id}')">
+          <span class="todo-text">${escapeHtml(todo.text)}</span>
+          <span class="todo-meta">${formatDate(todo.createdAt)}</span>
+          <button class="danger" onclick="deleteTodo('${todo.id}')">Delete</button>
+        </li>
+      `).join('');
+    }
+
+    // Undo/Redo
+    undoBtn.addEventListener('click', () => {
+      panClient.publish('history.undo', null);
+    });
+
+    redoBtn.addEventListener('click', () => {
+      panClient.publish('history.redo', null);
+    });
+
+    // Clear all
+    clearBtn.addEventListener('click', () => {
+      if (confirm('Clear all todos?')) {
+        todos = [];
+        panClient.publish('todos.list.state', [], { retain: true });
+        renderTodos();
+      }
+    });
+
+    // Force sync
+    syncBtn.addEventListener('click', async () => {
+      const offlineSync = document.querySelector('pan-offline-sync');
+      if (offlineSync.online && offlineSync.queueLength > 0) {
+        await offlineSync.syncNow();
+        alert('Sync complete!');
+      } else if (!offlineSync.online) {
+        alert('Cannot sync while offline');
+      } else {
+        alert('Nothing to sync');
+      }
+    });
+
+    // Helpers
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function formatDate(timestamp) {
+      const date = new Date(timestamp);
+      const now = new Date();
+      const diff = now - date;
+
+      if (diff < 60000) return 'Just now';
+      if (diff < 3600000) return `${Math.floor(diff / 60000)}m ago`;
+      if (diff < 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+      return date.toLocaleDateString();
+    }
+
+    function updateBadges() {
+      const offlineSync = document.querySelector('pan-offline-sync');
+      queueBadge.textContent = `Queue: ${offlineSync?.queueLength || 0}`;
+    }
+
+    // Make functions global for inline handlers
+    window.toggleTodo = toggleTodo;
+    window.deleteTodo = deleteTodo;
+
+    // Initial update
+    updateBadges();
+  </script>
+</body>
+</html>

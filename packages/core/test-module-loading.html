@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Test Module Loading</title>
+</head>
+<body>
+  <h1>Test Module Loading</h1>
+  <div id="status">Loading...</div>
+
+  <script type="module">
+    try {
+      console.log('Starting module import...');
+      await import('./src/components/pan-bus.mjs');
+      console.log('Module imported successfully');
+
+      const isDefined = customElements.get('pan-bus') !== undefined;
+      document.getElementById('status').textContent = `pan-bus defined: ${isDefined}`;
+      console.log('pan-bus defined:', isDefined);
+    } catch (error) {
+      console.error('Error loading module:', error);
+      document.getElementById('status').textContent = `Error: ${error.message}`;
+    }
+  </script>
+</body>
+</html>

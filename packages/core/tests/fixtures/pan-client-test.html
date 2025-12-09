@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PAN Client Test</title>
+  <script type="module">
+    // Import the components (relative to core package root)
+    import '../../src/components/pan-bus.mjs';
+    import { PanClient } from '../../src/components/pan-client.mjs';
+
+    // Make PanClient available globally for tests
+    window.PanClient = PanClient;
+    window.__testReady = true;
+  </script>
+</head>
+<body>
+  <pan-bus id="test-bus"></pan-bus>
+</body>
+</html>

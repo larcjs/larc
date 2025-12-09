@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAN Routing - Storage Persistence</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .panel {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .info {
+      background: #e3f2fd;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      cursor: pointer;
+    }
+    pre {
+      background: white;
+      padding: 1rem;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>PAN Routing - Storage Persistence</h1>
+
+  <div class="info">
+    <strong>💡 Tip:</strong> Routes are saved to localStorage. Refresh the page to see them persist!
+  </div>
+
+  <div class="panel">
+    <h3>Actions</h3>
+    <button id="addDefaultBtn">Add Default Routes</button>
+    <button id="clearRoutesBtn">Clear All Routes</button>
+    <button id="clearStorageBtn">Clear Storage</button>
+    <button id="refreshBtn">Refresh Page</button>
+  </div>
+
+  <div class="panel">
+    <h3>Current Routes</h3>
+    <pre id="routesDisplay"></pre>
+  </div>
+
+  <div class="panel">
+    <h3>localStorage Content</h3>
+    <pre id="storageDisplay"></pre>
+  </div>
+
+  <pan-bus enable-routing="true"></pan-bus>
+
+  <script type="module">
+    import '../../src/pan.mjs';
+    import { LocalStorageAdapter } from '../../src/components/pan-storage.mjs';
+
+    const routesDisplay = document.getElementById('routesDisplay');
+    const storageDisplay = document.getElementById('storageDisplay');
+
+    function updateDisplay() {
+      // Show current routes
+      const routes = window.pan.routes.list();
+      routesDisplay.textContent = JSON.stringify(routes, null, 2);
+
+      // Show localStorage content
+      const stored = localStorage.getItem('pan-routes');
+      storageDisplay.textContent = stored ? JSON.stringify(JSON.parse(stored), null, 2) : '(empty)';
+    }
+
+    document.addEventListener('pan:sys.ready', () => {
+      // Set up localStorage persistence
+      const storage = new LocalStorageAdapter('pan-routes');
+      window.pan.routes.useStorage(storage);
+
+      console.log('✅ Storage persistence enabled');
+
+      // Listen for route changes
+      window.pan.routes.onRoutesChanged(() => {
+        updateDisplay();
+      });
+
+      updateDisplay();
+    });
+
+    document.getElementById('addDefaultBtn').addEventListener('click', () => {
+      window.pan.routes.add({
+        name: 'Login Success Handler',
+        enabled: true,
+        match: { type: 'user.login.success' },
+        actions: [
+          {
+            type: 'LOG',
+            level: 'info',
+            template: 'User logged in: {{payload.username}}'
+          }
+        ]
+      });
+
+      window.pan.routes.add({
+        name: 'Error Logger',
+        enabled: true,
+        match: {
+          type: 'error',
+          where: { op: 'eq', path: 'payload.severity', value: 'critical' }
+        },
+        actions: [
+          {
+            type: 'LOG',
+            level: 'error',
+            template: 'Critical error: {{payload.message}}'
+          }
+        ]
+      });
+
+      console.log('✅ Default routes added');
+    });
+
+    document.getElementById('clearRoutesBtn').addEventListener('click', () => {
+      window.pan.routes.clear();
+      console.log('🗑️ All routes cleared');
+    });
+
+    document.getElementById('clearStorageBtn').addEventListener('click', () => {
+      localStorage.removeItem('pan-routes');
+      updateDisplay();
+      console.log('🗑️ Storage cleared (reload to see effect)');
+    });
+
+    document.getElementById('refreshBtn').addEventListener('click', () => {
+      location.reload();
+    });
+  </script>
+</body>
+</html>

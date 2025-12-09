@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAN Routing - Dynamic Route Management</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .panel {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    .route-list {
+      list-style: none;
+      padding: 0;
+    }
+    .route-item {
+      background: white;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .route-item.disabled {
+      opacity: 0.5;
+    }
+    .log-entry {
+      background: white;
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      cursor: pointer;
+      background: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    button.secondary {
+      background: #666;
+    }
+    button.danger {
+      background: #cc0000;
+    }
+  </style>
+</head>
+<body>
+  <h1>PAN Routing - Dynamic Route Management</h1>
+
+  <p>Add, enable/disable, and remove routes at runtime.</p>
+
+  <div class="container">
+    <div class="panel">
+      <h3>Routes</h3>
+      <ul class="route-list" id="routeList"></ul>
+      <button id="addRouteBtn">Add Random Route</button>
+    </div>
+
+    <div class="panel">
+      <h3>Activity Log</h3>
+      <button id="testBtn" class="secondary">Test Routes</button>
+      <button id="clearBtn" class="secondary">Clear Log</button>
+      <div id="log" style="max-height: 400px; overflow-y: auto; margin-top: 1rem;"></div>
+    </div>
+  </div>
+
+  <pan-bus enable-routing="true" debug="true"></pan-bus>
+
+  <script type="module">
+    import '../../src/pan.mjs';
+
+    const routeList = document.getElementById('routeList');
+    const logEl = document.getElementById('log');
+    let routeCounter = 0;
+
+    function log(message) {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.innerHTML = `<small>${new Date().toLocaleTimeString()}</small> ${message}`;
+      logEl.appendChild(entry);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    function renderRoutes() {
+      const routes = window.pan.routes.list();
+      routeList.innerHTML = '';
+
+      routes.forEach(route => {
+        const li = document.createElement('li');
+        li.className = `route-item${route.enabled ? '' : ' disabled'}`;
+
+        li.innerHTML = `
+          <div>
+            <strong>${route.name}</strong><br>
+            <small>${route.id}</small>
+          </div>
+          <div>
+            <button onclick="toggleRoute('${route.id}')" class="secondary">
+              ${route.enabled ? 'Disable' : 'Enable'}
+            </button>
+            <button onclick="removeRoute('${route.id}')" class="danger">Remove</button>
+          </div>
+        `;
+
+        routeList.appendChild(li);
+      });
+    }
+
+    window.toggleRoute = (id) => {
+      const route = window.pan.routes.get(id);
+      if (route.enabled) {
+        window.pan.routes.disable(id);
+        log(`🔴 Disabled route: ${route.name}`);
+      } else {
+        window.pan.routes.enable(id);
+        log(`🟢 Enabled route: ${route.name}`);
+      }
+      renderRoutes();
+    };
+
+    window.removeRoute = (id) => {
+      const route = window.pan.routes.get(id);
+      window.pan.routes.remove(id);
+      log(`🗑️ Removed route: ${route.name}`);
+      renderRoutes();
+    };
+
+    document.addEventListener('pan:sys.ready', () => {
+      log('✅ PAN Bus ready with routing');
+
+      // Listen for route changes
+      window.pan.routes.onRoutesChanged(() => {
+        renderRoutes();
+      });
+
+      // Subscribe to routed messages
+      document.addEventListener('pan:deliver', (e) => {
+        const { type, payload } = e.detail;
+        if (type?.startsWith('routed.')) {
+          log(`📨 Routed message: ${type}`);
+        }
+      });
+
+      renderRoutes();
+    });
+
+    document.getElementById('addRouteBtn').addEventListener('click', () => {
+      routeCounter++;
+      const name = `Route ${routeCounter}`;
+
+      window.pan.routes.add({
+        name,
+        enabled: true,
+        match: {
+          type: `test.event.${routeCounter}`
+        },
+        actions: [
+          {
+            type: 'EMIT',
+            message: {
+              type: `routed.${routeCounter}`,
+              payload: { routeName: name }
+            }
+          },
+          {
+            type: 'LOG',
+            level: 'info',
+            template: `Route ${routeCounter} executed`
+          }
+        ]
+      });
+
+      log(`✅ Added route: ${name}`);
+    });
+
+    document.getElementById('testBtn').addEventListener('click', () => {
+      const routes = window.pan.routes.list({ enabled: true });
+
+      if (routes.length === 0) {
+        log('⚠️ No enabled routes to test');
+        return;
+      }
+
+      const route = routes[Math.floor(Math.random() * routes.length)];
+      const matchType = route.match.type;
+
+      log(`🧪 Testing route: ${route.name}`);
+
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: {
+          type: matchType,
+          payload: { test: true }
+        }
+      }));
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      logEl.innerHTML = '';
+    });
+  </script>
+</body>
+</html>

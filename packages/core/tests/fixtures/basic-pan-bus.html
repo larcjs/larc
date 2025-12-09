@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>PAN Bus Test</title>
+  <script type="module">
+    // Import the pan-bus component (relative to core package root)
+    await import('../../src/components/pan-bus.mjs');
+
+    // Wait for custom element to be defined
+    await customElements.whenDefined('pan-bus');
+
+    // Set ready flag when module is fully loaded
+    window.__testReady = true;
+
+    // Listen for pan:sys.ready event
+    document.addEventListener('pan:sys.ready', () => {
+      window.__panReady = true;
+    });
+  </script>
+</head>
+<body>
+  <pan-bus id="test-bus"></pan-bus>
+</body>
+</html>

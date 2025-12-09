@@ -6,13 +6,10 @@
   "type": "module",
   "workspaces": [
     "packages/*",
-    "core",
-    "ui",
     "cli",
     "registry",
     "react-adapter",
-    "site",
-    "devtools",
+    "docs/site",
     "vscode-extension"
   ],
   "scripts": {

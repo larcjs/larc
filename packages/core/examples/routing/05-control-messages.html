@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAN Routing - Control Messages</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .panel {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .info {
+      background: #e3f2fd;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      cursor: pointer;
+    }
+    .output {
+      background: white;
+      padding: 1rem;
+      border-radius: 4px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 1rem;
+    }
+    .log-entry {
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      border-left: 3px solid #0066cc;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <h1>PAN Routing - Control Messages</h1>
+
+  <div class="info">
+    <strong>💡 Info:</strong> Control messages allow you to configure routes by sending messages over the bus itself.
+    This is useful for admin panels or remote configuration.
+  </div>
+
+  <div class="panel">
+    <h3>Control Message Actions</h3>
+    <button id="addViaControlBtn">Add Route via Control Message</button>
+    <button id="listViaControlBtn">List Routes via Control Message</button>
+    <button id="clearViaControlBtn">Clear Routes via Control Message</button>
+  </div>
+
+  <div class="panel">
+    <h3>Activity Log</h3>
+    <div class="output" id="output"></div>
+  </div>
+
+  <pan-bus enable-routing="true" debug="true"></pan-bus>
+
+  <script type="module">
+    import '../../src/pan.mjs';
+
+    const output = document.getElementById('output');
+
+    function log(message, color = '#0066cc') {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.style.borderLeftColor = color;
+      entry.innerHTML = `<small>${new Date().toLocaleTimeString()}</small><br>${message}`;
+      output.appendChild(entry);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    document.addEventListener('pan:sys.ready', () => {
+      log('✅ PAN Bus ready', '#00aa00');
+
+      // Listen for control message responses
+      document.addEventListener('pan:deliver', (e) => {
+        const { type, data } = e.detail;
+
+        if (type === 'pan.routes.list.result') {
+          log(`📋 Route list received: ${data.routes.length} routes`, '#9c27b0');
+          data.routes.forEach(route => {
+            log(`  - ${route.name} (${route.enabled ? 'enabled' : 'disabled'})`, '#9c27b0');
+          });
+        }
+      });
+    });
+
+    document.getElementById('addViaControlBtn').addEventListener('click', () => {
+      const requestId = crypto.randomUUID();
+
+      // Send control message to add a route
+      document.dispatchEvent(new CustomEvent('pan:control', {
+        detail: {
+          type: 'pan.routes.add',
+          payload: {
+            route: {
+              name: 'Control Message Route',
+              enabled: true,
+              match: {
+                type: 'test.control'
+              },
+              actions: [
+                {
+                  type: 'LOG',
+                  level: 'info',
+                  template: 'Route created via control message!'
+                }
+              ]
+            }
+          }
+        }
+      }));
+
+      log('📤 Sent control message: pan.routes.add', '#ff6600');
+    });
+
+    document.getElementById('listViaControlBtn').addEventListener('click', () => {
+      const requestId = crypto.randomUUID();
+
+      // Send control message to list routes
+      document.dispatchEvent(new CustomEvent('pan:control', {
+        detail: {
+          type: 'pan.routes.list',
+          payload: {
+            requestId
+          }
+        }
+      }));
+
+      log('📤 Sent control message: pan.routes.list', '#ff6600');
+    });
+
+    document.getElementById('clearViaControlBtn').addEventListener('click', () => {
+      // Send control message to clear routes
+      document.dispatchEvent(new CustomEvent('pan:control', {
+        detail: {
+          type: 'pan.routes.clear',
+          payload: {}
+        }
+      }));
+
+      log('📤 Sent control message: pan.routes.clear', '#ff6600');
+    });
+  </script>
+</body>
+</html>

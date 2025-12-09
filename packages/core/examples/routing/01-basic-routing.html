@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAN Routing - Basic Example</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+    .output {
+      background: #f5f5f5;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .log-entry {
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      border-left: 3px solid #0066cc;
+      background: white;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.25rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>PAN Routing - Basic Example</h1>
+
+  <p>This example demonstrates basic routing: when a user login succeeds, automatically show the dashboard.</p>
+
+  <div>
+    <button id="loginBtn">Simulate Login</button>
+    <button id="clearBtn">Clear Logs</button>
+  </div>
+
+  <div class="output" id="output"></div>
+
+  <!-- PAN Bus with routing enabled -->
+  <pan-bus enable-routing="true" debug="true"></pan-bus>
+
+  <script type="module">
+    import '../../src/pan.mjs';
+
+    const output = document.getElementById('output');
+
+    function log(message, color = '#0066cc') {
+      const entry = document.createElement('div');
+      entry.className = 'log-entry';
+      entry.style.borderLeftColor = color;
+      entry.innerHTML = `<small>${new Date().toLocaleTimeString()}</small><br>${message}`;
+      output.appendChild(entry);
+      output.scrollTop = output.scrollHeight;
+    }
+
+    // Wait for PAN bus to be ready
+    document.addEventListener('pan:sys.ready', () => {
+      log('✅ PAN Bus ready with routing enabled', '#00aa00');
+
+      // Add a simple routing rule
+      window.pan.routes.add({
+        name: 'Login -> Show Dashboard',
+        enabled: true,
+        match: {
+          type: 'user.login.success'
+        },
+        actions: [
+          {
+            type: 'EMIT',
+            message: {
+              type: 'ui.show.dashboard',
+              payload: { source: 'auto-routing' }
+            }
+          },
+          {
+            type: 'LOG',
+            level: 'info',
+            template: 'User logged in: {{payload.username}}'
+          }
+        ]
+      });
+
+      log('✅ Route added: "Login -> Show Dashboard"');
+
+      // Subscribe to UI events
+      document.addEventListener('pan:deliver', (e) => {
+        const { type, topic, payload } = e.detail;
+
+        if (type === 'ui.show.dashboard') {
+          log(`🎯 Dashboard shown (triggered by routing)`, '#00aa00');
+        } else if (type === 'user.login.success') {
+          log(`📨 Login success: ${payload?.username || 'anonymous'}`, '#0066cc');
+        }
+      });
+    });
+
+    // Button handlers
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      // Publish a login success message
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: {
+          type: 'user.login.success',
+          topic: 'auth',
+          payload: {
+            username: 'demo_user',
+            userId: 12345
+          }
+        }
+      }));
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', () => {
+      output.innerHTML = '';
+    });
+  </script>
+</body>
+</html>

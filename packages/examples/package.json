@@ -1,0 +1,41 @@
+{
+  "name": "@larcjs/examples",
+  "version": "1.0.1",
+  "description": "LARC Examples - Demo applications and usage examples for the PAN messaging system",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "api-legacy": "node api-legacy.js",
+    "api": "node apps/api.js",
+    "auth": "node auth.js",
+    "sse": "node sse.js",
+    "backends": "concurrently \"npm:api-legacy\" \"npm:api\" \"npm:auth\" \"npm:sse\""
+  },
+  "keywords": [
+    "larc",
+    "pan",
+    "examples",
+    "demos",
+    "tutorials"
+  ],
+  "author": "Chris Robison",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/larcjs/larc.git",
+    "directory": "packages/examples"
+  },
+  "bugs": {
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "homepage": "https://larcjs.com",
+  "dependencies": {
+    "mysql2": "^3.6.5",
+    "better-sqlite3": "^9.2.2",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

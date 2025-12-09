@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAN JSON Form Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .intro {
+      margin-bottom: 30px;
+      color: #666;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .demo-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .demo-card h2 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #333;
+      border-bottom: 2px solid #2196f3;
+      padding-bottom: 8px;
+    }
+
+    .demo-card p {
+      margin-bottom: 15px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .output {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+    }
+
+    .output h3 {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #333;
+      font-family: system-ui;
+    }
+
+    .output-item {
+      padding: 8px;
+      margin-bottom: 8px;
+      background: white;
+      border-left: 3px solid #2196f3;
+      border-radius: 2px;
+    }
+
+    .output-label {
+      font-weight: bold;
+      color: #2196f3;
+    }
+
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  </style>
+</head>
+<body>
+  <!-- PAN Message Bus with debug enabled -->
+  <pan-bus debug="true"></pan-bus>
+
+  <!-- Load LARC Core -->
+  <script type="module" src="../core/src/pan.mjs"></script>
+
+  <!-- Load pan-json-form component -->
+  <script type="module" src="../ui/src/components/pan-json-form.mjs"></script>
+
+  <div class="container">
+    <h1>📝 PAN JSON Form Generator Demo</h1>
+    <p class="intro">
+      Dynamic form generator that creates forms from JSON schemas with validation, custom layouts, and PAN integration.
+    </p>
+
+    <div class="demo-grid">
+      <!-- Demo 1: Contact Form -->
+      <div class="demo-card">
+        <h2>📧 Contact Form (Vertical Layout)</h2>
+        <p>Basic contact form with email validation</p>
+        <pan-json-form 
+          resource="contact"
+          layout="vertical"
+          auto-validate>
+        </pan-json-form>
+      </div>
+
+      <!-- Output for Contact Form -->
+      <div class="demo-card">
+        <div class="output">
+          <h3>Contact Form Output</h3>
+          <div id="contact-output"></div>
+        </div>
+      </div>
+
+      <!-- Demo 2: Registration Form -->
+      <div class="demo-card">
+        <h2>👤 Registration Form (Grid Layout)</h2>
+        <p>User registration with multiple field types</p>
+        <pan-json-form 
+          resource="registration"
+          layout="grid"
+          auto-validate>
+        </pan-json-form>
+      </div>
+
+      <!-- Output for Registration Form -->
+      <div class="demo-card">
+        <div class="output">
+          <h3>Registration Form Output</h3>
+          <div id="registration-output"></div>
+        </div>
+      </div>
+
+      <!-- Demo 3: Survey Form -->
+      <div class="demo-card">
+        <h2>📊 Survey Form (Horizontal Layout)</h2>
+        <p>Survey with checkboxes and radio buttons</p>
+        <pan-json-form 
+          resource="survey"
+          layout="horizontal">
+        </pan-json-form>
+      </div>
+
+      <!-- Output for Survey Form -->
+      <div class="demo-card">
+        <div class="output">
+          <h3>Survey Form Output</h3>
+          <div id="survey-output"></div>
+        </div>
+      </div>
+
+      <!-- Schema Examples -->
+      <div class="demo-card full-width">
+        <h2>💻 JSON Schema Examples</h2>
+
+        <h3 style="margin-top: 20px; margin-bottom: 10px;">Contact Form Schema:</h3>
+        <pre><code>{
+  "fields": [
+    {
+      "name": "name",
+      "type": "text",
+      "label": "Full Name",
+      "required": true,
+      "className": "form-control",
+      "placeholder": "John Doe"
+    },
+    {
+      "name": "email",
+      "type": "email",
+      "label": "Email Address",
+      "required": true,
+      "className": "form-control",
+      "help": "We'll never share your email"
+    },
+    {
+      "name": "message",
+      "type": "textarea",
+      "label": "Message",
+      "required": true,
+      "rows": 5,
+      "className": "form-control",
+      "maxLength": 500
+    }
+  ]
+}</code></pre>
+
+        <h3 style="margin-top: 20px; margin-bottom: 10px;">Registration Form Schema:</h3>
+        <pre><code>{
+  "fields": [
+    {
+      "name": "username",
+      "type": "text",
+      "label": "Username",
+      "required": true,
+      "minLength": 3,
+      "maxLength": 20,
+      "pattern": "^[a-zA-Z0-9_]+$",
+      "patternMessage": "Only letters, numbers, and underscore",
+      "help": "3-20 characters, alphanumeric only"
+    },
+    {
+      "name": "password",
+      "type": "password",
+      "label": "Password",
+      "required": true,
+      "minLength": 8
+    },
+    {
+      "name": "age",
+      "type": "number",
+      "label": "Age",
+      "min": 18,
+      "max": 100,
+      "required": true
+    },
+    {
+      "name": "country",
+      "type": "select",
+      "label": "Country",
+      "required": true,
+      "options": [
+        { "value": "us", "label": "United States" },
+        { "value": "uk", "label": "United Kingdom" },
+        { "value": "ca", "label": "Canada" }
+      ]
+    },
+    {
+      "name": "newsletter",
+      "type": "checkbox",
+      "label": "Subscribe to newsletter"
+    }
+  ]
+}</code></pre>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { PanClient } from '../core/src/components/pan-client.mjs';
+
+    const pc = new PanClient();
+
+    // Contact Form Schema
+    const contactSchema = {
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          label: 'Full Name',
+          required: true,
+          className: 'form-control',
+          placeholder: 'John Doe'
+        },
+        {
+          name: 'email',
+          type: 'email',
+          label: 'Email Address',
+          required: true,
+          className: 'form-control',
+          help: "We'll never share your email"
+        },
+        {
+          name: 'message',
+          type: 'textarea',
+          label: 'Message',
+          required: true,
+          rows: 5,
+          className: 'form-control',
+          maxLength: 500
+        }
+      ]
+    };
+
+    // Registration Form Schema
+    const registrationSchema = {
+      fields: [
+        {
+          name: 'username',
+          type: 'text',
+          label: 'Username',
+          required: true,
+          minLength: 3,
+          maxLength: 20,
+          pattern: '^[a-zA-Z0-9_]+$',
+          patternMessage: 'Only letters, numbers, and underscore',
+          help: '3-20 characters, alphanumeric only'
+        },
+        {
+          name: 'password',
+          type: 'password',
+          label: 'Password',
+          required: true,
+          minLength: 8,
+          help: 'At least 8 characters'
+        },
+        {
+          name: 'age',
+          type: 'number',
+          label: 'Age',
+          min: 18,
+          max: 100,
+          required: true
+        },
+        {
+          name: 'country',
+          type: 'select',
+          label: 'Country',
+          required: true,
+          placeholder: 'Select a country',
+          options: [
+            { value: 'us', label: 'United States' },
+            { value: 'uk', label: 'United Kingdom' },
+            { value: 'ca', label: 'Canada' },
+            { value: 'au', label: 'Australia' }
+          ]
+        },
+        {
+          name: 'newsletter',
+          type: 'checkbox',
+          label: 'Subscribe to newsletter'
+        }
+      ]
+    };
+
+    // Survey Form Schema
+    const surveySchema = {
+      fields: [
+        {
+          name: 'satisfaction',
+          type: 'radio',
+          label: 'Satisfaction',
+          required: true,
+          options: [
+            { value: '5', label: 'Very Satisfied' },
+            { value: '4', label: 'Satisfied' },
+            { value: '3', label: 'Neutral' },
+            { value: '2', label: 'Dissatisfied' },
+            { value: '1', label: 'Very Dissatisfied' }
+          ]
+        },
+        {
+          name: 'features',
+          type: 'checkbox-group',
+          label: 'Features Used',
+          options: [
+            { value: 'forms', label: 'Dynamic Forms' },
+            { value: 'routing', label: 'Routing' },
+            { value: 'state', label: 'State Management' },
+            { value: 'themes', label: 'Theming' }
+          ]
+        },
+        {
+          name: 'comments',
+          type: 'textarea',
+          label: 'Additional Comments',
+          rows: 4,
+          placeholder: 'Tell us more...'
+        }
+      ]
+    };
+
+    // Set form schemas
+    pc.publish({ topic: 'contact.schema.set', data: { schema: contactSchema } });
+    pc.publish({ topic: 'registration.schema.set', data: { schema: registrationSchema } });
+    pc.publish({ topic: 'survey.schema.set', data: { schema: surveySchema } });
+
+    // Helper to display output
+    function displayOutput(containerId, label, data) {
+      const container = document.getElementById(containerId);
+      const item = document.createElement('div');
+      item.className = 'output-item';
+      item.innerHTML = `
+        <div class="output-label">${label}</div>
+        <pre>${JSON.stringify(data, null, 2)}</pre>
+      `;
+      container.insertBefore(item, container.firstChild);
+
+      // Keep only last 3 items
+      while (container.children.length > 3) {
+        container.removeChild(container.lastChild);
+      }
+    }
+
+    // Contact Form Listeners
+    pc.subscribe('contact.submit', (msg) => {
+      displayOutput('contact-output', 'Submit', {
+        data: msg.data.data,
+        isValid: msg.data.isValid
+      });
+    });
+
+    pc.subscribe('contact.validation', (msg) => {
+      if (!msg.data.isValid) {
+        displayOutput('contact-output', 'Validation Errors', msg.data.errors);
+      }
+    });
+
+    // Registration Form Listeners
+    pc.subscribe('registration.submit', (msg) => {
+      displayOutput('registration-output', 'Submit', {
+        data: msg.data.data,
+        isValid: msg.data.isValid
+      });
+    });
+
+    pc.subscribe('registration.validation', (msg) => {
+      if (!msg.data.isValid) {
+        displayOutput('registration-output', 'Validation Errors', msg.data.errors);
+      }
+    });
+
+    // Survey Form Listeners
+    pc.subscribe('survey.submit', (msg) => {
+      displayOutput('survey-output', 'Submit', {
+        data: msg.data.data,
+        isValid: msg.data.isValid
+      });
+    });
+
+    pc.subscribe('survey.change', (msg) => {
+      displayOutput('survey-output', 'Field Changed', {
+        field: msg.data.field,
+        value: msg.data.value
+      });
+    });
+
+    console.log('📝 PAN JSON Form Demo loaded');
+    console.log('Forms initialized: contact, registration, survey');
+  </script>
+</body>
+</html>

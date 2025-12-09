@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Demo Suite · Core Lite - 9KB Bundle</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/grail.css">
+  <style>
+    .highlight-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      border-radius: 12px;
+      margin: 1rem 0;
+      text-align: center;
+    }
+    .highlight-box h2 {
+      margin: 0 0 0.5rem;
+      font-size: 2.5rem;
+      font-weight: 700;
+    }
+    .highlight-box p {
+      margin: 0;
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    .counter-display {
+      font-size: 4rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 2rem;
+      background: #f0f4ff;
+      border-radius: 12px;
+      margin: 1rem 0;
+    }
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: #48bb78;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #38a169;
+      transform: translateY(-1px);
+    }
+    .btn-danger {
+      background: #f56565;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #e53e3e;
+      transform: translateY(-1px);
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .stat-card {
+      padding: 1rem;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #667eea;
+    }
+    .stat-label {
+      font-size: 0.875rem;
+      color: #718096;
+      margin-top: 0.25rem;
+    }
+    @media (prefers-color-scheme: dark) {
+      .counter-display {
+        background: #1a202c;
+        color: #e2e8f0;
+      }
+      .stat-card {
+        background: #1a202c;
+        border-color: #2d3748;
+        color: #e2e8f0;
+      }
+      .stat-label {
+        color: #a0aec0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <main class="main-region">
+      <header class="main-header">
+        <h1>@larcjs/core-lite Demo</h1>
+        <p>
+          This example uses <strong>@larcjs/core-lite</strong> - just 9KB minified (3KB gzipped)!
+          That's 94% smaller than React. No routing, no debug tools, just pure pub/sub messaging.
+        </p>
+        <div class="badge-row">
+          <span class="badge">package: <code>@larcjs/core-lite</code></span>
+          <span class="badge">size: <code>9KB minified</code></span>
+          <span class="badge">topics: <code>counter.*</code></span>
+        </div>
+      </header>
+
+      <section class="content-area">
+        <div class="highlight-box">
+          <h2>9KB</h2>
+          <p>94% smaller than React · Zero dependencies · Full pub/sub messaging</p>
+        </div>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Simple Counter</h2>
+              <div class="subtitle">Demonstrates pub/sub with retained state using core-lite</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="counter-display" id="counter">0</div>
+
+            <div class="button-group">
+              <button class="btn btn-primary" id="incrementBtn">
+                <span>+1 Increment</span>
+              </button>
+              <button class="btn btn-secondary" id="incrementBy5Btn">
+                <span>+5 Increment</span>
+              </button>
+              <button class="btn btn-danger" id="resetBtn">
+                <span>↺ Reset</span>
+              </button>
+            </div>
+
+            <div class="stats">
+              <div class="stat-card">
+                <div class="stat-value" id="totalClicks">0</div>
+                <div class="stat-label">Total Clicks</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="currentValue">0</div>
+                <div class="stat-label">Current Value</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" id="messageCount">0</div>
+                <div class="stat-label">Messages Sent</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>What's Included in Core Lite?</h2>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div>
+                <h3 style="margin-top: 0;">✅ Included</h3>
+                <ul style="margin: 0; padding-left: 1.2rem; color: var(--color-muted);">
+                  <li>Pub/sub messaging</li>
+                  <li>Retained messages (state)</li>
+                  <li>Request/reply pattern</li>
+                  <li>Topic pattern matching</li>
+                  <li>Wildcard subscriptions</li>
+                  <li>Zero dependencies</li>
+                </ul>
+              </div>
+              <div>
+                <h3 style="margin-top: 0;">➕ Optional Add-ons</h3>
+                <ul style="margin: 0; padding-left: 1.2rem; color: var(--color-muted);">
+                  <li><code>@larcjs/core-routing</code> (+8KB)</li>
+                  <li><code>@larcjs/core-debug</code> (+3KB)</li>
+                  <li>Add only what you need!</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>The Code</h2>
+              <div class="subtitle">This entire demo uses just basic pub/sub - no framework needed!</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <pre style="background: #f7fafc; padding: 1rem; border-radius: 8px; overflow-x: auto;"><code>// Import core-lite (9KB)
+import '@larcjs/core-lite';
+
+// Subscribe to counter state
+document.addEventListener('pan:deliver', (e) => {
+  if (e.detail.topic === 'counter.state') {
+    document.getElementById('counter').textContent = e.detail.data;
+  }
+});
+
+// Publish increment
+document.getElementById('incrementBtn').addEventListener('click', () => {
+  document.dispatchEvent(new CustomEvent('pan:publish', {
+    detail: { topic: 'counter.increment', data: 1 }
+  }));
+});</code></pre>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <!-- Load core-lite instead of full core -->
+  <script type="module">
+    // For this demo, we'll use the local core-lite
+    // In production, you'd use: import '@larcjs/core-lite';
+    await import('../../packages/core-lite/src/pan.mjs');
+
+    // Simple counter logic
+    let count = 0;
+    let totalClicks = 0;
+    let messageCount = 0;
+
+    const counterEl = document.getElementById('counter');
+    const totalClicksEl = document.getElementById('totalClicks');
+    const currentValueEl = document.getElementById('currentValue');
+    const messageCountEl = document.getElementById('messageCount');
+
+    function updateDisplay() {
+      counterEl.textContent = count;
+      currentValueEl.textContent = count;
+      totalClicksEl.textContent = totalClicks;
+      messageCountEl.textContent = messageCount;
+
+      // Publish state with retain
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: {
+          topic: 'counter.state',
+          data: count,
+          retain: true
+        }
+      }));
+      messageCount++;
+    }
+
+    // Subscribe to counter events
+    document.addEventListener('pan:deliver', (e) => {
+      const msg = e.detail;
+
+      if (msg.topic === 'counter.increment') {
+        count += msg.data || 1;
+        totalClicks++;
+        updateDisplay();
+      } else if (msg.topic === 'counter.reset') {
+        count = 0;
+        updateDisplay();
+      }
+    });
+
+    // Register for counter topics
+    document.dispatchEvent(new CustomEvent('pan:subscribe', {
+      detail: { topics: ['counter.*'] }
+    }));
+
+    // Button handlers
+    document.getElementById('incrementBtn').addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: { topic: 'counter.increment', data: 1 }
+      }));
+    });
+
+    document.getElementById('incrementBy5Btn').addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: { topic: 'counter.increment', data: 5 }
+      }));
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      document.dispatchEvent(new CustomEvent('pan:publish', {
+        detail: { topic: 'counter.reset' }
+      }));
+    });
+
+    // Initialize display
+    updateDisplay();
+  </script>
+</body>
+</html>

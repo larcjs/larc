@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Demo Suite · 06 CRUD (Mock)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/grail.css">
+</head>
+<body>
+  <div class="app-shell">
+    
+
+    <main class="main-region">
+      <header class="main-header">
+        <h1>Users CRUD (Mock Provider)</h1>
+        <p>
+          Web components coordinate over PAN topics to power a zero-build CRUD experience. The table subscribes to retained state,
+          the form performs request/reply, and the inspector surfaces live traffic.
+        </p>
+        <div class="badge-row">
+          <span class="badge">topics: <code>users.*</code></span>
+          <span class="badge">retained snapshots</span>
+          <span class="badge">request / reply</span>
+        </div>
+      </header>
+
+      <section class="content-area">
+        <div class="split-vertical">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Users</h2>
+                <div class="subtitle">Subscribed to <code>users.list.state</code> with retained delivery.</div>
+              </div>
+              <div class="toolbar">
+                <a class="button-link" href="../src/components/pan-data-table.mjs">View source</a>
+              </div>
+            </div>
+            <div class="panel-body">
+              <pan-data-table resource="users" columns="id,name,email"></pan-data-table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Detail &amp; Traffic</h2>
+                <div class="subtitle">Form actions publish <code>users.item.*</code> topics; inspector listens to everything.</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="detail-grid">
+                <pan-form resource="users" fields="name,email"></pan-form>
+                <pan-inspector></pan-inspector>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <pan-data-provider resource="users" persist="localStorage">
+    <script type="application/json">[
+      {"id":"u1","name":"Ada Lovelace","email":"ada@example.com"},
+      {"id":"u2","name":"Grace Hopper","email":"grace@example.com"},
+      {"id":"u3","name":"Alan Turing","email":"alan@example.com"}
+    ]</script>
+  </pan-data-provider>
+
+  <script type="module">
+    if (!customElements.get('pan-bus')) {
+      await import('../../core/src/components/pan-bus.mjs');
+    // Load autoload system to discover and load custom elements on demand
+    await import('../src/pan.mjs');
+    }
+  </script>
+
+  <pan-bus debug="true"></pan-bus>
+</body>
+</html>
