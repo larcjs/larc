@@ -43,7 +43,7 @@
  */
 const defaults = {
   baseUrl: null,                // Full URL base (CDN or absolute path)
-  componentsPath: '/larc/packages/components/',  // Absolute path to components
+  componentsPath: '../../components/',  // Relative to this file (pan.mjs in /apps/src/)
   extension: '.mjs',
   rootMargin: 600,
 };
