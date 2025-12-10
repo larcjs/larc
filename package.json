@@ -2,7 +2,7 @@
   "name": "larc",
   "version": "2.0.0",
   "private": true,
-  "description": "LARC Development Monorepo - Documentation, examples, and developer tools",
+  "description": "LARC (Lightweight Asynchronous Relay Core) - Zero-dependency web component framework with message-based architecture",
   "type": "module",
   "workspaces": [
     "packages/*",
@@ -16,16 +16,23 @@
     "build": "npm run build --workspaces --if-present",
     "build:core": "npm run build --workspace @larcjs/core",
     "build:components": "npm run build --workspace @larcjs/components",
+    "build:cli": "npm run build --workspace create-larc-app",
     "build:minify": "node scripts/build-minified.js",
     "build:all": "npm run build && npm run build:minify",
     "test": "npm run test --workspaces --if-present",
     "test:core": "npm run test --workspace @larcjs/core",
     "test:components": "npm run test --workspace @larcjs/components",
+    "test:all": "npm run test && npm run test:integration",
+    "test:integration": "npm run test --workspace @larcjs/examples",
     "dev": "npm run dev --workspaces --if-present",
     "dev:site": "npm run dev --workspace @larcjs/site",
+    "dev:playground": "npm run serve -- playground",
     "clean": "npm run clean --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
+    "format": "npm run format --workspaces --if-present",
     "serve": "python3 -m http.server 8000",
+    "serve:examples": "cd packages/examples && python3 -m http.server 8888",
+    "version:check": "npm run version --workspaces",
     "pnpm:build": "pnpm -r build",
     "pnpm:test": "pnpm -r test",
     "pnpm:dev": "pnpm -r --parallel dev",
@@ -35,8 +42,18 @@
   "keywords": [
     "larc",
     "pan",
+    "page-area-network",
     "message-bus",
     "web-components",
+    "custom-elements",
+    "event-bus",
+    "pubsub",
+    "reactive",
+    "zero-dependencies",
+    "zero-build",
+    "microfrontends",
+    "microservices",
+    "component-framework",
     "monorepo"
   ],
   "author": "Chris Robison",
@@ -44,6 +61,14 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/larcjs/larc.git"
+  },
+  "homepage": "https://larcjs.com",
+  "bugs": {
+    "url": "https://github.com/larcjs/larc/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "devDependencies": {}
 }
