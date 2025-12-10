@@ -1,0 +1,76 @@
+name: Generate Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/**/*.mjs'
+      - 'docs/**/*.md'
+      - 'README.md'
+      - '.github/workflows/generate-docs.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-docs:
+    name: Generate API Documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install --workspace=@larcjs/site
+
+      - name: Generate API Documentation
+        working-directory: docs/site
+        run: |
+          echo "📚 Generating API documentation from JSDoc comments..."
+          node generate-docs.mjs
+
+      - name: Generate Markdown Documentation
+        working-directory: docs/site
+        run: |
+          echo "📝 Converting Markdown files to HTML..."
+          node render-markdown.mjs
+
+      - name: Check for Documentation Changes
+        id: check_changes
+        run: |
+          git add docs/site/api docs/site/docs docs/site/api-index.html
+          if git diff --cached --quiet; then
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "✓ No documentation changes detected"
+          else
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "✓ Documentation changes detected"
+          fi
+
+      - name: Commit Documentation Updates
+        if: steps.check_changes.outputs.changes == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git commit -m "docs: auto-generate API and markdown documentation [skip ci]"
+          git push
+
+      - name: Summary
+        run: |
+          echo "### Documentation Generation Complete ✅" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- API docs generated from JSDoc comments" >> $GITHUB_STEP_SUMMARY
+          echo "- Markdown files converted to HTML" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ steps.check_changes.outputs.changes }}" == "true" ]; then
+            echo "- Changes committed and pushed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- No changes to commit" >> $GITHUB_STEP_SUMMARY
+          fi

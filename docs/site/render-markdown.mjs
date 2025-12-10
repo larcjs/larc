@@ -12,8 +12,8 @@ import { join, relative, dirname, basename, extname } from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const rootDir = join(__dirname, '..');
-const siteDir = join(rootDir, 'site');
+const rootDir = join(__dirname, '..', '..');
+const siteDir = __dirname;
 const docsDir = join(siteDir, 'docs');
 
 // Ensure docs directory exists
