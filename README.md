@@ -2,6 +2,13 @@
 
 **Lightweight Asynchronous Relay Core** - A minimal, message-based framework for building reactive web applications with zero dependencies.
 
+[![npm version](https://img.shields.io/npm/v/@larcjs/core?label=%40larcjs%2Fcore&color=blue)](https://www.npmjs.com/package/@larcjs/core)
+[![npm version](https://img.shields.io/npm/v/@larcjs/components?label=%40larcjs%2Fcomponents&color=blue)](https://www.npmjs.com/package/@larcjs/components)
+[![npm downloads](https://img.shields.io/npm/dm/@larcjs/core?label=downloads)](https://www.npmjs.com/package/@larcjs/core)
+[![CI Status](https://github.com/larcjs/larc/actions/workflows/core-tests.yml/badge.svg)](https://github.com/larcjs/larc/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
+
 ## 📦 Using LARC in Your App
 
 LARC provides a lightweight messaging bus and component library for building modern web applications. Perfect for microfront ends, event-driven architectures, and composable UIs.
