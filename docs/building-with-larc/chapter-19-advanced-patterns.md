@@ -1,4 +1,4 @@
-# Chapter 19: Advanced Patterns
+# Advanced Patterns
 
 > "Any sufficiently advanced technology is indistinguishable from magic. Any sufficiently advanced LARC pattern is indistinguishable from over-engineering." — Clarke's Third Law, Revised
 
@@ -59,15 +59,15 @@ class BidirectionalBridge extends Component {
     this.busA = busA;
     this.busB = busB;
     this.config = {
-      aToB: config.aToB || ['*'], // Types to forward A → B
-      bToA: config.bToA || ['*'], // Types to forward B → A
+      aToB: config.aToB || ['*'], // Types to forward A -> B
+      bToA: config.bToA || ['*'], // Types to forward B -> A
       transform: config.transform || ((data) => data), // Transform data
       filter: config.filter || (() => true) // Filter messages
     };
   }
 
   init() {
-    // Forward A → B
+    // Forward A -> B
     this.config.aToB.forEach(type => {
       this.busA.on(type, (data) => {
         if (this.config.filter(type, data, 'aToB')) {
@@ -77,7 +77,7 @@ class BidirectionalBridge extends Component {
       });
     });
 
-    // Forward B → A
+    // Forward B -> A
     this.config.bToA.forEach(type => {
       this.busB.on(type, (data) => {
         if (this.config.filter(type, data, 'bToA')) {

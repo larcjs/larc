@@ -1,4 +1,4 @@
-# Appendix E: Recipes and Patterns
+# Recipes and Patterns
 
 This appendix provides practical, copy-paste-ready solutions for common LARC development scenarios. Each recipe demonstrates a specific technique or pattern you'll encounter when building real applications. Use these as starting points, adapting them to your specific requirements.
 
@@ -402,7 +402,7 @@ class SearchInput extends HTMLElement {
     this.innerHTML = `
       <div class="search-wrapper">
         <input type="search" placeholder="Search...">
-        <span class="spinner" style="display: none;">⏳</span>
+        <span class="spinner" style="display: none;">[hourglass]</span>
       </div>
       <div class="results"></div>
     `;

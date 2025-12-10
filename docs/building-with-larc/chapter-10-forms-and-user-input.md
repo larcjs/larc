@@ -1,4 +1,4 @@
-# Chapter 10: Forms and User Input
+# Forms and User Input
 
 *In which we learn to gracefully accept data from users, who are simultaneously your application's reason for existing and its greatest source of chaos*
 
@@ -440,10 +440,10 @@ class UsernameField extends LarcComponent {
         ${this.checking ? '<span class="checking">Checking...</span>' : ''}
 
         ${this.available === true ?
-          '<span class="success">✓ Available</span>' : ''}
+          '<span class="success">[v] Available</span>' : ''}
 
         ${this.available === false ?
-          '<span class="error">✗ Username taken</span>' : ''}
+          '<span class="error">[x] Username taken</span>' : ''}
       </div>
     `;
   }

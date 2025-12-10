@@ -24,6 +24,7 @@
 **Attributes (component)**, Chapter 4, Chapter 7, Chapter 21-25
 **attributeChangedCallback()**, Chapter 7
 **Authentication**, Chapter 12
+
   - JWT tokens, Chapter 12
   - OAuth integration, Chapter 12
   - Session management, Chapter 12
@@ -36,6 +37,7 @@
 ## B
 
 **Backend integration**, Chapter 11, Appendix G
+
   - Deno, Appendix G
   - Node.js, Appendix G
   - Python/Flask, Appendix G
@@ -44,12 +46,14 @@
 **Branching logic**, Chapter 19
 **BroadcastChannel API**, Chapter 8, Chapter 13, Appendix G
 **Browser compatibility**, Chapter 5, Chapter 20
+
   - Chrome, Chapter 5
   - Edge, Chapter 5
   - Firefox, Chapter 5
   - Mobile browsers, Chapter 5
   - Safari, Chapter 5
 **Browser DevTools**, Chapter 5, Chapter 18
+
   - Chrome DevTools, Chapter 5, Chapter 18
   - Console panel, Chapter 5, Chapter 18
   - Elements panel, Chapter 5
@@ -58,6 +62,7 @@
   - Safari Web Inspector, Chapter 5
 **Bubbling (event)**, Chapter 4, Chapter 7
 **Build tools**, Chapter 1, Chapter 2, Chapter 20
+
   - Optional nature, Chapter 2
   - Production optimization, Chapter 20
   - Rollup, Chapter 20
@@ -70,6 +75,7 @@
 **Caching**, Chapter 11, Chapter 16, Chapter 20
 **CAN bus (automotive)**, Chapter 1, Chapter 3
 **CDN deployment**, Chapter 5, Chapter 20, Appendix G
+
   - jsDelivr, Chapter 5, Appendix G
   - unpkg, Chapter 5, Appendix G
 **Change detection**, Chapter 8
@@ -89,6 +95,7 @@
 **Component development guide**, Appendix G
 **Component gallery**, Appendix G
 **Component lifecycle**, Chapter 7
+
   - attributeChangedCallback, Chapter 7
   - connectedCallback, Chapter 7
   - disconnectedCallback, Chapter 7
@@ -119,6 +126,7 @@
 **CSS Custom Properties**, Chapter 15
 **CSS encapsulation**, Chapter 7, Chapter 15
 **Custom Elements**, Chapter 1, Chapter 4, Chapter 7
+
   - v1 API, Chapter 7
 **customElements.define()**, Chapter 7
 **CustomEvent**, Chapter 4, Chapter 7
@@ -129,12 +137,14 @@
 **Dashboard applications**, Chapter 19
 **Data components**, Chapter 22
 **Data fetching**, Chapter 11
+
   - Caching strategies, Chapter 11
   - Error handling, Chapter 11
   - Loading states, Chapter 11
   - Pagination, Chapter 11
 **Data validation**, Chapter 10
 **Debugging**, Chapter 5, Chapter 18
+
   - Browser DevTools, Chapter 5, Chapter 18
   - Debug mode, Chapter 4, Chapter 21
   - LARC DevTools extension, Appendix G
@@ -143,6 +153,7 @@
 **Deduplication (messages)**, Chapter 4
 **Deep linking**, Chapter 9
 **Deployment**, Chapter 20
+
   - CDN configuration, Chapter 20
   - GitHub Pages, Chapter 20, Appendix G
   - Netlify, Chapter 20, Appendix G
@@ -152,6 +163,7 @@
 **Design patterns**, Chapter 19
 **Development environment setup**, Chapter 5
 **Development server**, Chapter 5
+
   - Live Server, Chapter 5
   - PHP built-in, Chapter 5
   - Python http.server, Chapter 5
@@ -170,6 +182,7 @@
 
 **E-commerce examples**, Chapter 4, Appendix G
 **Editor configuration**, Chapter 5
+
   - JetBrains, Appendix G
   - Sublime Text, Chapter 5
   - Vim, Chapter 5
@@ -180,6 +193,7 @@
 **Enterprise Integration Patterns**, Appendix G
 **Error boundaries**, Chapter 18
 **Error handling**, Chapter 18
+
   - API errors, Chapter 11, Chapter 18
   - Global handlers, Chapter 18
   - User feedback, Chapter 18
@@ -198,6 +212,7 @@
 **Feature detection**, Chapter 5, Chapter 14
 **Fetch API**, Chapter 11
 **File management**, Chapter 14
+
   - Downloads, Chapter 14
   - Drag and drop, Chapter 14
   - OPFS integration, Chapter 14
@@ -206,6 +221,7 @@
 **Filtering (data)**, Chapter 22
 **Firefox Developer Tools**, Chapter 5
 **Form handling**, Chapter 10
+
   - Accessibility, Chapter 10
   - Custom validation, Chapter 10
   - Multi-step forms, Chapter 10
@@ -244,6 +260,7 @@
 **Infinite scroll**, Chapter 22
 **Initial state loading**, Chapter 8
 **Installation options**, Chapter 5
+
   - CDN, Chapter 5
   - Git clone, Chapter 5
   - NPM, Chapter 5
@@ -286,6 +303,7 @@
 **Markdown editor**, Chapter 23
 **Memory management**, Chapter 4, Chapter 16, Chapter 21
 **Message bus**, Chapter 4, Chapter 21
+
   - Configuration, Chapter 4, Chapter 21
   - Debug mode, Chapter 4
   - Initialization, Chapter 5
@@ -318,6 +336,7 @@
 ## N
 
 **Naming conventions**
+
   - Components, Chapter 1, Chapter 7
   - Topics, Chapter 4, Appendix A
 **Navigation**, Chapter 9
@@ -336,6 +355,7 @@
 **Offline support**, Chapter 14, Chapter 20
 **Optimistic updates**, Chapter 11
 **Optimization**, Chapter 16, Chapter 20
+
   - Bundle size, Chapter 16, Chapter 20
   - Code splitting, Chapter 16, Chapter 20
   - Image optimization, Chapter 16
@@ -349,6 +369,7 @@
 **Pagination**, Chapter 11, Chapter 22
 **PAN (Page Area Network)**, Chapter 1, Chapter 3, Chapter 4
 **pan-bus component**, Chapter 4, Chapter 21
+
   - Attributes, Chapter 21
   - Configuration, Chapter 4, Chapter 21
   - Events, Chapter 21
@@ -369,6 +390,7 @@
 **pan:sys.stats**, Chapter 4, Chapter 21
 **Pattern matching (topics)**, Chapter 4
 **Performance optimization**, Chapter 16
+
   - Benchmarking, Chapter 16
   - Core Web Vitals, Chapter 16
   - Lazy loading, Chapter 16
@@ -404,6 +426,7 @@
 **React comparison**, Chapter 2
 **Reactive patterns**, Chapter 8, Appendix G
 **Real-time features**, Chapter 13
+
   - Presence tracking, Chapter 13
   - Server-Sent Events, Chapter 13
   - WebSocket integration, Chapter 13
@@ -424,6 +447,7 @@
 **Resources**, Appendix G
 **REST API design**, Chapter 11, Appendix G
 **Retained messages**, Chapter 4, Chapter 8
+
   - LRU eviction, Chapter 4
   - Memory limits, Chapter 4
   - State synchronization, Chapter 8
@@ -431,6 +455,7 @@
 **RFC process**, Appendix G
 **Roadmap**, Appendix G
 **Routing**, Chapter 9
+
   - Client-side, Chapter 9
   - Hash routing, Chapter 9
   - History API, Chapter 9
@@ -445,6 +470,7 @@
 **Scaffolding tools**, Chapter 5, Appendix G
 **Scope (component)**, Chapter 7, Chapter 15
 **Security**, Chapter 12, Chapter 20
+
   - Authentication, Chapter 12
   - Authorization, Chapter 12
   - CSP, Chapter 20
@@ -455,6 +481,7 @@
 **Session management**, Chapter 12
 **Setup**, Chapter 5
 **Shadow DOM**, Chapter 1, Chapter 5, Chapter 7, Chapter 15
+
   - CSS encapsulation, Chapter 15
   - Debugging, Chapter 5
   - Styling, Chapter 15
@@ -467,6 +494,7 @@
 **Sorting (data)**, Chapter 22
 **Stack Overflow**, Appendix G
 **State management**, Chapter 8
+
   - Cross-tab sync, Chapter 8
   - Local state, Chapter 8
   - Persistent state, Chapter 8
@@ -495,6 +523,7 @@
 **Task list example**, Chapter 4, Chapter 5
 **Templates (HTML)**, Chapter 7
 **Testing**, Chapter 17
+
   - Component testing, Chapter 17
   - E2E testing, Chapter 17
   - Integration testing, Chapter 17
@@ -503,6 +532,7 @@
 **Testing resources**, Appendix G
 **Theme switching**, Chapter 15
 **Theming**, Chapter 15
+
   - CSS Custom Properties, Chapter 15
   - Dark mode, Chapter 15
   - System preferences, Chapter 15
@@ -519,6 +549,7 @@
 **Training resources**, Appendix G
 **Tree shaking**, Chapter 20
 **Troubleshooting**, Chapter 5, Chapter 18
+
   - Component loading, Chapter 5
   - CORS errors, Chapter 5
   - Message delivery, Chapter 5
@@ -563,6 +594,7 @@
 ## W
 
 **Web Components**, Chapter 1, Chapter 4, Chapter 7, Appendix G
+
   - Browser support, Chapter 5
   - Custom Elements, Chapter 7
   - HTML Templates, Chapter 7
@@ -592,6 +624,7 @@
 ## Z
 
 **Zero-build development**, Chapter 1, Chapter 2, Chapter 5
+
   - Philosophy, Chapter 2
   - Workflow, Chapter 5
 
@@ -610,12 +643,14 @@
 ## Components Quick Reference
 
 **Core Components** (Chapter 21)
+
 - pan-bus
 - pan-theme-provider
 - pan-theme-toggle
 - pan-routes
 
 **Data Components** (Chapter 22)
+
 - pan-store
 - pan-storage
 - pan-data-table
@@ -624,6 +659,7 @@
 - pan-sort
 
 **UI Components** (Chapter 23)
+
 - pan-button
 - pan-card
 - pan-modal
@@ -633,6 +669,7 @@
 - pan-markdown-editor
 
 **Integration Components** (Chapter 24)
+
 - pan-http
 - pan-websocket
 - pan-sse
@@ -640,6 +677,7 @@
 - pan-analytics
 
 **Utility Components** (Chapter 25)
+
 - pan-logger
 - pan-validator
 - pan-debounce

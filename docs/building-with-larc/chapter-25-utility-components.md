@@ -1,4 +1,4 @@
-# Chapter 25: Utility Components
+# Utility Components
 
 > "The best debugging tool is still careful thought, coupled with judiciously placed print statements."
 >
@@ -28,6 +28,7 @@ Think of it as flight data recorder for your message bus. When something goes wr
 ### When to Use
 
 **Use `pan-debug` when:**
+
 - Debugging routing issues or missing messages
 - Profiling message throughput and patterns
 - Investigating performance bottlenecks in message handling
@@ -35,6 +36,7 @@ Think of it as flight data recorder for your message bus. When something goes wr
 - Diagnosing production issues (with sampling to minimize overhead)
 
 **Don't use `pan-debug` when:**
+
 - Building production applications (unless explicitly needed for diagnostics)
 - Memory is constrained (trace buffer can grow large)
 - You need real-time streaming of every message (sampling is more appropriate)
@@ -557,7 +559,7 @@ if (window.location.hostname !== 'localhost') {
       const stats = debug.getStats();
 
       document.getElementById('status').innerHTML =
-        `Enabled: ${stats.enabled ? '✓' : '✗'}<br>` +
+        `Enabled: ${stats.enabled ? '[v]' : '[x]'}<br>` +
         `Messages: ${stats.messageCount}`;
 
       document.getElementById('buffer').innerHTML =
@@ -719,6 +721,7 @@ Think of it as a bridge between LARC's in-browser message bus and the wider worl
 ### When to Use
 
 **Use `pan-forwarder` when:**
+
 - Synchronizing local actions to a server (chat messages, collaborative editing)
 - Logging client events to analytics or monitoring systems
 - Triggering server-side workflows from browser actions
@@ -726,6 +729,7 @@ Think of it as a bridge between LARC's in-browser message bus and the wider worl
 - Building multi-client synchronization
 
 **Don't use `pan-forwarder` when:**
+
 - You need request-response patterns (use `pan-xhr` or `fetch` directly)
 - Messages contain sensitive data and your endpoint isn't secured
 - You're forwarding high-frequency messages without throttling

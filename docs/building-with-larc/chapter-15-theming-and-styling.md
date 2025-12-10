@@ -1,4 +1,4 @@
-# Chapter 15: Theming and Styling
+# Theming and Styling
 
 > "CSS is the only language where two plus two equals five, sometimes three, and occasionally 'align-items: center' doesn't actually center things."
 >
@@ -452,21 +452,21 @@ class ThemeSwitcher extends HTMLElement {
           data-theme="light"
           aria-label="Light theme"
         >
-          ☀️ Light
+          [sun] Light
         </button>
         <button
           class="theme-switcher__button ${this.currentTheme === 'dark' ? 'active' : ''}"
           data-theme="dark"
           aria-label="Dark theme"
         >
-          🌙 Dark
+          [moon] Dark
         </button>
         <button
           class="theme-switcher__button ${this.currentTheme === 'system' ? 'active' : ''}"
           data-theme="system"
           aria-label="System theme"
         >
-          💻 System
+          [laptop] System
         </button>
       </div>
     `;
@@ -540,6 +540,7 @@ Switching themes can be jarring. Let's add smooth transitions:
 /* theme/transitions.css */
 
 /* Transition all themed properties */
+
 * {
   transition:
     background-color var(--transition-base),
@@ -555,6 +556,7 @@ Switching themes can be jarring. Let's add smooth transitions:
 
 /* Respect user preference for reduced motion */
 @media (prefers-reduced-motion: reduce) {
+
   * {
     transition: none !important;
   }
@@ -766,11 +768,13 @@ Don't transition everything:
 
 ```css
 /* Bad: transitions on every property */
+
 * {
   transition: all var(--transition-base);
 }
 
 /* Good: transition only themed properties */
+
 * {
   transition:
     background-color var(--transition-base),
@@ -852,6 +856,7 @@ Use tools like WebAIM's contrast checker. Aim for:
 
 ```css
 @media (prefers-reduced-motion: reduce) {
+
   * {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;

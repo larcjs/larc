@@ -1,4 +1,4 @@
-# Chapter 21: Core Components Reference
+# Core Components Reference
 
 > "Good API documentation is like a lighthouse: it doesn't just show you where you are, it shows you where you can go."
 >
@@ -28,12 +28,14 @@ Every LARC application needs exactly one `pan-bus` instance, typically placed in
 ### When to Use
 
 **Use `pan-bus` when:**
+
 - Building any LARC application (it's foundational)
 - You need decoupled component communication
 - You want components to react to application state changes without direct coupling
 - You're implementing request-response patterns between components
 
 **Don't use `pan-bus` when:**
+
 - Building a pure static site with no interactivity
 - All your components can communicate through direct DOM manipulation (though PAN is usually better)
 
@@ -624,12 +626,14 @@ The provider supports three theme modes: `light`, `dark`, and `auto`. In auto mo
 ### When to Use
 
 **Use `pan-theme-provider` when:**
+
 - Your application supports light and dark themes
 - You want to respect user system preferences
 - You need coordinated theme switching across multiple components
 - You're building a theme-aware component library
 
 **Don't use `pan-theme-provider` when:**
+
 - Your application has only one fixed theme
 - You're implementing a custom theme system that goes beyond light/dark
 
@@ -995,11 +999,13 @@ The toggle supports three visual variants: icon-only, button with label, and dro
 ### When to Use
 
 **Use `pan-theme-toggle` when:**
+
 - You want to provide users control over theme preferences
 - You need a quick, accessible way to switch themes
 - You're building a settings panel or toolbar
 
 **Don't use `pan-theme-toggle` when:**
+
 - You want themes to be automatic only (use only `pan-theme-provider`)
 - You're implementing custom theme controls with different UX
 
@@ -1105,7 +1111,7 @@ The toggle doesn't emit custom events. Theme changes are communicated through `p
     <label>Language</label>
     <select>
       <option>English</option>
-      <option>Español</option>
+      <option>Espanol</option>
     </select>
   </div>
 </div>
@@ -1227,6 +1233,7 @@ Note that `pan-routes` is not a URL router (for that, see Chapter 9). It's a mes
 ### When to Use
 
 **Use `pan-routes` when:**
+
 - You need to transform or redirect messages based on content
 - You're implementing cross-cutting concerns (logging, analytics, monitoring)
 - You want to decouple message producers from consumers
@@ -1234,6 +1241,7 @@ Note that `pan-routes` is not a URL router (for that, see Chapter 9). It's a mes
 - You need conditional message routing based on complex predicates
 
 **Don't use `pan-routes` when:**
+
 - Simple direct pub-sub suffices for your needs
 - You need URL/navigation routing (use client-side router instead)
 - The added complexity isn't justified by your use case
@@ -1327,7 +1335,7 @@ routes.add({
     {
       type: 'LOG',
       level: 'warn',
-      template: 'High temp: {{payload.temperature}}°C'
+      template: 'High temp: {{payload.temperature}} degreesC'
     }
   ]
 });

@@ -1,4 +1,4 @@
-# Chapter 16: Performance Optimization
+# Performance Optimization
 
 > "Premature optimization is the root of all evil. But shipping a slow application is the root of losing all your users."
 >

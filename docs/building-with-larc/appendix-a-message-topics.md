@@ -1,4 +1,4 @@
-# Appendix A: Message Topics Reference
+# Message Topics Reference
 
 This appendix provides a comprehensive reference for LARC message topic conventions. Topics are the fundamental addressing mechanism in LARC applications—they determine how messages are routed, who receives them, and how components interact. Understanding topic patterns is essential for building scalable, maintainable LARC applications.
 
@@ -34,6 +34,7 @@ This three-segment format provides clarity while remaining flexible enough for v
 ### Naming Rules
 
 **Case and Separators:**
+
 - Use lowercase letters only
 - Separate segments with dots (`.`)
 - Use hyphens (`-`) within a segment if needed: `auth.two-factor.verify`
@@ -659,7 +660,7 @@ const response = await client.request('users.item.save', {
 - Use underscores or camelCase
 - Use abbreviations that sacrifice clarity
 - Mix naming conventions
-- Use verbs for events (`users.update` ❌ → `users.updated` ✅)
+- Use verbs for events (`users.update` [X] -> `users.updated` [check])
 - Overuse wildcards (`*` matches everything)
 
 ### Topic Catalog

@@ -137,6 +137,8 @@ appendix-e-recipes-and-patterns.md
 appendix-f-glossary.md
 appendix-g-resources.md
 index.md
+colophon.md
+back-cover.md
 EOF
 
     echo -e "${GREEN}✓ Book order created${NC}"
@@ -231,11 +233,11 @@ build_epub() {
     echo -e "${BLUE}Building EPUB version...${NC}"
 
     # Create cover page if it doesn't exist
-    if [ ! -f "${BOOK_DIR}/cover.png" ]; then
-        echo -e "${YELLOW}No cover image found (cover.png), skipping cover...${NC}"
+    if [ ! -f "${BOOK_DIR}/front-cover.png" ]; then
+        echo -e "${YELLOW}No cover image found (front-cover.png), skipping cover...${NC}"
         COVER_ARG=""
     else
-        COVER_ARG="--epub-cover-image=${BOOK_DIR}/cover.png"
+        COVER_ARG="--epub-cover-image=${BOOK_DIR}/front-cover.png"
     fi
 
     pandoc \

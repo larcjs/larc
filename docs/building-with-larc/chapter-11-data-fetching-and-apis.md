@@ -1,4 +1,4 @@
-# Chapter 11: Data Fetching and APIs
+# Data Fetching and APIs
 
 *In which we learn to retrieve data from distant servers without losing our minds (or our users' patience)*
 

@@ -1,4 +1,4 @@
-# Chapter 13: Real-time Features
+# Real-time Features
 
 *In which we discover that the web doesn't have to reload every time something changes, explore the art of pushing data instead of polling, and learn that "real-time" doesn't mean "instantly"—it means "fast enough that users stop complaining."*
 
@@ -394,7 +394,7 @@ class NotificationFeed extends Component {
     return html`
       <div class="notification-feed">
         <div class="connection-status ${isConnected ? 'connected' : 'disconnected'}">
-          ${isConnected ? '● Connected' : '○ Disconnected'}
+          ${isConnected ? '* Connected' : 'o Disconnected'}
         </div>
 
         <div class="notifications">
@@ -406,7 +406,7 @@ class NotificationFeed extends Component {
                   class="dismiss"
                   onclick="${() => this.dismissNotification(notification.id)}"
                 >
-                  ×
+                  x
                 </button>
               </div>
               <div class="notification-body">
@@ -757,7 +757,7 @@ class ActivityFeed extends Component {
         <div class="feed-header">
           <h3>Activity Feed</h3>
           <span class="status ${isConnected ? 'live' : 'offline'}">
-            ${isConnected ? '● Live' : '○ Offline'}
+            ${isConnected ? '* Live' : 'o Offline'}
           </span>
         </div>
 

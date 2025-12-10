@@ -1,4 +1,4 @@
-# Chapter 7: Working with Components
+# Working with Components
 
 > "Give a developer a component, and they'll build a page. Teach a developer to build components, and they'll build an empire—or at least a reasonably maintainable SPA."
 >
@@ -357,7 +357,7 @@ class CartBadge extends HTMLElement {
   render() {
     this.innerHTML = `
       <div class="cart-badge">
-        🛒 ${this.itemCount}
+        [cart] ${this.itemCount}
       </div>
     `;
   }
@@ -729,7 +729,7 @@ class AccessibleDialog extends HTMLElement {
     this.innerHTML = `
       <div class="dialog-overlay">
         <div class="dialog-content">
-          <button class="dialog-close" aria-label="Close dialog">×</button>
+          <button class="dialog-close" aria-label="Close dialog">x</button>
           <slot></slot>
         </div>
       </div>

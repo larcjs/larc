@@ -1,4 +1,4 @@
-# Chapter 24: Integration Components
+# Integration Components
 
 *In which we bridge the gap between LARC applications and the outside world—REST APIs, GraphQL servers, WebSocket streams, and Server-Sent Events—without losing our composure or our data*
 
@@ -26,6 +26,7 @@ The connector listens for request topics like `${resource}.list.get` and `${reso
 ### When to Use
 
 **Use `pan-data-connector` when:**
+
 - Working with RESTful APIs that follow standard CRUD patterns
 - You want declarative data fetching without writing fetch() calls in every component
 - You need automatic state synchronization across multiple components
@@ -33,6 +34,7 @@ The connector listens for request topics like `${resource}.list.get` and `${reso
 - Your API uses predictable URL patterns (e.g., `/api/users`, `/api/users/:id`)
 
 **Don't use `pan-data-connector` when:**
+
 - Your API doesn't follow REST conventions (use custom fetch() or build a specialized connector)
 - You need fine-grained control over request timing and caching
 - Your endpoints use non-standard HTTP methods or complex request patterns
@@ -507,6 +509,7 @@ This component is ideal for applications that interact with GraphQL APIs while m
 ### When to Use
 
 **Use `pan-graphql-connector` when:**
+
 - Your backend uses GraphQL instead of REST
 - You want to leverage GraphQL's flexible query structure
 - You need to fetch nested or related data in a single request
@@ -514,6 +517,7 @@ This component is ideal for applications that interact with GraphQL APIs while m
 - You're building against existing GraphQL services (GitHub, Shopify, etc.)
 
 **Don't use `pan-graphql-connector` when:**
+
 - Your backend uses REST (use `pan-data-connector`)
 - You need real-time subscriptions (use `pan-websocket` with GraphQL subscription protocol)
 - Your queries are so dynamic that templating won't work (write custom GraphQL clients)
@@ -807,6 +811,7 @@ This enables real-time, full-duplex communication patterns: chat applications, l
 ### When to Use
 
 **Use `pan-websocket` when:**
+
 - You need bidirectional real-time communication
 - Both client and server need to initiate messages
 - You're building chat, collaboration, or multiplayer features
@@ -814,6 +819,7 @@ This enables real-time, full-duplex communication patterns: chat applications, l
 - Your server supports WebSocket protocol
 
 **Don't use `pan-websocket` when:**
+
 - You only need server-to-client updates (use `pan-sse` for simplicity)
 - Your infrastructure doesn't support WebSocket (some proxies block them)
 - You're working with simple request-response patterns (use `pan-data-connector`)
@@ -1234,6 +1240,7 @@ SSE is ideal for live feeds, notification streams, real-time dashboards, and any
 ### When to Use
 
 **Use `pan-sse` when:**
+
 - You only need server-to-client real-time updates
 - Your infrastructure doesn't support WebSocket
 - You want automatic reconnection built into the browser
@@ -1241,6 +1248,7 @@ SSE is ideal for live feeds, notification streams, real-time dashboards, and any
 - You're building live feeds, notifications, or monitoring dashboards
 
 **Don't use `pan-sse` when:**
+
 - You need bidirectional communication (use `pan-websocket`)
 - You need to send frequent client-to-server messages (SSE doesn't support that)
 - Your server doesn't support persistent HTTP connections

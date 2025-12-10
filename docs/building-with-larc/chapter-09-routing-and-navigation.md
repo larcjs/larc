@@ -1,4 +1,4 @@
-# Chapter 9: Routing and Navigation
+# Routing and Navigation
 
 *In which we learn to guide users through our applications without getting lost in the woods (or the browser's back button)*
 
@@ -437,7 +437,7 @@ navigate('/login', { replace: true });
 
 Replace is useful for:
 
-- Redirect chains (login → loading → dashboard)
+- Redirect chains (login -> loading -> dashboard)
 - Temporary states (splash screens, loading views)
 - Fixing invalid URLs (redirect /old-path to /new-path)
 

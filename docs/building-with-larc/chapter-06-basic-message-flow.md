@@ -1,4 +1,4 @@
-# Chapter 6: Basic Message Flow
+# Basic Message Flow
 
 > "In the beginning was the Message, and the Message was with the Bus, and the Message was the Bus. And the Bus said, 'Let there be publish-subscribe,' and there was publish-subscribe, and it was good—mostly because it avoided callback hell."
 >

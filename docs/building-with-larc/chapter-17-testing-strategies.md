@@ -1,4 +1,4 @@
-# Chapter 17: Testing Strategies
+# Testing Strategies
 
 > "Testing shows the presence, not the absence of bugs. But not testing shows the presence of unemployment."
 >
@@ -27,6 +27,7 @@ The testing pyramid guides our testing strategy:
   /------------------\- Medium speed
  /                    \
 /______________________\ Unit Tests (Many)
+
     - Single components
     - Pure functions
     - Fast, focused

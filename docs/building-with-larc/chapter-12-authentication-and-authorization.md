@@ -1,4 +1,4 @@
-# Chapter 12: Authentication and Authorization
+# Authentication and Authorization
 
 *In which we learn to keep the riffraff out, manage who gets to do what, and discover that security is less like a lock and more like an onion—layered, sometimes makes you cry, and absolutely essential.*
 

@@ -1,4 +1,4 @@
-# Chapter 3: The LARC Story
+# The LARC Story
 
 *Or: How We Learned to Stop Worrying and Love Asynchronous Components*
 

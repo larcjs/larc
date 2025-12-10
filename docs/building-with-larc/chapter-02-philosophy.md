@@ -1,4 +1,4 @@
-# Chapter 2: The Philosophy of LARC
+# The Philosophy of LARC
 
 ## Introduction: Why Another Approach?
 
@@ -437,7 +437,7 @@ Build configurations break:
 
 Build steps add friction to development:
 
-- Edit code → wait for rebuild → refresh browser
+- Edit code -> wait for rebuild -> refresh browser
 - Build errors interrupt flow
 - Debugging transpiled code is harder
 - Hot module replacement adds complexity
@@ -882,12 +882,14 @@ panClient.subscribe('items.*', ({ topic, data }) => {
 - **LARC**: Just publish and subscribe
 
 **When Redux is better:**
+
 - Need single source of truth
 - Complex state transformations
 - Time-travel debugging is essential
 - Team is already trained in Redux
 
 **When LARC is better:**
+
 - Loosely coupled components
 - Progressive enhancement
 - Mix of frameworks
@@ -1083,11 +1085,13 @@ class ItemList extends HTMLElement {
 - **LARC**: Framework-agnostic
 
 **When MobX is better:**
+
 - Need automatic reactivity
 - Complex computed values
 - Fine-grained updates
 
 **When LARC is better:**
+
 - Want explicit data flow
 - Need component isolation
 - Cross-framework compatibility
@@ -1475,6 +1479,7 @@ This philosophy makes trade-offs:
 - Low barrier to entry
 
 **What you give up:**
+
 - Automatic reactivity
 - Framework-specific optimizations
 - Established ecosystem

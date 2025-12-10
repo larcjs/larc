@@ -1,4 +1,4 @@
-# Chapter 20: Deployment and Production
+# Deployment and Production
 
 > "In development, everything works. In production, nothing works. In between is where your career is made." — Murphy's Law of Software Development
 
@@ -16,14 +16,14 @@ For small to medium applications, skip the build entirely:
 
 ```
 my-app/
-├── index.html
-├── app.js
-├── components/
-│   ├── header.js
-│   ├── sidebar.js
-│   └── footer.js
-└── lib/
-    └── larc.js
+|-- index.html
+|-- app.js
+|-- components/
+|   |-- header.js
+|   |-- sidebar.js
+|   `-- footer.js
+`-- lib/
+    `-- larc.js
 ```
 
 ```html

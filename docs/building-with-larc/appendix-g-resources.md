@@ -1,4 +1,4 @@
-# Appendix G: Resources
+# Resources
 
 This appendix provides a curated collection of resources for learning, using, and extending LARC. Whether you're getting started, troubleshooting a problem, or contributing to the ecosystem, these links will help you find what you need.
 
@@ -478,10 +478,10 @@ When you need assistance:
 3. **Be specific**: Include LARC version, browser, error messages, and what you've already tried
 4. **Choose the right channel**:
 
-   - Technical questions → Stack Overflow (tag: `larc`)
-   - Bug reports → GitHub Issues
-   - General discussion → GitHub Discussions or Discord
-   - Real-time help → Discord #help channel
+   - Technical questions -> Stack Overflow (tag: `larc`)
+   - Bug reports -> GitHub Issues
+   - General discussion -> GitHub Discussions or Discord
+   - Real-time help -> Discord #help channel
 
 ### Support Options
 

@@ -1,4 +1,4 @@
-# Appendix C: Configuration Options
+# Configuration Options
 
 This appendix provides a comprehensive reference for all configuration options available in LARC, from PAN bus settings to component configuration, global defaults, and environment variables. These settings control performance characteristics, security policies, feature flags, and operational behavior.
 
@@ -27,6 +27,7 @@ When this limit is exceeded, the bus evicts the least recently accessed retained
 - Large apps with extensive state: `5000-10000`
 
 **Performance Impact:**
+
 - Higher values: More memory usage, slower eviction checks
 - Lower values: Less memory, faster eviction, more message loss
 
@@ -220,6 +221,7 @@ client.subscribe('*', handler);
 ```
 
 **Features Enabled:**
+
 - Declarative routing rules
 - Message transformation
 - Message filtering
@@ -252,6 +254,7 @@ window.pan.routes.add({
 ```
 
 **Features Enabled:**
+
 - Message flow visualization
 - Delivery tracking
 - Route matching logs
@@ -817,6 +820,7 @@ document.querySelector('pan-bus').setAttribute('rate-limit', config.rateLimit);
 - [ ] Configuration documented in code comments
 
 **Performance Tuning:**
+
 - [ ] Monitor `retained` approaching `maxRetained`
 - [ ] Monitor `dropped` messages (rate limiting)
 - [ ] Monitor `errors` (validation, size limits)
@@ -832,6 +836,7 @@ document.querySelector('pan-bus').setAttribute('rate-limit', config.rateLimit);
 ## Summary
 
 **PAN Bus Core Settings:**
+
 - `max-retained` - Retained message limit (default: 1000)
 - `max-message-size` - Total message size limit (default: 1MB)
 - `max-payload-size` - Payload size limit (default: 512KB)
@@ -841,16 +846,19 @@ document.querySelector('pan-bus').setAttribute('rate-limit', config.rateLimit);
 - `debug` - Enable debug logging (default: false)
 
 **PAN Bus Features:**
+
 - `enable-routing` - Enable routing system (default: false)
 - `enable-tracing` - Enable message tracing (default: false)
 
 **PanClient Settings:**
+
 - `host` - Event dispatch element (default: document)
 - `busSelector` - Bus element selector (default: 'pan-bus')
 - `retained` - Receive retained messages (default: false)
 - `timeoutMs` - Request timeout (default: 5000ms)
 
 **Recommended Profiles:**
+
 - Development: Debug enabled, relaxed limits
 - Production: Debug disabled, strict limits
 - High-throughput: Increased limits, routing enabled

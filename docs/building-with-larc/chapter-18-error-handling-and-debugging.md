@@ -1,4 +1,4 @@
-# Chapter 18: Error Handling and Debugging
+# Error Handling and Debugging
 
 > "The only thing more satisfying than writing code that works is understanding why code that doesn't work... doesn't work." — Ancient Developer Proverb
 
@@ -71,7 +71,7 @@ class ResilientCounter extends Component {
     if (this.state.error) {
       return html`
         <div class="error-state">
-          <p>😱 Error: ${this.state.error}</p>
+          <p>[!] Error: ${this.state.error}</p>
           <button onclick=${() => this.receive('reset-error')}>
             Try Again
           </button>
@@ -141,7 +141,7 @@ class ErrorMonitor extends Component {
 
   render() {
     if (this.state.errors.length === 0) {
-      return html`<div class="error-monitor">No errors 🎉</div>`;
+      return html`<div class="error-monitor">No errors [*]</div>`;
     }
 
     return html`
@@ -181,7 +181,7 @@ const bus = createBus({
 
 // Now every message will be logged
 bus.emit('user-login', { username: 'detective' });
-// Console: [LARC] user-login → { username: 'detective' }
+// Console: [LARC] user-login -> { username: 'detective' }
 ```
 
 But debug mode in production is like wearing a tuxedo to a demolition derby—technically impressive, but not practical. Instead, implement selective tracing:
@@ -356,7 +356,7 @@ if (window.devtoolsFormatters) {
       if (!obj || !obj.__larcMessage) return null;
 
       return ['div', { style: 'color: #0066cc; font-weight: bold' },
-        ['span', {}, `📨 LARC Message: ${obj.type}`]
+        ['span', {}, `[msg] LARC Message: ${obj.type}`]
       ];
     },
     hasBody(obj) {

@@ -1,4 +1,4 @@
-# Appendix F: Glossary
+# Glossary
 
 This glossary defines technical terms, LARC-specific concepts, and web standards references used throughout this manual. Terms are presented in alphabetical order with clear definitions and, where relevant, cross-references to related concepts.
 

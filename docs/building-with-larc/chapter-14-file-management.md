@@ -1,4 +1,4 @@
-# Chapter 14: File Management
+# File Management
 
 *In which we discover that the browser can store files just like a real computer, learn that "unlimited storage" means "we'll delete your stuff if we feel like it," and find out that OPFS is the best-kept secret in modern web development.*
 
@@ -508,7 +508,7 @@ class FileBrowser extends Component {
               onclick="${this.createFolder}"
               title="New Folder"
             >
-              📁
+              [folder]
             </button>
 
             <button
@@ -517,7 +517,7 @@ class FileBrowser extends Component {
               disabled="${selectedItems.size === 0}"
               title="Delete Selected"
             >
-              🗑️
+              [trash]
             </button>
 
             <button
@@ -527,7 +527,7 @@ class FileBrowser extends Component {
               })}"
               title="Toggle View"
             >
-              ${viewMode === 'list' ? '⊞' : '☰'}
+              ${viewMode === 'list' ? '[+]' : '[menu]'}
             </button>
           </div>
         </div>
@@ -557,7 +557,7 @@ class FileBrowser extends Component {
               });
             }}"
           >
-            ${sortOrder === 'asc' ? '↑' : '↓'}
+            ${sortOrder === 'asc' ? '^' : 'v'}
           </button>
         </div>
 
@@ -569,7 +569,7 @@ class FileBrowser extends Component {
             <!-- Parent Directory Link -->
             ${currentPath !== '/' ? html`
               <div class="item directory" onclick="${this.navigateUp}">
-                <div class="item-icon">📁</div>
+                <div class="item-icon">[folder]</div>
                 <div class="item-name">..</div>
               </div>
             ` : ''}
@@ -580,7 +580,7 @@ class FileBrowser extends Component {
                 class="item directory"
                 onclick="${() => this.navigateToDirectory(dir.name)}"
               >
-                <div class="item-icon">📁</div>
+                <div class="item-icon">[folder]</div>
                 <div class="item-name">${dir.name}</div>
               </div>
             `)}
@@ -770,13 +770,13 @@ class FileBrowser extends Component {
   }
 
   private getFileIcon(type: string): string {
-    if (type.startsWith('image/')) return '🖼️';
-    if (type.startsWith('video/')) return '🎥';
-    if (type.startsWith('audio/')) return '🎵';
-    if (type.startsWith('text/')) return '📄';
-    if (type === 'application/pdf') return '📕';
-    if (type.includes('zip') || type.includes('compressed')) return '📦';
-    return '📄';
+    if (type.startsWith('image/')) return '[image]';
+    if (type.startsWith('video/')) return '[video]';
+    if (type.startsWith('audio/')) return '[audio]';
+    if (type.startsWith('text/')) return '[file]';
+    if (type === 'application/pdf') return '[PDF]';
+    if (type.includes('zip') || type.includes('compressed')) return '[package]';
+    return '[file]';
   }
 
   private formatSize(bytes: number): string {
@@ -989,7 +989,7 @@ class FileUpload extends Component<FileUploadProps> {
           onclick="${() => this.fileInputRef?.click()}"
         >
           <div class="drop-zone-content">
-            <div class="upload-icon">📤</div>
+            <div class="upload-icon">[upload]</div>
             <div class="upload-text">
               <strong>Drop files here</strong> or click to browse
             </div>
@@ -1029,12 +1029,12 @@ class FileUpload extends Component<FileUploadProps> {
                 ` : ''}
 
                 ${upload.status === 'complete' ? html`
-                  <div class="upload-status success">✓ Complete</div>
+                  <div class="upload-status success">[v] Complete</div>
                 ` : ''}
 
                 ${upload.status === 'error' ? html`
                   <div class="upload-status error">
-                    ✗ ${upload.error}
+                    [x] ${upload.error}
                   </div>
                 ` : ''}
               </div>
@@ -1262,7 +1262,7 @@ class StorageQuota extends Component {
 
         ${percentUsed > 75 ? html`
           <div class="quota-warning">
-            ⚠️ Running low on storage space. Consider cleaning up old files.
+            [warning] Running low on storage space. Consider cleaning up old files.
           </div>
         ` : ''}
       </div>
@@ -1519,21 +1519,21 @@ class FileManager extends Component {
               class="nav-item ${currentView === 'browser' ? 'active' : ''}"
               onclick="${() => this.setState({ currentView: 'browser' })}"
             >
-              📁 Browse Files
+              [folder] Browse Files
             </button>
 
             <button
               class="nav-item ${currentView === 'upload' ? 'active' : ''}"
               onclick="${() => this.setState({ currentView: 'upload' })}"
             >
-              📤 Upload
+              [upload] Upload
             </button>
 
             <button
               class="nav-item ${currentView === 'settings' ? 'active' : ''}"
               onclick="${() => this.setState({ currentView: 'settings' })}"
             >
-              ⚙️ Storage
+              [gear] Storage
             </button>
           </nav>
         </div>

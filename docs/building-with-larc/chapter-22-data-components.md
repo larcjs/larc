@@ -1,4 +1,4 @@
-# Chapter 22: Data Components
+# Data Components
 
 *In which we explore state management and persistent storage without losing track of what's true*
 

@@ -26,6 +26,7 @@ A complete book build system that converts 33 markdown files into professional H
    - Watch mode support (with fswatch)
 
 ### Documentation Files
+
 4. **`BUILD.md`** (comprehensive build guide)
    - Detailed instructions for all build options
    - Troubleshooting guide
@@ -118,6 +119,7 @@ Combines 33 files in order:
 - 1 index
 
 ### Step 5: Format Conversion
+
 - **HTML**: Pandoc → standalone HTML with TOC and CSS
 - **PDF**: Pandoc → LaTeX → pdflatex → PDF (or Prince XML)
 - **EPUB**: Pandoc → EPUB3 with metadata and TOC
@@ -158,11 +160,13 @@ Build times on Apple M1 MacBook Pro:
 ## 🛠️ Technical Stack
 
 ### Required Dependencies
+
 - **Pandoc** (2.19+) - Universal document converter
 - **pdflatex** (TeX Live) - PDF generation via LaTeX
 - **Bash** (4.0+) - Shell scripting
 
 ### Optional Dependencies
+
 - **Prince XML** - Better PDF output (commercial)
 - **fswatch** - File watching for auto-rebuild
 - **epubcheck** - EPUB validation
@@ -343,16 +347,19 @@ build_book:
 ## 🎓 Learning Path
 
 ### For First-Time Users
+
 1. Read `QUICKSTART.md`
 2. Run `./build-book.sh`
 3. Open `output/html/building-with-larc.html`
 
 ### For Customization
+
 1. Review `BUILD.md` customization section
 2. Edit `book-style.css`
 3. Rebuild with `make html view`
 
 ### For CI/CD Integration
+
 1. Review `BUILD.md` CI/CD section
 2. Copy workflow file
 3. Adapt to your environment

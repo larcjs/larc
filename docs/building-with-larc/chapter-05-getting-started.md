@@ -1,4 +1,4 @@
-# Chapter 5: Getting Started
+# Getting Started
 
 Welcome to the hands-on portion of *Building with LARC*. This chapter takes you from zero to running code in minutes—no elaborate setup, no dependency nightmares, just a browser, a text editor, and a way to serve static files.
 
@@ -16,6 +16,7 @@ Before you begin, make sure you have:
 - A way to serve static files (Python, PHP, Node, or any HTTP server)
 
 **Helpful but Optional:**
+
 - Git (for cloning examples)
 - Browser DevTools familiarity (Console, Network, Elements tabs)
 - Basic command-line comfort
@@ -90,6 +91,7 @@ This is LARC's "convention over configuration" approach in action.
 - Personal projects
 
 **When to avoid CDN:**
+
 - Production applications requiring optimization
 - Offline-first applications
 - Projects with strict CSP policies
@@ -172,6 +174,7 @@ This gives you:
 - DevTools extension
 
 **When to use Git clone:**
+
 - Learning from examples
 - Contributing to LARC
 - Exploring advanced features
@@ -206,24 +209,24 @@ LARC doesn't enforce a specific structure, but here's a recommended layout:
 
 ```
 my-larc-app/
-├── index.html              # Entry point
-├── larc-config.mjs         # Path configuration (optional)
-├── src/
-│   ├── components/         # Your custom components
-│   │   ├── task-list.mjs
-│   │   ├── task-item.mjs
-│   │   └── task-form.mjs
-│   ├── utils/              # Helper functions
-│   │   ├── api.mjs
-│   │   └── storage.mjs
-│   └── styles/             # Global styles
-│       └── main.css
-├── core/                   # LARC core (if cloned)
-│   └── src/
-│       └── pan.mjs
-└── ui/                     # LARC components (if cloned)
-    └── src/
-        └── components/
+|-- index.html              # Entry point
+|-- larc-config.mjs         # Path configuration (optional)
+|-- src/
+|   |-- components/         # Your custom components
+|   |   |-- task-list.mjs
+|   |   |-- task-item.mjs
+|   |   `-- task-form.mjs
+|   |-- utils/              # Helper functions
+|   |   |-- api.mjs
+|   |   `-- storage.mjs
+|   `-- styles/             # Global styles
+|       `-- main.css
+|-- core/                   # LARC core (if cloned)
+|   `-- src/
+|       `-- pan.mjs
+`-- ui/                     # LARC components (if cloned)
+    `-- src/
+        `-- components/
 ```
 
 **Rationale:**
@@ -264,6 +267,7 @@ Create `.vscode/settings.json`:
 This enables Emmet HTML completion inside JavaScript template literals.
 
 **Recommended extensions:**
+
 - **Live Server** - Auto-reload on file changes
 - **ES6 String HTML** - Syntax highlighting in template literals
 - **ESLint** - JavaScript linting (configure for ES modules)
@@ -282,6 +286,7 @@ autocmd BufNewFile,BufRead *.mjs set filetype=javascript
 ```
 
 **WebStorm/IntelliJ:**
+
 - Built-in support for ES modules
 - Configure web server for localhost testing
 
@@ -336,7 +341,7 @@ $ php -S localhost:8000
 
 #### VS Code Extension
 
-Install "Live Server" extension, then right-click `index.html` → "Open with Live Server". Changes reload automatically.
+Install "Live Server" extension, then right-click `index.html` -> "Open with Live Server". Changes reload automatically.
 
 **Recommended for beginners:** Python (simplest) or Live Server extension (best DX)
 
@@ -358,7 +363,7 @@ LARC applications are debuggable with standard browser DevTools. Here's how to c
 **Enable useful settings:**
 
 1. Open DevTools (F12 / Cmd+Option+I)
-2. Settings (F1 / ⚙️ icon) → Experiments
+2. Settings (F1 / [gear] icon) -> Experiments
 3. Enable:
 
    - "Show user agent shadow DOM" (to inspect component internals)
@@ -404,11 +409,12 @@ card.setAttribute('theme', 'dark');
 
 Safari's Web Inspector works well for debugging:
 
-1. Enable Develop menu: Preferences → Advanced → Show Develop Menu
-2. Develop → Show Web Inspector (Cmd+Option+I)
+1. Enable Develop menu: Preferences -> Advanced -> Show Develop Menu
+2. Develop -> Show Web Inspector (Cmd+Option+I)
 3. Elements tab shows Shadow DOM boundaries clearly
 
 **Safari-specific considerations:**
+
 - OPFS not available (use IndexedDB fallback)
 - BroadcastChannel available in Safari 15.4+
 - Test iOS Safari separately (different engine version)
@@ -1068,6 +1074,7 @@ If you must support older browsers, add polyfills selectively:
 ```
 
 **Polyfill size impact:**
+
 - Web Components: ~30 KB gzipped
 - BroadcastChannel: ~5 KB gzipped
 - Total: ~35 KB for full compatibility

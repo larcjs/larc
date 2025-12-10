@@ -1,4 +1,4 @@
-# Appendix B: Event Envelope Specification
+# Event Envelope Specification
 
 This appendix provides the complete specification for LARC message envelopes—the data structures that wrap every message flowing through the PAN bus. Understanding the envelope format is critical for debugging, building tooling, and understanding how the system works at a fundamental level.
 
@@ -7,6 +7,7 @@ This appendix provides the complete specification for LARC message envelopes—t
 Every message in LARC is wrapped in an envelope that provides metadata, routing information, and payload data. The envelope follows a simple, predictable structure that balances flexibility with consistency.
 
 **Key Characteristics:**
+
 - Plain JavaScript objects (no classes or prototypes)
 - JSON-serializable (can be logged, stored, transmitted)
 - Immutable once published (bus may add fields, but won't modify existing)
@@ -87,19 +88,20 @@ The bus will enhance this to:
 **Validation:**
 ```javascript
 // Valid topics
-'users.updated'             ✓
-'nav.goto'                  ✓
-'users.item.state.123'      ✓
-'auth.two-factor.verify'    ✓
+'users.updated'             [v]
+'nav.goto'                  [v]
+'users.item.state.123'      [v]
+'auth.two-factor.verify'    [v]
 
 // Invalid topics
-''                          ✗ Empty string
-'users updated'             ✗ Contains space
-'users_updated'             ✗ Underscore (not recommended)
-null                        ✗ Not a string
+''                          [x] Empty string
+'users updated'             [x] Contains space
+'users_updated'             [x] Underscore (not recommended)
+null                        [x] Not a string
 ```
 
 **Reserved Patterns:**
+
 - `pan:*` - Reserved for PAN bus internals
 - `sys:*` - Reserved for system-level topics
 
@@ -140,18 +142,18 @@ null
 **Invalid Data:**
 ```javascript
 // Functions
-data: () => console.log('hi')    ✗
+data: () => console.log('hi')    [x]
 
 // undefined (use null instead)
-data: undefined                  ✗
+data: undefined                  [x]
 
 // Circular references
 const obj = {};
 obj.self = obj;
-data: obj                        ✗
+data: obj                        [x]
 
 // DOM nodes
-data: document.body              ✗
+data: document.body              [x]
 ```
 
 **Best Practices:**
@@ -420,6 +422,7 @@ const response = await client.request('users.item.get', { id: 123 });
 - Included in message size calculations
 
 **Common Use Cases:**
+
 - User context (userId, sessionId, tenantId)
 - Distributed tracing (traceId, spanId, parentSpanId)
 - Source tracking (source, version, environment)
@@ -709,36 +712,36 @@ The PAN bus validates messages before processing:
 
 ```javascript
 // Must be non-empty string
-topic: ''                    ✗
-topic: null                  ✗
-topic: undefined             ✗
+topic: ''                    [x]
+topic: null                  [x]
+topic: undefined             [x]
 
 // Must not be reserved
-topic: 'pan:publish'         ✗ (reserved)
-topic: 'pan:subscribe'       ✗ (reserved)
+topic: 'pan:publish'         [x] (reserved)
+topic: 'pan:subscribe'       [x] (reserved)
 
 // Valid
-topic: 'users.updated'       ✓
+topic: 'users.updated'       [v]
 ```
 
 ### Data Validation
 
 ```javascript
 // Must be JSON-serializable
-data: () => {}               ✗ (function)
-data: document.body          ✗ (DOM node)
-data: undefined              ✗ (use null)
+data: () => {}               [x] (function)
+data: document.body          [x] (DOM node)
+data: undefined              [x] (use null)
 
 const obj = {};
 obj.self = obj;
-data: obj                    ✗ (circular reference)
+data: obj                    [x] (circular reference)
 
 // Valid
-data: null                   ✓
-data: { id: 123 }            ✓
-data: [1, 2, 3]              ✓
-data: "string"               ✓
-data: 42                     ✓
+data: null                   [v]
+data: { id: 123 }            [v]
+data: [1, 2, 3]              [v]
+data: "string"               [v]
+data: 42                     [v]
 ```
 
 ### Size Validation
@@ -821,6 +824,7 @@ Response to stats request:
 - `data` (any) - JSON-serializable payload
 
 **Auto-Generated Fields:**
+
 - `id` (string) - UUID for deduplication/tracking
 - `ts` (number) - Unix timestamp in milliseconds
 

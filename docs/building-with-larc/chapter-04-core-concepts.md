@@ -1,4 +1,4 @@
-# Chapter 4: Core Concepts
+# Core Concepts
 
 ## Introduction: The Building Blocks
 
@@ -425,7 +425,7 @@ class UserList extends HTMLElement {
     this.client.subscribe('users.list.state', (msg) => {
       this.users = msg.data.users;
       this.render();
-    }, { retained: true });  // ← This is the key
+    }, { retained: true });  // <- This is the key
   }
 }
 ```
@@ -504,7 +504,7 @@ Use it like any HTML element:
 
 Components in LARC communicate through three primary patterns:
 
-**1. Attributes (Parent → Child)**
+**1. Attributes (Parent -> Child)**
 
 The standard HTML way. Parent sets attributes, child reads them:
 
@@ -526,7 +526,7 @@ class UserCard extends HTMLElement {
 }
 ```
 
-**2. Events (Child → Parent)**
+**2. Events (Child -> Parent)**
 
 Components dispatch events to notify parents of changes:
 
@@ -548,7 +548,7 @@ document.querySelector('user-card').addEventListener('user-selected', (e) => {
 });
 ```
 
-**3. Messages (Anyone → Anyone)**
+**3. Messages (Anyone -> Anyone)**
 
 For cross-cutting concerns, use the message bus:
 

@@ -1,4 +1,4 @@
-# Chapter 23: UI Components
+# UI Components
 
 > "The best components are like good appliances: they do one thing well, fit perfectly into your existing setup, and you never have to think about how they work—until you need to, and then the manual is actually helpful."
 >
@@ -565,17 +565,17 @@ The toolbar provides buttons for common markdown operations. Each button has a c
 | **I** | Italic | Ctrl+I | `*text*` |
 | **S** | Strikethrough | - | `~~text~~` |
 | H1-H3 | Headings | - | `# text` |
-| • List | Bullet list | - | `* item` |
+| * List | Bullet list | - | `* item` |
 | 1. List | Numbered list | - | `1. item` |
-| ☑ Task | Task list | - | `- [ ] task` |
-| 🔗 Link | Insert link | Ctrl+K | `[text](url)` |
-| 🖼️ Image | Insert image | - | `![alt](url)` |
+| [v] Task | Task list | - | `- [ ] task` |
+| [link] Link | Insert link | Ctrl+K | `[text](url)` |
+| [image] Image | Insert image | - | `![alt](url)` |
 | { } | Inline code | - | `` `code` `` |
 | </> | Code block | - | ` ```lang\ncode\n``` ` |
-| ❝ Quote | Blockquote | - | `> quote` |
-| ─ | Horizontal rule | - | `---` |
-| ⊞ Table | Insert table | - | Markdown table template |
-| 👁️ Preview | Toggle preview | - | Shows/hides preview pane |
+| " Quote | Blockquote | - | `> quote` |
+| - | Horizontal rule | - | `---` |
+| [+] Table | Insert table | - | Markdown table template |
+| [eye] Preview | Toggle preview | - | Shows/hides preview pane |
 
 ### Keyboard Shortcuts
 
@@ -1135,9 +1135,9 @@ The simplest example:
 
 | Feature | Supported | Version |
 |---------|-----------|---------|
-| Import  | ✅ | 1.0 |
-| Export  | ✅ | 1.0 |
-| Sync    | ⏳ | 2.0 |`
+| Import  | [check] | 1.0 |
+| Export  | [check] | 1.0 |
+| Sync    | [hourglass] | 2.0 |`
       };
 
       // Navigation
@@ -1249,7 +1249,7 @@ Cause: Table markdown must follow strict formatting with alignment rows.
 Solution: Ensure tables have a header separator row:
 ```markdown
 | Header 1 | Header 2 |
-|----------|----------|  ← Required separator
+|----------|----------|  <- Required separator
 | Cell 1   | Cell 2   |
 ```
 
@@ -1293,7 +1293,7 @@ The three components work best when integrated together. Here are common pattern
 ### Pattern 1: Markdown Note-Taking App
 
 ```javascript
-// Connect file selection → editor → auto-save → file storage
+// Connect file selection -> editor -> auto-save -> file storage
 bus.subscribe('file.selected', (msg) => {
   bus.publish('file.load', { path: msg.data.path });
 });

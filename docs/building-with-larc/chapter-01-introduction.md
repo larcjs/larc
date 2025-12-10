@@ -1,4 +1,4 @@
-# Chapter 1: Introduction
+# Introduction
 
 Welcome to *Building with LARC: A Reference Manual*, your comprehensive guide to the Lightweight Asynchronous Relay Core framework. If you're holding this book (or reading it on a screen, as modern humans do), you're about to dive into one of the most refreshingly simple yet surprisingly powerful approaches to building web applications. No, we're not overselling it. Well, maybe a little. But stick with us.
 

@@ -1,4 +1,4 @@
-# Chapter 8: State Management
+# State Management
 
 > "There are only two hard things in Computer Science: cache invalidation, naming things, and state management."
 >

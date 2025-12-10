@@ -236,6 +236,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y pandoc texlive-xetex
+
       - name: Build book
         run: |
           cd docs/building-with-larc

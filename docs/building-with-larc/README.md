@@ -44,6 +44,7 @@ npm run build
 ### Part I: Foundations
 
 **[Chapter 1: Introduction](chapter-01-introduction.md)** (2,335 words)
+
 - What is LARC?
 - Who should use this book
 - How to use this book
@@ -52,6 +53,7 @@ npm run build
 - Book conventions and notation
 
 **[Chapter 2: The Philosophy of LARC](chapter-02-philosophy.md)** (5,122 words)
+
 - The state management crisis
 - Message-passing architecture
 - DOM-native communication principles
@@ -60,6 +62,7 @@ npm run build
 - Comparison to other approaches (Redux, Vuex, MobX, Context API)
 
 **[Chapter 3: The LARC Story](chapter-03-story.md)** (3,400 words)
+
 - Origins and motivation
 - Design decisions and trade-offs
 - Evolution of the PAN (Page Area Network) concept
@@ -67,6 +70,7 @@ npm run build
 - Community and ecosystem
 
 **[Chapter 4: Core Concepts](chapter-04-core-concepts.md)** (5,000+ words)
+
 - Message bus architecture
 - Pub/sub pattern in depth
 - Topics and routing
@@ -76,6 +80,7 @@ npm run build
 - Event envelopes and metadata
 
 **[Chapter 5: Getting Started](chapter-05-getting-started.md)** (4,100 words)
+
 - Installation and setup
 - Project structure recommendations
 - Development environment
@@ -88,6 +93,7 @@ npm run build
 ### Part II: Building Applications
 
 **[Chapter 6: Basic Message Flow](chapter-06-basic-message-flow.md)** (3,936 words)
+
 - Publishing messages
 - Subscribing to topics
 - Wildcard patterns
@@ -95,6 +101,7 @@ npm run build
 - Unsubscribing and cleanup
 
 **[Chapter 7: Working with Components](chapter-07-working-with-components.md)** (4,203 words)
+
 - Creating web components
 - Component lifecycle
 - Shadow DOM considerations
@@ -103,6 +110,7 @@ npm run build
 - Reusable component design
 
 **[Chapter 8: State Management](chapter-08-state-management.md)** (4,448 words)
+
 - Local vs. shared state
 - State persistence strategies
 - IndexedDB integration
@@ -111,6 +119,7 @@ npm run build
 - Conflict resolution
 
 **[Chapter 9: Routing and Navigation](chapter-09-routing-and-navigation.md)** (4,000 words)
+
 - Client-side routing with pan-routes
 - Route definitions and patterns
 - Navigation guards
@@ -119,6 +128,7 @@ npm run build
 - SEO considerations
 
 **[Chapter 10: Forms and User Input](chapter-10-forms-and-user-input.md)** (4,200 words)
+
 - Form handling patterns
 - Schema-driven forms
 - Validation strategies
@@ -127,6 +137,7 @@ npm run build
 - Markdown integration
 
 **[Chapter 11: Data Fetching and APIs](chapter-11-data-fetching-and-apis.md)** (4,100 words)
+
 - REST API integration
 - GraphQL connectors
 - WebSocket communication
@@ -135,6 +146,7 @@ npm run build
 - Caching strategies
 
 **[Chapter 12: Authentication and Authorization](chapter-12-authentication-and-authorization.md)** (3,900 words)
+
 - JWT authentication patterns
 - Session management
 - Role-based access control
@@ -143,6 +155,7 @@ npm run build
 - Token refresh strategies
 
 **[Chapter 13: Real-time Features](chapter-13-realtime-features.md)** (3,800 words)
+
 - WebSocket integration
 - SSE for live updates
 - BroadcastChannel for multi-tab sync
@@ -150,6 +163,7 @@ npm run build
 - Real-time collaboration patterns
 
 **[Chapter 14: File Management](chapter-14-file-management.md)** (3,700 words)
+
 - OPFS file operations
 - File browser components
 - Upload and download
@@ -158,6 +172,7 @@ npm run build
 - Storage quotas and limits
 
 **[Chapter 15: Theming and Styling](chapter-15-theming-and-styling.md)** (3,800 words)
+
 - CSS custom properties
 - Theme system architecture
 - Light/dark mode
@@ -166,6 +181,7 @@ npm run build
 - Responsive design patterns
 
 **[Chapter 16: Performance Optimization](chapter-16-performance-optimization.md)** (4,200 words)
+
 - Message filtering and routing efficiency
 - Component lazy loading
 - Virtual scrolling for large lists
@@ -174,6 +190,7 @@ npm run build
 - Bundle size optimization
 
 **[Chapter 17: Testing Strategies](chapter-17-testing-strategies.md)** (4,500 words)
+
 - Unit testing components
 - Integration testing message flows
 - E2E testing with PAN apps
@@ -182,6 +199,7 @@ npm run build
 - Test utilities and helpers
 
 **[Chapter 18: Error Handling and Debugging](chapter-18-error-handling-and-debugging.md)** (4,100 words)
+
 - Error boundaries
 - Message tracing
 - DevTools integration
@@ -190,6 +208,7 @@ npm run build
 - Common pitfalls and solutions
 
 **[Chapter 19: Advanced Patterns](chapter-19-advanced-patterns.md)** (4,000 words)
+
 - Message forwarding and bridging
 - Multi-bus architectures
 - Backend integration strategies
@@ -198,6 +217,7 @@ npm run build
 - Middleware patterns
 
 **[Chapter 20: Deployment and Production](chapter-20-deployment-and-production.md)** (4,200 words)
+
 - Build considerations (or lack thereof)
 - CDN deployment
 - Caching strategies
@@ -210,27 +230,32 @@ npm run build
 ### Part III: Component Reference
 
 **[Chapter 21: Core Components](chapter-21-core-components.md)** (5,849 words)
+
 - **pan-bus**: Message bus with pub/sub architecture
 - **pan-theme-provider**: Theme management system
 - **pan-theme-toggle**: Theme switching UI control
 - **pan-routes**: Message routing and transformation
 
 **[Chapter 22: Data Components](chapter-22-data-components.md)** (5,100 words)
+
 - **pan-store**: Reactive state management
 - **pan-idb**: IndexedDB integration
 
 **[Chapter 23: UI Components](chapter-23-ui-components.md)** (4,138 words)
+
 - **pan-files**: File browser with OPFS
 - **pan-markdown-editor**: Rich markdown editor
 - **pan-markdown-renderer**: Markdown display
 
 **[Chapter 24: Integration Components](chapter-24-integration-components.md)** (5,977 words)
+
 - **pan-data-connector**: REST API integration
 - **pan-graphql-connector**: GraphQL client
 - **pan-websocket**: WebSocket communication
 - **pan-sse**: Server-Sent Events
 
 **[Chapter 25: Utility Components](chapter-25-utility-components.md)** (4,800 words)
+
 - **pan-debug**: Message tracing and debugging
 - **pan-forwarder**: HTTP message forwarding
 
@@ -239,41 +264,48 @@ npm run build
 ### Part IV: Appendices
 
 **[Appendix A: Message Topics Reference](appendix-a-message-topics.md)** (2,945 words)
+
 - Standard topic conventions
 - Reserved topics
 - Topic naming best practices
 - Topic hierarchy patterns
 
 **[Appendix B: Event Envelope Specification](appendix-b-event-envelope.md)** (3,186 words)
+
 - Envelope structure
 - Standard fields
 - Metadata
 - Versioning
 
 **[Appendix C: Configuration Options](appendix-c-configuration-options.md)** (3,204 words)
+
 - Bus configuration
 - Component configuration
 - Global settings
 - Environment variables
 
 **[Appendix D: Migration Guide](appendix-d-migration-guide.md)** (2,800 words)
+
 - Upgrading from older versions
 - Breaking changes
 - Deprecation notices
 - Migration patterns
 
 **[Appendix E: Recipes and Patterns](appendix-e-recipes-and-patterns.md)** (3,800 words)
+
 - Common use cases
 - Code snippets
 - Design patterns
 - Anti-patterns to avoid
 
 **[Appendix F: Glossary](appendix-f-glossary.md)** (2,600 words)
+
 - Technical terms
 - LARC-specific terminology
 - Web standards references
 
 **[Appendix G: Resources](appendix-g-resources.md)** (1,850 words)
+
 - Official documentation
 - Community links
 - Example applications
@@ -281,6 +313,7 @@ npm run build
 - Further reading
 
 **[Index](index.md)**
+
 - Comprehensive alphabetical index of all topics, APIs, components, and concepts
 
 ---

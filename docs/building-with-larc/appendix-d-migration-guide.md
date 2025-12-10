@@ -1,4 +1,4 @@
-# Appendix D: Migration Guide
+# Migration Guide
 
 This appendix helps you upgrade LARC applications across versions, navigate breaking changes, and adopt new features while maintaining stability. Whether you're moving from an early prototype to a production release or keeping pace with framework evolution, this guide provides version-specific migration paths and practical strategies.
 
@@ -161,6 +161,7 @@ connectedCallback() {
 ```
 
 **Migration Considerations:**
+
 - Global styles won't penetrate Shadow DOM
 - Use CSS custom properties for theming
 - Update selectors in tests to query shadow roots
@@ -346,6 +347,7 @@ When upgrading major versions, verify these common breaking change areas:
 - [ ] Lifecycle callback signatures
 
 **Behavior Changes:**
+
 - [ ] Attribute parsing (automatic vs. manual)
 - [ ] Default Shadow DOM usage
 - [ ] Event bubbling and cancellation
