@@ -95,8 +95,8 @@ This section is for contributors who want to work on LARC itself.
 ### Setup
 
 ```bash
-# Clone the repository with submodules
-git clone --recurse-submodules https://github.com/larcjs/larc.git
+# Clone the repository
+git clone https://github.com/larcjs/larc.git
 cd larc
 
 # Install all dependencies (npm workspaces)
@@ -110,38 +110,40 @@ pnpm install
 
 ```
 larc/
-├── core/                       → @larcjs/core (submodule)
-├── ui/                         → @larcjs/components (submodule)
-├── packages/                   → Published packages
+├── packages/                   → Published packages (npm workspaces)
+│   ├── core/                   → @larcjs/core
+│   ├── components/             → @larcjs/components
 │   ├── core-lite/              → @larcjs/core-lite (9KB)
 │   ├── core-routing/           → @larcjs/core-routing
 │   ├── core-debug/             → @larcjs/core-debug
 │   ├── core-types/             → TypeScript types
-│   └── components-types/       → TypeScript types
+│   ├── components-types/       → TypeScript types
+│   ├── apps/                   → Demo applications
+│   ├── examples/               → Code examples
+│   └── devtools/               → Chrome DevTools extension
 ├── cli/                        → create-larc-app
 ├── react-adapter/              → React integration
 ├── registry/                   → Component registry
-├── site/                       → Documentation website
-├── examples/                   → Example applications
-├── devtools/                   → Chrome DevTools extension
-└── vscode-extension/           → VS Code extension
+├── vscode-extension/           → VS Code extension
+├── docs/                       → Documentation & guides
+└── playground/                 → Interactive component explorer
 ```
 
 ### Development Workflows
 
 #### Working on Core or Components
 
-The core runtime and component library are maintained as separate submodules:
+The core runtime and component library are in the packages directory:
 
 ```bash
 # Work on core
-cd core
+cd packages/core
 npm install
 npm run build
 npm test
 
 # Work on components
-cd ui
+cd packages/components
 npm install
 npm run build
 npm test
@@ -202,10 +204,10 @@ cd packages/core-lite
 npm publish
 
 # Publish core or components
-cd core
+cd packages/core
 npm publish
 
-cd ui
+cd packages/components
 npm publish
 ```
 
@@ -213,7 +215,7 @@ npm publish
 
 ```bash
 # Serve examples locally
-cd examples
+cd packages/examples
 python3 -m http.server 8888
 # Visit http://localhost:8888
 ```
@@ -230,17 +232,6 @@ npm run build
 npm run serve
 ```
 
-### Submodule Management
-
-```bash
-# Update all submodules
-git submodule update --remote --merge
-
-# Update specific submodule
-git submodule update --remote --merge core
-git submodule update --remote --merge ui
-```
-
 ### Testing
 
 ```bash
@@ -252,7 +243,7 @@ npm run test:core
 npm run test:components
 
 # Test with coverage
-cd core
+cd packages/core
 npm run test:coverage
 ```
 
@@ -261,13 +252,14 @@ npm run test:coverage
 We welcome contributions! Here's how to get started:
 
 1. **Fork** the repository
-2. **Clone** your fork with submodules: `git clone --recurse-submodules`
-3. **Create** a feature branch: `git checkout -b feature/my-feature`
-4. **Make** your changes and add tests
-5. **Test** your changes: `npm test`
-6. **Commit** with clear messages
-7. **Push** to your fork
-8. **Submit** a pull request
+2. **Clone** your fork: `git clone https://github.com/YOUR-USERNAME/larc.git`
+3. **Install** dependencies: `npm install`
+4. **Create** a feature branch: `git checkout -b feature/my-feature`
+5. **Make** your changes and add tests
+6. **Test** your changes: `npm test`
+7. **Commit** with clear messages
+8. **Push** to your fork
+9. **Submit** a pull request
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 
@@ -318,5 +310,4 @@ MIT © LARC Contributors
 
 ---
 
-**Note:** This repository was migrated from a submodules structure to a hybrid monorepo on 2025-12-06.
-See [docs/migration/MIGRATION-COMPLETE.md](./docs/migration/MIGRATION-COMPLETE.md) for migration details.
+**Note:** This repository uses npm workspaces for monorepo management. All packages are published under the `@larcjs` npm organization.
