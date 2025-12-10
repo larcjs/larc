@@ -2,7 +2,7 @@
 
 **Last Updated:** November 25, 2024
 **Target:** Production-quality, enterprise-ready v1.x
-**Current Version:** 1.1.1 (@larcjs/core), 1.1.0 (@larcjs/components) - Published to NPM
+**Current Version:** 1.1.1 (@larcjs/core), 1.1.0 (@larcjs/ui) - Published to NPM
 
 ---
 
@@ -30,7 +30,7 @@ LARC is currently at v1.0.2 and published to NPM, but requires several critical 
 | Package | Status | Coverage | Test Files | Notes |
 |---------|--------|----------|------------|-------|
 | **@larcjs/core** | ✅ COMPLETE | 90%+ | 335 tests | Comprehensive test suite with Playwright |
-| **@larcjs/components** | ✅ COMPLETE | ~100% | 57 files | Excellent coverage already in place |
+| **@larcjs/ui** | ✅ COMPLETE | ~100% | 57 files | Excellent coverage already in place |
 
 **Progress:**
 - ✅ Test infrastructure set up (Playwright config, test-runner, test-utils)
@@ -128,7 +128,7 @@ LARC is currently at v1.0.2 and published to NPM, but requires several critical 
 
 ---
 
-### UI Package (@larcjs/components)
+### UI Package (@larcjs/ui)
 
 **Status:** ✅ EXCELLENT
 

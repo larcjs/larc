@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 #### Component Registry Updates
-- Updated component paths from `@larcjs/components` to `@larcjs/ui`
+- Updated component paths from `@larcjs/ui` to `@larcjs/ui`
 - Regenerated component registry with latest component discoveries
 - Added 8 new components to registry:
   - `pan-computed-state` - Derived state management
@@ -87,13 +87,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Published version 1.1.1 with bug fixes and improvements
 - All 261 tests passing across Chromium, Firefox, and WebKit
 
-### Components (@larcjs/components)
+### Components (@larcjs/ui)
 - Published version 1.1.0 with new state management components
 - Enhanced state management suite with cross-tab sync, offline support, and validation
 
 ### Types
 - @larcjs/core-types version 1.1.1
-- @larcjs/components-types version 1.0.2
+- @larcjs/ui-types version 1.0.2
 
 ## [1.1.0] - 2024-11-20
 

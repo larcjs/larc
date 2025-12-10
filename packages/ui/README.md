@@ -1,6 +1,6 @@
 # LARC Components
 
-[![Version](https://img.shields.io/npm/v/@larcjs/components.svg)](https://www.npmjs.com/package/@larcjs/components)
+[![Version](https://img.shields.io/npm/v/@larcjs/ui.svg)](https://www.npmjs.com/package/@larcjs/ui)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Security](https://img.shields.io/badge/security-audited-brightgreen.svg)](docs/COMPONENT_SECURITY_AUDIT.md)
 
@@ -52,7 +52,7 @@ A dashboard with sidebar, header, data table, charts, and modals:
 ## Installation
 
 ```bash
-npm install @larcjs/components @larcjs/core
+npm install @larcjs/ui @larcjs/core
 ```
 
 ## Quick Start
@@ -84,8 +84,8 @@ npm install @larcjs/components @larcjs/core
 
 ```javascript
 import '@larcjs/core';
-import '@larcjs/components/pan-data-table';
-import '@larcjs/components/pan-form';
+import '@larcjs/ui/pan-data-table';
+import '@larcjs/ui/pan-form';
 
 // Components are now registered and ready to use
 ```

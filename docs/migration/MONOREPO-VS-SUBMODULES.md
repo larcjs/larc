@@ -95,7 +95,7 @@ cd ../components
 # Test immediately - works!
 
 # One atomic commit
-git add packages/core packages/components
+git add packages/core packages/ui
 git commit -m "Add and use bus.broadcast() method"
 git push
 
@@ -358,7 +358,7 @@ After 3 weeks, you're saving ~$2,000/month in developer productivity.
 **Answer:** You can still publish separately! Packages publish to npm independently. Users don't see your internal structure.
 
 ### "What about independent versioning?"
-**Answer:** Monorepos support this. Use changesets or lerna. You can still do @larcjs/core v1.1.1 and @larcjs/components v1.2.0.
+**Answer:** Monorepos support this. Use changesets or lerna. You can still do @larcjs/core v1.1.1 and @larcjs/ui v1.2.0.
 
 ### "Won't the repo get huge?"
 **Answer:** Not really. Code is small. Git is efficient. Facebook has 100GB+ repo, works fine. Yours will be <1GB.

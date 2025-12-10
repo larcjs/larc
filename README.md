@@ -3,7 +3,7 @@
 **Lightweight Asynchronous Relay Core** - A minimal, message-based framework for building reactive web applications with zero dependencies.
 
 [![npm version](https://img.shields.io/npm/v/@larcjs/core?label=%40larcjs%2Fcore&color=blue)](https://www.npmjs.com/package/@larcjs/core)
-[![npm version](https://img.shields.io/npm/v/@larcjs/components?label=%40larcjs%2Fcomponents&color=blue)](https://www.npmjs.com/package/@larcjs/components)
+[![npm version](https://img.shields.io/npm/v/@larcjs/ui?label=%40larcjs%2Fcomponents&color=blue)](https://www.npmjs.com/package/@larcjs/ui)
 [![npm downloads](https://img.shields.io/npm/dm/@larcjs/core?label=downloads)](https://www.npmjs.com/package/@larcjs/core)
 [![CI Status](https://github.com/larcjs/larc/actions/workflows/core-tests.yml/badge.svg)](https://github.com/larcjs/larc/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -20,7 +20,7 @@ LARC provides a lightweight messaging bus and component library for building mod
 npm install @larcjs/core
 
 # Optional: UI component library
-npm install @larcjs/components
+npm install @larcjs/ui
 
 # Or start with the lightweight version (9KB)
 npm install @larcjs/core-lite
@@ -66,7 +66,7 @@ npm install @larcjs/core-lite
 **Core Packages:**
 - **`@larcjs/core`** (v2.0.0) - Full-featured messaging bus with routing and debug tools
 - **`@larcjs/core-lite`** (v2.0.0) - Lightweight 9KB version (perfect for production) ⭐
-- **`@larcjs/components`** (v2.0.0) - UI component library
+- **`@larcjs/ui`** (v2.0.0) - UI component library
 
 **Add-ons:**
 - **`@larcjs/core-routing`** (v2.0.0) - Dynamic message routing (8KB)
@@ -78,7 +78,7 @@ npm install @larcjs/core-lite
 
 **TypeScript Support:**
 - **`@larcjs/core-types`** - Type definitions for @larcjs/core
-- **`@larcjs/components-types`** - Type definitions for @larcjs/components
+- **`@larcjs/ui-types`** - Type definitions for @larcjs/ui
 
 ### Documentation
 
@@ -119,7 +119,7 @@ pnpm install
 larc/
 ├── packages/                   → Published packages (npm workspaces)
 │   ├── core/                   → @larcjs/core
-│   ├── components/             → @larcjs/components
+│   ├── components/             → @larcjs/ui
 │   ├── core-lite/              → @larcjs/core-lite (9KB)
 │   ├── core-routing/           → @larcjs/core-routing
 │   ├── core-debug/             → @larcjs/core-debug
@@ -150,7 +150,7 @@ npm run build
 npm test
 
 # Work on components
-cd packages/components
+cd packages/ui
 npm install
 npm run build
 npm test
@@ -182,7 +182,7 @@ npm run test
 
 # Run specific workspace
 npm run build --workspace @larcjs/core
-npm run test --workspace @larcjs/components
+npm run test --workspace @larcjs/ui
 npm run dev --workspace @larcjs/site
 ```
 
@@ -214,7 +214,7 @@ npm publish
 cd packages/core
 npm publish
 
-cd packages/components
+cd packages/ui
 npm publish
 ```
 
@@ -280,7 +280,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 | `npm run lint` | Lint all packages |
 | `npm run serve` | Serve examples on port 8000 |
 | `npm run build:core` | Build only @larcjs/core |
-| `npm run build:components` | Build only @larcjs/components |
+| `npm run build:components` | Build only @larcjs/ui |
 | `npm run test:core` | Test only @larcjs/core |
 | `npm run dev:site` | Run documentation site |
 
@@ -295,11 +295,11 @@ These packages are published to npm:
 |---------|---------|-------------|
 | [@larcjs/core](https://npmjs.com/package/@larcjs/core) | 2.0.0 | Full-featured messaging bus |
 | [@larcjs/core-lite](https://npmjs.com/package/@larcjs/core-lite) | 2.0.0 | Lightweight 9KB version ⭐ |
-| [@larcjs/components](https://npmjs.com/package/@larcjs/components) | 2.0.0 | UI component library |
+| [@larcjs/ui](https://npmjs.com/package/@larcjs/ui) | 2.0.0 | UI component library |
 | [@larcjs/core-routing](https://npmjs.com/package/@larcjs/core-routing) | 2.0.0 | Message routing add-on |
 | [@larcjs/core-debug](https://npmjs.com/package/@larcjs/core-debug) | 2.0.0 | Debug tools add-on |
 | [@larcjs/core-types](https://npmjs.com/package/@larcjs/core-types) | 2.0.0 | TypeScript types |
-| [@larcjs/components-types](https://npmjs.com/package/@larcjs/components-types) | 2.0.0 | TypeScript types |
+| [@larcjs/ui-types](https://npmjs.com/package/@larcjs/ui-types) | 2.0.0 | TypeScript types |
 | [@larcjs/react-adapter](https://npmjs.com/package/@larcjs/react-adapter) | 2.0.0 | React integration |
 | [create-larc-app](https://npmjs.com/package/create-larc-app) | 2.0.0 | Project scaffolding CLI |
 

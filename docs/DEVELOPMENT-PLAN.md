@@ -53,7 +53,7 @@ This plan outlines the phased development of the LARC ecosystem, prioritized by 
 
 ### 1.3 Components Types Package
 
-- [ ] Create `@larcjs/components-types` repository
+- [ ] Create `@larcjs/ui-types` repository
 - [ ] Generate types for all components (can automate with tsc)
 - [ ] Publish to npm
 
@@ -228,7 +228,7 @@ Build 3-5 real apps demonstrating different use cases:
 
 ### 5.3 Component Library Expansion
 
-- [ ] Audit existing components in @larcjs/components
+- [ ] Audit existing components in @larcjs/ui
 - [ ] Add missing common patterns
 - [ ] Create component type definitions
 - [ ] Improve documentation with live examples
@@ -354,7 +354,7 @@ Track these to measure progress:
 
 ### Must Have (Phase 1-2)
 - @larcjs/core-types ✅
-- @larcjs/components-types ✅
+- @larcjs/ui-types ✅
 - @larcjs/react-adapter ✅
 - Production build guide ✅
 

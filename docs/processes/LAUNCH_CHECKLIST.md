@@ -26,7 +26,7 @@
 - [ ] Latest versions published to npm:
   - [ ] @larcjs/core@2.0.0 ✅
   - [ ] @larcjs/core@2.0.0 ✅
-  - [ ] @larcjs/components@2.0.0 ✅
+  - [ ] @larcjs/ui@2.0.0 ✅
   - [ ] @larcjs/core@2.0.0 ✅
 - [ ] GitHub Actions workflows all green
 - [ ] All TODO/FIXME comments resolved or documented

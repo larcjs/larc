@@ -603,7 +603,7 @@ Enhanced local reactive store with composition helpers.
 ### Creating a Store
 
 ```javascript
-import { createStore } from '@larcjs/components/pan-store';
+import { createStore } from '@larcjs/ui/pan-store';
 
 const store = createStore({
   count: 0,
@@ -678,7 +678,7 @@ const keys = store.keys();
 ### Two-Way Data Binding
 
 ```javascript
-import { bind } from '@larcjs/components/pan-store';
+import { bind } from '@larcjs/ui/pan-store';
 
 const store = createStore({ name: '', email: '' });
 
@@ -695,7 +695,7 @@ const unbind = bind(document.body, store, {
 ### Example: Shopping Cart
 
 ```javascript
-import { createStore } from '@larcjs/components/pan-store';
+import { createStore } from '@larcjs/ui/pan-store';
 
 const cart = createStore({
   items: [],

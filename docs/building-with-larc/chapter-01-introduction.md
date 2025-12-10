@@ -264,7 +264,7 @@ Example projects use a consistent structure:
   /utils/          # Helper functions
   /styles/         # Global styles
 /core/             # LARC core (@larcjs/core)
-/ui/               # LARC components (@larcjs/components)
+/ui/               # LARC components (@larcjs/ui)
 index.html         # Entry point
 larc-config.mjs    # Path configuration
 ```

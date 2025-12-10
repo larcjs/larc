@@ -8,7 +8,7 @@
 
 ## 🎯 What Was Done
 
-DevTools was initially migrated into the monorepo workspace as `packages/devtools/` but has now been restored as an independent repository to maintain architectural consistency with `@larcjs/core` and `@larcjs/components`.
+DevTools was initially migrated into the monorepo workspace as `packages/devtools/` but has now been restored as an independent repository to maintain architectural consistency with `@larcjs/core` and `@larcjs/ui`.
 
 ### Changes Made
 
@@ -34,7 +34,7 @@ DevTools was initially migrated into the monorepo workspace as `packages/devtool
 1. **`github.com/larcjs/core`** → `@larcjs/core`
    - The PAN messaging bus (5KB, zero dependencies)
 
-2. **`github.com/larcjs/components`** → `@larcjs/components`
+2. **`github.com/larcjs/components`** → `@larcjs/ui`
    - UI component library (57 components)
 
 3. **`github.com/larcjs/devtools`** → `@larcjs/devtools`
@@ -53,9 +53,9 @@ DevTools was initially migrated into the monorepo workspace as `packages/devtool
 larc/
 ├── packages/
 │   ├── core-types/          (@larcjs/core-types)
-│   └── components-types/    (@larcjs/components-types)
+│   └── components-types/    (@larcjs/ui-types)
 ├── core/         (submodule → @larcjs/core)
-├── ui/           (submodule → @larcjs/components)
+├── ui/           (submodule → @larcjs/ui)
 ├── devtools/     (submodule → @larcjs/devtools) ✨ RESTORED
 ├── examples/     (submodule)
 └── apps/         (submodule)
@@ -81,12 +81,12 @@ larc/
 ### Architectural Consistency
 All runtime/distributed packages are now separate repositories:
 - ✅ `@larcjs/core` - separate
-- ✅ `@larcjs/components` - separate
+- ✅ `@larcjs/ui` - separate
 - ✅ `@larcjs/devtools` - separate
 
 Only type definitions remain in the monorepo workspace (as they should be):
 - ✅ `@larcjs/core-types` - monorepo
-- ✅ `@larcjs/components-types` - monorepo
+- ✅ `@larcjs/ui-types` - monorepo
 
 ### Developer Experience
 - DevTools can be developed independently

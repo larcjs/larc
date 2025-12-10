@@ -141,7 +141,7 @@ Fast iteration in dev (no build), optimized delivery in prod (with build).
 **Full TypeScript support:**
 ```bash
 npm install @larcjs/core-types
-npm install @larcjs/components-types
+npm install @larcjs/ui-types
 ```
 
 **Features:**
@@ -167,7 +167,7 @@ npm install @larcjs/components-types
 **Total installed size:**
 - **@larcjs/core-lite:** 9KB minified (~3KB gzipped) ← Start here!
 - @larcjs/core: 40KB minified (~12KB gzipped) - includes routing & debug
-- @larcjs/components: 396KB minified (~110KB gzipped) - 57 components
+- @larcjs/ui: 396KB minified (~110KB gzipped) - 57 components
 
 ### "Why should I add another framework?"
 

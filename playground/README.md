@@ -132,6 +132,6 @@ MIT
 ## Related Packages
 
 - [@larcjs/core](https://github.com/larcjs/core) - Core PAN bus implementation
-- [@larcjs/components](https://github.com/larcjs/components) - Component library
+- [@larcjs/ui](https://github.com/larcjs/components) - Component library
 - [@larcjs/core-types](https://github.com/larcjs/core-types) - TypeScript types
-- [@larcjs/components-types](https://github.com/larcjs/components-types) - Component types
+- [@larcjs/ui-types](https://github.com/larcjs/components-types) - Component types

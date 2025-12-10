@@ -12,7 +12,7 @@ import { createInterface } from 'readline';
 import chalk from 'chalk';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const componentsDir = path.resolve(__dirname, '../components');
+const componentsDir = path.resolve(__dirname, '../ui');
 
 const readline = createInterface({
   input: process.stdin,

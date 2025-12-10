@@ -16,7 +16,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const COMPONENTS_DIR = path.join(__dirname, '../src/components');
+const COMPONENTS_DIR = path.join(__dirname, '../src/ui');
 const OUTPUT_DIR = path.join(__dirname, '../docs');
 const OUTPUT_FILE = path.join(OUTPUT_DIR, 'components.html');
 

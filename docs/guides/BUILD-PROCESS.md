@@ -49,7 +49,7 @@ npm run build:minify
 ```
 
 ### 3. UI: `ui/scripts/build-minified.js`
-Minifies all `.mjs` files in @larcjs/components
+Minifies all `.mjs` files in @larcjs/ui
 
 **Input Files (57):**
 All component files in `src/components/`:

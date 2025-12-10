@@ -32,7 +32,7 @@ Successfully migrated the LARC ecosystem from a complex 10-repository submodule 
 
 ### 2. `github.com/larcjs/components` ✅ (Unchanged - Separate)
 **UI component library (57 components)**
-- Published as: `@larcjs/components`
+- Published as: `@larcjs/ui`
 - Peer dependency: `@larcjs/core ^1.1.0`
 - Status: Remains independent repository
 
@@ -49,7 +49,7 @@ Successfully migrated the LARC ecosystem from a complex 10-repository submodule 
 larc/
 ├── packages/                 (Published to npm)
 │   ├── core-types/          → @larcjs/core-types v1.1.1
-│   └── components-types/    → @larcjs/components-types v1.0.2
+│   └── components-types/    → @larcjs/ui-types v1.0.2
 ├── docs/
 │   ├── site/                (Documentation website)
 │   ├── API-REFERENCE.md
@@ -57,7 +57,7 @@ larc/
 ├── examples/                (Example applications - submodule)
 ├── apps/                    (Demo applications - submodule)
 ├── core/                    (Core submodule → @larcjs/core)
-├── ui/                      (UI submodule → @larcjs/components)
+├── ui/                      (UI submodule → @larcjs/ui)
 ├── devtools/                (DevTools submodule → @larcjs/devtools)
 ├── cli/
 ├── playground/
@@ -78,10 +78,10 @@ larc/
   - package.json updated with monorepo links
   - Published as `@larcjs/core-types`
 
-- ✅ `components-types/` → `packages/components-types/`
+- ✅ `components-types/` → `packages/ui-types/`
   - 4 files migrated
   - package.json updated with monorepo links
-  - Published as `@larcjs/components-types`
+  - Published as `@larcjs/ui-types`
 
 ### Moved to `docs/`
 - ✅ `site/` → `docs/site/`
@@ -91,7 +91,7 @@ larc/
 
 ### Preserved/Restored as Submodules
 - ✅ `core/` - Remains submodule to @larcjs/core
-- ✅ `ui/` - Remains submodule to @larcjs/components
+- ✅ `ui/` - Remains submodule to @larcjs/ui
 - ✅ `devtools/` - Restored as submodule to @larcjs/devtools (Dec 7, 2025)
 - ✅ `examples/` - Remains submodule
 - ✅ `apps/` - Remains submodule
@@ -124,7 +124,7 @@ larc/
 **Removed from .gitmodules (consolidated into monorepo):**
 - `site` (now in docs/site/)
 - `core-types` (now in packages/core-types/)
-- `components-types` (now in packages/components-types/)
+- `components-types` (now in packages/ui-types/)
 
 **Note:** `devtools` was initially moved to packages/ but later restored as a separate submodule (Dec 7, 2025) to maintain architectural consistency with core and components.
 
@@ -142,7 +142,7 @@ larc/
   "scripts": {
     "build": "pnpm -r build",
     "test": "pnpm -r test",
-    "publish-types": "pnpm --filter '@larcjs/core-types' publish && pnpm --filter '@larcjs/components-types' publish"
+    "publish-types": "pnpm --filter '@larcjs/core-types' publish && pnpm --filter '@larcjs/ui-types' publish"
   }
 }
 ```
@@ -155,7 +155,7 @@ packages:
 
 This currently includes only type definition packages:
 - `@larcjs/core-types`
-- `@larcjs/components-types`
+- `@larcjs/ui-types`
 
 ### 3. Package.json Updates
 
@@ -171,7 +171,7 @@ All packages in `packages/` updated with:
 npm install
 # Output:
 # add @larcjs/core-types 1.1.1
-# add @larcjs/components-types 1.0.2
+# add @larcjs/ui-types 1.0.2
 #
 # added 2 packages, and audited 6 packages in 1s
 # found 0 vulnerabilities
@@ -329,7 +329,7 @@ python3 -m http.server 8000
 
    Archive these:
    - `larcjs/core-types` → "Moved to larcjs/larc/packages/core-types"
-   - `larcjs/components-types` → "Moved to larcjs/larc/packages/components-types"
+   - `larcjs/components-types` → "Moved to larcjs/larc/packages/ui-types"
    - `larcjs/devtools` → "Moved to larcjs/larc/packages/devtools"
    - `larcjs/site` → "Moved to larcjs/larc/docs/site"
 
@@ -364,7 +364,7 @@ npm install
 ls -la node_modules/@larcjs/
 
 # Expected output:
-# lrwxrwxrwx ... components-types -> ../../packages/components-types
+# lrwxrwxrwx ... components-types -> ../../packages/ui-types
 # lrwxrwxrwx ... core-types -> ../../packages/core-types
 # lrwxrwxrwx ... devtools -> ../../packages/devtools
 ```
@@ -449,7 +449,7 @@ If you encounter issues:
 
 ## 🎉 Conclusion
 
-The LARC repository has been successfully migrated from a complex submodule structure to a clean, maintainable monorepo while preserving the architectural integrity of keeping `@larcjs/core` and `@larcjs/components` as separate, independent packages.
+The LARC repository has been successfully migrated from a complex submodule structure to a clean, maintainable monorepo while preserving the architectural integrity of keeping `@larcjs/core` and `@larcjs/ui` as separate, independent packages.
 
 **Key Achievement:** Simplified developer experience without compromising package independence.
 

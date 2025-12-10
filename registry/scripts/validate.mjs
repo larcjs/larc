@@ -18,7 +18,7 @@ import addFormats from 'ajv-formats';
 import chalk from 'chalk';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const componentsDir = path.resolve(__dirname, '../components');
+const componentsDir = path.resolve(__dirname, '../ui');
 const schemaPath = path.resolve(__dirname, '../../registry-schema.json');
 
 // Initialize AJV validator

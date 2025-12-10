@@ -13,7 +13,7 @@
  * @example
  * // In your JS modules
  * import { paths } from '/larc-config.mjs';
- * import { PanClient } from paths.resolve('@larc/core', 'components/pan-client.mjs');
+ * import { PanClient } from paths.resolve('@larc/core', 'pan-client.mjs');
  */
 
 /**
@@ -32,9 +32,9 @@ export const aliases = {
     ? '/core'
     : 'https://unpkg.com/@larcjs/core@2.0.0',
 
-  '@larc/components': isDevelopment
-    ? '/components'
-    : 'https://unpkg.com/@larcjs/components@2.0.0',
+  '@larc/ui': isDevelopment
+    ? '/ui'
+    : 'https://unpkg.com/@larcjs/ui@2.0.0',
 
   '@larc/examples': isDevelopment
     ? '/examples'
@@ -51,7 +51,7 @@ export const aliases = {
 export const basePaths = {
   root: '/',
   core: '/core',
-  components: '/components',
+  ui: '/ui',
   examples: '/examples',
   site: '/site',
   assets: '/examples/assets',
@@ -66,27 +66,27 @@ export const componentPaths = {
   'pan-client': '@larc/core/pan-client.mjs',
 
   // Data components
-  'pan-data-table': '@larc/components/pan-data-table.mjs',
-  'pan-data-provider': '@larc/components/pan-data-provider.mjs',
-  'pan-form': '@larc/components/pan-form.mjs',
+  'pan-data-table': '@larc/ui/pan-data-table.mjs',
+  'pan-data-provider': '@larc/ui/pan-data-provider.mjs',
+  'pan-form': '@larc/ui/pan-form.mjs',
 
   // UI components
-  'pan-card': '@larc/components/pan-card.mjs',
-  'pan-modal': '@larc/components/pan-modal.mjs',
-  'pan-tabs': '@larc/components/pan-tabs.mjs',
-  'pan-dropdown': '@larc/components/pan-dropdown.mjs',
+  'pan-card': '@larc/ui/pan-card.mjs',
+  'pan-modal': '@larc/ui/pan-modal.mjs',
+  'pan-tabs': '@larc/ui/pan-tabs.mjs',
+  'pan-dropdown': '@larc/ui/pan-dropdown.mjs',
 
   // Utility components
-  'pan-inspector': '@larc/components/pan-inspector.mjs',
-  'pan-theme-provider': '@larc/components/pan-theme-provider.mjs',
-  'pan-theme-toggle': '@larc/components/pan-theme-toggle.mjs',
+  'pan-inspector': '@larc/ui/pan-inspector.mjs',
+  'pan-theme-provider': '@larc/ui/pan-theme-provider.mjs',
+  'pan-theme-toggle': '@larc/ui/pan-theme-toggle.mjs',
 
   // Store components
-  'pan-invoice-store': '@larc/components/pan-invoice-store.mjs',
+  'pan-invoice-store': '@larc/ui/pan-invoice-store.mjs',
 
   // Site-specific components
-  'pan-demo-nav': '@larc/site/components/pan-demo-nav.mjs',
-  'pan-demo-viewer': '@larc/site/components/pan-demo-viewer.mjs',
+  'pan-demo-nav': '@larc/site/ui/pan-demo-nav.mjs',
+  'pan-demo-viewer': '@larc/site/ui/pan-demo-viewer.mjs',
 };
 
 /**
@@ -147,8 +147,8 @@ export const paths = {
       return this.resolve(componentPaths[componentName]);
     }
 
-    // Default: assume it's in components directory
-    return this.resolve('@larc/components', `components/${componentName}.mjs`);
+    // Default: assume it's in ui directory
+    return this.resolve('@larc/ui', `${componentName}.mjs`);
   },
 
   /**
@@ -176,8 +176,7 @@ export const paths = {
  * Configuration for pan-autoload
  */
 export const autoloadConfig = {
-  baseUrl: null,  // Use relative paths
-  componentsPath: '/components/',
+  paths: ['/ui/', '/core/'],  // Search paths for components
   extension: '.mjs',
   rootMargin: 600,
 

@@ -338,7 +338,7 @@ npm run test:example -- 06-crud
 ## 🔗 Related Packages
 
 - **[@larcjs/core](https://github.com/larcjs/core)** — Core PAN messaging bus
-- **[@larcjs/components](https://github.com/larcjs/components)** — UI components library
+- **[@larcjs/ui](https://github.com/larcjs/components)** — UI components library
 - **[@larcjs/devtools](https://github.com/larcjs/devtools)** — Chrome DevTools extension
 - **[@larcjs/site](https://github.com/larcjs/site)** — Documentation website
 

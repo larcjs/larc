@@ -132,7 +132,8 @@
   <script type="module" src="/larc-config.mjs"></script>
 
   <!-- Load LARC Core -->
-  <script type="module" src="/core/pan.mjs"></script>
+  <script type="module">window.panAutoload = { paths: ['/ui/', '/core/'] };</script>
+  <script type="module" src="/pan.mjs"></script>
 
   <script type="module">
     let testLog = [];

@@ -11,7 +11,7 @@
 
 ### Strong Foundation (100% Complete)
 
-1. **✅ UI Components (@larcjs/components v1.1.0)**
+1. **✅ UI Components (@larcjs/ui v1.1.0)**
    - 57 components fully tested
    - Published to NPM
    - Security audit complete (0 critical vulnerabilities)

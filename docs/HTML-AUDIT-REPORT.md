@@ -185,7 +185,7 @@ All resources are accessible via web server without CORS issues.
    {
      "imports": {
        "@larcjs/core/": "/core/",
-       "@larcjs/components/": "/components/"
+       "@larcjs/ui/": "/components/"
      }
    }
    </script>

@@ -166,10 +166,11 @@
   <pan-bus debug="true"></pan-bus>
 
   <!-- Load LARC Core -->
-  <script type="module" src="../core/pan.mjs"></script>
+  <script type="module">window.panAutoload = { paths: ['/ui/', '/core/'] };</script>
+  <script type="module" src="/pan.mjs"></script>
 
   <!-- Load pan-tree component -->
-  <script type="module" src="/larc/packages/components/pan-tree.mjs"></script>
+  <script type="module" src="/ui/pan-tree.mjs"></script>
 
   <div class="container">
     <h1>🌳 PAN Tree Component Demo</h1>
@@ -249,7 +250,7 @@
       <h3 style="margin: 20px 0 10px 0;">Basic HTML Usage</h3>
       <pre><code>&lt;!-- Load components --&gt;
 &lt;script type="module" src="@larcjs/core/pan.mjs"&gt;&lt;/script&gt;
-&lt;script type="module" src="@larcjs/components/pan-tree.mjs"&gt;&lt;/script&gt;
+&lt;script type="module" src="@larc/ui/pan-tree.mjs"&gt;&lt;/script&gt;
 
 &lt;!-- Basic tree --&gt;
 &lt;pan-tree resource="documents" expanded&gt;&lt;/pan-tree&gt;

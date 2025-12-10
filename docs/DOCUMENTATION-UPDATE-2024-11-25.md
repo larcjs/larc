@@ -16,8 +16,8 @@ Updated package versions throughout documentation:
 |---------|-------------|-------------|
 | @larcjs/core | 1.0.0 | 1.1.1 |
 | @larcjs/core-types | 1.0.0 | 1.1.0 |
-| @larcjs/components | 1.0.0 | 1.1.0 |
-| @larcjs/components-types | - | 1.0.1 |
+| @larcjs/ui | 1.0.0 | 1.1.0 |
+| @larcjs/ui-types | - | 1.0.1 |
 | @larcjs/examples | 1.0.0 | 1.0.1 |
 
 **Files Updated:**
@@ -56,8 +56,8 @@ Fixed inconsistent package naming:
 - `@larcjs/ui-types` (incorrect)
 
 **After:**
-- `@larcjs/components` (correct)
-- `@larcjs/components-types` (correct)
+- `@larcjs/ui` (correct)
+- `@larcjs/ui-types` (correct)
 
 **Files Updated:**
 - `/README.md` - Repository table
@@ -112,7 +112,7 @@ Updated production readiness status:
   - Updated date to November 25, 2024
   - Updated current versions
   - Updated test status for @larcjs/core (now 335 tests passing)
-  - Changed @larcjs/ui to @larcjs/components
+  - Changed @larcjs/ui to @larcjs/ui
 
 ---
 
@@ -129,8 +129,8 @@ Updated production readiness status:
 ## 🎯 Consistency Improvements
 
 ### Naming Consistency
-- ✅ All references now use `@larcjs/components` (not `@larcjs/ui`)
-- ✅ All references now use `@larcjs/components-types` (not `@larcjs/ui-types`)
+- ✅ All references now use `@larcjs/ui` (not `@larcjs/ui`)
+- ✅ All references now use `@larcjs/ui-types` (not `@larcjs/ui-types`)
 
 ### Version Consistency
 - ✅ All docs reference current package versions
@@ -177,7 +177,7 @@ The project is now accurately represented as production-ready with:
    - Production status document
 
 2. Maintain consistency in:
-   - Package naming (@larcjs/components, not @larcjs/ui)
+   - Package naming (@larcjs/ui, not @larcjs/ui)
    - Positioning messaging (framework complement)
    - Bundle size claims (backed by real measurements)
 

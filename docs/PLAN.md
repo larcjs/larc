@@ -15,8 +15,8 @@
 @larcjs/core              # Pure JavaScript, zero dependencies
 @larcjs/core-types        # TypeScript definitions only
 
-@larcjs/components        # Pure JavaScript
-@larcjs/components-types  # TypeScript definitions only
+@larcjs/ui        # Pure JavaScript
+@larcjs/ui-types  # TypeScript definitions only
 
 @larcjs/devtools          # Pure JavaScript
 @larcjs/devtools-types    # TypeScript definitions only
@@ -321,12 +321,12 @@ await esbuild.build({
 ```
 Core Packages (JavaScript only):
 ├── @larcjs/core
-├── @larcjs/components
+├── @larcjs/ui
 ├── @larcjs/devtools
 
 Type Packages (Opt-in):
 ├── @larcjs/core-types
-├── @larcjs/components-types
+├── @larcjs/ui-types
 ├── @larcjs/devtools-types
 
 Framework Adapters:

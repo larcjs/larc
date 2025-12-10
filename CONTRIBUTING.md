@@ -71,12 +71,12 @@ LARC is organized as an **npm workspaces monorepo**:
 larc/
 ├── packages/                      # Published packages (npm workspaces)
 │   ├── core/                      # @larcjs/core
-│   ├── components/                # @larcjs/components
+│   ├── components/                # @larcjs/ui
 │   ├── core-lite/                 # @larcjs/core-lite
 │   ├── core-routing/              # @larcjs/core-routing
 │   ├── core-debug/                # @larcjs/core-debug
 │   ├── core-types/                # @larcjs/core-types
-│   ├── components-types/          # @larcjs/components-types
+│   ├── components-types/          # @larcjs/ui-types
 │   ├── apps/                      # Demo applications
 │   ├── examples/                  # Code examples
 │   └── devtools/                  # Chrome DevTools extension
@@ -96,8 +96,8 @@ All packages are in this monorepo. Choose the appropriate directory based on you
 |------------------|-----------|
 | Core messaging bus, autoloader | `packages/core/` |
 | TypeScript types for core | `packages/core-types/` |
-| UI components | `packages/components/` |
-| TypeScript types for components | `packages/components-types/` |
+| UI components | `packages/ui/` |
+| TypeScript types for components | `packages/ui-types/` |
 | Example applications | `packages/examples/` |
 | Documentation website | `docs/site/` |
 | DevTools extension | `packages/devtools/` |

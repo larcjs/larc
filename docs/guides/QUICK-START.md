@@ -67,14 +67,14 @@ Auto-linked packages
 larc/                           ← You are here
 ├── packages/                   ← Published packages
 │   ├── core-types/            → npm: @larcjs/core-types
-│   ├── components-types/      → npm: @larcjs/components-types
+│   ├── components-types/      → npm: @larcjs/ui-types
 │   └── devtools/              → npm: @larcjs/devtools
 ├── docs/
 │   └── site/                  → Documentation website
 ├── examples/                   → Example applications
 ├── apps/                       → Demo applications
 ├── core/                       → Submodule: @larcjs/core
-├── ui/                         → Submodule: @larcjs/components
+├── ui/                         → Submodule: @larcjs/ui
 └── package.json                ← Workspace root
 ```
 
@@ -84,7 +84,7 @@ larc/                           ← You are here
 
 ### ✅ What Stayed Separate (As Intended!)
 - `@larcjs/core` - Still its own repository
-- `@larcjs/components` - Still its own repository
+- `@larcjs/ui` - Still its own repository
 
 ### ✅ What Got Consolidated (Simplified!)
 - Type definitions → `packages/`

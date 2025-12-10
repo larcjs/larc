@@ -1,7 +1,7 @@
 # Recommended Repository Consolidation for LARC
 
 ## 🎯 Goal
-Simplify the LARC ecosystem while maintaining architectural clarity: keep `@larcjs/core` and `@larcjs/components` as separate, focused packages.
+Simplify the LARC ecosystem while maintaining architectural clarity: keep `@larcjs/core` and `@larcjs/ui` as separate, focused packages.
 
 ## ✅ Your Reasoning is Sound
 
@@ -53,10 +53,10 @@ This is architecturally correct. The problem is the **10 OTHER repos** around th
 │  github.com/larcjs/components                           │
 │  ├── src/                  (57 components)              │
 │  ├── tests/                                             │
-│  ├── package.json          (@larcjs/components v1.1.0) │
+│  ├── package.json          (@larcjs/ui v1.1.0) │
 │  └── README.md             (Component library docs)     │
 │                                                          │
-│  Published: @larcjs/components                          │
+│  Published: @larcjs/ui                          │
 │  Peer Dep: @larcjs/core ^1.1.0                         │
 └─────────────────────────────────────────────────────────┘
 
@@ -64,7 +64,7 @@ This is architecturally correct. The problem is the **10 OTHER repos** around th
 │  github.com/larcjs/larc (Monorepo - Development Hub)    │
 │  ├── packages/                                          │
 │  │   ├── core-types/      (@larcjs/core-types)         │
-│  │   ├── components-types/(@larcjs/components-types)   │
+│  │   ├── components-types/(@larcjs/ui-types)   │
 │  │   └── devtools/        (@larcjs/devtools)           │
 │  ├── docs/                                              │
 │  │   ├── site/            (Documentation website)       │
@@ -94,9 +94,9 @@ This is architecturally correct. The problem is the **10 OTHER repos** around th
 | Package | Repo | Purpose |
 |---------|------|---------|
 | `@larcjs/core` | `core` | Standalone messaging bus |
-| `@larcjs/components` | `components` | UI component library |
+| `@larcjs/ui` | `components` | UI component library |
 | `@larcjs/core-types` | `larc/packages/core-types` | TypeScript types for core |
-| `@larcjs/components-types` | `larc/packages/components-types` | TypeScript types for components |
+| `@larcjs/ui-types` | `larc/packages/ui-types` | TypeScript types for components |
 | `@larcjs/devtools` | `larc/packages/devtools` | Chrome extension (maybe) |
 
 ### Not Published (Development Assets)
@@ -146,7 +146,7 @@ npm version minor
 npm publish
 
 # Update types
-cd ../larc/packages/components-types
+cd ../larc/packages/ui-types
 # Update types
 npm version minor
 npm publish
@@ -163,7 +163,7 @@ pnpm install  # Installs all packages
 # Work on examples
 cd examples/contact-manager
 # edit files...
-# Uses published @larcjs/core and @larcjs/components
+# Uses published @larcjs/core and @larcjs/ui
 
 # Work on docs
 cd docs/site
@@ -230,8 +230,8 @@ git clone https://github.com/larcjs/core-types.git packages/core-types
 rm -rf packages/core-types/.git
 
 # Move components-types
-git clone https://github.com/larcjs/components-types.git packages/components-types
-rm -rf packages/components-types/.git
+git clone https://github.com/larcjs/components-types.git packages/ui-types
+rm -rf packages/ui-types/.git
 
 # Update package.json to reference published packages
 # packages/core-types/package.json
@@ -297,7 +297,7 @@ cat > package.json << EOF
     "test": "pnpm -r test",
     "dev": "pnpm -r --parallel dev",
     "clean": "pnpm -r clean",
-    "publish-types": "pnpm --filter '@larcjs/core-types' publish && pnpm --filter '@larcjs/components-types' publish"
+    "publish-types": "pnpm --filter '@larcjs/core-types' publish && pnpm --filter '@larcjs/ui-types' publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.0"
@@ -355,7 +355,7 @@ components/
 │   ├── styles/
 │   └── index.js
 ├── tests/
-├── package.json        (@larcjs/components)
+├── package.json        (@larcjs/ui)
 └── README.md
 ```
 
@@ -368,7 +368,7 @@ larc/
 │   │   └── package.json    (@larcjs/core-types)
 │   ├── components-types/
 │   │   ├── index.d.ts
-│   │   └── package.json    (@larcjs/components-types)
+│   │   └── package.json    (@larcjs/ui-types)
 │   └── devtools/
 │       ├── src/
 │       ├── manifest.json
@@ -411,9 +411,9 @@ larc/
 ### Package Installs (Unchanged)
 ```bash
 npm install @larcjs/core
-npm install @larcjs/components
+npm install @larcjs/ui
 npm install -D @larcjs/core-types
-npm install -D @larcjs/components-types
+npm install -D @larcjs/ui-types
 ```
 
 ### GitHub URLs (Simplified)
@@ -496,7 +496,7 @@ Everything else → Archive or move to wiki
 
 2. **Consolidate into `larc`** (Do this):
    - `core-types` → `larc/packages/core-types`
-   - `components-types` → `larc/packages/components-types`
+   - `components-types` → `larc/packages/ui-types`
    - `devtools` → `larc/packages/devtools`
    - `site` → `larc/docs/site`
    - `examples` + `apps` → `larc/examples`

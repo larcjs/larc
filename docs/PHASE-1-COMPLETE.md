@@ -34,10 +34,10 @@ Successfully established the TypeScript type system for LARC, proving the opt-in
 **Files:** 9 type definition files
 **Size:** 17.5 kB unpacked
 
-### 2. @larcjs/components-types Package ✅
+### 2. @larcjs/ui-types Package ✅
 
 **Repository:** https://github.com/larcjs/components-types
-**NPM Package:** https://www.npmjs.com/package/@larcjs/components-types
+**NPM Package:** https://www.npmjs.com/package/@larcjs/ui-types
 **Version:** 1.0.0
 
 **Type Definitions Created:**
@@ -90,8 +90,8 @@ npm install @larcjs/core
 npm install -D @larcjs/core-types
 
 # Install components
-npm install @larcjs/components
-npm install -D @larcjs/components-types @larcjs/core-types
+npm install @larcjs/ui
+npm install -D @larcjs/ui-types @larcjs/core-types
 ```
 
 ## Example Usage
@@ -99,7 +99,7 @@ npm install -D @larcjs/components-types @larcjs/core-types
 ```typescript
 import { PanClient } from '@larcjs/core/pan-client.mjs';
 import type { PanMessage } from '@larcjs/core-types';
-import type { PanStore, PanRouter } from '@larcjs/components-types';
+import type { PanStore, PanRouter } from '@larcjs/ui-types';
 
 interface AppState {
   user: { name: string; email: string } | null;
@@ -189,7 +189,7 @@ router.navigate('/dashboard');
 ## NPM Packages
 
 - https://www.npmjs.com/package/@larcjs/core-types
-- https://www.npmjs.com/package/@larcjs/components-types
+- https://www.npmjs.com/package/@larcjs/ui-types
 
 ---
 

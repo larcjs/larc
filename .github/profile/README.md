@@ -26,7 +26,7 @@ LARC implements the PAN (Page Area Network) messaging protocol — a framework-a
 | Package | Description | Version | Links |
 |---------|-------------|---------|-------|
 | **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | 1.1.1 | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
-| **[@larcjs/components](https://github.com/larcjs/components)** | UI components library | 1.1.0 | [NPM](https://npmjs.com/package/@larcjs/components) · [Gallery](https://larcjs.github.io/site/gallery.html) |
+| **[@larcjs/ui](https://github.com/larcjs/components)** | UI components library | 1.1.0 | [NPM](https://npmjs.com/package/@larcjs/ui) · [Gallery](https://larcjs.github.io/site/gallery.html) |
 | **[@larcjs/devtools](https://github.com/larcjs/devtools)** | Chrome DevTools extension | 1.0.0 | [Chrome Store](https://chrome.google.com/webstore) · [Docs](https://github.com/larcjs/devtools) |
 | **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | 1.0.1 | [Examples](https://larcjs.github.io/examples/) · [Apps](https://github.com/larcjs/examples/tree/main/apps) |
 | **[@larcjs/site](https://github.com/larcjs/site)** | Documentation website | 1.0.0 | [Live Site](https://larcjs.github.io/site/) |
@@ -55,12 +55,12 @@ LARC implements the PAN (Page Area Network) messaging protocol — a framework-a
 ### NPM Installation
 
 ```bash
-npm install @larcjs/core @larcjs/components
+npm install @larcjs/core @larcjs/ui
 ```
 
 ```javascript
 import '@larcjs/core';
-import '@larcjs/components/pan-data-table';
+import '@larcjs/ui/pan-data-table';
 
 // Use in your HTML
 ```

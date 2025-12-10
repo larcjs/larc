@@ -11,7 +11,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const componentsDir = path.resolve(__dirname, '../../components');
+const componentsDir = path.resolve(__dirname, '../../ui');
 const outputPath = path.resolve(__dirname, '../component-registry.json');
 
 // Component categories with icons
@@ -184,7 +184,7 @@ async function analyzeComponent(filePath) {
     displayName,
     description,
     category,
-    path: `../components/${fileName}.mjs`,
+    path: `../ui/${fileName}.mjs`,
     icon,
     tags: [category, componentName.split('-')[0]],
     status: 'stable',

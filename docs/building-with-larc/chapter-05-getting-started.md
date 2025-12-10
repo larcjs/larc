@@ -102,7 +102,7 @@ This is LARC's "convention over configuration" approach in action.
 For projects with existing Node.js tooling or teams familiar with npm, install LARC as a package:
 
 ```bash
-$ npm install @larcjs/core @larcjs/components
+$ npm install @larcjs/core @larcjs/ui
 ```
 
 Then import in your JavaScript:
@@ -125,7 +125,7 @@ Or use an import map in your HTML:
   {
     "imports": {
       "@larcjs/core/": "./node_modules/@larcjs/core/",
-      "@larcjs/components/": "./node_modules/@larcjs/components/"
+      "@larcjs/ui/": "./node_modules/@larcjs/ui/"
     }
   }
   </script>

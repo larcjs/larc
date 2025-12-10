@@ -10,7 +10,7 @@
 
 ### Phase 1: TypeScript Type System
 - ✅ @larcjs/core-types v1.0.0 published to npm
-- ✅ @larcjs/components-types v1.0.0 published to npm
+- ✅ @larcjs/ui-types v1.0.0 published to npm
 - ✅ 9 type definition files (37 kB total)
 - ✅ 24 component interfaces
 - ✅ Full TypeScript support without breaking zero-build
@@ -18,7 +18,7 @@
 
 **NPM Links:**
 - https://www.npmjs.com/package/@larcjs/core-types
-- https://www.npmjs.com/package/@larcjs/components-types
+- https://www.npmjs.com/package/@larcjs/ui-types
 
 ### Phase 5.5: LARC Playground
 - ✅ Component registry generator script
@@ -278,7 +278,7 @@ Once testing reveals issues, fix them immediately.
 
 ### NPM
 - **core-types:** https://www.npmjs.com/package/@larcjs/core-types
-- **components-types:** https://www.npmjs.com/package/@larcjs/components-types
+- **components-types:** https://www.npmjs.com/package/@larcjs/ui-types
 
 ### Pending
 - **GitHub Pages:** https://larcjs.github.io/larc/playground/ (not live yet)

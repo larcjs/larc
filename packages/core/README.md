@@ -580,7 +580,7 @@ const { publish } = usePanPublish();
 ## Related Packages
 
 - **[@larcjs/core-types](https://github.com/larcjs/core-types)** — TypeScript type definitions (opt-in)
-- **[@larcjs/components](https://github.com/larcjs/components)** — UI components built on LARC Core
+- **[@larcjs/ui](https://github.com/larcjs/components)** — UI components built on LARC Core
 - **[@larcjs/react-adapter](https://github.com/larcjs/react-adapter)** — React hooks for PAN messaging
 - **[@larcjs/vue-adapter](https://github.com/larcjs/vue-adapter)** — Vue composables for PAN messaging
 - **[@larcjs/devtools](https://github.com/larcjs/devtools)** — Chrome DevTools for debugging PAN messages

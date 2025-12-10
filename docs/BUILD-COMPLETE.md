@@ -363,7 +363,7 @@ Ahead: 0 commits (fully synced)
 Phase 1: TypeScript Types
 Duration: 2 hours
 Status: ✅ Complete (previous session)
-Output: @larcjs/core-types, @larcjs/components-types
+Output: @larcjs/core-types, @larcjs/ui-types
 
 Planning: Playground Design
 Duration: 1 hour
@@ -526,9 +526,9 @@ Status: Not yet deployed ⏳
 ### NPM Packages
 ```
 @larcjs/core              - Core PAN bus
-@larcjs/components        - Component library
+@larcjs/ui        - Component library
 @larcjs/core-types        - Core TypeScript types
-@larcjs/components-types  - Component TypeScript types
+@larcjs/ui-types  - Component TypeScript types
 ```
 
 ---

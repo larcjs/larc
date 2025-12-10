@@ -44,7 +44,7 @@ Reposition LARC as a **framework complement** rather than a framework replacemen
 - Added "When to Use What" decision guide
 - Updated "Related Packages" with React/Vue adapters
 
-**Note:** Changes prepared but need to be applied to actual @larcjs/components repository
+**Note:** Changes prepared but need to be applied to actual @larcjs/ui repository
 
 ### 4. Site Homepage Updated
 **Location:** `site/index.html` (in site repository)
@@ -166,7 +166,7 @@ All communicating via PAN messages without tight coupling.
 
 ### Short Term (This Week)
 - [ ] Apply README changes to @larcjs/core repository
-- [ ] Apply README changes to @larcjs/components repository
+- [ ] Apply README changes to @larcjs/ui repository
 - [ ] Apply homepage changes to site repository
 - [ ] Test hybrid dashboard in browser
 - [ ] Deploy to GitHub Pages
@@ -234,7 +234,7 @@ Date: Wed Nov 20 15:15:00 2025
 To measure if this repositioning works:
 
 1. **GitHub Stars Growth** - Track over next 3 months
-2. **npm Downloads** - Monitor @larcjs/core and @larcjs/components
+2. **npm Downloads** - Monitor @larcjs/core and @larcjs/ui
 3. **Community Engagement** - Discussions, issues, PRs
 4. **Framework Communities** - Mentions in React/Vue forums
 5. **Bundle Size Questions** - "How to reduce bundle size" searches

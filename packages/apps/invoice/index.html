@@ -270,12 +270,12 @@
 
   <script type="module">
     import '../../core/pan-bus.mjs';
-    import './components/pan-invoice-items.mjs';
-    import './components/pan-invoice-header.mjs';
-    import './components/pan-invoice-totals.mjs';
-    import '../../components/pan-invoice-store.mjs';
-    import '../../components/pan-theme-provider.mjs';
-    import '../../components/pan-theme-toggle.mjs';
+    import /ui/pan-invoice-items.mjs';
+    import /ui/pan-invoice-header.mjs';
+    import /ui/pan-invoice-totals.mjs';
+    import '/ui/pan-invoice-store.mjs';
+    import '/ui/pan-theme-provider.mjs';
+    import '/ui/pan-theme-toggle.mjs';
 
     // Get elements
     const bus = document.querySelector('pan-bus');
@@ -317,7 +317,7 @@
           try {
             const json = JSON.parse(event.target.result);
             bus.publish('invoice.import', { json });
-            fileInput.value = ''/larc/packages/components/ Reset input
+            fileInput.value = ''/ui/ Reset input
           } catch (error) {
             alert('Failed to import file. Please check the file format.');
             console.error('Import error:', error);

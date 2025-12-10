@@ -521,7 +521,7 @@
             <button class="btn btn-primary" onclick="openPlayground('${comp.name}')">
               Try it
             </button>
-            <a href="/larc/packages/components/${comp.name}.mjs" class="btn btn-secondary" target="_blank">
+            <a href="/ui/${comp.name}.mjs" class="btn btn-secondary" target="_blank">
               View Source
             </a>
           </div>
@@ -582,11 +582,9 @@
     * { box-sizing: border-box; }
   </style>
   <script type="module">
-    window.panAutoload = {
-      componentsPath: '/larc/packages/components/'
-    };
+    window.panAutoload = { paths: ['/ui/', '/core/'] };
   <\/script>
-  <script type="module" src="/larc/packages/core/pan.mjs"><\/script>
+  <script type="module" src="/pan.mjs"><\/script>
 </head>
 <body>
   <!-- Example code loaded from gallery -->
@@ -618,8 +616,8 @@
   <pan-theme-provider theme="auto"></pan-theme-provider>
 
   <script type="module">
-    import '/larc/packages/components/pan-theme-provider.mjs';
-    import '/larc/packages/components/pan-theme-toggle.mjs';
+    import '/ui/pan-theme-provider.mjs';
+    import '/ui/pan-theme-toggle.mjs';
   </script>
 </body>
 </html>

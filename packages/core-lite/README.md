@@ -219,7 +219,7 @@ npm install @larcjs/core-routing @larcjs/core-debug
 - **[@larcjs/core](../../core)** — Full-featured version (40KB with routing/debug)
 - **[@larcjs/core-routing](../core-routing)** — Dynamic routing add-on (8KB)
 - **[@larcjs/core-debug](../core-debug)** — Debug tools add-on (3KB)
-- **[@larcjs/components](https://github.com/larcjs/components)** — UI components built on PAN
+- **[@larcjs/ui](https://github.com/larcjs/components)** — UI components built on PAN
 - **[@larcjs/core-types](../core-types)** — TypeScript type definitions
 
 ## Documentation

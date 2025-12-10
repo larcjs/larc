@@ -106,7 +106,7 @@ export const aliases = {
 
   '@larc/components': isDevelopment
     ? './components/src'
-    : 'https://unpkg.com/@larcjs/components@2.0.0/src',
+    : 'https://unpkg.com/@larcjs/ui@2.0.0/src',
 };
 ```
 

@@ -18,15 +18,15 @@
 ### 2. NPM Packages ✅
 
 - [x] **@larcjs/core:** v1.1.1 published
-- [x] **@larcjs/components:** v1.1.1 published
+- [x] **@larcjs/ui:** v1.1.1 published
 - [x] **@larcjs/core-types:** v1.1.1 published
-- [x] **@larcjs/components-types:** v1.0.2 published
+- [x] **@larcjs/ui-types:** v1.0.2 published
 
 ### 3. CDN Links ✅
 
 All unpkg.com URLs tested and working:
 - [x] https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs ✅
-- [x] https://unpkg.com/@larcjs/components@2.0.0/package.json ✅
+- [x] https://unpkg.com/@larcjs/ui@2.0.0/package.json ✅
 - [x] https://unpkg.com/@larcjs/core@2.0.0/package.json ✅
 
 ### 4. Documentation ✅
@@ -153,7 +153,7 @@ See `HN_POST_DRAFT.md` for full text. Key points:
    > Chrome 90+, Firefox 88+, Safari 14+, Edge 90+. Modern browsers only.
 
 7. **TypeScript?**
-   > Full support with @larcjs/core-types and @larcjs/components-types
+   > Full support with @larcjs/core-types and @larcjs/ui-types
 
 8. **Learning curve?**
    > If you know HTML + vanilla JS, you're ready. No JSX, no new syntax.

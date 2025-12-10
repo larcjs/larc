@@ -9,7 +9,7 @@ Transform the LARC project from a git submodules architecture to a modern monore
 ```
 larc/ (meta repo)
 ├── core/ (submodule → @larcjs/core)
-├── ui/ (submodule → @larcjs/components)
+├── ui/ (submodule → @larcjs/ui)
 ├── apps/ (submodule)
 │   ├── components/ (nested submodule)
 │   └── core/ (nested submodule)
@@ -42,8 +42,8 @@ larc/ (single git repo)
 ├── package.json (workspace root)
 ├── packages/
 │   ├── core/              (@larcjs/core)
-│   ├── components/        (@larcjs/components)
-│   ├── components-types/  (@larcjs/components-types)
+│   ├── components/        (@larcjs/ui)
+│   ├── components-types/  (@larcjs/ui-types)
 │   ├── core-types/        (@larcjs/core-types)
 │   ├── react-adapter/     (@larcjs/react-adapter)
 │   ├── cli/               (@larcjs/cli)
@@ -74,7 +74,7 @@ cd ../components
 # Both changes tested together!
 
 # One commit for atomic changes
-git add packages/core packages/components
+git add packages/core packages/ui
 git commit -m "Add feature across core and components"
 git push
 ```
@@ -139,7 +139,7 @@ git push
 
 **Before (submodules):**
 ```json
-// packages/components/package.json
+// packages/ui/package.json
 {
   "peerDependencies": {
     "@larcjs/core": "^1.1.0"
@@ -149,7 +149,7 @@ git push
 
 **After (monorepo):**
 ```json
-// packages/components/package.json
+// packages/ui/package.json
 {
   "dependencies": {
     "@larcjs/core": "workspace:*"
@@ -182,7 +182,7 @@ for pkg in $PACKAGES; do
   # Get the actual directory name (ui → components)
   if [ "$pkg" = "ui" ]; then
     SOURCE="ui"
-    DEST="packages/components"
+    DEST="packages/ui"
   else
     SOURCE="$pkg"
     DEST="packages/$pkg"
@@ -221,7 +221,7 @@ echo "  4. Update documentation"
 
 ## 🔄 Alternative: Keep Some Repos Separate
 
-If you want to keep `@larcjs/core` and `@larcjs/components` in separate repos (for independent versioning), use a hybrid approach:
+If you want to keep `@larcjs/core` and `@larcjs/ui` in separate repos (for independent versioning), use a hybrid approach:
 
 ### Hybrid Option: Monorepo + External Packages
 
@@ -231,20 +231,20 @@ larc/ (monorepo)
 │   ├── cli/
 │   ├── react-adapter/
 │   └── devtools/
-├── apps/        (links to @larcjs/core, @larcjs/components via npm)
+├── apps/        (links to @larcjs/core, @larcjs/ui via npm)
 ├── examples/    (links via npm)
 └── site/        (links via npm)
 
 # Separate repos:
 github.com/larcjs/core        → published as @larcjs/core
-github.com/larcjs/components  → published as @larcjs/components
+github.com/larcjs/components  → published as @larcjs/ui
 ```
 
 **Development workflow:**
 ```bash
 # For core development
 npm link @larcjs/core
-npm link @larcjs/components
+npm link @larcjs/ui
 
 # Or use npm install git+https://...
 ```

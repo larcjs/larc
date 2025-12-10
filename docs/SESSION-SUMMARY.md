@@ -27,8 +27,8 @@ Created opt-in TypeScript support that doesn't compromise the zero-build philoso
 - `components/pan-autoload.d.ts` - Autoloader configuration
 - `index.d.ts` - Re-exports everything
 
-#### @larcjs/components-types (v1.0.0)
-- **Published to npm:** https://www.npmjs.com/package/@larcjs/components-types
+#### @larcjs/ui-types (v1.0.0)
+- **Published to npm:** https://www.npmjs.com/package/@larcjs/ui-types
 - **Repository:** https://github.com/larcjs/components-types
 - **Size:** 19.4 kB unpacked
 - **Components:** 24 component interfaces
@@ -236,7 +236,7 @@ SESSION-SUMMARY.md (this file)
 
 ### NPM Packages
 - **@larcjs/core-types:** https://www.npmjs.com/package/@larcjs/core-types
-- **@larcjs/components-types:** https://www.npmjs.com/package/@larcjs/components-types
+- **@larcjs/ui-types:** https://www.npmjs.com/package/@larcjs/ui-types
 
 ### Pending Deployment
 - **GitHub Pages:** https://larcjs.github.io/larc/playground/ (pending setup)

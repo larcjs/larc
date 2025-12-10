@@ -1,7 +1,7 @@
 {
-  "name": "@larcjs/components",
+  "name": "@larcjs/ui",
   "version": "2.0.0",
-  "description": "LARC Components - UI web components library built on the PAN messaging bus",
+  "description": "LARC UI - Web components library built on the PAN messaging bus",
   "type": "module",
   "exports": {
     "./drag-drop-list": "./drag-drop-list.mjs",
@@ -211,7 +211,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/larcjs/larc.git",
-    "directory": "packages/components"
+    "directory": "packages/ui"
   },
   "bugs": {
     "url": "https://github.com/larcjs/larc/issues"

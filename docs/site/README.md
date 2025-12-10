@@ -220,7 +220,7 @@ rsync -avz --delete . user@server:/var/www/site/
 The site links to other LARC repositories:
 
 - **[@larcjs/core](https://github.com/larcjs/core)** — Core implementation
-- **[@larcjs/components](https://github.com/larcjs/components)** — UI components
+- **[@larcjs/ui](https://github.com/larcjs/components)** — UI components
 - **[@larcjs/examples](https://github.com/larcjs/examples)** — Examples & demos
 - **[@larcjs/devtools](https://github.com/larcjs/devtools)** — DevTools extension
 

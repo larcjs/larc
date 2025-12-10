@@ -988,7 +988,10 @@
   </script>
 
   <!-- Load PAN Autoload -->
-  <script type="module" src="../../src/pan.mjs"></script>
+  <script type="module">
+    window.panAutoload = { paths: ['/ui/', '/core/'] };
+  </script>
+  <script type="module" src="/pan.mjs"></script>
 
   <pan-bus debug="true"></pan-bus>
 </body>

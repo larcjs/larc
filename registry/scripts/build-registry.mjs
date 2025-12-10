@@ -11,7 +11,7 @@ import { fileURLToPath } from 'url';
 import chalk from 'chalk';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const componentsDir = path.resolve(__dirname, '../components');
+const componentsDir = path.resolve(__dirname, '../ui');
 const outputPath = path.resolve(__dirname, '../registry.json');
 
 // Component categories

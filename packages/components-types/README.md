@@ -1,12 +1,12 @@
-# @larcjs/components-types
+# @larcjs/ui-types
 
-TypeScript type definitions for [@larcjs/components](https://github.com/larcjs/components).
+TypeScript type definitions for [@larcjs/ui](https://github.com/larcjs/components).
 
 ## Installation
 
 ```bash
-npm install @larcjs/components
-npm install -D @larcjs/components-types @larcjs/core-types
+npm install @larcjs/ui
+npm install -D @larcjs/ui-types @larcjs/core-types
 ```
 
 ## Usage
@@ -14,7 +14,7 @@ npm install -D @larcjs/components-types @larcjs/core-types
 Import types alongside your LARC components:
 
 ```typescript
-import type { PanRouter, PanStore, PanTable } from '@larcjs/components-types';
+import type { PanRouter, PanStore, PanTable } from '@larcjs/ui-types';
 
 const router: PanRouter = document.querySelector('pan-router')!;
 const store: PanStore<AppState> = document.querySelector('pan-store')!;
@@ -95,7 +95,7 @@ LARC follows a **zero-build** philosophy. The runtime packages are pure JavaScri
 ### Router
 
 ```typescript
-import type { PanRouter } from '@larcjs/components-types';
+import type { PanRouter } from '@larcjs/ui-types';
 
 const router: PanRouter = document.querySelector('pan-router')!;
 
@@ -115,7 +115,7 @@ router.addRoute('/users/:id', (params) => {
 ### Store
 
 ```typescript
-import type { PanStore } from '@larcjs/components-types';
+import type { PanStore } from '@larcjs/ui-types';
 
 interface AppState {
   user: { name: string; email: string } | null;
@@ -141,7 +141,7 @@ const unsubscribe = store.subscribe((state) => {
 ### Table
 
 ```typescript
-import type { PanTable } from '@larcjs/components-types';
+import type { PanTable } from '@larcjs/ui-types';
 
 interface User {
   id: number;
@@ -166,7 +166,7 @@ const selected = table.getSelectedRows();
 ### Form
 
 ```typescript
-import type { PanForm } from '@larcjs/components-types';
+import type { PanForm } from '@larcjs/ui-types';
 
 const form: PanForm = document.querySelector('pan-form')!;
 
@@ -192,7 +192,7 @@ form.reset();
 ### WebSocket
 
 ```typescript
-import type { PanWebSocket } from '@larcjs/components-types';
+import type { PanWebSocket } from '@larcjs/ui-types';
 
 const ws: PanWebSocket = document.querySelector('pan-websocket')!;
 
@@ -212,7 +212,7 @@ ws.disconnect();
 ### JWT
 
 ```typescript
-import type { PanJWT } from '@larcjs/components-types';
+import type { PanJWT } from '@larcjs/ui-types';
 
 const jwt: PanJWT = document.querySelector('pan-jwt')!;
 
@@ -238,7 +238,7 @@ if (jwt.isExpired()) {
 All LARC components extend the `LarcComponent` interface:
 
 ```typescript
-import type { LarcComponent } from '@larcjs/components-types';
+import type { LarcComponent } from '@larcjs/ui-types';
 import type { PanClient } from '@larcjs/core-types';
 
 const component: LarcComponent = document.querySelector('my-component')!;
@@ -259,7 +259,7 @@ if (component.client) {
 For components not yet typed, you can create your own type definitions:
 
 ```typescript
-import type { LarcComponent } from '@larcjs/components-types';
+import type { LarcComponent } from '@larcjs/ui-types';
 
 interface MyCustomComponent extends LarcComponent {
   // Add your component's public API
@@ -282,17 +282,17 @@ import type {
   PanRouter,
   PanStore,
   PanTable
-} from '@larcjs/components-types';
+} from '@larcjs/ui-types';
 
 // This is the actual runtime import
-import '@larcjs/components/pan-router.mjs';
+import '@larcjs/ui/pan-router.mjs';
 
 const router: PanRouter = document.querySelector('pan-router')!;
 ```
 
 ## VS Code IntelliSense
 
-Even if you're writing plain JavaScript, you'll get autocomplete and type hints in VS Code when `@larcjs/components-types` is installed:
+Even if you're writing plain JavaScript, you'll get autocomplete and type hints in VS Code when `@larcjs/ui-types` is installed:
 
 ```javascript
 // JavaScript file
@@ -312,7 +312,7 @@ This package provides type definitions for the most commonly used LARC component
 
 ## Related Packages
 
-- **[@larcjs/components](https://github.com/larcjs/components)** — UI component library
+- **[@larcjs/ui](https://github.com/larcjs/components)** — UI component library
 - **[@larcjs/core-types](https://github.com/larcjs/core-types)** — Type definitions for LARC Core
 - **[@larcjs/core](https://github.com/larcjs/core)** — Core PAN messaging bus
 

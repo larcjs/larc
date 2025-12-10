@@ -35,7 +35,7 @@ Can users reasonably want ONLY this package?
 - **Decision: Keep separate**
 
 ### `components` - Keep Separate ✅
-- ✅ Published to npm: `@larcjs/components`
+- ✅ Published to npm: `@larcjs/ui`
 - ✅ Users want it standalone: "Components without learning bus internals"
 - ✅ Independent value: UI library
 - ✅ Optional dependency: Works with core, but separate choice
@@ -48,8 +48,8 @@ Can users reasonably want ONLY this package?
 - **Decision: Move to larc/packages/**
 
 ### `components-types` - Consolidate 🔄
-- ✅ Published to npm: `@larcjs/components-types`
-- ❌ Users want it standalone: No, only with `@larcjs/components`
+- ✅ Published to npm: `@larcjs/ui-types`
+- ❌ Users want it standalone: No, only with `@larcjs/ui`
 - ❌ Independent value: Just types for components
 - **Decision: Move to larc/packages/**
 
@@ -136,7 +136,7 @@ Think of it like a building:
 │     - Foundation                        │
 │                                         │
 │  🏢 Components Product (Separate)      │
-│     @larcjs/components                  │
+│     @larcjs/ui                  │
 │     - Standalone                        │
 │     - Optional add-on                   │
 │     - Builds on core                    │
@@ -173,7 +173,7 @@ User A: "I just want the message bus"
 → Gets: 5KB, pure messaging
 
 User B: "I want the bus + components"
-→ npm install @larcjs/core @larcjs/components
+→ npm install @larcjs/core @larcjs/ui
 → Gets: Bus + UI library
 
 User C: "I already have React, just want the bus"
@@ -210,12 +210,12 @@ User C: "I already have React, just want the bus"
 ```
 Repos:
   @larcjs/core (product)
-  @larcjs/components (product)
+  @larcjs/ui (product)
   larc (development assets)
 
 User installs:
   npm install @larcjs/core (minimal)
-  npm install @larcjs/components (optional)
+  npm install @larcjs/ui (optional)
 ```
 **Result:** Clean, simple, flexible
 

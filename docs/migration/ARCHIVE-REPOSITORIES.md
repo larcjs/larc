@@ -16,7 +16,7 @@ All three repositories have been updated with archive notices and pushed to GitH
 
 2. ✅ **larcjs/components-types**
    - README updated with archive notice
-   - Points to `larcjs/larc/packages/components-types`
+   - Points to `larcjs/larc/packages/ui-types`
    - Commit: `5ddcfeb`
 
 3. ✅ **larcjs/site**
@@ -69,8 +69,8 @@ For each repository listed above:
 
 ### 2. larcjs/components-types
 - **URL:** https://github.com/larcjs/components-types
-- **Reason:** Moved to monorepo at `larcjs/larc/packages/components-types`
-- **Archive Message Suggestion:** "This repository has been archived and moved to larcjs/larc/packages/components-types"
+- **Reason:** Moved to monorepo at `larcjs/larc/packages/ui-types`
+- **Archive Message Suggestion:** "This repository has been archived and moved to larcjs/larc/packages/ui-types"
 
 ### 3. larcjs/site
 - **URL:** https://github.com/larcjs/site
@@ -129,7 +129,7 @@ If you ever need to unarchive a repository:
 | Repository | Status | New Location | README Updated |
 |------------|--------|--------------|----------------|
 | larcjs/core-types | ⚠️ Need to archive | `larcjs/larc/packages/core-types` | ✅ Yes |
-| larcjs/components-types | ⚠️ Need to archive | `larcjs/larc/packages/components-types` | ✅ Yes |
+| larcjs/components-types | ⚠️ Need to archive | `larcjs/larc/packages/ui-types` | ✅ Yes |
 | larcjs/site | ⚠️ Need to archive | `larcjs/larc/docs/site` | ✅ Yes |
 
 ---

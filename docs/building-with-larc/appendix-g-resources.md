@@ -325,8 +325,8 @@ How LARC is governed, who makes decisions, and how the community can participate
 https://npmjs.com/package/@larcjs/core
 Core framework package containing PAN bus, autoloader, and foundational components.
 
-**@larcjs/components**
-https://npmjs.com/package/@larcjs/components
+**@larcjs/ui**
+https://npmjs.com/package/@larcjs/ui
 Official component library with UI, data, and integration components.
 
 **@larcjs/core-types**
