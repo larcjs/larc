@@ -571,7 +571,8 @@
       const frame = document.getElementById('preview-frame');
 
       // Extract component names from the code to know which modules to import
-      const componentMatches = code.match(/<(pan-[a-z-]+)/g) || [];
+      // Match any custom element (contains a hyphen)
+      const componentMatches = code.match(/<([a-z]+-[a-z-]+)/g) || [];
       const componentNames = [...new Set(componentMatches.map(m => m.slice(1)))];
 
       // Generate import statements for each component
