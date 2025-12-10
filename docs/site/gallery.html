@@ -570,17 +570,31 @@
       const code = document.getElementById('code-editor').value;
       const frame = document.getElementById('preview-frame');
 
+      // Extract component names from the code to know which modules to import
+      const componentMatches = code.match(/<(pan-[a-z-]+)/g) || [];
+      const componentNames = [...new Set(componentMatches.map(m => m.slice(1)))];
+
+      // Generate import statements for each component
+      const imports = componentNames.map(name =>
+        `import '/larc/packages/components/${name}.mjs';`
+      ).join('\n    ');
+
       const html = `<!doctype html>
 <html>
 <head>
   <meta charset="utf-8">
   <style>
     body { font-family: system-ui; padding: 1rem; }
+    * { box-sizing: border-box; }
   </style>
 </head>
 <body>
   <!-- Example code loaded from gallery -->
   ${code}
+
+  <script type="module">
+    ${imports}
+  </script>
 </body>
 </html>`;
 
