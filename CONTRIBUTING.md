@@ -32,27 +32,32 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Setting Up the Development Environment
 
-1. **Clone the repository with submodules:**
+1. **Clone the repository:**
    ```bash
-   git clone --recurse-submodules https://github.com/larcjs/larc.git
+   git clone https://github.com/larcjs/larc.git
    cd larc
    ```
 
-2. **Run the setup script:**
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Run the setup script (optional):**
    ```bash
    ./setup.sh      # Mac/Linux
    # OR
    setup.bat       # Windows
    ```
 
-3. **Start a local server:**
+4. **Start a local server:**
    ```bash
    python3 -m http.server 8000
    # OR
    npx serve
    ```
 
-4. **Test the setup:**
+5. **Test the setup:**
    - Open http://localhost:8000/test-config.html
    - Open http://localhost:8000/playground/
 
@@ -60,37 +65,45 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ## Repository Structure
 
-LARC is organized as a **meta-repository** with multiple submodules:
+LARC is organized as an **npm workspaces monorepo**:
 
 ```
-larc-repos/                        # This meta-repository
-├── core/                          # @larcjs/core (submodule)
-├── core-types/                    # @larcjs/core-types (submodule)
-├── ui/                            # @larcjs/components (submodule)
-├── components-types/              # @larcjs/components-types (submodule)
-├── examples/                      # @larcjs/examples (submodule)
-├── site/                          # Documentation site (submodule)
-├── devtools/                      # Chrome DevTools extension (submodule)
-├── playground/                    # Interactive component explorer
-└── docs/                          # Meta-repository documentation
+larc/
+├── packages/                      # Published packages (npm workspaces)
+│   ├── core/                      # @larcjs/core
+│   ├── components/                # @larcjs/components
+│   ├── core-lite/                 # @larcjs/core-lite
+│   ├── core-routing/              # @larcjs/core-routing
+│   ├── core-debug/                # @larcjs/core-debug
+│   ├── core-types/                # @larcjs/core-types
+│   ├── components-types/          # @larcjs/components-types
+│   ├── apps/                      # Demo applications
+│   ├── examples/                  # Code examples
+│   └── devtools/                  # Chrome DevTools extension
+├── cli/                           # create-larc-app CLI
+├── react-adapter/                 # React integration
+├── registry/                      # Component registry
+├── vscode-extension/              # VS Code extension
+├── docs/                          # Documentation & guides
+└── playground/                    # Interactive component explorer
 ```
 
 ### Where to Contribute
 
-Choose the appropriate repository based on your contribution:
+All packages are in this monorepo. Choose the appropriate directory based on your contribution:
 
-| Contribution Type | Repository |
-|------------------|------------|
-| Core messaging bus, autoloader | [larcjs/core](https://github.com/larcjs/core) |
-| TypeScript types for core | [larcjs/core-types](https://github.com/larcjs/core-types) |
-| UI components | [larcjs/components](https://github.com/larcjs/components) |
-| TypeScript types for components | [larcjs/components-types](https://github.com/larcjs/components-types) |
-| Example applications | [larcjs/examples](https://github.com/larcjs/examples) |
-| Documentation website | [larcjs/site](https://github.com/larcjs/site) |
-| DevTools extension | [larcjs/devtools](https://github.com/larcjs/devtools) |
-| Playground, config, meta-docs | This repository |
-
-**Important:** Most contributions should go to the individual submodule repositories, not this meta-repository.
+| Contribution Type | Directory |
+|------------------|-----------|
+| Core messaging bus, autoloader | `packages/core/` |
+| TypeScript types for core | `packages/core-types/` |
+| UI components | `packages/components/` |
+| TypeScript types for components | `packages/components-types/` |
+| Example applications | `packages/examples/` |
+| Documentation website | `docs/site/` |
+| DevTools extension | `packages/devtools/` |
+| CLI tool | `cli/` |
+| React adapter | `react-adapter/` |
+| Playground, config, docs | Root directory |
 
 ---
 
