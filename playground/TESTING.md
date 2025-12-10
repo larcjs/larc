@@ -116,7 +116,7 @@
 
 ## Known Issues to Watch For
 
-1. **Path Resolution**: Components should load from `../components/src/components/`
+1. **Path Resolution**: Components should load from `../components/`
 2. **Pan-bus**: Should initialize without errors
 3. **Dynamic Imports**: May fail for components not yet implemented
 4. **CORS**: Should not be an issue with local server

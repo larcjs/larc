@@ -24,10 +24,10 @@
 - [ ] All tests passing in CI (261/261 core tests)
 - [ ] No critical or high-severity npm audit issues
 - [ ] Latest versions published to npm:
-  - [ ] @larcjs/core@1.1.1 ✅
-  - [ ] @larcjs/core-types@1.1.1 ✅
-  - [ ] @larcjs/components@1.1.0 ✅
-  - [ ] @larcjs/components-types@1.0.2 ✅
+  - [ ] @larcjs/core@2.0.0 ✅
+  - [ ] @larcjs/core@2.0.0 ✅
+  - [ ] @larcjs/components@2.0.0 ✅
+  - [ ] @larcjs/core@2.0.0 ✅
 - [ ] GitHub Actions workflows all green
 - [ ] All TODO/FIXME comments resolved or documented
 

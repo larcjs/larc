@@ -222,7 +222,7 @@ Only load polyfills for browsers that need them:
   </script>
 
   <!-- Load LARC after polyfills -->
-  <script type="module" src="https://unpkg.com/@larcjs/core/src/pan.js"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core/pan.js"></script>
 </head>
 <body>
   <!-- Your app here -->

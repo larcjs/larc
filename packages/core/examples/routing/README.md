@@ -185,4 +185,4 @@ window.pan.debug.export()
 
 - Read the [API Reference](../../docs/PAN-ROUTING.md)
 - Check the [TypeScript Definitions](../../src/types/index.d.ts)
-- Explore [Storage Adapters](../../src/components/pan-storage.mjs)
+- Explore [Storage Adapters](../../pan-storage.mjs)

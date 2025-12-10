@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * Enhanced Build Script for LARC Core
+ * Build Script for LARC Core-Lite
  *
  * Creates minified versions alongside source files:
  * - src/pan.mjs → src/pan.min.mjs (minified)
- * - src/components/pan-bus.mjs → src/components/pan-bus.min.mjs
  *
  * Preserves original .mjs files for development/debugging
  * Adds .min.mjs files for production use
@@ -125,6 +124,6 @@ if (failCount > 0) {
 
 console.log('\n✨ Minification complete!\n');
 console.log('Usage in HTML:');
-console.log('  Development: <script type="module" src="/core/src/pan.mjs"></script>');
-console.log('  Production:  <script type="module" src="/core/src/pan.min.mjs"></script>');
+console.log('  Development: <script type="module" src="/core-lite/src/pan.mjs"></script>');
+console.log('  Production:  <script type="module" src="/core-lite/src/pan.min.mjs"></script>');
 console.log('');

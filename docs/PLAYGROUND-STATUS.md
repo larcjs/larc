@@ -63,9 +63,9 @@ Then open http://localhost:8080/playground/ in your browser.
 │   │   └── playground.css
 │   └── scripts/
 │       └── generate-registry.mjs
-├── core/src/components/
+├── core/
 │   └── pan-bus.mjs (imported by playground)
-└── components/src/components/
+└── components/
     └── [49 component files] (loaded dynamically)
 ```
 
@@ -73,8 +73,8 @@ Then open http://localhost:8080/playground/ in your browser.
 
 The playground imports work correctly when served from root:
 
-- `playground/playground.mjs` imports `../core/src/components/pan-bus.mjs`
-- `pg-canvas.mjs` dynamically imports from `../components/src/components/`
+- `playground/playground.mjs` imports `../core/pan-bus.mjs`
+- `pg-canvas.mjs` dynamically imports from `../components/`
 - All relative paths resolve correctly from root
 
 ## Testing Checklist

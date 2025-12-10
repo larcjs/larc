@@ -985,7 +985,7 @@ Let's build a complete example that demonstrates all these concepts:
   </task-app>
 
   <script type="module">
-    import { PanClient } from '/core/components/pan-client.mjs';
+    import { PanClient } from '/core/pan-client.mjs';
 
     // Task state manager
     class TaskState extends HTMLElement {

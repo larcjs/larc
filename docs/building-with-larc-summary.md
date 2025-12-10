@@ -192,7 +192,7 @@ Real-world deployment strategies for:
 ## 🔧 Technical Accuracy
 
 All component documentation is based on:
-- Actual source code in `/Users/cdr/Projects/larc-repos/apps/src/components/`
+- Actual source code in `/Users/cdr/Projects/larc-repos/apps/`
 - Real implementations from demo apps in `/apps`
 - Working examples in `/examples`
 - Established patterns from existing LARC applications

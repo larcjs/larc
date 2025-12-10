@@ -613,7 +613,7 @@ Import Maps let you define aliases for module paths:
     "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js",
     "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1/dist/index.js",
     "app/": "/src/",
-    "components/": "/src/components/"
+    "components/": "/"
   }
 }
 </script>

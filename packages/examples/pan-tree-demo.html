@@ -166,10 +166,10 @@
   <pan-bus debug="true"></pan-bus>
 
   <!-- Load LARC Core -->
-  <script type="module" src="../core/src/pan.mjs"></script>
+  <script type="module" src="../core/pan.mjs"></script>
 
   <!-- Load pan-tree component -->
-  <script type="module" src="../ui/src/components/pan-tree.mjs"></script>
+  <script type="module" src="../ui//pan-tree.mjs"></script>
 
   <div class="container">
     <h1>🌳 PAN Tree Component Demo</h1>
@@ -248,8 +248,8 @@
 
       <h3 style="margin: 20px 0 10px 0;">Basic HTML Usage</h3>
       <pre><code>&lt;!-- Load components --&gt;
-&lt;script type="module" src="@larcjs/core/src/pan.mjs"&gt;&lt;/script&gt;
-&lt;script type="module" src="@larcjs/components/src/components/pan-tree.mjs"&gt;&lt;/script&gt;
+&lt;script type="module" src="@larcjs/core/pan.mjs"&gt;&lt;/script&gt;
+&lt;script type="module" src="@larcjs/components/pan-tree.mjs"&gt;&lt;/script&gt;
 
 &lt;!-- Basic tree --&gt;
 &lt;pan-tree resource="documents" expanded&gt;&lt;/pan-tree&gt;
@@ -264,7 +264,7 @@
 &lt;/pan-tree&gt;</code></pre>
 
       <h3 style="margin: 20px 0 10px 0;">JavaScript API</h3>
-      <pre><code>import { PanClient } from '@larcjs/core/components/pan-client.mjs';
+      <pre><code>import { PanClient } from '@larcjs/core/pan-client.mjs';
 
 const pc = new PanClient();
 
@@ -323,7 +323,7 @@ pc.subscribe('documents.node.move', (msg) => {
   </div>
 
   <script type="module">
-    import { PanClient } from '../core/src/components/pan-client.mjs';
+    import { PanClient } from '../core/pan-client.mjs';
 
     const pc = new PanClient();
     const eventList = document.getElementById('event-list');

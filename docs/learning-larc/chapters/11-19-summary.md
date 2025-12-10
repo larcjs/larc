@@ -132,7 +132,7 @@ app.listen(3000);
 ### Test Example:
 ```javascript
 import { expect, fixture, html } from '@open-wc/testing';
-import '../src/components/user-card.js';
+import '../user-card.js';
 
 describe('UserCard', () => {
   it('renders user data', async () => {

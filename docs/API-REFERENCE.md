@@ -33,7 +33,7 @@ LARC can be used in two ways:
 </head>
 <body>
   <!-- Load autoloader -->
-  <script type="module" src="/core/src/pan.mjs"></script>
+  <script type="module" src="/core/pan.mjs"></script>
 
   <!-- Use components - they load automatically -->
   <my-widget></my-widget>
@@ -77,11 +77,11 @@ LARC can be used in two ways:
   <title>Counter Demo</title>
 </head>
 <body>
-  <script type="module" src="/core/src/pan.mjs"></script>
+  <script type="module" src="/core/pan.mjs"></script>
 
   <!-- Create a simple counter component -->
   <script type="module">
-    import { PanClient } from '/core/src/components/pan-client.mjs';
+    import { PanClient } from '/core/pan-client.mjs';
 
     class CounterElement extends HTMLElement {
       constructor() {
@@ -190,12 +190,12 @@ interface AutoloadConfig {
 ```html
 <script type="module">
   window.panAutoload = {
-    baseUrl: 'https://unpkg.com/@larcjs/core@1.0.0/',
+    baseUrl: 'https://unpkg.com/@larcjs/core@2.0.0/',
     componentsPath: 'src/components/',
     extension: '.js'
   };
 </script>
-<script type="module" src="https://unpkg.com/@larcjs/core@1.0.0/src/pan.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
 ```
 
 **Custom Component Resolver**
@@ -237,7 +237,7 @@ Manually loads a component module for a specific element.
 **Example:**
 
 ```javascript
-import { maybeLoadFor } from '/core/src/pan.mjs';
+import { maybeLoadFor } from '/core/pan.mjs';
 
 // Create element
 const widget = document.createElement('my-widget');
@@ -269,7 +269,7 @@ Observes a DOM tree for undefined custom elements and sets up progressive loadin
 **Example:**
 
 ```javascript
-import { observeTree } from '/core/src/pan.mjs';
+import { observeTree } from '/core/pan.mjs';
 
 // Observe entire document (default)
 observeTree();
@@ -394,7 +394,7 @@ When you load `pan.mjs`, the PAN bus is automatically created and made available
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="/core/src/pan.mjs"></script>
+  <script type="module" src="/core/pan.mjs"></script>
 </head>
 <body>
   <!-- No <pan-bus> tag needed! -->
@@ -799,7 +799,7 @@ Check if a topic matches a pattern.
 
 **Example:**
 ```javascript
-import { PanBusEnhanced } from '/core/src/components/pan-bus.mjs';
+import { PanBusEnhanced } from '/core/pan-bus.mjs';
 
 PanBusEnhanced.matches('users.created', 'users.*');  // true
 PanBusEnhanced.matches('users.created', 'posts.*');  // false
@@ -859,7 +859,7 @@ new PanClient(host?: HTMLElement | Document, busSelector?: string)
 **Example:**
 
 ```javascript
-import { PanClient } from '/core/src/components/pan-client.mjs';
+import { PanClient } from '/core/pan-client.mjs';
 
 // Use document as host
 const client = new PanClient();
@@ -1094,7 +1094,7 @@ PanClient.matches('users.item.123', 'users.item.*');  // true
 ### Complete Example
 
 ```javascript
-import { PanClient } from '/core/src/components/pan-client.mjs';
+import { PanClient } from '/core/pan-client.mjs';
 
 class UserListComponent extends HTMLElement {
   constructor() {
@@ -1201,7 +1201,7 @@ LARC supports a centralized configuration file for path resolution across your a
   <script type="module" src="/larc-config.mjs"></script>
 
   <!-- Step 2: Load autoloader -->
-  <script type="module" src="/core/src/pan.mjs"></script>
+  <script type="module" src="/core/pan.mjs"></script>
 
   <!-- Step 3: Use components -->
   <pan-card>Hello World</pan-card>
@@ -1215,14 +1215,14 @@ LARC supports a centralized configuration file for path resolution across your a
 // larc-config.mjs
 export const aliases = {
   '@larc/core': '/core/src',
-  '@larc/components': '/ui/src',
+  '@larc/components': '/components',
   '@larc/examples': '/examples'
 };
 
 export const componentPaths = {
-  'pan-bus': '@larc/core/components/pan-bus.mjs',
-  'pan-client': '@larc/core/components/pan-client.mjs',
-  'pan-card': '@larc/components/components/pan-card.mjs'
+  'pan-bus': '@larc/core/pan-bus.mjs',
+  'pan-client': '@larc/core/pan-client.mjs',
+  'pan-card': '@larc/components/pan-card.mjs'
 };
 
 export const paths = {
@@ -1239,7 +1239,7 @@ export const paths = {
 
 export const autoloadConfig = {
   baseUrl: null,
-  componentsPath: '/ui/src/components/',
+  componentsPath: '/ui/',
   extension: '.mjs',
   rootMargin: 600,
 
@@ -1327,15 +1327,15 @@ import {
   PanMessage,
   SubscribeOptions,
   RequestOptions
-} from '/core/src/components/pan-client.mjs';
+} from '/core/pan-client.mjs';
 
 import {
   PanAutoloadConfig,
   maybeLoadFor,
   observeTree
-} from '/core/src/pan.mjs';
+} from '/core/pan.mjs';
 
-import { PanBusEnhanced } from '/core/src/components/pan-bus.mjs';
+import { PanBusEnhanced } from '/core/pan-bus.mjs';
 ```
 
 ### Type Definitions
@@ -1428,7 +1428,7 @@ console.log(response.data.email);
 ### Component with TypeScript
 
 ```typescript
-import { PanClient, PanMessage } from '/core/src/components/pan-client.mjs';
+import { PanClient, PanMessage } from '/core/pan-client.mjs';
 
 interface TodoItem {
   id: number;

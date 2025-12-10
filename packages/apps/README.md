@@ -12,7 +12,7 @@ apps/
 ├── components/        # LARC components (submodule)
 ├── src/               # Autoload system and utilities
 │   ├── pan.mjs        # Component autoloader
-│   └── components/    # Symlink to components/src/components
+│   └── components/    # Symlink to components
 ├── contact-manager/   # Contact management app
 ├── data-browser/      # Data visualization app
 ├── invoice/           # Simple invoice creator

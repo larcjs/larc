@@ -470,7 +470,7 @@ Everything else → Archive or move to wiki
 ```
 
 **Rationale:**
-- Types published as patch releases from core/components
+- Types published as patch releases from core
 - Examples live in README or GitHub Pages
 - Docs on website only
 

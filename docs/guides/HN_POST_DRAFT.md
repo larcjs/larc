@@ -39,7 +39,7 @@ Technical highlights:
 • 261 tests passing (Chromium, Firefox, WebKit)
 • Works with React, Vue, Svelte—mix and match
 • TypeScript support
-• Published on npm (@larcjs/core@1.1.1)
+• Published on npm (@larcjs/core@2.0.0)
 
 Live playground: https://larcjs.github.io/larc/playground/
 
@@ -110,7 +110,7 @@ and update automatically. No coupling, no imports, no framework required.
 • 261 tests passing (Chromium, Firefox, WebKit)
 • 0 vulnerabilities (npm audit)
 • TypeScript support
-• Published to npm (@larcjs/core@1.1.1)
+• Published to npm (@larcjs/core@2.0.0)
 
 **Try it:**
 Playground: https://larcjs.github.io/larc/playground/

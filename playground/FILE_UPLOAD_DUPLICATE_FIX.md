@@ -231,7 +231,7 @@ render() {
 
 ## Files Changed
 
-### `/Users/cdr/Projects/larc-repos/ui/src/components/file-upload.mjs`
+### `/Users/cdr/Projects/larc-repos/ui/file-upload.mjs`
 
 **Lines Changed:**
 - Line 27: Added `this.boundHandlers = null;`

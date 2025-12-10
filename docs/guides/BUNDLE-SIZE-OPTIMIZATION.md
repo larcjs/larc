@@ -76,8 +76,8 @@ larc/
 ├── packages/
 │   ├── core-lite/            (@larcjs/core-lite - 9KB) ⭐
 │   │   ├── src/pan.mjs
-│   │   ├── src/components/pan-bus.mjs (lite)
-│   │   └── src/components/pan-client.mjs
+│   │   ├── pan-bus.mjs (lite)
+│   │   └── pan-client.mjs
 │   ├── core-routing/         (@larcjs/core-routing - 8KB)
 │   │   └── src/pan-routes.mjs
 │   └── core-debug/           (@larcjs/core-debug - 3KB)

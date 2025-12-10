@@ -6,7 +6,7 @@
 **Problem**: File upload triggered events twice
 **Cause**: `setupEvents()` called multiple times without cleanup
 **Fix**: Added guard pattern with `this.eventsSetup` flag
-**File**: `ui/src/components/file-upload.mjs`
+**File**: `ui/file-upload.mjs`
 
 ### 2. Dropdown Menu - No Items Displayed ✅
 **Problem**: Dropdown showed button but no menu items
@@ -18,7 +18,7 @@
 **Problem**: Clicking date input did nothing
 **Cause**: Duplicate event listeners from multiple `setupEvents()` calls
 **Fix**: Added guard pattern with `this.eventsSetup` flag
-**File**: `ui/src/components/pan-date-picker.mjs`
+**File**: `ui/pan-date-picker.mjs`
 
 ### 4. Drag & Drop List - No PAN Messages ✅
 **Problem**:
@@ -37,7 +37,7 @@
 3. Added guard pattern with `this.eventsSetup` flag
 **Files**:
 - `playground/examples.mjs`
-- `ui/src/components/drag-drop-list.mjs`
+- `ui/drag-drop-list.mjs`
 
 ### 5. PAN DevTools Extension - Not Working ✅ FIXED!
 **Problem**: Chrome extension not showing messages
@@ -106,9 +106,9 @@ render() {
 6. `playground/DRAG_DROP_LIST_FIX.md` - Documentation
 
 ### Component Files
-1. `ui/src/components/file-upload.mjs` - Guard pattern
-2. `ui/src/components/pan-date-picker.mjs` - Guard pattern
-3. `ui/src/components/drag-drop-list.mjs` - Guard pattern + index tracking
+1. `ui/file-upload.mjs` - Guard pattern
+2. `ui/pan-date-picker.mjs` - Guard pattern
+3. `ui/drag-drop-list.mjs` - Guard pattern + index tracking
 
 ### DevTools Files
 1. `devtools/src/injected.js` - Added debug logging (for diagnostics)

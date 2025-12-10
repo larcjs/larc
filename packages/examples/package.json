@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/examples",
-  "version": "1.0.2",
+  "version": "2.0.0",
   "description": "LARC Examples - Demo applications and usage examples for the PAN messaging system",
   "type": "module",
   "scripts": {

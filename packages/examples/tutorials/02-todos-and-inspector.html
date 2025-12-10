@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Demo Suite · 02 Todos & Inspector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/grail.css">
+</head>
+<body>
+  <div class="app-shell">
+    
+
+    <main class="main-region">
+      <header class="main-header">
+        <h1>Todos &amp; Inspector</h1>
+        <p>
+          A minimal PAN stack: provider retains <code>todos.state</code>, the list subscribes with replay,
+          and the inspector captures every event for debugging.
+        </p>
+        <div class="badge-row">
+          <span class="badge">topics: <code>todos.*</code></span>
+          <span class="badge">retained state</span>
+          <span class="badge">inspect + replay</span>
+        </div>
+      </header>
+
+      <section class="content-area">
+        <div class="split-vertical">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Todo List</h2>
+                <div class="subtitle">Publishes intent topics (<code>todos.change</code>, <code>todos.toggle</code>, <code>todos.remove</code>).</div>
+              </div>
+              <div class="toolbar">
+                <span class="meta-label">Messages retained:</span>
+                <span class="meta-value">true</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <todo-list></todo-list>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Traffic Console</h2>
+                <div class="subtitle">Watch retained snapshots and live events in a rolling buffer.</div>
+              </div>
+            </div>
+            <div class="panel-body">
+              <pan-inspector></pan-inspector>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <todo-provider hidden></todo-provider>
+
+  <!-- PAN Autoload: just one script tag, components load automatically -->
+  <script type="module">
+    if (!customElements.get('pan-bus')) {
+      await import('../../core/pan-bus.mjs');
+    // Load autoload system to discover and load custom elements on demand
+    await import('../src/pan.mjs');
+    }
+  </script>
+
+  <pan-bus debug="true"></pan-bus>
+</body>
+</html>

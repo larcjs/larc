@@ -7,8 +7,8 @@ Centralized path management for the LARC monorepo, eliminating hardcoded relativ
 **Before:**
 ```javascript
 // ❌ Hardcoded, breaks when file moves
-import { PanClient } from '../../../../core/src/components/pan-client.mjs';
-import '../../../components/src/components/pan-card.mjs';
+import { PanClient } from '../../../../core/pan-client.mjs';
+import '../../../components/pan-card.mjs';
 ```
 
 **After:**
@@ -50,7 +50,7 @@ const PanClient = await import(paths.resolve('@larc/core', 'components/pan-clien
   <script type="module" src="/larc-config.mjs"></script>
 
   <!-- 2. Load autoloader (it will use the config) -->
-  <script type="module" src="/core/src/pan.mjs"></script>
+  <script type="module" src="/core/pan.mjs"></script>
 
   <!-- 3. Use components - they load automatically! -->
   <pan-bus></pan-bus>
@@ -73,10 +73,10 @@ const PanClient = await import(paths.resolve('@larc/core', 'components/pan-clien
 <script type="importmap">
 {
   "imports": {
-    "@larc/core/": "./core/src/",
-    "@larc/components/": "./components/src/",
-    "pan-bus": "./core/src/components/pan-bus.mjs",
-    "pan-client": "./core/src/components/pan-client.mjs"
+    "@larc/core/": "./core/",
+    "@larc/components/": "./components/",
+    "pan-bus": "./core/pan-bus.mjs",
+    "pan-client": "./core/pan-client.mjs"
   }
 }
 </script>
@@ -84,7 +84,7 @@ const PanClient = await import(paths.resolve('@larc/core', 'components/pan-clien
 <script type="module">
   // Now you can use clean imports!
   import { PanClient } from 'pan-client';
-  import '@larc/core/components/pan-bus.mjs';
+  import '@larc/core/pan-bus.mjs';
 </script>
 ```
 
@@ -102,11 +102,11 @@ Aliases map short names to actual paths, automatically switching between dev and
 export const aliases = {
   '@larc/core': isDevelopment
     ? './core/src'                                    // Local dev
-    : 'https://unpkg.com/@larcjs/core@1.0.0/src',    // Production CDN
+    : 'https://unpkg.com/@larcjs/core@2.0.0/src',    // Production CDN
 
   '@larc/components': isDevelopment
     ? './components/src'
-    : 'https://unpkg.com/@larcjs/components@1.0.0/src',
+    : 'https://unpkg.com/@larcjs/components@2.0.0/src',
 };
 ```
 
@@ -116,9 +116,9 @@ Explicit mappings for components used by the autoloader:
 
 ```javascript
 export const componentPaths = {
-  'pan-bus': '@larc/core/components/pan-bus.mjs',
-  'pan-card': '@larc/components/components/pan-card.mjs',
-  'pan-data-table': '@larc/components/components/pan-data-table.mjs',
+  'pan-bus': '@larc/core/pan-bus.mjs',
+  'pan-card': '@larc/components/pan-card.mjs',
+  'pan-data-table': '@larc/components/pan-data-table.mjs',
   // ... more components
 };
 ```
@@ -130,12 +130,12 @@ The `paths` utility provides methods for resolving paths:
 ```javascript
 // Resolve an alias
 paths.resolve('@larc/core', 'components/pan-bus.mjs');
-// Dev:  => './core/src/components/pan-bus.mjs'
-// Prod: => 'https://unpkg.com/@larcjs/core@1.0.0/src/components/pan-bus.mjs'
+// Dev:  => './core/pan-bus.mjs'
+// Prod: => 'https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs'
 
 // Get a component path
 paths.component('pan-card');
-// => './components/src/components/pan-card.mjs' (dev)
+// => './components/pan-card.mjs' (dev)
 
 // Join paths
 paths.join('./base/', 'subpath/file.mjs');
@@ -195,7 +195,7 @@ client.publish('app.ready', { timestamp: Date.now() });
 ```html
 <!-- No imports needed! Config + autoloader handles it -->
 <script type="module" src="/larc-config.mjs"></script>
-<script type="module" src="/core/src/pan.mjs"></script>
+<script type="module" src="/core/pan.mjs"></script>
 
 <pan-data-table resource="users"></pan-data-table>
 <pan-form resource="users"></pan-form>
@@ -248,7 +248,7 @@ export const componentPaths = {
 
   // Your custom components
   'my-widget': './my-app/components/my-widget.mjs',
-  'my-dialog': '@larc/components/components/my-dialog.mjs',
+  'my-dialog': '@larc/components/my-dialog.mjs',
 };
 ```
 
@@ -351,7 +351,7 @@ Replace hardcoded paths:
 
 ```javascript
 // Before
-import { PanClient } from '../../../core/src/components/pan-client.mjs';
+import { PanClient } from '../../../core/pan-client.mjs';
 
 // After
 import { paths } from '/larc-config.mjs';

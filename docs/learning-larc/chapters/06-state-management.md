@@ -990,7 +990,7 @@ self.addEventListener('install', (event) => {
         '/',
         '/index.html',
         '/src/app.js',
-        '/src/components/',
+        '/',
         // Cache critical assets
       ]);
     })

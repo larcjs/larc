@@ -29,7 +29,7 @@ test.describe('Complete Initialization Flow', () => {
           window.testLog('pan-bus element found: ' + (bus !== null));
 
           // Step 4: Import PanClient
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
           window.testLog('PanClient imported');
 
           // Step 5: Create client and verify ready
@@ -75,7 +75,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           // Import in different order - client before autoloader
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
           const client = new PanClient();
 
           // Now import autoloader
@@ -113,7 +113,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           // Create three clients representing different components
           const componentA = new PanClient();
@@ -176,7 +176,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           const serviceComponent = new PanClient();
           const clientComponent = new PanClient();
@@ -285,7 +285,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           const stateProvider = new PanClient();
           await stateProvider.ready();
@@ -332,7 +332,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           // State manager component
           const stateManager = new PanClient();
@@ -399,7 +399,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           const client1 = new PanClient();
           const client2 = new PanClient();
@@ -447,7 +447,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           const client = new PanClient();
           await client.ready();
@@ -488,7 +488,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           // Event store
           const eventStore = new PanClient();
@@ -542,7 +542,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           const publisher = new PanClient();
           await publisher.ready();
@@ -600,7 +600,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           // Command handler
           const commandHandler = new PanClient();
@@ -664,7 +664,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           const publisher = new PanClient();
           await publisher.ready();
@@ -723,7 +723,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           await import('../../src/pan.mjs');
-          const { PanClient } = await import('../../src/components/pan-client.mjs');
+          const { PanClient } = await import('../../pan-client.mjs');
 
           const publisher = new PanClient();
           const subscriber = new PanClient();

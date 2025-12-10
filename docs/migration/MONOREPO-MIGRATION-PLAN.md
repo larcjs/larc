@@ -242,7 +242,7 @@ github.com/larcjs/components  → published as @larcjs/components
 
 **Development workflow:**
 ```bash
-# For core/components development
+# For core development
 npm link @larcjs/core
 npm link @larcjs/components
 

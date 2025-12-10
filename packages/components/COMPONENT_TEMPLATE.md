@@ -77,7 +77,7 @@ Use this standard header format for all component files. The documentation gener
  * ```
  */
 
-import { PanClient } from '../../../core/src/components/pan-client.mjs';
+import { PanClient } from '../../../core/pan-client.mjs';
 
 export class PanExample extends HTMLElement {
   static get observedAttributes() {

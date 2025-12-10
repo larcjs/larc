@@ -46,7 +46,7 @@ The simplest setup requires no configuration:
 <html>
 <head>
   <meta charset="UTF-8">
-  <script type="module" src="/core/src/components/pan-bus.mjs"></script>
+  <script type="module" src="/core/pan-bus.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -642,8 +642,8 @@ Include the provider once per application, typically near the bus:
 <html>
 <head>
   <meta charset="UTF-8">
-  <script type="module" src="/core/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-theme-provider.mjs"></script>
+  <script type="module" src="/core/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-theme-provider.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>

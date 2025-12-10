@@ -9,7 +9,7 @@ The "Data Flow" example (and several other examples) were using a non-existent `
 
 ## Root Cause
 
-There is a `panFetch` utility in `/ui/src/components/pan-fetch.mjs`, but it's **not a Web Component**—it's a JavaScript utility function for authenticated fetch operations. The examples incorrectly tried to use it as `<pan-fetch>` with attributes.
+There is a `panFetch` utility in `/ui/pan-fetch.mjs`, but it's **not a Web Component**—it's a JavaScript utility function for authenticated fetch operations. The examples incorrectly tried to use it as `<pan-fetch>` with attributes.
 
 ## Solution
 

@@ -742,7 +742,7 @@ Complete example using multiple state management components together:
 <head>
   <meta charset="utf-8">
   <title>Advanced State Management Demo</title>
-  <script type="module" src="https://unpkg.com/@larcjs/core/src/pan.js"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core/pan.js"></script>
 </head>
 <body>
   <h1>Todo App with Advanced State</h1>

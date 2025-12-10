@@ -93,7 +93,7 @@ class MyComponent extends HTMLElement {
 </pan-card>
 ```
 
-**File paths** are shown in UNIX format (`/src/components/my-component.mjs`) but translate naturally to Windows (`\src\components\my-component.mjs`).
+**File paths** are shown in UNIX format (`/my-component.mjs`) but translate naturally to Windows (`\src\components\my-component.mjs`).
 
 **Command-line examples** begin with a prompt:
 
@@ -272,8 +272,8 @@ larc-config.mjs    # Path configuration
 Imports use ES6 module syntax:
 
 ```javascript
-import { PanBus } from '/core/src/pan-bus.mjs';
-import MyComponent from '/src/components/my-component.mjs';
+import { PanBus } from '/core/pan-bus.mjs';
+import MyComponent from '/my-component.mjs';
 ```
 
 Production applications typically use import maps or CDN URLs (covered in Chapter 20).

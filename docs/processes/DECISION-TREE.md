@@ -61,7 +61,7 @@ Can users reasonably want ONLY this package?
 
 ### `examples` - Consolidate 🔄
 - ❌ Published to npm: No
-- ❌ Users want it standalone: No, examples of using core/components
+- ❌ Users want it standalone: No, examples of using core
 - ❌ Independent value: Educational assets
 - **Decision: Move to larc/examples/**
 

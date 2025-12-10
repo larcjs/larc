@@ -53,7 +53,7 @@ document.addEventListener('pan:deliver', this.deliverHandler, true);
 
 ## How PAN Bus Actually Works
 
-From the core PAN bus implementation (`core/src/components/pan-bus.mjs`):
+From the core PAN bus implementation (`core/pan-bus.mjs`):
 
 ### Publishing
 When a component publishes a message:

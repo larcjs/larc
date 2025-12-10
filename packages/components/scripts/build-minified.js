@@ -4,8 +4,8 @@
  * Build Script for LARC UI Components
  *
  * Creates minified versions alongside source files:
- * - src/components/pan-table.mjs → src/components/pan-table.min.mjs (minified)
- * - src/components/pan-form.mjs → src/components/pan-form.min.mjs
+ * - pan-table.mjs → pan-table.min.mjs (minified)
+ * - pan-form.mjs → pan-form.min.mjs
  *
  * Preserves original .mjs files for development/debugging
  * Adds .min.mjs files for production use
@@ -18,7 +18,6 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
-const srcDir = join(rootDir, 'src');
 
 console.log('🚀 Building LARC UI Components with minified versions...\n');
 
@@ -84,10 +83,10 @@ async function minifyFile(inputPath) {
 // Find and minify all .mjs files
 // ============================================================================
 
-const mjsFiles = findMjsFiles(srcDir);
+const mjsFiles = findMjsFiles(rootDir);
 
 if (mjsFiles.length === 0) {
-  console.error('❌ No .mjs files found in src/ directory');
+  console.error('❌ No .mjs files found in components directory');
   process.exit(1);
 }
 
@@ -136,6 +135,6 @@ if (failCount > 0) {
 
 console.log('\n✨ Minification complete!\n');
 console.log('Usage in HTML:');
-console.log('  Development: <script type="module" src="/components/src/components/pan-table.mjs"></script>');
-console.log('  Production:  <script type="module" src="/components/src/components/pan-table.min.mjs"></script>');
+console.log('  Development: <script type="module" src="/components/pan-table.mjs"></script>');
+console.log('  Production:  <script type="module" src="/components/pan-table.min.mjs"></script>');
 console.log('');

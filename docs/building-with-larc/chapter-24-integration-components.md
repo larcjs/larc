@@ -47,8 +47,8 @@ Include the component module and add it to your HTML:
 <html>
 <head>
   <meta charset="UTF-8">
-  <script type="module" src="/ui/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-data-connector.mjs"></script>
+  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-data-connector.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -280,8 +280,8 @@ This means you can configure authentication once in `pan-auth-provider`, and all
 <html>
 <head>
   <meta charset="UTF-8">
-  <script type="module" src="/ui/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-data-connector.mjs"></script>
+  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-data-connector.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -524,8 +524,8 @@ This component is ideal for applications that interact with GraphQL APIs while m
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="/ui/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-graphql-connector.mjs"></script>
+  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-graphql-connector.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -825,8 +825,8 @@ This enables real-time, full-duplex communication patterns: chat applications, l
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="/ui/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-websocket.mjs"></script>
+  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-websocket.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -1010,8 +1010,8 @@ Outbound messages are forwarded in the same format.
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="/ui/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-websocket.mjs"></script>
+  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-websocket.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -1252,8 +1252,8 @@ SSE is ideal for live feeds, notification streams, real-time dashboards, and any
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="/ui/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-sse.mjs"></script>
+  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-sse.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -1570,11 +1570,11 @@ Real-world applications often use multiple integration patterns simultaneously. 
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="/ui/src/components/pan-bus.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-auth-provider.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-data-connector.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-websocket.mjs"></script>
-  <script type="module" src="/ui/src/components/pan-sse.mjs"></script>
+  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/ui/pan-auth-provider.mjs"></script>
+  <script type="module" src="/ui/pan-data-connector.mjs"></script>
+  <script type="module" src="/ui/pan-websocket.mjs"></script>
+  <script type="module" src="/ui/pan-sse.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -1825,8 +1825,8 @@ self.addEventListener('install', (event) => {
     caches.open('app-v1').then((cache) => {
       return cache.addAll([
         '/',
-        '/ui/src/components/pan-bus.mjs',
-        '/ui/src/components/pan-data-connector.mjs',
+        '/ui/pan-bus.mjs',
+        '/ui/pan-data-connector.mjs',
         '/app.js',
         '/styles.css'
       ]);

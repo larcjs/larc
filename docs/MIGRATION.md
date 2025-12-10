@@ -169,7 +169,7 @@ If you encounter issues (unlikely), rolling back is simple:
 npm install @larcjs/core@0.1.0
 
 # Or pin to last working version
-npm install @larcjs/core@1.0.1
+npm install @larcjs/core@2.0.0
 ```
 
 No code changes needed for rollback - APIs are fully compatible.

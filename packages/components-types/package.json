@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/components-types",
-  "version": "1.0.3",
+  "version": "2.0.0",
   "description": "TypeScript type definitions for @larcjs/components",
   "types": "index.d.ts",
   "type": "module",

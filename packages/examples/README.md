@@ -163,7 +163,7 @@ Most examples work directly with CDN links:
   <script type="module" src="https://unpkg.com/@larcjs/core-lite@latest/src/pan.js"></script>
 
   <!-- Option 2: Full Core (40KB - includes routing & debug) -->
-  <!-- <script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.js"></script> -->
+  <!-- <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.js"></script> -->
 </head>
 <body>
   <!-- Your PAN components here -->

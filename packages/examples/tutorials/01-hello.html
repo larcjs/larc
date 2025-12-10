@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Demo Suite · 01 Hello Counter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/grail.css">
+</head>
+<body>
+  <div class="app-shell">
+    
+
+    <main class="main-region">
+      <header class="main-header">
+        <h1>Hello Counter</h1>
+        <p>
+          The smallest possible PAN demo: a single custom element publishes a retained counter topic and receives its own updates through the bus.
+        </p>
+        <div class="badge-row">
+          <span class="badge">single topic</span>
+          <span class="badge">retained delivery</span>
+          <span class="badge">zero build</span>
+        </div>
+      </header>
+
+      <section class="content-area">
+        <section class="panel" style="max-width: 520px;">
+          <div class="panel-header">
+            <div>
+              <h2>Counter Component</h2>
+              <div class="subtitle">Publish <code>demo:click</code>, replay retained state on subscribe.</div>
+            </div>
+            <div class="toolbar">
+              <a class="button-link" href="..//pan-client.mjs">PanClient API</a>
+            </div>
+          </div>
+          <div class="panel-body">
+            <x-counter></x-counter>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <!-- PAN Autoload: loads pan-bus and enables automatic component discovery -->
+  <script type="module">
+    if (!customElements.get('pan-bus')) {
+      await import('../../core/pan-bus.mjs');
+    }
+    // Load autoload system to discover and load custom elements on demand
+    await import('../src/pan.mjs');
+  </script>
+
+  <pan-bus debug="true"></pan-bus>
+</body>
+</html>

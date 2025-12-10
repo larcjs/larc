@@ -34,11 +34,11 @@ Minifies all `.mjs` files in @larcjs/core
 
 **Input Files (6):**
 - `src/pan.mjs`
-- `src/components/pan-bus.mjs`
-- `src/components/pan-client.mjs`
-- `src/components/pan-debug.mjs`
-- `src/components/pan-routes.mjs`
-- `src/components/pan-storage.mjs`
+- `pan-bus.mjs`
+- `pan-client.mjs`
+- `pan-debug.mjs`
+- `pan-routes.mjs`
+- `pan-storage.mjs`
 
 **Output:** `.min.mjs` files alongside each source
 
@@ -166,13 +166,13 @@ npm run build:all
 
 ```html
 <!-- Core -->
-<script type="module" src="/core/src/pan.mjs"></script>
+<script type="module" src="/core/pan.mjs"></script>
 
 <!-- Individual component -->
-<script type="module" src="/core/src/components/pan-bus.mjs"></script>
+<script type="module" src="/core/pan-bus.mjs"></script>
 
 <!-- UI Components -->
-<script type="module" src="/components/src/components/pan-table.mjs"></script>
+<script type="module" src="/components/pan-table.mjs"></script>
 ```
 
 **Benefits:**
@@ -185,13 +185,13 @@ npm run build:all
 
 ```html
 <!-- Core -->
-<script type="module" src="/core/src/pan.min.mjs"></script>
+<script type="module" src="/core/pan.min.mjs"></script>
 
 <!-- Individual component -->
-<script type="module" src="/core/src/components/pan-bus.min.mjs"></script>
+<script type="module" src="/core/pan-bus.min.mjs"></script>
 
 <!-- UI Components -->
-<script type="module" src="/components/src/components/pan-table.min.mjs"></script>
+<script type="module" src="/components/pan-table.min.mjs"></script>
 ```
 
 **Benefits:**
@@ -277,10 +277,10 @@ Developers manually choose which version to import:
 
 ```html
 <!-- Dev -->
-<script type="module" src="/core/src/pan.mjs"></script>
+<script type="module" src="/core/pan.mjs"></script>
 
 <!-- Prod -->
-<script type="module" src="/core/src/pan.min.mjs"></script>
+<script type="module" src="/core/pan.min.mjs"></script>
 ```
 
 ### Option 2: Environment-Based (Future)
@@ -288,7 +288,7 @@ Developers manually choose which version to import:
 Use a build-time variable or server-side logic:
 
 ```html
-<script type="module" src="/core/src/pan{{ ENV === 'production' ? '.min' : '' }}.mjs"></script>
+<script type="module" src="/core/pan{{ ENV === 'production' ? '.min' : '' }}.mjs"></script>
 ```
 
 ### Option 3: .htaccess Rewrite (Advanced)
@@ -328,7 +328,7 @@ python3 -m http.server 8000
 
     <!-- Test minified core -->
     <script type="module">
-        import { PanClient } from '/core/src/components/pan-client.min.mjs';
+        import { PanClient } from '/core/pan-client.min.mjs';
 
         const client = new PanClient();
         document.getElementById('output').textContent =

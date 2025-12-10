@@ -371,7 +371,7 @@ test.describe('Configuration', () => {
 
           // Create element with custom module path
           const el = document.createElement('custom-path');
-          el.setAttribute('data-module', '../../src/components/pan-bus.mjs');
+          el.setAttribute('data-module', '../../pan-bus.mjs');
           document.body.appendChild(el);
 
           // Get the URL that would be used

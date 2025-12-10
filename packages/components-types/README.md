@@ -285,7 +285,7 @@ import type {
 } from '@larcjs/components-types';
 
 // This is the actual runtime import
-import '@larcjs/components/components/pan-router.mjs';
+import '@larcjs/components/pan-router.mjs';
 
 const router: PanRouter = document.querySelector('pan-router')!;
 ```

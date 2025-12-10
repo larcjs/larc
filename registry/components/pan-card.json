@@ -10,14 +10,14 @@
 
   "npm": {
     "package": "@larcjs/ui",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "url": "https://www.npmjs.com/package/@larcjs/ui"
   },
 
   "cdn": {
-    "jsdelivr": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1.0.0/dist/index.js",
-    "unpkg": "https://unpkg.com/@larcjs/ui@1.0.0/dist/index.js",
-    "esm": "https://esm.sh/@larcjs/ui@1.0.0"
+    "jsdelivr": "https://cdn.jsdelivr.net/npm/@larcjs/components@2.0.0/pan-card.mjs",
+    "unpkg": "https://unpkg.com/@larcjs/components@2.0.0/pan-card.mjs",
+    "esm": "https://esm.sh/@larcjs/components@2.0.0/pan-card.mjs"
   },
 
   "repository": {

@@ -88,7 +88,7 @@ The component registry is auto-generated from component source files:
 node scripts/generate-registry.mjs
 ```
 
-This scans all components in `../components/src/components/` and extracts:
+This scans all components in `../components/` and extracts:
 - Component names and descriptions
 - Attributes from `observedAttributes`
 - Categories and icons
@@ -98,7 +98,7 @@ This scans all components in `../components/src/components/` and extracts:
 
 ### Adding New Components
 
-1. Add your component to `/components/src/components/`
+1. Add your component to `/components/`
 2. Regenerate the registry: `node scripts/generate-registry.mjs`
 3. Add category mapping in `generate-registry.mjs` if needed
 4. Optionally add an icon mapping

@@ -1390,7 +1390,7 @@ Import Maps let you define aliases for module paths:
     "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js",
     "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1/dist/index.js",
     "app/": "/src/",
-    "components/": "/src/components/"
+    "components/": "/"
   }
 }
 </script>
@@ -2387,7 +2387,7 @@ Create shortcuts for your own modules:
 {
   "imports": {
     "@/": "/src/",
-    "components/": "/src/components/",
+    "components/": "/",
     "lib/": "/src/lib/",
     "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
   }
@@ -2413,7 +2413,7 @@ Pin dependencies to specific versions:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1.2.3/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js",
     "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.1/dist/index.js"
   }
 }
@@ -2472,7 +2472,7 @@ Use different import maps for different environments:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1.2.3/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js",
     "app/": "/assets/js/"
   }
 }
@@ -2572,7 +2572,7 @@ Run tests without a build step:
 
   <script type="module">
     import { pan } from '@larcjs/core';
-    import '../src/components/counter-display.js';
+    import '../counter-display.js';
 
     // Simple test framework
     function test(name, fn) {
@@ -3828,7 +3828,7 @@ Test components in isolation:
 ```javascript
 // tests/user-card.test.js
 import { expect } from '@open-wc/testing';
-import '../src/components/user-card.js';
+import '../user-card.js';
 
 describe('UserCard', () => {
   let element;
@@ -6152,7 +6152,7 @@ self.addEventListener('install', (event) => {
         '/',
         '/index.html',
         '/src/app.js',
-        '/src/components/',
+        '/',
         // Cache critical assets
       ]);
     })
@@ -10123,7 +10123,7 @@ app.listen(3000);
 ### Test Example:
 ```javascript
 import { expect, fixture, html } from '@open-wc/testing';
-import '../src/components/user-card.js';
+import '../user-card.js';
 
 describe('UserCard', () => {
   it('renders user data', async () => {

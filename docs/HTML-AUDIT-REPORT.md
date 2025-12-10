@@ -20,13 +20,13 @@
 **Pan-bus Setup:**
 - ✅ Has `<pan-bus debug="true"></pan-bus>` element at end of body
 - ✅ Inline module script imports pan-bus conditionally
-- ✅ Path: `../core/src/components/pan-bus.mjs` ← CORRECT
+- ✅ Path: `../core/pan-bus.mjs` ← CORRECT
 - ✅ Then imports `./playground.mjs` ← CORRECT
 
 **All Script Paths Verified:**
 - ✅ `./styles/playground.css` exists
 - ✅ `./playground.mjs` exists
-- ✅ `../core/src/components/pan-bus.mjs` exists
+- ✅ `../core/pan-bus.mjs` exists
 
 **Components Used:**
 - `<pg-palette></pg-palette>` ← Loaded by playground.mjs
@@ -42,21 +42,21 @@
 ## Submodule Directories
 
 ### `/core/` - Core Pan-bus Implementation
-- Contains: `src/components/pan-bus.mjs`
+- Contains: `pan-bus.mjs`
 - Status: ✅ File exists and is the source for playground
 
 ### `/components/` - Component Library
 - Contains: `src/components/` with 49 components
 - Status: ✅ All 36 components with pan-client imports fixed
-- Import path: `../../../core/src/components/pan-client.mjs`
+- Import path: `../../../core/pan-client.mjs`
 
 ### `/examples/` - Example Applications
 - Status: ✅ All paths fixed and verified (36 files updated)
 - Note: Examples directory is a git submodule with its own repo
 - Fixed patterns:
-  - All `./src/pan.js` → `../core/src/components/pan-bus.mjs`
-  - All `../src/pan.js` → `../../core/src/components/pan-bus.mjs`
-  - All `../../src/pan.js` → `../../../core/src/components/pan-bus.mjs`
+  - All `./src/pan.js` → `../core/pan-bus.mjs`
+  - All `../src/pan.js` → `../../core/pan-bus.mjs`
+  - All `../../src/pan.js` → `../../../core/pan-bus.mjs`
   - All pan-client imports updated to correct relative paths
   - Added missing `<pan-bus>` elements to 24 HTML files
 - Committed to examples submodule: ab2d792
@@ -69,18 +69,18 @@
 
 **From `/playground/index.html`:**
 ```javascript
-import('../core/src/components/pan-bus.mjs')  // ✅ Correct
+import('../core/pan-bus.mjs')  // ✅ Correct
 import('./playground.mjs')                      // ✅ Correct
 ```
 
 **From `/playground/components/pg-canvas.mjs`:**
 ```javascript
-import('../../components/src/components/pan-card.mjs')  // ✅ Correct
+import('../../components/pan-card.mjs')  // ✅ Correct
 ```
 
-**From `/components/src/components/pan-card.mjs`:**
+**From `/components/pan-card.mjs`:**
 ```javascript
-import('../../../core/src/components/pan-client.mjs')  // ✅ Correct (Fixed)
+import('../../../core/pan-client.mjs')  // ✅ Correct (Fixed)
 ```
 
 ### Pan-bus Element Usage
@@ -90,7 +90,7 @@ import('../../../core/src/components/pan-client.mjs')  // ✅ Correct (Fixed)
 <script type="module">
   // Load pan-bus module first
   if (!customElements.get('pan-bus')) {
-    await import('../core/src/components/pan-bus.mjs');
+    await import('../core/pan-bus.mjs');
   }
   // Then load your app
   await import('./your-app.mjs');
@@ -116,9 +116,9 @@ import('../../../core/src/components/pan-client.mjs')  // ✅ Correct (Fixed)
 ✅ playground/components/pg-exporter.mjs
 ✅ playground/components/pg-bus-monitor.mjs
 ✅ playground/examples.mjs
-✅ core/src/components/pan-bus.mjs
-✅ core/src/components/pan-client.mjs
-✅ components/src/components/ (49 component files)
+✅ core/pan-bus.mjs
+✅ core/pan-client.mjs
+✅ components/ (49 component files)
 ```
 
 ---
@@ -132,8 +132,8 @@ import('../../../core/src/components/pan-client.mjs')  // ✅ Correct (Fixed)
 - ✅ http://localhost:8080/playground/index.html
 - ✅ http://localhost:8080/playground/styles/playground.css
 - ✅ http://localhost:8080/playground/component-registry.json
-- ✅ http://localhost:8080/core/src/components/pan-bus.mjs
-- ✅ http://localhost:8080/components/src/components/pan-card.mjs
+- ✅ http://localhost:8080/core/pan-bus.mjs
+- ✅ http://localhost:8080/components/pan-card.mjs
 
 All resources are accessible via web server without CORS issues.
 
@@ -147,12 +147,12 @@ All resources are accessible via web server without CORS issues.
 
 2. **❌ Wrong pan-client Import Path (36 files in components/)**
    - Was: `./pan-client.mjs` (wrong directory)
-   - Fixed: `../../../core/src/components/pan-client.mjs`
+   - Fixed: `../../../core/pan-client.mjs`
    - Files affected: 36 component files
 
 3. **❌ Wrong pan-client Import Path (30+ files in examples/)**
-   - Was: Various wrong paths like `./src/components/`, `../src/components/`, etc.
-   - Fixed: Correct relative paths to `core/src/components/pan-client.mjs`
+   - Was: Various wrong paths like `./`, `../`, etc.
+   - Fixed: Correct relative paths to `core/pan-client.mjs`
    - Files affected: 36 files in examples directory
 
 4. **❌ Wrong pan-bus Script Tags (20+ files in examples/)**
@@ -184,8 +184,8 @@ All resources are accessible via web server without CORS issues.
    <script type="importmap">
    {
      "imports": {
-       "@larcjs/core/": "/core/src/",
-       "@larcjs/components/": "/components/src/"
+       "@larcjs/core/": "/core/",
+       "@larcjs/components/": "/components/"
      }
    }
    </script>

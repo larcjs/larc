@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * Enhanced Build Script for LARC Core
+ * Build Script for LARC Core
  *
  * Creates minified versions alongside source files:
- * - src/pan.mjs → src/pan.min.mjs (minified)
- * - src/components/pan-bus.mjs → src/components/pan-bus.min.mjs
+ * - pan.mjs → pan.min.mjs (minified)
+ * - pan-bus.mjs → pan-bus.min.mjs
  *
  * Preserves original .mjs files for development/debugging
  * Adds .min.mjs files for production use
@@ -18,7 +18,6 @@ import { fileURLToPath } from 'url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const rootDir = join(__dirname, '..');
-const srcDir = join(rootDir, 'src');
 
 console.log('🚀 Building LARC Core with minified versions...\n');
 
@@ -79,7 +78,7 @@ async function minifyFile(inputPath) {
 // Find and minify all .mjs files
 // ============================================================================
 
-const mjsFiles = findMjsFiles(srcDir);
+const mjsFiles = findMjsFiles(rootDir);
 console.log(`📝 Found ${mjsFiles.length} .mjs files to minify\n`);
 
 const results = [];
@@ -125,6 +124,6 @@ if (failCount > 0) {
 
 console.log('\n✨ Minification complete!\n');
 console.log('Usage in HTML:');
-console.log('  Development: <script type="module" src="/core/src/pan.mjs"></script>');
-console.log('  Production:  <script type="module" src="/core/src/pan.min.mjs"></script>');
+console.log('  Development: <script type="module" src="/core/pan.mjs"></script>');
+console.log('  Production:  <script type="module" src="/core/pan.min.mjs"></script>');
 console.log('');

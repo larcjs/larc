@@ -271,8 +271,8 @@ if (!needsEnhanced) {
 ```
 larc/
 ├── core/
-│   ├── src/components/pan-bus-lite.mjs  (NEW - 3KB)
-│   └── src/components/pan-bus.mjs       (UPDATED - lazy-loading)
+│   ├── pan-bus-lite.mjs  (NEW - 3KB)
+│   └── pan-bus.mjs       (UPDATED - lazy-loading)
 ├── packages/
 │   ├── core-lite/                       (NEW PACKAGE - 9KB)
 │   │   ├── package.json
@@ -394,9 +394,9 @@ On 3G connection (750KB/s):
 
 1. Test all packages manually
 2. Publish to npm:
-   - `@larcjs/core-lite@1.2.0`
-   - `@larcjs/core-routing@1.0.0`
-   - `@larcjs/core-debug@1.0.0`
+   - `@larcjs/core@2.0.0`
+   - `@larcjs/core@2.0.0`
+   - `@larcjs/core@2.0.0`
 3. Update examples to use core-lite
 4. Update website/playground
 

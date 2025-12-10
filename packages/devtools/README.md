@@ -410,15 +410,15 @@ Inspired by:
   <title>PAN Inspector Test</title>
 </head>
 <body>
-  <script type="module" src="../src/components/pan-bus.mjs"></script>
-  <script type="module" src="../src/components/pan-client.mjs"></script>
+  <script type="module" src="../pan-bus.mjs"></script>
+  <script type="module" src="../pan-client.mjs"></script>
 
   <pan-bus></pan-bus>
 
   <button id="test-btn">Send Test Message</button>
 
   <script type="module">
-    import { PanClient } from '../src/components/pan-client.mjs';
+    import { PanClient } from '../pan-client.mjs';
 
     const client = new PanClient();
     await client.ready();

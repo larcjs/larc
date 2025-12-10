@@ -61,11 +61,12 @@ export async function createApp(projectPath, config) {
 
   // Create larc.config.json
   const larcConfig = {
-    version: '1.0.0',
+    version: '2.0.0',
     importmap: {
       imports: {
-        '@larcjs/core': 'https://cdn.jsdelivr.net/npm/@larcjs/core@latest/dist/index.js',
-        '@larcjs/ui': 'https://cdn.jsdelivr.net/npm/@larcjs/ui@latest/dist/index.js'
+        '@larcjs/core': 'https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs',
+        '@larcjs/core-lite': 'https://cdn.jsdelivr.net/npm/@larcjs/core-lite@latest/src/pan.mjs',
+        '@larcjs/components': 'https://cdn.jsdelivr.net/npm/@larcjs/components@2.0.0/'
       }
     },
     devServer: {

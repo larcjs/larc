@@ -7,7 +7,7 @@
  * - base: base path for demo URLs
  */
 
-import { PanClient } from '../../core/src/components/pan-client.mjs';
+import { PanClient } from '../../core/pan-client.mjs';
 
 class PanDemoViewer extends HTMLElement {
   constructor() {

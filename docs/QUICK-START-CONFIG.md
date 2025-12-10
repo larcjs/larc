@@ -15,7 +15,7 @@
   <script type="module" src="/larc-config.mjs"></script>
 
   <!-- Step 2: Load autoloader -->
-  <script type="module" src="/core/src/pan.mjs"></script>
+  <script type="module" src="/core/pan.mjs"></script>
 
   <!-- Step 3: Use components! -->
   <pan-card>Hello World</pan-card>
@@ -48,9 +48,9 @@ const resolved = window.larcResolve('@larc/core', 'components/pan-bus.mjs');
 
 | Alias | Development | Production |
 |-------|------------|------------|
-| `@larc/core` | `./core/src` | `https://unpkg.com/@larcjs/core@1.0.0/src` |
-| `@larc/components` | `./components/src` | `https://unpkg.com/@larcjs/components@1.0.0/src` |
-| `@larc/examples` | `./examples` | `https://unpkg.com/@larcjs/examples@1.0.0` |
+| `@larc/core` | `./core/src` | `https://unpkg.com/@larcjs/core@2.0.0/src` |
+| `@larc/components` | `./components/src` | `https://unpkg.com/@larcjs/components@2.0.0/src` |
+| `@larc/examples` | `./examples` | `https://unpkg.com/@larcjs/examples@2.0.0` |
 | `@larc/site` | `./site` | `https://larcjs.github.io/site` |
 
 ---
@@ -60,7 +60,7 @@ const resolved = window.larcResolve('@larc/core', 'components/pan-bus.mjs');
 ### **Pattern 1: Auto-Loading (Recommended)**
 ```html
 <script type="module" src="/larc-config.mjs"></script>
-<script type="module" src="/core/src/pan.mjs"></script>
+<script type="module" src="/core/pan.mjs"></script>
 <pan-data-table resource="users"></pan-data-table>
 ```
 

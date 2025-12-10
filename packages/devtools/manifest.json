@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "PAN Inspector",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "DevTools for debugging Page Area Network (PAN) message bus",
   "icons": {
     "16": "icons/icon-16.png",

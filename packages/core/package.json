@@ -1,44 +1,47 @@
 {
   "name": "@larcjs/core",
-  "version": "1.1.3",
+  "version": "2.0.0",
   "description": "LARC Core - Lightweight Asynchronous Relay Core: The PAN (Page Area Network) messaging bus implementation",
   "type": "module",
-  "main": "./src/index.js",
-  "module": "./src/pan.mjs",
+  "main": "./index.js",
+  "module": "./pan.mjs",
   "exports": {
     ".": {
-      "import": "./src/pan.mjs",
-      "default": "./src/index.js"
+      "import": "./pan.mjs",
+      "default": "./index.js"
     },
     "./pan": {
-      "import": "./src/pan.mjs",
-      "default": "./src/pan.js"
+      "import": "./pan.mjs",
+      "default": "./pan.js"
     },
-    "./pan.mjs": {
-      "import": "./src/pan.mjs"
-    },
-    "./components/pan-bus": {
-      "import": "./src/components/pan-bus.mjs"
-    },
-    "./components/pan-bus.mjs": {
-      "import": "./src/components/pan-bus.mjs"
-    },
-    "./components/pan-client": {
-      "import": "./src/components/pan-client.mjs"
-    },
-    "./components/pan-client.mjs": {
-      "import": "./src/components/pan-client.mjs"
-    },
-    "./components/pan-routes": {
-      "import": "./src/components/pan-routes.mjs"
-    },
-    "./components/pan-routes.mjs": {
-      "import": "./src/components/pan-routes.mjs"
-    }
+    "./pan.mjs": "./pan.mjs",
+    "./pan.min.mjs": "./pan.min.mjs",
+    "./pan-bus": "./pan-bus.mjs",
+    "./pan-bus.mjs": "./pan-bus.mjs",
+    "./pan-bus.min.mjs": "./pan-bus.min.mjs",
+    "./pan-bus-lite": "./pan-bus-lite.mjs",
+    "./pan-bus-lite.mjs": "./pan-bus-lite.mjs",
+    "./pan-bus-lite.min.mjs": "./pan-bus-lite.min.mjs",
+    "./pan-client": "./pan-client.mjs",
+    "./pan-client.mjs": "./pan-client.mjs",
+    "./pan-client.min.mjs": "./pan-client.min.mjs",
+    "./pan-routes": "./pan-routes.mjs",
+    "./pan-routes.mjs": "./pan-routes.mjs",
+    "./pan-routes.min.mjs": "./pan-routes.min.mjs",
+    "./pan-debug": "./pan-debug.mjs",
+    "./pan-debug.mjs": "./pan-debug.mjs",
+    "./pan-debug.min.mjs": "./pan-debug.min.mjs",
+    "./pan-storage": "./pan-storage.mjs",
+    "./pan-storage.mjs": "./pan-storage.mjs",
+    "./pan-storage.min.mjs": "./pan-storage.min.mjs",
+    "./larc-element": "./larc-element.mjs",
+    "./larc-element.mjs": "./larc-element.mjs"
   },
   "files": [
-    "src/**/*",
-    "dist/**/*",
+    "*.mjs",
+    "*.js",
+    "*.d.ts",
+    "types/**/*",
     "LICENSE",
     "README.md"
   ],

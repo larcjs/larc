@@ -7,7 +7,7 @@
  * - Subscribes: invoice.load, invoice.clear, contact.selected
  */
 
-import { PanClient } from '../../../../core/src/components/pan-client.mjs';
+import { PanClient } from '../../../../core/pan-client.mjs';
 
 class PanInvoiceHeader extends HTMLElement {
   constructor() {

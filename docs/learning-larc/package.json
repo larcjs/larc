@@ -1,6 +1,6 @@
 {
   "name": "learning-larc-book",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Learning LARC: A Hands-On Guide - Build scripts and tooling",
   "scripts": {
     "build": "./build-book.sh all",

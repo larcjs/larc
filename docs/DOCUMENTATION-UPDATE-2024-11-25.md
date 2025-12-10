@@ -31,12 +31,12 @@ Updated all CDN references to use versioned URLs:
 
 **Before:**
 ```html
-<script type="module" src="https://unpkg.com/@larcjs/core/src/pan.js"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core/pan.js"></script>
 ```
 
 **After:**
 ```html
-<script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.js"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.js"></script>
 ```
 
 **Files Updated:**
@@ -156,7 +156,7 @@ Updated production readiness status:
 The meta repository's `ui/` and `ui-types/` directory names remain unchanged (they're git submodules pointing to the `components` and `components-types` repos). Only documentation references were updated.
 
 ### CDN Version Strategy
-All CDN URLs now pin to specific versions for reliability. Users can still use unpinned URLs (`@larcjs/core/src/pan.js`) if they want automatic updates.
+All CDN URLs now pin to specific versions for reliability. Users can still use unpinned URLs (`@larcjs/core/pan.js`) if they want automatic updates.
 
 ### Production Status
 The project is now accurately represented as production-ready with:

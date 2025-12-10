@@ -478,7 +478,7 @@ class PgExporter extends HTMLElement {
     const lines = ['<!DOCTYPE html>', '<html>', '<head>',
       '  <meta charset="utf-8">',
       '  <title>LARC Playground Export</title>',
-      '  <script type="module" src="https://unpkg.com/@larcjs/core/src/pan.mjs"></script>',
+      '  <script type="module" src="https://unpkg.com/@larcjs/core/pan.mjs"></script>',
       '</head>', '<body>', '  <pan-bus></pan-bus>', ''];
 
     components.forEach(comp => {

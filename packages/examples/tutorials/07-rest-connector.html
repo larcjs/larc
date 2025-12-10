@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Demo Suite · 07 REST Connector</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/grail.css">
+</head>
+<body>
+  <div class="app-shell">
+    
+
+    <main class="main-region">
+      <header class="main-header">
+        <h1>REST Connector · JSONPlaceholder</h1>
+        <p>
+          The same table + form stack connects to <code>https://jsonplaceholder.typicode.com</code>.
+          GET requests return live data, while write operations echo responses for demonstration.
+        </p>
+        <div class="badge-row">
+          <span class="badge">resource: <code>users</code></span>
+          <span class="badge">topics: <code>users.list.*</code></span>
+          <span class="badge">fetch bridge</span>
+        </div>
+      </header>
+
+      <section class="content-area">
+        <div class="split-vertical">
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Remote Users</h2>
+                <div class="subtitle">Powered by JSONPlaceholder <code>/users</code> endpoint.</div>
+              </div>
+              <div class="toolbar">
+                <button type="button" class="button-link" id="refresh">Refresh</button>
+              </div>
+            </div>
+            <div class="panel-body">
+              <pan-data-table resource="users" columns="id,name,email"></pan-data-table>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Details &amp; Traffic</h2>
+                <div class="subtitle">Form publishes <code>users.item.*</code>; inspector shows round-trips.</div>
+              </div>
+              <div class="toolbar">
+                <span class="meta-label">Base URL</span>
+                <span class="meta-value">jsonplaceholder.typicode.com</span>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div class="detail-grid">
+                <pan-form resource="users" fields="name,email"></pan-form>
+                <pan-inspector></pan-inspector>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <pan-data-connector resource="users" base-url="https://jsonplaceholder.typicode.com"></pan-data-connector>
+
+  <script type="module">
+    if (!customElements.get('pan-bus')) {
+      await import('../../core/pan-bus.mjs');
+    // Load autoload system to discover and load custom elements on demand
+    await import('../src/pan.mjs');
+    }
+  </script>
+  <script type="module">
+    import { PanClient } from '../../core/pan-client.mjs';
+    const pc = new PanClient();
+    document.getElementById('refresh')?.addEventListener('click', () => {
+      pc.publish({ topic: 'users.list.get', data: {} });
+    });
+  </script>
+
+  <pan-bus debug="true"></pan-bus>
+</body>
+</html>

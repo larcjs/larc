@@ -33,11 +33,11 @@
 </div>
 
 <script type="module">
-  import '../../../../core/src/components/pan-bus.mjs';
-  import '../../../../core/src/components/pan-client.mjs';
-  import '../../../../components/src/components/pan-inspector.mjs';
+  import '../../../../core/pan-bus.mjs';
+  import '../../../../core/pan-client.mjs';
+  import '../../../../components/pan-inspector.mjs';
   import './pan-provider.js';
-  import { PanClient } from '../../../../core/src/components/pan-client.mjs';
+  import { PanClient } from '../../../../core/pan-client.mjs';
   const pc = new PanClient();
 
   // Provider for 'users' resource

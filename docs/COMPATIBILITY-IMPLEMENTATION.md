@@ -35,7 +35,7 @@ Implemented comprehensive browser compatibility documentation and tooling for th
 - ✅ Troubleshooting guide
 
 ### 2. Feature Detection Utility
-**File:** [`core/src/utils/features.mjs`](../core/src/utils/features.mjs)
+**File:** [`core/utils/features.mjs`](../core/utils/features.mjs)
 **Size:** ~12 KB, 490 lines
 
 **Features:**
@@ -261,7 +261,7 @@ Total:                      1,934 lines,  96 KB
 
   <!-- Feature detection -->
   <script type="module">
-    import { Features } from './core/src/utils/features.mjs';
+    import { Features } from './core/utils/features.mjs';
 
     if (!Features.hasCoreFeatuers()) {
       document.body.innerHTML = `
@@ -275,7 +275,7 @@ Total:                      1,934 lines,  96 KB
   </script>
 
   <!-- Load LARC -->
-  <script type="module" src="./core/src/pan.mjs"></script>
+  <script type="module" src="./core/pan.mjs"></script>
 </head>
 <body>
   <pan-bus></pan-bus>
@@ -326,7 +326,7 @@ class PanFiles extends HTMLElement {
 ### For Developers
 
 📚 **Main Guide:** [`docs/BROWSER-COMPATIBILITY.md`](./BROWSER-COMPATIBILITY.md)
-🔧 **Utility:** [`core/src/utils/features.mjs`](../core/src/utils/features.mjs)
+🔧 **Utility:** [`core/utils/features.mjs`](../core/utils/features.mjs)
 🧪 **Live Check:** [`examples/compatibility-check.html`](../examples/compatibility-check.html)
 
 ### Quick Links

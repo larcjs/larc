@@ -629,7 +629,7 @@ Create shortcuts for your own modules:
 {
   "imports": {
     "@/": "/src/",
-    "components/": "/src/components/",
+    "components/": "/",
     "lib/": "/src/lib/",
     "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
   }
@@ -655,7 +655,7 @@ Pin dependencies to specific versions:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1.2.3/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js",
     "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.1/dist/index.js"
   }
 }
@@ -714,7 +714,7 @@ Use different import maps for different environments:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1.2.3/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js",
     "app/": "/assets/js/"
   }
 }
@@ -814,7 +814,7 @@ Run tests without a build step:
 
   <script type="module">
     import { pan } from '@larcjs/core';
-    import '../src/components/counter-display.js';
+    import '../counter-display.js';
 
     // Simple test framework
     function test(name, fn) {

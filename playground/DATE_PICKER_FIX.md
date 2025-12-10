@@ -282,7 +282,7 @@ Then use computed-state to ensure end > start.
 
 ## Files Changed
 
-### `/Users/cdr/Projects/larc-repos/ui/src/components/pan-date-picker.mjs`
+### `/Users/cdr/Projects/larc-repos/ui/pan-date-picker.mjs`
 
 **Lines Changed:**
 - Line 28: Added `this.eventsSetup = false;` guard variable

@@ -1011,7 +1011,7 @@ Test components in isolation:
 ```javascript
 // tests/user-card.test.js
 import { expect } from '@open-wc/testing';
-import '../src/components/user-card.js';
+import '../user-card.js';
 
 describe('UserCard', () => {
   let element;

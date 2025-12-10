@@ -8,7 +8,7 @@
  * @example
  * // In your HTML
  * <script type="module" src="/larc-config.mjs"></script>
- * <script type="module" src="/core/src/pan.mjs"></script>
+ * <script type="module" src="/core/pan.mjs"></script>
  *
  * @example
  * // In your JS modules
@@ -29,16 +29,16 @@ const isDevelopment = window.location.hostname === 'localhost' ||
  */
 export const aliases = {
   '@larc/core': isDevelopment
-    ? '/core/src'
-    : 'https://unpkg.com/@larcjs/core@1.0.0/src',
+    ? '/core'
+    : 'https://unpkg.com/@larcjs/core@2.0.0',
 
   '@larc/components': isDevelopment
-    ? '/ui/src'
-    : 'https://unpkg.com/@larcjs/components@1.0.0/src',
+    ? '/components'
+    : 'https://unpkg.com/@larcjs/components@2.0.0',
 
   '@larc/examples': isDevelopment
     ? '/examples'
-    : 'https://unpkg.com/@larcjs/examples@1.0.0',
+    : 'https://unpkg.com/@larcjs/examples@2.0.0',
 
   '@larc/site': isDevelopment
     ? '/site'
@@ -50,8 +50,8 @@ export const aliases = {
  */
 export const basePaths = {
   root: '/',
-  core: '/core/src',
-  components: '/ui/src',
+  core: '/core',
+  components: '/components',
   examples: '/examples',
   site: '/site',
   assets: '/examples/assets',
@@ -62,27 +62,27 @@ export const basePaths = {
  */
 export const componentPaths = {
   // Core components
-  'pan-bus': '@larc/core/components/pan-bus.mjs',
-  'pan-client': '@larc/core/components/pan-client.mjs',
+  'pan-bus': '@larc/core/pan-bus.mjs',
+  'pan-client': '@larc/core/pan-client.mjs',
 
   // Data components
-  'pan-data-table': '@larc/components/components/pan-data-table.mjs',
-  'pan-data-provider': '@larc/components/components/pan-data-provider.mjs',
-  'pan-form': '@larc/components/components/pan-form.mjs',
+  'pan-data-table': '@larc/components/pan-data-table.mjs',
+  'pan-data-provider': '@larc/components/pan-data-provider.mjs',
+  'pan-form': '@larc/components/pan-form.mjs',
 
   // UI components
-  'pan-card': '@larc/components/components/pan-card.mjs',
-  'pan-modal': '@larc/components/components/pan-modal.mjs',
-  'pan-tabs': '@larc/components/components/pan-tabs.mjs',
-  'pan-dropdown': '@larc/components/components/pan-dropdown.mjs',
+  'pan-card': '@larc/components/pan-card.mjs',
+  'pan-modal': '@larc/components/pan-modal.mjs',
+  'pan-tabs': '@larc/components/pan-tabs.mjs',
+  'pan-dropdown': '@larc/components/pan-dropdown.mjs',
 
   // Utility components
-  'pan-inspector': '@larc/components/components/pan-inspector.mjs',
-  'pan-theme-provider': '@larc/components/components/pan-theme-provider.mjs',
-  'pan-theme-toggle': '@larc/components/components/pan-theme-toggle.mjs',
+  'pan-inspector': '@larc/components/pan-inspector.mjs',
+  'pan-theme-provider': '@larc/components/pan-theme-provider.mjs',
+  'pan-theme-toggle': '@larc/components/pan-theme-toggle.mjs',
 
   // Store components
-  'pan-invoice-store': '@larc/components/components/pan-invoice-store.mjs',
+  'pan-invoice-store': '@larc/components/pan-invoice-store.mjs',
 
   // Site-specific components
   'pan-demo-nav': '@larc/site/components/pan-demo-nav.mjs',
@@ -101,9 +101,9 @@ export const paths = {
    * @returns {string} Resolved absolute URL
    *
    * @example
-   * paths.resolve('@larc/core', 'components/pan-bus.mjs')
-   * // => './core/src/components/pan-bus.mjs' (dev)
-   * // => 'https://unpkg.com/@larcjs/core@1.0.0/src/components/pan-bus.mjs' (prod)
+   * paths.resolve('@larc/core', 'pan-bus.mjs')
+   * // => './core/pan-bus.mjs' (dev)
+   * // => 'https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs' (prod)
    */
   resolve(aliasOrPath, subpath = '') {
     // Check if it's an alias
@@ -177,7 +177,7 @@ export const paths = {
  */
 export const autoloadConfig = {
   baseUrl: null,  // Use relative paths
-  componentsPath: '/ui/src/components/',
+  componentsPath: '/components/',
   extension: '.mjs',
   rootMargin: 600,
 

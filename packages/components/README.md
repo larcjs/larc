@@ -65,7 +65,7 @@ npm install @larcjs/components @larcjs/core
 <head>
   <meta charset="utf-8">
   <!-- Load LARC Core autoloader -->
-  <script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.js"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.js"></script>
 </head>
 <body>
   <!-- Components load automatically on demand -->

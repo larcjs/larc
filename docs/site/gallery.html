@@ -421,7 +421,7 @@
         status: 'stable',
         code: `<pan-bus></pan-bus>
 <script type="module">
-  import { PanClient } from '../src/components/pan-client.mjs';
+  import { PanClient } from '../pan-client.mjs';
   const pc = new PanClient();
   pc.subscribe('test.topic', (msg) => {
     console.log('Received:', msg.data);
@@ -435,7 +435,7 @@
         category: ['core'],
         status: 'stable',
         code: `<script type="module">
-  import { PanClient } from '../src/components/pan-client.mjs';
+  import { PanClient } from '../pan-client.mjs';
   const pc = new PanClient();
 
   // Subscribe to a topic
@@ -469,7 +469,7 @@
 <div id="content"></div>
 
 <script type="module">
-  import { PanClient } from '../src/components/pan-client.mjs';
+  import { PanClient } from '../pan-client.mjs';
   const pc = new PanClient();
 
   pc.subscribe('nav.state', (msg) => {
@@ -516,7 +516,7 @@
 </pan-idb>
 
 <script type="module">
-  import { PanClient } from '../src/components/pan-client.mjs';
+  import { PanClient } from '../pan-client.mjs';
   const pc = new PanClient();
 
   // Wait for ready
@@ -555,7 +555,7 @@
 </pan-websocket>
 
 <script type="module">
-  import { PanClient } from '../src/components/pan-client.mjs';
+  import { PanClient } from '../pan-client.mjs';
   const pc = new PanClient();
 
   pc.subscribe('ws.connected', () => {
@@ -587,7 +587,7 @@
 </pan-sse>
 
 <script type="module">
-  import { PanClient } from '../src/components/pan-client.mjs';
+  import { PanClient } from '../pan-client.mjs';
   const pc = new PanClient();
 
   pc.subscribe('notifications.*', (msg) => {
@@ -604,7 +604,7 @@
 <pan-inspector style="height: 400px;"></pan-inspector>
 
 <script type="module">
-  import { PanClient } from '../src/components/pan-client.mjs';
+  import { PanClient } from '../pan-client.mjs';
   const pc = new PanClient();
 
   // Generate some messages to inspect
@@ -748,7 +748,7 @@
     const base = '${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}';
     window.panAutoload = { componentsPath: base + '/components/' };
   <\/script>
-  <script type="module" src="../src/components/pan-autoload.mjs"><\/script>
+  <script type="module" src="../pan-autoload.mjs"><\/script>
   ${code}
 </body>
 </html>`;
@@ -773,14 +773,14 @@
     renderComponents();
   </script>
 
-  <script type="module" src="../src/components/pan-autoload.mjs"></script>
+  <script type="module" src="../pan-autoload.mjs"></script>
 
   <!-- Theme System -->
   <pan-theme-provider theme="auto"></pan-theme-provider>
 
   <script type="module">
-    import '../src/components/pan-theme-provider.mjs';
-    import '../src/components/pan-theme-toggle.mjs';
+    import '../pan-theme-provider.mjs';
+    import '../pan-theme-toggle.mjs';
   </script>
 </body>
 </html>

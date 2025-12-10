@@ -15,7 +15,7 @@ Built a complete interactive playground for exploring, testing, and demonstratin
 **Script:** `playground/scripts/generate-registry.mjs`
 
 **Features:**
-- Automatically scans 49 components from `/components/src/components/`
+- Automatically scans 49 components from `/components/`
 - Extracts component names from `customElements.define()`
 - Extracts attributes from `observedAttributes` getter
 - Categorizes components into 10 categories
@@ -130,7 +130,7 @@ playground/
 1. **Load Registry**: Playground fetches `component-registry.json` with metadata for all 49 components
 2. **Browse Components**: User searches/browses components by category
 3. **Add to Canvas**: Click component → creates element → adds to preview area
-4. **Dynamic Import**: Component loaded from `../components/src/components/` if not already defined
+4. **Dynamic Import**: Component loaded from `../components/` if not already defined
 5. **Edit Properties**: Select component → properties panel shows attributes → edit values → updates live
 6. **Export Code**: Click "View Code" → generates clean HTML → copy or download
 7. **Monitor Messages**: Click "PAN Monitor" → intercepts bus events → displays in real-time

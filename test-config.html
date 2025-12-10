@@ -87,7 +87,7 @@
   <script type="module" src="/larc-config.mjs"></script>
 
   <!-- Step 2: Load autoloader (will use config) -->
-  <script type="module" src="/core/src/pan.mjs"></script>
+  <script type="module" src="/core/pan.mjs"></script>
 
   <!-- Step 3: Run tests -->
   <script type="module">
@@ -136,7 +136,7 @@
         {
           name: 'Resolve @larc/core with subpath',
           test: () => window.larcResolve('@larc/core', 'components/pan-bus.mjs'),
-          expected: './core/src/components/pan-bus.mjs'
+          expected: './core/pan-bus.mjs'
         },
         {
           name: 'Resolve @larc/components',

@@ -98,7 +98,7 @@ See <a href="RELEASE_NOTES.md">RELEASE_NOTES.md</a> for full details and <a href
 <strong>With autoload (recommended):</strong>
 <p>Drop one script tag, then use any component. That's it!</p>
 <pre><code class="language-html">&lt;!doctype html&gt;&lt;meta charset=&quot;utf-8&quot;&gt;
-&lt;script type=&quot;module&quot; src=&quot../src/components/pan-autoload.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot../pan-autoload.mjs&quot;&gt;&lt;/script&gt;
 
 &lt;!-- Just declare the components you want - they load automatically --&gt;
 &lt;x-counter&gt;&lt;/x-counter&gt;
@@ -144,7 +144,7 @@ See <a href="RELEASE_NOTES.md">RELEASE_NOTES.md</a> for full details and <a href
 <h2>Install</h2>
 <strong>Recommended: Use autoload</strong>
 <p>Clone the repo and drop a single script tag on your page:</p>
-<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot../src/components/pan-autoload.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot../pan-autoload.mjs&quot;&gt;&lt;/script&gt;</code></pre>
 <p>Then just use components in your HTML - they load automatically on demand:</p>
 <pre><code class="language-html">&lt;pan-bus&gt;&lt;/pan-bus&gt;
 &lt;todo-list&gt;&lt;/todo-list&gt;
@@ -153,8 +153,8 @@ See <a href="RELEASE_NOTES.md">RELEASE_NOTES.md</a> for full details and <a href
 <hr>
 <strong>Alternative: Manual imports</strong>
 <p>For fine-grained control or CDN usage (when published):</p>
-<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot../src/components/pan-bus.mjs&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;module&quot; src=&quot../src/components/pan-client.mjs&quot;&gt;&lt;/script&gt;
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot../pan-bus.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot../pan-client.mjs&quot;&gt;&lt;/script&gt;
 &lt;script type=&quot;module&quot; src=&quot;./pan/components/pan-inspector.mjs&quot;&gt;&lt;/script&gt;</code></pre>
 <hr>
 <h2>Autoloading Custom Elements</h2>
@@ -163,7 +163,7 @@ See <a href="RELEASE_NOTES.md">RELEASE_NOTES.md</a> for full details and <a href
 <code>components/</code> folder. Tags with a dash (<code><my-widget></code>) are auto-detected; when they
 approach the viewport, the loader imports <code../src/components/<tag>.mjs</code> and registers them.</p>
 <strong>The <code><pan-bus></code> is automatically created</strong> so you can start using components immediately:
-<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot../src/components/pan-autoload.mjs&quot;&gt;&lt;/script&gt;
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot../pan-autoload.mjs&quot;&gt;&lt;/script&gt;
 
 &lt;!-- All of these load automatically - no imports needed --&gt;
 &lt;my-widget&gt;&lt;/my-widget&gt;
@@ -178,7 +178,7 @@ approach the viewport, the loader imports <code../src/components/<tag>.mjs</code
     rootMargin: 600  // px from viewport to trigger load
   };
 &lt;/script&gt;
-&lt;script type=&quot;module&quot; src=&quot../src/components/pan-autoload.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+&lt;script type=&quot;module&quot; src=&quot../pan-autoload.mjs&quot;&gt;&lt;/script&gt;</code></pre>
 <strong>Per-element override:</strong>
 <p>Point a specific element to a different module:</p>
 <pre><code class="language-html">&lt;my-card data-module=&quo../src/components/cards/my-card.mjs&quot;&gt;&lt;/my-card&gt;</code></pre>

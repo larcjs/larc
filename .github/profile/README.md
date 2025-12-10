@@ -42,7 +42,7 @@ LARC implements the PAN (Page Area Network) messaging protocol — a framework-a
 <html>
 <head>
   <meta charset="utf-8">
-  <script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.js"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.js"></script>
 </head>
 <body>
   <!-- Components load automatically -->
@@ -99,7 +99,7 @@ Add interactive components to existing pages without framework rewrites.
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="https://unpkg.com/@larcjs/core/src/pan.js"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core/pan.js"></script>
 </head>
 <body>
   <h1>Todos</h1>

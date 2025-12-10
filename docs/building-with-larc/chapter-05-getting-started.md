@@ -42,7 +42,7 @@ Create a file called `index.html`:
 </head>
 <body>
   <!-- Load LARC from CDN -->
-  <script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.mjs"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
 
   <!-- PAN bus is automatically instantiated -->
 
@@ -107,7 +107,7 @@ Then import in your JavaScript:
 
 ```javascript
 // main.js
-import '/node_modules/@larcjs/core/src/pan.mjs';
+import '/node_modules/@larcjs/core/pan.mjs';
 
 // Components auto-load from node_modules
 // Configure the path resolver if needed
@@ -122,8 +122,8 @@ Or use an import map in your HTML:
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/core/": "./node_modules/@larcjs/core/src/",
-      "@larcjs/components/": "./node_modules/@larcjs/components/src/"
+      "@larcjs/core/": "./node_modules/@larcjs/core/",
+      "@larcjs/components/": "./node_modules/@larcjs/components/"
     }
   }
   </script>
@@ -474,12 +474,12 @@ $ cd task-manager
     <h1>Task Manager</h1>
 
     <!-- Load LARC from CDN -->
-    <script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.mjs"></script>
+    <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
 
     <!-- Load our custom components -->
-    <script type="module" src="./src/components/task-form.mjs"></script>
-    <script type="module" src="./src/components/task-list.mjs"></script>
-    <script type="module" src="./src/components/task-item.mjs"></script>
+    <script type="module" src="./task-form.mjs"></script>
+    <script type="module" src="./task-list.mjs"></script>
+    <script type="module" src="./task-item.mjs"></script>
 
     <!-- Use components -->
     <task-form></task-form>
@@ -1059,7 +1059,7 @@ If you must support older browsers, add polyfills selectively:
   </script>
 
   <!-- Load LARC after polyfills -->
-  <script type="module" src="https://unpkg.com/@larcjs/core@1.1.1/src/pan.mjs"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
 </head>
 <body>
   <!-- Your app -->
@@ -1133,7 +1133,7 @@ $ python3 -m http.server 8000
 3. **Check MIME types:**
 ```bash
 # Should be application/javascript
-$ curl -I http://localhost:8000/src/components/task-form.mjs
+$ curl -I http://localhost:8000/task-form.mjs
 ```
 
 4. **Verify module syntax:**

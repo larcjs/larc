@@ -371,7 +371,7 @@ console.log(store.keys());
 <body>
   <!-- Load LARC -->
   <script type="module">
-    import '../../core/src/pan.mjs';
+    import '../../core/pan.mjs';
   </script>
 
   <!-- PAN Bus -->
@@ -388,7 +388,7 @@ console.log(store.keys());
 
   <!-- Your app code -->
   <script type="module">
-    import { PanClient } from '../../core/src/components/pan-client.mjs';
+    import { PanClient } from '../../core/pan-client.mjs';
     const panClient = new PanClient();
 
     // Publish state

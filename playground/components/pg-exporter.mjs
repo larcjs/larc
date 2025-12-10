@@ -363,7 +363,7 @@ class PgExporter extends HTMLElement {
       '  <meta charset="utf-8">',
       '  <meta name="viewport" content="width=device-width, initial-scale=1.0">',
       '  <title>LARC Playground Export</title>',
-      '  <script type="module" src="https://unpkg.com/@larcjs/core/src/pan.mjs"></script>',
+      '  <script type="module" src="https://unpkg.com/@larcjs/core/pan.mjs"></script>',
       '</head>',
       '<body>',
       '  <pan-bus></pan-bus>',

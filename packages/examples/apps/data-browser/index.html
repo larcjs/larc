@@ -92,11 +92,11 @@
   </style>
   <script type="module">
     if (!customElements.get('pan-bus')) {
-      await import('../../../core/src/components/pan-bus.mjs');
+      await import('../../../core/pan-bus.mjs');
     }
   </script>
   <script type="module">
-    import { PanClient } from '../../../core/src/components/pan-client.mjs';
+    import { PanClient } from '../../../core/pan-client.mjs';
 
     // Simple helper to fetch resources from api.php
     async function listResources(api){
@@ -352,8 +352,8 @@
   <pan-theme-provider theme="auto"></pan-theme-provider>
 
   <script type="module">
-    import '../../src/components/pan-theme-provider.mjs';
-    import '../../src/components/pan-theme-toggle.mjs';
+    import '../..//pan-theme-provider.mjs';
+    import '../..//pan-theme-toggle.mjs';
   </script>
 
   <pan-bus debug="true"></pan-bus>

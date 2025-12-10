@@ -321,7 +321,7 @@ Use Appendix D when upgrading LARC versions, and refer to Chapter 20 for product
 - **Learning LARC** - Narrative tutorial for beginners
 - **LARC Examples** - Working demo applications at `/examples`
 - **LARC Demo Apps** - Production-quality sample apps at `/apps`
-- **Component Source Code** - Reference implementation at `/core/src/components`
+- **Component Source Code** - Reference implementation at `/core`
 - **API Documentation** - Generated docs at `/docs/api`
 
 ---

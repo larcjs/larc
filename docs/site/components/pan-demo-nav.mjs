@@ -7,7 +7,7 @@
  * - sync-url: "hash" to sync with URL hash
  */
 
-import { PanClient } from '../../core/src/components/pan-client.mjs';
+import { PanClient } from '../../core/pan-client.mjs';
 
 class PanDemoNav extends HTMLElement {
   constructor() {
