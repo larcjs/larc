@@ -168,6 +168,74 @@ git commit -m "test: add tests for message routing"
 
 ---
 
+## Version Management & Changesets
+
+We use [Changesets](https://github.com/changesets/changesets) for managing versions and publishing packages. If your contribution changes functionality or fixes bugs in a published package, you need to create a changeset.
+
+### When to Create a Changeset
+
+Create a changeset if your PR:
+- Adds a new feature
+- Fixes a bug
+- Makes breaking changes
+- Updates dependencies that affect functionality
+
+**Don't create a changeset for:**
+- Documentation-only changes
+- Internal refactoring without behavior changes
+- Example updates
+- Test additions
+
+### How to Create a Changeset
+
+1. **Run the changeset command:**
+   ```bash
+   npm run changeset
+   ```
+
+2. **Select packages** that your changes affect (use spacebar to select)
+
+3. **Choose the change type:**
+   - `major` - Breaking changes (bumps to next major version)
+   - `minor` - New features (bumps to next minor version)
+   - `patch` - Bug fixes (bumps to next patch version)
+
+4. **Write a summary** describing your changes (this becomes the changelog entry)
+
+5. **Commit the changeset** with your changes:
+   ```bash
+   git add .changeset
+   git commit -m "feat: add new feature with changeset"
+   ```
+
+### Example Changeset Workflow
+
+```bash
+# Make your changes
+vim packages/core/src/pan-bus.mjs
+
+# Create a changeset
+npm run changeset
+# Select: @larcjs/core
+# Type: minor (new feature)
+# Summary: "Add support for wildcard message subscriptions"
+
+# Commit everything together
+git add packages/core .changeset
+git commit -m "feat(core): add wildcard subscriptions"
+git push
+```
+
+### Automated Release Process
+
+When your PR with a changeset is merged:
+1. GitHub Action creates a "Version Packages" PR
+2. Maintainers review and merge the version PR
+3. Packages are automatically published to npm
+4. Changelog is automatically updated
+
+---
+
 ## Pull Request Process
 
 ### Before Submitting
