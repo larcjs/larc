@@ -413,244 +413,80 @@
   </div>
 
   <script type="module">
-    const components = [
-      {
-        name: 'pan-bus',
-        description: 'Core message bus for pub/sub communication. Handles topic routing, retained messages, and cross-shadow-DOM delivery.',
-        category: ['core'],
-        status: 'stable',
-        code: `<pan-bus></pan-bus>
-<script type="module">
-  import { PanClient } from '../pan-client.mjs';
-  const pc = new PanClient();
-  pc.subscribe('test.topic', (msg) => {
-    console.log('Received:', msg.data);
-  });
-  pc.publish({ topic: 'test.topic', data: { hello: 'world' } });
-<\/script>`
-      },
-      {
-        name: 'pan-client',
-        description: 'Client library for interacting with the PAN bus. Provides publish, subscribe, request/reply APIs.',
-        category: ['core'],
-        status: 'stable',
-        code: `<script type="module">
-  import { PanClient } from '../pan-client.mjs';
-  const pc = new PanClient();
+    // Fetch components from registry
+    let components = [];
 
-  // Subscribe to a topic
-  pc.subscribe('messages.*', (msg) => {
-    console.log('Topic:', msg.topic);
-    console.log('Data:', msg.data);
-  });
-
-  // Publish a message
-  pc.publish({
-    topic: 'messages.greeting',
-    data: { text: 'Hello!' },
-    retain: true
-  });
-<\/script>`
-      },
-      {
-        name: 'pan-router',
-        description: 'URL router that syncs browser location with nav.state topics. Supports history/hash modes, route guards, and SPA navigation.',
-        category: ['core', 'new'],
-        status: 'new',
-        code: `<pan-bus></pan-bus>
-<pan-router mode="history" base="/"></pan-router>
-
-<nav>
-  <pan-link to="/">Home</pan-link>
-  <pan-link to="/about">About</pan-link>
-  <pan-link to="/contact">Contact</pan-link>
-</nav>
-
-<div id="content"></div>
-
-<script type="module">
-  import { PanClient } from '../pan-client.mjs';
-  const pc = new PanClient();
-
-  pc.subscribe('nav.state', (msg) => {
-    const content = document.getElementById('content');
-    content.innerHTML = \`<h1>Current path: \${msg.data.path}</h1>\`;
-  }, { retained: true });
-<\/script>`
-      },
-      {
-        name: 'pan-link',
-        description: 'Declarative navigation links that publish nav.goto messages. Automatically adds active class when matching current route.',
-        category: ['ui', 'new'],
-        status: 'new',
-        code: `<pan-bus></pan-bus>
-<pan-router></pan-router>
-
-<style>
-  pan-link {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    color: #6366f1;
-  }
-  pan-link.active {
-    font-weight: bold;
-    border-bottom: 2px solid #6366f1;
-  }
-</style>
-
-<pan-link to="/">Home</pan-link>
-<pan-link to="/about" exact>About</pan-link>
-<pan-link to="/profile" replace>Profile</pan-link>`
-      },
-      {
-        name: 'pan-idb',
-        description: 'IndexedDB bridge that exposes database operations through PAN topics. Supports CRUD, queries, and indexes.',
-        category: ['data', 'new'],
-        status: 'new',
-        code: `<pan-bus></pan-bus>
-<pan-idb
-  database="myapp"
-  store="users"
-  key-path="id"
-  indexes='[{"name":"email","keyPath":"email","unique":true}]'>
-</pan-idb>
-
-<script type="module">
-  import { PanClient } from '../pan-client.mjs';
-  const pc = new PanClient();
-
-  // Wait for ready
-  pc.subscribe('users.idb.ready', () => {
-    // Add a user
-    pc.publish({
-      topic: 'users.idb.add',
-      data: { item: { id: 1, name: 'Alice', email: 'alice@example.com' } }
-    });
-
-    // Query users
-    pc.publish({
-      topic: 'users.idb.list',
-      data: {}
-    });
-  }, { retained: true });
-
-  // Listen for results
-  pc.subscribe('users.idb.result', (msg) => {
-    console.log('Result:', msg.data);
-  });
-<\/script>`
-      },
-      {
-        name: 'pan-websocket',
-        description: 'Bidirectional WebSocket bridge with automatic reconnection, heartbeat, and topic filtering for real-time communication.',
-        category: ['bridge', 'new'],
-        status: 'new',
-        code: `<pan-bus></pan-bus>
-<pan-websocket
-  url="ws://localhost:8080"
-  outbound-topics="chat.* user.*"
-  inbound-topics="*"
-  auto-reconnect="true"
-  heartbeat="30">
-</pan-websocket>
-
-<script type="module">
-  import { PanClient } from '../pan-client.mjs';
-  const pc = new PanClient();
-
-  pc.subscribe('ws.connected', () => {
-    console.log('WebSocket connected!');
-
-    // Send a message
-    pc.publish({
-      topic: 'chat.message',
-      data: { text: 'Hello server!' }
-    });
-  });
-
-  pc.subscribe('chat.*', (msg) => {
-    console.log('Chat message:', msg.data);
-  });
-<\/script>`
-      },
-      {
-        name: 'pan-sse',
-        description: 'Server-Sent Events bridge that converts SSE streams into PAN topics with automatic reconnection and last-event persistence.',
-        category: ['bridge'],
-        status: 'stable',
-        code: `<pan-bus></pan-bus>
-<pan-sse
-  src="/api/events"
-  topics="notifications updates"
-  persist-last-event="myapp"
-  backoff="1000,15000">
-</pan-sse>
-
-<script type="module">
-  import { PanClient } from '../pan-client.mjs';
-  const pc = new PanClient();
-
-  pc.subscribe('notifications.*', (msg) => {
-    console.log('Notification:', msg.data);
-  });
-<\/script>`
-      },
-      {
-        name: 'pan-inspector',
-        description: 'Developer tool for monitoring all PAN messages in real-time. Shows topic, payload size, and timestamp.',
-        category: ['ui'],
-        status: 'stable',
-        code: `<pan-bus></pan-bus>
-<pan-inspector style="height: 400px;"></pan-inspector>
-
-<script type="module">
-  import { PanClient } from '../pan-client.mjs';
-  const pc = new PanClient();
-
-  // Generate some messages to inspect
-  setInterval(() => {
-    pc.publish({
-      topic: 'demo.heartbeat',
-      data: { timestamp: Date.now() }
-    });
-  }, 2000);
-<\/script>`
-      },
-      {
-        name: 'pan-data-table',
-        description: 'Reactive data table component that subscribes to resource.list.state topics. Supports sorting, pagination, and row selection.',
-        category: ['ui', 'data'],
-        status: 'stable',
-        code: `<pan-bus></pan-bus>
-<pan-data-provider-mock resource="users"></pan-data-provider-mock>
-<pan-data-table
-  resource="users"
-  columns="id,name,email"
-  page-size="5">
-</pan-data-table>`
-      },
-      {
-        name: 'pan-form',
-        description: 'Form component that binds to resource.item.state and publishes changes. Auto-subscribes on item selection.',
-        category: ['ui', 'data'],
-        status: 'stable',
-        code: `<pan-bus></pan-bus>
-<pan-data-provider-mock resource="users"></pan-data-provider-mock>
-<pan-form
-  resource="users"
-  fields="name,email,role">
-</pan-form>`
-      },
-      {
-        name: 'pan-schema-form',
-        description: 'JSON Schema-driven form with automatic validation, error display, and type-aware input rendering.',
-        category: ['ui', 'data'],
-        status: 'stable',
-        code: `<pan-bus></pan-bus>
-<pan-schema resource="users"></pan-schema>
-<pan-schema-form resource="users"></pan-schema-form>`
+    // Function to generate example code from component metadata
+    function generateExampleCode(comp) {
+      if (comp.helpText) {
+        // Extract code from helpText if available
+        const codeMatch = comp.helpText.match(/<pre>([\s\S]*?)<\/pre>/);
+        if (codeMatch) {
+          return codeMatch[1].replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"');
+        }
       }
-    ];
+
+      // Generate basic example
+      let code = `<pan-bus></pan-bus>\n<${comp.name}`;
+
+      // Add common attributes as examples
+      const exampleAttrs = comp.attributes.filter(attr =>
+        attr.helpText || attr.default || ['topic', 'resource', 'value'].includes(attr.name)
+      ).slice(0, 3);
+
+      if (exampleAttrs.length > 0) {
+        code += '\n';
+        exampleAttrs.forEach(attr => {
+          const value = attr.helpText || attr.default || `"example-${attr.name}"`;
+          code += `  ${attr.name}=${typeof value === 'string' && value.startsWith('[') ? "'" : '"'}${value}${typeof value === 'string' && value.startsWith('[') ? "'" : '"'}\n`;
+        });
+        code += `></${comp.name}>`;
+      } else {
+        code += `></${comp.name}>`;
+      }
+
+      return code;
+    }
+
+    // Transform registry format to gallery format
+    async function loadComponents() {
+      try {
+        const response = await fetch('./component-registry.json');
+        const registry = await response.json();
+
+        components = registry.components.map(comp => ({
+          name: comp.name,
+          description: comp.description || `${comp.displayName} component`,
+          category: Array.isArray(comp.tags) ? comp.tags : [comp.category],
+          status: comp.status || 'stable',
+          code: generateExampleCode(comp),
+          icon: comp.icon,
+          since: comp.since,
+          attributes: comp.attributes
+        }));
+
+        // Initial render
+        renderComponents();
+        updateStats();
+      } catch (error) {
+        console.error('Failed to load components:', error);
+        gallery.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 2rem;">
+            <p style="color: var(--color-text-muted);">Failed to load component registry.</p>
+            <p style="color: var(--color-text-muted); font-size: 0.875rem;">Error: ${error.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function updateStats() {
+      const totalCount = components.length;
+      const stableCount = components.filter(c => c.status === 'stable').length;
+      const subtitle = document.querySelector('.subtitle');
+      if (subtitle) {
+        subtitle.textContent = `Explore ${totalCount} components for building LARC applications (${stableCount} stable)`;
+      }
+    }
 
     const gallery = document.getElementById('gallery');
     const search = document.getElementById('search');
@@ -685,7 +521,7 @@
             <button class="btn btn-primary" onclick="openPlayground('${comp.name}')">
               Try it
             </button>
-            <a href="../src/components/${comp.name}.mjs" class="btn btn-secondary" target="_blank">
+            <a href="../../packages/components/${comp.name}.mjs" class="btn btn-secondary" target="_blank">
               View Source
             </a>
           </div>
@@ -743,12 +579,7 @@
   </style>
 </head>
 <body>
-  <script type="module">
-    // Make components available
-    const base = '${window.location.origin}${window.location.pathname.replace(/\/[^/]*$/, '')}';
-    window.panAutoload = { componentsPath: base + '/components/' };
-  <\/script>
-  <script type="module" src="../pan-autoload.mjs"><\/script>
+  <!-- Example code loaded from gallery -->
   ${code}
 </body>
 </html>`;
@@ -769,18 +600,16 @@
       if (e.target.id === 'playground-modal') closeModal();
     });
 
-    // Initial render
-    renderComponents();
+    // Load and render components
+    loadComponents();
   </script>
-
-  <script type="module" src="../pan-autoload.mjs"></script>
 
   <!-- Theme System -->
   <pan-theme-provider theme="auto"></pan-theme-provider>
 
   <script type="module">
-    import '../pan-theme-provider.mjs';
-    import '../pan-theme-toggle.mjs';
+    import '../../packages/components/pan-theme-provider.mjs';
+    import '../../packages/components/pan-theme-toggle.mjs';
   </script>
 </body>
 </html>
