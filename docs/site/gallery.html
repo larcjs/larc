@@ -570,16 +570,9 @@
       const code = document.getElementById('code-editor').value;
       const frame = document.getElementById('preview-frame');
 
-      // Extract component names from the code to know which modules to import
-      // Match any custom element (contains a hyphen)
-      const componentMatches = code.match(/<([a-z]+-[a-z-]+)/g) || [];
-      const componentNames = [...new Set(componentMatches.map(m => m.slice(1)))];
-
-      // Generate import statements for each component
-      const imports = componentNames.map(name =>
-        `import '/larc/packages/components/${name}.mjs';`
-      ).join('\n    ');
-
+      // Use pan.mjs autoloader which automatically:
+      // - Creates <pan-bus> if not present
+      // - Auto-loads components as they're encountered
       const html = `<!doctype html>
 <html>
 <head>
@@ -588,12 +581,11 @@
     body { font-family: system-ui; padding: 1rem; }
     * { box-sizing: border-box; }
   </style>
+  <script type="module" src="/larc/packages/core/pan.mjs"><\/script>
 </head>
 <body>
   <!-- Example code loaded from gallery -->
   ${code}
-
-  <script type="module">${imports}<\/script>
 </body>
 </html>`;
 
