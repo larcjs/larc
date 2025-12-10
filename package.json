@@ -33,6 +33,10 @@
     "serve": "python3 -m http.server 8000",
     "serve:examples": "cd packages/examples && python3 -m http.server 8888",
     "version:check": "npm run version --workspaces",
+    "changeset": "changeset",
+    "changeset:version": "changeset version",
+    "changeset:publish": "changeset publish",
+    "changeset:status": "changeset status",
     "pnpm:build": "pnpm -r build",
     "pnpm:test": "pnpm -r test",
     "pnpm:dev": "pnpm -r --parallel dev",
@@ -70,5 +74,7 @@
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@changesets/cli": "^2.29.8"
+  }
 }
