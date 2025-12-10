@@ -12,14 +12,15 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const ROOT_DIR = path.resolve(__dirname, '..');
+const ROOT_DIR = path.resolve(__dirname, '..', '..');
 
 // Output directory
-const DOCS_DIR = path.join(ROOT_DIR, 'docs', 'api');
+const DOCS_DIR = path.join(__dirname, 'api');
 
-// Source directories to scan
+// Source directories to scan (monorepo structure)
 const SOURCE_DIRS = [
-  path.join(ROOT_DIR, 'src', 'components'),
+  path.join(ROOT_DIR, 'packages', 'core'),
+  path.join(ROOT_DIR, 'packages', 'components'),
 ];
 
 /**
@@ -466,31 +467,39 @@ function main() {
   const allDocs = [];
 
   for (const sourceDir of SOURCE_DIRS) {
+    if (!fs.existsSync(sourceDir)) {
+      console.log(`⚠️  Skipping missing directory: ${path.relative(ROOT_DIR, sourceDir)}`);
+      continue;
+    }
+
     const files = fs.readdirSync(sourceDir)
-      .filter(f => f.endsWith('.mjs') && !f.includes('.test.'))
+      .filter(f => f.endsWith('.mjs') && !f.includes('.test.') && !f.includes('.min.'))
       .map(f => path.join(sourceDir, f));
 
+    const packageName = path.basename(sourceDir);
+    console.log(`\n📦 Scanning ${packageName} (${files.length} files)`);
+
     for (const file of files) {
-      console.log(`📄 Processing: ${path.relative(ROOT_DIR, file)}`);
+      console.log(`   📄 ${path.basename(file)}`);
       const docs = extractDocs(file);
 
       if (docs.classes.length > 0 || docs.functions.length > 0) {
         allDocs.push(docs);
 
-        // Generate component HTML
+        // Generate component HTML with package prefix
         const html = generateComponentHTML(docs);
-        const outputFile = path.join(DOCS_DIR, path.basename(file).replace('.mjs', '.html'));
+        const outputFile = path.join(DOCS_DIR, `${packageName}-${path.basename(file).replace('.mjs', '.html')}`);
         fs.writeFileSync(outputFile, html);
-        console.log(`   ✓ Generated: ${path.relative(ROOT_DIR, outputFile)}`);
+        console.log(`      ✓ Generated: ${path.relative(__dirname, outputFile)}`);
       }
     }
   }
 
   // Generate index
   const indexHTML = generateIndexHTML(allDocs);
-  const indexFile = path.join(ROOT_DIR, 'docs', 'index.html');
+  const indexFile = path.join(__dirname, 'api-index.html');
   fs.writeFileSync(indexFile, indexHTML);
-  console.log(`\n✓ Generated index: ${path.relative(ROOT_DIR, indexFile)}`);
+  console.log(`\n✓ Generated API index: ${path.relative(__dirname, indexFile)}`);
 
   console.log(`\n✅ Documentation generated successfully!`);
   console.log(`   Total components: ${allDocs.length}`);
