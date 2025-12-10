@@ -56,7 +56,7 @@
  */
 const defaults = {
   baseUrl: null,                // Full URL base (CDN or absolute path)
-  componentsPath: './',         // Relative path from baseUrl or import.meta.url
+  componentsPath: '/larc/packages/components/',  // Absolute path to components
   extension: '.mjs',
   rootMargin: 600,
   localPrefix: null,            // Tag prefix for local components (e.g., 'app-')

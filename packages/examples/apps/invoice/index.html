@@ -317,7 +317,7 @@
           try {
             const json = JSON.parse(event.target.result);
             bus.publish('invoice.import', { json });
-            fileInput.value = ''; // Reset input
+            fileInput.value = ''/larc/packages/components/ Reset input
           } catch (error) {
             alert('Failed to import file. Please check the file format.');
             console.error('Import error:', error);

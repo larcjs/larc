@@ -1,0 +1,1 @@
+../core/pan-routes.mjs

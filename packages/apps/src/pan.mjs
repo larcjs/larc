@@ -43,7 +43,7 @@
  */
 const defaults = {
   baseUrl: null,                // Full URL base (CDN or absolute path)
-  componentsPath: './components/',  // Relative path from baseUrl or import.meta.url
+  componentsPath: '/larc/packages/components/',  // Absolute path to components
   extension: '.mjs',
   rootMargin: 600,
 };

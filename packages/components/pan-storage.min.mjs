@@ -1,0 +1,1 @@
+../core/pan-storage.min.mjs
