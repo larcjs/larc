@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LARC Demo - Web Components + Messaging</title>
+
+  <!-- Load LARC autoloader -->
+  <script type="module" src="https://unpkg.com/@larcjs/core@1.1.2/src/pan.mjs"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      color: white;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .tagline {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      font-weight: 300;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .panel h2 {
+      color: #667eea;
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .feature-box {
+      background: #f0f9ff;
+      border-left: 4px solid #0ea5e9;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #0c4a6e;
+    }
+
+    .feature-box strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #0369a1;
+    }
+
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      background: #667eea;
+      color: white;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      background: #5568d3;
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button.danger {
+      background: #ef4444;
+    }
+
+    button.danger:hover {
+      background: #dc2626;
+    }
+
+    .counter-display {
+      font-size: 3rem;
+      font-weight: 700;
+      color: #667eea;
+      text-align: center;
+      padding: 2rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    pan-inspector {
+      display: block;
+      height: 500px;
+      margin-top: 1rem;
+    }
+
+    .inspector-panel {
+      grid-column: 1 / -1;
+    }
+
+    footer {
+      text-align: center;
+      color: white;
+      padding: 2rem 0;
+      opacity: 0.9;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 2px solid rgba(255,255,255,0.3);
+      transition: border-color 0.2s;
+    }
+
+    footer a:hover {
+      border-bottom-color: white;
+    }
+
+    .code-hint {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      line-height: 1.6;
+    }
+
+    .code-hint .comment {
+      color: #94a3b8;
+    }
+
+    @media (max-width: 768px) {
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+
+      .counter-display {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⚡ LARC Interactive Demo</h1>
+      <p class="tagline">Lightweight Asynchronous Relay Core</p>
+      <p class="subtitle">Zero-dependency messaging • Web Components • Decoupled Architecture</p>
+    </header>
+
+    <div class="demo-grid">
+      <div class="panel">
+        <h2>🎯 Counter Demo</h2>
+
+        <div class="counter-display" id="counter">0</div>
+
+        <div class="controls">
+          <button onclick="increment()">➕ Increment</button>
+          <button onclick="decrement()">➖ Decrement</button>
+          <button onclick="reset()" class="danger">🔄 Reset</button>
+        </div>
+
+        <div class="feature-box">
+          <strong>What's happening:</strong>
+          Buttons publish messages to topics like <code>counter.increment</code>.
+          A subscriber listens for these messages and updates the display.
+          Components are completely decoupled!
+        </div>
+
+        <div class="code-hint">
+          <span class="comment">// Publisher (button)</span><br>
+          client.pub('counter.increment');<br>
+          <br>
+          <span class="comment">// Subscriber (display)</span><br>
+          client.sub('counter.*', updateDisplay);
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>📬 Publish Your Own</h2>
+
+        <div class="controls">
+          <button onclick="sendNotification()">🔔 Send Notification</button>
+          <button onclick="triggerEvent()">✨ Trigger Event</button>
+          <button onclick="updateState()">💾 Update State</button>
+        </div>
+
+        <div class="feature-box">
+          <strong>Try it out:</strong>
+          Click these buttons to publish different types of messages.
+          Watch them appear in the inspector below in real-time!
+        </div>
+
+        <div class="feature-box" style="background: #fef3c7; border-color: #f59e0b; color: #78350f;">
+          <strong>💡 Pro Tip:</strong>
+          Open your browser console to see all messages.
+          Messages are logged automatically by the PAN bus.
+        </div>
+      </div>
+
+      <div class="panel inspector-panel">
+        <h2>🔍 Real-Time Message Inspector</h2>
+        <div class="feature-box">
+          <strong>Live monitoring:</strong>
+          This inspector shows all messages flowing through the PAN bus in real-time.
+          Filter by topic, pause/resume, and see message details.
+        </div>
+
+        <!-- PAN Inspector component -->
+        <pan-inspector></pan-inspector>
+      </div>
+    </div>
+
+    <footer>
+      <p>
+        Built with <strong>LARC</strong> •
+        <a href="https://github.com/larcjs/larc" target="_blank">GitHub</a> •
+        <a href="https://www.npmjs.com/org/larcjs" target="_blank">npm</a>
+      </p>
+    </footer>
+  </div>
+
+  <!-- PAN Bus (auto-created by pan.mjs, but we specify routing and debug) -->
+  <pan-bus enable-routing="false" debug="true"></pan-bus>
+
+  <script type="module">
+    import { PanClient } from 'https://unpkg.com/@larcjs/core@1.1.2/src/index.js';
+
+    // Create client
+    const client = new PanClient();
+    let count = 0;
+
+    // Wait for bus
+    await client.ready();
+    console.log('✅ PAN Bus ready!');
+
+    // Subscribe to counter events
+    client.sub('counter.increment', () => {
+      count++;
+      updateDisplay();
+    });
+
+    client.sub('counter.decrement', () => {
+      count--;
+      updateDisplay();
+    });
+
+    client.sub('counter.reset', () => {
+      count = 0;
+      updateDisplay();
+    });
+
+    function updateDisplay() {
+      document.getElementById('counter').textContent = count;
+    }
+
+    // Make functions global for onclick handlers
+    window.increment = () => client.pub('counter.increment', { timestamp: Date.now() });
+    window.decrement = () => client.pub('counter.decrement', { timestamp: Date.now() });
+    window.reset = () => client.pub('counter.reset', { timestamp: Date.now() });
+
+    window.sendNotification = () => {
+      client.pub('app.notification', {
+        type: 'info',
+        message: 'Hello from LARC! 👋',
+        timestamp: Date.now()
+      });
+    };
+
+    window.triggerEvent = () => {
+      client.pub('app.event.triggered', {
+        eventType: 'custom',
+        source: 'demo',
+        data: { random: Math.random() },
+        timestamp: Date.now()
+      });
+    };
+
+    window.updateState = () => {
+      client.pub('app.state.update', {
+        state: 'active',
+        user: 'demo-user',
+        timestamp: Date.now()
+      }, { retain: true });
+    };
+
+    // Log all messages to console
+    client.sub('*', (msg) => {
+      if (!msg.topic.startsWith('pan:sys')) {
+        console.log(`📨 ${msg.topic}`, msg.data);
+      }
+    });
+  </script>
+</body>
+</html>
