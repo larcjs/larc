@@ -429,7 +429,45 @@ build_pdf() {
     if command -v prince &> /dev/null; then
         echo -e "${YELLOW}Using Prince XML for PDF generation...${NC}"
 
-        # First generate HTML
+        # Create cover page HTML if cover image exists
+        if [ -f "${BOOK_DIR}/learning-larc-cover.png" ]; then
+            echo -e "${YELLOW}Adding front cover...${NC}"
+            cat > "${TEMP_DIR}/cover.html" <<COVEREOF
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page { margin: 0; }
+        body { margin: 0; padding: 0; }
+        .cover-page {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            page-break-after: always;
+        }
+        .cover-page img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-page">
+        <img src="${BOOK_DIR}/learning-larc-cover.png" alt="Book Cover" />
+    </div>
+</body>
+</html>
+COVEREOF
+            COVER_FILE="${TEMP_DIR}/cover.html"
+        else
+            echo -e "${YELLOW}No front cover image found, skipping...${NC}"
+            COVER_FILE=""
+        fi
+
+        # Generate main content HTML
         pandoc \
             "${BUILD_DIR}/metadata.yaml" \
             "${TEMP_DIR}/learning-larc-complete.md" \
@@ -443,14 +481,25 @@ build_pdf() {
             --syntax-highlighting=tango \
             --output="${TEMP_DIR}/temp.html"
 
-        # Convert HTML to PDF with Prince
-        prince \
-            "${TEMP_DIR}/temp.html" \
-            -o "${OUTPUT_DIR}/learning-larc.pdf" \
-            --pdf-title="${BOOK_TITLE}" \
-            --pdf-author="${AUTHOR}"
+        # Convert HTML to PDF with Prince (include cover if it exists)
+        if [ -n "$COVER_FILE" ]; then
+            prince \
+                "${COVER_FILE}" \
+                "${TEMP_DIR}/temp.html" \
+                -o "${OUTPUT_DIR}/learning-larc.pdf" \
+                --pdf-title="${BOOK_TITLE}" \
+                --pdf-author="${AUTHOR}"
+        else
+            prince \
+                "${TEMP_DIR}/temp.html" \
+                -o "${OUTPUT_DIR}/learning-larc.pdf" \
+                --pdf-title="${BOOK_TITLE}" \
+                --pdf-author="${AUTHOR}"
+        fi
 
+        # Cleanup
         rm "${TEMP_DIR}/temp.html"
+        [ -f "${TEMP_DIR}/cover.html" ] && rm "${TEMP_DIR}/cover.html"
     else
         echo -e "${YELLOW}Using XeLaTeX for PDF generation (Unicode support)...${NC}"
 
@@ -483,7 +532,10 @@ build_epub() {
     echo -e "${BLUE}Building EPUB version...${NC}"
 
     # Check for cover image
-    if [ -f "${BOOK_DIR}/larc-book.png" ]; then
+    if [ -f "${BOOK_DIR}/learning-larc-cover.png" ]; then
+        COVER_ARG="--epub-cover-image=${BOOK_DIR}/learning-larc-cover.png"
+        echo -e "${GREEN}Using cover image: learning-larc-cover.png${NC}"
+    elif [ -f "${BOOK_DIR}/larc-book.png" ]; then
         COVER_ARG="--epub-cover-image=${BOOK_DIR}/larc-book.png"
         echo -e "${GREEN}Using cover image: larc-book.png${NC}"
     elif [ -f "${BOOK_DIR}/cover.png" ]; then

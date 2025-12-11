@@ -318,3 +318,5 @@ MIT © LARC Contributors
 ---
 
 **Note:** This repository uses npm workspaces for monorepo management. All packages are published under the `@larcjs` npm organization.
+
+**Demo**: Check out the [Wiki Explorer](./docs/wiki-explorer.html) - a live demo showcasing LARC's tree navigation and markdown rendering components.

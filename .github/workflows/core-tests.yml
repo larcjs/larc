@@ -4,12 +4,12 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'core/**'
+      - 'packages/core/**'
       - '.github/workflows/core-tests.yml'
   pull_request:
     branches: [ main, develop ]
     paths:
-      - 'core/**'
+      - 'packages/core/**'
   workflow_dispatch:
 
 jobs:
@@ -34,18 +34,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-          cache-dependency-path: core/package-lock.json
+          cache-dependency-path: packages/core/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./core
+        working-directory: ./packages/core
         run: npm ci
 
       - name: Install Playwright browsers
-        working-directory: ./core
+        working-directory: ./packages/core
         run: npx playwright install --with-deps chromium firefox webkit
 
       - name: Run tests
-        working-directory: ./core
+        working-directory: ./packages/core
         run: npm test
         env:
           CI: true
@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results-${{ matrix.os }}-${{ matrix.node-version }}
-          path: core/test-results/
+          path: packages/core/test-results/
           retention-days: 7
 
       - name: Upload test report
@@ -63,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.os }}-${{ matrix.node-version }}
-          path: core/playwright-report/
+          path: packages/core/playwright-report/
           retention-days: 7
 
   test-summary:
@@ -112,14 +112,14 @@ jobs:
         with:
           node-version: 20.x
           cache: 'npm'
-          cache-dependency-path: core/package-lock.json
+          cache-dependency-path: packages/core/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./core
+        working-directory: ./packages/core
         run: npm ci
 
       - name: Check for console.log statements
-        working-directory: ./core
+        working-directory: ./packages/core
         run: |
           if grep -r "console\.log" src/ --include="*.mjs" --include="*.js" | grep -v "// console.log"; then
             echo "❌ Found console.log statements in source files"
@@ -129,7 +129,7 @@ jobs:
           fi
 
       - name: Validate package.json
-        working-directory: ./core
+        working-directory: ./packages/core
         run: |
           node -e "JSON.parse(require('fs').readFileSync('package.json', 'utf8'))"
           echo "✅ package.json is valid JSON"
@@ -149,15 +149,15 @@ jobs:
         with:
           node-version: 20.x
           cache: 'npm'
-          cache-dependency-path: core/package-lock.json
+          cache-dependency-path: packages/core/package-lock.json
 
       - name: Run npm audit
-        working-directory: ./core
+        working-directory: ./packages/core
         run: npm audit --audit-level=moderate
         continue-on-error: true
 
       - name: Check for known vulnerabilities
-        working-directory: ./core
+        working-directory: ./packages/core
         run: |
           npm audit --json > audit-report.json || true
           echo "✅ Security audit completed"
@@ -167,7 +167,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: security-audit
-          path: core/audit-report.json
+          path: packages/core/audit-report.json
           retention-days: 30
 
   deploy-docs:

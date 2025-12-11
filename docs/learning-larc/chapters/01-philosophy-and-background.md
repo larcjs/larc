@@ -129,7 +129,7 @@ Now, here's the same thing with native Web Components and LARC:
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1/dist/index.js"
+      "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/components@2.0.0/pan-card.mjs"
     }
   }
   </script>

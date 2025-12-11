@@ -33,7 +33,7 @@
     "url": "https://github.com/larcjs/larc/issues"
   },
   "peerDependencies": {
-    "@larcjs/core": "^1.1.0"
+    "@larcjs/core": "^2.0.0"
   },
   "peerDependenciesMeta": {
     "@larcjs/core": {

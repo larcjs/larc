@@ -41,17 +41,13 @@ jobs:
           # Debug: List directory structure
           echo "=== Directory structure ==="
           ls -la
-          echo "=== Checking submodules ==="
-          git submodule status
+          echo "=== Checking packages ==="
+          ls -la packages/
           # Copy directories using rsync to handle symlinks and nested structures
           rsync -av --exclude='.git' --exclude='.github' playground/ _site/playground/
-          rsync -av --exclude='.git' core/ _site/core/
-          if [ -d "ui" ]; then
-            rsync -av --exclude='.git' ui/ _site/ui/
-          else
-            echo "ERROR: ui directory not found!"
-            exit 1
-          fi
+          rsync -av --exclude='.git' --exclude='node_modules' packages/core/ _site/packages/core/
+          rsync -av --exclude='.git' --exclude='node_modules' packages/components/ _site/packages/components/
+          rsync -av --exclude='.git' --exclude='node_modules' packages/apps/ _site/packages/apps/
           # Copy config if it exists
           [ -f larc-config.mjs ] && cp larc-config.mjs _site/ || echo "No larc-config.mjs found"
 

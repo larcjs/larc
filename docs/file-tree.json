@@ -1,0 +1,2964 @@
+{
+  "metadata": {
+    "generated": "2025-12-11T15:10:34.288Z",
+    "root": "/Users/cdr/Projects/larc-repos/docs",
+    "extensions": [
+      ".md",
+      ".html",
+      ".pdf"
+    ],
+    "stats": {
+      "folders": 43,
+      "files": 289,
+      "totalSize": 18154430,
+      "totalSizeFormatted": "17.31 MB"
+    }
+  },
+  "tree": [
+    {
+      "id": "node-80",
+      "name": "building-with-larc",
+      "type": "folder",
+      "path": "building-with-larc",
+      "children": [
+        {
+          "id": "node-79",
+          "name": "output",
+          "type": "folder",
+          "path": "building-with-larc/output",
+          "children": [
+            {
+              "id": "node-76",
+              "name": "html",
+              "type": "folder",
+              "path": "building-with-larc/output/html",
+              "children": [
+                {
+                  "id": "node-75",
+                  "name": "building-with-larc.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "building-with-larc/output/html/building-with-larc.html",
+                  "size": 4914028,
+                  "modified": "2025-12-11T00:18:47.762Z"
+                }
+              ]
+            },
+            {
+              "id": "node-78",
+              "name": "pdf",
+              "type": "folder",
+              "path": "building-with-larc/output/pdf",
+              "children": [
+                {
+                  "id": "node-77",
+                  "name": "building-with-larc.pdf",
+                  "type": "file",
+                  "extension": ".pdf",
+                  "path": "building-with-larc/output/pdf/building-with-larc.pdf",
+                  "size": 5756880,
+                  "modified": "2025-12-11T00:57:57.505Z"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "node-39",
+          "name": "appendix-a-message-topics.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/appendix-a-message-topics.md",
+          "size": 19320,
+          "modified": "2025-12-10T18:13:45.610Z"
+        },
+        {
+          "id": "node-40",
+          "name": "appendix-b-event-envelope.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/appendix-b-event-envelope.md",
+          "size": 17901,
+          "modified": "2025-12-10T18:13:45.613Z"
+        },
+        {
+          "id": "node-41",
+          "name": "appendix-c-configuration-options.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/appendix-c-configuration-options.md",
+          "size": 19258,
+          "modified": "2025-12-10T18:13:45.613Z"
+        },
+        {
+          "id": "node-42",
+          "name": "appendix-d-migration-guide.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/appendix-d-migration-guide.md",
+          "size": 10565,
+          "modified": "2025-12-10T18:13:45.613Z"
+        },
+        {
+          "id": "node-43",
+          "name": "appendix-e-recipes-and-patterns.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/appendix-e-recipes-and-patterns.md",
+          "size": 23617,
+          "modified": "2025-12-10T18:13:45.613Z"
+        },
+        {
+          "id": "node-44",
+          "name": "appendix-f-glossary.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/appendix-f-glossary.md",
+          "size": 15959,
+          "modified": "2025-12-10T18:13:45.614Z"
+        },
+        {
+          "id": "node-45",
+          "name": "appendix-g-resources.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/appendix-g-resources.md",
+          "size": 19072,
+          "modified": "2025-12-11T00:57:25.687Z"
+        },
+        {
+          "id": "node-46",
+          "name": "back-cover.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "building-with-larc/back-cover.html",
+          "size": 4611,
+          "modified": "2025-12-10T18:13:45.614Z"
+        },
+        {
+          "id": "node-47",
+          "name": "back-cover.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/back-cover.md",
+          "size": 2378,
+          "modified": "2025-12-10T18:13:45.615Z"
+        },
+        {
+          "id": "node-35",
+          "name": "BUILD-SYSTEM-SUMMARY.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/BUILD-SYSTEM-SUMMARY.md",
+          "size": 10325,
+          "modified": "2025-12-10T18:13:45.609Z"
+        },
+        {
+          "id": "node-36",
+          "name": "BUILD.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/BUILD.md",
+          "size": 7541,
+          "modified": "2025-12-10T18:13:45.609Z"
+        },
+        {
+          "id": "node-48",
+          "name": "chapter-01-introduction.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-01-introduction.md",
+          "size": 16415,
+          "modified": "2025-12-10T18:13:45.615Z"
+        },
+        {
+          "id": "node-49",
+          "name": "chapter-02-philosophy.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-02-philosophy.md",
+          "size": 48887,
+          "modified": "2025-12-11T00:55:50.826Z"
+        },
+        {
+          "id": "node-50",
+          "name": "chapter-03-story.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-03-story.md",
+          "size": 19419,
+          "modified": "2025-12-10T18:13:45.616Z"
+        },
+        {
+          "id": "node-51",
+          "name": "chapter-04-core-concepts.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-04-core-concepts.md",
+          "size": 32059,
+          "modified": "2025-12-10T18:13:45.616Z"
+        },
+        {
+          "id": "node-52",
+          "name": "chapter-05-getting-started.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-05-getting-started.md",
+          "size": 31604,
+          "modified": "2025-12-10T18:13:45.616Z"
+        },
+        {
+          "id": "node-53",
+          "name": "chapter-06-basic-message-flow.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-06-basic-message-flow.md",
+          "size": 25197,
+          "modified": "2025-12-10T18:13:45.617Z"
+        },
+        {
+          "id": "node-54",
+          "name": "chapter-07-working-with-components.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-07-working-with-components.md",
+          "size": 27128,
+          "modified": "2025-12-10T18:13:45.617Z"
+        },
+        {
+          "id": "node-55",
+          "name": "chapter-08-state-management.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-08-state-management.md",
+          "size": 30027,
+          "modified": "2025-12-10T18:13:45.617Z"
+        },
+        {
+          "id": "node-56",
+          "name": "chapter-09-routing-and-navigation.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-09-routing-and-navigation.md",
+          "size": 23017,
+          "modified": "2025-12-10T18:13:45.618Z"
+        },
+        {
+          "id": "node-57",
+          "name": "chapter-10-forms-and-user-input.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-10-forms-and-user-input.md",
+          "size": 31800,
+          "modified": "2025-12-10T18:13:45.618Z"
+        },
+        {
+          "id": "node-58",
+          "name": "chapter-11-data-fetching-and-apis.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-11-data-fetching-and-apis.md",
+          "size": 30577,
+          "modified": "2025-12-10T18:13:45.618Z"
+        },
+        {
+          "id": "node-59",
+          "name": "chapter-12-authentication-and-authorization.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-12-authentication-and-authorization.md",
+          "size": 32672,
+          "modified": "2025-12-10T18:13:45.618Z"
+        },
+        {
+          "id": "node-60",
+          "name": "chapter-13-realtime-features.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-13-realtime-features.md",
+          "size": 38267,
+          "modified": "2025-12-10T18:13:45.619Z"
+        },
+        {
+          "id": "node-61",
+          "name": "chapter-14-file-management.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-14-file-management.md",
+          "size": 44052,
+          "modified": "2025-12-10T18:13:45.619Z"
+        },
+        {
+          "id": "node-62",
+          "name": "chapter-15-theming-and-styling.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-15-theming-and-styling.md",
+          "size": 23694,
+          "modified": "2025-12-10T18:13:45.619Z"
+        },
+        {
+          "id": "node-63",
+          "name": "chapter-16-performance-optimization.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-16-performance-optimization.md",
+          "size": 26636,
+          "modified": "2025-12-10T18:13:45.619Z"
+        },
+        {
+          "id": "node-64",
+          "name": "chapter-17-testing-strategies.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-17-testing-strategies.md",
+          "size": 28867,
+          "modified": "2025-12-10T18:13:45.620Z"
+        },
+        {
+          "id": "node-65",
+          "name": "chapter-18-error-handling-and-debugging.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-18-error-handling-and-debugging.md",
+          "size": 24088,
+          "modified": "2025-12-10T18:13:45.620Z"
+        },
+        {
+          "id": "node-66",
+          "name": "chapter-19-advanced-patterns.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-19-advanced-patterns.md",
+          "size": 27113,
+          "modified": "2025-12-10T18:13:45.620Z"
+        },
+        {
+          "id": "node-67",
+          "name": "chapter-20-deployment-and-production.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-20-deployment-and-production.md",
+          "size": 27260,
+          "modified": "2025-12-10T18:13:45.620Z"
+        },
+        {
+          "id": "node-68",
+          "name": "chapter-21-core-components.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-21-core-components.md",
+          "size": 45155,
+          "modified": "2025-12-10T18:13:45.620Z"
+        },
+        {
+          "id": "node-69",
+          "name": "chapter-22-data-components.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-22-data-components.md",
+          "size": 33815,
+          "modified": "2025-12-10T18:13:45.621Z"
+        },
+        {
+          "id": "node-70",
+          "name": "chapter-23-ui-components.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-23-ui-components.md",
+          "size": 34387,
+          "modified": "2025-12-10T18:13:45.621Z"
+        },
+        {
+          "id": "node-71",
+          "name": "chapter-24-integration-components.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-24-integration-components.md",
+          "size": 56013,
+          "modified": "2025-12-10T18:13:45.621Z"
+        },
+        {
+          "id": "node-72",
+          "name": "chapter-25-utility-components.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/chapter-25-utility-components.md",
+          "size": 36817,
+          "modified": "2025-12-10T18:13:45.621Z"
+        },
+        {
+          "id": "node-73",
+          "name": "colophon.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/colophon.md",
+          "size": 5039,
+          "modified": "2025-12-10T15:27:12.973Z"
+        },
+        {
+          "id": "node-74",
+          "name": "index.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/index.md",
+          "size": 20076,
+          "modified": "2025-12-10T18:13:45.636Z"
+        },
+        {
+          "id": "node-37",
+          "name": "QUICKSTART.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/QUICKSTART.md",
+          "size": 3764,
+          "modified": "2025-12-06T01:40:28.569Z"
+        },
+        {
+          "id": "node-38",
+          "name": "README.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "building-with-larc/README.md",
+          "size": 11292,
+          "modified": "2025-12-10T18:13:45.609Z"
+        }
+      ]
+    },
+    {
+      "id": "node-91",
+      "name": "guides",
+      "type": "folder",
+      "path": "guides",
+      "children": [
+        {
+          "id": "node-83",
+          "name": "BUILD-PROCESS.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/BUILD-PROCESS.md",
+          "size": 9082,
+          "modified": "2025-12-10T00:28:15.015Z"
+        },
+        {
+          "id": "node-84",
+          "name": "BUNDLE-REDUCTION-COMPLETE.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/BUNDLE-REDUCTION-COMPLETE.md",
+          "size": 10533,
+          "modified": "2025-12-10T00:28:15.015Z"
+        },
+        {
+          "id": "node-85",
+          "name": "BUNDLE-SIZE-OPTIMIZATION.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/BUNDLE-SIZE-OPTIMIZATION.md",
+          "size": 6773,
+          "modified": "2025-12-10T00:28:15.015Z"
+        },
+        {
+          "id": "node-86",
+          "name": "HN_FAQ.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/HN_FAQ.md",
+          "size": 12247,
+          "modified": "2025-12-10T00:28:15.015Z"
+        },
+        {
+          "id": "node-87",
+          "name": "HN_POST_DRAFT.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/HN_POST_DRAFT.md",
+          "size": 6386,
+          "modified": "2025-12-10T00:28:15.016Z"
+        },
+        {
+          "id": "node-88",
+          "name": "PACKAGES.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/PACKAGES.md",
+          "size": 7969,
+          "modified": "2025-12-08T06:41:20.079Z"
+        },
+        {
+          "id": "node-89",
+          "name": "QUICK-START-GUIDE.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/QUICK-START-GUIDE.md",
+          "size": 4760,
+          "modified": "2025-12-08T06:41:20.079Z"
+        },
+        {
+          "id": "node-90",
+          "name": "QUICK-START.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "guides/QUICK-START.md",
+          "size": 3476,
+          "modified": "2025-12-08T06:41:20.079Z"
+        }
+      ]
+    },
+    {
+      "id": "node-132",
+      "name": "learning-larc",
+      "type": "folder",
+      "path": "learning-larc",
+      "children": [
+        {
+          "id": "node-107",
+          "name": "build",
+          "type": "folder",
+          "path": "learning-larc/build",
+          "children": [
+            {
+              "id": "node-104",
+              "name": "output",
+              "type": "folder",
+              "path": "learning-larc/build/output",
+              "children": [
+                {
+                  "id": "node-102",
+                  "name": "learning-larc.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "learning-larc/build/output/learning-larc.html",
+                  "size": 1418987,
+                  "modified": "2025-12-06T01:42:02.481Z"
+                },
+                {
+                  "id": "node-103",
+                  "name": "learning-larc.pdf",
+                  "type": "file",
+                  "extension": ".pdf",
+                  "path": "learning-larc/build/output/learning-larc.pdf",
+                  "size": 2328406,
+                  "modified": "2025-12-11T01:34:51.794Z"
+                }
+              ]
+            },
+            {
+              "id": "node-106",
+              "name": "temp",
+              "type": "folder",
+              "path": "learning-larc/build/temp",
+              "children": [
+                {
+                  "id": "node-105",
+                  "name": "learning-larc-complete.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "learning-larc/build/temp/learning-larc-complete.md",
+                  "size": 257860,
+                  "modified": "2025-12-11T01:34:49.036Z"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "node-119",
+          "name": "chapters",
+          "type": "folder",
+          "path": "learning-larc/chapters",
+          "children": [
+            {
+              "id": "node-108",
+              "name": "01-philosophy-and-background.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/01-philosophy-and-background.md",
+              "size": 18830,
+              "modified": "2025-12-11T01:34:10.206Z"
+            },
+            {
+              "id": "node-109",
+              "name": "02-core-concepts.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/02-core-concepts.md",
+              "size": 23348,
+              "modified": "2025-12-11T01:34:10.206Z"
+            },
+            {
+              "id": "node-110",
+              "name": "03-getting-started.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/03-getting-started.md",
+              "size": 24263,
+              "modified": "2025-12-11T01:34:10.207Z"
+            },
+            {
+              "id": "node-111",
+              "name": "04-creating-web-components.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/04-creating-web-components.md",
+              "size": 25524,
+              "modified": "2025-12-11T01:34:10.207Z"
+            },
+            {
+              "id": "node-112",
+              "name": "05-the-pan-bus.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/05-the-pan-bus.md",
+              "size": 25847,
+              "modified": "2025-12-11T01:34:10.207Z"
+            },
+            {
+              "id": "node-113",
+              "name": "06-state-management.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/06-state-management.md",
+              "size": 27793,
+              "modified": "2025-12-11T01:34:10.208Z"
+            },
+            {
+              "id": "node-114",
+              "name": "07-advanced-component-patterns.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/07-advanced-component-patterns.md",
+              "size": 25985,
+              "modified": "2025-12-11T01:34:10.208Z"
+            },
+            {
+              "id": "node-115",
+              "name": "08-business-logic-patterns.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/08-business-logic-patterns.md",
+              "size": 34780,
+              "modified": "2025-12-11T01:34:10.209Z"
+            },
+            {
+              "id": "node-116",
+              "name": "09-routing-and-navigation.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/09-routing-and-navigation.md",
+              "size": 10542,
+              "modified": "2025-12-11T01:34:10.209Z"
+            },
+            {
+              "id": "node-117",
+              "name": "10-forms-and-validation.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/10-forms-and-validation.md",
+              "size": 15357,
+              "modified": "2025-12-11T01:34:10.209Z"
+            },
+            {
+              "id": "node-118",
+              "name": "11-19-summary.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/chapters/11-19-summary.md",
+              "size": 13286,
+              "modified": "2025-12-11T01:34:27.706Z"
+            }
+          ]
+        },
+        {
+          "id": "node-130",
+          "name": "diagrams",
+          "type": "folder",
+          "path": "learning-larc/diagrams",
+          "children": [
+            {
+              "id": "node-121",
+              "name": "01-architecture-overview.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/01-architecture-overview.md",
+              "size": 4383,
+              "modified": "2025-12-01T16:05:05.169Z"
+            },
+            {
+              "id": "node-122",
+              "name": "02-component-structure.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/02-component-structure.md",
+              "size": 6598,
+              "modified": "2025-12-01T16:05:40.892Z"
+            },
+            {
+              "id": "node-123",
+              "name": "05-pan-bus.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/05-pan-bus.md",
+              "size": 7977,
+              "modified": "2025-12-01T16:06:25.905Z"
+            },
+            {
+              "id": "node-124",
+              "name": "06-state-management.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/06-state-management.md",
+              "size": 7874,
+              "modified": "2025-12-01T16:07:09.791Z"
+            },
+            {
+              "id": "node-125",
+              "name": "08-routing.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/08-routing.md",
+              "size": 8901,
+              "modified": "2025-12-01T16:07:55.920Z"
+            },
+            {
+              "id": "node-126",
+              "name": "12-traditional-vs-larc.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/12-traditional-vs-larc.md",
+              "size": 9494,
+              "modified": "2025-12-01T16:08:48.547Z"
+            },
+            {
+              "id": "node-127",
+              "name": "14-app-architecture.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/14-app-architecture.md",
+              "size": 10697,
+              "modified": "2025-12-01T16:09:42.175Z"
+            },
+            {
+              "id": "node-128",
+              "name": "DIAGRAM-INDEX.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/DIAGRAM-INDEX.md",
+              "size": 5978,
+              "modified": "2025-12-01T16:10:23.835Z"
+            },
+            {
+              "id": "node-129",
+              "name": "README.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "learning-larc/diagrams/README.md",
+              "size": 1932,
+              "modified": "2025-12-01T16:04:36.770Z"
+            }
+          ]
+        },
+        {
+          "id": "node-92",
+          "name": "00-front-matter.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/00-front-matter.md",
+          "size": 5814,
+          "modified": "2025-12-06T01:23:47.651Z"
+        },
+        {
+          "id": "node-98",
+          "name": "author-bio.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "learning-larc/author-bio.html",
+          "size": 2190,
+          "modified": "2025-12-04T03:00:35.614Z"
+        },
+        {
+          "id": "node-99",
+          "name": "author-bio.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/author-bio.md",
+          "size": 986,
+          "modified": "2025-12-04T02:58:04.051Z"
+        },
+        {
+          "id": "node-100",
+          "name": "back-cover.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "learning-larc/back-cover.html",
+          "size": 4611,
+          "modified": "2025-12-04T03:57:38.159Z"
+        },
+        {
+          "id": "node-101",
+          "name": "back-cover.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/back-cover.md",
+          "size": 1353,
+          "modified": "2025-12-04T02:57:09.965Z"
+        },
+        {
+          "id": "node-93",
+          "name": "BUILD-SYSTEM.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/BUILD-SYSTEM.md",
+          "size": 7325,
+          "modified": "2025-12-05T22:38:03.359Z"
+        },
+        {
+          "id": "node-120",
+          "name": "colophon.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/colophon.md",
+          "size": 3628,
+          "modified": "2025-12-06T11:06:11.747Z"
+        },
+        {
+          "id": "node-94",
+          "name": "DIAGRAMS-COMPLETE.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/DIAGRAMS-COMPLETE.md",
+          "size": 7480,
+          "modified": "2025-12-01T16:11:22.776Z"
+        },
+        {
+          "id": "node-131",
+          "name": "foreword.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/foreword.md",
+          "size": 3970,
+          "modified": "2025-12-03T23:06:24.525Z"
+        },
+        {
+          "id": "node-95",
+          "name": "PROGRESS.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/PROGRESS.md",
+          "size": 4971,
+          "modified": "2025-12-01T16:10:41.845Z"
+        },
+        {
+          "id": "node-96",
+          "name": "QUICKSTART.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/QUICKSTART.md",
+          "size": 3348,
+          "modified": "2025-12-05T22:36:36.342Z"
+        },
+        {
+          "id": "node-97",
+          "name": "README.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "learning-larc/README.md",
+          "size": 11304,
+          "modified": "2025-12-05T22:37:09.077Z"
+        }
+      ]
+    },
+    {
+      "id": "node-138",
+      "name": "migration",
+      "type": "folder",
+      "path": "migration",
+      "children": [
+        {
+          "id": "node-133",
+          "name": "ARCHIVE-REPOSITORIES.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "migration/ARCHIVE-REPOSITORIES.md",
+          "size": 5131,
+          "modified": "2025-12-08T06:41:20.079Z"
+        },
+        {
+          "id": "node-134",
+          "name": "DEVTOOLS-EXTRACTION.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "migration/DEVTOOLS-EXTRACTION.md",
+          "size": 3591,
+          "modified": "2025-12-08T06:41:20.079Z"
+        },
+        {
+          "id": "node-135",
+          "name": "MIGRATION-COMPLETE.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "migration/MIGRATION-COMPLETE.md",
+          "size": 11519,
+          "modified": "2025-12-08T06:41:20.079Z"
+        },
+        {
+          "id": "node-136",
+          "name": "MONOREPO-MIGRATION-PLAN.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "migration/MONOREPO-MIGRATION-PLAN.md",
+          "size": 10947,
+          "modified": "2025-12-10T00:28:15.018Z"
+        },
+        {
+          "id": "node-137",
+          "name": "MONOREPO-VS-SUBMODULES.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "migration/MONOREPO-VS-SUBMODULES.md",
+          "size": 9640,
+          "modified": "2025-12-08T06:41:20.080Z"
+        }
+      ]
+    },
+    {
+      "id": "node-145",
+      "name": "processes",
+      "type": "folder",
+      "path": "processes",
+      "children": [
+        {
+          "id": "node-139",
+          "name": "DECISION-TREE.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "processes/DECISION-TREE.md",
+          "size": 6890,
+          "modified": "2025-12-10T00:28:15.018Z"
+        },
+        {
+          "id": "node-140",
+          "name": "LAUNCH_CHECKLIST.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "processes/LAUNCH_CHECKLIST.md",
+          "size": 10466,
+          "modified": "2025-12-10T00:28:15.018Z"
+        },
+        {
+          "id": "node-141",
+          "name": "LAUNCH_READINESS.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "processes/LAUNCH_READINESS.md",
+          "size": 7804,
+          "modified": "2025-12-10T00:28:15.018Z"
+        },
+        {
+          "id": "node-142",
+          "name": "RECOMMENDED-CONSOLIDATION.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "processes/RECOMMENDED-CONSOLIDATION.md",
+          "size": 14620,
+          "modified": "2025-12-10T00:28:15.018Z"
+        },
+        {
+          "id": "node-143",
+          "name": "SCRIPTS-README.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "processes/SCRIPTS-README.md",
+          "size": 5096,
+          "modified": "2025-12-08T06:41:20.081Z"
+        },
+        {
+          "id": "node-144",
+          "name": "SUBMODULE-WORKFLOW.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "processes/SUBMODULE-WORKFLOW.md",
+          "size": 9408,
+          "modified": "2025-12-08T06:41:20.081Z"
+        }
+      ]
+    },
+    {
+      "id": "node-330",
+      "name": "site",
+      "type": "folder",
+      "path": "site",
+      "children": [
+        {
+          "id": "node-172",
+          "name": "api",
+          "type": "folder",
+          "path": "site/api",
+          "children": [
+            {
+              "id": "node-147",
+              "name": "components-pan-bus-enhanced.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-bus-enhanced.html",
+              "size": 2757,
+              "modified": "2025-12-10T06:15:38.173Z"
+            },
+            {
+              "id": "node-148",
+              "name": "components-pan-bus-legacy.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-bus-legacy.html",
+              "size": 1949,
+              "modified": "2025-12-10T06:15:38.174Z"
+            },
+            {
+              "id": "node-149",
+              "name": "components-pan-computed-state.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-computed-state.html",
+              "size": 3514,
+              "modified": "2025-12-10T06:15:38.174Z"
+            },
+            {
+              "id": "node-150",
+              "name": "components-pan-data-connector.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-data-connector.html",
+              "size": 1616,
+              "modified": "2025-12-10T06:15:38.174Z"
+            },
+            {
+              "id": "node-151",
+              "name": "components-pan-files.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-files.html",
+              "size": 2842,
+              "modified": "2025-12-10T06:15:38.174Z"
+            },
+            {
+              "id": "node-152",
+              "name": "components-pan-invoice-store.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-invoice-store.html",
+              "size": 2738,
+              "modified": "2025-12-10T06:15:38.174Z"
+            },
+            {
+              "id": "node-153",
+              "name": "components-pan-jwt.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-jwt.html",
+              "size": 4420,
+              "modified": "2025-12-10T06:15:38.175Z"
+            },
+            {
+              "id": "node-154",
+              "name": "components-pan-markdown-renderer.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-markdown-renderer.html",
+              "size": 2258,
+              "modified": "2025-12-10T06:15:38.175Z"
+            },
+            {
+              "id": "node-155",
+              "name": "components-pan-offline-sync.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-offline-sync.html",
+              "size": 2900,
+              "modified": "2025-12-10T06:15:38.175Z"
+            },
+            {
+              "id": "node-156",
+              "name": "components-pan-persistence-strategy.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-persistence-strategy.html",
+              "size": 2484,
+              "modified": "2025-12-10T06:15:38.175Z"
+            },
+            {
+              "id": "node-157",
+              "name": "components-pan-schema-validator.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-schema-validator.html",
+              "size": 2739,
+              "modified": "2025-12-10T06:15:38.175Z"
+            },
+            {
+              "id": "node-158",
+              "name": "components-pan-security.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-security.html",
+              "size": 9368,
+              "modified": "2025-12-10T06:15:38.176Z"
+            },
+            {
+              "id": "node-159",
+              "name": "components-pan-state-sync.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-state-sync.html",
+              "size": 2769,
+              "modified": "2025-12-10T06:15:38.176Z"
+            },
+            {
+              "id": "node-160",
+              "name": "components-pan-theme-provider.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-theme-provider.html",
+              "size": 1899,
+              "modified": "2025-12-10T06:15:38.176Z"
+            },
+            {
+              "id": "node-161",
+              "name": "components-pan-theme-toggle.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-theme-toggle.html",
+              "size": 1957,
+              "modified": "2025-12-10T06:15:38.176Z"
+            },
+            {
+              "id": "node-162",
+              "name": "components-pan-undo-redo.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-undo-redo.html",
+              "size": 3068,
+              "modified": "2025-12-10T06:15:38.176Z"
+            },
+            {
+              "id": "node-163",
+              "name": "components-pan-validation.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/components-pan-validation.html",
+              "size": 8117,
+              "modified": "2025-12-10T06:15:38.176Z"
+            },
+            {
+              "id": "node-164",
+              "name": "core-larc-element.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-larc-element.html",
+              "size": 1729,
+              "modified": "2025-12-10T06:15:38.170Z"
+            },
+            {
+              "id": "node-165",
+              "name": "core-pan-bus-lite.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-pan-bus-lite.html",
+              "size": 1960,
+              "modified": "2025-12-10T06:15:38.171Z"
+            },
+            {
+              "id": "node-166",
+              "name": "core-pan-bus.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-pan-bus.html",
+              "size": 3188,
+              "modified": "2025-12-10T06:15:38.171Z"
+            },
+            {
+              "id": "node-167",
+              "name": "core-pan-client.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-pan-client.html",
+              "size": 2511,
+              "modified": "2025-12-10T06:15:38.171Z"
+            },
+            {
+              "id": "node-168",
+              "name": "core-pan-debug.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-pan-debug.html",
+              "size": 6393,
+              "modified": "2025-12-10T06:15:38.172Z"
+            },
+            {
+              "id": "node-169",
+              "name": "core-pan-routes.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-pan-routes.html",
+              "size": 3992,
+              "modified": "2025-12-10T06:15:38.172Z"
+            },
+            {
+              "id": "node-170",
+              "name": "core-pan-storage.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-pan-storage.html",
+              "size": 2753,
+              "modified": "2025-12-10T06:15:38.172Z"
+            },
+            {
+              "id": "node-171",
+              "name": "core-pan.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/api/core-pan.html",
+              "size": 11128,
+              "modified": "2025-12-10T06:15:38.173Z"
+            }
+          ]
+        },
+        {
+          "id": "node-176",
+          "name": "conformance",
+          "type": "folder",
+          "path": "site/conformance",
+          "children": [
+            {
+              "id": "node-175",
+              "name": "index.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/conformance/index.html",
+              "size": 4759,
+              "modified": "2025-12-10T00:28:15.019Z"
+            }
+          ]
+        },
+        {
+          "id": "node-321",
+          "name": "docs",
+          "type": "folder",
+          "path": "site/docs",
+          "children": [
+            {
+              "id": "node-242",
+              "name": "api",
+              "type": "folder",
+              "path": "site/docs/api",
+              "children": [
+                {
+                  "id": "node-228",
+                  "name": "pan-bus-enhanced.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-bus-enhanced.html",
+                  "size": 2737,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-229",
+                  "name": "pan-bus-legacy.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-bus-legacy.html",
+                  "size": 1929,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-230",
+                  "name": "pan-bus.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-bus.html",
+                  "size": 2728,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-231",
+                  "name": "pan-client.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-client.html",
+                  "size": 2497,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-232",
+                  "name": "pan-data-connector.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-data-connector.html",
+                  "size": 1596,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-233",
+                  "name": "pan-files.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-files.html",
+                  "size": 2822,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-234",
+                  "name": "pan-invoice-store.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-invoice-store.html",
+                  "size": 2718,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-235",
+                  "name": "pan-jwt.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-jwt.html",
+                  "size": 4394,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-236",
+                  "name": "pan-markdown-editor.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-markdown-editor.html",
+                  "size": 2400,
+                  "modified": "2025-12-10T00:28:15.020Z"
+                },
+                {
+                  "id": "node-237",
+                  "name": "pan-markdown-renderer.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-markdown-renderer.html",
+                  "size": 2238,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                },
+                {
+                  "id": "node-238",
+                  "name": "pan-security.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-security.html",
+                  "size": 9348,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                },
+                {
+                  "id": "node-239",
+                  "name": "pan-theme-provider.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-theme-provider.html",
+                  "size": 1879,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                },
+                {
+                  "id": "node-240",
+                  "name": "pan-theme-toggle.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-theme-toggle.html",
+                  "size": 1937,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                },
+                {
+                  "id": "node-241",
+                  "name": "pan-validation.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/api/pan-validation.html",
+                  "size": 8097,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                }
+              ]
+            },
+            {
+              "id": "node-250",
+              "name": "apps",
+              "type": "folder",
+              "path": "site/docs/apps",
+              "children": [
+                {
+                  "id": "node-245",
+                  "name": "contact-manager",
+                  "type": "folder",
+                  "path": "site/docs/apps/contact-manager",
+                  "children": [
+                    {
+                      "id": "node-244",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/apps/contact-manager/README.html",
+                      "size": 13678,
+                      "modified": "2025-12-08T06:41:20.093Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-247",
+                  "name": "invoice",
+                  "type": "folder",
+                  "path": "site/docs/apps/invoice",
+                  "children": [
+                    {
+                      "id": "node-246",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/apps/invoice/README.html",
+                      "size": 13641,
+                      "modified": "2025-12-08T06:41:20.093Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-249",
+                  "name": "invoice-studio",
+                  "type": "folder",
+                  "path": "site/docs/apps/invoice-studio",
+                  "children": [
+                    {
+                      "id": "node-248",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/apps/invoice-studio/README.html",
+                      "size": 11491,
+                      "modified": "2025-12-08T06:41:20.093Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-243",
+                  "name": "README.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/apps/README.html",
+                  "size": 9191,
+                  "modified": "2025-12-08T06:41:20.092Z"
+                }
+              ]
+            },
+            {
+              "id": "node-261",
+              "name": "archive",
+              "type": "folder",
+              "path": "site/docs/archive",
+              "children": [
+                {
+                  "id": "node-251",
+                  "name": "AUTHENTICATION_SUMMARY.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/AUTHENTICATION_SUMMARY.md",
+                  "size": 13081,
+                  "modified": "2025-12-08T06:41:20.093Z"
+                },
+                {
+                  "id": "node-252",
+                  "name": "DEVTOOLS_EXTENSION_COMPLETE.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/DEVTOOLS_EXTENSION_COMPLETE.md",
+                  "size": 11926,
+                  "modified": "2025-12-08T06:41:20.093Z"
+                },
+                {
+                  "id": "node-253",
+                  "name": "IMPROVEMENTS_SUMMARY.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/IMPROVEMENTS_SUMMARY.md",
+                  "size": 8749,
+                  "modified": "2025-12-08T06:41:20.093Z"
+                },
+                {
+                  "id": "node-254",
+                  "name": "NPM_PUBLISHED.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/NPM_PUBLISHED.md",
+                  "size": 6208,
+                  "modified": "2025-12-08T06:41:20.093Z"
+                },
+                {
+                  "id": "node-256",
+                  "name": "RELEASE_NOTES_v0.1.0.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/RELEASE_NOTES_v0.1.0.md",
+                  "size": 1349,
+                  "modified": "2025-12-08T06:41:20.094Z"
+                },
+                {
+                  "id": "node-255",
+                  "name": "RELEASE_NOTES.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/RELEASE_NOTES.md",
+                  "size": 7682,
+                  "modified": "2025-12-08T06:41:20.094Z"
+                },
+                {
+                  "id": "node-257",
+                  "name": "SECURITY_FIXES.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/SECURITY_FIXES.md",
+                  "size": 13490,
+                  "modified": "2025-12-08T06:41:20.094Z"
+                },
+                {
+                  "id": "node-258",
+                  "name": "SECURITY_IMPROVEMENTS.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/SECURITY_IMPROVEMENTS.md",
+                  "size": 12367,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                },
+                {
+                  "id": "node-259",
+                  "name": "TYPESCRIPT_IMPLEMENTATION.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/TYPESCRIPT_IMPLEMENTATION.md",
+                  "size": 8538,
+                  "modified": "2025-12-08T06:41:20.094Z"
+                },
+                {
+                  "id": "node-260",
+                  "name": "WEBSITE_UPDATE.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/archive/WEBSITE_UPDATE.md",
+                  "size": 10521,
+                  "modified": "2025-12-08T06:41:20.094Z"
+                }
+              ]
+            },
+            {
+              "id": "node-265",
+              "name": "devtools-extension",
+              "type": "folder",
+              "path": "site/docs/devtools-extension",
+              "children": [
+                {
+                  "id": "node-262",
+                  "name": "BUILD_ICONS.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/devtools-extension/BUILD_ICONS.html",
+                  "size": 4893,
+                  "modified": "2025-12-08T06:41:20.094Z"
+                },
+                {
+                  "id": "node-263",
+                  "name": "QUICKSTART.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/devtools-extension/QUICKSTART.html",
+                  "size": 7346,
+                  "modified": "2025-12-08T06:41:20.094Z"
+                },
+                {
+                  "id": "node-264",
+                  "name": "README.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/devtools-extension/README.html",
+                  "size": 14130,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                }
+              ]
+            },
+            {
+              "id": "node-286",
+              "name": "docs",
+              "type": "folder",
+              "path": "site/docs/docs",
+              "children": [
+                {
+                  "id": "node-282",
+                  "name": "rfcs",
+                  "type": "folder",
+                  "path": "site/docs/docs/rfcs",
+                  "children": [
+                    {
+                      "id": "node-280",
+                      "name": "0000-template.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/docs/rfcs/0000-template.html",
+                      "size": 2851,
+                      "modified": "2025-12-08T06:41:20.096Z"
+                    },
+                    {
+                      "id": "node-281",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/docs/rfcs/README.html",
+                      "size": 2474,
+                      "modified": "2025-12-08T06:41:20.096Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-285",
+                  "name": "templates",
+                  "type": "folder",
+                  "path": "site/docs/docs/templates",
+                  "children": [
+                    {
+                      "id": "node-284",
+                      "name": "provider-kit",
+                      "type": "folder",
+                      "path": "site/docs/docs/templates/provider-kit",
+                      "children": [
+                        {
+                          "id": "node-283",
+                          "name": "README.html",
+                          "type": "file",
+                          "extension": ".html",
+                          "path": "site/docs/docs/templates/provider-kit/README.html",
+                          "size": 2613,
+                          "modified": "2025-12-08T06:41:20.096Z"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "id": "node-266",
+                  "name": "API_REFERENCE.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/API_REFERENCE.html",
+                  "size": 33855,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                },
+                {
+                  "id": "node-267",
+                  "name": "API_STABILITY.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/API_STABILITY.html",
+                  "size": 26231,
+                  "modified": "2025-12-08T06:41:20.095Z"
+                },
+                {
+                  "id": "node-269",
+                  "name": "AUTH_QUICKSTART.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/AUTH_QUICKSTART.html",
+                  "size": 7615,
+                  "modified": "2025-12-10T00:28:15.022Z"
+                },
+                {
+                  "id": "node-268",
+                  "name": "AUTHENTICATION.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/AUTHENTICATION.html",
+                  "size": 24104,
+                  "modified": "2025-12-10T00:28:15.021Z"
+                },
+                {
+                  "id": "node-270",
+                  "name": "MARKDOWN_SYSTEM.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/MARKDOWN_SYSTEM.html",
+                  "size": 20061,
+                  "modified": "2025-12-08T06:41:20.095Z"
+                },
+                {
+                  "id": "node-271",
+                  "name": "MIGRATION_ENHANCED.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/MIGRATION_ENHANCED.html",
+                  "size": 17247,
+                  "modified": "2025-12-10T00:28:15.022Z"
+                },
+                {
+                  "id": "node-272",
+                  "name": "PERFORMANCE.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/PERFORMANCE.html",
+                  "size": 13230,
+                  "modified": "2025-12-08T06:41:20.095Z"
+                },
+                {
+                  "id": "node-273",
+                  "name": "QUICK_START.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/QUICK_START.html",
+                  "size": 15312,
+                  "modified": "2025-12-10T00:28:15.022Z"
+                },
+                {
+                  "id": "node-274",
+                  "name": "REORGANIZATION.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/REORGANIZATION.html",
+                  "size": 16747,
+                  "modified": "2025-12-10T00:28:15.022Z"
+                },
+                {
+                  "id": "node-275",
+                  "name": "SECURITY.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/SECURITY.html",
+                  "size": 19869,
+                  "modified": "2025-12-10T00:28:15.022Z"
+                },
+                {
+                  "id": "node-276",
+                  "name": "THEME_SYSTEM.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/THEME_SYSTEM.html",
+                  "size": 13617,
+                  "modified": "2025-12-08T06:41:20.096Z"
+                },
+                {
+                  "id": "node-277",
+                  "name": "TOPICS.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/TOPICS.html",
+                  "size": 21078,
+                  "modified": "2025-12-08T06:41:20.096Z"
+                },
+                {
+                  "id": "node-278",
+                  "name": "TYPESCRIPT.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/TYPESCRIPT.html",
+                  "size": 19880,
+                  "modified": "2025-12-08T06:41:20.096Z"
+                },
+                {
+                  "id": "node-279",
+                  "name": "V1_ROADMAP.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/docs/V1_ROADMAP.html",
+                  "size": 16427,
+                  "modified": "2025-12-08T06:41:20.096Z"
+                }
+              ]
+            },
+            {
+              "id": "node-294",
+              "name": "packages",
+              "type": "folder",
+              "path": "site/docs/packages",
+              "children": [
+                {
+                  "id": "node-289",
+                  "name": "pan-bus",
+                  "type": "folder",
+                  "path": "site/docs/packages/pan-bus",
+                  "children": [
+                    {
+                      "id": "node-288",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/packages/pan-bus/README.html",
+                      "size": 2661,
+                      "modified": "2025-12-08T06:41:20.096Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-291",
+                  "name": "pan-client",
+                  "type": "folder",
+                  "path": "site/docs/packages/pan-client",
+                  "children": [
+                    {
+                      "id": "node-290",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/packages/pan-client/README.html",
+                      "size": 2684,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-293",
+                  "name": "pan-inspector",
+                  "type": "folder",
+                  "path": "site/docs/packages/pan-inspector",
+                  "children": [
+                    {
+                      "id": "node-292",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/packages/pan-inspector/README.html",
+                      "size": 2719,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "node-297",
+              "name": "rfcs",
+              "type": "folder",
+              "path": "site/docs/rfcs",
+              "children": [
+                {
+                  "id": "node-295",
+                  "name": "0000-template.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/rfcs/0000-template.md",
+                  "size": 553,
+                  "modified": "2025-12-08T06:41:20.097Z"
+                },
+                {
+                  "id": "node-296",
+                  "name": "README.md",
+                  "type": "file",
+                  "extension": ".md",
+                  "path": "site/docs/rfcs/README.md",
+                  "size": 236,
+                  "modified": "2025-12-08T06:41:20.097Z"
+                }
+              ]
+            },
+            {
+              "id": "node-309",
+              "name": "src",
+              "type": "folder",
+              "path": "site/docs/src",
+              "children": [
+                {
+                  "id": "node-299",
+                  "name": "app",
+                  "type": "folder",
+                  "path": "site/docs/src/app",
+                  "children": [
+                    {
+                      "id": "node-298",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/src/app/README.html",
+                      "size": 7075,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-301",
+                  "name": "components",
+                  "type": "folder",
+                  "path": "site/docs/src/components",
+                  "children": [
+                    {
+                      "id": "node-300",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/src/components/README.html",
+                      "size": 6311,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-304",
+                  "name": "core",
+                  "type": "folder",
+                  "path": "site/docs/src/core",
+                  "children": [
+                    {
+                      "id": "node-303",
+                      "name": "README_ENHANCED.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/src/core/README_ENHANCED.html",
+                      "size": 6175,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    },
+                    {
+                      "id": "node-302",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/src/core/README.html",
+                      "size": 3781,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-306",
+                  "name": "data",
+                  "type": "folder",
+                  "path": "site/docs/src/data",
+                  "children": [
+                    {
+                      "id": "node-305",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/src/data/README.html",
+                      "size": 6142,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    }
+                  ]
+                },
+                {
+                  "id": "node-308",
+                  "name": "ui",
+                  "type": "folder",
+                  "path": "site/docs/src/ui",
+                  "children": [
+                    {
+                      "id": "node-307",
+                      "name": "README.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/src/ui/README.html",
+                      "size": 5243,
+                      "modified": "2025-12-08T06:41:20.097Z"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "node-315",
+              "name": "templates",
+              "type": "folder",
+              "path": "site/docs/templates",
+              "children": [
+                {
+                  "id": "node-314",
+                  "name": "provider-kit",
+                  "type": "folder",
+                  "path": "site/docs/templates/provider-kit",
+                  "children": [
+                    {
+                      "id": "node-313",
+                      "name": "index.html",
+                      "type": "file",
+                      "extension": ".html",
+                      "path": "site/docs/templates/provider-kit/index.html",
+                      "size": 2360,
+                      "modified": "2025-12-10T00:28:15.022Z"
+                    },
+                    {
+                      "id": "node-312",
+                      "name": "README.md",
+                      "type": "file",
+                      "extension": ".md",
+                      "path": "site/docs/templates/provider-kit/README.md",
+                      "size": 325,
+                      "modified": "2025-12-08T06:41:20.098Z"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "node-320",
+              "name": "tests",
+              "type": "folder",
+              "path": "site/docs/tests",
+              "children": [
+                {
+                  "id": "node-316",
+                  "name": "MIGRATION.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/tests/MIGRATION.html",
+                  "size": 11494,
+                  "modified": "2025-12-08T06:41:20.098Z"
+                },
+                {
+                  "id": "node-317",
+                  "name": "QUICKSTART.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/tests/QUICKSTART.html",
+                  "size": 6576,
+                  "modified": "2025-12-08T06:41:20.098Z"
+                },
+                {
+                  "id": "node-318",
+                  "name": "README.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/tests/README.html",
+                  "size": 11024,
+                  "modified": "2025-12-08T06:41:20.098Z"
+                },
+                {
+                  "id": "node-319",
+                  "name": "TEST_COVERAGE.html",
+                  "type": "file",
+                  "extension": ".html",
+                  "path": "site/docs/tests/TEST_COVERAGE.html",
+                  "size": 11079,
+                  "modified": "2025-12-08T06:41:20.099Z"
+                }
+              ]
+            },
+            {
+              "id": "node-179",
+              "name": "API_REFERENCE.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/API_REFERENCE.md",
+              "size": 24676,
+              "modified": "2025-12-08T06:41:20.083Z"
+            },
+            {
+              "id": "node-180",
+              "name": "API_STABILITY.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/API_STABILITY.md",
+              "size": 18336,
+              "modified": "2025-12-08T06:41:20.083Z"
+            },
+            {
+              "id": "node-183",
+              "name": "AUTH_QUICKSTART.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/AUTH_QUICKSTART.md",
+              "size": 4219,
+              "modified": "2025-12-08T06:41:20.084Z"
+            },
+            {
+              "id": "node-182",
+              "name": "AUTHENTICATION_SUMMARY.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/AUTHENTICATION_SUMMARY.html",
+              "size": 18962,
+              "modified": "2025-12-10T00:28:15.019Z"
+            },
+            {
+              "id": "node-181",
+              "name": "AUTHENTICATION.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/AUTHENTICATION.md",
+              "size": 16947,
+              "modified": "2025-12-08T06:41:20.083Z"
+            },
+            {
+              "id": "node-184",
+              "name": "CHANGELOG.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/CHANGELOG.html",
+              "size": 14250,
+              "modified": "2025-12-08T06:41:20.086Z"
+            },
+            {
+              "id": "node-185",
+              "name": "COMPONENT_SECURITY_AUDIT.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/COMPONENT_SECURITY_AUDIT.md",
+              "size": 19236,
+              "modified": "2025-12-08T06:41:20.086Z"
+            },
+            {
+              "id": "node-186",
+              "name": "DEMO_IDEAS.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/DEMO_IDEAS.html",
+              "size": 17763,
+              "modified": "2025-12-08T06:41:20.086Z"
+            },
+            {
+              "id": "node-187",
+              "name": "DEMO_IDEAS.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/DEMO_IDEAS.md",
+              "size": 11472,
+              "modified": "2025-12-08T06:41:20.086Z"
+            },
+            {
+              "id": "node-189",
+              "name": "DEV_SERVER_README.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/DEV_SERVER_README.html",
+              "size": 7174,
+              "modified": "2025-12-08T06:41:20.086Z"
+            },
+            {
+              "id": "node-190",
+              "name": "DEV_SERVER_README.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/DEV_SERVER_README.md",
+              "size": 3902,
+              "modified": "2025-12-08T06:41:20.086Z"
+            },
+            {
+              "id": "node-188",
+              "name": "DEVTOOLS_EXTENSION_COMPLETE.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/DEVTOOLS_EXTENSION_COMPLETE.html",
+              "size": 16535,
+              "modified": "2025-12-08T06:41:20.086Z"
+            },
+            {
+              "id": "node-191",
+              "name": "IMPROVEMENTS_SUMMARY.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/IMPROVEMENTS_SUMMARY.html",
+              "size": 13130,
+              "modified": "2025-12-10T00:28:15.019Z"
+            },
+            {
+              "id": "node-287",
+              "name": "index.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/index.html",
+              "size": 3840,
+              "modified": "2025-12-08T06:41:20.096Z"
+            },
+            {
+              "id": "node-192",
+              "name": "LARC_AGENTS.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/LARC_AGENTS.html",
+              "size": 4855,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-193",
+              "name": "LARC_AGENTS.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/LARC_AGENTS.md",
+              "size": 2128,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-194",
+              "name": "LARC_ROADMAP.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/LARC_ROADMAP.html",
+              "size": 5493,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-195",
+              "name": "LARC_ROADMAP.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/LARC_ROADMAP.md",
+              "size": 2738,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-196",
+              "name": "LARC_SPEC.v0.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/LARC_SPEC.v0.html",
+              "size": 20608,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-197",
+              "name": "LARC_SPEC.v0.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/LARC_SPEC.v0.md",
+              "size": 15223,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-198",
+              "name": "MARKDOWN_SYSTEM.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/MARKDOWN_SYSTEM.md",
+              "size": 13324,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-199",
+              "name": "MIGRATION_ENHANCED.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/MIGRATION_ENHANCED.md",
+              "size": 11881,
+              "modified": "2025-12-08T06:41:20.087Z"
+            },
+            {
+              "id": "node-202",
+              "name": "NEXT_STEPS_PRIORITY.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/NEXT_STEPS_PRIORITY.html",
+              "size": 11069,
+              "modified": "2025-12-08T06:41:20.088Z"
+            },
+            {
+              "id": "node-203",
+              "name": "NEXT_STEPS_PRIORITY.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/NEXT_STEPS_PRIORITY.md",
+              "size": 6992,
+              "modified": "2025-12-10T00:28:15.019Z"
+            },
+            {
+              "id": "node-200",
+              "name": "NEXT_STEPS.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/NEXT_STEPS.html",
+              "size": 12499,
+              "modified": "2025-12-08T06:41:20.088Z"
+            },
+            {
+              "id": "node-201",
+              "name": "NEXT_STEPS.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/NEXT_STEPS.md",
+              "size": 8582,
+              "modified": "2025-12-08T06:41:20.088Z"
+            },
+            {
+              "id": "node-204",
+              "name": "NPM_PUBLISH_GUIDE.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/NPM_PUBLISH_GUIDE.md",
+              "size": 5735,
+              "modified": "2025-12-08T06:41:20.088Z"
+            },
+            {
+              "id": "node-205",
+              "name": "PAN_SPEC.v1.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/PAN_SPEC.v1.html",
+              "size": 6385,
+              "modified": "2025-12-08T06:41:20.088Z"
+            },
+            {
+              "id": "node-206",
+              "name": "PAN_SPEC.v1.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/PAN_SPEC.v1.md",
+              "size": 3291,
+              "modified": "2025-12-08T06:41:20.088Z"
+            },
+            {
+              "id": "node-207",
+              "name": "PERFORMANCE.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/PERFORMANCE.md",
+              "size": 8898,
+              "modified": "2025-12-08T06:41:20.088Z"
+            },
+            {
+              "id": "node-208",
+              "name": "QUICK_START.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/QUICK_START.md",
+              "size": 10262,
+              "modified": "2025-12-08T06:41:20.089Z"
+            },
+            {
+              "id": "node-209",
+              "name": "README.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/README.html",
+              "size": 54018,
+              "modified": "2025-12-10T00:28:15.019Z"
+            },
+            {
+              "id": "node-211",
+              "name": "RELEASE_NOTES_v0.1.0.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/RELEASE_NOTES_v0.1.0.html",
+              "size": 3884,
+              "modified": "2025-12-08T06:41:20.089Z"
+            },
+            {
+              "id": "node-210",
+              "name": "RELEASE_NOTES.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/RELEASE_NOTES.html",
+              "size": 11637,
+              "modified": "2025-12-08T06:41:20.089Z"
+            },
+            {
+              "id": "node-212",
+              "name": "REORGANIZATION.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/REORGANIZATION.md",
+              "size": 11354,
+              "modified": "2025-12-08T06:41:20.089Z"
+            },
+            {
+              "id": "node-213",
+              "name": "ROADMAP_TO_10.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/ROADMAP_TO_10.html",
+              "size": 23866,
+              "modified": "2025-12-08T06:41:20.089Z"
+            },
+            {
+              "id": "node-214",
+              "name": "ROADMAP_TO_10.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/ROADMAP_TO_10.md",
+              "size": 16960,
+              "modified": "2025-12-08T06:41:20.089Z"
+            },
+            {
+              "id": "node-216",
+              "name": "SECURITY_FIXES.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/SECURITY_FIXES.html",
+              "size": 20076,
+              "modified": "2025-12-10T00:28:15.019Z"
+            },
+            {
+              "id": "node-217",
+              "name": "SECURITY_IMPROVEMENTS.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/SECURITY_IMPROVEMENTS.html",
+              "size": 17887,
+              "modified": "2025-12-10T00:28:15.020Z"
+            },
+            {
+              "id": "node-218",
+              "name": "SECURITY_STATUS.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/SECURITY_STATUS.md",
+              "size": 6250,
+              "modified": "2025-12-08T06:41:20.090Z"
+            },
+            {
+              "id": "node-215",
+              "name": "SECURITY.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/SECURITY.md",
+              "size": 13995,
+              "modified": "2025-12-08T06:41:20.090Z"
+            },
+            {
+              "id": "node-310",
+              "name": "state-management-api.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/state-management-api.md",
+              "size": 20392,
+              "modified": "2025-12-10T00:28:15.022Z"
+            },
+            {
+              "id": "node-311",
+              "name": "state-management-patterns.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/state-management-patterns.md",
+              "size": 18559,
+              "modified": "2025-12-08T06:41:20.098Z"
+            },
+            {
+              "id": "node-219",
+              "name": "THEME_SYSTEM.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/THEME_SYSTEM.md",
+              "size": 8820,
+              "modified": "2025-12-08T06:41:20.090Z"
+            },
+            {
+              "id": "node-220",
+              "name": "TOPICS.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/TOPICS.md",
+              "size": 15157,
+              "modified": "2025-12-08T06:41:20.090Z"
+            },
+            {
+              "id": "node-222",
+              "name": "TYPESCRIPT_IMPLEMENTATION.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/TYPESCRIPT_IMPLEMENTATION.html",
+              "size": 13040,
+              "modified": "2025-12-08T06:41:20.090Z"
+            },
+            {
+              "id": "node-221",
+              "name": "TYPESCRIPT.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/TYPESCRIPT.md",
+              "size": 14284,
+              "modified": "2025-12-08T06:41:20.090Z"
+            },
+            {
+              "id": "node-223",
+              "name": "USAGE.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/USAGE.html",
+              "size": 11054,
+              "modified": "2025-12-10T00:28:15.020Z"
+            },
+            {
+              "id": "node-224",
+              "name": "USAGE.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/USAGE.md",
+              "size": 6909,
+              "modified": "2025-12-08T06:41:20.091Z"
+            },
+            {
+              "id": "node-225",
+              "name": "V1_CHECKLIST.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/docs/V1_CHECKLIST.html",
+              "size": 10619,
+              "modified": "2025-12-08T06:41:20.091Z"
+            },
+            {
+              "id": "node-226",
+              "name": "V1_CHECKLIST.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/V1_CHECKLIST.md",
+              "size": 7005,
+              "modified": "2025-12-08T06:41:20.091Z"
+            },
+            {
+              "id": "node-227",
+              "name": "V1_ROADMAP.md",
+              "type": "file",
+              "extension": ".md",
+              "path": "site/docs/V1_ROADMAP.md",
+              "size": 11341,
+              "modified": "2025-12-08T06:41:20.091Z"
+            }
+          ]
+        },
+        {
+          "id": "node-328",
+          "name": "registry",
+          "type": "folder",
+          "path": "site/registry",
+          "children": [
+            {
+              "id": "node-327",
+              "name": "index.html",
+              "type": "file",
+              "extension": ".html",
+              "path": "site/registry/index.html",
+              "size": 5484,
+              "modified": "2025-12-08T06:41:20.099Z"
+            }
+          ]
+        },
+        {
+          "id": "node-173",
+          "name": "api-index.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/api-index.html",
+          "size": 6614,
+          "modified": "2025-12-10T06:15:38.176Z"
+        },
+        {
+          "id": "node-174",
+          "name": "apps.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/apps.html",
+          "size": 6531,
+          "modified": "2025-12-10T18:13:45.593Z"
+        },
+        {
+          "id": "node-177",
+          "name": "demo.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/demo.html",
+          "size": 16427,
+          "modified": "2025-12-08T06:41:20.082Z"
+        },
+        {
+          "id": "node-178",
+          "name": "demos.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/demos.html",
+          "size": 3828,
+          "modified": "2025-12-10T00:28:15.019Z"
+        },
+        {
+          "id": "node-322",
+          "name": "examples.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/examples.html",
+          "size": 7606,
+          "modified": "2025-12-10T00:28:15.022Z"
+        },
+        {
+          "id": "node-323",
+          "name": "gallery.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/gallery.html",
+          "size": 16715,
+          "modified": "2025-12-10T18:13:45.593Z"
+        },
+        {
+          "id": "node-324",
+          "name": "grid.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/grid.html",
+          "size": 31805,
+          "modified": "2025-12-10T00:28:15.023Z"
+        },
+        {
+          "id": "node-325",
+          "name": "index.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/index.html",
+          "size": 21346,
+          "modified": "2025-12-10T18:13:45.594Z"
+        },
+        {
+          "id": "node-326",
+          "name": "pan-grid.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/pan-grid.html",
+          "size": 6080,
+          "modified": "2025-12-10T00:28:15.023Z"
+        },
+        {
+          "id": "node-146",
+          "name": "README.md",
+          "type": "file",
+          "extension": ".md",
+          "path": "site/README.md",
+          "size": 7331,
+          "modified": "2025-12-10T00:28:15.018Z"
+        },
+        {
+          "id": "node-329",
+          "name": "theme-demo.html",
+          "type": "file",
+          "extension": ".html",
+          "path": "site/theme-demo.html",
+          "size": 8265,
+          "modified": "2025-12-10T00:28:15.023Z"
+        }
+      ]
+    },
+    {
+      "id": "node-0",
+      "name": "API-REFERENCE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "API-REFERENCE.md",
+      "size": 40550,
+      "modified": "2025-12-10T00:28:15.011Z"
+    },
+    {
+      "id": "node-1",
+      "name": "API-STABILITY.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "API-STABILITY.md",
+      "size": 11410,
+      "modified": "2025-11-25T02:30:24.261Z"
+    },
+    {
+      "id": "node-2",
+      "name": "BROWSER-COMPATIBILITY.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "BROWSER-COMPATIBILITY.md",
+      "size": 17901,
+      "modified": "2025-12-10T00:28:15.011Z"
+    },
+    {
+      "id": "node-3",
+      "name": "BUILD-COMPLETE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "BUILD-COMPLETE.md",
+      "size": 15321,
+      "modified": "2025-11-13T06:27:11.317Z"
+    },
+    {
+      "id": "node-81",
+      "name": "building-with-larc-outline.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "building-with-larc-outline.md",
+      "size": 7847,
+      "modified": "2025-12-05T11:44:17.072Z"
+    },
+    {
+      "id": "node-82",
+      "name": "building-with-larc-summary.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "building-with-larc-summary.md",
+      "size": 9941,
+      "modified": "2025-12-10T00:28:15.014Z"
+    },
+    {
+      "id": "node-4",
+      "name": "CHANGELOG.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "CHANGELOG.md",
+      "size": 5136,
+      "modified": "2025-12-08T06:41:20.065Z"
+    },
+    {
+      "id": "node-5",
+      "name": "COMPATIBILITY-IMPLEMENTATION.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "COMPATIBILITY-IMPLEMENTATION.md",
+      "size": 11503,
+      "modified": "2025-12-10T00:28:15.012Z"
+    },
+    {
+      "id": "node-6",
+      "name": "COMPONENT-REGISTRY-PLAN.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "COMPONENT-REGISTRY-PLAN.md",
+      "size": 11727,
+      "modified": "2025-11-13T05:31:53.727Z"
+    },
+    {
+      "id": "node-7",
+      "name": "CURRENT-STATUS.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "CURRENT-STATUS.md",
+      "size": 8700,
+      "modified": "2025-11-13T06:17:43.657Z"
+    },
+    {
+      "id": "node-9",
+      "name": "DEVELOPMENT_PHILOSOPHY.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "DEVELOPMENT_PHILOSOPHY.md",
+      "size": 8170,
+      "modified": "2025-12-08T06:41:20.074Z"
+    },
+    {
+      "id": "node-8",
+      "name": "DEVELOPMENT-PLAN.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "DEVELOPMENT-PLAN.md",
+      "size": 12977,
+      "modified": "2025-11-12T19:45:21.834Z"
+    },
+    {
+      "id": "node-10",
+      "name": "DOCUMENTATION-UPDATE-2024-11-25.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "DOCUMENTATION-UPDATE-2024-11-25.md",
+      "size": 5957,
+      "modified": "2025-12-10T00:28:15.012Z"
+    },
+    {
+      "id": "node-11",
+      "name": "HTML-AUDIT-REPORT.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "HTML-AUDIT-REPORT.md",
+      "size": 6618,
+      "modified": "2025-12-10T00:28:15.012Z"
+    },
+    {
+      "id": "node-12",
+      "name": "IMPLEMENTATION_COMPLETE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "IMPLEMENTATION_COMPLETE.md",
+      "size": 11681,
+      "modified": "2025-12-08T06:41:20.075Z"
+    },
+    {
+      "id": "node-13",
+      "name": "MIGRATION.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "MIGRATION.md",
+      "size": 14159,
+      "modified": "2025-12-10T00:28:15.012Z"
+    },
+    {
+      "id": "node-14",
+      "name": "PAN-ROUTING-API.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PAN-ROUTING-API.md",
+      "size": 2107,
+      "modified": "2025-11-25T06:55:37.854Z"
+    },
+    {
+      "id": "node-15",
+      "name": "PERFORMANCE-OPTIMIZATION.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PERFORMANCE-OPTIMIZATION.md",
+      "size": 72542,
+      "modified": "2025-12-10T00:28:15.012Z"
+    },
+    {
+      "id": "node-16",
+      "name": "PHASE-1-COMPLETE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PHASE-1-COMPLETE.md",
+      "size": 6184,
+      "modified": "2025-11-12T21:40:15.098Z"
+    },
+    {
+      "id": "node-17",
+      "name": "PLAN.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PLAN.md",
+      "size": 9054,
+      "modified": "2025-11-12T15:07:12.577Z"
+    },
+    {
+      "id": "node-18",
+      "name": "PLAYGROUND-COMPLETE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PLAYGROUND-COMPLETE.md",
+      "size": 8034,
+      "modified": "2025-12-10T00:28:15.012Z"
+    },
+    {
+      "id": "node-19",
+      "name": "PLAYGROUND-IMPLEMENTATION.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PLAYGROUND-IMPLEMENTATION.md",
+      "size": 17428,
+      "modified": "2025-12-10T00:28:15.013Z"
+    },
+    {
+      "id": "node-20",
+      "name": "PLAYGROUND-STATUS.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PLAYGROUND-STATUS.md",
+      "size": 3382,
+      "modified": "2025-12-10T00:28:15.013Z"
+    },
+    {
+      "id": "node-21",
+      "name": "POSITIONING-UPDATE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "POSITIONING-UPDATE.md",
+      "size": 8607,
+      "modified": "2025-12-08T06:41:20.075Z"
+    },
+    {
+      "id": "node-24",
+      "name": "PRODUCTION_ROADMAP.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PRODUCTION_ROADMAP.md",
+      "size": 11962,
+      "modified": "2025-12-08T06:41:20.077Z"
+    },
+    {
+      "id": "node-25",
+      "name": "PRODUCTION_STATUS_UPDATE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PRODUCTION_STATUS_UPDATE.md",
+      "size": 7902,
+      "modified": "2025-12-08T06:41:20.077Z"
+    },
+    {
+      "id": "node-22",
+      "name": "PRODUCTION-READINESS-PROGRESS.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PRODUCTION-READINESS-PROGRESS.md",
+      "size": 14449,
+      "modified": "2025-11-24T20:19:51.205Z"
+    },
+    {
+      "id": "node-23",
+      "name": "PRODUCTION-READINESS-STATUS.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "PRODUCTION-READINESS-STATUS.md",
+      "size": 9788,
+      "modified": "2025-11-28T19:23:53.221Z"
+    },
+    {
+      "id": "node-26",
+      "name": "QUICK-START-CONFIG.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "QUICK-START-CONFIG.md",
+      "size": 2463,
+      "modified": "2025-12-10T00:28:15.013Z"
+    },
+    {
+      "id": "node-27",
+      "name": "README-CONFIG.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "README-CONFIG.md",
+      "size": 9837,
+      "modified": "2025-12-10T00:28:15.013Z"
+    },
+    {
+      "id": "node-28",
+      "name": "READY-FOR-TESTING.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "READY-FOR-TESTING.md",
+      "size": 6189,
+      "modified": "2025-11-13T06:25:43.516Z"
+    },
+    {
+      "id": "node-29",
+      "name": "SEMVER.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "SEMVER.md",
+      "size": 13130,
+      "modified": "2025-11-24T11:11:16.023Z"
+    },
+    {
+      "id": "node-30",
+      "name": "SESSION-COMPLETE.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "SESSION-COMPLETE.md",
+      "size": 8260,
+      "modified": "2025-11-13T06:24:56.783Z"
+    },
+    {
+      "id": "node-31",
+      "name": "SESSION-SUMMARY.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "SESSION-SUMMARY.md",
+      "size": 11854,
+      "modified": "2025-12-10T00:28:15.013Z"
+    },
+    {
+      "id": "node-32",
+      "name": "STATE_MANAGEMENT_README.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "STATE_MANAGEMENT_README.md",
+      "size": 15096,
+      "modified": "2025-12-10T00:28:15.013Z"
+    },
+    {
+      "id": "node-33",
+      "name": "TROUBLESHOOTING.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "TROUBLESHOOTING.md",
+      "size": 46282,
+      "modified": "2025-12-10T00:28:15.013Z"
+    },
+    {
+      "id": "node-34",
+      "name": "WIKI-EXPLORER-README.md",
+      "type": "file",
+      "extension": ".md",
+      "path": "WIKI-EXPLORER-README.md",
+      "size": 4466,
+      "modified": "2025-12-11T04:01:59.700Z"
+    },
+    {
+      "id": "node-331",
+      "name": "wiki-explorer.html",
+      "type": "file",
+      "extension": ".html",
+      "path": "wiki-explorer.html",
+      "size": 14662,
+      "modified": "2025-12-11T04:01:30.431Z"
+    }
+  ]
+}

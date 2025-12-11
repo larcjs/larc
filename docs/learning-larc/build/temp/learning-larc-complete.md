@@ -415,7 +415,7 @@ Now, here's the same thing with native Web Components and LARC:
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1/dist/index.js"
+      "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/components@2.0.0/pan-card.mjs"
     }
   }
   </script>
@@ -1387,8 +1387,8 @@ Import Maps let you define aliases for module paths:
 <script type="importmap">
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js",
-    "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@1/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs",
+    "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/components@2.0.0/pan-card.mjs",
     "app/": "/src/",
     "components/": "/"
   }
@@ -1824,7 +1824,7 @@ mkdir public
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
+      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
     }
   }
   </script>
@@ -1988,7 +1988,7 @@ We'll create:
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
+      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
     }
   }
   </script>
@@ -2389,7 +2389,7 @@ Create shortcuts for your own modules:
     "@/": "/src/",
     "components/": "/",
     "lib/": "/src/lib/",
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
   }
 }
 </script>
@@ -2424,7 +2424,7 @@ Or use version ranges for automatic updates:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs",
     "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2/dist/index.js"
   }
 }
@@ -10495,7 +10495,7 @@ class UserCard extends HTMLElement {
 
 - LARC Docs: https://larcjs.com/docs
 - Component Registry: https://components.larcjs.com
-- GitHub: https://github.com/larcjs
+- GitHub: https://github.com/larcjs/larc
 
 ### Web Standards
 
@@ -10519,13 +10519,12 @@ class UserCard extends HTMLElement {
 
 - LARC CLI: https://www.npmjs.com/package/create-larc-app
 - VS Code Extension: Search "LARC" in marketplace
-- Component Analyzer: https://github.com/larcjs/analyzer
+- Component Analyzer: https://github.com/larcjs/larc/tree/main/packages/devtools
 
 ### Example Projects
 
-- TodoMVC: https://github.com/larcjs/todomvc
-- E-Commerce: https://github.com/larcjs/ecommerce-example
-- Dashboard: https://github.com/larcjs/dashboard-example
+- Official Examples: https://github.com/larcjs/larc/tree/main/packages/examples
+- Demo Apps: https://github.com/larcjs/larc/tree/main/packages/apps
 
 \pagebreak
 

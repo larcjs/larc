@@ -11,15 +11,15 @@ https://github.com/larcjs/larc
 The main LARC repository containing the core framework source code, examples, and technical documentation. This is the authoritative source for implementation details and includes the complete test suite.
 
 **LARC Components Library**
-https://github.com/larcjs/components
+https://github.com/larcjs/larc/tree/main/packages/components
 Official component library with production-ready UI components, data components, integration components, and utilities. Each component includes comprehensive documentation and working examples.
 
 **API Reference**
-https://larcjs.org/api
+https://larcjs.com/api
 Complete API documentation for all core classes, components, and utilities. Includes type definitions, method signatures, and interactive examples.
 
 **Getting Started Guide**
-https://larcjs.org/getting-started
+https://larcjs.com/getting-started
 Quick-start guide for new developers. Walks through installation, first application, and core concepts in 30 minutes.
 
 ### Companion Books
@@ -28,7 +28,7 @@ Quick-start guide for new developers. Walks through installation, first applicat
 The tutorial-focused companion to this reference manual. Organized around progressive learning with hands-on exercises, projects, and quizzes. Ideal for developers new to LARC or component-based architecture.
 
 **Building with LARC: A Reference Manual**
-This book. Comprehensive reference covering all aspects of LARC development from core concepts to advanced patterns. Available online at https://larcjs.org/reference
+This book. Comprehensive reference covering all aspects of LARC development from core concepts to advanced patterns. Available online at https://larcjs.com/reference
 
 ## Community Resources
 
@@ -70,7 +70,7 @@ Professional network for LARC developers. Good for job postings, industry discus
 ### Example Applications
 
 **Official Examples Repository**
-https://github.com/larcjs/examples
+https://github.com/larcjs/larc/tree/main/packages/examples
 Curated collection of example applications demonstrating LARC patterns and components. Each example is self-contained, documented, and includes setup instructions.
 
 Notable examples include:
@@ -92,7 +92,7 @@ Community-contributed projects using LARC. Browse for inspiration, study real-wo
 ### Component Showcases
 
 **LARC Component Gallery**
-https://components.larcjs.org
+https://components.larcjs.com
 Visual gallery of all official components with live demos, code samples, and customization tools. Essential reference when choosing components for your project.
 
 **Awesome LARC Components**
@@ -130,9 +130,9 @@ Support for WebStorm, IntelliJ IDEA, and other JetBrains IDEs. Provides code com
 ### Command-Line Tools
 
 **LARC CLI**
-https://github.com/larcjs/cli
+https://github.com/larcjs/larc/tree/main/cli
 ```bash
-$ npm install -g @larcjs/cli
+$ npm install -g create-larc-app
 ```
 Official command-line interface for:
 
@@ -143,7 +143,7 @@ Official command-line interface for:
 - Component registry integration (`larc add`)
 
 **create-larc-app**
-https://github.com/larcjs/create-larc-app
+https://github.com/larcjs/larc/tree/main/cli
 ```bash
 $ npx create-larc-app my-app
 ```
@@ -174,7 +174,7 @@ Full-day workshop covering LARC from fundamentals to advanced patterns. Includes
 ### Blog Posts and Articles
 
 **LARC Blog**
-https://blog.larcjs.org
+https://blog.larcjs.com
 Official blog with deep dives into architecture decisions, release notes, performance analysis, and best practices from core maintainers.
 
 **CSS-Tricks: LARC Guide Series**
@@ -240,25 +240,25 @@ Cross-tab communication API used by LARC for multi-window synchronization.
 ### LARC-Compatible Backends
 
 **Node.js Backend Examples**
-https://github.com/larcjs/examples/tree/main/backends/nodejs
+https://github.com/larcjs/larc/tree/main/packages/examples/backends/nodejs
 Reference implementations showing REST and WebSocket backends for LARC applications. Includes authentication, file uploads, and real-time features.
 
 **Python/Flask Backend Examples**
-https://github.com/larcjs/examples/tree/main/backends/python
+https://github.com/larcjs/larc/tree/main/packages/examples/backends/python
 Python backend examples demonstrating API design patterns that work well with LARC frontend applications.
 
 **Deno Backend Examples**
-https://github.com/larcjs/examples/tree/main/backends/deno
+https://github.com/larcjs/larc/tree/main/packages/examples/backends/deno
 Modern JavaScript runtime examples showing how to build backends without Node.js dependencies.
 
 ### API Design Guides
 
 **REST API Design for LARC Applications**
-https://larcjs.org/guides/rest-api-design
+https://larcjs.com/guides/rest-api-design
 Best practices for designing REST APIs that integrate cleanly with LARC's data components and message patterns.
 
 **WebSocket Integration Guide**
-https://larcjs.org/guides/websocket-integration
+https://larcjs.com/guides/websocket-integration
 How to implement real-time features using WebSocket connections with LARC's messaging system.
 
 ## Testing and Quality
@@ -266,7 +266,7 @@ How to implement real-time features using WebSocket connections with LARC's mess
 ### Testing Resources
 
 **LARC Testing Guide**
-https://larcjs.org/guides/testing
+https://larcjs.com/guides/testing
 Official guide for testing LARC applications covering unit tests, integration tests, end-to-end tests, and visual regression testing.
 
 **Web Test Runner**
@@ -296,11 +296,11 @@ https://github.com/larcjs/larc/blob/main/CONTRIBUTING.md
 Guidelines for contributing to the LARC core framework. Includes coding standards, testing requirements, and pull request process.
 
 **Publishing Components**
-https://larcjs.org/guides/publishing-components
+https://larcjs.com/guides/publishing-components
 How to create, document, and publish reusable LARC components for the community. Covers naming conventions, versioning, and registry submission.
 
 **Component Development Guide**
-https://larcjs.org/guides/component-development
+https://larcjs.com/guides/component-development
 Best practices for building high-quality LARC components including accessibility, performance, and API design.
 
 ### Governance and Roadmap
@@ -348,7 +348,7 @@ https://cdn.jsdelivr.net/npm/@larcjs/core@latest
 Alternative CDN with excellent performance and reliability. Supports version pinning and package exploration.
 
 **LARC Official CDN**
-https://cdn.larcjs.org
+https://cdn.larcjs.com
 Official CDN optimized for LARC with guaranteed uptime, geographic distribution, and versioned URLs.
 
 ## Books and Long-Form Resources
@@ -398,11 +398,11 @@ Free hosting for open source projects. Simple deployment directly from GitHub re
 ### Deployment Guides
 
 **LARC Deployment Guide**
-https://larcjs.org/guides/deployment
+https://larcjs.com/guides/deployment
 Comprehensive guide covering deployment options, optimization strategies, caching configuration, and production best practices.
 
 **Performance Optimization Guide**
-https://larcjs.org/guides/performance-optimization
+https://larcjs.com/guides/performance-optimization
 How to optimize LARC applications for production including code splitting, lazy loading, asset optimization, and CDN configuration.
 
 ## Events and Training
@@ -410,7 +410,7 @@ How to optimize LARC applications for production including code splitting, lazy 
 ### Conferences
 
 **LARC Conf**
-https://conf.larcjs.org
+https://conf.larcjs.com
 Annual conference dedicated to LARC featuring talks, workshops, and networking. Recordings available online.
 
 **Web Components Summit**
@@ -420,18 +420,18 @@ General Web Components conference with LARC-specific tracks and presentations.
 ### Workshops and Training
 
 **Official LARC Workshops**
-https://larcjs.org/workshops
+https://larcjs.com/workshops
 In-person and virtual workshops taught by LARC experts. Topics range from fundamentals to advanced patterns.
 
 **Corporate Training**
-https://larcjs.org/training
+https://larcjs.com/training
 Customized training programs for enterprise teams. Includes on-site workshops, consultation, and ongoing support.
 
 ## Community Projects
 
 ### Notable Applications Built with LARC
 
-Browse https://larcjs.org/showcase for featured applications demonstrating LARC's capabilities in production environments.
+Browse https://larcjs.com/showcase for featured applications demonstrating LARC's capabilities in production environments.
 
 ### Open Source Projects
 
@@ -452,7 +452,7 @@ Composable dashboard system with widgets and layouts
 ### Newsletters
 
 **LARC Weekly**
-https://larcjs.org/newsletter
+https://larcjs.com/newsletter
 Weekly newsletter covering LARC news, tutorials, community projects, and ecosystem updates.
 
 **Web Components Weekly**
@@ -489,7 +489,7 @@ When you need assistance:
 Discord, GitHub Discussions, Stack Overflow
 
 **Professional Support**
-https://larcjs.org/support
+https://larcjs.com/support
 Commercial support plans available for enterprise users needing guaranteed response times and consulting.
 
 ---

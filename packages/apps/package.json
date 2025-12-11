@@ -32,8 +32,8 @@
   },
   "homepage": "https://larcjs.com",
   "peerDependencies": {
-    "@larcjs/core": "^1.1.0",
-    "@larcjs/ui": "^1.1.0"
+    "@larcjs/core": "^2.0.0",
+    "@larcjs/ui": "^2.0.0"
   },
   "files": [
     "contact-manager/**/*",

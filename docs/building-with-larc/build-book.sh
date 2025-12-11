@@ -180,7 +180,45 @@ build_pdf() {
     if command -v prince &> /dev/null; then
         echo -e "${YELLOW}Using Prince XML for PDF generation...${NC}"
 
-        # First generate HTML
+        # Create cover page HTML if cover image exists
+        if [ -f "${BOOK_DIR}/front-cover.png" ]; then
+            echo -e "${YELLOW}Adding front cover...${NC}"
+            cat > "${BUILD_DIR}/cover.html" <<COVEREOF
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        @page { margin: 0; }
+        body { margin: 0; padding: 0; }
+        .cover-page {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            page-break-after: always;
+        }
+        .cover-page img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="cover-page">
+        <img src="${BOOK_DIR}/front-cover.png" alt="Book Cover" />
+    </div>
+</body>
+</html>
+COVEREOF
+            COVER_FILE="${BUILD_DIR}/cover.html"
+        else
+            echo -e "${YELLOW}No front cover image found, skipping...${NC}"
+            COVER_FILE=""
+        fi
+
+        # Generate main content HTML
         pandoc \
             "${BUILD_DIR}/metadata.yaml" \
             $(cat "${BUILD_DIR}/book-order.txt" | sed "s|^|${BOOK_DIR}/|") \
@@ -194,14 +232,25 @@ build_pdf() {
             --highlight-style=tango \
             --output="${BUILD_DIR}/temp.html"
 
-        # Convert HTML to PDF with Prince
-        prince \
-            "${BUILD_DIR}/temp.html" \
-            -o "${OUTPUT_DIR}/pdf/building-with-larc.pdf" \
-            --pdf-title="${BOOK_TITLE}" \
-            --pdf-author="${AUTHOR}"
+        # Convert HTML to PDF with Prince (include cover if it exists)
+        if [ -n "$COVER_FILE" ]; then
+            prince \
+                "${COVER_FILE}" \
+                "${BUILD_DIR}/temp.html" \
+                -o "${OUTPUT_DIR}/pdf/building-with-larc.pdf" \
+                --pdf-title="${BOOK_TITLE}" \
+                --pdf-author="${AUTHOR}"
+        else
+            prince \
+                "${BUILD_DIR}/temp.html" \
+                -o "${OUTPUT_DIR}/pdf/building-with-larc.pdf" \
+                --pdf-title="${BOOK_TITLE}" \
+                --pdf-author="${AUTHOR}"
+        fi
 
+        # Cleanup
         rm "${BUILD_DIR}/temp.html"
+        [ -f "${BUILD_DIR}/cover.html" ] && rm "${BUILD_DIR}/cover.html"
     else
         echo -e "${YELLOW}Using pdflatex for PDF generation...${NC}"
 

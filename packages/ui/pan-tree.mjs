@@ -152,6 +152,7 @@ export class PanTree extends HTMLElement {
   }
 
   expandNode(id) {
+    console.log('📂 Expanding node:', id);
     this.expandedNodes.add(id);
     this.render();
     const node = this.findNodeById(id);
@@ -176,6 +177,7 @@ export class PanTree extends HTMLElement {
   }
 
   toggleNode(id) {
+    console.log('🔄 Toggle node:', id, 'Currently expanded:', this.expandedNodes.has(id));
     if (this.expandedNodes.has(id)) {
       this.collapseNode(id);
     } else {
@@ -291,7 +293,13 @@ export class PanTree extends HTMLElement {
         }
 
         .tree {
-          padding: 8px;
+          padding: 4px;
+        }
+
+        .tree-nodes {
+          list-style: none;
+          margin: 0;
+          padding-left: 1em;
         }
 
         .tree-node {
@@ -304,7 +312,7 @@ export class PanTree extends HTMLElement {
         .node-content {
           display: flex;
           align-items: center;
-          padding: 4px 8px;
+          padding: 2px 4px;
           cursor: pointer;
           border-radius: 4px;
           transition: background-color 0.15s ease;
@@ -326,9 +334,9 @@ export class PanTree extends HTMLElement {
 
         .toggle-icon {
           display: inline-block;
-          width: 16px;
+          width: 14px;
           text-align: center;
-          margin-right: 4px;
+          margin-right: 2px;
           font-size: 10px;
           color: #666;
           cursor: pointer;
@@ -340,7 +348,7 @@ export class PanTree extends HTMLElement {
         }
 
         .node-icon {
-          margin-right: 6px;
+          margin-right: 4px;
           font-size: 14px;
         }
 
@@ -443,12 +451,16 @@ export class PanTree extends HTMLElement {
 
     // Click handlers
     root.addEventListener('click', (e) => {
+      console.log('🖱️ Click detected on:', e.target, 'className:', e.target.className, 'data-action:', e.target.dataset?.action);
+
       // Prioritize toggle icon clicks
       if (e.target.matches('[data-action="toggle"]') || e.target.closest('[data-action="toggle"]')) {
+        console.log('✅ Toggle icon clicked:', e.target);
         const toggle = e.target.closest('[data-action="toggle"]') || e.target;
         const node = toggle.closest('.tree-node');
         if (node) {
           const id = node.dataset.id;
+          console.log('📌 Found node with id:', id);
           this.toggleNode(id);
         }
         return;
@@ -456,18 +468,31 @@ export class PanTree extends HTMLElement {
 
       // Handle clicks on node content (for selection, not toggle)
       if (e.target.matches('[data-action="label"]') || e.target.closest('[data-action="label"]')) {
-        // Let contenteditable handle label clicks
-        return;
+        // In editable mode, let contenteditable handle label clicks
+        if (this.editable) {
+          return;
+        }
+        // In non-editable mode, treat label clicks as selection
       }
 
-      // Click anywhere else on the node content selects it
+      // Click anywhere else on the node content
       const content = e.target.closest('.node-content');
       if (content) {
-        const node = e.target.closest('.tree-node');
-        if (node) {
-          const id = node.dataset.id;
-          const path = node.dataset.path.split(',').map(Number);
-          this.handleNodeClick(id, path);
+        const nodeEl = e.target.closest('.tree-node');
+        if (nodeEl) {
+          const id = nodeEl.dataset.id;
+          const path = nodeEl.dataset.path.split(',').map(Number);
+          const node = this.getNodeByPath(path);
+
+          // If it's a folder (has children), toggle it instead of selecting
+          if (node && node.children && node.children.length > 0) {
+            console.log('📁 Folder clicked, toggling:', id);
+            this.toggleNode(id);
+          } else {
+            // If it's a leaf node, select it
+            console.log('📄 File clicked, selecting:', id);
+            this.handleNodeClick(id, path);
+          }
         }
       }
     });

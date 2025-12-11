@@ -256,22 +256,62 @@ export class PanMarkdownRenderer extends HTMLElement {
     // Horizontal rules
     html = html.replace(/^(---|\*\*\*|___)$/gm, '<hr>');
 
-    // Task lists
-    html = html.replace(/^- \[([ x])\]\s+(.+)$/gm, (match, checked, text) => {
-      return `<li><input type="checkbox" ${checked === 'x' ? 'checked' : ''} disabled>${text}</li>`;
-    });
+    // Process lists line by line to properly group them
+    const lines = html.split('\n');
+    const processedLines = [];
+    let i = 0;
 
-    // Unordered lists
-    html = html.replace(/^[*+-]\s+(.+)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+    while (i < lines.length) {
+      const line = lines[i];
 
-    // Ordered lists
-    html = html.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>\n?)+/g, (match) => {
-      // Only wrap in <ol> if not already wrapped in <ul>
-      if (match.includes('<ul>')) return match;
-      return `<ol>${match}</ol>`;
-    });
+      // Task list
+      if (line.match(/^- \[([ x])\]/)) {
+        const items = [];
+        while (i < lines.length && lines[i].match(/^- \[([ x])\]/)) {
+          const match = lines[i].match(/^- \[([ x])\]\s+(.+)$/);
+          if (match) {
+            const checked = match[1] === 'x' ? 'checked' : '';
+            items.push(`<li><input type="checkbox" ${checked} disabled>${match[2]}</li>`);
+          }
+          i++;
+        }
+        processedLines.push('<ul>' + items.join('\n') + '</ul>');
+        continue;
+      }
+
+      // Unordered list
+      if (line.match(/^[*+-]\s+/)) {
+        const items = [];
+        while (i < lines.length && lines[i].match(/^[*+-]\s+/)) {
+          const match = lines[i].match(/^[*+-]\s+(.+)$/);
+          if (match) {
+            items.push(`<li>${match[1]}</li>`);
+          }
+          i++;
+        }
+        processedLines.push('<ul>' + items.join('\n') + '</ul>');
+        continue;
+      }
+
+      // Ordered list
+      if (line.match(/^\d+\.\s+/)) {
+        const items = [];
+        while (i < lines.length && lines[i].match(/^\d+\.\s+/)) {
+          const match = lines[i].match(/^\d+\.\s+(.+)$/);
+          if (match) {
+            items.push(`<li>${match[1]}</li>`);
+          }
+          i++;
+        }
+        processedLines.push('<ol>' + items.join('\n') + '</ol>');
+        continue;
+      }
+
+      processedLines.push(line);
+      i++;
+    }
+
+    html = processedLines.join('\n');
 
     // Blockquotes
     html = html.replace(/^>\s+(.+)$/gm, '<blockquote><p>$1</p></blockquote>');
@@ -302,28 +342,61 @@ export class PanMarkdownRenderer extends HTMLElement {
     // Images
     html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1">');
 
-    // Paragraphs (wrap text not in tags)
-    const lines = html.split('\n');
+    // Paragraphs (group consecutive lines into paragraphs, separated by blank lines)
+    const paragraphLines = html.split('\n');
     const processed = [];
     let inBlock = false;
+    let paragraphBuffer = [];
 
-    for (let line of lines) {
+    const flushParagraph = () => {
+      if (paragraphBuffer.length > 0) {
+        processed.push(`<p>${paragraphBuffer.join(' ')}</p>`);
+        paragraphBuffer = [];
+      }
+    };
+
+    // Block-level tags that should not be wrapped in paragraphs
+    const blockTags = /^<(h[1-6]|ul|ol|blockquote|pre|table|hr|div|section|article|header|footer|nav|aside)/;
+    const blockEndTags = /<\/(ul|ol|blockquote|pre|table|div|section|article|header|footer|nav|aside)>$/;
+
+    for (let line of paragraphLines) {
       const trimmed = line.trim();
 
-      if (trimmed.match(/^<(h[1-6]|ul|ol|blockquote|pre|table|hr)/)) {
+      // Start of a block element
+      if (trimmed.match(blockTags)) {
+        flushParagraph();
         inBlock = true;
         processed.push(line);
-      } else if (trimmed.match(/<\/(ul|ol|blockquote|pre|table)>$/)) {
+      }
+      // End of a block element
+      else if (trimmed.match(blockEndTags)) {
+        flushParagraph();
         processed.push(line);
         inBlock = false;
-      } else if (trimmed === '') {
+      }
+      // List items
+      else if (trimmed.match(/^<li>/) || trimmed.match(/<\/li>$/)) {
+        flushParagraph();
+        processed.push(line);
+      }
+      // Blank line - flush paragraph buffer
+      else if (trimmed === '') {
+        flushParagraph();
         processed.push('');
-      } else if (!inBlock && !trimmed.match(/^</) && !trimmed.match(/<\/(li|th|td)>$/)) {
-        processed.push(`<p>${trimmed}</p>`);
-      } else {
+      }
+      // Regular text line or inline HTML (add to paragraph buffer)
+      else if (!inBlock) {
+        // Add to paragraph buffer (includes lines with inline tags like <strong>, <em>, <a>, etc.)
+        paragraphBuffer.push(trimmed);
+      }
+      // Inside a block element
+      else {
         processed.push(line);
       }
     }
+
+    // Flush any remaining paragraph
+    flushParagraph();
 
     html = processed.join('\n');
 

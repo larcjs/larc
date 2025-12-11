@@ -66,7 +66,7 @@ mkdir public
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
+      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
     }
   }
   </script>
@@ -230,7 +230,7 @@ We'll create:
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
+      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
     }
   }
   </script>
@@ -631,7 +631,7 @@ Create shortcuts for your own modules:
     "@/": "/src/",
     "components/": "/",
     "lib/": "/src/lib/",
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js"
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
   }
 }
 </script>
@@ -666,7 +666,7 @@ Or use version ranges for automatic updates:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@1/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs",
     "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2/dist/index.js"
   }
 }

@@ -504,7 +504,7 @@ class UserCard extends HTMLElement {
 
 - LARC Docs: https://larcjs.com/docs
 - Component Registry: https://components.larcjs.com
-- GitHub: https://github.com/larcjs
+- GitHub: https://github.com/larcjs/larc
 
 ### Web Standards
 
@@ -528,10 +528,9 @@ class UserCard extends HTMLElement {
 
 - LARC CLI: https://www.npmjs.com/package/create-larc-app
 - VS Code Extension: Search "LARC" in marketplace
-- Component Analyzer: https://github.com/larcjs/analyzer
+- Component Analyzer: https://github.com/larcjs/larc/tree/main/packages/devtools
 
 ### Example Projects
 
-- TodoMVC: https://github.com/larcjs/todomvc
-- E-Commerce: https://github.com/larcjs/ecommerce-example
-- Dashboard: https://github.com/larcjs/dashboard-example
+- Official Examples: https://github.com/larcjs/larc/tree/main/packages/examples
+- Demo Apps: https://github.com/larcjs/larc/tree/main/packages/apps
