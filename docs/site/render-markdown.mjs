@@ -7,7 +7,7 @@
  * with navigation, syntax highlighting, and a consistent theme.
  */
 
-import { readFileSync, writeFileSync, readdirSync, statSync, mkdirSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, readdirSync, statSync, lstatSync, mkdirSync, existsSync } from 'fs';
 import { join, relative, dirname, basename, extname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -184,7 +184,19 @@ function findMarkdownFiles(dir, baseDir = dir, files = []) {
 
   for (const entry of entries) {
     const fullPath = join(dir, entry);
-    const stat = statSync(fullPath);
+
+    // Use try-catch to handle broken symlinks gracefully
+    let stat;
+    try {
+      stat = statSync(fullPath);
+    } catch (err) {
+      // Skip broken symlinks or inaccessible files
+      if (err.code === 'ENOENT' || err.code === 'EACCES') {
+        console.warn(`⚠️  Skipping broken/inaccessible path: ${relative(baseDir, fullPath)}`);
+        continue;
+      }
+      throw err;
+    }
 
     if (stat.isDirectory()) {
       // Skip node_modules, .git, dist, etc.
