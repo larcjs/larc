@@ -393,7 +393,8 @@ export class PanJsonForm extends HTMLElement {
   }
 
   isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    // Use length-limited regex to prevent ReDoS attacks
+    return /^[^\s@]{1,64}@[^\s@]{1,253}\.[^\s@]{1,63}$/.test(email);
   }
 
   renderErrors() {
