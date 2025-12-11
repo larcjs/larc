@@ -1,110 +1,1180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PAN API Documentation</title>
-  <link rel="stylesheet" href="styles/docs.css">
+  <title>Documentation · PAN</title>
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
 </head>
 <body>
-  <nav class="sidebar">
-    <div class="logo">
-      <h2>PAN Docs</h2>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">PAN</a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
     </div>
-    <div class="nav-section">
-      <h3>Components</h3>
-      <ul class="nav-list">
-        <li><a href="api/pan-bus-enhanced.html">PanBusEnhanced</a></li>
-        <li><a href="api/pan-bus-legacy.html">PanBus</a></li>
-        <li><a href="api/pan-bus.html">PanBusEnhanced</a></li>
-        <li><a href="api/pan-client.html">PanClient</a></li>
-        <li><a href="api/pan-data-connector.html">PanDataConnector</a></li>
-        <li><a href="api/pan-files.html">PanFiles</a></li>
-        <li><a href="api/pan-invoice-store.html">PanInvoiceStore</a></li>
-        <li><a href="api/pan-jwt.html">PanJWT</a></li>
-        <li><a href="api/pan-markdown-editor.html">PanMarkdownEditor</a></li>
-        <li><a href="api/pan-markdown-renderer.html">PanMarkdownRenderer</a></li>
-        <li><a href="api/pan-security.html">pan-security</a></li>
-        <li><a href="api/pan-theme-provider.html">PanThemeProvider</a></li>
-        <li><a href="api/pan-theme-toggle.html">PanThemeToggle</a></li>
-        <li><a href="api/pan-validation.html">pan-validation</a></li>
+  </header>
 
-      </ul>
+  <div class="docs-layout">
+    <main class="docs-main docs-main-wide">
+      <h1>Documentation</h1>
+      <p class="docs-intro">Browse all documentation for PAN (Page Area Network)</p>
+      <div class="docs-index">
+  <section class="docs-category">
+    <h2>.changeset</h2>
+    <div class="docs-grid">
+      <a href=".changeset/README.html" class="docs-card">
+        <h3>Changesets</h3>
+        <p class="docs-path">.changeset/README.html</p>
+      </a>
     </div>
-  </nav>
+  </section>
+  <section class="docs-category">
+    <h2>.github/profile</h2>
+    <div class="docs-grid">
+      <a href=".github/profile/README.html" class="docs-card">
+        <h3>LARC — Lightweight Asynchronous Relay Core</h3>
+        <p class="docs-path">.github/profile/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>Root</h2>
+    <div class="docs-grid">
+      <a href="CODEPEN-SETUP.html" class="docs-card">
+        <h3>CodePen Setup for LARC Demo</h3>
+        <p class="docs-path">CODEPEN-SETUP.html</p>
+      </a>
+      <a href="CONTRIBUTING.html" class="docs-card">
+        <h3>Contributing to LARC</h3>
+        <p class="docs-path">CONTRIBUTING.html</p>
+      </a>
+      <a href="CODE_OF_CONDUCT.html" class="docs-card">
+        <h3>Contributor Covenant Code of Conduct</h3>
+        <p class="docs-path">CODE_OF_CONDUCT.html</p>
+      </a>
+      <a href="README.html" class="docs-card">
+        <h3>LARC</h3>
+        <p class="docs-path">README.html</p>
+      </a>
+      <a href="SECURITY.html" class="docs-card">
+        <h3>Security Policy</h3>
+        <p class="docs-path">SECURITY.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>cli</h2>
+    <div class="docs-grid">
+      <a href="cli/README.html" class="docs-card">
+        <h3>create-larc-app</h3>
+        <p class="docs-path">cli/README.html</p>
+      </a>
+      <a href="cli/PUBLISHING.html" class="docs-card">
+        <h3>Publishing create-larc-app to npm</h3>
+        <p class="docs-path">cli/PUBLISHING.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>core</h2>
+    <div class="docs-grid">
+      <a href="core/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">core/CHANGELOG.html</p>
+      </a>
+      <a href="core/README.html" class="docs-card">
+        <h3>LARC Core</h3>
+        <p class="docs-path">core/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>core/docs</h2>
+    <div class="docs-grid">
+      <a href="core/docs/LARC_SPEC.v0.html" class="docs-card">
+        <h3>LARC — Page Area Network (PAN)</h3>
+        <p class="docs-path">core/docs/LARC_SPEC.v0.html</p>
+      </a>
+      <a href="core/docs/LARC_ROADMAP.html" class="docs-card">
+        <h3>LARC Roadmap (PAN)</h3>
+        <p class="docs-path">core/docs/LARC_ROADMAP.html</p>
+      </a>
+      <a href="core/docs/ROUTING.html" class="docs-card">
+        <h3>PAN Routes - Dynamic Message Routing</h3>
+        <p class="docs-path">core/docs/ROUTING.html</p>
+      </a>
+      <a href="core/docs/API_REFERENCE.html" class="docs-card">
+        <h3>PAN v1.0 API Reference</h3>
+        <p class="docs-path">core/docs/API_REFERENCE.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>core/examples/routing</h2>
+    <div class="docs-grid">
+      <a href="core/examples/routing/README.html" class="docs-card">
+        <h3>PAN Routing Examples</h3>
+        <p class="docs-path">core/examples/routing/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs</h2>
+    <div class="docs-grid">
+      <a href="docs/WIKI-EXPLORER-README.html" class="docs-card">
+        <h3>📚 LARC Wiki Explorer</h3>
+        <p class="docs-path">docs/WIKI-EXPLORER-README.html</p>
+      </a>
+      <a href="docs/QUICK-START-CONFIG.html" class="docs-card">
+        <h3>🚀 LARC Config Quick Start</h3>
+        <p class="docs-path">docs/QUICK-START-CONFIG.html</p>
+      </a>
+      <a href="docs/STATE_MANAGEMENT_README.html" class="docs-card">
+        <h3>Advanced State Management in LARC</h3>
+        <p class="docs-path">docs/STATE_MANAGEMENT_README.html</p>
+      </a>
+      <a href="docs/BROWSER-COMPATIBILITY.html" class="docs-card">
+        <h3>Browser Compatibility Guide</h3>
+        <p class="docs-path">docs/BROWSER-COMPATIBILITY.html</p>
+      </a>
+      <a href="docs/COMPATIBILITY-IMPLEMENTATION.html" class="docs-card">
+        <h3>Browser Compatibility Implementation Summary</h3>
+        <p class="docs-path">docs/COMPATIBILITY-IMPLEMENTATION.html</p>
+      </a>
+      <a href="docs/building-with-larc-outline.html" class="docs-card">
+        <h3>Building with LARC: A Reference Manual</h3>
+        <p class="docs-path">docs/building-with-larc-outline.html</p>
+      </a>
+      <a href="docs/building-with-larc-summary.html" class="docs-card">
+        <h3>Building with LARC: A Reference Manual - Completion Summary</h3>
+        <p class="docs-path">docs/building-with-larc-summary.html</p>
+      </a>
+      <a href="docs/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">docs/CHANGELOG.html</p>
+      </a>
+      <a href="docs/COMPONENT-REGISTRY-PLAN.html" class="docs-card">
+        <h3>Component Registry Plan</h3>
+        <p class="docs-path">docs/COMPONENT-REGISTRY-PLAN.html</p>
+      </a>
+      <a href="docs/DOCUMENTATION-UPDATE-2024-11-25.html" class="docs-card">
+        <h3>Documentation Update - November 25, 2024</h3>
+        <p class="docs-path">docs/DOCUMENTATION-UPDATE-2024-11-25.html</p>
+      </a>
+      <a href="docs/API-REFERENCE.html" class="docs-card">
+        <h3>LARC API Reference</h3>
+        <p class="docs-path">docs/API-REFERENCE.html</p>
+      </a>
+      <a href="docs/README-CONFIG.html" class="docs-card">
+        <h3>LARC Configuration System</h3>
+        <p class="docs-path">docs/README-CONFIG.html</p>
+      </a>
+      <a href="docs/API-STABILITY.html" class="docs-card">
+        <h3>LARC Core API Stability Guarantee</h3>
+        <p class="docs-path">docs/API-STABILITY.html</p>
+      </a>
+      <a href="docs/DEVELOPMENT_PHILOSOPHY.html" class="docs-card">
+        <h3>LARC Development Philosophy</h3>
+        <p class="docs-path">docs/DEVELOPMENT_PHILOSOPHY.html</p>
+      </a>
+      <a href="docs/DEVELOPMENT-PLAN.html" class="docs-card">
+        <h3>LARC Development Plan</h3>
+        <p class="docs-path">docs/DEVELOPMENT-PLAN.html</p>
+      </a>
+      <a href="docs/SESSION-SUMMARY.html" class="docs-card">
+        <h3>LARC Development Session Summary</h3>
+        <p class="docs-path">docs/SESSION-SUMMARY.html</p>
+      </a>
+      <a href="docs/IMPLEMENTATION_COMPLETE.html" class="docs-card">
+        <h3>LARC Ecosystem - Implementation Complete ✅</h3>
+        <p class="docs-path">docs/IMPLEMENTATION_COMPLETE.html</p>
+      </a>
+      <a href="docs/HTML-AUDIT-REPORT.html" class="docs-card">
+        <h3>LARC HTML Files Audit Report</h3>
+        <p class="docs-path">docs/HTML-AUDIT-REPORT.html</p>
+      </a>
+      <a href="docs/MIGRATION.html" class="docs-card">
+        <h3>LARC Migration Guide</h3>
+        <p class="docs-path">docs/MIGRATION.html</p>
+      </a>
+      <a href="docs/PERFORMANCE-OPTIMIZATION.html" class="docs-card">
+        <h3>LARC Performance Optimization Guide</h3>
+        <p class="docs-path">docs/PERFORMANCE-OPTIMIZATION.html</p>
+      </a>
+      <a href="docs/BUILD-COMPLETE.html" class="docs-card">
+        <h3>LARC Playground - Build Complete Report 🎉</h3>
+        <p class="docs-path">docs/BUILD-COMPLETE.html</p>
+      </a>
+      <a href="docs/PLAYGROUND-COMPLETE.html" class="docs-card">
+        <h3>LARC Playground - COMPLETE! ✅</h3>
+        <p class="docs-path">docs/PLAYGROUND-COMPLETE.html</p>
+      </a>
+      <a href="docs/PLAYGROUND-IMPLEMENTATION.html" class="docs-card">
+        <h3>LARC Playground - Implementation Plan</h3>
+        <p class="docs-path">docs/PLAYGROUND-IMPLEMENTATION.html</p>
+      </a>
+      <a href="docs/READY-FOR-TESTING.html" class="docs-card">
+        <h3>LARC Playground - Ready for Testing! 🚀</h3>
+        <p class="docs-path">docs/READY-FOR-TESTING.html</p>
+      </a>
+      <a href="docs/PLAYGROUND-STATUS.html" class="docs-card">
+        <h3>LARC Playground - Status</h3>
+        <p class="docs-path">docs/PLAYGROUND-STATUS.html</p>
+      </a>
+      <a href="docs/POSITIONING-UPDATE.html" class="docs-card">
+        <h3>LARC Positioning Update - Complete</h3>
+        <p class="docs-path">docs/POSITIONING-UPDATE.html</p>
+      </a>
+      <a href="docs/PRODUCTION_STATUS_UPDATE.html" class="docs-card">
+        <h3>LARC Production Readiness - Status Update</h3>
+        <p class="docs-path">docs/PRODUCTION_STATUS_UPDATE.html</p>
+      </a>
+      <a href="docs/PRODUCTION-READINESS-PROGRESS.html" class="docs-card">
+        <h3>LARC Production Readiness Progress Report</h3>
+        <p class="docs-path">docs/PRODUCTION-READINESS-PROGRESS.html</p>
+      </a>
+      <a href="docs/PRODUCTION_ROADMAP.html" class="docs-card">
+        <h3>LARC Production Readiness Roadmap</h3>
+        <p class="docs-path">docs/PRODUCTION_ROADMAP.html</p>
+      </a>
+      <a href="docs/PRODUCTION-READINESS-STATUS.html" class="docs-card">
+        <h3>LARC Production Readiness Status</h3>
+        <p class="docs-path">docs/PRODUCTION-READINESS-STATUS.html</p>
+      </a>
+      <a href="docs/CURRENT-STATUS.html" class="docs-card">
+        <h3>LARC Project - Current Status</h3>
+        <p class="docs-path">docs/CURRENT-STATUS.html</p>
+      </a>
+      <a href="docs/PLAN.html" class="docs-card">
+        <h3>LARC Project Plan</h3>
+        <p class="docs-path">docs/PLAN.html</p>
+      </a>
+      <a href="docs/TROUBLESHOOTING.html" class="docs-card">
+        <h3>LARC Troubleshooting Guide</h3>
+        <p class="docs-path">docs/TROUBLESHOOTING.html</p>
+      </a>
+      <a href="docs/PAN-ROUTING-API.html" class="docs-card">
+        <h3>PAN Runtime Routes - API Reference</h3>
+        <p class="docs-path">docs/PAN-ROUTING-API.html</p>
+      </a>
+      <a href="docs/PHASE-1-COMPLETE.html" class="docs-card">
+        <h3>Phase 1: Foundation - COMPLETE! ✅</h3>
+        <p class="docs-path">docs/PHASE-1-COMPLETE.html</p>
+      </a>
+      <a href="docs/SEMVER.html" class="docs-card">
+        <h3>Semantic Versioning Commitment</h3>
+        <p class="docs-path">docs/SEMVER.html</p>
+      </a>
+      <a href="docs/SESSION-COMPLETE.html" class="docs-card">
+        <h3>Session Complete - Playground Build</h3>
+        <p class="docs-path">docs/SESSION-COMPLETE.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/building-with-larc</h2>
+    <div class="docs-grid">
+      <a href="docs/building-with-larc/chapter-19-advanced-patterns.html" class="docs-card">
+        <h3>Advanced Patterns</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-19-advanced-patterns.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-12-authentication-and-authorization.html" class="docs-card">
+        <h3>Authentication and Authorization</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-12-authentication-and-authorization.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-06-basic-message-flow.html" class="docs-card">
+        <h3>Basic Message Flow</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-06-basic-message-flow.html</p>
+      </a>
+      <a href="docs/building-with-larc/BUILD-SYSTEM-SUMMARY.html" class="docs-card">
+        <h3>Book Build System - Complete Summary</h3>
+        <p class="docs-path">docs/building-with-larc/BUILD-SYSTEM-SUMMARY.html</p>
+      </a>
+      <a href="docs/building-with-larc/BUILD.html" class="docs-card">
+        <h3>Building the Book</h3>
+        <p class="docs-path">docs/building-with-larc/BUILD.html</p>
+      </a>
+      <a href="docs/building-with-larc/README.html" class="docs-card">
+        <h3>Building with LARC: A Reference Manual</h3>
+        <p class="docs-path">docs/building-with-larc/README.html</p>
+      </a>
+      <a href="docs/building-with-larc/colophon.html" class="docs-card">
+        <h3>Colophon</h3>
+        <p class="docs-path">docs/building-with-larc/colophon.html</p>
+      </a>
+      <a href="docs/building-with-larc/appendix-c-configuration-options.html" class="docs-card">
+        <h3>Configuration Options</h3>
+        <p class="docs-path">docs/building-with-larc/appendix-c-configuration-options.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-21-core-components.html" class="docs-card">
+        <h3>Core Components Reference</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-21-core-components.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-04-core-concepts.html" class="docs-card">
+        <h3>Core Concepts</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-04-core-concepts.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-22-data-components.html" class="docs-card">
+        <h3>Data Components</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-22-data-components.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-11-data-fetching-and-apis.html" class="docs-card">
+        <h3>Data Fetching and APIs</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-11-data-fetching-and-apis.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-20-deployment-and-production.html" class="docs-card">
+        <h3>Deployment and Production</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-20-deployment-and-production.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-18-error-handling-and-debugging.html" class="docs-card">
+        <h3>Error Handling and Debugging</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-18-error-handling-and-debugging.html</p>
+      </a>
+      <a href="docs/building-with-larc/appendix-b-event-envelope.html" class="docs-card">
+        <h3>Event Envelope Specification</h3>
+        <p class="docs-path">docs/building-with-larc/appendix-b-event-envelope.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-14-file-management.html" class="docs-card">
+        <h3>File Management</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-14-file-management.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-10-forms-and-user-input.html" class="docs-card">
+        <h3>Forms and User Input</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-10-forms-and-user-input.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-05-getting-started.html" class="docs-card">
+        <h3>Getting Started</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-05-getting-started.html</p>
+      </a>
+      <a href="docs/building-with-larc/appendix-f-glossary.html" class="docs-card">
+        <h3>Glossary</h3>
+        <p class="docs-path">docs/building-with-larc/appendix-f-glossary.html</p>
+      </a>
+      <a href="docs/building-with-larc/index.html" class="docs-card">
+        <h3>Index</h3>
+        <p class="docs-path">docs/building-with-larc/index.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-24-integration-components.html" class="docs-card">
+        <h3>Integration Components</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-24-integration-components.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-01-introduction.html" class="docs-card">
+        <h3>Introduction</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-01-introduction.html</p>
+      </a>
+      <a href="docs/building-with-larc/back-cover.html" class="docs-card">
+        <h3>Learning LARC</h3>
+        <p class="docs-path">docs/building-with-larc/back-cover.html</p>
+      </a>
+      <a href="docs/building-with-larc/appendix-a-message-topics.html" class="docs-card">
+        <h3>Message Topics Reference</h3>
+        <p class="docs-path">docs/building-with-larc/appendix-a-message-topics.html</p>
+      </a>
+      <a href="docs/building-with-larc/appendix-d-migration-guide.html" class="docs-card">
+        <h3>Migration Guide</h3>
+        <p class="docs-path">docs/building-with-larc/appendix-d-migration-guide.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-16-performance-optimization.html" class="docs-card">
+        <h3>Performance Optimization</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-16-performance-optimization.html</p>
+      </a>
+      <a href="docs/building-with-larc/QUICKSTART.html" class="docs-card">
+        <h3>Quick Start Guide - Book Building</h3>
+        <p class="docs-path">docs/building-with-larc/QUICKSTART.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-13-realtime-features.html" class="docs-card">
+        <h3>Real-time Features</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-13-realtime-features.html</p>
+      </a>
+      <a href="docs/building-with-larc/appendix-e-recipes-and-patterns.html" class="docs-card">
+        <h3>Recipes and Patterns</h3>
+        <p class="docs-path">docs/building-with-larc/appendix-e-recipes-and-patterns.html</p>
+      </a>
+      <a href="docs/building-with-larc/appendix-g-resources.html" class="docs-card">
+        <h3>Resources</h3>
+        <p class="docs-path">docs/building-with-larc/appendix-g-resources.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-09-routing-and-navigation.html" class="docs-card">
+        <h3>Routing and Navigation</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-09-routing-and-navigation.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-08-state-management.html" class="docs-card">
+        <h3>State Management</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-08-state-management.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-17-testing-strategies.html" class="docs-card">
+        <h3>Testing Strategies</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-17-testing-strategies.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-03-story.html" class="docs-card">
+        <h3>The LARC Story</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-03-story.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-02-philosophy.html" class="docs-card">
+        <h3>The Philosophy of LARC</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-02-philosophy.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-15-theming-and-styling.html" class="docs-card">
+        <h3>Theming and Styling</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-15-theming-and-styling.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-23-ui-components.html" class="docs-card">
+        <h3>UI Components</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-23-ui-components.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-25-utility-components.html" class="docs-card">
+        <h3>Utility Components</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-25-utility-components.html</p>
+      </a>
+      <a href="docs/building-with-larc/chapter-07-working-with-components.html" class="docs-card">
+        <h3>Working with Components</h3>
+        <p class="docs-path">docs/building-with-larc/chapter-07-working-with-components.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/guides</h2>
+    <div class="docs-grid">
+      <a href="docs/guides/BUNDLE-SIZE-OPTIMIZATION.html" class="docs-card">
+        <h3>Bundle Size Optimization - Complete</h3>
+        <p class="docs-path">docs/guides/BUNDLE-SIZE-OPTIMIZATION.html</p>
+      </a>
+      <a href="docs/guides/BUNDLE-REDUCTION-COMPLETE.html" class="docs-card">
+        <h3>Bundle Size Reduction - COMPLETE ✅</h3>
+        <p class="docs-path">docs/guides/BUNDLE-REDUCTION-COMPLETE.html</p>
+      </a>
+      <a href="docs/guides/HN_FAQ.html" class="docs-card">
+        <h3>Hacker News Launch - FAQ Answers</h3>
+        <p class="docs-path">docs/guides/HN_FAQ.html</p>
+      </a>
+      <a href="docs/guides/HN_POST_DRAFT.html" class="docs-card">
+        <h3>Hacker News Post - LARC Launch</h3>
+        <p class="docs-path">docs/guides/HN_POST_DRAFT.html</p>
+      </a>
+      <a href="docs/guides/BUILD-PROCESS.html" class="docs-card">
+        <h3>LARC Build Process - Minified Production Files</h3>
+        <p class="docs-path">docs/guides/BUILD-PROCESS.html</p>
+      </a>
+      <a href="docs/guides/QUICK-START.html" class="docs-card">
+        <h3>LARC Monorepo Quick Start</h3>
+        <p class="docs-path">docs/guides/QUICK-START.html</p>
+      </a>
+      <a href="docs/guides/PACKAGES.html" class="docs-card">
+        <h3>LARC Package Guide</h3>
+        <p class="docs-path">docs/guides/PACKAGES.html</p>
+      </a>
+      <a href="docs/guides/QUICK-START-GUIDE.html" class="docs-card">
+        <h3>LARC Quick Start Guide</h3>
+        <p class="docs-path">docs/guides/QUICK-START-GUIDE.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/learning-larc</h2>
+    <div class="docs-grid">
+      <a href="docs/learning-larc/author-bio.html" class="docs-card">
+        <h3>author-bio</h3>
+        <p class="docs-path">docs/learning-larc/author-bio.html</p>
+      </a>
+      <a href="docs/learning-larc/back-cover.html" class="docs-card">
+        <h3>back-cover</h3>
+        <p class="docs-path">docs/learning-larc/back-cover.html</p>
+      </a>
+      <a href="docs/learning-larc/colophon.html" class="docs-card">
+        <h3>Colophon</h3>
+        <p class="docs-path">docs/learning-larc/colophon.html</p>
+      </a>
+      <a href="docs/learning-larc/DIAGRAMS-COMPLETE.html" class="docs-card">
+        <h3>Diagrams Complete! 🎉</h3>
+        <p class="docs-path">docs/learning-larc/DIAGRAMS-COMPLETE.html</p>
+      </a>
+      <a href="docs/learning-larc/foreword.html" class="docs-card">
+        <h3>Foreword</h3>
+        <p class="docs-path">docs/learning-larc/foreword.html</p>
+      </a>
+      <a href="docs/learning-larc/00-front-matter.html" class="docs-card">
+        <h3>Learning LARC</h3>
+        <p class="docs-path">docs/learning-larc/00-front-matter.html</p>
+      </a>
+      <a href="docs/learning-larc/README.html" class="docs-card">
+        <h3>Learning LARC</h3>
+        <p class="docs-path">docs/learning-larc/README.html</p>
+      </a>
+      <a href="docs/learning-larc/BUILD-SYSTEM.html" class="docs-card">
+        <h3>Learning LARC - Build System</h3>
+        <p class="docs-path">docs/learning-larc/BUILD-SYSTEM.html</p>
+      </a>
+      <a href="docs/learning-larc/PROGRESS.html" class="docs-card">
+        <h3>Learning LARC - Writing Progress</h3>
+        <p class="docs-path">docs/learning-larc/PROGRESS.html</p>
+      </a>
+      <a href="docs/learning-larc/QUICKSTART.html" class="docs-card">
+        <h3>Quick Start Guide - Building "Learning LARC"</h3>
+        <p class="docs-path">docs/learning-larc/QUICKSTART.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/learning-larc/build/temp</h2>
+    <div class="docs-grid">
+      <a href="docs/learning-larc/build/temp/learning-larc-complete.html" class="docs-card">
+        <h3>Learning LARC</h3>
+        <p class="docs-path">docs/learning-larc/build/temp/learning-larc-complete.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/learning-larc/chapters</h2>
+    <div class="docs-grid">
+      <a href="docs/learning-larc/chapters/01-philosophy-and-background.html" class="docs-card">
+        <h3>Chapter 1: Philosophy and Background</h3>
+        <p class="docs-path">docs/learning-larc/chapters/01-philosophy-and-background.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/02-core-concepts.html" class="docs-card">
+        <h3>Chapter 2: Core Concepts</h3>
+        <p class="docs-path">docs/learning-larc/chapters/02-core-concepts.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/03-getting-started.html" class="docs-card">
+        <h3>Chapter 3: Getting Started</h3>
+        <p class="docs-path">docs/learning-larc/chapters/03-getting-started.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/04-creating-web-components.html" class="docs-card">
+        <h3>Chapter 4: Creating Web Components</h3>
+        <p class="docs-path">docs/learning-larc/chapters/04-creating-web-components.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/05-the-pan-bus.html" class="docs-card">
+        <h3>Chapter 5: The PAN Bus</h3>
+        <p class="docs-path">docs/learning-larc/chapters/05-the-pan-bus.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/06-state-management.html" class="docs-card">
+        <h3>Chapter 6: State Management</h3>
+        <p class="docs-path">docs/learning-larc/chapters/06-state-management.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/07-advanced-component-patterns.html" class="docs-card">
+        <h3>Chapter 7: Advanced Component Patterns</h3>
+        <p class="docs-path">docs/learning-larc/chapters/07-advanced-component-patterns.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/08-business-logic-patterns.html" class="docs-card">
+        <h3>Chapter 8: Business Logic Patterns</h3>
+        <p class="docs-path">docs/learning-larc/chapters/08-business-logic-patterns.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/09-routing-and-navigation.html" class="docs-card">
+        <h3>Chapter 8: Routing and Navigation</h3>
+        <p class="docs-path">docs/learning-larc/chapters/09-routing-and-navigation.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/10-forms-and-validation.html" class="docs-card">
+        <h3>Chapter 9: Forms and Validation</h3>
+        <p class="docs-path">docs/learning-larc/chapters/10-forms-and-validation.html</p>
+      </a>
+      <a href="docs/learning-larc/chapters/11-19-summary.html" class="docs-card">
+        <h3>Chapters 11-19: Summary Outlines</h3>
+        <p class="docs-path">docs/learning-larc/chapters/11-19-summary.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/learning-larc/diagrams</h2>
+    <div class="docs-grid">
+      <a href="docs/learning-larc/diagrams/08-routing.html" class="docs-card">
+        <h3>Client-Side Routing</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/08-routing.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/14-app-architecture.html" class="docs-card">
+        <h3>Complete Application Architecture</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/14-app-architecture.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/DIAGRAM-INDEX.html" class="docs-card">
+        <h3>Complete Diagram Index</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/DIAGRAM-INDEX.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/01-architecture-overview.html" class="docs-card">
+        <h3>LARC Architecture Overview</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/01-architecture-overview.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/README.html" class="docs-card">
+        <h3>Learning LARC - Diagrams</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/README.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/05-pan-bus.html" class="docs-card">
+        <h3>PAN Bus Communication Patterns</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/05-pan-bus.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/06-state-management.html" class="docs-card">
+        <h3>State Management Patterns</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/06-state-management.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/12-traditional-vs-larc.html" class="docs-card">
+        <h3>Traditional Frameworks vs LARC</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/12-traditional-vs-larc.html</p>
+      </a>
+      <a href="docs/learning-larc/diagrams/02-component-structure.html" class="docs-card">
+        <h3>Web Component Structure</h3>
+        <p class="docs-path">docs/learning-larc/diagrams/02-component-structure.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/migration</h2>
+    <div class="docs-grid">
+      <a href="docs/migration/ARCHIVE-REPOSITORIES.html" class="docs-card">
+        <h3>Archive Old Repositories - Instructions</h3>
+        <p class="docs-path">docs/migration/ARCHIVE-REPOSITORIES.html</p>
+      </a>
+      <a href="docs/migration/DEVTOOLS-EXTRACTION.html" class="docs-card">
+        <h3>DevTools Extraction - Complete ✅</h3>
+        <p class="docs-path">docs/migration/DEVTOOLS-EXTRACTION.html</p>
+      </a>
+      <a href="docs/migration/MIGRATION-COMPLETE.html" class="docs-card">
+        <h3>LARC Repository Migration - Complete ✅</h3>
+        <p class="docs-path">docs/migration/MIGRATION-COMPLETE.html</p>
+      </a>
+      <a href="docs/migration/MONOREPO-MIGRATION-PLAN.html" class="docs-card">
+        <h3>Migration Plan: From Git Submodules to Monorepo</h3>
+        <p class="docs-path">docs/migration/MONOREPO-MIGRATION-PLAN.html</p>
+      </a>
+      <a href="docs/migration/MONOREPO-VS-SUBMODULES.html" class="docs-card">
+        <h3>Monorepo vs Submodules: Developer Experience Comparison</h3>
+        <p class="docs-path">docs/migration/MONOREPO-VS-SUBMODULES.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>docs/processes</h2>
+    <div class="docs-grid">
+      <a href="docs/processes/SCRIPTS-README.html" class="docs-card">
+        <h3>Git Submodule Helper Scripts</h3>
+        <p class="docs-path">docs/processes/SCRIPTS-README.html</p>
+      </a>
+      <a href="docs/processes/SUBMODULE-WORKFLOW.html" class="docs-card">
+        <h3>Git Submodules Workflow Guide</h3>
+        <p class="docs-path">docs/processes/SUBMODULE-WORKFLOW.html</p>
+      </a>
+      <a href="docs/processes/LAUNCH_CHECKLIST.html" class="docs-card">
+        <h3>Hacker News Launch Checklist</h3>
+        <p class="docs-path">docs/processes/LAUNCH_CHECKLIST.html</p>
+      </a>
+      <a href="docs/processes/LAUNCH_READINESS.html" class="docs-card">
+        <h3>LARC Hacker News Launch - Readiness Report</h3>
+        <p class="docs-path">docs/processes/LAUNCH_READINESS.html</p>
+      </a>
+      <a href="docs/processes/RECOMMENDED-CONSOLIDATION.html" class="docs-card">
+        <h3>Recommended Repository Consolidation for LARC</h3>
+        <p class="docs-path">docs/processes/RECOMMENDED-CONSOLIDATION.html</p>
+      </a>
+      <a href="docs/processes/DECISION-TREE.html" class="docs-card">
+        <h3>Repository Structure Decision Tree</h3>
+        <p class="docs-path">docs/processes/DECISION-TREE.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/apps</h2>
+    <div class="docs-grid">
+      <a href="packages/apps/README.html" class="docs-card">
+        <h3>LARC.js Demo Applications</h3>
+        <p class="docs-path">packages/apps/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/apps/contact-manager</h2>
+    <div class="docs-grid">
+      <a href="packages/apps/contact-manager/README.html" class="docs-card">
+        <h3>Contact Manager Demo</h3>
+        <p class="docs-path">packages/apps/contact-manager/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/apps/invoice</h2>
+    <div class="docs-grid">
+      <a href="packages/apps/invoice/README.html" class="docs-card">
+        <h3>Invoice Creator Demo App</h3>
+        <p class="docs-path">packages/apps/invoice/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/apps/invoice-studio</h2>
+    <div class="docs-grid">
+      <a href="packages/apps/invoice-studio/README.html" class="docs-card">
+        <h3>📄 PAN Invoice Studio</h3>
+        <p class="docs-path">packages/apps/invoice-studio/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/apps/src/ui</h2>
+    <div class="docs-grid">
+      <a href="packages/apps/src/ui/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">packages/apps/src/ui/CHANGELOG.html</p>
+      </a>
+      <a href="packages/apps/src/ui/COMPONENT_TEMPLATE.html" class="docs-card">
+        <h3>LARC Component Header Template</h3>
+        <p class="docs-path">packages/apps/src/ui/COMPONENT_TEMPLATE.html</p>
+      </a>
+      <a href="packages/apps/src/ui/README.html" class="docs-card">
+        <h3>LARC Components</h3>
+        <p class="docs-path">packages/apps/src/ui/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/apps/src/ui/docs</h2>
+    <div class="docs-grid">
+      <a href="packages/apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html" class="docs-card">
+        <h3>Component Security Audit Report</h3>
+        <p class="docs-path">packages/apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html</p>
+      </a>
+      <a href="packages/apps/src/ui/docs/THEME_SYSTEM.html" class="docs-card">
+        <h3>PAN Theme System</h3>
+        <p class="docs-path">packages/apps/src/ui/docs/THEME_SYSTEM.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/components-types</h2>
+    <div class="docs-grid">
+      <a href="packages/components-types/README.html" class="docs-card">
+        <h3>@larcjs/ui-types</h3>
+        <p class="docs-path">packages/components-types/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/core</h2>
+    <div class="docs-grid">
+      <a href="packages/core/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">packages/core/CHANGELOG.html</p>
+      </a>
+      <a href="packages/core/README.html" class="docs-card">
+        <h3>LARC Core</h3>
+        <p class="docs-path">packages/core/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/core-debug</h2>
+    <div class="docs-grid">
+      <a href="packages/core-debug/README.html" class="docs-card">
+        <h3>@larcjs/core-debug</h3>
+        <p class="docs-path">packages/core-debug/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/core-lite</h2>
+    <div class="docs-grid">
+      <a href="packages/core-lite/README.html" class="docs-card">
+        <h3>@larcjs/core-lite</h3>
+        <p class="docs-path">packages/core-lite/README.html</p>
+      </a>
+      <a href="packages/core-lite/MIGRATION.html" class="docs-card">
+        <h3>Migration Guide: @larcjs/core → @larcjs/core-lite</h3>
+        <p class="docs-path">packages/core-lite/MIGRATION.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/core-routing</h2>
+    <div class="docs-grid">
+      <a href="packages/core-routing/README.html" class="docs-card">
+        <h3>@larcjs/core-routing</h3>
+        <p class="docs-path">packages/core-routing/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/core-types</h2>
+    <div class="docs-grid">
+      <a href="packages/core-types/README.html" class="docs-card">
+        <h3>@larcjs/core-types</h3>
+        <p class="docs-path">packages/core-types/README.html</p>
+      </a>
+      <a href="packages/core-types/NPM-ORG-SETUP.html" class="docs-card">
+        <h3>NPM Organization Setup Required</h3>
+        <p class="docs-path">packages/core-types/NPM-ORG-SETUP.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/core/docs</h2>
+    <div class="docs-grid">
+      <a href="packages/core/docs/LARC_SPEC.v0.html" class="docs-card">
+        <h3>LARC — Page Area Network (PAN)</h3>
+        <p class="docs-path">packages/core/docs/LARC_SPEC.v0.html</p>
+      </a>
+      <a href="packages/core/docs/LARC_ROADMAP.html" class="docs-card">
+        <h3>LARC Roadmap (PAN)</h3>
+        <p class="docs-path">packages/core/docs/LARC_ROADMAP.html</p>
+      </a>
+      <a href="packages/core/docs/ROUTING.html" class="docs-card">
+        <h3>PAN Routes - Dynamic Message Routing</h3>
+        <p class="docs-path">packages/core/docs/ROUTING.html</p>
+      </a>
+      <a href="packages/core/docs/API_REFERENCE.html" class="docs-card">
+        <h3>PAN v1.0 API Reference</h3>
+        <p class="docs-path">packages/core/docs/API_REFERENCE.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/core/examples/routing</h2>
+    <div class="docs-grid">
+      <a href="packages/core/examples/routing/README.html" class="docs-card">
+        <h3>PAN Routing Examples</h3>
+        <p class="docs-path">packages/core/examples/routing/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/devtools</h2>
+    <div class="docs-grid">
+      <a href="packages/devtools/BUILD_ICONS.html" class="docs-card">
+        <h3>Building Icons</h3>
+        <p class="docs-path">packages/devtools/BUILD_ICONS.html</p>
+      </a>
+      <a href="packages/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html" class="docs-card">
+        <h3>Chrome DevTools MCP Extension Setup</h3>
+        <p class="docs-path">packages/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html</p>
+      </a>
+      <a href="packages/devtools/EXTENSION_ENABLED.html" class="docs-card">
+        <h3>PAN DevTools Extension - Now Enabled! ✅</h3>
+        <p class="docs-path">packages/devtools/EXTENSION_ENABLED.html</p>
+      </a>
+      <a href="packages/devtools/QUICK_START.html" class="docs-card">
+        <h3>PAN DevTools Extension - Quick Start</h3>
+        <p class="docs-path">packages/devtools/QUICK_START.html</p>
+      </a>
+      <a href="packages/devtools/RESTART_REQUIRED.html" class="docs-card">
+        <h3>PAN DevTools Extension - Restart Required</h3>
+        <p class="docs-path">packages/devtools/RESTART_REQUIRED.html</p>
+      </a>
+      <a href="packages/devtools/README.html" class="docs-card">
+        <h3>PAN Inspector - Chrome DevTools Extension</h3>
+        <p class="docs-path">packages/devtools/README.html</p>
+      </a>
+      <a href="packages/devtools/QUICKSTART.html" class="docs-card">
+        <h3>PAN Inspector - Quick Start Guide</h3>
+        <p class="docs-path">packages/devtools/QUICKSTART.html</p>
+      </a>
+      <a href="packages/devtools/EXTENSION_TEST_PLAN.html" class="docs-card">
+        <h3>PAN Inspector Extension - Test Plan</h3>
+        <p class="docs-path">packages/devtools/EXTENSION_TEST_PLAN.html</p>
+      </a>
+      <a href="packages/devtools/EXTENSION_TEST_RESULTS.html" class="docs-card">
+        <h3>PAN Inspector Extension - Test Results</h3>
+        <p class="docs-path">packages/devtools/EXTENSION_TEST_RESULTS.html</p>
+      </a>
+      <a href="packages/devtools/ROOT_CAUSE_FOUND.html" class="docs-card">
+        <h3>Root Cause Found! ✅</h3>
+        <p class="docs-path">packages/devtools/ROOT_CAUSE_FOUND.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">packages/examples/CHANGELOG.html</p>
+      </a>
+      <a href="packages/examples/README.html" class="docs-card">
+        <h3>LARC Examples</h3>
+        <p class="docs-path">packages/examples/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/apps</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/apps/README.html" class="docs-card">
+        <h3>Demo Applications</h3>
+        <p class="docs-path">packages/examples/apps/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/apps/contact-manager</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/apps/contact-manager/README.html" class="docs-card">
+        <h3>Contact Manager Demo</h3>
+        <p class="docs-path">packages/examples/apps/contact-manager/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/apps/invoice</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/apps/invoice/README.html" class="docs-card">
+        <h3>Invoice Creator Demo App</h3>
+        <p class="docs-path">packages/examples/apps/invoice/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/apps/invoice-studio</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/apps/invoice-studio/README.html" class="docs-card">
+        <h3>📄 PAN Invoice Studio</h3>
+        <p class="docs-path">packages/examples/apps/invoice-studio/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/backends</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/backends/README.html" class="docs-card">
+        <h3>LARC/PAN Backend Examples</h3>
+        <p class="docs-path">packages/examples/backends/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/backends/nodejs</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/backends/nodejs/README.html" class="docs-card">
+        <h3>Node.js Backend Examples for LARC/PAN</h3>
+        <p class="docs-path">packages/examples/backends/nodejs/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/backends/php</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/backends/php/README.html" class="docs-card">
+        <h3>PHP Backend Examples for LARC/PAN</h3>
+        <p class="docs-path">packages/examples/backends/php/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/backends/python</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/backends/python/README.html" class="docs-card">
+        <h3>Python Backend Examples for LARC/PAN</h3>
+        <p class="docs-path">packages/examples/backends/python/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/hybrid-dashboard</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/hybrid-dashboard/README.html" class="docs-card">
+        <h3>Hybrid Dashboard Demo</h3>
+        <p class="docs-path">packages/examples/hybrid-dashboard/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/src/ui</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/src/ui/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">packages/examples/src/ui/CHANGELOG.html</p>
+      </a>
+      <a href="packages/examples/src/ui/COMPONENT_TEMPLATE.html" class="docs-card">
+        <h3>LARC Component Header Template</h3>
+        <p class="docs-path">packages/examples/src/ui/COMPONENT_TEMPLATE.html</p>
+      </a>
+      <a href="packages/examples/src/ui/README.html" class="docs-card">
+        <h3>LARC Components</h3>
+        <p class="docs-path">packages/examples/src/ui/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/examples/src/ui/docs</h2>
+    <div class="docs-grid">
+      <a href="packages/examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html" class="docs-card">
+        <h3>Component Security Audit Report</h3>
+        <p class="docs-path">packages/examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html</p>
+      </a>
+      <a href="packages/examples/src/ui/docs/THEME_SYSTEM.html" class="docs-card">
+        <h3>PAN Theme System</h3>
+        <p class="docs-path">packages/examples/src/ui/docs/THEME_SYSTEM.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/ui</h2>
+    <div class="docs-grid">
+      <a href="packages/ui/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">packages/ui/CHANGELOG.html</p>
+      </a>
+      <a href="packages/ui/COMPONENT_TEMPLATE.html" class="docs-card">
+        <h3>LARC Component Header Template</h3>
+        <p class="docs-path">packages/ui/COMPONENT_TEMPLATE.html</p>
+      </a>
+      <a href="packages/ui/README.html" class="docs-card">
+        <h3>LARC Components</h3>
+        <p class="docs-path">packages/ui/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>packages/ui/docs</h2>
+    <div class="docs-grid">
+      <a href="packages/ui/docs/COMPONENT_SECURITY_AUDIT.html" class="docs-card">
+        <h3>Component Security Audit Report</h3>
+        <p class="docs-path">packages/ui/docs/COMPONENT_SECURITY_AUDIT.html</p>
+      </a>
+      <a href="packages/ui/docs/THEME_SYSTEM.html" class="docs-card">
+        <h3>PAN Theme System</h3>
+        <p class="docs-path">packages/ui/docs/THEME_SYSTEM.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>playground</h2>
+    <div class="docs-grid">
+      <a href="playground/DATA_FLOW_FIX.html" class="docs-card">
+        <h3>Data Flow Example Fix</h3>
+        <p class="docs-path">playground/DATA_FLOW_FIX.html</p>
+      </a>
+      <a href="playground/DATE_PICKER_FIX.html" class="docs-card">
+        <h3>Date Picker Example Fix</h3>
+        <p class="docs-path">playground/DATE_PICKER_FIX.html</p>
+      </a>
+      <a href="playground/DRAG_DROP_LIST_FIX.html" class="docs-card">
+        <h3>Drag & Drop List Example Fix</h3>
+        <p class="docs-path">playground/DRAG_DROP_LIST_FIX.html</p>
+      </a>
+      <a href="playground/DROPDOWN_MENU_FIX.html" class="docs-card">
+        <h3>Dropdown Menu Example Fix</h3>
+        <p class="docs-path">playground/DROPDOWN_MENU_FIX.html</p>
+      </a>
+      <a href="playground/FILE_UPLOAD_DUPLICATE_FIX.html" class="docs-card">
+        <h3>File Upload Duplicate Events Fix</h3>
+        <p class="docs-path">playground/FILE_UPLOAD_DUPLICATE_FIX.html</p>
+      </a>
+      <a href="playground/HELP_TEXT_GUIDE.html" class="docs-card">
+        <h3>Help Text Guide</h3>
+        <p class="docs-path">playground/HELP_TEXT_GUIDE.html</p>
+      </a>
+      <a href="playground/README.html" class="docs-card">
+        <h3>LARC Playground</h3>
+        <p class="docs-path">playground/README.html</p>
+      </a>
+      <a href="playground/QUICK-START.html" class="docs-card">
+        <h3>LARC Playground - Quick Start</h3>
+        <p class="docs-path">playground/QUICK-START.html</p>
+      </a>
+      <a href="playground/TESTING.html" class="docs-card">
+        <h3>LARC Playground - Testing Guide</h3>
+        <p class="docs-path">playground/TESTING.html</p>
+      </a>
+      <a href="playground/PAGINATION_LIMITATION.html" class="docs-card">
+        <h3>Pagination Example Limitation</h3>
+        <p class="docs-path">playground/PAGINATION_LIMITATION.html</p>
+      </a>
+      <a href="playground/BUS_MONITOR_FIX.html" class="docs-card">
+        <h3>PAN Bus Monitor Fix</h3>
+        <p class="docs-path">playground/BUS_MONITOR_FIX.html</p>
+      </a>
+      <a href="playground/EXAMPLES_FIXED.html" class="docs-card">
+        <h3>Playground Examples - Fixed and Ready</h3>
+        <p class="docs-path">playground/EXAMPLES_FIXED.html</p>
+      </a>
+      <a href="playground/EXAMPLE_TEST_PLAN.html" class="docs-card">
+        <h3>Playground Examples Test Plan</h3>
+        <p class="docs-path">playground/EXAMPLE_TEST_PLAN.html</p>
+      </a>
+      <a href="playground/IMPROVEMENTS.html" class="docs-card">
+        <h3>Playground Improvements</h3>
+        <p class="docs-path">playground/IMPROVEMENTS.html</p>
+      </a>
+      <a href="playground/SESSION_FIXES_SUMMARY.html" class="docs-card">
+        <h3>Playground Session Fixes Summary</h3>
+        <p class="docs-path">playground/SESSION_FIXES_SUMMARY.html</p>
+      </a>
+      <a href="playground/PLAYGROUND_STATUS.html" class="docs-card">
+        <h3>Playground Status Report</h3>
+        <p class="docs-path">playground/PLAYGROUND_STATUS.html</p>
+      </a>
+      <a href="playground/SYNTAX_HIGHLIGHTING_FIX.html" class="docs-card">
+        <h3>Syntax Highlighting Fix</h3>
+        <p class="docs-path">playground/SYNTAX_HIGHLIGHTING_FIX.html</p>
+      </a>
+      <a href="playground/TOOLBAR_BADGES_FIX.html" class="docs-card">
+        <h3>Toolbar Badges for Non-UI Components</h3>
+        <p class="docs-path">playground/TOOLBAR_BADGES_FIX.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>registry</h2>
+    <div class="docs-grid">
+      <a href="registry/CONTRIBUTING.html" class="docs-card">
+        <h3>Contributing to LARC Component Registry</h3>
+        <p class="docs-path">registry/CONTRIBUTING.html</p>
+      </a>
+      <a href="registry/DEPLOYING.html" class="docs-card">
+        <h3>Deploying Registry to GitHub Pages</h3>
+        <p class="docs-path">registry/DEPLOYING.html</p>
+      </a>
+      <a href="registry/README.html" class="docs-card">
+        <h3>LARC Component Registry</h3>
+        <p class="docs-path">registry/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>ui</h2>
+    <div class="docs-grid">
+      <a href="ui/CHANGELOG.html" class="docs-card">
+        <h3>Changelog</h3>
+        <p class="docs-path">ui/CHANGELOG.html</p>
+      </a>
+      <a href="ui/COMPONENT_TEMPLATE.html" class="docs-card">
+        <h3>LARC Component Header Template</h3>
+        <p class="docs-path">ui/COMPONENT_TEMPLATE.html</p>
+      </a>
+      <a href="ui/README.html" class="docs-card">
+        <h3>LARC Components</h3>
+        <p class="docs-path">ui/README.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>ui/docs</h2>
+    <div class="docs-grid">
+      <a href="ui/docs/COMPONENT_SECURITY_AUDIT.html" class="docs-card">
+        <h3>Component Security Audit Report</h3>
+        <p class="docs-path">ui/docs/COMPONENT_SECURITY_AUDIT.html</p>
+      </a>
+      <a href="ui/docs/THEME_SYSTEM.html" class="docs-card">
+        <h3>PAN Theme System</h3>
+        <p class="docs-path">ui/docs/THEME_SYSTEM.html</p>
+      </a>
+    </div>
+  </section>
+  <section class="docs-category">
+    <h2>vscode-extension</h2>
+    <div class="docs-grid">
+      <a href="vscode-extension/README.html" class="docs-card">
+        <h3>LARC VS Code Extension</h3>
+        <p class="docs-path">vscode-extension/README.html</p>
+      </a>
+      <a href="vscode-extension/PUBLISHING.html" class="docs-card">
+        <h3>Publishing LARC VS Code Extension</h3>
+        <p class="docs-path">vscode-extension/PUBLISHING.html</p>
+      </a>
+    </div>
+  </section>
+</div>
 
-  <main class="content">
-    <header class="page-header">
-      <h1>PAN API Documentation</h1>
-      <p>Complete reference for all PAN components and APIs</p>
-    </header>
-
-    <section class="section">
-      <h2>Components</h2>
-      <div class="components-grid">
-
-        <div class="component-card">
-          <h3><a href="api/pan-bus-enhanced.html">PanBusEnhanced</a></h3>
-          <p>PAN Bus (Enhanced) - Memory-safe, secure message bus</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-bus-legacy.html">PanBus</a></h3>
-          <p>The PAN Bus is a custom element that provides publish/subscribe and request/reply</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-bus.html">PanBusEnhanced</a></h3>
-          <p>PAN Bus (Enhanced) - Memory-safe, secure message bus</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-client.html">PanClient</a></h3>
-          <p>PanClient provides a clean, promise-based API for publish/subscribe messaging</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-data-connector.html">PanDataConnector</a></h3>
-          <p>Attributes:</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-files.html">PanFiles</a></h3>
-          <p>pan-files</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-invoice-store.html">PanInvoiceStore</a></h3>
-          <p>pan-invoice-store</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-jwt.html">PanJWT</a></h3>
-          <p>Provides JWT token management with:</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-markdown-editor.html">PanMarkdownEditor</a></h3>
-          <p>pan-markdown-editor</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-markdown-renderer.html">PanMarkdownRenderer</a></h3>
-          <p>pan-markdown-renderer</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-theme-provider.html">PanThemeProvider</a></h3>
-          <p>pan-theme-provider</p>
-        </div>
-
-        <div class="component-card">
-          <h3><a href="api/pan-theme-toggle.html">PanThemeToggle</a></h3>
-          <p>pan-theme-toggle</p>
-        </div>
-
-      </div>
-    </section>
-  </main>
+    </main>
+  </div>
 </body>
 </html>

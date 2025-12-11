@@ -1,335 +1,1222 @@
 {
-  ".github/ISSUE_TEMPLATE": [
+  ".changeset": [
     {
-      "title": "rfc",
-      "path": ".github/ISSUE_TEMPLATE/rfc.html",
-      "category": ".github/ISSUE_TEMPLATE"
+      "title": "Changesets",
+      "path": ".changeset/README.html",
+      "category": ".changeset"
+    }
+  ],
+  ".github/profile": [
+    {
+      "title": "LARC — Lightweight Asynchronous Relay Core",
+      "path": ".github/profile/README.html",
+      "category": ".github/profile"
     }
   ],
   "Root": [
     {
-      "title": "✅ PAN Inspector DevTools Extension - Complete!",
-      "path": "DEVTOOLS_EXTENSION_COMPLETE.html",
+      "title": "CodePen Setup for LARC Demo",
+      "path": "CODEPEN-SETUP.html",
       "category": "Root"
     },
     {
-      "title": "✅ Security & Memory Management Improvements - Complete",
-      "path": "IMPROVEMENTS_SUMMARY.html",
+      "title": "Contributing to LARC",
+      "path": "CONTRIBUTING.html",
       "category": "Root"
     },
     {
-      "title": "🎯 Priority Action Plan: 9.5 → 10/10",
-      "path": "NEXT_STEPS_PRIORITY.html",
+      "title": "Contributor Covenant Code of Conduct",
+      "path": "CODE_OF_CONDUCT.html",
       "category": "Root"
     },
     {
-      "title": "🎯 Roadmap to 10/10 - The Path to Excellence",
-      "path": "ROADMAP_TO_10.html",
-      "category": "Root"
-    },
-    {
-      "title": "Changelog",
-      "path": "CHANGELOG.html",
-      "category": "Root"
-    },
-    {
-      "title": "LARC — Lightweight Asynchronous Relay Core",
+      "title": "LARC",
       "path": "README.html",
       "category": "Root"
     },
     {
+      "title": "Security Policy",
+      "path": "SECURITY.html",
+      "category": "Root"
+    }
+  ],
+  "cli": [
+    {
+      "title": "create-larc-app",
+      "path": "cli/README.html",
+      "category": "cli"
+    },
+    {
+      "title": "Publishing create-larc-app to npm",
+      "path": "cli/PUBLISHING.html",
+      "category": "cli"
+    }
+  ],
+  "core": [
+    {
+      "title": "Changelog",
+      "path": "core/CHANGELOG.html",
+      "category": "core"
+    },
+    {
+      "title": "LARC Core",
+      "path": "core/README.html",
+      "category": "core"
+    }
+  ],
+  "core/docs": [
+    {
       "title": "LARC — Page Area Network (PAN)",
-      "path": "LARC_SPEC.v0.html",
-      "category": "Root"
-    },
-    {
-      "title": "LARC (PAN) Usage Guide",
-      "path": "USAGE.html",
-      "category": "Root"
-    },
-    {
-      "title": "LARC PAN Demo App Ideas",
-      "path": "DEMO_IDEAS.html",
-      "category": "Root"
+      "path": "core/docs/LARC_SPEC.v0.html",
+      "category": "core/docs"
     },
     {
       "title": "LARC Roadmap (PAN)",
-      "path": "LARC_ROADMAP.html",
-      "category": "Root"
+      "path": "core/docs/LARC_ROADMAP.html",
+      "category": "core/docs"
     },
     {
-      "title": "Next Steps to v1.0",
-      "path": "NEXT_STEPS.html",
-      "category": "Root"
+      "title": "PAN Routes - Dynamic Message Routing",
+      "path": "core/docs/ROUTING.html",
+      "category": "core/docs"
     },
     {
-      "title": "PAN Authentication System - Implementation Complete ✅",
-      "path": "AUTHENTICATION_SUMMARY.html",
-      "category": "Root"
-    },
-    {
-      "title": "PAN v1 — Page Area Network (Concise Spec)",
-      "path": "PAN_SPEC.v1.html",
-      "category": "Root"
-    },
-    {
-      "title": "PAN v1.0 Release Checklist",
-      "path": "V1_CHECKLIST.html",
-      "category": "Root"
-    },
-    {
-      "title": "PAN v1.0.0 Release Notes",
-      "path": "RELEASE_NOTES.html",
-      "category": "Root"
-    },
-    {
-      "title": "Repository Guidelines",
-      "path": "LARC_AGENTS.html",
-      "category": "Root"
-    },
-    {
-      "title": "Secure Development Server",
-      "path": "DEV_SERVER_README.html",
-      "category": "Root"
-    },
-    {
-      "title": "Security & Memory Management Improvements",
-      "path": "SECURITY_IMPROVEMENTS.html",
-      "category": "Root"
-    },
-    {
-      "title": "Security Fixes Applied - PAN Framework",
-      "path": "SECURITY_FIXES.html",
-      "category": "Root"
-    },
-    {
-      "title": "TypeScript Implementation Complete ✅",
-      "path": "TYPESCRIPT_IMPLEMENTATION.html",
-      "category": "Root"
-    },
-    {
-      "title": "v0.1.0 — SSE bridge, reactive stores, and live updates",
-      "path": "RELEASE_NOTES_v0.1.0.html",
-      "category": "Root"
+      "title": "PAN v1.0 API Reference",
+      "path": "core/docs/API_REFERENCE.html",
+      "category": "core/docs"
     }
   ],
-  "apps": [
+  "core/examples/routing": [
     {
-      "title": "Demo Applications",
-      "path": "apps/README.html",
-      "category": "apps"
-    }
-  ],
-  "apps/contact-manager": [
-    {
-      "title": "Contact Manager Demo",
-      "path": "apps/contact-manager/README.html",
-      "category": "apps/contact-manager"
-    }
-  ],
-  "apps/invoice": [
-    {
-      "title": "Invoice Creator Demo App",
-      "path": "apps/invoice/README.html",
-      "category": "apps/invoice"
-    }
-  ],
-  "apps/invoice-studio": [
-    {
-      "title": "📄 PAN Invoice Studio",
-      "path": "apps/invoice-studio/README.html",
-      "category": "apps/invoice-studio"
-    }
-  ],
-  "devtools-extension": [
-    {
-      "title": "Building Icons",
-      "path": "devtools-extension/BUILD_ICONS.html",
-      "category": "devtools-extension"
-    },
-    {
-      "title": "PAN Inspector - Chrome DevTools Extension",
-      "path": "devtools-extension/README.html",
-      "category": "devtools-extension"
-    },
-    {
-      "title": "PAN Inspector - Quick Start Guide",
-      "path": "devtools-extension/QUICKSTART.html",
-      "category": "devtools-extension"
+      "title": "PAN Routing Examples",
+      "path": "core/examples/routing/README.html",
+      "category": "core/examples/routing"
     }
   ],
   "docs": [
     {
-      "title": "Authentication Quick Start",
-      "path": "docs/AUTH_QUICKSTART.html",
+      "title": "📚 LARC Wiki Explorer",
+      "path": "docs/WIKI-EXPLORER-README.html",
       "category": "docs"
     },
     {
-      "title": "MARKDOWN_SYSTEM",
-      "path": "docs/MARKDOWN_SYSTEM.html",
+      "title": "🚀 LARC Config Quick Start",
+      "path": "docs/QUICK-START-CONFIG.html",
       "category": "docs"
     },
     {
-      "title": "Migration Guide: Enhanced PAN Bus",
-      "path": "docs/MIGRATION_ENHANCED.html",
+      "title": "Advanced State Management in LARC",
+      "path": "docs/STATE_MANAGEMENT_README.html",
       "category": "docs"
     },
     {
-      "title": "PAN Authentication System",
-      "path": "docs/AUTHENTICATION.html",
+      "title": "Browser Compatibility Guide",
+      "path": "docs/BROWSER-COMPATIBILITY.html",
       "category": "docs"
     },
     {
-      "title": "PAN Performance Characteristics",
-      "path": "docs/PERFORMANCE.html",
+      "title": "Browser Compatibility Implementation Summary",
+      "path": "docs/COMPATIBILITY-IMPLEMENTATION.html",
       "category": "docs"
     },
     {
-      "title": "PAN Quick Start Guide",
-      "path": "docs/QUICK_START.html",
+      "title": "Building with LARC: A Reference Manual",
+      "path": "docs/building-with-larc-outline.html",
       "category": "docs"
     },
     {
-      "title": "PAN Reorganization - Project Structure",
-      "path": "docs/REORGANIZATION.html",
+      "title": "Building with LARC: A Reference Manual - Completion Summary",
+      "path": "docs/building-with-larc-summary.html",
       "category": "docs"
     },
     {
-      "title": "PAN Security Guide",
-      "path": "docs/SECURITY.html",
+      "title": "Changelog",
+      "path": "docs/CHANGELOG.html",
       "category": "docs"
+    },
+    {
+      "title": "Component Registry Plan",
+      "path": "docs/COMPONENT-REGISTRY-PLAN.html",
+      "category": "docs"
+    },
+    {
+      "title": "Documentation Update - November 25, 2024",
+      "path": "docs/DOCUMENTATION-UPDATE-2024-11-25.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC API Reference",
+      "path": "docs/API-REFERENCE.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Configuration System",
+      "path": "docs/README-CONFIG.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Core API Stability Guarantee",
+      "path": "docs/API-STABILITY.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Development Philosophy",
+      "path": "docs/DEVELOPMENT_PHILOSOPHY.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Development Plan",
+      "path": "docs/DEVELOPMENT-PLAN.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Development Session Summary",
+      "path": "docs/SESSION-SUMMARY.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Ecosystem - Implementation Complete ✅",
+      "path": "docs/IMPLEMENTATION_COMPLETE.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC HTML Files Audit Report",
+      "path": "docs/HTML-AUDIT-REPORT.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Migration Guide",
+      "path": "docs/MIGRATION.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Performance Optimization Guide",
+      "path": "docs/PERFORMANCE-OPTIMIZATION.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Playground - Build Complete Report 🎉",
+      "path": "docs/BUILD-COMPLETE.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Playground - COMPLETE! ✅",
+      "path": "docs/PLAYGROUND-COMPLETE.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Playground - Implementation Plan",
+      "path": "docs/PLAYGROUND-IMPLEMENTATION.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Playground - Ready for Testing! 🚀",
+      "path": "docs/READY-FOR-TESTING.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Playground - Status",
+      "path": "docs/PLAYGROUND-STATUS.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Positioning Update - Complete",
+      "path": "docs/POSITIONING-UPDATE.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Production Readiness - Status Update",
+      "path": "docs/PRODUCTION_STATUS_UPDATE.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Production Readiness Progress Report",
+      "path": "docs/PRODUCTION-READINESS-PROGRESS.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Production Readiness Roadmap",
+      "path": "docs/PRODUCTION_ROADMAP.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Production Readiness Status",
+      "path": "docs/PRODUCTION-READINESS-STATUS.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Project - Current Status",
+      "path": "docs/CURRENT-STATUS.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Project Plan",
+      "path": "docs/PLAN.html",
+      "category": "docs"
+    },
+    {
+      "title": "LARC Troubleshooting Guide",
+      "path": "docs/TROUBLESHOOTING.html",
+      "category": "docs"
+    },
+    {
+      "title": "PAN Runtime Routes - API Reference",
+      "path": "docs/PAN-ROUTING-API.html",
+      "category": "docs"
+    },
+    {
+      "title": "Phase 1: Foundation - COMPLETE! ✅",
+      "path": "docs/PHASE-1-COMPLETE.html",
+      "category": "docs"
+    },
+    {
+      "title": "Semantic Versioning Commitment",
+      "path": "docs/SEMVER.html",
+      "category": "docs"
+    },
+    {
+      "title": "Session Complete - Playground Build",
+      "path": "docs/SESSION-COMPLETE.html",
+      "category": "docs"
+    }
+  ],
+  "docs/building-with-larc": [
+    {
+      "title": "Advanced Patterns",
+      "path": "docs/building-with-larc/chapter-19-advanced-patterns.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": "docs/building-with-larc/chapter-12-authentication-and-authorization.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Basic Message Flow",
+      "path": "docs/building-with-larc/chapter-06-basic-message-flow.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Book Build System - Complete Summary",
+      "path": "docs/building-with-larc/BUILD-SYSTEM-SUMMARY.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Building the Book",
+      "path": "docs/building-with-larc/BUILD.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": "docs/building-with-larc/README.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": "docs/building-with-larc/colophon.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Configuration Options",
+      "path": "docs/building-with-larc/appendix-c-configuration-options.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": "docs/building-with-larc/chapter-21-core-components.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Core Concepts",
+      "path": "docs/building-with-larc/chapter-04-core-concepts.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Data Components",
+      "path": "docs/building-with-larc/chapter-22-data-components.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "docs/building-with-larc/chapter-11-data-fetching-and-apis.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": "docs/building-with-larc/chapter-20-deployment-and-production.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": "docs/building-with-larc/chapter-18-error-handling-and-debugging.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Event Envelope Specification",
+      "path": "docs/building-with-larc/appendix-b-event-envelope.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "File Management",
+      "path": "docs/building-with-larc/chapter-14-file-management.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": "docs/building-with-larc/chapter-10-forms-and-user-input.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Getting Started",
+      "path": "docs/building-with-larc/chapter-05-getting-started.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Glossary",
+      "path": "docs/building-with-larc/appendix-f-glossary.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Index",
+      "path": "docs/building-with-larc/index.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Integration Components",
+      "path": "docs/building-with-larc/chapter-24-integration-components.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Introduction",
+      "path": "docs/building-with-larc/chapter-01-introduction.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "docs/building-with-larc/back-cover.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Message Topics Reference",
+      "path": "docs/building-with-larc/appendix-a-message-topics.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Migration Guide",
+      "path": "docs/building-with-larc/appendix-d-migration-guide.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": "docs/building-with-larc/chapter-16-performance-optimization.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Quick Start Guide - Book Building",
+      "path": "docs/building-with-larc/QUICKSTART.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Real-time Features",
+      "path": "docs/building-with-larc/chapter-13-realtime-features.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Recipes and Patterns",
+      "path": "docs/building-with-larc/appendix-e-recipes-and-patterns.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Resources",
+      "path": "docs/building-with-larc/appendix-g-resources.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "docs/building-with-larc/chapter-09-routing-and-navigation.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "State Management",
+      "path": "docs/building-with-larc/chapter-08-state-management.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Testing Strategies",
+      "path": "docs/building-with-larc/chapter-17-testing-strategies.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "The LARC Story",
+      "path": "docs/building-with-larc/chapter-03-story.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "The Philosophy of LARC",
+      "path": "docs/building-with-larc/chapter-02-philosophy.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Theming and Styling",
+      "path": "docs/building-with-larc/chapter-15-theming-and-styling.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "UI Components",
+      "path": "docs/building-with-larc/chapter-23-ui-components.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Utility Components",
+      "path": "docs/building-with-larc/chapter-25-utility-components.html",
+      "category": "docs/building-with-larc"
+    },
+    {
+      "title": "Working with Components",
+      "path": "docs/building-with-larc/chapter-07-working-with-components.html",
+      "category": "docs/building-with-larc"
+    }
+  ],
+  "docs/guides": [
+    {
+      "title": "Bundle Size Optimization - Complete",
+      "path": "docs/guides/BUNDLE-SIZE-OPTIMIZATION.html",
+      "category": "docs/guides"
+    },
+    {
+      "title": "Bundle Size Reduction - COMPLETE ✅",
+      "path": "docs/guides/BUNDLE-REDUCTION-COMPLETE.html",
+      "category": "docs/guides"
+    },
+    {
+      "title": "Hacker News Launch - FAQ Answers",
+      "path": "docs/guides/HN_FAQ.html",
+      "category": "docs/guides"
+    },
+    {
+      "title": "Hacker News Post - LARC Launch",
+      "path": "docs/guides/HN_POST_DRAFT.html",
+      "category": "docs/guides"
+    },
+    {
+      "title": "LARC Build Process - Minified Production Files",
+      "path": "docs/guides/BUILD-PROCESS.html",
+      "category": "docs/guides"
+    },
+    {
+      "title": "LARC Monorepo Quick Start",
+      "path": "docs/guides/QUICK-START.html",
+      "category": "docs/guides"
+    },
+    {
+      "title": "LARC Package Guide",
+      "path": "docs/guides/PACKAGES.html",
+      "category": "docs/guides"
+    },
+    {
+      "title": "LARC Quick Start Guide",
+      "path": "docs/guides/QUICK-START-GUIDE.html",
+      "category": "docs/guides"
+    }
+  ],
+  "docs/learning-larc": [
+    {
+      "title": "author-bio",
+      "path": "docs/learning-larc/author-bio.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "back-cover",
+      "path": "docs/learning-larc/back-cover.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": "docs/learning-larc/colophon.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Diagrams Complete! 🎉",
+      "path": "docs/learning-larc/DIAGRAMS-COMPLETE.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Foreword",
+      "path": "docs/learning-larc/foreword.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "docs/learning-larc/00-front-matter.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "docs/learning-larc/README.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Build System",
+      "path": "docs/learning-larc/BUILD-SYSTEM.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Writing Progress",
+      "path": "docs/learning-larc/PROGRESS.html",
+      "category": "docs/learning-larc"
+    },
+    {
+      "title": "Quick Start Guide - Building \"Learning LARC\"",
+      "path": "docs/learning-larc/QUICKSTART.html",
+      "category": "docs/learning-larc"
+    }
+  ],
+  "docs/learning-larc/build/temp": [
+    {
+      "title": "Learning LARC",
+      "path": "docs/learning-larc/build/temp/learning-larc-complete.html",
+      "category": "docs/learning-larc/build/temp"
+    }
+  ],
+  "docs/learning-larc/chapters": [
+    {
+      "title": "Chapter 1: Philosophy and Background",
+      "path": "docs/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 2: Core Concepts",
+      "path": "docs/learning-larc/chapters/02-core-concepts.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 3: Getting Started",
+      "path": "docs/learning-larc/chapters/03-getting-started.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 4: Creating Web Components",
+      "path": "docs/learning-larc/chapters/04-creating-web-components.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 5: The PAN Bus",
+      "path": "docs/learning-larc/chapters/05-the-pan-bus.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 6: State Management",
+      "path": "docs/learning-larc/chapters/06-state-management.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 7: Advanced Component Patterns",
+      "path": "docs/learning-larc/chapters/07-advanced-component-patterns.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 8: Business Logic Patterns",
+      "path": "docs/learning-larc/chapters/08-business-logic-patterns.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 8: Routing and Navigation",
+      "path": "docs/learning-larc/chapters/09-routing-and-navigation.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapter 9: Forms and Validation",
+      "path": "docs/learning-larc/chapters/10-forms-and-validation.html",
+      "category": "docs/learning-larc/chapters"
+    },
+    {
+      "title": "Chapters 11-19: Summary Outlines",
+      "path": "docs/learning-larc/chapters/11-19-summary.html",
+      "category": "docs/learning-larc/chapters"
+    }
+  ],
+  "docs/learning-larc/diagrams": [
+    {
+      "title": "Client-Side Routing",
+      "path": "docs/learning-larc/diagrams/08-routing.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Application Architecture",
+      "path": "docs/learning-larc/diagrams/14-app-architecture.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Diagram Index",
+      "path": "docs/learning-larc/diagrams/DIAGRAM-INDEX.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "LARC Architecture Overview",
+      "path": "docs/learning-larc/diagrams/01-architecture-overview.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "Learning LARC - Diagrams",
+      "path": "docs/learning-larc/diagrams/README.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "PAN Bus Communication Patterns",
+      "path": "docs/learning-larc/diagrams/05-pan-bus.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "State Management Patterns",
+      "path": "docs/learning-larc/diagrams/06-state-management.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "Traditional Frameworks vs LARC",
+      "path": "docs/learning-larc/diagrams/12-traditional-vs-larc.html",
+      "category": "docs/learning-larc/diagrams"
+    },
+    {
+      "title": "Web Component Structure",
+      "path": "docs/learning-larc/diagrams/02-component-structure.html",
+      "category": "docs/learning-larc/diagrams"
+    }
+  ],
+  "docs/migration": [
+    {
+      "title": "Archive Old Repositories - Instructions",
+      "path": "docs/migration/ARCHIVE-REPOSITORIES.html",
+      "category": "docs/migration"
+    },
+    {
+      "title": "DevTools Extraction - Complete ✅",
+      "path": "docs/migration/DEVTOOLS-EXTRACTION.html",
+      "category": "docs/migration"
+    },
+    {
+      "title": "LARC Repository Migration - Complete ✅",
+      "path": "docs/migration/MIGRATION-COMPLETE.html",
+      "category": "docs/migration"
+    },
+    {
+      "title": "Migration Plan: From Git Submodules to Monorepo",
+      "path": "docs/migration/MONOREPO-MIGRATION-PLAN.html",
+      "category": "docs/migration"
+    },
+    {
+      "title": "Monorepo vs Submodules: Developer Experience Comparison",
+      "path": "docs/migration/MONOREPO-VS-SUBMODULES.html",
+      "category": "docs/migration"
+    }
+  ],
+  "docs/processes": [
+    {
+      "title": "Git Submodule Helper Scripts",
+      "path": "docs/processes/SCRIPTS-README.html",
+      "category": "docs/processes"
+    },
+    {
+      "title": "Git Submodules Workflow Guide",
+      "path": "docs/processes/SUBMODULE-WORKFLOW.html",
+      "category": "docs/processes"
+    },
+    {
+      "title": "Hacker News Launch Checklist",
+      "path": "docs/processes/LAUNCH_CHECKLIST.html",
+      "category": "docs/processes"
+    },
+    {
+      "title": "LARC Hacker News Launch - Readiness Report",
+      "path": "docs/processes/LAUNCH_READINESS.html",
+      "category": "docs/processes"
+    },
+    {
+      "title": "Recommended Repository Consolidation for LARC",
+      "path": "docs/processes/RECOMMENDED-CONSOLIDATION.html",
+      "category": "docs/processes"
+    },
+    {
+      "title": "Repository Structure Decision Tree",
+      "path": "docs/processes/DECISION-TREE.html",
+      "category": "docs/processes"
+    }
+  ],
+  "packages/apps": [
+    {
+      "title": "LARC.js Demo Applications",
+      "path": "packages/apps/README.html",
+      "category": "packages/apps"
+    }
+  ],
+  "packages/apps/contact-manager": [
+    {
+      "title": "Contact Manager Demo",
+      "path": "packages/apps/contact-manager/README.html",
+      "category": "packages/apps/contact-manager"
+    }
+  ],
+  "packages/apps/invoice": [
+    {
+      "title": "Invoice Creator Demo App",
+      "path": "packages/apps/invoice/README.html",
+      "category": "packages/apps/invoice"
+    }
+  ],
+  "packages/apps/invoice-studio": [
+    {
+      "title": "📄 PAN Invoice Studio",
+      "path": "packages/apps/invoice-studio/README.html",
+      "category": "packages/apps/invoice-studio"
+    }
+  ],
+  "packages/apps/src/ui": [
+    {
+      "title": "Changelog",
+      "path": "packages/apps/src/ui/CHANGELOG.html",
+      "category": "packages/apps/src/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": "packages/apps/src/ui/COMPONENT_TEMPLATE.html",
+      "category": "packages/apps/src/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": "packages/apps/src/ui/README.html",
+      "category": "packages/apps/src/ui"
+    }
+  ],
+  "packages/apps/src/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": "packages/apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": "packages/apps/src/ui/docs"
     },
     {
       "title": "PAN Theme System",
-      "path": "docs/THEME_SYSTEM.html",
-      "category": "docs"
+      "path": "packages/apps/src/ui/docs/THEME_SYSTEM.html",
+      "category": "packages/apps/src/ui/docs"
+    }
+  ],
+  "packages/components-types": [
+    {
+      "title": "@larcjs/ui-types",
+      "path": "packages/components-types/README.html",
+      "category": "packages/components-types"
+    }
+  ],
+  "packages/core": [
+    {
+      "title": "Changelog",
+      "path": "packages/core/CHANGELOG.html",
+      "category": "packages/core"
     },
     {
-      "title": "PAN Topic Conventions",
-      "path": "docs/TOPICS.html",
-      "category": "docs"
+      "title": "LARC Core",
+      "path": "packages/core/README.html",
+      "category": "packages/core"
+    }
+  ],
+  "packages/core/docs": [
+    {
+      "title": "LARC — Page Area Network (PAN)",
+      "path": "packages/core/docs/LARC_SPEC.v0.html",
+      "category": "packages/core/docs"
+    },
+    {
+      "title": "LARC Roadmap (PAN)",
+      "path": "packages/core/docs/LARC_ROADMAP.html",
+      "category": "packages/core/docs"
+    },
+    {
+      "title": "PAN Routes - Dynamic Message Routing",
+      "path": "packages/core/docs/ROUTING.html",
+      "category": "packages/core/docs"
     },
     {
       "title": "PAN v1.0 API Reference",
-      "path": "docs/API_REFERENCE.html",
-      "category": "docs"
+      "path": "packages/core/docs/API_REFERENCE.html",
+      "category": "packages/core/docs"
+    }
+  ],
+  "packages/core/examples/routing": [
+    {
+      "title": "PAN Routing Examples",
+      "path": "packages/core/examples/routing/README.html",
+      "category": "packages/core/examples/routing"
+    }
+  ],
+  "packages/core-debug": [
+    {
+      "title": "@larcjs/core-debug",
+      "path": "packages/core-debug/README.html",
+      "category": "packages/core-debug"
+    }
+  ],
+  "packages/core-lite": [
+    {
+      "title": "@larcjs/core-lite",
+      "path": "packages/core-lite/README.html",
+      "category": "packages/core-lite"
     },
     {
-      "title": "PAN v1.0 API Stability Contract",
-      "path": "docs/API_STABILITY.html",
-      "category": "docs"
+      "title": "Migration Guide: @larcjs/core → @larcjs/core-lite",
+      "path": "packages/core-lite/MIGRATION.html",
+      "category": "packages/core-lite"
+    }
+  ],
+  "packages/core-routing": [
+    {
+      "title": "@larcjs/core-routing",
+      "path": "packages/core-routing/README.html",
+      "category": "packages/core-routing"
+    }
+  ],
+  "packages/core-types": [
+    {
+      "title": "@larcjs/core-types",
+      "path": "packages/core-types/README.html",
+      "category": "packages/core-types"
     },
     {
-      "title": "PAN v1.0 Release Roadmap",
-      "path": "docs/V1_ROADMAP.html",
-      "category": "docs"
+      "title": "NPM Organization Setup Required",
+      "path": "packages/core-types/NPM-ORG-SETUP.html",
+      "category": "packages/core-types"
+    }
+  ],
+  "packages/devtools": [
+    {
+      "title": "Building Icons",
+      "path": "packages/devtools/BUILD_ICONS.html",
+      "category": "packages/devtools"
     },
     {
-      "title": "TypeScript Guide for PAN",
-      "path": "docs/TYPESCRIPT.html",
-      "category": "docs"
-    }
-  ],
-  "docs/rfcs": [
-    {
-      "title": "0000-template",
-      "path": "docs/rfcs/0000-template.html",
-      "category": "docs/rfcs"
+      "title": "Chrome DevTools MCP Extension Setup",
+      "path": "packages/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
+      "category": "packages/devtools"
     },
     {
-      "title": "PAN RFCs",
-      "path": "docs/rfcs/README.html",
-      "category": "docs/rfcs"
-    }
-  ],
-  "docs/templates/provider-kit": [
-    {
-      "title": "README",
-      "path": "docs/templates/provider-kit/README.html",
-      "category": "docs/templates/provider-kit"
-    }
-  ],
-  "packages/pan-bus": [
-    {
-      "title": "@pan/bus",
-      "path": "packages/pan-bus/README.html",
-      "category": "packages/pan-bus"
-    }
-  ],
-  "packages/pan-client": [
-    {
-      "title": "@pan/client",
-      "path": "packages/pan-client/README.html",
-      "category": "packages/pan-client"
-    }
-  ],
-  "packages/pan-inspector": [
-    {
-      "title": "@pan/inspector",
-      "path": "packages/pan-inspector/README.html",
-      "category": "packages/pan-inspector"
-    }
-  ],
-  "src/app": [
-    {
-      "title": "Application Components",
-      "path": "src/app/README.html",
-      "category": "src/app"
-    }
-  ],
-  "src/components": [
-    {
-      "title": "Components",
-      "path": "src/components/README.html",
-      "category": "src/components"
-    }
-  ],
-  "src/core": [
-    {
-      "title": "Core Infrastructure",
-      "path": "src/core/README.html",
-      "category": "src/core"
+      "title": "PAN DevTools Extension - Now Enabled! ✅",
+      "path": "packages/devtools/EXTENSION_ENABLED.html",
+      "category": "packages/devtools"
     },
     {
-      "title": "PAN Core: Basic vs Enhanced",
-      "path": "src/core/README_ENHANCED.html",
-      "category": "src/core"
-    }
-  ],
-  "src/data": [
-    {
-      "title": "Data & State Management",
-      "path": "src/data/README.html",
-      "category": "src/data"
-    }
-  ],
-  "src/ui": [
-    {
-      "title": "UI Components",
-      "path": "src/ui/README.html",
-      "category": "src/ui"
-    }
-  ],
-  "tests": [
-    {
-      "title": "LARC Test Coverage Report",
-      "path": "tests/TEST_COVERAGE.html",
-      "category": "tests"
+      "title": "PAN DevTools Extension - Quick Start",
+      "path": "packages/devtools/QUICK_START.html",
+      "category": "packages/devtools"
     },
     {
-      "title": "LARC Test Suite",
-      "path": "tests/README.html",
-      "category": "tests"
+      "title": "PAN DevTools Extension - Restart Required",
+      "path": "packages/devtools/RESTART_REQUIRED.html",
+      "category": "packages/devtools"
     },
     {
-      "title": "Test System Migration: TypeScript → Plain JavaScript",
-      "path": "tests/MIGRATION.html",
-      "category": "tests"
+      "title": "PAN Inspector - Chrome DevTools Extension",
+      "path": "packages/devtools/README.html",
+      "category": "packages/devtools"
     },
     {
-      "title": "Test System Quick Start",
-      "path": "tests/QUICKSTART.html",
-      "category": "tests"
+      "title": "PAN Inspector - Quick Start Guide",
+      "path": "packages/devtools/QUICKSTART.html",
+      "category": "packages/devtools"
+    },
+    {
+      "title": "PAN Inspector Extension - Test Plan",
+      "path": "packages/devtools/EXTENSION_TEST_PLAN.html",
+      "category": "packages/devtools"
+    },
+    {
+      "title": "PAN Inspector Extension - Test Results",
+      "path": "packages/devtools/EXTENSION_TEST_RESULTS.html",
+      "category": "packages/devtools"
+    },
+    {
+      "title": "Root Cause Found! ✅",
+      "path": "packages/devtools/ROOT_CAUSE_FOUND.html",
+      "category": "packages/devtools"
+    }
+  ],
+  "packages/examples": [
+    {
+      "title": "Changelog",
+      "path": "packages/examples/CHANGELOG.html",
+      "category": "packages/examples"
+    },
+    {
+      "title": "LARC Examples",
+      "path": "packages/examples/README.html",
+      "category": "packages/examples"
+    }
+  ],
+  "packages/examples/apps": [
+    {
+      "title": "Demo Applications",
+      "path": "packages/examples/apps/README.html",
+      "category": "packages/examples/apps"
+    }
+  ],
+  "packages/examples/apps/contact-manager": [
+    {
+      "title": "Contact Manager Demo",
+      "path": "packages/examples/apps/contact-manager/README.html",
+      "category": "packages/examples/apps/contact-manager"
+    }
+  ],
+  "packages/examples/apps/invoice": [
+    {
+      "title": "Invoice Creator Demo App",
+      "path": "packages/examples/apps/invoice/README.html",
+      "category": "packages/examples/apps/invoice"
+    }
+  ],
+  "packages/examples/apps/invoice-studio": [
+    {
+      "title": "📄 PAN Invoice Studio",
+      "path": "packages/examples/apps/invoice-studio/README.html",
+      "category": "packages/examples/apps/invoice-studio"
+    }
+  ],
+  "packages/examples/backends": [
+    {
+      "title": "LARC/PAN Backend Examples",
+      "path": "packages/examples/backends/README.html",
+      "category": "packages/examples/backends"
+    }
+  ],
+  "packages/examples/backends/nodejs": [
+    {
+      "title": "Node.js Backend Examples for LARC/PAN",
+      "path": "packages/examples/backends/nodejs/README.html",
+      "category": "packages/examples/backends/nodejs"
+    }
+  ],
+  "packages/examples/backends/php": [
+    {
+      "title": "PHP Backend Examples for LARC/PAN",
+      "path": "packages/examples/backends/php/README.html",
+      "category": "packages/examples/backends/php"
+    }
+  ],
+  "packages/examples/backends/python": [
+    {
+      "title": "Python Backend Examples for LARC/PAN",
+      "path": "packages/examples/backends/python/README.html",
+      "category": "packages/examples/backends/python"
+    }
+  ],
+  "packages/examples/hybrid-dashboard": [
+    {
+      "title": "Hybrid Dashboard Demo",
+      "path": "packages/examples/hybrid-dashboard/README.html",
+      "category": "packages/examples/hybrid-dashboard"
+    }
+  ],
+  "packages/examples/src/ui": [
+    {
+      "title": "Changelog",
+      "path": "packages/examples/src/ui/CHANGELOG.html",
+      "category": "packages/examples/src/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": "packages/examples/src/ui/COMPONENT_TEMPLATE.html",
+      "category": "packages/examples/src/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": "packages/examples/src/ui/README.html",
+      "category": "packages/examples/src/ui"
+    }
+  ],
+  "packages/examples/src/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": "packages/examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": "packages/examples/src/ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": "packages/examples/src/ui/docs/THEME_SYSTEM.html",
+      "category": "packages/examples/src/ui/docs"
+    }
+  ],
+  "packages/ui": [
+    {
+      "title": "Changelog",
+      "path": "packages/ui/CHANGELOG.html",
+      "category": "packages/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": "packages/ui/COMPONENT_TEMPLATE.html",
+      "category": "packages/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": "packages/ui/README.html",
+      "category": "packages/ui"
+    }
+  ],
+  "packages/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": "packages/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": "packages/ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": "packages/ui/docs/THEME_SYSTEM.html",
+      "category": "packages/ui/docs"
+    }
+  ],
+  "playground": [
+    {
+      "title": "Data Flow Example Fix",
+      "path": "playground/DATA_FLOW_FIX.html",
+      "category": "playground"
+    },
+    {
+      "title": "Date Picker Example Fix",
+      "path": "playground/DATE_PICKER_FIX.html",
+      "category": "playground"
+    },
+    {
+      "title": "Drag & Drop List Example Fix",
+      "path": "playground/DRAG_DROP_LIST_FIX.html",
+      "category": "playground"
+    },
+    {
+      "title": "Dropdown Menu Example Fix",
+      "path": "playground/DROPDOWN_MENU_FIX.html",
+      "category": "playground"
+    },
+    {
+      "title": "File Upload Duplicate Events Fix",
+      "path": "playground/FILE_UPLOAD_DUPLICATE_FIX.html",
+      "category": "playground"
+    },
+    {
+      "title": "Help Text Guide",
+      "path": "playground/HELP_TEXT_GUIDE.html",
+      "category": "playground"
+    },
+    {
+      "title": "LARC Playground",
+      "path": "playground/README.html",
+      "category": "playground"
+    },
+    {
+      "title": "LARC Playground - Quick Start",
+      "path": "playground/QUICK-START.html",
+      "category": "playground"
+    },
+    {
+      "title": "LARC Playground - Testing Guide",
+      "path": "playground/TESTING.html",
+      "category": "playground"
+    },
+    {
+      "title": "Pagination Example Limitation",
+      "path": "playground/PAGINATION_LIMITATION.html",
+      "category": "playground"
+    },
+    {
+      "title": "PAN Bus Monitor Fix",
+      "path": "playground/BUS_MONITOR_FIX.html",
+      "category": "playground"
+    },
+    {
+      "title": "Playground Examples - Fixed and Ready",
+      "path": "playground/EXAMPLES_FIXED.html",
+      "category": "playground"
+    },
+    {
+      "title": "Playground Examples Test Plan",
+      "path": "playground/EXAMPLE_TEST_PLAN.html",
+      "category": "playground"
+    },
+    {
+      "title": "Playground Improvements",
+      "path": "playground/IMPROVEMENTS.html",
+      "category": "playground"
+    },
+    {
+      "title": "Playground Session Fixes Summary",
+      "path": "playground/SESSION_FIXES_SUMMARY.html",
+      "category": "playground"
+    },
+    {
+      "title": "Playground Status Report",
+      "path": "playground/PLAYGROUND_STATUS.html",
+      "category": "playground"
+    },
+    {
+      "title": "Syntax Highlighting Fix",
+      "path": "playground/SYNTAX_HIGHLIGHTING_FIX.html",
+      "category": "playground"
+    },
+    {
+      "title": "Toolbar Badges for Non-UI Components",
+      "path": "playground/TOOLBAR_BADGES_FIX.html",
+      "category": "playground"
+    }
+  ],
+  "registry": [
+    {
+      "title": "Contributing to LARC Component Registry",
+      "path": "registry/CONTRIBUTING.html",
+      "category": "registry"
+    },
+    {
+      "title": "Deploying Registry to GitHub Pages",
+      "path": "registry/DEPLOYING.html",
+      "category": "registry"
+    },
+    {
+      "title": "LARC Component Registry",
+      "path": "registry/README.html",
+      "category": "registry"
+    }
+  ],
+  "ui": [
+    {
+      "title": "Changelog",
+      "path": "ui/CHANGELOG.html",
+      "category": "ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": "ui/COMPONENT_TEMPLATE.html",
+      "category": "ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": "ui/README.html",
+      "category": "ui"
+    }
+  ],
+  "ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": "ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": "ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": "ui/docs/THEME_SYSTEM.html",
+      "category": "ui/docs"
+    }
+  ],
+  "vscode-extension": [
+    {
+      "title": "LARC VS Code Extension",
+      "path": "vscode-extension/README.html",
+      "category": "vscode-extension"
+    },
+    {
+      "title": "Publishing LARC VS Code Extension",
+      "path": "vscode-extension/PUBLISHING.html",
+      "category": "vscode-extension"
     }
   ]
 }
