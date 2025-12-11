@@ -26,6 +26,14 @@ const isDevelopment = window.location.hostname === 'localhost' ||
 /**
  * Path aliases for different resources
  * These work like package.json "paths" in TypeScript
+ *
+ * NOTE: For local development, create symlinks in the repository root:
+ *   ln -s packages/core core
+ *   ln -s packages/ui ui
+ *   ln -s packages/core/pan.mjs pan.mjs
+ *
+ * This allows absolute paths like /core/ and /ui/ to work when serving from root.
+ * Alternatively, serve from packages/examples/ and use relative paths (../core/, ../ui/)
  */
 export const aliases = {
   '@larc/core': isDevelopment
