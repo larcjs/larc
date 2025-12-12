@@ -163,7 +163,10 @@ def handle_post():
         else:
             return result, 500
     except Exception as e:
-        return {'ok': False, 'error': str(e)}, 500
+        # Log full error internally, return generic message to client
+        import logging
+        logging.exception('Error handling POST request')
+        return {'ok': False, 'error': 'Internal server error'}, 500
 
 # GET handler - SSE stream
 @app.route('/', methods=['GET'])

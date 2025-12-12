@@ -161,15 +161,24 @@ class PgExporter extends HTMLElement {
         return;
       }
 
-      // Clear existing components
-      previewArea.innerHTML = '';
+      // Clear existing components using safe method
+      while (previewArea.firstChild) {
+        previewArea.removeChild(previewArea.firstChild);
+      }
       canvas.components = [];
 
-      // Extract body content (ignore <!DOCTYPE>, <html>, <head>, <pan-bus>)
+      // Extract body content (ignore <!DOCTYPE>, <html>, <head>, <pan-bus>, <script>)
       const bodyContent = doc.body;
       const elements = Array.from(bodyContent.children).filter(el => {
-        return el.tagName.toLowerCase() !== 'pan-bus' &&
-               el.tagName.toLowerCase() !== 'script';
+        const tag = el.tagName.toLowerCase();
+        // Only allow known safe component tags (pan-* and similar)
+        return tag !== 'pan-bus' &&
+               tag !== 'script' &&
+               tag !== 'style' &&
+               tag !== 'link' &&
+               tag !== 'iframe' &&
+               tag !== 'object' &&
+               tag !== 'embed';
       });
 
       // Load component registry for metadata

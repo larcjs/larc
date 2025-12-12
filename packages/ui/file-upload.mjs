@@ -161,6 +161,13 @@ export class FileUpload extends HTMLElement {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   }
 
+  // Escape HTML special characters to prevent XSS
+  escapeHTML(text) {
+    if (!text || typeof text !== 'string') return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
   renderFileList() {
     const fileList = this.shadowRoot.querySelector('.file-list');
     if (!fileList) return;
@@ -173,18 +180,19 @@ export class FileUpload extends HTMLElement {
     fileList.innerHTML = this.files.map((item, index) => {
       const { data } = item;
       const isImage = data.type.startsWith('image/');
+      const safeName = this.escapeHTML(data.name);
 
       return `
         <div class="file-item">
           ${isImage && data.dataUrl ? `
             <div class="file-preview">
-              <img src="${data.dataUrl}" alt="${data.name}">
+              <img src="${this.escapeHTML(data.dataUrl)}" alt="${safeName}">
             </div>
           ` : `
             <div class="file-icon">📄</div>
           `}
           <div class="file-info">
-            <div class="file-name">${data.name}</div>
+            <div class="file-name">${safeName}</div>
             <div class="file-size">${this.formatFileSize(data.size)}</div>
           </div>
           <button class="remove-btn" data-index="${index}">✕</button>
@@ -370,7 +378,7 @@ export class FileUpload extends HTMLElement {
         <input
           type="file"
           class="file-input"
-          ${this.accept ? `accept="${this.accept}"` : ''}
+          ${this.accept ? `accept="${this.escapeHTML(this.accept)}"` : ''}
           ${this.multiple ? 'multiple' : ''}
         >
 

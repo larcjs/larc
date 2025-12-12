@@ -54,10 +54,24 @@ export class UserAvatar extends HTMLElement {
     return `hsl(${hue}, 65%, 55%)`;
   }
 
+  // Escape HTML special characters to prevent XSS
+  escapeHTML(text) {
+    if (!text || typeof text !== 'string') return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
   render() {
     const hasSlot = this.querySelector('[slot]') || this.textContent.trim();
-    const initials = this.getInitials(this.name);
+    const initials = this.escapeHTML(this.getInitials(this.name));
     const bgColor = this.color || this.getColorFromName(this.name);
+    // Sanitize size and status to only allow valid values
+    const validSizes = ['xs', 'sm', 'md', 'lg', 'xl'];
+    const validStatuses = ['online', 'offline', 'away', 'busy'];
+    const safeSize = validSizes.includes(this.size) ? this.size : 'md';
+    const safeStatus = validStatuses.includes(this.status) ? this.status : '';
+    const safeName = this.escapeHTML(this.name);
+    const safeImage = this.escapeHTML(this.image);
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -143,16 +157,16 @@ export class UserAvatar extends HTMLElement {
         }
       </style>
 
-      <div class="avatar size-${this.size}">
-        ${this.image ? `
-          <img src="${this.image}" alt="${this.name}" class="avatar-image">
+      <div class="avatar size-${safeSize}">
+        ${safeImage ? `
+          <img src="${safeImage}" alt="${safeName}" class="avatar-image">
         ` : hasSlot ? `
           <slot></slot>
         ` : `
           ${initials}
         `}
-        ${this.showStatus && this.status ? `
-          <div class="status-indicator status-${this.status}"></div>
+        ${this.showStatus && safeStatus ? `
+          <div class="status-indicator status-${safeStatus}"></div>
         ` : ''}
       </div>
     `;

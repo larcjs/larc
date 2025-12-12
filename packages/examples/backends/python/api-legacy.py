@@ -232,6 +232,15 @@ def handle_request():
 
     return jsonify(result)
 
+@app.errorhandler(Exception)
+def handle_exception(e):
+    """Handle all exceptions without exposing stack traces"""
+    # Log the full error internally
+    import logging
+    logging.exception('Internal server error')
+    # Return generic error to client
+    return jsonify({'status': 'error', 'msg': 'Internal server error'}), 500
+
 if __name__ == '__main__':
     print(f'Legacy API server running on http://localhost:{PORT}')
     print('Usage: ?x=list_resources | ?x=get&rsc=tablename | ?x=list_fields&rsc=tablename')

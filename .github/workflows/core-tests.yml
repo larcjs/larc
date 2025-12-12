@@ -12,6 +12,11 @@ on:
       - 'packages/core/**'
   workflow_dispatch:
 
+# Restrict workflow permissions to minimum required
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   test:
     name: Test Core Package

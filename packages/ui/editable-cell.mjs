@@ -52,6 +52,13 @@ export class EditableCell extends HTMLElement {
   get editable() { return this.getAttribute('editable') !== 'false'; }
   get multiline() { return this.hasAttribute('multiline'); }
 
+  // Escape HTML special characters to prevent XSS
+  escapeHTML(text) {
+    if (!text || typeof text !== 'string') return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
   setupTopics() {
     this.pc.subscribe(`${this.topic}.setValue`, (msg) => {
       if (msg.data.cellId === this.cellId) {
@@ -232,15 +239,15 @@ export class EditableCell extends HTMLElement {
 
       <div class="cell-container">
         <div class="cell-display ${!hasValue ? 'empty' : ''}">
-          ${this.value || this.placeholder}
+          ${this.escapeHTML(this.value) || this.escapeHTML(this.placeholder)}
         </div>
         ${this.multiline ? `
-          <textarea class="cell-input" placeholder="${this.placeholder}"></textarea>
+          <textarea class="cell-input" placeholder="${this.escapeHTML(this.placeholder)}"></textarea>
         ` : `
           <input
-            type="${this.type}"
+            type="${['text', 'number', 'email', 'url', 'tel', 'date'].includes(this.type) ? this.type : 'text'}"
             class="cell-input"
-            placeholder="${this.placeholder}"
+            placeholder="${this.escapeHTML(this.placeholder)}"
           >
         `}
       </div>

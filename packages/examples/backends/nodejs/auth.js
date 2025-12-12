@@ -261,15 +261,16 @@ async function handleLogin(req, res, session) {
 			`refresh_jwt=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=604800; Path=/`
 		]);
 
+		// Tokens are sent via HttpOnly cookies for security
+		// Don't include them in the response body to prevent client-side storage
 		sendJSON(res, {
 			ok: true,
 			user: {
 				id: user.userID,
 				username: user.username,
 				email: user.email
-			},
-			token,
-			refresh_token: refreshToken
+			}
+			// Note: tokens are set as HttpOnly cookies, not returned in body
 		});
 	} else {
 		sendJSON(res, { ok: false, error: 'Invalid credentials' }, 401);
@@ -314,9 +315,10 @@ function handleRefresh(req, res) {
 
 	res.setHeader('Set-Cookie', `jwt=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=900; Path=/`);
 
+	// Token is sent via HttpOnly cookie, not in response body
 	sendJSON(res, {
-		ok: true,
-		token
+		ok: true
+		// Note: token is set as HttpOnly cookie, not returned in body
 	});
 }
 
@@ -395,7 +397,9 @@ const server = http.createServer(async (req, res) => {
 				sendJSON(res, { ok: false, error: 'Invalid action' }, 400);
 		}
 	} catch (err) {
-		sendJSON(res, { ok: false, error: err.message }, 500);
+		// Log full error internally but don't expose to client
+		console.error('Auth server error:', err);
+		sendJSON(res, { ok: false, error: 'Internal server error' }, 500);
 	}
 });
 

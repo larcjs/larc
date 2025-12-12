@@ -157,6 +157,11 @@ function broadcastEvent(rec) {
 	}
 }
 
+// Escape special regex characters
+function escapeRegex(str) {
+	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 // Check if topic matches patterns
 function topicMatches(topic, patterns) {
 	if (!patterns || patterns.length === 0) return true;
@@ -164,8 +169,13 @@ function topicMatches(topic, patterns) {
 	for (const p of patterns) {
 		if (!p || p === '' || p === '*') return true;
 
+		// Validate pattern length to prevent ReDoS
+		if (p.length > 200) continue;
+
 		// Convert PAN wildcard ("*" for single token) to regex
-		const regex = new RegExp('^' + p.replace(/\*/g, '[^.]+') + '$');
+		// First escape special regex characters, then replace \* back to the wildcard pattern
+		const escaped = escapeRegex(p);
+		const regex = new RegExp('^' + escaped.replace(/\\\*/g, '[^.]+') + '$');
 		if (regex.test(topic)) return true;
 	}
 

@@ -182,28 +182,61 @@ Consider this scenario (repeated countless times):
 
 **Developer**: "I need to add a simple feature—just fetch some data and display it."
 
-**Reality**:
-1. Figure out where to add the code in the build pipeline
-2. Ensure TypeScript types are correct
-3. Check if you need to configure webpack to handle the import
-4. Add the feature
-5. Wait for build
-6. Build fails—some obscure loader issue
-7. Google the error
-8. Update a config file
-9. Rebuild
-10. Finally test the feature
+**Traditional Framework Workflow (React/Vue/Angular/etc.)**:
+
+1. Pull latest code
+2. Install/update dependencies (because the lockfile changed… again)
+3. Create/update component file
+4. Write fetch logic
+5. Update state/store/actions
+6. Update template/JSX
+7. Update routing if needed
+8. Update types/interfaces
+9. Fix lint errors
+10. Fix type errors
+11. Start dev server (or wait for it to restart)
+12. Wait for bundler to rebuild (don't forget about the source maps!)
+13. Debug through layers of framework abstractions
+14. Update tests and mocks
+15. Commit changes
+16. Push branch
+17. Wait for CI: transpile, bundle, test, lint, type-check
+18. Fix config/environment differences CI complains about
+19. Merge when green
+20. Build pipeline runs again for production artifacts
+21. Deploy artifacts to server
+22. Verify it works in production
 
 **Time spent**: 2 hours
 **Time actually coding**: 15 minutes
 
-This is backwards. The tools should be invisible, not the primary challenge.
+This is backwards. The tools should be invisible, not the primary challenge. Let's compare with the LARC workflow:
+
+**LARC Workflow**
+
+1. Pull latest code
+2. Open component or create a new one
+3. Write fetch logic using standard fetch()
+4. Drop the results into the DOM (template literal, innerHTML, whatever fits)
+5. Refresh browser tab
+6. Debug directly in the browser with no abstraction layer
+7. Commit + push
+8. CI runs lint/tests (no build pipeline)
+9. Deploy static files
+10. Done
+
+That’s it.   
+No bundler.   
+No transpiler.   
+No dev server.   
+No JSX.   
+No toolchain waiting room.
 
 ### What LARC Discovered
 
 Through the PAN experiment and building real applications without framework dependencies, several insights emerged:
 
-**1. Modern browsers are incredibly capable**
+1. ** Modern browsers are incredibly capable**
 
 You don't need JSX—template literals work great:
 
@@ -222,17 +255,17 @@ You don't need a virtual DOM—the real DOM is fast enough for most use cases.
 
 You don't need Babel—browsers support modern JavaScript features natively.
 
-**2. Message-passing eliminates coupling**
+2. ** Message-passing eliminates coupling**
 
 Components that communicate through messages instead of direct imports can truly be reused anywhere. They don't know about each other. They don't depend on each other. They just publish and subscribe to topics.
 
-**3. Build-free development is liberating**
+3. ** Build-free development is liberating**
 
 Edit a file. Refresh the browser. See the change instantly. No waiting. No watching. No hot module replacement complexity. Just immediate feedback.
 
 This dramatically lowers the barrier to entry—new developers can start contributing immediately.
 
-**4. Standards are more stable than frameworks**
+4. ** Standards are more stable than frameworks**
 
 Web platform APIs evolve slowly and maintain backward compatibility. Code written with Custom Elements five years ago still works today. The same can't always be said for framework-specific code.
 
@@ -374,7 +407,7 @@ Think of retained messages as "stateful topics"—each topic can hold exactly on
 
 Why is this better than centralized state management?
 
-**1. Zero coupling between components**
+1. ** Zero coupling between components**
 
 Components don't import each other. They don't know each other exist. They just publish and subscribe to topics. This means:
 
@@ -383,7 +416,7 @@ Components don't import each other. They don't know each other exist. They just 
 - **Test in isolation**: Mock the bus, not the entire application state
 - **Reuse anywhere**: Components work in any application with a PAN bus
 
-**2. Progressive complexity**
+2. ** Progressive complexity**
 
 Start simple and add sophistication only when needed:
 
@@ -417,7 +450,7 @@ panClient.subscribe('cart.item.add', async ({ data }) => {
 
 No refactoring required. Just add features incrementally.
 
-**3. Natural debugging**
+3. ** Natural debugging**
 
 Every message flows through the bus. Want to debug state changes? Subscribe to all topics:
 
@@ -439,7 +472,7 @@ panClient.subscribe('cart.*', ({ topic, data }) => {
 
 Compare this to stepping through Redux reducers or tracing Vue reactivity. Message-passing makes data flow explicit and observable.
 
-**4. Multi-component coordination**
+4. ** Multi-component coordination**
 
 Traditional state management struggles with coordinating multiple components:
 
@@ -487,10 +520,10 @@ Each component handles its own concerns. No central coordinator needed.
 
 LARC doesn't invent new communication patterns—it leverages patterns already present in the DOM:
 
-**1. Events**: The DOM uses events for component interaction
-**2. Attributes**: Components configure via attributes
-**3. Properties**: JavaScript interfaces use properties
-**4. Custom Elements**: The browser provides a component system
+1. **Events**: The DOM uses events for component interaction
+2. **Attributes**: Components configure via attributes
+3. **Properties**: JavaScript interfaces use properties
+4. **Custom Elements**: The browser provides a component system
 
 The PAN bus extends these patterns to handle application-level communication:
 
@@ -574,7 +607,7 @@ Modern web development has become synonymous with build tools. Want to create a 
 
 This creates several problems:
 
-**1. Barrier to entry**
+1. **Barrier to entry**
 
 Beginners must learn the toolchain before they can learn web development:
 
@@ -582,7 +615,7 @@ Beginners must learn the toolchain before they can learn web development:
 - Why did the build fail? What's a source map?
 - How do I debug code that's been transpiled?
 
-**2. Maintenance burden**
+2. **Maintenance burden**
 
 Build configurations break:
 
@@ -591,7 +624,7 @@ Build configurations break:
 - Build times increase as projects grow
 - Different team members have different tool versions
 
-**3. Slower iteration**
+3. **Slower iteration**
 
 Build steps add friction to development:
 
@@ -600,7 +633,7 @@ Build steps add friction to development:
 - Debugging transpiled code is harder
 - Hot module replacement adds complexity
 
-**4. Framework lock-in**
+4. ** Framework lock-in**
 
 Each framework has its own tooling:
 
@@ -615,7 +648,7 @@ Switching frameworks means learning new tools.
 
 LARC eliminates build requirements for development by using only features that browsers understand natively:
 
-**1. ES Modules**
+1. ** ES Modules**
 
 ```javascript
 // Native imports work directly in browsers
@@ -625,7 +658,7 @@ import './components/pan-card.mjs';
 
 No bundler required. The browser loads modules directly.
 
-**2. Standard JavaScript**
+2. ** Standard JavaScript**
 
 ```javascript
 // Write modern JavaScript that runs directly
@@ -644,7 +677,7 @@ class PanCard extends HTMLElement {
 
 No transpilation. Modern browsers support classes, async/await, destructuring, template literals, and other ES2015+ features.
 
-**3. CSS Custom Properties**
+3. ** CSS Custom Properties**
 
 ```css
 /* Native CSS variables for theming */
@@ -657,7 +690,7 @@ No transpilation. Modern browsers support classes, async/await, destructuring, t
 
 No CSS-in-JS runtime. No styled-components overhead.
 
-**4. Web Components**
+4. ** Web Components**
 
 ```javascript
 // Native component system
@@ -1030,14 +1063,12 @@ panClient.subscribe('items.*', ({ topic, data }) => {
 
 **Key Differences:**
 
-- **Redux**: Centralized store, reducers, actions, selectors
-- **LARC**: Distributed messages, topics, subscribers
-- **Redux**: All state in one place
-- **LARC**: State distributed across components
-- **Redux**: Components coupled to store
-- **LARC**: Components coupled only to topics
-- **Redux**: Requires setup and configuration
-- **LARC**: Just publish and subscribe
+| **Redux**     | **LARC** |
+|---------------|----------|
+| Centralized store, reducers, actions, selectors | Distributed messages, topics, subscribers |
+| All state in one place | State distributed across components |
+| Components coupled to store | Components coupled only to topics |
+| Requires setup and configuration | Just publish and subscribe |
 
 **When Redux is better:**
 
@@ -1140,12 +1171,11 @@ class ItemList extends HTMLElement {
 
 **Key Differences:**
 
-- **Vuex**: Mutations, actions, getters
-- **LARC**: Messages, topics, subscriptions
-- **Vuex**: Vue-specific
-- **LARC**: Framework-agnostic
-- **Vuex**: Centralized state
-- **LARC**: Distributed state
+| **Vuex**                  | **LARC**                          |
+|---------------------------|-----------------------------------|
+| Mutations, actions, getters | Messages, topics, subscriptions |
+| Vue-specific              | Framework-agnostic                |
+| Centralized state         | Distributed state                 |
 
 ### LARC vs. MobX
 
@@ -1235,12 +1265,11 @@ class ItemList extends HTMLElement {
 
 **Key Differences:**
 
-- **MobX**: Automatic reactivity through proxies
-- **LARC**: Explicit message subscriptions
-- **MobX**: Implicit dependencies
-- **LARC**: Explicit topic subscriptions
-- **MobX**: Framework integration required
-- **LARC**: Framework-agnostic
+| **MobX**                  | **LARC**                  |
+|---------------------------|---------------------------|
+| Automatic reactivity through proxies  | Explicit message subscriptions |
+| Implicit dependencies     | Explicit topic subscriptions |
+| Framework integration required | Framework-agnostic |
 
 **When MobX is better:**
 
@@ -1331,12 +1360,11 @@ function Header() {
 
 **Key Differences:**
 
-- **Context**: Provider hierarchy, hook dependencies
-- **LARC**: Flat message bus
-- **Context**: React-specific
-- **LARC**: Framework-agnostic
-- **Context**: Requires wrapping components
-- **LARC**: Just subscribe to topics
+| **Context**               | **LARC**              |
+|---------------------------|-----------------------|
+| Provider hierarchy, hook dependencies | Flat message bus |
+| React-specific            | Framework-agnostic |
+| Requires wrapping components | Just subscribe to topics |
 
 ### Summary: Architectural Trade-offs
 

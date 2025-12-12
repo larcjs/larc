@@ -24,11 +24,23 @@ const mimeTypes = {
 };
 
 const server = createServer(async (req, res) => {
-  let filePath = join(publicDir, req.url === '/' ? 'index.html' : req.url);
+  const requestPath = req.url === '/' ? 'index.html' : req.url.split('?')[0];
 
-  // Handle registry.json at root
+  // Sanitize path to prevent directory traversal
+  let filePath;
   if (req.url === '/registry.json') {
     filePath = join(__dirname, '../registry.json');
+  } else {
+    filePath = join(publicDir, requestPath);
+    // Resolve and verify path stays within publicDir
+    const { resolve } = await import('path');
+    const resolvedPath = resolve(filePath);
+    if (!resolvedPath.startsWith(publicDir)) {
+      res.writeHead(403);
+      res.end('403 Forbidden');
+      console.log(chalk.gray(`${new Date().toLocaleTimeString()} ${chalk.red('403')} ${req.url}`));
+      return;
+    }
   }
 
   try {

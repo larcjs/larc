@@ -54,8 +54,18 @@ export async function startDevServer(options) {
       return;
     }
 
-    // Serve files
-    let filePath = join(process.cwd(), req.url === '/' ? 'index.html' : req.url);
+    // Serve files - sanitize path to prevent directory traversal
+    const requestPath = req.url === '/' ? 'index.html' : req.url.split('?')[0];
+    // Resolve and verify path stays within cwd
+    const cwd = process.cwd();
+    let filePath = join(cwd, requestPath);
+    const resolvedPath = require('path').resolve(filePath);
+    if (!resolvedPath.startsWith(cwd)) {
+      res.writeHead(403);
+      res.end('403 Forbidden');
+      logRequest(req.url, 403);
+      return;
+    }
 
     // Handle larc.config.json -> generate importmap
     if (req.url === '/importmap.json') {

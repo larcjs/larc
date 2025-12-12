@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Restrict workflow permissions to minimum required
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   test:
     name: Test on ${{ matrix.browser }} - Node ${{ matrix.node-version }}

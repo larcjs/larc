@@ -68,12 +68,23 @@ function setPath(obj, path, value) {
   let target = obj;
   for (let i = 0; i < parts.length - 1; i++) {
     const part = parts[i];
+    // Guard against prototype pollution
+    if (part === '__proto__' || part === 'constructor' || part === 'prototype') {
+      console.warn(`[PAN Routes] Blocked attempt to set dangerous property: ${part}`);
+      return;
+    }
     if (!(part in target) || typeof target[part] !== 'object') {
       target[part] = {};
     }
     target = target[part];
   }
-  target[parts[parts.length - 1]] = value;
+  const lastPart = parts[parts.length - 1];
+  // Guard against prototype pollution on final property
+  if (lastPart === '__proto__' || lastPart === 'constructor' || lastPart === 'prototype') {
+    console.warn(`[PAN Routes] Blocked attempt to set dangerous property: ${lastPart}`);
+    return;
+  }
+  target[lastPart] = value;
 }
 
 /**

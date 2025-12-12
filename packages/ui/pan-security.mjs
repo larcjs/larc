@@ -32,8 +32,11 @@ export function enforceHTTPS(options = {}) {
     console.error(`Current URL: ${location.href}`);
     console.error('Redirecting to HTTPS...');
 
-    // Redirect to HTTPS
-    location.replace(`https:${location.href.substring(location.protocol.length)}`);
+    // Redirect to HTTPS - construct URL safely using location properties
+    // instead of user-controllable location.href
+    const safeURL = new URL(location.href);
+    safeURL.protocol = 'https:';
+    location.replace(safeURL.href);
   }
 }
 

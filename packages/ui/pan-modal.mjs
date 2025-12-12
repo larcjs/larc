@@ -45,6 +45,13 @@ export class PanModal extends HTMLElement {
   get size() { return this.getAttribute('size') || 'md'; }
   get closable() { return this.getAttribute('closable') !== 'false'; }
 
+  // Escape HTML special characters to prevent XSS
+  escapeHTML(text) {
+    if (!text || typeof text !== 'string') return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
   setupTopics() {
     this.pc.subscribe(`${this.topic}.show`, () => this.show());
     this.pc.subscribe(`${this.topic}.hide`, () => this.hide());
@@ -217,10 +224,10 @@ export class PanModal extends HTMLElement {
       </style>
 
       <div class="modal-backdrop">
-        <div class="modal-content size-${this.size}" role="dialog" aria-modal="true">
+        <div class="modal-content size-${['sm', 'md', 'lg', 'xl', 'full'].includes(this.size) ? this.size : 'md'}" role="dialog" aria-modal="true">
           <div class="modal-header">
             <slot name="header">
-              ${this.title ? `<h2 class="modal-title">${this.title}</h2>` : ''}
+              ${this.title ? `<h2 class="modal-title">${this.escapeHTML(this.title)}</h2>` : ''}
             </slot>
             ${this.closable ? `
               <button class="close-btn" aria-label="Close">&times;</button>

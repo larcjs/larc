@@ -111,6 +111,13 @@ export class PanTabs extends HTMLElement {
     });
   }
 
+  // Escape HTML special characters to prevent XSS
+  escapeHTML(text) {
+    if (!text || typeof text !== 'string') return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
   render() {
     const tabs = this.tabs;
 
@@ -193,8 +200,8 @@ export class PanTabs extends HTMLElement {
               aria-selected="${i === this.activeIndex}"
               ${tab.disabled ? 'disabled' : ''}
             >
-              ${tab.icon ? `<span class="tab-icon">${tab.icon}</span>` : ''}
-              ${tab.label}
+              ${tab.icon ? `<span class="tab-icon">${this.escapeHTML(tab.icon)}</span>` : ''}
+              ${this.escapeHTML(tab.label)}
             </button>
           `).join('')}
         </div>

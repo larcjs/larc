@@ -117,8 +117,9 @@ async function get(params) {
 			out.total = countRows[0].total;
 			out.start = start;
 
-			// Get paginated results
-			const sql = `SELECT ${fields} FROM ${mysql.escapeId(params.rsc)} ${where} LIMIT ? OFFSET ?`;
+			// Get paginated results - properly escape fields
+			const safeFields = fields === '*' ? '*' : fields.split(',').map(f => mysql.escapeId(f.trim())).join(', ');
+			const sql = `SELECT ${safeFields} FROM ${mysql.escapeId(params.rsc)} ${where} LIMIT ? OFFSET ?`;
 			const [rows] = await pool.execute(sql, [...whereParams, pageSize, start]);
 			out.results = rows;
 			out.count = rows.length;
