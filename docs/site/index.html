@@ -538,6 +538,311 @@
     .feature-card:nth-child(4) { animation-delay: 0.4s; }
     .feature-card:nth-child(5) { animation-delay: 0.5s; }
     .feature-card:nth-child(6) { animation-delay: 0.6s; }
+
+    /* Philosophy Quote */
+    .philosophy-quote {
+      max-width: 900px;
+      margin: 0 auto 3rem;
+      padding: 0 2rem;
+      text-align: center;
+    }
+
+    .philosophy-quote blockquote {
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--color-text);
+      line-height: 1.6;
+      margin: 0 0 1rem;
+      position: relative;
+    }
+
+    .philosophy-quote blockquote::before {
+      content: '"';
+      font-size: 4rem;
+      color: var(--color-primary);
+      opacity: 0.3;
+      position: absolute;
+      left: -1.5rem;
+      top: -1rem;
+      font-family: Georgia, serif;
+    }
+
+    .philosophy-quote cite {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+      font-style: normal;
+    }
+
+    /* Philosophy Section */
+    .philosophy {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .philosophy h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .philosophy-intro {
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 1.125rem;
+      max-width: 800px;
+      margin: 0 auto 3rem;
+      line-height: 1.7;
+    }
+
+    .assertions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .assertion {
+      padding: 2rem;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      border-top: 4px solid var(--color-primary);
+    }
+
+    .assertion-number {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 2rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .assertion h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .assertion p {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    .philosophy-cta {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    /* Books Section */
+    .books-section {
+      background: linear-gradient(135deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+    }
+
+    .books-section-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .books-section h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .books-section-subtitle {
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 1.125rem;
+      margin-bottom: 3rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+    }
+
+    .book-card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s;
+    }
+
+    .book-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-primary);
+    }
+
+    .book-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      align-self: flex-start;
+    }
+
+    .book-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .book-card .book-author {
+      font-size: 0.95rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .book-card .book-description {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .book-stats {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .book-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .book-card .btn {
+      align-self: flex-start;
+    }
+
+    /* Hybrid Demo Highlight */
+    .hybrid-highlight {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+      color: white;
+    }
+
+    .hybrid-highlight-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .hybrid-highlight-inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+    }
+
+    .hybrid-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #5eead4;
+    }
+
+    .hybrid-content p {
+      font-size: 1.125rem;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .hybrid-badges {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .hybrid-badge {
+      display: inline-block;
+      padding: 0.375rem 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .hybrid-badge.react { border-color: #61dafb; color: #61dafb; }
+    .hybrid-badge.vue { border-color: #42b883; color: #42b883; }
+    .hybrid-badge.vanilla { border-color: #f7df1e; color: #f7df1e; }
+    .hybrid-badge.pan { border-color: #5eead4; color: #5eead4; }
+
+    .hybrid-demo {
+      background: var(--color-code-bg);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      overflow: hidden;
+    }
+
+    .hybrid-demo-header {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .hybrid-demo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .hybrid-demo-dot:nth-child(1) { background: #ef4444; }
+    .hybrid-demo-dot:nth-child(2) { background: #eab308; }
+    .hybrid-demo-dot:nth-child(3) { background: #22c55e; }
+
+    .hybrid-demo pre {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .btn-cyan {
+      background: #5eead4;
+      color: #0f172a;
+    }
+
+    .btn-cyan:hover {
+      background: #2dd4bf;
+      transform: translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -549,10 +854,11 @@
         <span>LARC</span>
       </a>
       <nav class="nav">
-        <a href="#features">Features</a>
+        <a href="#philosophy">Why LARC</a>
         <a href="/examples/tutorials/">Examples</a>
         <a href="apps.html">Apps</a>
         <a href="docs/index.html">Docs</a>
+        <a href="#books">Books</a>
         <a href="https://github.com/larcjs" target="_blank">GitHub</a>
         <pan-theme-toggle variant="icon"></pan-theme-toggle>
       </nav>
@@ -573,6 +879,14 @@
       <a href="docs/index.html" class="btn btn-secondary">Read Docs</a>
     </div>
   </section>
+
+  <!-- Philosophy Quote -->
+  <div class="philosophy-quote">
+    <blockquote>
+      I wanted the joy of dropping a &lt;script&gt; tag into an HTML file and instantly seeing something come alive. No ceremony. No yak shaving. Just a browser, a file, and an idea.
+    </blockquote>
+    <cite>— Christopher Robison, <em>Learning LARC</em> Foreword</cite>
+  </div>
 
   <!-- Features Grid -->
   <section class="features" id="features">
@@ -625,6 +939,40 @@
         <h3>DevTools Included</h3>
         <p>Built-in Inspector component lets you watch message flow, filter topics, and debug in real-time.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- Philosophy Section: Why LARC Exists -->
+  <section class="philosophy" id="philosophy">
+    <h2>Why LARC Exists</h2>
+    <p class="philosophy-intro">
+      React, Angular, Vue — they solved problems that absolutely needed solving at the time.
+      But the web has evolved since then. Many of those features now exist natively — standardized,
+      built-in, fast, and universally available. LARC builds on what the platform provides.
+    </p>
+
+    <div class="assertions">
+      <div class="assertion">
+        <span class="assertion-number">1</span>
+        <h3>The Browser Has Matured</h3>
+        <p>Modern frameworks solved 2010's problems. Custom Elements, ES Modules, Shadow DOM, async/await, CSS Grid — the browser now handles what used to require heavy abstraction layers.</p>
+      </div>
+
+      <div class="assertion">
+        <span class="assertion-number">2</span>
+        <h3>Web Components Need a Nervous System</h3>
+        <p>Web Components give you 80% of what you need. LARC provides the missing 20% — the coordination layer. Just as a car's sensors and motors communicate over a CAN bus without knowing each other's internals, LARC components coordinate through PAN.</p>
+      </div>
+
+      <div class="assertion">
+        <span class="assertion-number">3</span>
+        <h3>Builds Should Be Optional</h3>
+        <p>The friction of modern toolchains — webpack configs, Babel presets, dependency hell — shouldn't be mandatory for every project. Drop a script tag, refresh your browser, see your change. That's how the web was designed to work.</p>
+      </div>
+    </div>
+
+    <div class="philosophy-cta">
+      <a href="/building-with-larc/output/html/building-with-larc.html#chapter-02-philosophy" class="btn btn-primary">Read the Full Philosophy</a>
     </div>
   </section>
 
@@ -681,6 +1029,100 @@
     </div>
   </section>
 
+  <!-- Hybrid Framework Demo -->
+  <section class="hybrid-highlight">
+    <div class="hybrid-highlight-inner">
+      <div class="hybrid-content">
+        <h2>True Multi-Framework Integration</h2>
+        <p>
+          This isn't theoretical. React, Vue, and vanilla JS components all coordinate
+          through the same PAN bus on the same page. No wrapper libraries. No adapters.
+          They just work together.
+        </p>
+        <div class="hybrid-badges">
+          <span class="hybrid-badge react">React</span>
+          <span class="hybrid-badge vue">Vue 3</span>
+          <span class="hybrid-badge vanilla">Vanilla JS</span>
+          <span class="hybrid-badge pan">PAN Bus</span>
+        </div>
+        <p>
+          Different teams can use different frameworks while sharing the same design system
+          and coordinating through standardized messages. One codebase. Every framework.
+        </p>
+        <a href="/examples/tutorials/15-framework-integration.html" class="btn btn-cyan">See Hybrid Demo</a>
+      </div>
+      <div class="hybrid-demo">
+        <div class="hybrid-demo-header">
+          <span class="hybrid-demo-dot"></span>
+          <span class="hybrid-demo-dot"></span>
+          <span class="hybrid-demo-dot"></span>
+        </div>
+<pre><code><span style="color:#64748b">// React component subscribes to PAN</span>
+useEffect(() => {
+  pan.subscribe('cart.updated', (items) => {
+    setCartItems(items);
+  });
+}, []);
+
+<span style="color:#64748b">// Vue component publishes to PAN</span>
+const addToCart = (item) => {
+  pan.publish('cart.add', item);
+};
+
+<span style="color:#64748b">// Vanilla component listens</span>
+pan.on('cart.*', (msg) => {
+  this.updateBadge(msg.data.length);
+});</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Books Section -->
+  <section class="books-section" id="books">
+    <div class="books-section-inner">
+      <h2>Learn LARC In-Depth</h2>
+      <p class="books-section-subtitle">
+        Two comprehensive books cover everything from philosophy to production deployment.
+        Written in the O'Reilly tradition with working code examples throughout.
+      </p>
+
+      <div class="books-grid">
+        <div class="book-card">
+          <span class="book-badge">Tutorial</span>
+          <h3>Learning LARC</h3>
+          <p class="book-author">by Christopher Robison</p>
+          <p class="book-description">
+            Start here if you're new to LARC. A progressive tutorial that builds from "Hello World"
+            to production applications. Learn the philosophy, understand the architecture, and
+            master the patterns through hands-on examples.
+          </p>
+          <div class="book-stats">
+            <span class="book-stat">📖 15 chapters</span>
+            <span class="book-stat">💻 50+ examples</span>
+          </div>
+          <a href="/learning-larc/build/output/learning-larc.html" class="btn btn-primary">Read Learning LARC</a>
+        </div>
+
+        <div class="book-card">
+          <span class="book-badge">Reference</span>
+          <h3>Building with LARC</h3>
+          <p class="book-author">by Christopher Robison</p>
+          <p class="book-description">
+            The comprehensive reference manual. Task-oriented chapters on routing, authentication,
+            real-time features, testing, and deployment. Complete API documentation for all 60+
+            components. The book you keep on your desk.
+          </p>
+          <div class="book-stats">
+            <span class="book-stat">📖 25 chapters</span>
+            <span class="book-stat">💻 200+ examples</span>
+            <span class="book-stat">📚 ~115K words</span>
+          </div>
+          <a href="/building-with-larc/output/html/building-with-larc.html" class="btn btn-primary">Read Building with LARC</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CTA Section -->
   <section class="cta-section">
     <h2>Ready to Build?</h2>
@@ -730,13 +1172,21 @@
         </ul>
       </div>
       <div class="footer-section">
+        <h4>Books</h4>
+        <ul>
+          <li><a href="/learning-larc/build/output/learning-larc.html">Learning LARC</a></li>
+          <li><a href="/building-with-larc/output/html/building-with-larc.html">Building with LARC</a></li>
+          <li><a href="/building-with-larc/output/html/building-with-larc.html#chapter-02-philosophy">Philosophy</a></li>
+          <li><a href="/learning-larc/build/output/learning-larc.pdf">PDF Download</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
         <h4>Community</h4>
         <ul>
           <li><a href="https://github.com/larcjs" target="_blank">GitHub Organization</a></li>
           <li><a href="https://github.com/larcjs/core" target="_blank">Core Repository</a></li>
           <li><a href="https://github.com/larcjs/components" target="_blank">Components</a></li>
           <li><a href="https://github.com/larcjs/core/issues" target="_blank">Issues</a></li>
-          <li><a href="docs/rfcs/README.md">RFCs</a></li>
         </ul>
       </div>
     </div>
