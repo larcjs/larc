@@ -232,7 +232,10 @@ def get_data(params):
             'results': results
         }
     except Exception as e:
-        return {'status': 'error', 'msg': str(e)}
+        # Log full error internally, return generic message to client
+        import logging
+        logging.exception('Database query error')
+        return {'status': 'error', 'msg': 'Database query failed'}
 
 # List resources
 def list_resources():
