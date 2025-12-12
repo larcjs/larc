@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Books — Learning LARC & Building with LARC</title>
+  <meta name="description" content="Comprehensive books on building modern web applications with LARC. From beginner tutorials to advanced reference material.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-bg: #ffffff;
+      --color-bg-alt: #f8fafc;
+      --color-text: #1e293b;
+      --color-text-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-primary: #0f766e;
+      --color-primary-dark: #0d9488;
+      --color-code-bg: #1e293b;
+      --border-radius: 0.75rem;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-bg: #0f172a;
+        --color-bg-alt: #1e293b;
+        --color-text: #f1f5f9;
+        --color-text-muted: #94a3b8;
+        --color-border: #334155;
+        --color-primary: #5eead4;
+        --color-primary-dark: #2dd4bf;
+        --color-code-bg: #020617;
+      }
+    }
+
+    [data-theme="dark"] {
+      --color-bg: #0f172a;
+      --color-bg-alt: #1e293b;
+      --color-text: #f1f5f9;
+      --color-text-muted: #94a3b8;
+      --color-border: #334155;
+      --color-primary: #5eead4;
+      --color-primary-dark: #2dd4bf;
+      --color-code-bg: #020617;
+    }
+
+    [data-theme="light"] {
+      --color-bg: #ffffff;
+      --color-bg-alt: #f8fafc;
+      --color-text: #1e293b;
+      --color-text-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-primary: #0f766e;
+      --color-primary-dark: #0d9488;
+      --color-code-bg: #1e293b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    @supports not (color: color-mix(in srgb, white, black)) {
+      .header {
+        background: var(--color-bg);
+        opacity: 0.95;
+      }
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--color-primary);
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, var(--color-bg-alt) 0%, var(--color-bg) 100%);
+      padding: 4rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--color-text-muted);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Book Section */
+    .book-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem;
+    }
+
+    .book-section:nth-child(odd) {
+      background: var(--color-bg);
+    }
+
+    .book-section:nth-child(even) {
+      background: var(--color-bg-alt);
+    }
+
+    .book-container {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 4rem;
+      align-items: start;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+      .book-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .book-cover {
+        justify-self: center;
+      }
+    }
+
+    .book-cover {
+      position: relative;
+    }
+
+    .book-cover img {
+      width: 100%;
+      max-width: 300px;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-xl);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .book-cover:hover img {
+      transform: translateY(-8px) rotate(-1deg);
+      box-shadow: 0 30px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .book-badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background: var(--color-primary);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: var(--shadow-md);
+    }
+
+    .book-info h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      color: var(--color-text);
+    }
+
+    .book-author {
+      font-size: 1.125rem;
+      color: var(--color-text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .book-description {
+      font-size: 1.125rem;
+      line-height: 1.8;
+      color: var(--color-text);
+      margin-bottom: 2rem;
+    }
+
+    .book-quote {
+      background: var(--color-bg-alt);
+      border-left: 4px solid var(--color-primary);
+      padding: 1.5rem;
+      margin: 2rem 0;
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+
+    .book-quote blockquote {
+      font-style: italic;
+      font-size: 1.125rem;
+      color: var(--color-text);
+      margin: 0;
+    }
+
+    .book-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--color-bg-alt);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--color-border);
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      display: block;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .book-features {
+      margin-bottom: 2rem;
+    }
+
+    .book-features h3 {
+      font-size: 1.125rem;
+      margin-bottom: 1rem;
+      color: var(--color-text);
+    }
+
+    .book-features ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .book-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-text-muted);
+    }
+
+    .book-features li::before {
+      content: "✓";
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .download-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--color-bg);
+      color: var(--color-text);
+      border: 2px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-2px);
+    }
+
+    .btn-icon {
+      font-size: 1.25rem;
+    }
+
+    /* Divider */
+    .divider {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .divider hr {
+      border: none;
+      border-top: 1px solid var(--color-border);
+    }
+
+    /* Comparison Section */
+    .comparison {
+      max-width: 1100px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .comparison h2 {
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-bg);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .comparison-table th {
+      background: var(--color-bg-alt);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .comparison-table td {
+      color: var(--color-text-muted);
+    }
+
+    .comparison-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--color-bg-alt);
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+    }
+
+    .footer p {
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--color-primary);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .book-stats {
+        justify-content: center;
+      }
+
+      .download-buttons {
+        flex-direction: column;
+      }
+
+      .btn {
+        justify-content: center;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .book-container {
+      animation: fadeInUp 0.6s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">
+        <span>LARC</span>
+      </a>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="index.html#philosophy">Why LARC</a>
+        <a href="/examples/tutorials/">Examples</a>
+        <a href="apps.html">Apps</a>
+        <a href="docs/index.html">Docs</a>
+        <a href="https://github.com/larcjs" target="_blank">GitHub</a>
+        <pan-theme-toggle variant="icon"></pan-theme-toggle>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>The LARC Library</h1>
+    <p>
+      Two comprehensive books covering everything from philosophy to production deployment.
+      Written in the O'Reilly tradition with hundreds of working code examples.
+    </p>
+  </section>
+
+  <!-- Learning LARC -->
+  <section class="book-section">
+    <div class="book-container">
+      <div class="book-cover">
+        <span class="book-badge">Tutorial</span>
+        <img src="/larc/docs/learning-larc/learning-larc-cover.png" alt="Learning LARC book cover">
+      </div>
+      <div class="book-info">
+        <h2>Learning LARC</h2>
+        <p class="book-author">by Christopher Robison &middot; First Edition, 2025</p>
+
+        <p class="book-description">
+          Start here if you're new to LARC. This progressive tutorial builds from "Hello World"
+          to production applications, teaching you the philosophy, architecture, and patterns
+          through hands-on examples. Learn why modern web development doesn't need to be complicated.
+        </p>
+
+        <div class="book-quote">
+          <blockquote>
+            "I wanted the joy of dropping a &lt;script&gt; tag into an HTML file and instantly
+            seeing something come alive. No ceremony. No yak shaving. Just a browser, a file, and an idea."
+          </blockquote>
+        </div>
+
+        <div class="book-stats">
+          <div class="stat">
+            <span class="stat-value">18</span>
+            <span class="stat-label">Chapters</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">5</span>
+            <span class="stat-label">Appendices</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">150+</span>
+            <span class="stat-label">Code Examples</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">~350</span>
+            <span class="stat-label">Pages</span>
+          </div>
+        </div>
+
+        <div class="book-features">
+          <h3>What You'll Learn</h3>
+          <ul>
+            <li>Web Components fundamentals</li>
+            <li>PAN bus pub/sub architecture</li>
+            <li>State management patterns</li>
+            <li>Routing and navigation</li>
+            <li>Forms and validation</li>
+            <li>API integration</li>
+            <li>Authentication & security</li>
+            <li>Testing strategies</li>
+          </ul>
+        </div>
+
+        <div class="download-buttons">
+          <a href="/larc/docs/learning-larc/build/output/learning-larc.html" class="btn btn-primary">
+            <span class="btn-icon">📖</span> Read Online (HTML)
+          </a>
+          <a href="/larc/docs/learning-larc/build/output/learning-larc.pdf" class="btn btn-secondary">
+            <span class="btn-icon">📄</span> Download PDF
+          </a>
+          <a href="/larc/docs/learning-larc/build/output/learning-larc.epub" class="btn btn-secondary">
+            <span class="btn-icon">📱</span> Download EPUB
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"><hr></div>
+
+  <!-- Building with LARC -->
+  <section class="book-section">
+    <div class="book-container">
+      <div class="book-cover">
+        <span class="book-badge">Reference</span>
+        <img src="/larc/docs/building-with-larc/front-cover.png" alt="Building with LARC book cover">
+      </div>
+      <div class="book-info">
+        <h2>Building with LARC</h2>
+        <p class="book-author">by Christopher Robison &middot; First Edition, 2025</p>
+
+        <p class="book-description">
+          The definitive technical reference for LARC developers. This comprehensive manual
+          covers everything from core philosophy to advanced patterns, with exhaustive API
+          documentation for all 60+ components. The book you keep on your desk.
+        </p>
+
+        <div class="book-quote">
+          <blockquote>
+            "Web Components give you 80% of what you need to build modern applications.
+            LARC provides the missing 20% — the coordination layer, auto-loading system,
+            and state management infrastructure that makes Web Components genuinely practical."
+          </blockquote>
+        </div>
+
+        <div class="book-stats">
+          <div class="stat">
+            <span class="stat-value">25</span>
+            <span class="stat-label">Chapters</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">7</span>
+            <span class="stat-label">Appendices</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">200+</span>
+            <span class="stat-label">Code Examples</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">~115K</span>
+            <span class="stat-label">Words</span>
+          </div>
+        </div>
+
+        <div class="book-features">
+          <h3>What's Inside</h3>
+          <ul>
+            <li>Complete philosophy & story</li>
+            <li>Message flow patterns</li>
+            <li>Real-time features</li>
+            <li>File management (OPFS)</li>
+            <li>Theming systems</li>
+            <li>Performance optimization</li>
+            <li>Full component API reference</li>
+            <li>Recipes & patterns</li>
+          </ul>
+        </div>
+
+        <div class="download-buttons">
+          <a href="/larc/docs/building-with-larc/output/html/building-with-larc.html" class="btn btn-primary">
+            <span class="btn-icon">📖</span> Read Online (HTML)
+          </a>
+          <!--
+          <a href="/larc/docs/building-with-larc/output/pdf/building-with-larc.pdf" class="btn btn-secondary">
+            <span class="btn-icon">📄</span> Download PDF
+          </a>
+          <a href="/larc/docs/building-with-larc/output/epub/building-with-larc.epub" class="btn btn-secondary">
+            <span class="btn-icon">📱</span> Download EPUB
+          </a>
+          -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comparison -->
+  <section class="comparison">
+    <h2>Which Book Should I Read?</h2>
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Aspect</th>
+          <th>Learning LARC</th>
+          <th>Building with LARC</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Audience</strong></td>
+          <td>Beginners to LARC</td>
+          <td>Experienced developers</td>
+        </tr>
+        <tr>
+          <td><strong>Style</strong></td>
+          <td>Narrative tutorial</td>
+          <td>Comprehensive reference</td>
+        </tr>
+        <tr>
+          <td><strong>Approach</strong></td>
+          <td>Progressive learning path</td>
+          <td>Task-oriented chapters</td>
+        </tr>
+        <tr>
+          <td><strong>Best For</strong></td>
+          <td>Learning concepts from scratch</td>
+          <td>Looking up APIs, solving problems</td>
+        </tr>
+        <tr>
+          <td><strong>Read It</strong></td>
+          <td>Cover to cover</td>
+          <td>As a reference</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>Both books are free to read online. Written with care by the LARC team.</p>
+    <div class="footer-links">
+      <a href="index.html">Home</a>
+      <a href="docs/index.html">Documentation</a>
+      <a href="/examples/tutorials/">Examples</a>
+      <a href="apps.html">Demo Apps</a>
+      <a href="https://github.com/larcjs" target="_blank">GitHub</a>
+    </div>
+  </footer>
+
+  <!-- Theme System -->
+  <pan-theme-provider theme="auto"></pan-theme-provider>
+
+  <script type="module">
+    import '/ui/pan-theme-provider.mjs';
+    import '/ui/pan-theme-toggle.mjs';
+  </script>
+</body>
+</html>
