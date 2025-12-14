@@ -44,7 +44,7 @@ Tag: `larc`
 For technical troubleshooting and specific programming questions. Search existing questions before posting new ones.
 
 **Discord Community**
-https://discord.gg/larcjs
+https://discord.gg/zjUPsWTu
 Real-time chat for LARC developers. Channels for beginners, advanced topics, component development, and off-topic discussion. Most active community hub.
 
 **Reddit r/larcjs**

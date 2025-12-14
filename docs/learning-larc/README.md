@@ -351,7 +351,7 @@ The code examples in this book are available under the MIT License for use in yo
 
 - Website: https://larcjs.com
 - GitHub: https://github.com/larcjs
-- Discord: https://discord.gg/larcjs
+- Discord: https://discord.gg/zjUPsWTu
 - Twitter: @larcjs
 
 ---

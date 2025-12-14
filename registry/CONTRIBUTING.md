@@ -408,7 +408,7 @@ To update your component entry:
 
 ## ❓ Questions?
 
-- 💬 [Discord Community](https://discord.gg/larc)
+- 💬 [Discord Community](https://discord.gg/zjUPsWTu)
 - 📧 Email: components@larcjs.com
 - 📝 [Open an Issue](https://github.com/larcjs/registry/issues)
 

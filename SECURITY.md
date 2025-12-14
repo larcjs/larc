@@ -291,6 +291,7 @@ When contributing to LARC:
 ## Contact
 
 For security concerns or questions:
+- Email: security@larcjs.com
 - GitHub Security Advisories: https://github.com/larcjs/core/security/advisories
 - GitHub Discussions (mark as Security): https://github.com/larcjs/core/discussions
 
