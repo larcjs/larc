@@ -647,6 +647,11 @@
       padding: 4rem 2rem;
       margin: 4rem 0;
     }
+    
+    .book-head-wrap {
+      display: flex;
+      
+    }
 
     .books-section-inner {
       max-width: 1200px;
@@ -741,6 +746,45 @@
 
     .book-card .btn {
       align-self: flex-start;
+    }
+
+    .book-card-inner {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .book-card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .book-card-content .book-description {
+      flex-grow: 1;
+    }
+
+    .book-card-cover {
+      flex-shrink: 0;
+      height: 100px;
+      padding-right: 1em;
+      border-radius: 0;
+      box-shadow: var(--shadow-md);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .book-card:hover .book-card-cover {
+      transform: scale(1.05);
+      box-shadow: var(--shadow-lg);
+    }
+
+    @media (max-width: 500px) {
+      .book-card-inner {
+        flex-direction: column-reverse;
+      }
+      .book-card-cover {
+        width: 100px;
+        align-self: center;
+      }
     }
 
     /* Hybrid Demo Highlight */
@@ -1088,36 +1132,50 @@ pan.on('cart.*', (msg) => {
 
       <div class="books-grid">
         <div class="book-card">
-          <span class="book-badge">Tutorial</span>
-          <h3>Learning LARC</h3>
-          <p class="book-author">by Christopher Robison</p>
-          <p class="book-description">
-            Start here if you're new to LARC. A progressive tutorial that builds from "Hello World"
-            to production applications. Learn the philosophy, understand the architecture, and
-            master the patterns through hands-on examples.
-          </p>
-          <div class="book-stats">
-            <span class="book-stat">📖 15 chapters</span>
-            <span class="book-stat">💻 50+ examples</span>
+          <div class="book-card-inner">
+            <div class="book-card-content">
+              <span class="book-badge">Tutorial</span>
+              <span class="book-head-wrap">
+                <img src="../larc/docs/learning-larc/learning-larc-cover.png" alt="Learning LARC book cover" class="book-card-cover">
+                <span>
+                  <h3>Learning LARC</h3>
+                  <p class="book-author">by Christopher Robison</p>
+                </span>
+              </span>
+              <p class="book-description">
+                Start here if you're new to LARC. A progressive tutorial that builds from "Hello World"
+                to production applications. Learn the philosophy, understand the architecture, and
+                master the patterns through hands-on examples.
+              </p>
+              <div class="book-stats">
+                <span class="book-stat">📖 15 chapters</span>
+                <span class="book-stat">💻 50+ examples</span>
+              </div>
+              <a href="book-viewer.html?book=learning-larc" class="btn btn-primary">Read Learning LARC</a>
+            </div>
           </div>
-          <a href="book-viewer.html?book=learning-larc" class="btn btn-primary">Read Learning LARC</a>
         </div>
 
         <div class="book-card">
-          <span class="book-badge">Reference</span>
-          <h3>Building with LARC</h3>
-          <p class="book-author">by Christopher Robison</p>
-          <p class="book-description">
-            The comprehensive reference manual. Task-oriented chapters on routing, authentication,
-            real-time features, testing, and deployment. Complete API documentation for all 60+
-            components. The book you keep on your desk.
-          </p>
-          <div class="book-stats">
-            <span class="book-stat">📖 25 chapters</span>
-            <span class="book-stat">💻 200+ examples</span>
-            <span class="book-stat">📚 ~115K words</span>
+          <div class="book-card-inner">
+            <div class="book-card-content">
+              <span class="book-badge">Reference</span>
+              <h3>Building with LARC</h3>
+              <p class="book-author">by Christopher Robison</p>
+              <p class="book-description">
+                The comprehensive reference manual. Task-oriented chapters on routing, authentication,
+                real-time features, testing, and deployment. Complete API documentation for all 60+
+                components. The book you keep on your desk.
+              </p>
+              <div class="book-stats">
+                <span class="book-stat">📖 25 chapters</span>
+                <span class="book-stat">💻 200+ examples</span>
+                <span class="book-stat">📚 ~115K words</span>
+              </div>
+              <a href="book-viewer.html?book=building-with-larc" class="btn btn-primary">Read Building with LARC</a>
+            </div>
+            <img src="../larc/docs/building-with-larc/front-cover.png" alt="Building with LARC book cover" class="book-card-cover">
           </div>
-          <a href="book-viewer.html?book=building-with-larc" class="btn btn-primary">Read Building with LARC</a>
         </div>
       </div>
     </div>
@@ -1177,7 +1235,7 @@ pan.on('cart.*', (msg) => {
           <li><a href="book-viewer.html?book=learning-larc">Learning LARC</a></li>
           <li><a href="book-viewer.html?book=building-with-larc">Building with LARC</a></li>
           <li><a href="book-viewer.html?book=building-with-larc#chapter-2-the-philosophy-of-larc">Philosophy</a></li>
-          <li><a href="/larc/docs/learning-larc/build/output/learning-larc.pdf">PDF Download</a></li>
+          <li><a href="../larc/docs/learning-larc/build/output/learning-larc.pdf">PDF Download</a></li>
         </ul>
       </div>
       <div class="footer-section">
