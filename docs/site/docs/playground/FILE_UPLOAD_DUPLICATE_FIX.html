@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>File Upload Duplicate Events Fix · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - File Upload Duplicate Events Fix">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>FILE_UPLOAD_DUPLICATE_FIX</span>
+      </div>
+      <article class="docs-content">
+        <h1>File Upload Duplicate Events Fix</h1>
+<h2>Problem</h2>
+<p>In the File Upload Manager example, everything was happening twice:
+<ul><li>Uploading a file triggered two upload events</li>
+<li>PAN Monitor showed duplicate messages</li>
+<li>File appeared twice in the list</li>
+</ul>
+<h2>Root Cause</h2></p>
+<p>The <code>file-upload</code> component had a cascading event listener problem:</p>
+<h3>The Bug Chain</h3>
+<li><strong><code>connectedCallback()</code></strong> calls <code>render()</code> and <code>setupEvents()</code> (lines 30-31)</li>
+<li><strong><code>render()</code></strong> also calls <code>setupEvents()</code> in a setTimeout (line 374)</li>
+<li><strong><code>attributeChangedCallback()</code></strong> calls <code>render()</code> whenever attributes change (line 35)</li>
+<li><strong>Each <code>setupEvents()</code> call</strong> added NEW event listeners without removing old ones</li>
+<p>This meant:
+<ul><li>First render: 1 set of listeners</li>
+<li>Attribute change: 2 sets of listeners (original + new)</li>
+<li>Another change: 3 sets of listeners</li>
+<li>etc.</li>
+</ul>
+<h3>Why It Happened</h3></p>
+<pre><code class="language-javascript">// OLD CODE - BAD
+connectedCallback() {
+  this.render();        // Calls setupEvents()
+  this.setupEvents();   // Calls setupEvents() AGAIN ❌
+}
+
+render() {
+  this.shadowRoot.innerHTML = `...`;
+
+  setTimeout(() =&gt; {
+    this.setupEvents();  // Calls setupEvents() AGAIN ❌
+    this.renderFileList();
+  }, 0);
+}
+
+setupEvents() {
+  const input = this.shadowRoot.querySelector(&#039;.file-input&#039;);
+
+  if (input) {
+    // Adds a NEW listener every time, never removes old ones ❌
+    input.addEventListener(&#039;change&#039;, (e) =&gt; this.handleFiles(e.target.files));
+  }
+  // ... more listeners ...
+}</code></pre>
+<h2>Solution</h2>
+<h3>1. Remove Duplicate setupEvents() Call</h3>
+<pre><code class="language-javascript">// NEW CODE - GOOD
+connectedCallback() {
+  this.render();  // This will call setupEvents()
+  // Removed duplicate setupEvents() call ✅
+}</code></pre>
+<h3>2. Guard Against Multiple Setup Calls</h3>
+<pre><code class="language-javascript">constructor() {
+  super();
+  this.attachShadow({ mode: &#039;open&#039; });
+  this.pc = new PanClient(this);
+  this.files = [];
+  this.boundHandlers = null; // Store handlers for cleanup ✅
+}
+
+setupEvents() {
+  // Skip if already set up to prevent duplicate listeners ✅
+  if (this.boundHandlers) return;
+
+  const input = this.shadowRoot.querySelector(&#039;.file-input&#039;);
+  const dropZone = this.shadowRoot.querySelector(&#039;.drop-zone&#039;);
+  const browseBtn = this.shadowRoot.querySelector(&#039;.browse-btn&#039;);
+
+  // Create bound handlers once ✅
+  this.boundHandlers = {
+    fileChange: (e) =&gt; this.handleFiles(e.target.files),
+    browseClick: () =&gt; input?.click(),
+    preventDefaults: (e) =&gt; {
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    dragEnter: () =&gt; dropZone?.classList.add(&#039;drag-over&#039;),
+    dragLeave: () =&gt; dropZone?.classList.remove(&#039;drag-over&#039;),
+    drop: (e) =&gt; {
+      dropZone?.classList.remove(&#039;drag-over&#039;);
+      const files = e.dataTransfer.files;
+      this.handleFiles(files);
+    }
+  };
+
+  // Use stored handlers ✅
+  if (input) {
+    input.addEventListener(&#039;change&#039;, this.boundHandlers.fileChange);
+  }
+
+  if (browseBtn) {
+    browseBtn.addEventListener(&#039;click&#039;, this.boundHandlers.browseClick);
+  }
+
+  if (dropZone &amp;&amp; this.dragDrop) {
+    [&#039;dragenter&#039;, &#039;dragover&#039;, &#039;dragleave&#039;, &#039;drop&#039;].forEach(eventName =&gt; {
+      dropZone.addEventListener(eventName, this.boundHandlers.preventDefaults);
+    });
+
+    [&#039;dragenter&#039;, &#039;dragover&#039;].forEach(eventName =&gt; {
+      dropZone.addEventListener(eventName, this.boundHandlers.dragEnter);
+    });
+
+    dropZone.addEventListener(&#039;dragleave&#039;, this.boundHandlers.dragLeave);
+    dropZone.addEventListener(&#039;drop&#039;, this.boundHandlers.drop);
+  }
+}</code></pre>
+<h3>3. Reset Handlers on Re-render</h3>
+<pre><code class="language-javascript">render() {
+  // Reset handlers so setupEvents can run fresh ✅
+  this.boundHandlers = null;
+
+  this.shadowRoot.innerHTML = `...`;
+
+  // Re-setup events after render
+  if (this.isConnected) {
+    setTimeout(() =&gt; {
+      this.setupEvents();  // Now only runs once ✅
+      this.renderFileList();
+    }, 0);
+  }
+}</code></pre>
+<h2>How the Fix Works</h2>
+<h3>Before (Broken)</h3>
+<pre><code class="language-plaintext">User uploads file
+↓
+3 event listeners fire (from 3 setupEvents() calls)
+↓
+handleFiles() runs 3 times
+↓
+3 upload events published
+↓
+File appears 3 times in list</code></pre>
+<h3>After (Fixed)</h3>
+<pre><code class="language-plaintext">User uploads file
+↓
+1 event listener fires (setupEvents ran once)
+↓
+handleFiles() runs once
+↓
+1 upload event published
+↓
+File appears once in list</code></pre>
+<h2>Key Pattern: Guarded Event Setup</h2>
+<p>This pattern prevents duplicate event listeners:</p>
+<pre><code class="language-javascript">// 1. Store handlers in instance variable
+this.boundHandlers = null;
+
+// 2. Check if already set up
+setupEvents() {
+  if (this.boundHandlers) return;  // Skip if already done
+
+  // 3. Create bound handlers once
+  this.boundHandlers = { ... };
+
+  // 4. Add listeners using stored handlers
+  element.addEventListener(&#039;event&#039;, this.boundHandlers.handler);
+}
+
+// 5. Reset when re-rendering
+render() {
+  this.boundHandlers = null;  // Allow fresh setup
+  // ... re-render ...
+  this.setupEvents();  // Set up again with new elements
+}</code></pre>
+<h2>Benefits</h2>
+<p>✅ <strong>No duplicate events</strong> - Each handler runs exactly once
+✅ <strong>Clean re-renders</strong> - Resetting handlers allows proper re-setup
+✅ <strong>Better performance</strong> - Not stacking up unused listeners
+✅ <strong>Easier debugging</strong> - PAN Monitor shows correct message count</p>
+<h2>Testing</h2>
+<h3>Before Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;File Upload Manager&quot; example
+2. Open PAN Monitor
+3. Upload a file
+4. See: 2+ &quot;files.uploaded.upload&quot; messages ❌
+5. See: File appears multiple times in list ❌</code></pre>
+<h3>After Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;File Upload Manager&quot; example
+2. Open PAN Monitor
+3. Upload a file
+4. See: 1 &quot;files.uploaded.upload&quot; message ✅
+5. See: File appears once in list ✅
+6. Change attributes (e.g., toggle preview)
+7. Upload another file
+8. See: Still only 1 message per upload ✅</code></pre>
+<h2>Files Changed</h2>
+<h3><code>/Users/cdr/Projects/larc-repos/ui/file-upload.mjs</code></h3>
+<strong>Lines Changed:</strong>
+<ul><li>Line 27: Added <code>this.boundHandlers = null;</code></li>
+<li>Lines 30-31: Removed duplicate <code>setupEvents()</code> call from <code>connectedCallback()</code></li>
+<li>Lines 45-90: Complete rewrite of <code>setupEvents()</code> with guard and bound handlers</li>
+<li>Lines 205-206: Reset <code>boundHandlers</code> in <code>render()</code></li>
+</ul>
+<h2>Related Issues</h2>
+<p>This same pattern could affect other components that:
+<ul><li>Call <code>setupEvents()</code> from multiple places</li>
+<li>Re-render frequently (attribute changes)</li>
+<li>Don't remove old event listeners</li>
+</ul>
+<h3>Potential Candidates to Check</h3>
+<ul><li><code>drag-drop-list</code> - Has drag event listeners</li>
+<li><code>pan-markdown-editor</code> - Has input event listeners</li>
+<li><code>pan-search-bar</code> - Has input event listeners</li>
+<li><code>pan-date-picker</code> - Has calendar event listeners</li>
+</ul>
+<h2>Prevention Pattern</h2></p>
+<p>For new components, follow this pattern:</p>
+<pre><code class="language-javascript">class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.handlers = null;  // Guard variable
+  }
+
+  connectedCallback() {
+    this.render();  // Only render
+  }
+
+  setupEvents() {
+    if (this.handlers) return;  // Guard
+
+    this.handlers = {
+      // Store bound handlers
+      click: () =&gt; this.handleClick(),
+      input: (e) =&gt; this.handleInput(e)
+    };
+
+    // Use stored handlers
+    this.shadowRoot.querySelector(&#039;.btn&#039;)
+      .addEventListener(&#039;click&#039;, this.handlers.click);
+  }
+
+  render() {
+    this.handlers = null;  // Reset for re-render
+    this.shadowRoot.innerHTML = `...`;
+    this.setupEvents();  // Set up once
+  }
+}</code></pre>
+<h2>Summary</h2>
+<p>The file upload duplicate events issue was caused by:
+<li>Multiple calls to <code>setupEvents()</code></li>
+<li>No guard against adding duplicate listeners</li>
+<li>No cleanup of old listeners</li></p>
+<p>Fixed by:
+<li>Removing duplicate <code>setupEvents()</code> call</li>
+<li>Adding guard check (<code>if (this.boundHandlers) return</code>)</li>
+<li>Storing bound handlers for reuse</li>
+<li>Resetting handlers on re-render</li></p>
+<p>The fix ensures each event listener is added exactly once per render cycle.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/FILE_UPLOAD_DUPLICATE_FIX.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

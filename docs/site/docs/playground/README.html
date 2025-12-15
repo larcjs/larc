@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Playground · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Playground">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Playground</h1>
+<p>Interactive component explorer and testing tool for the LARC framework.</p>
+<h2>Features</h2>
+<ul><li><strong>Component Palette</strong>: Browse 49+ components organized by category</li>
+<li><strong>Live Preview</strong>: See components render in real-time</li>
+<li><strong>Properties Panel</strong>: Edit component attributes dynamically</li>
+<li><strong>Code Export</strong>: Generate clean HTML from your designs</li>
+<li><strong>PAN Bus Monitor</strong>: Visualize message flow between components</li>
+<li><strong>Zero Build</strong>: Runs directly in the browser, no compilation needed</li>
+</ul>
+<h2>Quick Start</h2>
+<h3>Local Development</h3>
+<li>Clone the repository:</li>
+   <pre><code class="language-bash">git clone https://github.com/larcjs/larc.git
+   cd larc/playground</code></pre>
+<li>Serve with any static file server:</li>
+   <pre><code class="language-bash"># Using Python
+   python3 -m http.server 8080
+
+   # Using Node.js http-server
+   npx http-server -p 8080
+
+   # Using PHP
+   php -S localhost:8080</code></pre>
+<li>Open http://localhost:8080 in your browser</li>
+<h3>Online Demo</h3>
+<p>Visit the live playground at: https://larcjs.github.io/larc/playground/</p>
+<h2>Usage</h2>
+<li><strong>Browse Components</strong>: Use the left sidebar to explore available components by category</li>
+<li><strong>Search</strong>: Type in the search box to filter components by name or description</li>
+<li><strong>Add to Canvas</strong>: Click any component to add it to the canvas</li>
+<li><strong>Edit Properties</strong>: Select a component to see and edit its attributes in the right panel</li>
+<li><strong>View Code</strong>: Click "View Code" to see the generated HTML</li>
+<li><strong>Monitor Messages</strong>: Click "PAN Monitor" to watch PAN bus messages</li>
+<h2>Component Categories</h2>
+<ul><li>🧭 <strong>Routing & Navigation</strong> - Client-side routing</li>
+<li>💾 <strong>State Management</strong> - Data persistence and state</li>
+<li>📝 <strong>Forms & Input</strong> - Form handling and validation</li>
+<li>🔌 <strong>Data & Connectivity</strong> - API integration and data fetching</li>
+<li>🎨 <strong>UI Components</strong> - Interface building blocks</li>
+<li>📄 <strong>Content & Media</strong> - Content display and editing</li>
+<li>🔐 <strong>Authentication</strong> - Security and auth</li>
+<li>🎭 <strong>Theming</strong> - Theme management</li>
+<li>🔧 <strong>Developer Tools</strong> - Debugging utilities</li>
+<li>⚙️ <strong>Advanced</strong> - Advanced functionality</li>
+</ul>
+<h2>Architecture</h2>
+<pre><code class="language-plaintext">playground/
+├── index.html              # Main page
+├── playground.mjs          # Entry point
+├── component-registry.json # Component metadata
+├── components/             # Playground components
+│   ├── pg-palette.mjs     # Component browser
+│   ├── pg-canvas.mjs      # Live preview
+│   ├── pg-properties.mjs  # Property editor
+│   ├── pg-exporter.mjs    # Code generator
+│   └── pg-bus-monitor.mjs # Message visualizer
+├── styles/
+│   └── playground.css     # Styling
+└── scripts/
+    └── generate-registry.mjs  # Registry generator</code></pre>
+<h2>Regenerating Component Registry</h2>
+<p>The component registry is auto-generated from component source files:</p>
+<pre><code class="language-bash">node scripts/generate-registry.mjs</code></pre>
+<p>This scans all components in <code>../components/</code> and extracts:
+<ul><li>Component names and descriptions</li>
+<li>Attributes from <code>observedAttributes</code></li>
+<li>Categories and icons</li>
+<li>Metadata for the playground</li>
+</ul>
+<h2>Development</h2></p>
+<h3>Adding New Components</h3>
+<li>Add your component to <code>/components/</code></li>
+<li>Regenerate the registry: <code>node scripts/generate-registry.mjs</code></li>
+<li>Add category mapping in <code>generate-registry.mjs</code> if needed</li>
+<li>Optionally add an icon mapping</li>
+<h3>Customizing Categories</h3>
+<p>Edit <code>CATEGORIES</code> and <code>COMPONENT_CATEGORIES</code> in <code>scripts/generate-registry.mjs</code>:</p>
+<pre><code class="language-javascript">const CATEGORIES = [
+  { id: &#039;custom&#039;, name: &#039;Custom Components&#039;, icon: &#039;✨&#039; }
+];
+
+const COMPONENT_CATEGORIES = {
+  &#039;my-component&#039;: &#039;custom&#039;
+};</code></pre>
+<h2>Browser Support</h2>
+<ul><li>Chrome/Edge 90+</li>
+<li>Firefox 90+</li>
+<li>Safari 14+</li>
+</ul>
+Requires ES modules and Custom Elements support.
+<h2>License</h2>
+<p>MIT</p>
+<h2>Related Packages</h2>
+<ul><li><a href="https://github.com/larcjs/core">@larcjs/core</a> - Core PAN bus implementation</li>
+<li><a href="https://github.com/larcjs/components">@larcjs/ui</a> - Component library</li>
+<li><a href="https://github.com/larcjs/core-types">@larcjs/core-types</a> - TypeScript types</li>
+<li><a href="https://github.com/larcjs/components-types">@larcjs/ui-types</a> - Component types</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

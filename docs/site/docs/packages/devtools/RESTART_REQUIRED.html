@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN DevTools Extension - Restart Required · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN DevTools Extension - Restart Required">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">devtools</a> / <span>RESTART_REQUIRED</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN DevTools Extension - Restart Required</h1>
+<h2>Current Status: Configuration Added, Restart Needed ⏳</h2>
+<p>I've confirmed via chrome-devtools MCP that the extension is <strong>NOT yet loaded</strong> in Chrome.</p>
+<h3>Evidence from chrome://extensions/</h3>
+<pre><code class="language-plaintext">No extensions loaded (empty state shown)</code></pre>
+<h3>Evidence from Console</h3>
+<pre><code class="language-plaintext">Missing: [PAN DevTools] Injected and monitoring PAN messages
+Present: [PAN Bus] PAN Bus Enhanced ready
+Present: [pg-bus-monitor] Starting monitoring...</code></pre>
+<h2>Why It's Not Working Yet</h2>
+<p>The MCP server configuration I added to:
+<pre><code class="language-plaintext">/Users/cdr/Library/Application Support/Claude/claude_desktop_config.json</code></pre></p>
+<p>...is only read when <strong>Claude Desktop launches</strong>. The chrome-devtools MCP server that's currently running was started with the OLD configuration (no extension args).</p>
+<h2>What You Need To Do</h2>
+<h3>1. Quit Claude Desktop Completely</h3>
+<pre><code class="language-plaintext">Cmd+Q (or File → Quit)</code></pre>
+<p>Make sure it's fully quit, not just closed window.</p>
+<h3>2. Reopen Claude Desktop</h3>
+Launch from Applications or Dock.
+<h3>3. Wait for MCP Initialization</h3>
+Takes about 5-10 seconds for MCP servers to start up.
+<h3>4. Verify Extension Loaded</h3>
+<p>Ask me:
+<pre><code class="language-plaintext">Can you check if the PAN DevTools extension loaded in chrome://extensions/?</code></pre></p>
+<p>I'll verify:
+<ul><li>Extension appears in chrome://extensions/</li>
+<li>Console shows: <code>[PAN DevTools] Injected and monitoring PAN messages</code></li>
+<li>API exists: <code>window.__panDevTools</code></li>
+</ul>
+<h2>What Will Happen After Restart</h2></p>
+<p>The chrome-devtools MCP server will launch Chrome with these args:
+<pre><code class="language-bash">--load-extension=/Users/cdr/Projects/larc-repos/devtools
+--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools</code></pre></p>
+<p>Chrome will:
+<li>Load the PAN DevTools extension on startup</li>
+<li>Inject content-script.js into all pages</li>
+<li>Inject injected.js into page context</li>
+<li>Intercept all PAN events</li>
+<li>Display DevTools panel with "PAN" tab</li></p>
+<h2>Extension Files (Ready to Load)</h2>
+<p>All files are in place:
+<pre><code class="language-plaintext">/Users/cdr/Projects/larc-repos/devtools/
+├── manifest.json ✅ (valid Manifest V3)
+├── devtools.html ✅
+├── panel.html ✅
+├── icons/ ✅
+│   ├── icon-16.png
+│   ├── icon-48.png
+│   └── icon-128.png
+└── src/ ✅
+    ├── background.js ✅ (service worker)
+    ├── content-script.js ✅ (bridge)
+    ├── devtools.js ✅ (panel creation)
+    ├── injected.js ✅ (event interception with debug logs)
+    └── panel.js ✅ (UI logic)</code></pre></p>
+<h2>Alternative: Test Extension Manually (Without Restart)</h2>
+<p>If you want to test the extension before restarting Claude Desktop:</p>
+<pre><code class="language-bash"># Launch Chrome manually with extension
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+  --load-extension=/Users/cdr/Projects/larc-repos/devtools \
+  --disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools \
+  --user-data-dir=/tmp/chrome-test-pan-extension \
+  http://localhost:8080/playground/
+
+# Then:
+# 1. Open DevTools (F12)
+# 2. Look for &quot;PAN&quot; tab
+# 3. Load an example (e.g., Drag &amp; Drop List)
+# 4. Interact with it
+# 5. See messages appear in PAN panel</code></pre>
+<h2>Expected Console Output After Restart</h2>
+<p>When the extension loads properly:
+<pre><code class="language-plaintext">[PAN DevTools] Injected and monitoring PAN messages
+[PAN Bus] PAN Bus Enhanced ready
+[pg-bus-monitor] Starting monitoring...
+[PAN DevTools] Intercepted event: pan:publish ...
+[PAN DevTools] Posting message to content script: ...</code></pre></p>
+<h2>Configuration Applied</h2>
+<p>File: <code>/Users/cdr/Library/Application Support/Claude/claude_desktop_config.json</code></p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;chrome-devtools&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [
+        &quot;chrome-devtools-mcp&quot;,
+        &quot;--chrome-arg=--load-extension=/Users/cdr/Projects/larc-repos/devtools&quot;,
+        &quot;--chrome-arg=--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools&quot;
+      ]
+    }
+  }
+}</code></pre>
+<h2>Summary</h2>
+<ul><li>✅ Configuration file updated</li>
+<li>✅ Extension files ready</li>
+<li>✅ Manifest valid</li>
+<li>⏳ <strong>Waiting for Claude Desktop restart</strong></li>
+<li>⏳ Then extension will load automatically</li>
+</ul>
+<strong>Next Action</strong>: Restart Claude Desktop!
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/devtools/RESTART_REQUIRED.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

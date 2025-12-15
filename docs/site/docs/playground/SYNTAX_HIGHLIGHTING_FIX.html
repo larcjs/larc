@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Syntax Highlighting Fix · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Syntax Highlighting Fix">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>SYNTAX_HIGHLIGHTING_FIX</span>
+      </div>
+      <article class="docs-content">
+        <h1>Syntax Highlighting Fix</h1>
+<h2>Problem</h2>
+<p>In the "View Code" panel, every <code><</code> character was being replaced with <code>class="tag"></code>, making the HTML output completely broken and unreadable.</p>
+<p>Example of broken output:
+<pre><code class="language-plaintext">class=&quot;tag&quot;&gt;pan-data-connector resource=&quot;users&quot; base-url=&quot;https://api.example.com&quot;&gt;class=&quot;tag&quot;&gt;/pan-data-connector&gt;</code></pre></p>
+<h2>Root Cause</h2>
+<p>The syntax highlighting function had <strong>overlapping regex replacements</strong> that interfered with each other:</p>
+<h3>Original Broken Code</h3>
+<pre><code class="language-javascript">// Step 1: Highlight tags
+code = code.replace(
+  /(&amp;lt;\/?)([\w-]+)/g,
+  &#039;$1&lt;span class=&quot;tag&quot;&gt;$2&lt;/span&gt;&#039;
+);
+// This adds: &lt;span class=&quot;tag&quot;&gt;
+
+// Step 2: Highlight attributes (PROBLEM!)
+code = code.replace(
+  /([\w-]+)(=)(&quot;)(.*?)(&quot;)/g,
+  &#039;&lt;span class=&quot;attr-name&quot;&gt;$1&lt;/span&gt;...&#039;
+);
+// This matches ANY word with =, including &quot;class&quot; from the span we just added!</code></pre>
+<h3>The Issue</h3>
+<li>First regex adds: <code><span class="tag">tagname</span></code></li>
+<li>Second regex sees <code>class="tag"</code> and thinks it's an HTML attribute</li>
+<li>It wraps <code>class</code> in another span, creating malformed HTML</li>
+<li>The browser then fails to render the spans correctly</li>
+<li>Text like <code>class="tag"></code> leaks into the visible output</li>
+<h2>Solution</h2>
+<strong>Process tags and attributes together in a single replacement</strong>, using a callback function to avoid conflicts:
+<pre><code class="language-javascript">code = code.replace(
+  /(&amp;lt;\/?)([\w-]+)((?:\s+[\w-]+(?:=&quot;[^&quot;]*&quot;)?)*)\s*(\/?&amp;gt;)/g,
+  (match, openBracket, tagName, attrs, closeBracket) =&gt; {
+    // Build result manually to avoid nested replacements
+    let result = openBracket + &#039;&lt;span class=&quot;tag&quot;&gt;&#039; + tagName + &#039;&lt;/span&gt;&#039;;
+
+    // Highlight attributes if present
+    if (attrs) {
+      result += attrs.replace(
+        /([\w-]+)(=)(&quot;)(.*?)(&quot;)/g,
+        &#039; &lt;span class=&quot;attr-name&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;punctuation&quot;&gt;$2$3&lt;/span&gt;&lt;span class=&quot;attr-value&quot;&gt;$4&lt;/span&gt;&lt;span class=&quot;punctuation&quot;&gt;$5&lt;/span&gt;&#039;
+      );
+    }
+
+    result += &#039;&lt;span class=&quot;punctuation&quot;&gt;&#039; + closeBracket + &#039;&lt;/span&gt;&#039;;
+    return result;
+  }
+);</code></pre>
+<h2>How It Works Now</h2>
+<h3>Single Pass Processing</h3>
+<p>The new regex captures the entire tag structure in one match:
+<ul><li><code>(&lt;\/?)</code> - Opening bracket with optional <code>/</code></li>
+<li><code>([\w-]+)</code> - Tag name</li>
+<li><code>((?:\s+[\w-]+(?:="[^"]<em>")?)</em>)</code> - All attributes (optional)</li>
+<li><code>(\/?&gt;)</code> - Closing bracket with optional <code>/</code></li>
+</ul>
+<h3>Callback Function</h3></p>
+<p>Instead of string replacement, we use a callback that:
+<li>Receives all captured groups</li>
+<li>Manually constructs the highlighted HTML</li>
+<li>Only processes attributes within the captured attribute string</li>
+<li>Returns the complete highlighted tag in one piece</li></p>
+<p>This ensures <strong>no interference</strong> between tag highlighting and attribute highlighting.</p>
+<h2>Results</h2>
+<h3>Before (Broken)</h3>
+<pre><code class="language-plaintext">class=&quot;tag&quot;&gt;pan-data-connector resource=&quot;users&quot;&gt;class=&quot;tag&quot;&gt;/pan-data-connector&gt;</code></pre>
+<h3>After (Fixed)</h3>
+<pre><code class="language-html">&lt;span class=&quot;tag&quot;&gt;pan-data-connector&lt;/span&gt;
+&lt;span class=&quot;attr-name&quot;&gt;resource&lt;/span&gt;&lt;span class=&quot;punctuation&quot;&gt;=&quot;&lt;/span&gt;&lt;span class=&quot;attr-value&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;punctuation&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;punctuation&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;tag&quot;&gt;/pan-data-connector&lt;/span&gt;
+&lt;span class=&quot;punctuation&quot;&gt;&amp;gt;&lt;/span&gt;</code></pre>
+<p>Which renders as:
+<pre><code class="language-html">&lt;pan-data-connector resource=&quot;users&quot; base-url=&quot;https://api.example.com&quot;&gt;
+&lt;/pan-data-connector&gt;</code></pre></p>
+<h2>Testing</h2>
+<li><strong>Start playground:</strong></li>
+   <pre><code class="language-bash">cd playground
+   python3 -m http.server 8080
+   open http://localhost:8080/</code></pre>
+<li><strong>Load "Data Flow" example</strong></li>
+<li><strong>Click "View Code" button</strong></li>
+<li><strong>Verify:</strong></li>
+   - HTML is properly displayed with syntax highlighting
+   - No <code>class="tag"></code> appears in the output
+   - Tag names are colored (green)
+   - Attribute names are colored (blue)
+   - Attribute values are colored (orange)
+   - Code is readable and valid
+<h2>Why This Pattern?</h2>
+<h3>Anti-Pattern: Sequential Regex Replacements</h3>
+<pre><code class="language-javascript">// ❌ BAD: Each replacement can break the previous one
+code = replaceA(code);
+code = replaceB(code); // Might match text added by replaceA
+code = replaceC(code); // Might match text added by replaceB</code></pre>
+<h3>Better Pattern: Single-Pass with Callback</h3>
+<pre><code class="language-javascript">// ✅ GOOD: Single replacement, manual construction
+code = code.replace(regex, (match, ...groups) =&gt; {
+  // Build result without creating intermediate text
+  return constructResult(groups);
+});</code></pre>
+<h2>Files Changed</h2>
+<ul><li><strong><code>components/pg-exporter.mjs</code></strong>: Fixed <code>highlightHTML()</code> method (lines 266-305)</li>
+</ul>
+<h2>Related Issues</h2>
+<p>This same pattern causes issues in many syntax highlighters. Other vulnerable scenarios:</p>
+<li><strong>JSON highlighting</strong> - <code>"key": "value"</code> can interfere with string highlighting</li>
+<li><strong>CSS highlighting</strong> - <code>class</code> selectors can interfere with HTML class attributes</li>
+<li><strong>Markdown highlighting</strong> - <code><a href="url">link</a></code> can interfere with HTML tag highlighting</li>
+<p>The solution is always: <strong>process in a single pass with explicit boundaries</strong>.</p>
+<h2>Benefits</h2>
+<p>✅ <strong>Correct rendering</strong> - HTML displays properly
+✅ <strong>No text leakage</strong> - Styling spans don't appear in output
+✅ <strong>Proper syntax colors</strong> - Tags, attributes, values all highlighted
+✅ <strong>Copy/paste works</strong> - Generated HTML is valid
+✅ <strong>Download works</strong> - Exported files are correct
+✅ <strong>Performance</strong> - Single regex pass is faster than multiple</p>
+<p>The code panel is now fully functional! 🎉</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/SYNTAX_HIGHLIGHTING_FIX.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,1089 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing Strategies · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Testing Strategies">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">building-with-larc</a> / <span>chapter-17-testing-strategies</span>
+      </div>
+      <article class="docs-content">
+        <h1>Testing Strategies</h1>
+<blockquote>"Testing shows the presence, not the absence of bugs. But not testing shows the presence of unemployment."</blockquote>
+>
+<blockquote>— Edsger W. Dijkstra (with career advice added)</blockquote>
+<p>Testing is the art of proving your code works before users prove it doesn't. It's insurance against regressions, documentation that stays up-to-date, and confidence that your refactoring didn't break everything.</p>
+<p>In this chapter, we'll explore testing strategies for LARC applications: unit testing web components, integration testing message flows, end-to-end testing with complete PAN applications, mocking the message bus, testing async operations, and building test utilities that make testing a joy rather than a chore.</p>
+<p>By the end of this chapter, you'll have a comprehensive testing strategy that catches bugs early, runs fast, and doesn't make you want to skip writing tests.</p>
+<h2>The Testing Pyramid for LARC</h2>
+<p>The testing pyramid guides our testing strategy:</p>
+<pre><code class="language-plaintext">/\
+          /  \        E2E Tests (Few)
+         /____\       - Full application
+        /      \      - Real browser
+       /        \     - Slow, brittle
+      /----------\
+     /            \   Integration Tests (Some)
+    /              \  - Multiple components
+   /                \ - Message flows
+  /------------------\- Medium speed
+ /                    \
+/______________________\ Unit Tests (Many)
+
+    - Single components
+    - Pure functions
+    - Fast, focused</code></pre>
+<p>Most tests should be unit tests. Fewer integration tests. Even fewer E2E tests.</p>
+<h2>Unit Testing Components</h2>
+<p>Unit tests verify individual components in isolation. Let's use Vitest (modern, fast) or Mocha (classic, reliable).</p>
+<h3>Setting Up Vitest</h3>
+<pre><code class="language-bash">npm install -D vitest happy-dom</code></pre>
+<p>Create a test configuration:</p>
+<pre><code class="language-javascript">// vitest.config.js
+
+import { defineConfig } from &#039;vitest/config&#039;;
+
+export default defineConfig({
+  test: {
+    environment: &#039;happy-dom&#039;,
+    globals: true,
+    setupFiles: [&#039;./tests/setup.js&#039;]
+  }
+});</code></pre>
+<p>Create test setup:</p>
+<pre><code class="language-javascript">// tests/setup.js
+
+import { beforeEach, afterEach } from &#039;vitest&#039;;
+
+// Clean up DOM after each test
+afterEach(() =&gt; {
+  document.body.innerHTML = &#039;&#039;;
+});</code></pre>
+<h3>Testing a Simple Component</h3>
+<p>Let's test a counter component:</p>
+<pre><code class="language-javascript">// components/counter-button.mjs
+
+class CounterButton extends HTMLElement {
+  constructor() {
+    super();
+    this.count = 0;
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  increment() {
+    this.count++;
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;button id=&quot;increment&quot;&gt;
+        Count: ${this.count}
+      &lt;/button&gt;
+    `;
+
+    this.querySelector(&#039;#increment&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.increment();
+    });
+  }
+}
+
+customElements.define(&#039;counter-button&#039;, CounterButton);
+
+export { CounterButton };</code></pre>
+<p>Test it:</p>
+<pre><code class="language-javascript">// tests/counter-button.test.js
+
+import { describe, it, expect, beforeEach } from &#039;vitest&#039;;
+import { CounterButton } from &#039;../components/counter-button.mjs&#039;;
+
+describe(&#039;CounterButton&#039;, () =&gt; {
+  let element;
+
+  beforeEach(() =&gt; {
+    element = document.createElement(&#039;counter-button&#039;);
+    document.body.appendChild(element);
+  });
+
+  it(&#039;should render with initial count of 0&#039;, () =&gt; {
+    expect(element.count).toBe(0);
+    expect(element.textContent).toContain(&#039;Count: 0&#039;);
+  });
+
+  it(&#039;should increment count when button is clicked&#039;, () =&gt; {
+    const button = element.querySelector(&#039;button&#039;);
+
+    button.click();
+    expect(element.count).toBe(1);
+    expect(element.textContent).toContain(&#039;Count: 1&#039;);
+
+    button.click();
+    expect(element.count).toBe(2);
+    expect(element.textContent).toContain(&#039;Count: 2&#039;);
+  });
+
+  it(&#039;should call increment method when clicked&#039;, () =&gt; {
+    const incrementSpy = vi.spyOn(element, &#039;increment&#039;);
+    const button = element.querySelector(&#039;button&#039;);
+
+    button.click();
+
+    expect(incrementSpy).toHaveBeenCalledTimes(1);
+  });
+});</code></pre>
+<p>Run tests:</p>
+<pre><code class="language-bash">npm test</code></pre>
+<h3>Testing Components with Attributes</h3>
+<pre><code class="language-javascript">// components/user-badge.mjs
+
+class UserBadge extends HTMLElement {
+  static get observedAttributes() {
+    return [&#039;username&#039;, &#039;role&#039;];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue !== newValue) {
+      this.render();
+    }
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  render() {
+    const username = this.getAttribute(&#039;username&#039;) || &#039;Anonymous&#039;;
+    const role = this.getAttribute(&#039;role&#039;) || &#039;User&#039;;
+
+    this.innerHTML = `
+      &lt;div class=&quot;user-badge&quot;&gt;
+        &lt;span class=&quot;username&quot;&gt;${username}&lt;/span&gt;
+        &lt;span class=&quot;role&quot;&gt;${role}&lt;/span&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;user-badge&#039;, UserBadge);
+export { UserBadge };</code></pre>
+<p>Test it:</p>
+<pre><code class="language-javascript">// tests/user-badge.test.js
+
+import { describe, it, expect, beforeEach } from &#039;vitest&#039;;
+import { UserBadge } from &#039;../components/user-badge.mjs&#039;;
+
+describe(&#039;UserBadge&#039;, () =&gt; {
+  let element;
+
+  beforeEach(() =&gt; {
+    element = document.createElement(&#039;user-badge&#039;);
+    document.body.appendChild(element);
+  });
+
+  it(&#039;should render with default values&#039;, () =&gt; {
+    expect(element.textContent).toContain(&#039;Anonymous&#039;);
+    expect(element.textContent).toContain(&#039;User&#039;);
+  });
+
+  it(&#039;should render with provided attributes&#039;, () =&gt; {
+    element.setAttribute(&#039;username&#039;, &#039;Alice&#039;);
+    element.setAttribute(&#039;role&#039;, &#039;Admin&#039;);
+
+    expect(element.textContent).toContain(&#039;Alice&#039;);
+    expect(element.textContent).toContain(&#039;Admin&#039;);
+  });
+
+  it(&#039;should update when attributes change&#039;, () =&gt; {
+    element.setAttribute(&#039;username&#039;, &#039;Bob&#039;);
+    expect(element.textContent).toContain(&#039;Bob&#039;);
+
+    element.setAttribute(&#039;username&#039;, &#039;Charlie&#039;);
+    expect(element.textContent).toContain(&#039;Charlie&#039;);
+    expect(element.textContent).not.toContain(&#039;Bob&#039;);
+  });
+
+  it(&#039;should have correct CSS classes&#039;, () =&gt; {
+    element.setAttribute(&#039;username&#039;, &#039;Alice&#039;);
+
+    const badge = element.querySelector(&#039;.user-badge&#039;);
+    const username = element.querySelector(&#039;.username&#039;);
+    const role = element.querySelector(&#039;.role&#039;);
+
+    expect(badge).not.toBeNull();
+    expect(username).not.toBeNull();
+    expect(role).not.toBeNull();
+  });
+});</code></pre>
+<h2>Mocking the PAN Bus</h2>
+<p>Testing message-driven components requires mocking the message bus.</p>
+<h3>Creating a Mock Bus</h3>
+<pre><code class="language-javascript">// tests/mocks/mock-bus.js
+
+class MockBus {
+  constructor() {
+    this.subscriptions = new Map();
+    this.published = [];
+  }
+
+  // Mock publish function
+  publish(topic, data) {
+    this.published.push({ topic, data, timestamp: Date.now() });
+
+    // Trigger subscriptions
+    const handlers = this.subscriptions.get(topic) || [];
+    handlers.forEach(handler =&gt; {
+      handler({ topic, data });
+    });
+
+    // Trigger wildcard subscriptions
+    const wildcardHandlers = this.getWildcardHandlers(topic);
+    wildcardHandlers.forEach(handler =&gt; {
+      handler({ topic, data });
+    });
+  }
+
+  // Mock subscribe function
+  subscribe(pattern, handler) {
+    if (!this.subscriptions.has(pattern)) {
+      this.subscriptions.set(pattern, []);
+    }
+
+    this.subscriptions.get(pattern).push(handler);
+
+    // Return unsubscribe function
+    return () =&gt; {
+      const handlers = this.subscriptions.get(pattern);
+      const index = handlers.indexOf(handler);
+      if (index &gt; -1) {
+        handlers.splice(index, 1);
+      }
+    };
+  }
+
+  // Get handlers for wildcard patterns
+  getWildcardHandlers(topic) {
+    const handlers = [];
+
+    for (const [pattern, patternHandlers] of this.subscriptions) {
+      if (this.matchesPattern(topic, pattern)) {
+        handlers.push(...patternHandlers);
+      }
+    }
+
+    return handlers;
+  }
+
+  // Simple wildcard matching
+  matchesPattern(topic, pattern) {
+    if (pattern === &#039;*&#039;) return true;
+    if (pattern === topic) return false; // Exact match handled separately
+
+    const patternParts = pattern.split(&#039;.&#039;);
+    const topicParts = topic.split(&#039;.&#039;);
+
+    if (patternParts.length !== topicParts.length) {
+      return false;
+    }
+
+    return patternParts.every((part, i) =&gt; {
+      return part === &#039;*&#039; || part === topicParts[i];
+    });
+  }
+
+  // Reset the bus
+  reset() {
+    this.subscriptions.clear();
+    this.published = [];
+  }
+
+  // Test helpers
+  getPublished(topic) {
+    return this.published.filter(msg =&gt; msg.topic === topic);
+  }
+
+  getLastPublished(topic) {
+    const messages = this.getPublished(topic);
+    return messages[messages.length - 1];
+  }
+
+  wasPublished(topic, data) {
+    return this.published.some(msg =&gt;
+      msg.topic === topic &amp;&amp;
+      JSON.stringify(msg.data) === JSON.stringify(data)
+    );
+  }
+}
+
+export { MockBus };</code></pre>
+<h3>Using the Mock Bus</h3>
+<pre><code class="language-javascript">// tests/setup.js
+
+import { beforeEach, afterEach } from &#039;vitest&#039;;
+import { MockBus } from &#039;./mocks/mock-bus.js&#039;;
+
+let mockBus;
+
+beforeEach(() =&gt; {
+  mockBus = new MockBus();
+
+  // Replace global publish and subscribe
+  global.publish = mockBus.publish.bind(mockBus);
+  global.subscribe = mockBus.subscribe.bind(mockBus);
+});
+
+afterEach(() =&gt; {
+  mockBus.reset();
+  document.body.innerHTML = &#039;&#039;;
+});
+
+// Export for use in tests
+export function getMockBus() {
+  return mockBus;
+}</code></pre>
+<h3>Testing Message-Driven Components</h3>
+<pre><code class="language-javascript">// components/notification-display.mjs
+
+import { subscribe } from &#039;../pan.js&#039;;
+
+class NotificationDisplay extends HTMLElement {
+  constructor() {
+    super();
+    this.notifications = [];
+  }
+
+  connectedCallback() {
+    this.unsubscribe = subscribe(&#039;notification.show&#039;, (msg) =&gt; {
+      this.addNotification(msg.data);
+    });
+
+    this.render();
+  }
+
+  addNotification(notification) {
+    this.notifications.push(notification);
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;notifications&quot;&gt;
+        ${this.notifications.map(n =&gt; `
+          &lt;div class=&quot;notification notification-${n.type}&quot;&gt;
+            ${n.message}
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+
+  disconnectedCallback() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+}
+
+customElements.define(&#039;notification-display&#039;, NotificationDisplay);
+export { NotificationDisplay };</code></pre>
+<p>Test it:</p>
+<pre><code class="language-javascript">// tests/notification-display.test.js
+
+import { describe, it, expect, beforeEach } from &#039;vitest&#039;;
+import { NotificationDisplay } from &#039;../components/notification-display.mjs&#039;;
+import { getMockBus } from &#039;./setup.js&#039;;
+
+describe(&#039;NotificationDisplay&#039;, () =&gt; {
+  let element;
+  let mockBus;
+
+  beforeEach(() =&gt; {
+    mockBus = getMockBus();
+    element = document.createElement(&#039;notification-display&#039;);
+    document.body.appendChild(element);
+  });
+
+  it(&#039;should start with no notifications&#039;, () =&gt; {
+    expect(element.notifications).toHaveLength(0);
+    expect(element.querySelector(&#039;.notification&#039;)).toBeNull();
+  });
+
+  it(&#039;should display notification when message is published&#039;, () =&gt; {
+    publish(&#039;notification.show&#039;, {
+      type: &#039;info&#039;,
+      message: &#039;Hello, World!&#039;
+    });
+
+    expect(element.notifications).toHaveLength(1);
+    expect(element.textContent).toContain(&#039;Hello, World!&#039;);
+    expect(element.querySelector(&#039;.notification-info&#039;)).not.toBeNull();
+  });
+
+  it(&#039;should display multiple notifications&#039;, () =&gt; {
+    publish(&#039;notification.show&#039;, { type: &#039;info&#039;, message: &#039;First&#039; });
+    publish(&#039;notification.show&#039;, { type: &#039;warning&#039;, message: &#039;Second&#039; });
+    publish(&#039;notification.show&#039;, { type: &#039;error&#039;, message: &#039;Third&#039; });
+
+    expect(element.notifications).toHaveLength(3);
+    expect(element.textContent).toContain(&#039;First&#039;);
+    expect(element.textContent).toContain(&#039;Second&#039;);
+    expect(element.textContent).toContain(&#039;Third&#039;);
+  });
+
+  it(&#039;should unsubscribe when disconnected&#039;, () =&gt; {
+    element.remove();
+
+    // Publish after removal
+    publish(&#039;notification.show&#039;, { type: &#039;info&#039;, message: &#039;After removal&#039; });
+
+    // Should not have been added
+    expect(element.notifications).toHaveLength(0);
+  });
+});</code></pre>
+<h2>Integration Testing Message Flows</h2>
+<p>Integration tests verify multiple components working together through message flows.</p>
+<pre><code class="language-javascript">// tests/integration/shopping-cart.test.js
+
+import { describe, it, expect, beforeEach } from &#039;vitest&#039;;
+import { ProductCatalog } from &#039;../../components/product-catalog.mjs&#039;;
+import { ShoppingCart } from &#039;../../components/shopping-cart.mjs&#039;;
+import { CartBadge } from &#039;../../components/cart-badge.mjs&#039;;
+import { getMockBus } from &#039;../setup.js&#039;;
+
+describe(&#039;Shopping Cart Integration&#039;, () =&gt; {
+  let catalog;
+  let cart;
+  let badge;
+  let mockBus;
+
+  beforeEach(() =&gt; {
+    mockBus = getMockBus();
+
+    // Create components
+    catalog = document.createElement(&#039;product-catalog&#039;);
+    cart = document.createElement(&#039;shopping-cart&#039;);
+    badge = document.createElement(&#039;cart-badge&#039;);
+
+    // Add to DOM
+    document.body.appendChild(catalog);
+    document.body.appendChild(cart);
+    document.body.appendChild(badge);
+  });
+
+  it(&#039;should update cart and badge when product is added&#039;, () =&gt; {
+    // Simulate adding product
+    publish(&#039;cart.item.added&#039;, {
+      productId: 1,
+      name: &#039;Widget&#039;,
+      price: 10,
+      quantity: 1
+    });
+
+    // Cart should contain the item
+    expect(cart.items).toHaveLength(1);
+    expect(cart.items[0].name).toBe(&#039;Widget&#039;);
+
+    // Badge should show count
+    expect(badge.itemCount).toBe(1);
+    expect(badge.textContent).toContain(&#039;1&#039;);
+  });
+
+  it(&#039;should publish cart.updated when item is added&#039;, () =&gt; {
+    publish(&#039;cart.item.added&#039;, {
+      productId: 1,
+      name: &#039;Widget&#039;,
+      price: 10,
+      quantity: 1
+    });
+
+    // Verify cart.updated was published
+    const updated = mockBus.getLastPublished(&#039;cart.updated&#039;);
+    expect(updated).not.toBeUndefined();
+    expect(updated.data.items).toHaveLength(1);
+    expect(updated.data.total).toBe(10);
+  });
+
+  it(&#039;should handle multiple items&#039;, () =&gt; {
+    publish(&#039;cart.item.added&#039;, {
+      productId: 1,
+      name: &#039;Widget&#039;,
+      price: 10,
+      quantity: 2
+    });
+
+    publish(&#039;cart.item.added&#039;, {
+      productId: 2,
+      name: &#039;Gadget&#039;,
+      price: 20,
+      quantity: 1
+    });
+
+    expect(cart.items).toHaveLength(2);
+    expect(badge.itemCount).toBe(3); // 2 widgets + 1 gadget
+  });
+
+  it(&#039;should update quantities for duplicate items&#039;, () =&gt; {
+    publish(&#039;cart.item.added&#039;, {
+      productId: 1,
+      name: &#039;Widget&#039;,
+      price: 10,
+      quantity: 1
+    });
+
+    publish(&#039;cart.item.added&#039;, {
+      productId: 1,
+      name: &#039;Widget&#039;,
+      price: 10,
+      quantity: 1
+    });
+
+    // Should have one item with quantity 2
+    expect(cart.items).toHaveLength(1);
+    expect(cart.items[0].quantity).toBe(2);
+  });
+});</code></pre>
+<h2>Testing Async Operations</h2>
+<p>Many LARC operations are async. Test them properly.</p>
+<h3>Testing Promises</h3>
+<pre><code class="language-javascript">// components/data-loader.mjs
+
+import { publish } from &#039;../pan.js&#039;;
+
+class DataLoader extends HTMLElement {
+  async connectedCallback() {
+    try {
+      publish(&#039;data.loading&#039;, { loading: true });
+
+      const response = await fetch(&#039;/api/data&#039;);
+      const data = await response.json();
+
+      publish(&#039;data.loaded&#039;, { data });
+    } catch (error) {
+      publish(&#039;data.error&#039;, { error: error.message });
+    } finally {
+      publish(&#039;data.loading&#039;, { loading: false });
+    }
+  }
+}
+
+customElements.define(&#039;data-loader&#039;, DataLoader);
+export { DataLoader };</code></pre>
+<p>Test it:</p>
+<pre><code class="language-javascript">// tests/data-loader.test.js
+
+import { describe, it, expect, beforeEach, vi } from &#039;vitest&#039;;
+import { DataLoader } from &#039;../components/data-loader.mjs&#039;;
+import { getMockBus } from &#039;./setup.js&#039;;
+
+describe(&#039;DataLoader&#039;, () =&gt; {
+  let mockBus;
+
+  beforeEach(() =&gt; {
+    mockBus = getMockBus();
+
+    // Mock fetch
+    global.fetch = vi.fn();
+  });
+
+  it(&#039;should publish loading state&#039;, async () =&gt; {
+    fetch.mockResolvedValueOnce({
+      json: async () =&gt; ({ items: [] })
+    });
+
+    const element = document.createElement(&#039;data-loader&#039;);
+    document.body.appendChild(element);
+
+    // Wait for async operations
+    await new Promise(resolve =&gt; setTimeout(resolve, 0));
+
+    // Check loading messages
+    const loadingMessages = mockBus.getPublished(&#039;data.loading&#039;);
+    expect(loadingMessages).toHaveLength(2);
+    expect(loadingMessages[0].data.loading).toBe(true);
+    expect(loadingMessages[1].data.loading).toBe(false);
+  });
+
+  it(&#039;should publish data when loaded successfully&#039;, async () =&gt; {
+    const mockData = { items: [1, 2, 3] };
+
+    fetch.mockResolvedValueOnce({
+      json: async () =&gt; mockData
+    });
+
+    const element = document.createElement(&#039;data-loader&#039;);
+    document.body.appendChild(element);
+
+    // Wait for async operations
+    await new Promise(resolve =&gt; setTimeout(resolve, 0));
+
+    const loaded = mockBus.getLastPublished(&#039;data.loaded&#039;);
+    expect(loaded).not.toBeUndefined();
+    expect(loaded.data.data).toEqual(mockData);
+  });
+
+  it(&#039;should publish error when fetch fails&#039;, async () =&gt; {
+    fetch.mockRejectedValueOnce(new Error(&#039;Network error&#039;));
+
+    const element = document.createElement(&#039;data-loader&#039;);
+    document.body.appendChild(element);
+
+    // Wait for async operations
+    await new Promise(resolve =&gt; setTimeout(resolve, 0));
+
+    const error = mockBus.getLastPublished(&#039;data.error&#039;);
+    expect(error).not.toBeUndefined();
+    expect(error.data.error).toBe(&#039;Network error&#039;);
+  });
+});</code></pre>
+<h3>Testing with Async/Await</h3>
+<p>Use async/await in tests:</p>
+<pre><code class="language-javascript">it(&#039;should load data&#039;, async () =&gt; {
+  fetch.mockResolvedValueOnce({
+    json: async () =&gt; ({ data: &#039;test&#039; })
+  });
+
+  const element = document.createElement(&#039;data-loader&#039;);
+  document.body.appendChild(element);
+
+  // Wait for component to finish loading
+  await vi.waitFor(() =&gt; {
+    expect(mockBus.wasPublished(&#039;data.loaded&#039;, { data: { data: &#039;test&#039; } })).toBe(true);
+  });
+});</code></pre>
+<h3>Testing Timeouts and Intervals</h3>
+<pre><code class="language-javascript">// components/auto-saver.mjs
+
+import { subscribe } from &#039;../pan.js&#039;;
+
+class AutoSaver extends HTMLElement {
+  constructor() {
+    super();
+    this.saveInterval = 5000; // 5 seconds
+    this.intervalId = null;
+  }
+
+  connectedCallback() {
+    this.intervalId = setInterval(() =&gt; {
+      publish(&#039;data.save&#039;, { timestamp: Date.now() });
+    }, this.saveInterval);
+  }
+
+  disconnectedCallback() {
+    clearInterval(this.intervalId);
+  }
+}
+
+customElements.define(&#039;auto-saver&#039;, AutoSaver);
+export { AutoSaver };</code></pre>
+<p>Test it:</p>
+<pre><code class="language-javascript">// tests/auto-saver.test.js
+
+import { describe, it, expect, beforeEach, vi } from &#039;vitest&#039;;
+import { AutoSaver } from &#039;../components/auto-saver.mjs&#039;;
+import { getMockBus } from &#039;./setup.js&#039;;
+
+describe(&#039;AutoSaver&#039;, () =&gt; {
+  let mockBus;
+
+  beforeEach(() =&gt; {
+    mockBus = getMockBus();
+    vi.useFakeTimers();
+  });
+
+  afterEach(() =&gt; {
+    vi.useRealTimers();
+  });
+
+  it(&#039;should save at regular intervals&#039;, () =&gt; {
+    const element = document.createElement(&#039;auto-saver&#039;);
+    document.body.appendChild(element);
+
+    // Fast-forward 5 seconds
+    vi.advanceTimersByTime(5000);
+    expect(mockBus.getPublished(&#039;data.save&#039;)).toHaveLength(1);
+
+    // Fast-forward another 5 seconds
+    vi.advanceTimersByTime(5000);
+    expect(mockBus.getPublished(&#039;data.save&#039;)).toHaveLength(2);
+
+    // Fast-forward another 5 seconds
+    vi.advanceTimersByTime(5000);
+    expect(mockBus.getPublished(&#039;data.save&#039;)).toHaveLength(3);
+  });
+
+  it(&#039;should stop saving when disconnected&#039;, () =&gt; {
+    const element = document.createElement(&#039;auto-saver&#039;);
+    document.body.appendChild(element);
+
+    vi.advanceTimersByTime(5000);
+    expect(mockBus.getPublished(&#039;data.save&#039;)).toHaveLength(1);
+
+    element.remove();
+
+    // Should not save after removal
+    vi.advanceTimersByTime(5000);
+    expect(mockBus.getPublished(&#039;data.save&#039;)).toHaveLength(1);
+  });
+});</code></pre>
+<h2>End-to-End Testing</h2>
+<p>E2E tests verify the entire application in a real browser. Use Playwright or Cypress.</p>
+<h3>Setting Up Playwright</h3>
+<pre><code class="language-bash">npm install -D @playwright/test
+npx playwright install</code></pre>
+<p>Create a test:</p>
+<pre><code class="language-javascript">// tests/e2e/shopping-cart.spec.js
+
+import { test, expect } from &#039;@playwright/test&#039;;
+
+test.describe(&#039;Shopping Cart&#039;, () =&gt; {
+  test.beforeEach(async ({ page }) =&gt; {
+    await page.goto(&#039;http://localhost:3000&#039;);
+  });
+
+  test(&#039;should add item to cart&#039;, async ({ page }) =&gt; {
+    // Click add to cart button
+    await page.click(&#039;button:has-text(&quot;Add to Cart&quot;)&#039;);
+
+    // Verify cart badge updates
+    const badge = page.locator(&#039;cart-badge&#039;);
+    await expect(badge).toContainText(&#039;1&#039;);
+
+    // Verify cart displays item
+    const cart = page.locator(&#039;shopping-cart&#039;);
+    await expect(cart).toContainText(&#039;Widget&#039;);
+    await expect(cart).toContainText(&#039;$10&#039;);
+  });
+
+  test(&#039;should calculate total correctly&#039;, async ({ page }) =&gt; {
+    // Add multiple items
+    await page.click(&#039;button:has-text(&quot;Add to Cart&quot;)&#039;).first();
+    await page.click(&#039;button:has-text(&quot;Add to Cart&quot;)&#039;).nth(1);
+
+    // Verify total
+    const cart = page.locator(&#039;shopping-cart&#039;);
+    await expect(cart).toContainText(&#039;Total: $30&#039;);
+  });
+
+  test(&#039;should persist cart across page reloads&#039;, async ({ page }) =&gt; {
+    // Add item to cart
+    await page.click(&#039;button:has-text(&quot;Add to Cart&quot;)&#039;);
+
+    // Reload page
+    await page.reload();
+
+    // Verify cart still has item
+    const cart = page.locator(&#039;shopping-cart&#039;);
+    await expect(cart).toContainText(&#039;Widget&#039;);
+  });
+});</code></pre>
+<p>Run E2E tests:</p>
+<pre><code class="language-bash">npx playwright test</code></pre>
+<h3>Testing Theme Switching</h3>
+<pre><code class="language-javascript">// tests/e2e/theme.spec.js
+
+import { test, expect } from &#039;@playwright/test&#039;;
+
+test.describe(&#039;Theme Switching&#039;, () =&gt; {
+  test(&#039;should toggle between light and dark mode&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;http://localhost:3000&#039;);
+
+    // Check initial theme
+    const html = page.locator(&#039;html&#039;);
+    await expect(html).toHaveAttribute(&#039;data-theme&#039;, &#039;light&#039;);
+
+    // Click dark mode button
+    await page.click(&#039;button:has-text(&quot;Dark&quot;)&#039;);
+
+    // Verify theme changed
+    await expect(html).toHaveAttribute(&#039;data-theme&#039;, &#039;dark&#039;);
+
+    // Verify styles applied
+    const body = page.locator(&#039;body&#039;);
+    const bgColor = await body.evaluate(el =&gt;
+      getComputedStyle(el).backgroundColor
+    );
+    expect(bgColor).toBe(&#039;rgb(17, 24, 39)&#039;); // Dark background
+  });
+
+  test(&#039;should persist theme preference&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;http://localhost:3000&#039;);
+
+    // Switch to dark mode
+    await page.click(&#039;button:has-text(&quot;Dark&quot;)&#039;);
+
+    // Reload page
+    await page.reload();
+
+    // Verify theme persisted
+    const html = page.locator(&#039;html&#039;);
+    await expect(html).toHaveAttribute(&#039;data-theme&#039;, &#039;dark&#039;);
+  });
+});</code></pre>
+<h2>Test Utilities and Helpers</h2>
+<p>Build reusable utilities to make testing easier.</p>
+<h3>Component Test Harness</h3>
+<pre><code class="language-javascript">// tests/utils/component-harness.js
+
+class ComponentHarness {
+  constructor(tagName, attributes = {}) {
+    this.element = document.createElement(tagName);
+
+    // Set attributes
+    for (const [key, value] of Object.entries(attributes)) {
+      this.element.setAttribute(key, value);
+    }
+
+    document.body.appendChild(this.element);
+  }
+
+  // Query within component
+  query(selector) {
+    return this.element.querySelector(selector);
+  }
+
+  queryAll(selector) {
+    return this.element.querySelectorAll(selector);
+  }
+
+  // Get text content
+  text() {
+    return this.element.textContent.trim();
+  }
+
+  // Click element
+  click(selector) {
+    const el = selector ? this.query(selector) : this.element;
+    el.click();
+    return this;
+  }
+
+  // Type into input
+  type(selector, value) {
+    const input = this.query(selector);
+    input.value = value;
+    input.dispatchEvent(new Event(&#039;input&#039;, { bubbles: true }));
+    return this;
+  }
+
+  // Wait for condition
+  async waitFor(condition, timeout = 1000) {
+    const start = Date.now();
+
+    while (Date.now() - start &lt; timeout) {
+      if (condition(this.element)) {
+        return;
+      }
+      await new Promise(resolve =&gt; setTimeout(resolve, 50));
+    }
+
+    throw new Error(&#039;Timeout waiting for condition&#039;);
+  }
+
+  // Clean up
+  destroy() {
+    this.element.remove();
+  }
+}
+
+export { ComponentHarness };</code></pre>
+<p>Use it:</p>
+<pre><code class="language-javascript">// tests/user-profile.test.js
+
+import { describe, it, expect } from &#039;vitest&#039;;
+import { ComponentHarness } from &#039;./utils/component-harness.js&#039;;
+import { UserProfile } from &#039;../components/user-profile.mjs&#039;;
+
+describe(&#039;UserProfile&#039;, () =&gt; {
+  it(&#039;should display user information&#039;, async () =&gt; {
+    const harness = new ComponentHarness(&#039;user-profile&#039;, {
+      &#039;user-id&#039;: &#039;123&#039;
+    });
+
+    // Publish user data
+    publish(&#039;user.data&#039;, {
+      userId: &#039;123&#039;,
+      name: &#039;Alice&#039;,
+      email: &#039;alice@example.com&#039;
+    });
+
+    // Wait for render
+    await harness.waitFor(el =&gt; el.textContent.includes(&#039;Alice&#039;));
+
+    expect(harness.text()).toContain(&#039;Alice&#039;);
+    expect(harness.text()).toContain(&#039;alice@example.com&#039;);
+
+    harness.destroy();
+  });
+});</code></pre>
+<h3>Message Bus Test Helper</h3>
+<pre><code class="language-javascript">// tests/utils/message-helper.js
+
+import { getMockBus } from &#039;../setup.js&#039;;
+
+class MessageHelper {
+  constructor() {
+    this.bus = getMockBus();
+  }
+
+  // Publish and wait for response
+  async publishAndWait(publishTopic, publishData, waitTopic, timeout = 1000) {
+    return new Promise((resolve, reject) =&gt; {
+      const timeoutId = setTimeout(() =&gt; {
+        unsubscribe();
+        reject(new Error(`Timeout waiting for ${waitTopic}`));
+      }, timeout);
+
+      const unsubscribe = subscribe(waitTopic, (msg) =&gt; {
+        clearTimeout(timeoutId);
+        unsubscribe();
+        resolve(msg.data);
+      });
+
+      publish(publishTopic, publishData);
+    });
+  }
+
+  // Wait for specific message
+  async waitForMessage(topic, predicate = null, timeout = 1000) {
+    return new Promise((resolve, reject) =&gt; {
+      const timeoutId = setTimeout(() =&gt; {
+        unsubscribe();
+        reject(new Error(`Timeout waiting for ${topic}`));
+      }, timeout);
+
+      const unsubscribe = subscribe(topic, (msg) =&gt; {
+        if (!predicate || predicate(msg.data)) {
+          clearTimeout(timeoutId);
+          unsubscribe();
+          resolve(msg.data);
+        }
+      });
+    });
+  }
+
+  // Assert message was published
+  assertPublished(topic, data = null) {
+    const messages = this.bus.getPublished(topic);
+
+    if (messages.length === 0) {
+      throw new Error(`Expected message on topic &quot;${topic}&quot; but none were published`);
+    }
+
+    if (data !== null) {
+      const match = messages.some(msg =&gt;
+        JSON.stringify(msg.data) === JSON.stringify(data)
+      );
+
+      if (!match) {
+        throw new Error(
+          `Expected message on topic &quot;${topic}&quot; with data ${JSON.stringify(data)} ` +
+          `but received: ${JSON.stringify(messages.map(m =&gt; m.data))}`
+        );
+      }
+    }
+  }
+
+  // Assert message was NOT published
+  assertNotPublished(topic) {
+    const messages = this.bus.getPublished(topic);
+
+    if (messages.length &gt; 0) {
+      throw new Error(
+        `Expected no messages on topic &quot;${topic}&quot; but ${messages.length} were published`
+      );
+    }
+  }
+}
+
+export { MessageHelper };</code></pre>
+<p>Use it:</p>
+<pre><code class="language-javascript">import { MessageHelper } from &#039;./utils/message-helper.js&#039;;
+
+it(&#039;should respond to data request&#039;, async () =&gt; {
+  const helper = new MessageHelper();
+
+  const element = document.createElement(&#039;data-provider&#039;);
+  document.body.appendChild(element);
+
+  // Publish request and wait for response
+  const response = await helper.publishAndWait(
+    &#039;data.request&#039;,
+    { id: 123 },
+    &#039;data.response&#039;
+  );
+
+  expect(response.id).toBe(123);
+  expect(response.data).toBeDefined();
+});</code></pre>
+<h2>Test Coverage</h2>
+<p>Measure test coverage to identify untested code:</p>
+<pre><code class="language-bash">npm install -D @vitest/coverage-v8</code></pre>
+<p>Run with coverage:</p>
+<pre><code class="language-bash">npx vitest --coverage</code></pre>
+<p>Aim for:</p>
+<ul><li><strong>80%+ overall coverage</strong></li>
+<li><strong>100% coverage for critical paths</strong> (auth, payments, data loss scenarios)</li>
+<li><strong>Lower coverage for UI glue code</strong> (it's okay)</li>
+</ul>
+<h2>Wrapping Up</h2>
+<p>Testing LARC applications is straightforward once you understand the patterns:</p>
+<li><strong>Unit tests</strong>: Test components in isolation, mock the message bus</li>
+<li><strong>Integration tests</strong>: Test message flows between components</li>
+<li><strong>E2E tests</strong>: Test the full application in a real browser</li>
+<li><strong>Mock the bus</strong>: Use MockBus for predictable, fast tests</li>
+<li><strong>Test async operations</strong>: Use async/await and fake timers</li>
+<li><strong>Build utilities</strong>: Create harnesses and helpers to simplify testing</li>
+<p>The key insight: message-driven architecture makes testing easier, not harder. Components are decoupled, dependencies are explicit (subscriptions), and side effects are observable (publications).</p>
+<p>Write tests. Run them often. Trust them completely. And when a test fails, thank it for catching a bug before your users did.</p>
+<p>You've now completed a comprehensive tour of LARC development: theming and styling for beautiful UIs, performance optimization for fast applications, and testing strategies for reliable software. You have all the tools to build production-ready LARC applications.</p>
+<p>Now go forth and build something amazing. And remember: untested code is legacy code the moment you write it.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/building-with-larc/chapter-17-testing-strategies.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

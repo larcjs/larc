@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PanDebugManager - PAN Documentation</title>
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">
+      <a href="../index.html">PAN Docs</a>
+    </div>
+    <div class="nav-section">
+      <a href="../index.html">← Back to Index</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <header class="page-header">
+      <h1>PanDebugManager</h1>
+      <div class="file-path">packages/core/pan-debug.mjs</div>
+    </header>
+
+    <section class="section">
+      <div class="description">
+        Provides introspection and debugging capabilities for PAN message flows.<br>Tracks messages as they pass through the bus and routing system.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 id="PanDebugManager">Class: PanDebugManager</h2>
+      
+      <div class="description">Provides introspection and debugging capabilities for PAN message flows.<br>Tracks messages as they pass through the bus and routing system.</div>
+
+      <h3>Examples</h3>
+
+      <pre><code>// Enable tracing
+pan.debug.enableTracing({ maxBuffer: 100, sampleRate: 1.0 });
+// Get trace history
+const trace = pan.debug.getTrace();
+console.log(`Captured ${trace.length} messages`);
+// Disable tracing
+pan.debug.disableTracing();
+/
+/**
+PAN Debug Manager</code></pre>
+
+    </section>
+
+    <section class="section">
+      <h2>Methods</h2>
+
+      <div class="method" id="captureSnapshot">
+        <h3><code>captureSnapshot()</code></h3>
+        <div class="description">Enable message tracing<br>/<br>enableTracing(options = {}) {<br>this.enabled = true;<br>this.maxBuffer = options.maxBuffer !== undefined ? options.maxBuffer : 1000;<br>this.sampleRate = options.sampleRate !== undefined ? options.sampleRate : 1.0;<br>// Validate sample rate<br>if (this.sampleRate < 0) this.sampleRate = 0;<br>if (this.sampleRate > 1) this.sampleRate = 1;<br>console.log(`[PAN Debug] Tracing enabled (buffer: ${this.maxBuffer}, sample rate: ${this.sampleRate})`);<br>}<br>/**<br>Disable message tracing<br>/<br>disableTracing() {<br>this.enabled = false;<br>console.log(`[PAN Debug] Tracing disabled (captured ${this.traceBuffer.length} messages)`);<br>}<br>/**<br>Record a message trace<br>/<br>trace(message, matchedRoutes = []) {<br>if (!this.enabled) return;<br>this.messageCount++;<br>// Sample check<br>if (this.sampleRate < 1.0 && Math.random() > this.sampleRate) {<br>return;<br>}<br>const entry = {<br>message: this._sanitizeMessage(message),<br>matchedRoutes: matchedRoutes.map(route => ({<br>id: route.id,<br>name: route.name,<br>actions: route.actions.map(a => a.type),<br>error: null<br>})),<br>ts: Date.now(),<br>sequence: this.messageCount<br>};<br>this.traceBuffer.push(entry);<br>// Trim buffer if over limit<br>while (this.traceBuffer.length > this.maxBuffer) {<br>this.traceBuffer.shift();<br>}<br>}<br>/**<br>Record a routing error<br>/<br>traceError(message, route, error) {<br>if (!this.enabled) return;<br>// Find existing trace entry for this message<br>const entry = this.traceBuffer<br>.slice()<br>.reverse()<br>.find(e => e.message.id === message.id);<br>if (entry) {<br>const routeTrace = entry.matchedRoutes.find(r => r.id === route.id);<br>if (routeTrace) {<br>routeTrace.error = {<br>message: error.message || String(error),<br>stack: error.stack<br>};<br>}<br>}<br>}<br>/**<br>Get trace buffer<br>/<br>getTrace() {<br>return [...this.traceBuffer];<br>}<br>/**<br>Clear trace buffer<br>/<br>clearTrace() {<br>this.traceBuffer = [];<br>this.messageCount = 0;<br>console.log('[PAN Debug] Trace buffer cleared');<br>}<br>/**<br>Get trace statistics<br>/<br>getStats() {<br>const stats = {<br>enabled: this.enabled,<br>messageCount: this.messageCount,<br>bufferSize: this.traceBuffer.length,<br>maxBuffer: this.maxBuffer,<br>sampleRate: this.sampleRate<br>};<br>if (this.traceBuffer.length > 0) {<br>stats.oldestMessage = this.traceBuffer[0].ts;<br>stats.newestMessage = this.traceBuffer[this.traceBuffer.length - 1].ts;<br>stats.timespan = stats.newestMessage - stats.oldestMessage;<br>}<br>return stats;<br>}<br>/**<br>Query trace buffer<br>/<br>query(filter = {}) {<br>let results = [...this.traceBuffer];<br>// Filter by topic<br>if (filter.topic) {<br>results = results.filter(e => e.message.topic === filter.topic);<br>}<br>// Filter by type<br>if (filter.type) {<br>results = results.filter(e => e.message.type === filter.type);<br>}<br>// Filter by matched routes<br>if (filter.hasRoutes !== undefined) {<br>if (filter.hasRoutes) {<br>results = results.filter(e => e.matchedRoutes.length > 0);<br>} else {<br>results = results.filter(e => e.matchedRoutes.length === 0);<br>}<br>}<br>// Filter by errors<br>if (filter.hasErrors !== undefined) {<br>if (filter.hasErrors) {<br>results = results.filter(e =><br>e.matchedRoutes.some(r => r.error !== null)<br>);<br>} else {<br>results = results.filter(e =><br>!e.matchedRoutes.some(r => r.error !== null)<br>);<br>}<br>}<br>// Filter by time range<br>if (filter.startTs) {<br>results = results.filter(e => e.ts >= filter.startTs);<br>}<br>if (filter.endTs) {<br>results = results.filter(e => e.ts <= filter.endTs);<br>}<br>// Limit results<br>if (filter.limit && filter.limit > 0) {<br>results = results.slice(-filter.limit);<br>}<br>return results;<br>}<br>/**<br>Export trace as JSON<br>/<br>export() {<br>return JSON.stringify(this.traceBuffer, null, 2);<br>}<br>/**<br>Import trace from JSON<br>/<br>import(json) {<br>try {<br>const data = JSON.parse(json);<br>if (Array.isArray(data)) {<br>this.traceBuffer = data;<br>console.log(`[PAN Debug] Imported ${data.length} trace entries`);<br>}<br>} catch (err) {<br>console.error('[PAN Debug] Failed to import trace:', err);<br>throw err;<br>}<br>}<br>/**<br>Sanitize message for storage (remove circular refs, etc.)<br>/<br>_sanitizeMessage(message) {<br>try {<br>// Simple approach: JSON stringify/parse to remove circular refs<br>return JSON.parse(JSON.stringify(message));<br>} catch (err) {<br>// Fallback: basic copy<br>return {<br>id: message.id,<br>type: message.type,<br>topic: message.topic,<br>ts: message.ts,<br>error: 'Failed to serialize message'<br>};<br>}<br>}<br>}<br>/**<br>Create snapshot of current PAN state</div>
+
+      </div>
+
+    </section>
+
+  </main>
+</body>
+</html>

@@ -656,6 +656,13 @@
       }
     };
 
+    // HTML escape helper to prevent XSS
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     // Get book from URL params
     const params = new URLSearchParams(window.location.search);
     const bookId = params.get('book') || 'learning-larc';
@@ -757,8 +764,8 @@
           <div style="text-align: center; padding: 4rem 2rem;">
             <h2>Error Loading Book</h2>
             <p>Sorry, we couldn't load the book content. Please try again.</p>
-            <p style="color: var(--color-text-muted);">${error.message}</p>
-            <p><a href="${book.url}">View original HTML</a></p>
+            <p style="color: var(--color-text-muted);">${escapeHtml(error.message || 'Unknown error')}</p>
+            <p><a href="${escapeHtml(book.url)}">View original HTML</a></p>
           </div>
         `;
       }

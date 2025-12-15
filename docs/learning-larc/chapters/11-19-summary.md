@@ -514,7 +514,7 @@ class UserCard extends HTMLElement {
 
 ### Community
 
-- Discord: https://discord.gg/larcjs
+- Discord: https://discord.gg/zjUPsWTu
 - Forum: https://forum.larcjs.com
 - Twitter: @larcjs
 

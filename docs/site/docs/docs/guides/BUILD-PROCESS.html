@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Build Process - Minified Production Files · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Build Process - Minified Production Files">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">guides</a> / <span>BUILD-PROCESS</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Build Process - Minified Production Files</h1>
+<strong>Created:</strong> December 7, 2025
+<strong>Status:</strong> ✅ Implemented and Tested
+<hr>
+<h2>🎯 Overview</h2>
+<p>The LARC monorepo now has a comprehensive build process that creates <strong>minified versions</strong> of all <code>.mjs</code> files alongside their unminified sources.</p>
+<h3>Strategy</h3>
+<ul><li><strong>Development:</strong> Use <code>.mjs</code> files (unminified, with comments, easier debugging)</li>
+<li><strong>Production:</strong> Use <code>.min.mjs</code> files (minified, optimized, smaller size)</li>
+</ul>
+Both versions exist side-by-side, giving developers flexibility to choose based on their needs.
+<hr>
+<h2>📦 Build Scripts Created</h2>
+<h3>1. Monorepo Root: <code>scripts/build-minified.js</code></h3>
+Orchestrates builds across all submodules.
+<strong>Usage:</strong>
+<pre><code class="language-bash">cd /home/cdr/domains/larcjs.com/www/larc
+npm run build:minify</code></pre>
+<h3>2. Core: <code>core/scripts/build-minified.js</code></h3>
+Minifies all <code>.mjs</code> files in @larcjs/core
+<strong>Input Files (6):</strong>
+<ul><li><code>src/pan.mjs</code></li>
+<li><code>pan-bus.mjs</code></li>
+<li><code>pan-client.mjs</code></li>
+<li><code>pan-debug.mjs</code></li>
+<li><code>pan-routes.mjs</code></li>
+<li><code>pan-storage.mjs</code></li>
+</ul>
+<strong>Output:</strong> <code>.min.mjs</code> files alongside each source
+<strong>Usage:</strong>
+<pre><code class="language-bash">cd /home/cdr/domains/larcjs.com/www/larc/core
+npm run build:minify</code></pre>
+<h3>3. UI: <code>ui/scripts/build-minified.js</code></h3>
+Minifies all <code>.mjs</code> files in @larcjs/ui
+<strong>Input Files (57):</strong>
+All component files in <code>src/components/</code>:
+<ul><li><code>pan-table.mjs</code></li>
+<li><code>pan-form.mjs</code></li>
+<li><code>pan-router.mjs</code></li>
+<li><code>pan-store.mjs</code></li>
+<li>... and 53 more</li>
+</ul>
+<strong>Output:</strong> <code>.min.mjs</code> files alongside each source
+<strong>Usage:</strong>
+<pre><code class="language-bash">cd /home/cdr/domains/larcjs.com/www/larc/ui
+npm run build:minify</code></pre>
+<hr>
+<h2>🚀 Available Scripts</h2>
+<h3>Monorepo Level</h3>
+<pre><code class="language-bash"># Minify all .mjs files in core and ui
+npm run build:minify
+
+# Run standard build + minification
+npm run build:all
+
+# Just the standard build (for packages)
+npm run build</code></pre>
+<h3>Core Package Level</h3>
+<pre><code class="language-bash">cd core/
+
+# Standard build (creates dist/ with bundled files)
+npm run build
+
+# Minify source files (creates .min.mjs alongside .mjs)
+npm run build:minify
+
+# Both: standard build + minification
+npm run build:all</code></pre>
+<h3>UI Package Level</h3>
+<pre><code class="language-bash">cd ui/
+
+# Minify source files (creates .min.mjs alongside .mjs)
+npm run build:minify
+
+# Alias for build:minify (UI doesn&#039;t bundle, just minifies)
+npm run build:all</code></pre>
+<hr>
+<h2>📊 File Size Comparison</h2>
+<h3>Core Package</h3>
+<p>| File | Original | Minified | Savings |
+|------|----------|----------|---------|
+| <code>pan.mjs</code> | 13 KB | 3.4 KB | <strong>74%</strong> |
+| <code>pan-bus.mjs</code> | 23 KB | 12 KB | <strong>48%</strong> |
+| <code>pan-client.mjs</code> | ~15 KB | ~8 KB | <strong>47%</strong> |</p>
+<h3>Average Savings: <strong>50-75% smaller</strong></h3>
+<hr>
+<h2>🔧 Build Configuration</h2>
+<h3>esbuild Settings</h3>
+<pre><code class="language-javascript">{
+  format: &#039;esm&#039;,           // ES modules format
+  minify: true,            // Enable minification
+  bundle: false,           // Don&#039;t bundle, keep separate files
+  platform: &#039;browser&#039;,     // Browser environment
+  target: &#039;es2022&#039;,        // Modern browsers
+  sourcemap: false,        // No sourcemaps for minified
+  legalComments: &#039;none&#039;,   // Remove all comments
+  treeShaking: true,       // Remove dead code
+  charset: &#039;utf8&#039;          // UTF-8 encoding
+}</code></pre>
+<h3>What Gets Minified</h3>
+<p>✅ <strong>Included:</strong>
+<ul><li>All <code>.mjs</code> files in <code>src/</code> directory</li>
+<li>Recursively processes subdirectories</li>
+<li>Both components and utilities</li>
+</ul>
+❌ <strong>Excluded:</strong>
+<ul><li>Files already ending in <code>.min.mjs</code></li>
+<li>Test files (<code>tests/</code> directory)</li>
+<li><code>node_modules/</code></li>
+<li>Hidden directories (<code>.git</code>, etc.)</li>
+</ul>
+<hr></p>
+<h2>📝 Usage in HTML</h2>
+<h3>Development Mode (Unminified)</h3>
+<pre><code class="language-html">&lt;!-- Core --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Individual component --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;!-- UI Components --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/components/pan-table.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<strong>Benefits:</strong>
+<ul><li>Full comments and documentation</li>
+<li>Easier debugging</li>
+<li>Readable stack traces</li>
+<li>Better error messages</li>
+</ul>
+<h3>Production Mode (Minified)</h3>
+<pre><code class="language-html">&lt;!-- Core --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan.min.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Individual component --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan-bus.min.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;!-- UI Components --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/components/pan-table.min.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<strong>Benefits:</strong>
+<ul><li>50-75% smaller file sizes</li>
+<li>Faster downloads</li>
+<li>Reduced bandwidth</li>
+<li>Better performance</li>
+</ul>
+<hr>
+<h2>🔄 CI/CD Integration</h2>
+<h3>Git Ignore</h3>
+<p>Add to <code>.gitignore</code> to avoid committing minified files:</p>
+<pre><code class="language-gitignore"># Minified files (can be regenerated)
+*.min.mjs
+*.min.js</code></pre>
+<strong>Or</strong> commit them if you want to serve directly from git:
+<pre><code class="language-bash">git add src/**/*.min.mjs
+git commit -m &quot;Add minified production files&quot;</code></pre>
+<h3>Build on Deploy</h3>
+<pre><code class="language-bash"># In your deployment script
+cd /home/cdr/domains/larcjs.com/www/larc
+git pull
+npm run build:minify
+
+# Minified files now available for production use</code></pre>
+<hr>
+<h2>📂 Directory Structure After Build</h2>
+<h3>Core</h3>
+<pre><code class="language-plaintext">core/
+├── src/
+│   ├── pan.mjs                     ✅ Original (13 KB)
+│   ├── pan.min.mjs                 ✨ Minified (3.4 KB)
+│   └── components/
+│       ├── pan-bus.mjs             ✅ Original (23 KB)
+│       ├── pan-bus.min.mjs         ✨ Minified (12 KB)
+│       ├── pan-client.mjs          ✅ Original
+│       ├── pan-client.min.mjs      ✨ Minified
+│       └── ...
+└── dist/                           (Standard bundled output)</code></pre>
+<h3>UI</h3>
+<pre><code class="language-plaintext">ui/
+└── src/
+    └── components/
+        ├── pan-table.mjs           ✅ Original
+        ├── pan-table.min.mjs       ✨ Minified
+        ├── pan-form.mjs            ✅ Original
+        ├── pan-form.min.mjs        ✨ Minified
+        ├── pan-router.mjs          ✅ Original
+        ├── pan-router.min.mjs      ✨ Minified
+        └── ... (57 components total)</code></pre>
+<hr>
+<h2>🎨 Automatic Serving Strategy</h2>
+<h3>Option 1: Manual Selection (Current)</h3>
+<p>Developers manually choose which version to import:</p>
+<pre><code class="language-html">&lt;!-- Dev --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Prod --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan.min.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<h3>Option 2: Environment-Based (Future)</h3>
+<p>Use a build-time variable or server-side logic:</p>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;/core/pan{{ ENV === &#039;production&#039; ? &#039;.min&#039; : &#039;&#039; }}.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<h3>Option 3: .htaccess Rewrite (Advanced)</h3>
+<pre><code class="language-apache"># Serve .min.mjs if available and requested
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.min.mjs -f
+RewriteRule ^(.*)\.mjs$ $1.min.mjs [L]</code></pre>
+<hr>
+<h2>✅ Verification</h2>
+<h3>Test Minified Files Work</h3>
+<pre><code class="language-bash"># Start local server
+cd /home/cdr/domains/larcjs.com/www
+python3 -m http.server 8000
+
+# Visit test page
+# http://localhost:8000/test-minified.html</code></pre>
+<strong>Test HTML:</strong>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Minified Test&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;Testing Minified Files&lt;/h1&gt;
+    &lt;div id=&quot;output&quot;&gt;&lt;/div&gt;
+
+    &lt;!-- Test minified core --&gt;
+    &lt;script type=&quot;module&quot;&gt;
+        import { PanClient } from &#039;/core/pan-client.min.mjs&#039;;
+
+        const client = new PanClient();
+        document.getElementById(&#039;output&#039;).textContent =
+            &#039;Minified files loaded successfully! ✅&#039;;
+
+        console.log(&#039;PanClient:&#039;, client);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<hr>
+<h2>🔍 Troubleshooting</h2>
+<h3>Build Fails</h3>
+<pre><code class="language-bash"># Make sure esbuild is installed
+cd core
+npm install
+
+cd ../ui
+npm install</code></pre>
+<h3>Files Not Minified</h3>
+<pre><code class="language-bash"># Check script is executable
+chmod +x scripts/build-minified.js
+
+# Run manually
+node scripts/build-minified.js</code></pre>
+<h3>Import Errors</h3>
+<ul><li>Minified files preserve ES module structure</li>
+<li>Imports/exports work the same as unminified</li>
+<li>Check browser console for specific errors</li>
+</ul>
+<hr>
+<h2>📈 Performance Impact</h2>
+<h3>Before (Unminified Only)</h3>
+<ul><li>Total Core Size: <strong>~80 KB</strong></li>
+<li>Total UI Size: <strong>~1.2 MB</strong> (57 components)</li>
+<li><strong>Total: ~1.28 MB</strong></li>
+</ul>
+<h3>After (Using Minified)</h3>
+<ul><li>Total Core Size: <strong>~40 KB</strong> (50% savings)</li>
+<li>Total UI Size: <strong>~600 KB</strong> (50% savings)</li>
+<li><strong>Total: ~640 KB</strong> (50% reduction!)</li>
+</ul>
+<h3>Impact</h3>
+<ul><li><strong>Faster page loads</strong></li>
+<li><strong>Reduced bandwidth costs</strong></li>
+<li><strong>Better mobile performance</strong></li>
+<li><strong>Improved lighthouse scores</strong></li>
+</ul>
+<hr>
+<h2>🚀 Future Enhancements</h2>
+<h3>Potential Additions</h3>
+<li><strong>Gzip/Brotli compression</strong> on server</li>
+<li><strong>Source maps</strong> for production debugging</li>
+<li><strong>Cache busting</strong> with file hashes</li>
+<li><strong>CDN integration</strong> for minified files</li>
+<li><strong>Automatic .htaccess</strong> serving logic</li>
+<h3>Already Considered</h3>
+<p>✅ Bundle vs. separate files → <strong>Separate files chosen</strong> (better for tree-shaking)
+✅ Minify vs. uglify → <strong>Minify chosen</strong> (modern, preserves structure)
+✅ Single bundle vs. per-file → <strong>Per-file chosen</strong> (flexibility)</p>
+<hr>
+<h2>📝 Summary</h2>
+<p>✅ <strong>Build scripts created</strong> for core and UI
+✅ <strong>Package.json updated</strong> with new scripts
+✅ <strong>Tested successfully</strong> - 63 files minified (6 core + 57 UI)
+✅ <strong>50-75% size reduction</strong> achieved
+✅ <strong>Side-by-side deployment</strong> - both versions available
+✅ <strong>Zero breaking changes</strong> - original files untouched</p>
+<hr>
+<strong>The build process is ready for production use!</strong> 🎉
+<p>Developers can now choose between development-friendly <code>.mjs</code> files and production-optimized <code>.min.mjs</code> files for any LARC component.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/guides/BUILD-PROCESS.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

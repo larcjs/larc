@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@larcjs/core-lite · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - @larcjs/core-lite">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core-lite</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>@larcjs/core-lite</h1>
+<a href="https://img.shields.io/npm/v/@larcjs/core-lite.svg">![Version</a>](https://www.npmjs.com/package/@larcjs/core-lite)
+<a href="https://img.shields.io/badge/license-MIT-green.svg">![License</a>](LICENSE)
+<a href="https://img.shields.io/badge/bundle-9KB%20minified-brightgreen.svg">![Bundle Size</a>](#)
+<blockquote><strong>Lightweight PAN messaging bus</strong> - Essential features only, 78% smaller than full version</blockquote>
+<p>LARC Core Lite provides the essential PAN (Page Area Network) messaging infrastructure for building loosely-coupled web applications. This is the lightweight version with routing and debugging features removed.</p>
+<h2>📦 Bundle Size Comparison</h2>
+<p>| Package | Minified | Features |
+|---------|----------|----------|
+| <strong>@larcjs/core-lite</strong> | <strong>~9KB</strong> | ✅ Pub/sub, retained messages, request/reply |
+| @larcjs/core | ~40KB | ✅ Everything + routing + debug + advanced features |</p>
+<strong>Use core-lite when:</strong>
+<ul><li>✅ You want the smallest possible bundle</li>
+<li>✅ You only need pub/sub messaging</li>
+<li>✅ You don't need dynamic routing</li>
+<li>✅ You don't need advanced debugging</li>
+</ul>
+<strong>Use full @larcjs/core when:</strong>
+<ul><li>🔧 You need dynamic message routing</li>
+<li>🔧 You need advanced debugging/tracing</li>
+<li>🔧 You need rate limiting & security features</li>
+<li>🔧 You want batteries-included</li>
+</ul>
+<h2>Features</h2>
+<ul><li>🚀 <strong>Zero build required</strong> — Drop-in <code><pan-bus></code> element, communicate via CustomEvents</li>
+<li>🔌 <strong>Loose coupling</strong> — Components depend on topic contracts, not imports</li>
+<li>🌐 <strong>Framework friendly</strong> — Works with React, Vue, Angular</li>
+<li>📬 <strong>Core messaging</strong> — Pub/sub, request/reply, retained messages</li>
+<li>🎯 <strong>Lightweight</strong> — 9KB minified vs 40KB full version (78% reduction)</li>
+<li>⚡ <strong>Performance</strong> — 300k+ messages/second, zero memory leaks</li>
+<li>🔒 <strong>Secure</strong> — Zero dependencies, minimal attack surface</li>
+</ul>
+<h2>Installation</h2>
+<pre><code class="language-bash">npm install @larcjs/core-lite</code></pre>
+<h2>Quick Start</h2>
+<h3>CDN Usage (No Build Required)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;!-- Load the lite autoloader --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core-lite@latest/src/pan.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- The pan-bus is automatically created --&gt;
+  &lt;script&gt;
+    // Publish a message
+    document.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+      detail: {
+        topic: &#039;greeting.message&#039;,
+        payload: { text: &#039;Hello, PAN!&#039; }
+      }
+    }));
+
+    // Subscribe to messages
+    document.addEventListener(&#039;pan:message&#039;, (e) =&gt; {
+      if (e.detail.topic === &#039;greeting.message&#039;) {
+        console.log(&#039;Received:&#039;, e.detail.payload.text);
+      }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Module Usage</h3>
+<pre><code class="language-javascript">import { PanBusLite } from &#039;@larcjs/core-lite/pan-bus&#039;;
+
+// The bus is automatically created by the autoloader
+// Or create manually:
+const bus = new PanBusLite();
+document.body.appendChild(bus);
+
+// Subscribe to a topic
+bus.subscribe(&#039;user.login&#039;, (message) =&gt; {
+  console.log(&#039;User logged in:&#039;, message.payload);
+});
+
+// Publish a message
+bus.publish(&#039;user.login&#039;, { userId: 123, name: &#039;Alice&#039; });</code></pre>
+<h2>Core Components</h2>
+<h3><code><pan-bus></code> (Lite Version)</h3>
+<p>The lightweight message hub.</p>
+<pre><code class="language-html">&lt;pan-bus&gt;&lt;/pan-bus&gt;</code></pre>
+<p>No configuration needed - it just works!</p>
+<h3><code><pan-client></code></h3>
+<p>Simplifies publishing and subscribing.</p>
+<pre><code class="language-html">&lt;pan-client id=&quot;client&quot;&gt;&lt;/pan-client&gt;
+
+&lt;script&gt;
+  const client = document.getElementById(&#039;client&#039;);
+
+  client.subscribe(&#039;data.changed&#039;, (msg) =&gt; {
+    console.log(&#039;Data updated:&#039;, msg.payload);
+  });
+
+  client.publish(&#039;data.request&#039;, { id: 42 });
+&lt;/script&gt;</code></pre>
+<h2>Message Patterns</h2>
+<h3>Publish/Subscribe</h3>
+<pre><code class="language-javascript">// Publisher
+bus.publish(&#039;notifications.new&#039;, {
+  type: &#039;info&#039;,
+  message: &#039;Welcome!&#039;
+});
+
+// Subscriber
+bus.subscribe(&#039;notifications.new&#039;, (msg) =&gt; {
+  showNotification(msg.payload);
+});</code></pre>
+<h3>Request/Reply</h3>
+<pre><code class="language-javascript">// Responder
+bus.subscribe(&#039;user.get&#039;, async (msg) =&gt; {
+  const user = await fetchUser(msg.payload.id);
+  return { ok: true, user };
+});
+
+// Requester
+const result = await bus.request(&#039;user.get&#039;, { id: 123 });
+if (result.ok) {
+  console.log(&#039;User:&#039;, result.user);
+}</code></pre>
+<h3>Retained Messages (State)</h3>
+<pre><code class="language-javascript">// Publish with retain flag
+bus.publish(&#039;app.state&#039;, { theme: &#039;dark&#039; }, { retain: true });
+
+// Late subscribers immediately receive the retained message
+bus.subscribe(&#039;app.state&#039;, (msg) =&gt; {
+  applyTheme(msg.payload.theme);
+});</code></pre>
+<h2>What's NOT Included (vs Full Version)</h2>
+<p>❌ <strong>Dynamic Message Routing</strong> - Use <a href="../core-routing">@larcjs/core-routing</a> if needed
+❌ <strong>Debug/Tracing Tools</strong> - Use <a href="../core-debug">@larcjs/core-debug</a> if needed
+❌ <strong>Rate Limiting</strong> - Not available in lite
+❌ <strong>Message Size Validation</strong> - Not available in lite
+❌ <strong>Statistics Tracking</strong> - Not available in lite
+❌ <strong>LRU Cache Eviction</strong> - Simple Map instead</p>
+<p>These features add <strong>31KB</strong> to the bundle. If you need them, use <a href="../../core">@larcjs/core</a> instead.</p>
+<h2>Upgrading to Full Version</h2>
+<p>Need more features? Switch to the full version:</p>
+<pre><code class="language-bash">npm uninstall @larcjs/core-lite
+npm install @larcjs/core</code></pre>
+<p>Or add routing/debug separately:</p>
+<pre><code class="language-bash">npm install @larcjs/core-routing @larcjs/core-debug</code></pre>
+<h2>Performance</h2>
+<ul><li><strong>Throughput:</strong> 300,000+ messages/second</li>
+<li><strong>Latency:</strong> <1ms per message (local)</li>
+<li><strong>Memory:</strong> Zero leaks, constant memory usage</li>
+<li><strong>Bundle size:</strong> 9KB minified</li>
+</ul>  - <code>pan.min.mjs</code>: 3.6KB (autoloader)
+  - <code>pan-bus.min.mjs</code>: 3.0KB (lite bus)
+  - <code>pan-client.min.mjs</code>: 2.0KB (client API)
+<h2>Browser Support</h2>
+<ul><li>✅ Chrome/Edge 90+</li>
+<li>✅ Firefox 88+</li>
+<li>✅ Safari 14+</li>
+<li>✅ Opera 76+</li>
+</ul>
+<h2>Related Packages</h2>
+<ul><li><strong><a href="../../core">@larcjs/core</a></strong> — Full-featured version (40KB with routing/debug)</li>
+<li><strong><a href="../core-routing">@larcjs/core-routing</a></strong> — Dynamic routing add-on (8KB)</li>
+<li><strong><a href="../core-debug">@larcjs/core-debug</a></strong> — Debug tools add-on (3KB)</li>
+<li><strong><a href="https://github.com/larcjs/components">@larcjs/ui</a></strong> — UI components built on PAN</li>
+<li><strong><a href="../core-types">@larcjs/core-types</a></strong> — TypeScript type definitions</li>
+</ul>
+<h2>Documentation</h2>
+<ul><li><a href="https://larcjs.github.io/site/">Full Documentation</a></li>
+<li><a href="./MIGRATION.md">Migration from Full Version</a></li>
+<li><a href="./API.md">API Reference</a></li>
+</ul>
+<h2>Contributing</h2>
+<p>Contributions are welcome! Please see our <a href="../../CONTRIBUTING.md">Contributing Guide</a>.</p>
+<h2>License</h2>
+<p>MIT © Chris Robison</p>
+<h2>Support</h2>
+<ul><li>📖 <a href="https://larcjs.github.io/site/">Documentation</a></li>
+<li>💬 <a href="https://github.com/larcjs/larc/discussions">Discussions</a></li>
+<li>🐛 <a href="https://github.com/larcjs/larc/issues">Issue Tracker</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core-lite/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

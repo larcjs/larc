@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PanComputedState - PAN Documentation</title>
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">
+      <a href="../index.html">PAN Docs</a>
+    </div>
+    <div class="nav-section">
+      <a href="../index.html">← Back to Index</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <header class="page-header">
+      <h1>PanComputedState</h1>
+      <div class="file-path">packages/components/pan-computed-state.mjs</div>
+    </header>
+
+    <section class="section">
+      <div class="description">
+        pan-computed-state - Computed/derived state with automatic dependency tracking<br>Subscribes to multiple PAN topics and computes a derived value, publishing<br>the result to an output topic. Includes memoization and debouncing.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 id="PanComputedState">Class: PanComputedState</h2>
+      
+      <div class="description">pan-computed-state - Computed/derived state with automatic dependency tracking<br>Subscribes to multiple PAN topics and computes a derived value, publishing<br>the result to an output topic. Includes memoization and debouncing.</div>
+
+      <h3>Attributes</h3>
+      <table class="params-table">
+        <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><code>sources</code></td>
+            <td><code>string</code></td>
+            <td>Comma-separated list of source topics</td>
+          </tr>
+
+          <tr>
+            <td><code>output</code></td>
+            <td><code>string</code></td>
+            <td>Output topic to publish computed result</td>
+          </tr>
+
+          <tr>
+            <td><code>debounce</code></td>
+            <td><code>number</code></td>
+            <td>Debounce delay in ms (default: 0)</td>
+          </tr>
+
+          <tr>
+            <td><code>retain</code></td>
+            <td><code>boolean</code></td>
+            <td>Whether to retain the computed message</td>
+          </tr>
+
+          <tr>
+            <td><code>async</code></td>
+            <td><code>boolean</code></td>
+            <td>Whether the compute function is async</td>
+          </tr>
+
+          <tr>
+            <td><code>debug</code></td>
+            <td><code>boolean</code></td>
+            <td>Enable debug logging</td>
+          </tr>
+
+          <tr>
+            <td><code>memo</code></td>
+            <td><code>string</code></td>
+            <td>Memoization strategy: 'none' | 'shallow' | 'deep' (default: 'shallow')</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <h3>Examples</h3>
+
+      <pre><code>&lt;pan-computed-state
+  sources=&quot;cart.items,user.discount&quot;
+  output=&quot;cart.total&quot;
+  debounce=&quot;100&quot;
+  retain&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+    {
+      &quot;compute&quot;: &quot;(items, discount) =&gt; items.reduce((sum, item) =&gt; sum + item.price, 0) - (discount || 0)&quot;
+    }
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;
+Alternatively, use a script element directly:
+&lt;pan-computed-state sources=&quot;a,b&quot; output=&quot;c&quot;&gt;
+  &lt;script&gt;
+    (a, b) =&gt; a + b
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;</code></pre>
+
+    </section>
+
+  </main>
+</body>
+</html>

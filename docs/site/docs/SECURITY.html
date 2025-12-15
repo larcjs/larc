@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security Policy · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Security Policy">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>SECURITY</span>
+      </div>
+      <article class="docs-content">
+        <h1>Security Policy</h1>
+<h2>Supported Versions</h2>
+<p>We actively support the following versions of LARC with security updates:</p>
+<p>| Package | Version | Supported |
+|---------|---------|-----------|
+| @larcjs/core | 1.1.x | ✅ Yes |
+| @larcjs/core | 1.0.x | ✅ Yes |
+| @larcjs/core | < 1.0 | ❌ No |
+| @larcjs/ui | 1.1.x | ✅ Yes |
+| @larcjs/ui | 1.0.x | ✅ Yes |
+| @larcjs/ui | < 1.0 | ❌ No |</p>
+<strong>Security support window:</strong> We provide security updates for the current major version (1.x) and the previous minor versions within that major version.
+<hr>
+<h2>Reporting a Vulnerability</h2>
+<strong>Please do NOT report security vulnerabilities through public GitHub issues.</strong>
+<p>If you discover a security vulnerability in LARC, please follow these steps:</p>
+<h3>1. Report Privately</h3>
+<p>Send details to the maintainers via one of these methods:</p>
+<strong>Preferred:</strong> Use GitHub Security Advisories
+<ul><li>Go to https://github.com/larcjs/core/security/advisories</li>
+<li>Click "Report a vulnerability"</li>
+<li>Fill out the private vulnerability report form</li>
+</ul>
+<strong>Alternative:</strong> Open a security-specific discussion
+<ul><li>Mark it as "Security" category</li>
+<li>We will move it to a private channel immediately</li>
+</ul>
+<h3>2. What to Include</h3>
+<p>Please provide as much information as possible:</p>
+<ul><li><strong>Type of vulnerability</strong> (e.g., XSS, injection, CSRF)</li>
+<li><strong>Affected component(s)</strong> (e.g., pan-bus, pan-client, specific UI component)</li>
+<li><strong>Affected version(s)</strong></li>
+<li><strong>Step-by-step reproduction</strong></li>
+<li><strong>Proof of concept</strong> (code sample or demo URL)</li>
+<li><strong>Potential impact</strong> (what an attacker could do)</li>
+<li><strong>Suggested fix</strong> (if you have one)</li>
+</ul>
+<strong>Example report:</strong>
+<pre><code class="language-markdown">**Vulnerability Type:** Cross-Site Scripting (XSS)
+
+**Affected Component:** pan-markdown-editor v1.1.0
+
+**Description:**
+User-supplied markdown content is not properly sanitized before rendering,
+allowing arbitrary JavaScript execution.
+
+**Reproduction:**
+1. Create a pan-markdown-editor component
+2. Insert the following markdown: `[Click me](javascript:alert(&#039;XSS&#039;))`
+3. Click the rendered link
+4. JavaScript executes
+
+**Impact:**
+An attacker could inject malicious scripts into markdown content, potentially
+stealing user credentials or performing actions on behalf of users.
+
+**Suggested Fix:**
+Use DOMPurify or similar library to sanitize HTML output from markdown parser.</code></pre>
+<h3>3. Response Timeline</h3>
+<p>We aim to respond to security reports according to this timeline:</p>
+<p>| Timeframe | Action |
+|-----------|--------|
+| Within 24 hours | Initial acknowledgment of report |
+| Within 3 business days | Preliminary assessment and severity rating |
+| Within 7 days | Detailed response with action plan |
+| Within 30 days | Fix developed, tested, and released (for critical vulnerabilities) |
+| Within 90 days | Fix developed, tested, and released (for non-critical vulnerabilities) |</p>
+<h3>4. Disclosure Policy</h3>
+<p>We follow <strong>coordinated disclosure</strong>:</p>
+<ul><li>We will work with you to understand and fix the vulnerability</li>
+<li>We will keep you informed of our progress</li>
+<li>We will credit you in the security advisory (unless you prefer anonymity)</li>
+<li>We ask that you do not publicly disclose the vulnerability until we have released a fix</li>
+<li>We will publicly disclose the vulnerability after a fix is released</li>
+</ul>
+<strong>Typical timeline:</strong>
+<li><strong>Day 0:</strong> Vulnerability reported privately</li>
+<li><strong>Day 1-3:</strong> Acknowledged and assessed</li>
+<li><strong>Day 3-30:</strong> Fix developed and tested</li>
+<li><strong>Day 30:</strong> Security release published</li>
+<li><strong>Day 30+:</strong> Public disclosure with credit to reporter</li>
+<hr>
+<h2>Security Considerations for LARC Users</h2>
+<h3>Browser Security</h3>
+<p>LARC runs in the browser and relies on browser security features:</p>
+<strong>Content Security Policy (CSP):</strong>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;Content-Security-Policy&quot;
+      content=&quot;default-src &#039;self&#039;;
+               script-src &#039;self&#039; https://unpkg.com/@larcjs/;
+               style-src &#039;self&#039; &#039;unsafe-inline&#039;;&quot;&gt;</code></pre>
+<strong>Subresource Integrity (SRI):</strong>
+<pre><code class="language-html">&lt;script type=&quot;module&quot;
+        src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;
+        integrity=&quot;sha384-...&quot;
+        crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;</code></pre>
+<h3>Message Bus Security</h3>
+<strong>Topic validation:</strong>
+<ul><li>Topic names are validated to prevent injection</li>
+<li>Wildcards are restricted (no global wildcards by default)</li>
+<li>Message payloads are not executed as code</li>
+</ul>
+<strong>Rate limiting:</strong>
+<ul><li>Built-in rate limiting prevents message flooding</li>
+<li>Configurable via <code>rate-limit</code> attribute on <code><pan-bus></code></li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-html">&lt;pan-bus
+  rate-limit=&quot;1000&quot;
+  allow-global-wildcard=&quot;false&quot;
+  max-message-size=&quot;1048576&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<h3>Component Security</h3>
+<strong>XSS Prevention:</strong>
+<ul><li>Always sanitize user input before rendering</li>
+<li>Use Shadow DOM for encapsulation</li>
+<li>Avoid <code>innerHTML</code> with user-provided content</li>
+</ul>
+<strong>Example (safe):</strong>
+<pre><code class="language-javascript">// Good - using textContent
+element.textContent = userInput;
+
+// Good - sanitizing HTML
+import DOMPurify from &#039;dompurify&#039;;
+element.innerHTML = DOMPurify.sanitize(userInput);
+
+// Bad - direct innerHTML with user input
+element.innerHTML = userInput; // ❌ XSS vulnerability</code></pre>
+<strong>Attribute injection:</strong>
+<ul><li>Validate attribute values</li>
+<li>Sanitize before using in DOM manipulation</li>
+</ul>
+<h3>State Management Security</h3>
+<strong>localStorage/sessionStorage:</strong>
+<ul><li>Never store sensitive data (passwords, tokens) in localStorage</li>
+<li>Use httpOnly cookies for authentication tokens</li>
+<li>Encrypt sensitive data before persisting</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Bad - storing sensitive data
+localStorage.setItem(&#039;authToken&#039;, token); // ❌
+
+// Good - using secure cookies (set by server)
+// Set-Cookie: authToken=...; HttpOnly; Secure; SameSite=Strict</code></pre>
+<h3>Third-Party Components</h3>
+<p>If you create LARC components:
+<ul><li>Audit dependencies for vulnerabilities</li>
+<li>Use npm audit regularly</li>
+<li>Pin dependency versions</li>
+<li>Follow OWASP security guidelines</li>
+</ul>
+<hr></p>
+<h2>Known Security Considerations</h2>
+<h3>1. Message Bus Access</h3>
+<strong>Consideration:</strong> All components on a page can publish/subscribe to the PAN bus.
+<strong>Mitigation:</strong>
+<ul><li>Use topic namespacing to isolate components</li>
+<li>Validate message sources in sensitive handlers</li>
+<li>Don't put sensitive data in PAN messages</li>
+</ul>
+<h3>2. Dynamic Component Loading</h3>
+<strong>Consideration:</strong> The autoloader dynamically imports JavaScript modules.
+<strong>Mitigation:</strong>
+<ul><li>Only load components from trusted sources</li>
+<li>Use Subresource Integrity (SRI) for CDN components</li>
+<li>Configure CSP to restrict script sources</li>
+<li>Use <code>resolveComponent</code> to validate component paths</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">window.panAutoload = {
+  resolveComponent: (tag) =&gt; {
+    // Whitelist allowed components
+    const allowed = [&#039;pan-card&#039;, &#039;pan-button&#039;, &#039;pan-table&#039;];
+    if (!allowed.includes(tag)) {
+      throw new Error(`Component ${tag} not allowed`);
+    }
+    return `/components/${tag}.mjs`;
+  }
+};</code></pre>
+<h3>3. Shadow DOM Encapsulation</h3>
+<strong>Consideration:</strong> Shadow DOM provides style encapsulation but not security isolation.
+<strong>Mitigation:</strong>
+<ul><li>Don't rely on Shadow DOM for security boundaries</li>
+<li>Still validate and sanitize inputs</li>
+<li>Use proper authentication/authorization</li>
+</ul>
+<hr>
+<h2>Security Best Practices for Contributors</h2>
+<p>When contributing to LARC:</p>
+<li><strong>Never commit secrets:</strong></li>
+   - API keys, tokens, passwords
+   - Use environment variables or secure vaults
+<li><strong>Validate all inputs:</strong></li>
+   - User-provided data
+   - Attribute values
+   - Message payloads
+<li><strong>Sanitize outputs:</strong></li>
+   - HTML rendering
+   - URL construction
+   - DOM manipulation
+<li><strong>Review dependencies:</strong></li>
+   - Run <code>npm audit</code> before committing
+   - Update vulnerable dependencies
+   - Use minimal dependencies
+<li><strong>Write secure tests:</strong></li>
+   - Test input validation
+   - Test XSS prevention
+   - Test authorization checks
+<hr>
+<h2>Security Audit History</h2>
+<p>| Date | Version | Audit Type | Findings |
+|------|---------|------------|----------|
+| 2024-11-24 | 1.1.0 | npm audit | 0 critical, 0 high |
+| 2024-11-XX | 1.0.2 | npm audit | 0 critical, 0 high |</p>
+<hr>
+<h2>Security Resources</h2>
+<ul><li><a href="https://owasp.org/www-project-top-ten/">OWASP Top 10</a></li>
+<li><a href="https://cheatsheetseries.owasp.org/">Web Security Cheat Sheet</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security">MDN Security Best Practices</a></li>
+<li><a href="https://docs.npmjs.com/packages-and-modules/securing-your-code">npm Security Best Practices</a></li>
+</ul>
+<hr>
+<h2>Contact</h2>
+<p>For security concerns or questions:
+<ul><li>GitHub Security Advisories: https://github.com/larcjs/core/security/advisories</li>
+<li>GitHub Discussions (mark as Security): https://github.com/larcjs/core/discussions</li>
+</ul>
+<hr></p>
+<strong>Thank you for helping keep LARC and its users safe!</strong> 🔒
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/SECURITY.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

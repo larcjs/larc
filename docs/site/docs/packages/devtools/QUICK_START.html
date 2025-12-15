@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN DevTools Extension - Quick Start · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN DevTools Extension - Quick Start">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">devtools</a> / <span>QUICK_START</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN DevTools Extension - Quick Start</h1>
+<h2>✅ Configuration Complete!</h2>
+<p>The extension is now configured to load automatically with chrome-devtools MCP.</p>
+<h2>🔄 Next: Restart Claude Desktop</h2>
+<strong>IMPORTANT</strong>: MCP server configuration only loads on startup.
+<li><strong>Quit Claude Desktop</strong>: Cmd+Q (or File → Quit)</li>
+<li><strong>Reopen Claude Desktop</strong>: Launch from Applications</li>
+<li><strong>Wait 5-10 seconds</strong>: For MCP servers to initialize</li>
+<h2>✓ Verify Extension Loaded</h2>
+<p>After restart, when you use chrome-devtools tools, the extension will be loaded automatically.</p>
+<h3>Test It</h3>
+<p>Use these commands in conversation with me:</p>
+<pre><code class="language-plaintext">Can you navigate to http://localhost:8080/playground/ and check if the PAN DevTools extension loaded?</code></pre>
+<p>I'll check for:
+<ul><li>Console message: <code>[PAN DevTools] Injected and monitoring PAN messages</code></li>
+<li>API available: <code>window.__panDevTools</code></li>
+<li>DevTools panel: "PAN" tab visible</li>
+</ul>
+<h2>📍 What Changed</h2></p>
+<strong>File</strong>: <code>/Users/cdr/Library/Application Support/Claude/claude_desktop_config.json</code>
+<strong>Added</strong>:
+<pre><code class="language-json">&quot;chrome-devtools&quot;: {
+  &quot;command&quot;: &quot;npx&quot;,
+  &quot;args&quot;: [
+    &quot;chrome-devtools-mcp&quot;,
+    &quot;--chrome-arg=--load-extension=/Users/cdr/Projects/larc-repos/devtools&quot;,
+    &quot;--chrome-arg=--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools&quot;
+  ]
+}</code></pre>
+<h2>🎯 What You'll Get</h2>
+<h3>DevTools Panel</h3>
+<ul><li>Real-time PAN message display</li>
+<li>Message filtering and search</li>
+<li>Component inspection</li>
+<li>Message replay</li>
+<li>Statistics dashboard</li>
+</ul>
+<h3>Console Logging</h3>
+<pre><code class="language-plaintext">[PAN DevTools] Intercepted event: pan:publish
+[PAN DevTools] Posting message to content script</code></pre>
+<h3>Browser API</h3>
+<pre><code class="language-javascript">window.__panDevTools.getHistory()      // All messages
+window.__panDevTools.getComponents()   // All components
+window.__panDevTools.getStats()        // Statistics
+window.__panDevTools.clearHistory()    // Clear logs
+window.__panDevTools.replay(id)        // Replay message</code></pre>
+<h2>🔍 How to Use</h2>
+<li><strong>Open Playground</strong>: Navigate to <code>http://localhost:8080/playground/</code></li>
+<li><strong>Open DevTools</strong>: Press F12 or Cmd+Option+I</li>
+<li><strong>Find PAN Tab</strong>: Look in top toolbar (between Elements, Console, etc.)</li>
+<li><strong>Interact with Examples</strong>: Load any example and interact with components</li>
+<li><strong>Watch Messages</strong>: See PAN messages appear in real-time</li>
+<h2>📚 Full Documentation</h2>
+<ul><li><strong>Extension Setup</strong>: <code>EXTENSION_ENABLED.md</code></li>
+<li><strong>Session Fixes</strong>: <code>../playground/SESSION_FIXES_SUMMARY.md</code></li>
+<li><strong>MCP Setup</strong>: <code>CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.md</code></li>
+</ul>
+<h2>🎉 That's It!</h2>
+<p>Just restart Claude Desktop and the extension will work automatically with all chrome-devtools MCP tools!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/devtools/QUICK_START.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

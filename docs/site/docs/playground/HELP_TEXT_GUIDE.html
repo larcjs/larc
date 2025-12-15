@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Help Text Guide · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Help Text Guide">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>HELP_TEXT_GUIDE</span>
+      </div>
+      <article class="docs-content">
+        <h1>Help Text Guide</h1>
+<h2>Overview</h2>
+<p>The playground now includes comprehensive help text for components with complex configurations. This guide explains what was added and how to use it.</p>
+<h2>Components with Help Text (13 total)</h2>
+<h3>UI Components</h3>
+<p>#### 1. <strong>pan-tabs</strong>
+Shows how to configure tabs using JSON array:
+<pre><code class="language-json">[
+  { &quot;label&quot;: &quot;Tab 1&quot;, &quot;id&quot;: &quot;tab1&quot; },
+  { &quot;label&quot;: &quot;Tab 2&quot;, &quot;id&quot;: &quot;tab2&quot;, &quot;disabled&quot;: true },
+  { &quot;label&quot;: &quot;Tab 3&quot;, &quot;id&quot;: &quot;tab3&quot;, &quot;icon&quot;: &quot;🎨&quot; }
+]</code></pre>
+Also shows slot-based approach for dynamic content.</p>
+<p>#### 2. <strong>pan-chart</strong>
+Examples for chart data structure and options:
+<pre><code class="language-json">{
+  &quot;labels&quot;: [&quot;Jan&quot;, &quot;Feb&quot;, &quot;Mar&quot;],
+  &quot;datasets&quot;: [{
+    &quot;label&quot;: &quot;Sales&quot;,
+    &quot;data&quot;: [12, 19, 3]
+  }]
+}</code></pre></p>
+<p>#### 3. <strong>pan-data-table</strong>
+Shows expected data format from PAN topics:
+<pre><code class="language-json">{
+  &quot;data&quot;: {
+    &quot;items&quot;: [
+      { &quot;id&quot;: 1, &quot;name&quot;: &quot;Alice&quot;, &quot;email&quot;: &quot;alice@example.com&quot; }
+    ]
+  }
+}</code></pre></p>
+<p>#### 4. <strong>drag-drop-list</strong>
+Array of items with id and text:
+<pre><code class="language-json">[
+  {&quot;id&quot;: 1, &quot;text&quot;: &quot;First item&quot;},
+  {&quot;id&quot;: 2, &quot;text&quot;: &quot;Second item&quot;}
+]</code></pre></p>
+<h3>Form Components</h3>
+<p>#### 5. <strong>pan-json-form</strong>
+JSON schema for dynamic form generation:
+<pre><code class="language-json">{
+  &quot;fields&quot;: [
+    {
+      &quot;name&quot;: &quot;email&quot;,
+      &quot;type&quot;: &quot;email&quot;,
+      &quot;label&quot;: &quot;Email Address&quot;,
+      &quot;required&quot;: true,
+      &quot;placeholder&quot;: &quot;you@example.com&quot;
+    }
+  ]
+}</code></pre></p>
+<p>#### 6. <strong>pan-form</strong>
+Shows PAN topic integration for CRUD operations:
+<ul><li>Listens: <code>{resource}.item.select</code></li>
+<li>Requests: <code>{resource}.item.get</code></li>
+<li>Submits: <code>{resource}.item.save</code></li>
+<li>Deletes: <code>{resource}.item.delete</code></li>
+</ul>
+#### 7. <strong>file-upload</strong>
+Configuration for file uploads with size limits:
+<ul><li><code>accept="image/*"</code> - File type filter</li>
+<li><code>max-size="5242880"</code> - 5MB in bytes</li>
+<li><code>preview</code> - Show image previews</li>
+<li><code>drag-drop</code> - Enable drag-drop zone</li>
+</ul>
+<h3>State Management Components</h3></p>
+<p>#### 8. <strong>pan-computed-state</strong>
+Derived state with automatic dependency tracking:
+<pre><code class="language-html">&lt;pan-computed-state sources=&quot;todos.list&quot; output=&quot;todos.stats&quot;&gt;
+  &lt;script&gt;
+    (todos) =&gt; ({
+      total: todos.length,
+      completed: todos.filter(t =&gt; t.completed).length
+    })
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;</code></pre></p>
+<p>#### 9. <strong>pan-state-sync</strong>
+Cross-tab synchronization with BroadcastChannel:
+<pre><code class="language-html">&lt;pan-state-sync
+  channel=&quot;myapp&quot;
+  topics=&quot;user.*,cart.*&quot;&gt;
+&lt;/pan-state-sync&gt;</code></pre></p>
+<p>#### 10. <strong>pan-offline-sync</strong>
+Offline-first with automatic queue and sync:
+<pre><code class="language-json">{
+  &quot;todos.create&quot;: &quot;/api/todos&quot;,
+  &quot;todos.update&quot;: &quot;/api/todos/:id&quot;,
+  &quot;todos.delete&quot;: &quot;/api/todos/:id&quot;
+}</code></pre></p>
+<p>#### 11. <strong>pan-persistence-strategy</strong>
+Declarative routing to storage backends:
+<pre><code class="language-html">&lt;pan-persistence-strategy auto-hydrate&gt;
+  &lt;strategy topics=&quot;user.prefs&quot; storage=&quot;localStorage&quot;&gt;&lt;/strategy&gt;
+  &lt;strategy topics=&quot;cart.*&quot; storage=&quot;indexedDB&quot; ttl=&quot;3600000&quot;&gt;&lt;/strategy&gt;
+&lt;/pan-persistence-strategy&gt;</code></pre></p>
+<p>#### 12. <strong>pan-schema-validator</strong>
+Runtime JSON Schema validation:
+<pre><code class="language-json">{
+  &quot;type&quot;: &quot;object&quot;,
+  &quot;required&quot;: [&quot;email&quot;, &quot;name&quot;],
+  &quot;properties&quot;: {
+    &quot;email&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;email&quot;},
+    &quot;name&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;minLength&quot;: 2}
+  }
+}</code></pre></p>
+<p>#### 13. <strong>pan-undo-redo</strong>
+Time-travel debugging for state:
+<pre><code class="language-html">&lt;pan-undo-redo
+  topics=&quot;editor.*&quot;
+  max-history=&quot;50&quot;
+  channel=&quot;editor-history&quot;&gt;
+&lt;/pan-undo-redo&gt;</code></pre></p>
+<h2>Attributes with Help Text (9 total)</h2>
+<p>Attributes now show inline examples when you click "Show example":</p>
+<p>| Component | Attribute | Type | Help Text |
+|-----------|-----------|------|-----------|
+| pan-tabs | tabs | json | Tab configuration array |
+| pan-json-form | schema | json | Form field definitions |
+| pan-chart | data | json | Chart dataset structure |
+| pan-chart | options | json | Chart configuration options |
+| pan-data-table | columns | string | Comma-separated column names |
+| pan-form | fields | string | Comma-separated field names |
+| pan-computed-state | sources | string | Source topic patterns |
+| pan-offline-sync | endpoints | json | Topic-to-URL mappings |
+| drag-drop-list | items | json | Array of draggable items |</p>
+<h2>Updated Attribute Types</h2>
+<p>For better editing experience, these attributes now use <code>json</code> or <code>textarea</code> input types:</p>
+<ul><li><strong>JSON types</strong>: <code>pan-tabs.tabs</code>, <code>pan-json-form.schema</code>, <code>pan-chart.data/options</code>, <code>pan-offline-sync.endpoints</code>, <code>drag-drop-list.items</code>, <code>pan-schema-validator.schema</code></li>
+<li><strong>These render as textareas</strong> with monospace font for easier JSON editing</li>
+</ul>
+<h2>How to Use in Playground</h2>
+<li><strong>Start playground:</strong></li>
+   <pre><code class="language-bash">cd playground
+   python3 -m http.server 8080
+   open http://localhost:8080/</code></pre>
+<li><strong>Add a component</strong> from the sidebar</li>
+<li><strong>Select the component</strong> to see properties panel</li>
+<li><strong>Look for help text:</strong></li>
+   - <strong>Component-level</strong>: Expandable "💡 Usage Guide" section at top
+   - <strong>Attribute-level</strong>: "Show example" link under each complex attribute
+<li><strong>Edit properties:</strong></li>
+   - JSON attributes show as textareas
+   - Help text provides copy-paste examples
+   - Changes update on blur (tab out of textarea)
+<h2>Adding New Help Text</h2>
+<p>To add help text for more components:</p>
+<li><strong>Edit</strong> <code>playground/scripts/add-help-text.mjs</code></li>
+<li><strong>Add component help:</strong></li>
+   <pre><code class="language-javascript">const COMPONENT_HELP = {
+     &#039;your-component&#039;: {
+       helpText: `&lt;p&gt;Description here&lt;/p&gt;&lt;pre&gt;Example code&lt;/pre&gt;`
+     }
+   };</code></pre>
+<li><strong>Add attribute help:</strong></li>
+   <pre><code class="language-javascript">const ATTRIBUTE_HELP = {
+     &#039;your-component&#039;: {
+       &#039;attribute-name&#039;: `Example value or JSON`
+     }
+   };</code></pre>
+<li><strong>Set attribute types:</strong></li>
+   <pre><code class="language-javascript">const ATTRIBUTE_TYPES = {
+     &#039;your-component&#039;: {
+       &#039;attribute-name&#039;: &#039;json&#039; // or &#039;textarea&#039;, &#039;number&#039;, etc.
+     }
+   };</code></pre>
+<li><strong>Run the script:</strong></li>
+   <pre><code class="language-bash">node playground/scripts/add-help-text.mjs</code></pre>
+<h2>Tips for Writing Help Text</h2>
+<h3>Component Help Text (HTML)</h3>
+<ul><li>Start with a brief description</li>
+<li>Show complete, working examples in <code><pre></code> tags</li>
+<li>Explain the data shape or format</li>
+<li>Mention related PAN topics or components</li>
+<li>Keep it concise but complete</li>
+</ul>
+<h3>Attribute Help Text (Plain Text)</h3>
+<ul><li>Show actual example values</li>
+<li>For JSON: format it nicely with newlines</li>
+<li>For strings: show common patterns</li>
+<li>For arrays: show 1-2 example items</li>
+<li>Keep it one-line or minimal</li>
+</ul>
+<h3>Good Examples</h3>
+<strong>Component Help (with HTML):</strong>
+<pre><code class="language-javascript">helpText: `&lt;p&gt;Description of what it does:&lt;/p&gt;
+&lt;pre&gt;&amp;lt;component
+  attr1=&quot;value&quot;
+  attr2=&#039;{&quot;json&quot;: &quot;here&quot;}&#039;&amp;gt;
+&amp;lt;/component&amp;gt;&lt;/pre&gt;
+&lt;p&gt;Additional usage notes.&lt;/p&gt;`</code></pre>
+<strong>Attribute Help (plain text):</strong>
+<pre><code class="language-javascript">helpText: `[{&quot;id&quot;:1,&quot;name&quot;:&quot;Example&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;Another&quot;}]`</code></pre>
+<h2>Benefits</h2>
+<li><strong>Self-documenting</strong>: Components explain themselves</li>
+<li><strong>Copy-paste ready</strong>: Examples are immediately usable</li>
+<li><strong>Better DX</strong>: No need to switch to external docs</li>
+<li><strong>Type-aware</strong>: JSON attributes get proper textarea input</li>
+<li><strong>Contextual</strong>: Help appears exactly when needed</li>
+<h2>Impact</h2>
+<p>Before:
+<ul><li>Generic descriptions only</li>
+<li>No examples</li>
+<li>Unclear data shapes</li>
+<li>Single-line text inputs for complex JSON</li>
+</ul>
+After:
+<ul><li>13 components with detailed help</li>
+<li>9 attributes with examples</li>
+<li>Clear data format specifications</li>
+<li>Proper textarea inputs for JSON/objects</li>
+<li>Expandable help sections</li>
+</ul>
+The playground is now self-explanatory for complex components! 🎉</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/HELP_TEXT_GUIDE.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,1062 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deployment and Production · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Deployment and Production">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">building-with-larc</a> / <span>chapter-20-deployment-and-production</span>
+      </div>
+      <article class="docs-content">
+        <h1>Deployment and Production</h1>
+<blockquote>"In development, everything works. In production, nothing works. In between is where your career is made." — Murphy's Law of Software Development</blockquote>
+<p>You've built your LARC application. It's beautiful. It's tested. It works perfectly on your machine. Now comes the moment of truth: deploying it to production, where real users with real problems will find real bugs you never knew existed.</p>
+<p>The good news? LARC's simplicity makes deployment straightforward. The better news? We're about to make it even easier.</p>
+<h2>Build Considerations (Or Lack Thereof)</h2>
+<p>One of LARC's most delightful features is that it doesn't require a build step. No webpack. No babel. No spending three days configuring bundlers. You can literally serve your <code>.js</code> files directly to browsers.</p>
+<h3>The No-Build Approach</h3>
+<p>For small to medium applications, skip the build entirely:</p>
+<pre><code class="language-plaintext">my-app/
+|-- index.html
+|-- app.js
+|-- components/
+|   |-- header.js
+|   |-- sidebar.js
+|   `-- footer.js
+`-- lib/
+    `-- larc.js</code></pre>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My LARC App&lt;/title&gt;
+  &lt;script type=&quot;module&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<pre><code class="language-javascript">// app.js
+import { createBus, Component, html } from &#039;./lib/larc.js&#039;;
+import { Header } from &#039;./components/header.js&#039;;
+import { Sidebar } from &#039;./components/sidebar.js&#039;;
+import { Footer } from &#039;./components/footer.js&#039;;
+
+const bus = createBus();
+
+// Initialize components
+new Header({ bus, target: document.querySelector(&#039;#header&#039;) });
+new Sidebar({ bus, target: document.querySelector(&#039;#sidebar&#039;) });
+new Footer({ bus, target: document.querySelector(&#039;#footer&#039;) });</code></pre>
+<p>Deploy this to any static file server. Done. Seriously. That's it.</p>
+<h3>When You Actually Need a Build Step</h3>
+<p>Sometimes you want to optimize. Fair enough. Here's when a build makes sense:</p>
+<li><strong>Minification</strong>: Reduce file size for faster loading</li>
+<li><strong>Code splitting</strong>: Load only what's needed for each page</li>
+<li><strong>Tree shaking</strong>: Remove unused code</li>
+<li><strong>Transpilation</strong>: Support older browsers (if you must)</li>
+<li><strong>Asset optimization</strong>: Compress images, inline critical CSS</li>
+<h3>Minimal Build with esbuild</h3>
+<p>esbuild is fast enough that you'll think it's broken:</p>
+<pre><code class="language-javascript">// build.js
+import * as esbuild from &#039;esbuild&#039;;
+
+await esbuild.build({
+  entryPoints: [&#039;src/app.js&#039;],
+  bundle: true,
+  minify: true,
+  sourcemap: true,
+  target: [&#039;es2020&#039;],
+  outfile: &#039;dist/app.js&#039;,
+  format: &#039;esm&#039;
+});
+
+console.log(&#039;Build complete!&#039;);</code></pre>
+<p>Run it:</p>
+<pre><code class="language-bash">node build.js</code></pre>
+<p>That's your entire build process. Add it to <code>package.json</code>:</p>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;node build.js&quot;,
+    &quot;dev&quot;: &quot;node build.js --watch&quot;
+  }
+}</code></pre>
+<h3>Code Splitting for Larger Apps</h3>
+<p>Split your code by route or feature:</p>
+<pre><code class="language-javascript">// build.js
+import * as esbuild from &#039;esbuild&#039;;
+
+await esbuild.build({
+  entryPoints: [
+    &#039;src/app.js&#039;,
+    &#039;src/pages/home.js&#039;,
+    &#039;src/pages/about.js&#039;,
+    &#039;src/pages/contact.js&#039;
+  ],
+  bundle: true,
+  minify: true,
+  splitting: true,
+  format: &#039;esm&#039;,
+  outdir: &#039;dist&#039;,
+  chunkNames: &#039;chunks/[name]-[hash]&#039;
+});</code></pre>
+<p>Then lazy load pages:</p>
+<pre><code class="language-javascript">class Router extends Component {
+  async loadPage(pageName) {
+    this.state.loading = true;
+
+    try {
+      // Dynamic import
+      const module = await import(`./pages/${pageName}.js`);
+      const PageComponent = module.default;
+
+      this.state.currentPage = new PageComponent({
+        bus: this.bus,
+        target: this.pageContainer
+      });
+
+      this.state.loading = false;
+
+    } catch (error) {
+      console.error(&#039;Failed to load page:&#039;, error);
+      this.state.error = error.message;
+    }
+  }
+
+  render() {
+    if (this.state.loading) {
+      return html`&lt;div class=&quot;loading&quot;&gt;Loading...&lt;/div&gt;`;
+    }
+
+    if (this.state.error) {
+      return html`&lt;div class=&quot;error&quot;&gt;Error: ${this.state.error}&lt;/div&gt;`;
+    }
+
+    return html`&lt;div ref=${el =&gt; this.pageContainer = el}&gt;&lt;/div&gt;`;
+  }
+}</code></pre>
+<h3>TypeScript Integration (Optional)</h3>
+<p>If you're into type safety:</p>
+<pre><code class="language-typescript">// tsconfig.json
+{
+  &quot;compilerOptions&quot;: {
+    &quot;target&quot;: &quot;ES2020&quot;,
+    &quot;module&quot;: &quot;ES2020&quot;,
+    &quot;moduleResolution&quot;: &quot;node&quot;,
+    &quot;strict&quot;: true,
+    &quot;esModuleInterop&quot;: true,
+    &quot;skipLibCheck&quot;: true,
+    &quot;outDir&quot;: &quot;dist&quot;
+  },
+  &quot;include&quot;: [&quot;src/**/*&quot;]
+}</code></pre>
+<pre><code class="language-bash"># Build
+tsc &amp;&amp; node build.js</code></pre>
+<p>Or use esbuild to handle TypeScript directly:</p>
+<pre><code class="language-javascript">await esbuild.build({
+  entryPoints: [&#039;src/app.ts&#039;],
+  bundle: true,
+  minify: true,
+  loader: { &#039;.ts&#039;: &#039;ts&#039; },
+  outfile: &#039;dist/app.js&#039;
+});</code></pre>
+<h2>CDN Deployment</h2>
+<p>Content Delivery Networks make your app fast worldwide. Users in Tokyo load from Tokyo. Users in Paris load from Paris. Everyone's happy.</p>
+<h3>Static File Hosting</h3>
+<p>Deploy to any CDN that serves static files:</p>
+<strong>Cloudflare Pages</strong>:
+<pre><code class="language-bash"># Install Wrangler CLI
+npm install -g wrangler
+
+# Deploy
+wrangler pages publish dist</code></pre>
+<strong>Netlify</strong>:
+<pre><code class="language-bash"># Install Netlify CLI
+npm install -g netlify-cli
+
+# Deploy
+netlify deploy --dir=dist --prod</code></pre>
+<strong>Vercel</strong>:
+<pre><code class="language-bash"># Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel --prod</code></pre>
+<h3>Configuration Files</h3>
+<p>Most CDN providers want a config file:</p>
+<strong>Cloudflare Pages</strong> (<code>_headers</code>):
+<pre><code class="language-plaintext">/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/index.html
+  Cache-Control: no-cache
+
+/app.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/service-worker.js
+  Cache-Control: no-cache</code></pre>
+<strong>Netlify</strong> (<code>netlify.toml</code>):
+<pre><code class="language-toml">[build]
+  publish = &quot;dist&quot;
+  command = &quot;npm run build&quot;
+
+[[headers]]
+  for = &quot;/*.js&quot;
+  [headers.values]
+    Cache-Control = &quot;public, max-age=31536000, immutable&quot;
+
+[[headers]]
+  for = &quot;/index.html&quot;
+  [headers.values]
+    Cache-Control = &quot;no-cache&quot;
+
+[[redirects]]
+  from = &quot;/*&quot;
+  to = &quot;/index.html&quot;
+  status = 200</code></pre>
+<strong>Vercel</strong> (<code>vercel.json</code>):
+<pre><code class="language-json">{
+  &quot;buildCommand&quot;: &quot;npm run build&quot;,
+  &quot;outputDirectory&quot;: &quot;dist&quot;,
+  &quot;routes&quot;: [
+    {
+      &quot;src&quot;: &quot;/(.*\\.js)&quot;,
+      &quot;headers&quot;: {
+        &quot;Cache-Control&quot;: &quot;public, max-age=31536000, immutable&quot;
+      }
+    },
+    {
+      &quot;src&quot;: &quot;/index.html&quot;,
+      &quot;headers&quot;: {
+        &quot;Cache-Control&quot;: &quot;no-cache&quot;
+      }
+    },
+    {
+      &quot;handle&quot;: &quot;filesystem&quot;
+    },
+    {
+      &quot;src&quot;: &quot;/(.*)&quot;,
+      &quot;dest&quot;: &quot;/index.html&quot;
+    }
+  ]
+}</code></pre>
+<h3>Asset Fingerprinting</h3>
+<p>Add content hashes to filenames for cache busting:</p>
+<pre><code class="language-javascript">// build.js
+import * as esbuild from &#039;esbuild&#039;;
+import { createHash } from &#039;crypto&#039;;
+import { readFileSync, writeFileSync } from &#039;fs&#039;;
+
+// Build
+await esbuild.build({
+  entryPoints: [&#039;src/app.js&#039;],
+  bundle: true,
+  minify: true,
+  metafile: true,
+  outfile: &#039;dist/app.js&#039;
+});
+
+// Add hash to filename
+const content = readFileSync(&#039;dist/app.js&#039;);
+const hash = createHash(&#039;sha256&#039;).update(content).digest(&#039;hex&#039;).slice(0, 8);
+const hashedFilename = `app.${hash}.js`;
+
+// Rename file
+renameSync(&#039;dist/app.js&#039;, `dist/${hashedFilename}`);
+
+// Update index.html
+let html = readFileSync(&#039;src/index.html&#039;, &#039;utf-8&#039;);
+html = html.replace(&#039;app.js&#039;, hashedFilename);
+writeFileSync(&#039;dist/index.html&#039;, html);
+
+console.log(`Built: ${hashedFilename}`);</code></pre>
+<h2>Caching Strategies</h2>
+<p>Caching is the art of remembering things so you don't have to fetch them again. Get it right, and your app is lightning fast. Get it wrong, and users see stale content for months.</p>
+<h3>Browser Cache Headers</h3>
+<p>Set appropriate cache headers for different file types:</p>
+<pre><code class="language-javascript">// Edge function (Cloudflare Workers example)
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    const response = await fetch(request);
+
+    // Clone response so we can modify headers
+    const newResponse = new Response(response.body, response);
+
+    if (url.pathname.endsWith(&#039;.js&#039;) || url.pathname.endsWith(&#039;.css&#039;)) {
+      // Cache JavaScript and CSS for 1 year
+      newResponse.headers.set(
+        &#039;Cache-Control&#039;,
+        &#039;public, max-age=31536000, immutable&#039;
+      );
+    } else if (url.pathname.endsWith(&#039;.html&#039;)) {
+      // Don&#039;t cache HTML
+      newResponse.headers.set(
+        &#039;Cache-Control&#039;,
+        &#039;no-cache, must-revalidate&#039;
+      );
+    } else if (url.pathname.match(/\.(png|jpg|jpeg|gif|webp|svg)$/)) {
+      // Cache images for 30 days
+      newResponse.headers.set(
+        &#039;Cache-Control&#039;,
+        &#039;public, max-age=2592000&#039;
+      );
+    }
+
+    return newResponse;
+  }
+};</code></pre>
+<h3>Service Worker Caching</h3>
+<p>Implement offline support and faster loads:</p>
+<pre><code class="language-javascript">// service-worker.js
+const CACHE_NAME = &#039;larc-app-v1&#039;;
+const URLS_TO_CACHE = [
+  &#039;/&#039;,
+  &#039;/index.html&#039;,
+  &#039;/app.js&#039;,
+  &#039;/styles.css&#039;,
+  &#039;/lib/larc.js&#039;
+];
+
+self.addEventListener(&#039;install&#039;, (event) =&gt; {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache =&gt; cache.addAll(URLS_TO_CACHE))
+  );
+});
+
+self.addEventListener(&#039;fetch&#039;, (event) =&gt; {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response =&gt; {
+        // Return cached version or fetch new
+        if (response) {
+          return response;
+        }
+
+        return fetch(event.request).then(response =&gt; {
+          // Cache new responses
+          if (!response || response.status !== 200 || response.type !== &#039;basic&#039;) {
+            return response;
+          }
+
+          const responseToCache = response.clone();
+
+          caches.open(CACHE_NAME)
+            .then(cache =&gt; {
+              cache.put(event.request, responseToCache);
+            });
+
+          return response;
+        });
+      })
+  );
+});
+
+self.addEventListener(&#039;activate&#039;, (event) =&gt; {
+  // Clean up old caches
+  event.waitUntil(
+    caches.keys().then(cacheNames =&gt; {
+      return Promise.all(
+        cacheNames.map(cacheName =&gt; {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
+});</code></pre>
+<p>Register the service worker:</p>
+<pre><code class="language-javascript">// app.js
+if (&#039;serviceWorker&#039; in navigator) {
+  window.addEventListener(&#039;load&#039;, () =&gt; {
+    navigator.serviceWorker.register(&#039;/service-worker.js&#039;)
+      .then(registration =&gt; {
+        console.log(&#039;Service Worker registered:&#039;, registration.scope);
+      })
+      .catch(error =&gt; {
+        console.error(&#039;Service Worker registration failed:&#039;, error);
+      });
+  });
+}</code></pre>
+<h3>API Response Caching</h3>
+<p>Cache API responses intelligently:</p>
+<pre><code class="language-javascript">class CachedAPIClient extends Component {
+  init() {
+    this.state = {
+      cache: new Map(),
+      cacheDurations: {
+        &#039;GET&#039;: 5 * 60 * 1000, // 5 minutes
+        &#039;POST&#039;: 0, // Don&#039;t cache
+        &#039;PUT&#039;: 0,
+        &#039;DELETE&#039;: 0
+      }
+    };
+
+    this.on(&#039;api-request&#039;, this.handleRequest);
+  }
+
+  async handleRequest({ method, endpoint, data, requestId, bypassCache }) {
+    const cacheKey = `${method}:${endpoint}:${JSON.stringify(data || {})}`;
+
+    // Check cache for GET requests
+    if (method === &#039;GET&#039; &amp;&amp; !bypassCache) {
+      const cached = this.state.cache.get(cacheKey);
+
+      if (cached &amp;&amp; Date.now() &lt; cached.expiresAt) {
+        this.emit(&#039;api-success&#039;, {
+          requestId,
+          result: cached.data,
+          cached: true
+        });
+        return;
+      }
+    }
+
+    try {
+      const response = await fetch(endpoint, {
+        method,
+        headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+        body: data ? JSON.stringify(data) : undefined
+      });
+
+      const result = await response.json();
+
+      // Cache GET responses
+      if (method === &#039;GET&#039;) {
+        this.state.cache.set(cacheKey, {
+          data: result,
+          expiresAt: Date.now() + this.state.cacheDurations[method]
+        });
+      } else {
+        // Invalidate cache on mutations
+        this.invalidateCache(endpoint);
+      }
+
+      this.emit(&#039;api-success&#039;, {
+        requestId,
+        result,
+        cached: false
+      });
+
+    } catch (error) {
+      this.emit(&#039;api-error&#039;, {
+        requestId,
+        error: error.message
+      });
+    }
+  }
+
+  invalidateCache(pattern) {
+    // Remove cache entries matching pattern
+    for (const key of this.state.cache.keys()) {
+      if (key.includes(pattern)) {
+        this.state.cache.delete(key);
+      }
+    }
+  }
+
+  render() {
+    return null;
+  }
+}</code></pre>
+<h2>Performance Monitoring</h2>
+<p>You can't improve what you don't measure. Let's measure everything.</p>
+<h3>Real User Monitoring (RUM)</h3>
+<p>Track actual user experience:</p>
+<pre><code class="language-javascript">class PerformanceMonitor extends Component {
+  init() {
+    this.state = {
+      metrics: {}
+    };
+
+    // Capture Core Web Vitals
+    this.measureWebVitals();
+
+    // Monitor component render times
+    this.monitorComponents();
+
+    // Track custom metrics
+    this.on(&#039;track-metric&#039;, this.trackMetric);
+  }
+
+  measureWebVitals() {
+    // Largest Contentful Paint (LCP)
+    new PerformanceObserver((list) =&gt; {
+      const entries = list.getEntries();
+      const lastEntry = entries[entries.length - 1];
+
+      this.state.metrics.lcp = lastEntry.renderTime || lastEntry.loadTime;
+      this.sendMetric(&#039;lcp&#039;, this.state.metrics.lcp);
+    }).observe({ entryTypes: [&#039;largest-contentful-paint&#039;] });
+
+    // First Input Delay (FID)
+    new PerformanceObserver((list) =&gt; {
+      const entries = list.getEntries();
+      entries.forEach(entry =&gt; {
+        this.state.metrics.fid = entry.processingStart - entry.startTime;
+        this.sendMetric(&#039;fid&#039;, this.state.metrics.fid);
+      });
+    }).observe({ entryTypes: [&#039;first-input&#039;] });
+
+    // Cumulative Layout Shift (CLS)
+    let clsScore = 0;
+    new PerformanceObserver((list) =&gt; {
+      for (const entry of list.getEntries()) {
+        if (!entry.hadRecentInput) {
+          clsScore += entry.value;
+        }
+      }
+      this.state.metrics.cls = clsScore;
+      this.sendMetric(&#039;cls&#039;, clsScore);
+    }).observe({ entryTypes: [&#039;layout-shift&#039;] });
+
+    // Time to First Byte (TTFB)
+    const navigationEntry = performance.getEntriesByType(&#039;navigation&#039;)[0];
+    if (navigationEntry) {
+      this.state.metrics.ttfb = navigationEntry.responseStart - navigationEntry.requestStart;
+      this.sendMetric(&#039;ttfb&#039;, this.state.metrics.ttfb);
+    }
+  }
+
+  monitorComponents() {
+    // Wrap component render methods to track timing
+    const originalRender = Component.prototype.render;
+
+    Component.prototype.render = function(...args) {
+      const start = performance.now();
+      const result = originalRender.apply(this, args);
+      const duration = performance.now() - start;
+
+      if (duration &gt; 16) { // Slower than 60fps
+        this.bus.emit(&#039;slow-render&#039;, {
+          component: this.constructor.name,
+          duration
+        });
+      }
+
+      return result;
+    };
+
+    this.on(&#039;slow-render&#039;, (data) =&gt; {
+      this.sendMetric(&#039;slow-render&#039;, data);
+    });
+  }
+
+  trackMetric({ name, value, tags }) {
+    this.state.metrics[name] = value;
+    this.sendMetric(name, value, tags);
+  }
+
+  sendMetric(name, value, tags = {}) {
+    // Send to analytics service
+    const payload = {
+      metric: name,
+      value,
+      tags: {
+        ...tags,
+        url: window.location.pathname,
+        userAgent: navigator.userAgent,
+        timestamp: Date.now()
+      }
+    };
+
+    // Use sendBeacon for reliability
+    navigator.sendBeacon(&#039;/api/metrics&#039;, JSON.stringify(payload));
+  }
+
+  render() {
+    // Optional: Display metrics in dev mode
+    if (process.env.NODE_ENV === &#039;development&#039;) {
+      return html`
+        &lt;div class=&quot;perf-monitor&quot;&gt;
+          &lt;h4&gt;Performance Metrics&lt;/h4&gt;
+          &lt;dl&gt;
+            &lt;dt&gt;LCP&lt;/dt&gt;
+            &lt;dd&gt;${this.state.metrics.lcp?.toFixed(2)}ms&lt;/dd&gt;
+            &lt;dt&gt;FID&lt;/dt&gt;
+            &lt;dd&gt;${this.state.metrics.fid?.toFixed(2)}ms&lt;/dd&gt;
+            &lt;dt&gt;CLS&lt;/dt&gt;
+            &lt;dd&gt;${this.state.metrics.cls?.toFixed(3)}&lt;/dd&gt;
+            &lt;dt&gt;TTFB&lt;/dt&gt;
+            &lt;dd&gt;${this.state.metrics.ttfb?.toFixed(2)}ms&lt;/dd&gt;
+          &lt;/dl&gt;
+        &lt;/div&gt;
+      `;
+    }
+
+    return null;
+  }
+}</code></pre>
+<h3>Custom Performance Marks</h3>
+<p>Track specific operations:</p>
+<pre><code class="language-javascript">class DataLoader extends Component {
+  async loadUserData(userId) {
+    performance.mark(&#039;load-user-start&#039;);
+
+    try {
+      const response = await fetch(`/api/users/${userId}`);
+      const data = await response.json();
+
+      performance.mark(&#039;load-user-end&#039;);
+      performance.measure(&#039;load-user&#039;, &#039;load-user-start&#039;, &#039;load-user-end&#039;);
+
+      const measurement = performance.getEntriesByName(&#039;load-user&#039;)[0];
+
+      this.emit(&#039;track-metric&#039;, {
+        name: &#039;user-load-time&#039;,
+        value: measurement.duration,
+        tags: { userId }
+      });
+
+      this.state.user = data;
+
+    } catch (error) {
+      performance.mark(&#039;load-user-error&#039;);
+      this.emit(&#039;track-metric&#039;, {
+        name: &#039;user-load-error&#039;,
+        value: 1,
+        tags: { userId, error: error.message }
+      });
+    }
+  }
+}</code></pre>
+<h3>Bundle Size Monitoring</h3>
+<p>Track your bundle size over time:</p>
+<pre><code class="language-javascript">// build.js
+import * as esbuild from &#039;esbuild&#039;;
+import { statSync, writeFileSync } from &#039;fs&#039;;
+
+const result = await esbuild.build({
+  entryPoints: [&#039;src/app.js&#039;],
+  bundle: true,
+  minify: true,
+  metafile: true,
+  outfile: &#039;dist/app.js&#039;
+});
+
+// Analyze bundle
+const stats = statSync(&#039;dist/app.js&#039;);
+const bundleSize = stats.size;
+const bundleSizeKB = (bundleSize / 1024).toFixed(2);
+
+console.log(`Bundle size: ${bundleSizeKB} KB`);
+
+// Save to history
+const history = {
+  timestamp: new Date().toISOString(),
+  size: bundleSize,
+  sizeKB: bundleSizeKB
+};
+
+writeFileSync(&#039;build-stats.json&#039;, JSON.stringify(history, null, 2));
+
+// Fail build if bundle is too large
+const MAX_SIZE_KB = 500;
+if (parseFloat(bundleSizeKB) &gt; MAX_SIZE_KB) {
+  throw new Error(`Bundle size ${bundleSizeKB} KB exceeds limit of ${MAX_SIZE_KB} KB`);
+}</code></pre>
+<h2>Production Debugging</h2>
+<p>Debugging production is like debugging with one hand tied behind your back and the lights off. Here's how to see in the dark.</p>
+<h3>Source Maps</h3>
+<p>Always deploy source maps (but protect them):</p>
+<pre><code class="language-javascript">// build.js
+await esbuild.build({
+  entryPoints: [&#039;src/app.js&#039;],
+  bundle: true,
+  minify: true,
+  sourcemap: &#039;external&#039;, // Creates separate .map file
+  outfile: &#039;dist/app.js&#039;
+});</code></pre>
+<p>Serve source maps only to authenticated users:</p>
+<pre><code class="language-javascript">// Edge function
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+
+    // Protect source maps
+    if (url.pathname.endsWith(&#039;.map&#039;)) {
+      const authToken = request.headers.get(&#039;Authorization&#039;);
+
+      if (!isValidDevToken(authToken)) {
+        return new Response(&#039;Unauthorized&#039;, { status: 401 });
+      }
+    }
+
+    return fetch(request);
+  }
+};</code></pre>
+<h3>Remote Error Tracking</h3>
+<p>Integrate with error tracking services:</p>
+<pre><code class="language-javascript">class ErrorTracker extends Component {
+  init() {
+    // Initialize error tracking (e.g., Sentry)
+    if (window.Sentry) {
+      window.Sentry.init({
+        dsn: &#039;YOUR_SENTRY_DSN&#039;,
+        environment: process.env.NODE_ENV,
+        release: process.env.APP_VERSION,
+        beforeSend(event, hint) {
+          // Add custom context
+          event.contexts = {
+            ...event.contexts,
+            app: {
+              userId: localStorage.getItem(&#039;userId&#039;),
+              sessionId: sessionStorage.getItem(&#039;sessionId&#039;)
+            }
+          };
+          return event;
+        }
+      });
+    }
+
+    // Catch global errors
+    window.addEventListener(&#039;error&#039;, (event) =&gt; {
+      this.trackError({
+        message: event.message,
+        stack: event.error?.stack,
+        source: event.filename,
+        line: event.lineno,
+        column: event.colno
+      });
+    });
+
+    // Catch promise rejections
+    window.addEventListener(&#039;unhandledrejection&#039;, (event) =&gt; {
+      this.trackError({
+        message: event.reason?.message || &#039;Unhandled Promise Rejection&#039;,
+        stack: event.reason?.stack
+      });
+    });
+
+    // Listen for application errors
+    this.on(&#039;app-error&#039;, this.trackError);
+  }
+
+  trackError(error) {
+    if (window.Sentry) {
+      window.Sentry.captureException(error);
+    }
+
+    // Also log to our own service
+    navigator.sendBeacon(&#039;/api/errors&#039;, JSON.stringify({
+      ...error,
+      timestamp: new Date().toISOString(),
+      url: window.location.href,
+      userAgent: navigator.userAgent
+    }));
+  }
+
+  render() {
+    return null;
+  }
+}</code></pre>
+<h3>Feature Flags</h3>
+<p>Control features in production without deploying:</p>
+<pre><code class="language-javascript">class FeatureFlags extends Component {
+  init() {
+    this.state = {
+      flags: {},
+      loading: true
+    };
+
+    this.loadFlags();
+    this.on(&#039;check-flag&#039;, this.checkFlag);
+  }
+
+  async loadFlags() {
+    try {
+      const response = await fetch(&#039;/api/feature-flags&#039;);
+      this.state.flags = await response.json();
+      this.state.loading = false;
+      this.emit(&#039;flags-loaded&#039;);
+    } catch (error) {
+      console.error(&#039;Failed to load feature flags:&#039;, error);
+      this.state.loading = false;
+    }
+  }
+
+  checkFlag({ flag, defaultValue = false }) {
+    if (this.state.loading) {
+      return defaultValue;
+    }
+
+    return this.state.flags[flag] ?? defaultValue;
+  }
+
+  render() {
+    return null;
+  }
+}
+
+// Usage
+class NewFeature extends Component {
+  init() {
+    this.state = { enabled: false };
+
+    this.on(&#039;flags-loaded&#039;, () =&gt; {
+      this.emit(&#039;check-flag&#039;, { flag: &#039;new-feature-enabled&#039; });
+    });
+
+    this.on(&#039;flag-result&#039;, ({ flag, value }) =&gt; {
+      if (flag === &#039;new-feature-enabled&#039;) {
+        this.state.enabled = value;
+      }
+    });
+  }
+
+  render() {
+    if (!this.state.enabled) {
+      return html`&lt;div&gt;Coming soon!&lt;/div&gt;`;
+    }
+
+    return html`&lt;div class=&quot;new-feature&quot;&gt;New feature content&lt;/div&gt;`;
+  }
+}</code></pre>
+<h2>Versioning and Upgrades</h2>
+<p>Manage versions without breaking production.</p>
+<h3>Semantic Versioning</h3>
+<p>Track your app version:</p>
+<pre><code class="language-javascript">// version.js
+export const VERSION = &#039;1.2.3&#039;;
+export const BUILD_DATE = &#039;2025-12-04T10:30:00Z&#039;;</code></pre>
+<p>Display in your app:</p>
+<pre><code class="language-javascript">class AppFooter extends Component {
+  render() {
+    return html`
+      &lt;footer&gt;
+        &lt;span&gt;v${VERSION}&lt;/span&gt;
+        &lt;span&gt;Built: ${new Date(BUILD_DATE).toLocaleString()}&lt;/span&gt;
+      &lt;/footer&gt;
+    `;
+  }
+}</code></pre>
+<h3>Update Notifications</h3>
+<p>Notify users when a new version is available:</p>
+<pre><code class="language-javascript">class UpdateChecker extends Component {
+  init() {
+    this.state = {
+      currentVersion: VERSION,
+      latestVersion: VERSION,
+      updateAvailable: false
+    };
+
+    this.checkForUpdates();
+
+    // Check every 30 minutes
+    setInterval(() =&gt; this.checkForUpdates(), 30 * 60 * 1000);
+  }
+
+  async checkForUpdates() {
+    try {
+      const response = await fetch(&#039;/version.json&#039;, {
+        cache: &#039;no-cache&#039;
+      });
+      const data = await response.json();
+
+      if (data.version !== this.state.currentVersion) {
+        this.state.latestVersion = data.version;
+        this.state.updateAvailable = true;
+        this.emit(&#039;update-available&#039;, {
+          current: this.state.currentVersion,
+          latest: data.version
+        });
+      }
+    } catch (error) {
+      console.error(&#039;Failed to check for updates:&#039;, error);
+    }
+  }
+
+  render() {
+    if (!this.state.updateAvailable) {
+      return null;
+    }
+
+    return html`
+      &lt;div class=&quot;update-banner&quot;&gt;
+        &lt;p&gt;A new version (${this.state.latestVersion}) is available!&lt;/p&gt;
+        &lt;button onclick=${() =&gt; window.location.reload()}&gt;
+          Refresh Now
+        &lt;/button&gt;
+        &lt;button onclick=${() =&gt; this.state.updateAvailable = false}&gt;
+          Later
+        &lt;/button&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h3>Rolling Deployments</h3>
+<p>Deploy gradually to minimize risk:</p>
+<pre><code class="language-javascript">// Edge function for gradual rollout
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+
+    // Determine which version to serve
+    const userId = getUserIdFromRequest(request);
+    const rolloutPercent = 10; // Serve v2 to 10% of users
+
+    const hash = hashString(userId);
+    const bucket = hash % 100;
+
+    if (bucket &lt; rolloutPercent) {
+      // Serve new version
+      return fetch(`${url.origin}/v2${url.pathname}`);
+    } else {
+      // Serve current version
+      return fetch(request);
+    }
+  }
+};
+
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i &lt; str.length; i++) {
+    hash = ((hash &lt;&lt; 5) - hash) + str.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}</code></pre>
+<h2>Deployment Checklist</h2>
+<p>Before you deploy to production, verify:</p>
+<ul><li>[ ] All tests pass</li>
+<li>[ ] Bundle is minified and gzipped</li>
+<li>[ ] Source maps are generated (and protected)</li>
+<li>[ ] Cache headers are configured correctly</li>
+<li>[ ] Service worker is registered (if using)</li>
+<li>[ ] Error tracking is enabled</li>
+<li>[ ] Performance monitoring is active</li>
+<li>[ ] Feature flags are configured</li>
+<li>[ ] API endpoints point to production</li>
+<li>[ ] Environment variables are set</li>
+<li>[ ] Database migrations are applied (if applicable)</li>
+<li>[ ] SSL certificate is valid</li>
+<li>[ ] CDN is configured with correct origins</li>
+<li>[ ] Monitoring alerts are configured</li>
+<li>[ ] Rollback plan is documented</li>
+<li>[ ] Team is notified of deployment</li>
+</ul>
+<h2>Monitoring Production Health</h2>
+<p>Set up health checks and dashboards:</p>
+<pre><code class="language-javascript">class HealthCheck extends Component {
+  init() {
+    this.state = {
+      status: &#039;unknown&#039;,
+      checks: {}
+    };
+
+    this.runHealthChecks();
+
+    // Run checks every 60 seconds
+    setInterval(() =&gt; this.runHealthChecks(), 60000);
+  }
+
+  async runHealthChecks() {
+    const checks = {
+      api: await this.checkAPI(),
+      websocket: await this.checkWebSocket(),
+      localStorage: this.checkLocalStorage(),
+      serviceWorker: await this.checkServiceWorker()
+    };
+
+    this.state.checks = checks;
+
+    const allHealthy = Object.values(checks).every(c =&gt; c.status === &#039;ok&#039;);
+    this.state.status = allHealthy ? &#039;healthy&#039; : &#039;degraded&#039;;
+
+    if (!allHealthy) {
+      this.emit(&#039;health-check-failed&#039;, { checks });
+    }
+  }
+
+  async checkAPI() {
+    try {
+      const response = await fetch(&#039;/api/health&#039;, { timeout: 5000 });
+      return { status: response.ok ? &#039;ok&#039; : &#039;error&#039; };
+    } catch (error) {
+      return { status: &#039;error&#039;, error: error.message };
+    }
+  }
+
+  async checkWebSocket() {
+    // Check if WebSocket connection is alive
+    return { status: &#039;ok&#039; }; // Simplified
+  }
+
+  checkLocalStorage() {
+    try {
+      localStorage.setItem(&#039;test&#039;, &#039;test&#039;);
+      localStorage.removeItem(&#039;test&#039;);
+      return { status: &#039;ok&#039; };
+    } catch (error) {
+      return { status: &#039;error&#039;, error: error.message };
+    }
+  }
+
+  async checkServiceWorker() {
+    if (&#039;serviceWorker&#039; in navigator) {
+      const registration = await navigator.serviceWorker.getRegistration();
+      return { status: registration ? &#039;ok&#039; : &#039;not-registered&#039; };
+    }
+    return { status: &#039;not-supported&#039; };
+  }
+
+  render() {
+    return null;
+  }
+}</code></pre>
+<h2>Conclusion</h2>
+<p>Deploying a LARC application is refreshingly simple. No complex build pipelines. No Docker orchestration. No Kubernetes manifests that would make a Vogon poet proud. Just clean, modern JavaScript that runs anywhere.</p>
+<p>But simplicity doesn't mean carelessness. Monitor your app. Cache intelligently. Track errors. Use feature flags. Version carefully. And always have a rollback plan.</p>
+<p>Your LARC application is now live, serving real users, solving real problems. You've built something with vanilla JavaScript that's faster, simpler, and more maintainable than most framework-heavy applications. That's worth celebrating.</p>
+<p>Now go forth and deploy. And when something breaks (it will), you'll have the tools to fix it quickly. That's the LARC way.</p>
+<strong>Congratulations—you've completed Building with LARC: A Reference Manual!</strong>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/building-with-larc/chapter-20-deployment-and-production.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

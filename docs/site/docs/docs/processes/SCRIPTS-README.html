@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git Submodule Helper Scripts · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Git Submodule Helper Scripts">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">processes</a> / <span>SCRIPTS-README</span>
+      </div>
+      <article class="docs-content">
+        <h1>Git Submodule Helper Scripts</h1>
+<p>This directory contains helper scripts to make working with git submodules easier.</p>
+<h2>Available Scripts</h2>
+<h3>1. <code>pull-updates.sh</code> - Pull Latest Changes</h3>
+<p>Updates the meta repository and all submodules.</p>
+<strong>Usage:</strong>
+<pre><code class="language-bash"># Update everything to latest remote branches (default)
+./pull-updates.sh
+
+# Just check status, don&#039;t make changes
+./pull-updates.sh --check
+
+# Update to exact commits specified by meta repo (no branch checkout)
+./pull-updates.sh --exact</code></pre>
+<strong>When to use:</strong>
+<ul><li>Starting your day / syncing with team changes</li>
+<li>After someone updates submodules</li>
+<li>Before deploying to production</li>
+</ul>
+<hr>
+<h3>2. <code>work-on-submodule.sh</code> - Prepare Submodule for Work</h3>
+<p>Safely prepares a submodule for editing by checking out main branch and pulling latest.</p>
+<strong>Usage:</strong>
+<pre><code class="language-bash"># Work on a top-level submodule
+./work-on-submodule.sh apps
+
+# Work on a nested submodule
+./work-on-submodule.sh apps/components</code></pre>
+<strong>What it does:</strong>
+<ul><li>Detects if you're in detached HEAD and switches to main</li>
+<li>Pulls latest changes</li>
+<li>Shows recent commits</li>
+<li>Shows any uncommitted changes</li>
+<li>Provides next-step instructions</li>
+</ul>
+<strong>When to use:</strong>
+<ul><li>Before editing any files in a submodule</li>
+<li>When you see "detached HEAD" warnings</li>
+</ul>
+<hr>
+<h3>3. <code>push-submodule-changes.sh</code> - Smart Push</h3>
+<p>Intelligently pushes changes in the correct order: submodules first, then meta repo.</p>
+<strong>Usage:</strong>
+<pre><code class="language-bash"># Interactive mode (asks for confirmation)
+./push-submodule-changes.sh
+
+# Auto-push everything without prompts
+./push-submodule-changes.sh --force</code></pre>
+<strong>What it does:</strong>
+<li>Checks all submodules for unpushed commits</li>
+<li>Shows what needs pushing</li>
+<li>Pushes submodules first (in correct order)</li>
+<li>Updates meta repo to point to new commits</li>
+<li>Pushes meta repo</li>
+<strong>When to use:</strong>
+<ul><li>After making changes to submodules</li>
+<li>Before asking teammates to pull your changes</li>
+<li>Before deploying</li>
+</ul>
+<hr>
+<h2>Quick Workflow Examples</h2>
+<h3>Example 1: Editing a Submodule</h3>
+<pre><code class="language-bash"># 1. Prepare the submodule
+./work-on-submodule.sh apps
+
+# 2. Make your changes
+cd apps
+# ... edit files ...
+
+# 3. Commit
+git add .
+git commit -m &quot;Add new feature&quot;
+
+# 4. Push everything (from meta repo root)
+cd ..
+./push-submodule-changes.sh</code></pre>
+<hr>
+<h3>Example 2: Syncing with Team</h3>
+<pre><code class="language-bash"># Check what&#039;s out of date
+./pull-updates.sh --check
+
+# Pull all updates
+./pull-updates.sh
+
+# If it says &quot;Meta repo has changes&quot;, commit them
+git add -A
+git commit -m &quot;Update submodules to latest versions&quot;
+git push</code></pre>
+<hr>
+<h3>Example 3: Nested Submodule (e.g., apps/components)</h3>
+<pre><code class="language-bash"># 1. Prepare nested submodule
+./work-on-submodule.sh apps/components
+
+# 2. Make changes
+cd apps/components
+# ... edit files ...
+git add .
+git commit -m &quot;Enhance drag-drop component&quot;
+git push
+
+# 3. Update parent submodule (apps)
+cd ..  # now in apps/
+git add components
+git commit -m &quot;Update components submodule&quot;
+git push
+
+# 4. Update meta repo
+cd ..  # now in meta repo
+git add apps
+git commit -m &quot;Update apps submodule with component enhancements&quot;
+git push</code></pre>
+<p>Or use the smart push script:
+<pre><code class="language-bash"># After step 2 above, from meta repo root:
+./push-submodule-changes.sh
+# This handles steps 3-4 automatically!</code></pre></p>
+<hr>
+<h3>Example 4: Deploying to Production</h3>
+<pre><code class="language-bash"># On production server
+cd /path/to/larc
+
+# Pull all updates
+./pull-updates.sh
+
+# Verify everything is correct
+./pull-updates.sh --check
+
+# Restart services, run build, etc.</code></pre>
+<hr>
+<h2>Troubleshooting with Scripts</h2>
+<h3>"I'm stuck in detached HEAD"</h3>
+<pre><code class="language-bash">./work-on-submodule.sh &lt;submodule-name&gt;</code></pre>
+<h3>"I don't know what needs pushing"</h3>
+<pre><code class="language-bash">./pull-updates.sh --check
+# or
+./push-submodule-changes.sh  # will show what needs pushing</code></pre>
+<h3>"Someone updated submodules, how do I sync?"</h3>
+<pre><code class="language-bash">./pull-updates.sh</code></pre>
+<h3>"I want exact commits, not latest"</h3>
+<pre><code class="language-bash">./pull-updates.sh --exact</code></pre>
+<hr>
+<h2>Understanding the Output</h2>
+<h3>Color Codes</h3>
+<ul><li>🟢 Green ✓ = Success / Good status</li>
+<li>🟡 Yellow ⚠ = Warning / Needs attention</li>
+<li>🔴 Red ✗ = Error</li>
+<li>🔵 Blue = Section headers</li>
+</ul>
+<h3>Common Warnings</h3>
+<strong>"DETACHED HEAD"</strong>
+<ul><li>The submodule is not on a branch</li>
+<li>Fix: Use <code>./work-on-submodule.sh <name></code> before editing</li>
+</ul>
+<strong>"unpushed commits"</strong>
+<ul><li>You have local commits not pushed to remote</li>
+<li>Fix: Use <code>./push-submodule-changes.sh</code></li>
+</ul>
+<strong>"Meta repo has changes (submodules moved to newer commits)"</strong>
+<ul><li>Submodules are at different commits than meta repo expects</li>
+<li>Fix: Commit the changes:</li>
+</ul>  <pre><code class="language-bash">git add -A
+  git commit -m &quot;Update submodules to latest versions&quot;
+  git push</code></pre>
+<hr>
+<h2>Manual Commands (if scripts aren't available)</h2>
+<p>If you can't use the scripts, here are the manual commands:</p>
+<pre><code class="language-bash"># Pull everything
+git pull --recurse-submodules
+git submodule update --init --recursive --remote
+
+# Fix detached HEAD in a submodule
+cd submodule-name
+git checkout main
+git pull
+
+# Push with submodule safety
+git push --recurse-submodules=on-demand</code></pre>
+<hr>
+<h2>See Also</h2>
+<ul><li><a href="./SUBMODULE-WORKFLOW.md">SUBMODULE-WORKFLOW.md</a> - Comprehensive submodule workflow guide</li>
+<li><a href="https://git-scm.com/book/en/v2/Git-Tools-Submodules">Official Git Submodules Documentation</a></li>
+</ul>
+<hr>
+<em>Last updated: 2025-12-06</em>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/processes/SCRIPTS-README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

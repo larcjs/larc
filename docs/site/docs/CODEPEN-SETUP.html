@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CodePen Setup for LARC Demo · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - CodePen Setup for LARC Demo">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>CODEPEN-SETUP</span>
+      </div>
+      <article class="docs-content">
+        <h1>CodePen Setup for LARC Demo</h1>
+<h2>Quick Setup Instructions</h2>
+<li>Go to <a href="https://codepen.io/pen/">CodePen.io</a> and create a new pen</li>
+<li>Copy the sections below into the corresponding tabs</li>
+<hr>
+<h2>HTML</h2>
+<pre><code class="language-html">&lt;header&gt;
+  &lt;h1&gt;⚡ LARC Demo&lt;/h1&gt;
+  &lt;p class=&quot;tagline&quot;&gt;Lightweight Asynchronous Relay Core - Zero-dependency messaging&lt;/p&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+  &lt;div class=&quot;panel&quot;&gt;
+    &lt;h2&gt;🎮 Interactive Counter&lt;/h2&gt;
+    &lt;div class=&quot;demo-section&quot;&gt;
+      &lt;div class=&quot;counter-display&quot; id=&quot;counterDisplay&quot;&gt;0&lt;/div&gt;
+
+      &lt;div class=&quot;controls&quot;&gt;
+        &lt;button class=&quot;btn-increment&quot; onclick=&quot;changeCounter(1)&quot;&gt;
+          ➕ Increment
+        &lt;/button&gt;
+        &lt;button class=&quot;btn-decrement&quot; onclick=&quot;changeCounter(-1)&quot;&gt;
+          ➖ Decrement
+        &lt;/button&gt;
+        &lt;button class=&quot;btn-reset&quot; onclick=&quot;resetCounter()&quot;&gt;
+          🔄 Reset
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;info&quot;&gt;
+        &lt;strong&gt;How it works:&lt;/strong&gt; Clicking buttons publishes messages to the PAN bus.
+        The counter subscribes to these messages and updates. All communication is decoupled!
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;panel&quot;&gt;
+    &lt;h2&gt;📊 PAN Message Inspector&lt;/h2&gt;
+    &lt;div class=&quot;message-log&quot; id=&quot;messageLog&quot;&gt;
+      &lt;div style=&quot;color: #6b7280; text-align: center; padding: 2rem;&quot;&gt;
+        Waiting for messages...
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class=&quot;info&quot; style=&quot;margin-top: 1rem;&quot;&gt;
+      Watch messages flow in real-time. This is the PAN messaging bus in action!
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+  &lt;p&gt;
+    Learn more at &lt;a href=&quot;https://github.com/larcjs/larc&quot; target=&quot;_blank&quot;&gt;github.com/larcjs/larc&lt;/a&gt;
+  &lt;/p&gt;
+&lt;/footer&gt;</code></pre>
+<hr>
+<h2>CSS</h2>
+<pre><code class="language-css">* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, &#039;Segoe UI&#039;, Roboto, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+header {
+  text-align: center;
+  color: white;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.tagline {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  font-weight: 300;
+}
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.panel {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.panel h2 {
+  color: #667eea;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.demo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.counter-display {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #667eea;
+  text-align: center;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.btn-increment {
+  background: #10b981;
+  color: white;
+}
+
+.btn-decrement {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-reset {
+  background: #6b7280;
+  color: white;
+}
+
+.info {
+  background: #f0f9ff;
+  border-left: 4px solid #0ea5e9;
+  padding: 1rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #0c4a6e;
+}
+
+.message-log {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  font-family: &#039;Monaco&#039;, &#039;Consolas&#039;, monospace;
+  font-size: 0.85rem;
+}
+
+.log-entry {
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  border-radius: 4px;
+  border-left: 3px solid #667eea;
+  background: white;
+}
+
+.log-time {
+  color: #6b7280;
+  font-size: 0.75rem;
+}
+
+.log-topic {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.log-data {
+  color: #374151;
+  margin-top: 0.25rem;
+}
+
+footer {
+  text-align: center;
+  color: white;
+  opacity: 0.9;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(255,255,255,0.3);
+  transition: border-color 0.2s;
+}
+
+footer a:hover {
+  border-bottom-color: white;
+}
+
+@media (max-width: 768px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .counter-display {
+    font-size: 3rem;
+  }
+}</code></pre>
+<hr>
+<h2>JS</h2>
+<strong>IMPORTANT:</strong> In CodePen settings (⚙️ icon in the JS panel), add this external script:
+<pre><code class="language-plaintext">https://unpkg.com/@larcjs/core@1.1.2/src/index.js</code></pre>
+<p>Then use this JavaScript code:</p>
+<pre><code class="language-js">// Import from the external module
+import { PanClient, ensureBus } from &#039;https://unpkg.com/@larcjs/core@1.1.2/src/index.js&#039;;
+
+// Ensure the bus exists
+ensureBus();
+
+// Create a client
+const client = new PanClient();
+
+// Counter state
+let count = 0;
+const display = document.getElementById(&#039;counterDisplay&#039;);
+const messageLog = document.getElementById(&#039;messageLog&#039;);
+
+// Clear initial message
+messageLog.innerHTML = &#039;&#039;;
+
+// Helper to log messages
+function logMessage(topic, data) {
+  const entry = document.createElement(&#039;div&#039;);
+  entry.className = &#039;log-entry&#039;;
+
+  const time = new Date().toLocaleTimeString();
+  entry.innerHTML = `
+    &lt;div class=&quot;log-time&quot;&gt;${time}&lt;/div&gt;
+    &lt;div class=&quot;log-topic&quot;&gt;📨 ${topic}&lt;/div&gt;
+    &lt;div class=&quot;log-data&quot;&gt;${JSON.stringify(data, null, 2)}&lt;/div&gt;
+  `;
+
+  messageLog.insertBefore(entry, messageLog.firstChild);
+
+  // Keep only last 10 messages
+  while (messageLog.children.length &gt; 10) {
+    messageLog.removeChild(messageLog.lastChild);
+  }
+}
+
+// Wait for bus to be ready
+client.ready().then(() =&gt; {
+  logMessage(&#039;pan:sys.ready&#039;, { message: &#039;PAN Bus initialized!&#039; });
+
+  // Subscribe to counter messages
+  client.subscribe(&#039;counter.change&#039;, (msg) =&gt; {
+    count += msg.data.delta;
+    display.textContent = count;
+    logMessage(&#039;counter.change&#039;, msg.data);
+  });
+
+  client.subscribe(&#039;counter.reset&#039;, (msg) =&gt; {
+    count = 0;
+    display.textContent = count;
+    logMessage(&#039;counter.reset&#039;, msg.data);
+  });
+});
+
+// Make functions available globally
+window.changeCounter = (delta) =&gt; {
+  client.publish({
+    topic: &#039;counter.change&#039;,
+    data: { delta, timestamp: Date.now() }
+  });
+};
+
+window.resetCounter = () =&gt; {
+  client.publish({
+    topic: &#039;counter.reset&#039;,
+    data: { timestamp: Date.now() }
+  });
+};</code></pre>
+<hr>
+<h2>CodePen Settings</h2>
+<li>Click the "Settings" button (⚙️) in the JS panel</li>
+<li>Set <strong>JavaScript Preprocessor</strong> to "None" (or leave as default)</li>
+<li>The import will work as ES6 module</li>
+<hr>
+<h2>What This Demo Shows</h2>
+<li><strong>Zero-dependency messaging</strong> - Pure pub/sub with no frameworks</li>
+<li><strong>Decoupled architecture</strong> - Counter doesn't know about buttons</li>
+<li><strong>Real-time monitoring</strong> - Watch all messages in the inspector</li>
+<li><strong>Simple API</strong> - Subscribe, publish, done!</li>
+<hr>
+<h2>Alternative: Using unpkg directly</h2>
+<p>If you have issues with CodePen's module system, you can also just paste the entire <code>demo-codepen.html</code> file contents into a single HTML file and it will work standalone!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/CODEPEN-SETUP.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

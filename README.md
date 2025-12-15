@@ -310,6 +310,7 @@ These packages are published to npm:
 - **Examples**: [larcjs.github.io/larc/examples](https://larcjs.github.io/larc/examples/)
 - **npm Organization**: [@larcjs](https://www.npmjs.com/org/larcjs)
 - **GitHub**: [github.com/larcjs](https://github.com/larcjs)
+- **Discord**: [Join our Discord](https://discord.gg/zjUPsWTu)
 
 ## 📄 License
 

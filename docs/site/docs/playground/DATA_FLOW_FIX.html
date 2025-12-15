@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Flow Example Fix · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Data Flow Example Fix">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>DATA_FLOW_FIX</span>
+      </div>
+      <article class="docs-content">
+        <h1>Data Flow Example Fix</h1>
+<h2>Problem</h2>
+<p>The "Data Flow" example (and several other examples) were using a non-existent <code><pan-fetch></code> component. This caused:
+<li>No data to be fetched and displayed in the table</li>
+<li>No way to configure the fetch URL in the properties panel</li>
+<li>Confusion about how to connect REST APIs to LARC components</li></p>
+<h2>Root Cause</h2>
+<p>There is a <code>panFetch</code> utility in <code>/ui/pan-fetch.mjs</code>, but it's <strong>not a Web Component</strong>—it's a JavaScript utility function for authenticated fetch operations. The examples incorrectly tried to use it as <code><pan-fetch></code> with attributes.</p>
+<h2>Solution</h2>
+<p>The correct component to use is <strong><code><pan-data-connector></code></strong>, which:
+<ul><li>Is a real Web Component that can be added to the DOM</li>
+<li>Connects REST APIs to PAN topics</li>
+<li>Automatically handles CRUD operations</li>
+<li>Works seamlessly with <code><pan-data-table></code> and <code><pan-form></code></li>
+</ul>
+<h2>Changes Made</h2></p>
+<h3>1. Fixed Examples (<code>examples.mjs</code>)</h3>
+<p>Updated three examples to use <code>pan-data-connector</code> instead of the non-existent <code>pan-fetch</code>:</p>
+<strong>Data Flow Example:</strong>
+<pre><code class="language-javascript">// Before (broken):
+{
+  name: &#039;pan-fetch&#039;,
+  attributes: {
+    &#039;url&#039;: &#039;https://jsonplaceholder.typicode.com/users&#039;,
+    &#039;topic&#039;: &#039;users.loaded&#039;
+  }
+}
+
+// After (working):
+{
+  name: &#039;pan-data-connector&#039;,
+  attributes: {
+    &#039;resource&#039;: &#039;users&#039;,
+    &#039;base-url&#039;: &#039;https://jsonplaceholder.typicode.com&#039;
+  }
+}</code></pre>
+<p>Also updated:
+<ul><li><strong>Search & Filter</strong> example</li>
+<li><strong>Pagination</strong> example</li>
+</ul>
+<h3>2. Added Component Metadata (<code>component-registry.json</code>)</h3></p>
+<p>Added complete attribute definitions for <code>pan-data-connector</code>:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;pan-data-connector&quot;,
+  &quot;attributes&quot;: [
+    {
+      &quot;name&quot;: &quot;resource&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Logical resource name (e.g., &#039;users&#039;, &#039;posts&#039;)&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;base-url&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Base URL for the API&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;key&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Identifier field name (default: &#039;id&#039;)&quot;,
+      &quot;default&quot;: &quot;id&quot;
+    },
+    {
+      &quot;name&quot;: &quot;list-path&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Override for list endpoint (default: /{resource})&quot;
+    },
+    {
+      &quot;name&quot;: &quot;item-path&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Override for item endpoint (default: /{resource}/:id)&quot;
+    },
+    {
+      &quot;name&quot;: &quot;update-method&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;description&quot;: &quot;HTTP method for updates (default: PUT)&quot;,
+      &quot;options&quot;: [&quot;PUT&quot;, &quot;PATCH&quot;]
+    },
+    {
+      &quot;name&quot;: &quot;credentials&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;description&quot;: &quot;Fetch credentials mode&quot;,
+      &quot;options&quot;: [&quot;omit&quot;, &quot;same-origin&quot;, &quot;include&quot;]
+    }
+  ]
+}</code></pre>
+<h3>3. Added Help Text</h3>
+<p>Added comprehensive help text explaining:
+<ul><li>How <code>pan-data-connector</code> works with <code>pan-data-table</code></li>
+<li>PAN topic patterns (<code>{resource}.list.get</code> → <code>{resource}.list.state</code>)</li>
+<li>Example configurations</li>
+<li>Related components</li>
+</ul>
+<h2>How It Works Now</h2></p>
+<h3>Architecture</h3>
+<pre><code class="language-plaintext">[pan-data-connector]  ←→  [PAN Bus]  ←→  [pan-data-table]
+       ↓                                          ↑
+   REST API                                   Displays</code></pre>
+<h3>Flow</h3>
+<li><strong><code>pan-data-connector</code></strong> connects on mount and:</li>
+   - Publishes <code>{resource}.list.get</code> to request data
+   - Fetches from <code>{base-url}/{resource}</code>
+   - Publishes <code>{resource}.list.state</code> with results (retained)
+<li><strong><code>pan-data-table</code></strong> subscribes to <code>{resource}.list.state</code> and:</li>
+   - Receives the data
+   - Renders it in a table
+   - On row click, publishes <code>{resource}.item.select</code>
+<h3>Example Usage</h3>
+<pre><code class="language-html">&lt;!-- Connector: Fetches from API and publishes to PAN --&gt;
+&lt;pan-data-connector
+  resource=&quot;users&quot;
+  base-url=&quot;https://jsonplaceholder.typicode.com&quot;&gt;
+&lt;/pan-data-connector&gt;
+
+&lt;!-- Table: Subscribes to PAN and displays data --&gt;
+&lt;pan-data-table
+  resource=&quot;users&quot;
+  columns=&quot;name,email,phone&quot;&gt;
+&lt;/pan-data-table&gt;</code></pre>
+<h2>Testing</h2>
+<li><strong>Start the playground:</strong></li>
+   <pre><code class="language-bash">cd playground
+   python3 -m http.server 8080
+   open http://localhost:8080/</code></pre>
+<li><strong>Load the "Data Flow" example</strong></li>
+<li><strong>Verify:</strong></li>
+   - <code>pan-data-connector</code> appears with a badge (it's a non-UI component)
+   - <code>pan-data-table</code> displays user data from JSONPlaceholder API
+   - Properties panel shows all configurable attributes
+   - Help text explains how to use it
+<h2>Related Components</h2>
+<ul><li><strong><code>pan-data-table</code></strong>: Displays data from <code>{resource}.list.state</code></li>
+<li><strong><code>pan-form</code></strong>: CRUD form that works with data connector</li>
+<li><strong><code>pan-graphql-connector</code></strong>: Similar connector for GraphQL APIs</li>
+<li><strong><code>pan-php-connector</code></strong>: Specialized connector for PHP backends</li>
+</ul>
+<h2>Benefits</h2>
+<p>✅ <strong>Working data fetching</strong> - API data now loads correctly
+✅ <strong>Editable properties</strong> - All attributes can be configured in the UI
+✅ <strong>Self-documenting</strong> - Help text explains the component
+✅ <strong>CRUD-ready</strong> - Full create, read, update, delete support
+✅ <strong>Auth-aware</strong> - Automatically includes auth tokens if <code>pan-auth</code> is present</p>
+<h2>Why This Pattern?</h2>
+<p>Instead of a simple <code><pan-fetch url="..."></code> component, LARC uses resource-oriented connectors because:</p>
+<li><strong>CRUD operations</strong>: Not just GET—also POST, PUT, DELETE</li>
+<li><strong>PAN integration</strong>: Publishes to structured topics other components can use</li>
+<li><strong>State management</strong>: Retained messages keep data in sync</li>
+<li><strong>Live updates</strong>: Individual item updates trigger table refreshes</li>
+<li><strong>Form integration</strong>: <code>pan-form</code> can save/delete through the same connector</li>
+<p>This is more powerful than a simple fetch wrapper!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/DATA_FLOW_FIX.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

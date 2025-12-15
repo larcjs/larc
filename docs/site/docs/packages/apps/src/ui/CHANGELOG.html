@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Changelog · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Changelog">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">apps</a> / <a href="#">src</a> / <a href="#">ui</a> / <span>CHANGELOG</span>
+      </div>
+      <article class="docs-content">
+        <h1>Changelog</h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>This project adheres to Keep a Changelog, and aims to follow Semantic Versioning.</p>
+<h2>[Unreleased]</h2>
+<hr>
+<h2>[1.1.0] - 2024-11-24</h2>
+<h3>🚀 Major Feature: Advanced State Management</h3>
+<p>This release adds a comprehensive suite of state management components for building modern, offline-first applications.</p>
+<p>#### ✨ New Components</p>
+<strong>State Management:</strong>
+<ul><li><strong>pan-state-sync</strong> - Cross-tab state synchronization using BroadcastChannel API</li>
+</ul>  - Leader election with automatic failover
+  - Conflict resolution strategies (last-write-wins, merge, custom)
+  - Tab visibility handling and automatic reconnection
+  - Heartbeat monitoring for leader health checks
+<ul><li><strong>pan-computed-state</strong> - Derived/computed state with automatic dependency tracking</li>
+</ul>  - Multi-source dependencies with wildcard support
+  - Async computation support
+  - Memoization strategies (none, shallow, deep)
+  - Debouncing for performance optimization
+<ul><li><strong>pan-offline-sync</strong> - Offline-first support with automatic queue management</li>
+</ul>  - IndexedDB-based mutation queue with persistence
+  - Exponential backoff retry logic
+  - Network status monitoring with automatic sync
+  - Conflict detection and resolution
+  - Configurable endpoints for API synchronization
+<ul><li><strong>pan-persistence-strategy</strong> - Declarative persistence routing</li>
+</ul>  - Multiple storage backends (memory, localStorage, sessionStorage, IndexedDB)
+  - TTL (time-to-live) support for cache expiration
+  - Automatic state hydration on page load
+  - Size limits per topic with overflow handling
+  - Topic-based routing rules
+<ul><li><strong>pan-schema-validator</strong> - Runtime JSON Schema validation (no build tools required)</li>
+</ul>  - Subset of JSON Schema Draft-07
+  - Strict and warning modes
+  - Built-in format validators (email, uri, date-time, uuid, ipv4, ipv6)
+  - Detailed error messages with paths
+  - Zero dependencies, browser-native
+<ul><li><strong>pan-undo-redo</strong> - Time-travel debugging with history management</li>
+</ul>  - Configurable history stack size
+  - Automatic change batching (100ms window)
+  - Jump to specific timestamp
+  - Auto-snapshot on interval
+  - Undo/redo via PAN topics or direct API
+<ul><li><strong>pan-store (enhanced)</strong> - Local reactive store with new composition helpers</li>
+</ul>  - <code>select(path)</code> - Nested path selection
+  - <code>derive(key, deps, fn)</code> - Computed values
+  - <code>batch(fn)</code> - Atomic updates with single event
+  - <code>use(fn)</code> - Middleware support
+  - <code>reset()</code>, <code>has()</code>, <code>delete()</code>, <code>keys()</code> - Additional utilities
+<p>#### 🎨 Enhanced Components</p>
+<ul><li><strong>pan-inspector</strong> - Completely redesigned with advanced debugging features</li>
+</ul>  - <strong>State Tree View</strong> - Hierarchical visualization of all retained messages
+  - <strong>Metrics Dashboard</strong> - Message rates, top topics, performance stats
+  - <strong>Advanced Filtering</strong> - Filter by topic patterns and message type (retained/transient)
+  - <strong>Message Details Modal</strong> - Inspect full payloads and metadata
+  - <strong>Export/Import</strong> - Save and restore state snapshots as JSON
+  - <strong>Performance Tracking</strong> - Handler duration and message sizes
+  - Three-view tabs: Messages, State Tree, Metrics
+<p>#### 📚 Documentation</p>
+<ul><li><strong>State Management Patterns Guide</strong> (15,000+ words) - Comprehensive patterns and best practices</li>
+<li><strong>State Management API Reference</strong> - Complete API documentation with examples</li>
+<li><strong>STATE_MANAGEMENT_README.md</strong> - Overview and quick start guide</li>
+<li><strong>Offline-First Todo App Example</strong> - Complete demo showing all features working together</li>
+</ul>
+#### 🔧 Package Updates
+<ul><li>Added 7 new component exports to package.json</li>
+<li>Updated keywords: state-management, offline-first, cross-tab-sync, persistence, validation, undo-redo</li>
+<li>Updated README with state management section</li>
+<li>Component count: 50+ → 57+</li>
+</ul>
+#### 🎯 Use Cases Enabled
+<p>This release enables:
+<ul><li><strong>Offline-first PWAs</strong> - Work without network, sync when available</li>
+<li><strong>Collaborative apps</strong> - Multi-tab state synchronization</li>
+<li><strong>Complex state management</strong> - Derived state, validation, undo/redo</li>
+<li><strong>Enterprise applications</strong> - Robust persistence, debugging, monitoring</li>
+</ul>
+<h3>🔒 Security</h3></p>
+<ul><li><strong>Security audit completed</strong> - Comprehensive audit of all high-risk UI components</li>
+</ul>  - ✅ pan-markdown-renderer (XSS reviewed)
+  - ✅ pan-files (path traversal immune via OPFS)
+  - ✅ pan-form (secure-by-design)
+  - ✅ pan-php-connector (defense-in-depth with backend)
+  - ✅ pan-graphql-connector (variables-based queries)
+  - <strong>Result:</strong> 0 critical vulnerabilities found
+  - <strong>Status:</strong> All components approved for production use
+  - See <a href="docs/COMPONENT_SECURITY_AUDIT.md">COMPONENT_SECURITY_AUDIT.md</a> for full report
+<h3>Changed</h3>
+<ul><li>Updated README to reflect component security audit completion and state management features</li>
+<li>Components no longer marked as experimental</li>
+<li>Bumped component count from 50+ to 57+</li>
+</ul>
+<hr>
+<h2>[1.0.0] - 2024-11-XX</h2>
+<h3>🎉 First Production Release</h3>
+<p>This is the first production-ready release of PAN. The <strong>core messaging infrastructure</strong> is stable, tested, and performance-validated.</p>
+<p>#### ✅ Core Infrastructure (Production-Ready)</p>
+<strong>Core Modules:</strong>
+<ul><li><strong>pan-bus.mjs</strong> - DOM-native event bus with pub/sub messaging</li>
+</ul>  - Exact and wildcard topic matching (<code>users.<em></code>, <code>users.</em>*</code>)
+  - Retained message support for state management
+  - Request/reply pattern with automatic cleanup
+  - Shadow DOM traversal for component isolation
+  - Automatic message ID and timestamp generation
+  - Zero memory leaks validated
+<ul><li><strong>pan-client.mjs</strong> - High-level client API</li>
+</ul>  - <code>publish()</code>, <code>subscribe()</code>, <code>request()</code>, <code>retained()</code> methods
+  - AbortSignal support for subscription cleanup
+  - Configurable host and bus element
+  - Request timeout and cleanup handling
+<ul><li><strong>pan-autoload.mjs</strong> - Automatic component discovery and loading</li>
+</ul>
+<strong>API Stability:</strong>
+<ul><li>All core APIs locked (no breaking changes in v1.x)</li>
+<li>Semantic versioning policy documented</li>
+<li>API stability guarantees in API_STABILITY.md</li>
+</ul>
+#### ✅ Testing & Quality (80%+ Coverage)
+<strong>Test Suites:</strong>
+<ul><li>85 comprehensive test suites covering all core functionality</li>
+<li>80%+ code coverage of core modules (1,054 lines)</li>
+<li>Core functionality tests (pan-bus, pan-client, pan-autoload)</li>
+<li>Edge case and error handling tests</li>
+<li>Memory leak prevention tests</li>
+<li>Integration pattern tests (CRUD, state management, lifecycle)</li>
+<li>Performance benchmarks with Playwright + Chrome DevTools Protocol</li>
+</ul>
+<strong>Test Infrastructure:</strong>
+<ul><li>Playwright-based test runner</li>
+<li>Chrome DevTools Protocol integration for memory profiling</li>
+<li>HTTP server for realistic browser environment</li>
+<li>Performance measurement utilities</li>
+</ul>
+#### ✅ Performance Validation
+<strong>Benchmark Results:</strong>
+<ul><li>Message Throughput: 300,300 msg/sec (30x threshold)</li>
+<li>Subscribe Speed: 434,783 ops/sec (434x threshold)</li>
+<li>Unsubscribe Speed: 114,943 ops/sec (114x threshold)</li>
+<li>Retained Retrieval: 9,814 msg/sec (19x threshold)</li>
+<li>Wildcard Performance: 291,545 msg/sec (58x threshold)</li>
+<li>Request/Reply Sequential: 103,093 req/sec</li>
+<li>Request/Reply Parallel: 109,890 req/sec</li>
+<li>Memory Leak: 0 MB increase over 30 seconds (266,800 messages)</li>
+<li>Large Datasets: <1ms (10k items, 2.93 MB)</li>
+</ul>
+<strong>Performance Characteristics:</strong>
+<ul><li>Sub-millisecond latency for all operations</li>
+<li>Linear scalability</li>
+<li>Zero memory leaks</li>
+<li>Efficient wildcard matching (only 3% overhead)</li>
+</ul>
+See docs/PERFORMANCE.md for detailed benchmarks.
+<p>#### ✅ Documentation</p>
+<strong>Core Documentation:</strong>
+<ul><li>API_REFERENCE.md - Complete API documentation with examples</li>
+<li>TOPICS.md - Topic naming conventions and patterns</li>
+<li>QUICK_START.md - Getting started guide</li>
+<li>PERFORMANCE.md - Performance characteristics and benchmarks</li>
+<li>API_STABILITY.md - Stability guarantees and versioning policy</li>
+<li>PAN_SPEC.v1.md - Complete technical specification</li>
+<li>V1_ROADMAP.md - Development roadmap</li>
+<li>V1_CHECKLIST.md - Release checklist</li>
+<li>RELEASE_NOTES.md - Detailed release notes</li>
+<li>Comprehensive JSDoc comments in all core files</li>
+</ul>
+#### 🔄 Browser Support
+<strong>Tested (v1.0):</strong>
+<ul><li>✅ Chrome (latest 2 versions)</li>
+<li>✅ Edge (Chromium-based)</li>
+</ul>
+<strong>Not Yet Tested (Planned for v1.1):</strong>
+<ul><li>⏳ Firefox, Safari, mobile browsers</li>
+</ul>
+<strong>Note:</strong> Core uses standard DOM APIs likely to work on all modern browsers.
+<p>#### 🔒 Security (Production-Ready)</p>
+<strong>Completed:</strong>
+<ul><li>✅ Security best practices documentation</li>
+<li>✅ Content Security Policy guidelines</li>
+<li>✅ Input sanitization patterns</li>
+<li>✅ localStorage security considerations</li>
+<li>✅ <strong>Comprehensive security audit of UI components</strong> (Nov 2024)</li>
+</ul>  - pan-markdown-renderer: XSS protection verified
+  - pan-files: Path traversal immune (OPFS sandboxing)
+  - pan-form: Secure-by-design architecture
+  - pan-php-connector: Defense-in-depth with backend
+  - pan-graphql-connector: Variables-based queries
+  - <strong>Result:</strong> 0 critical vulnerabilities found
+  - Full report: <a href="docs/COMPONENT_SECURITY_AUDIT.md">COMPONENT_SECURITY_AUDIT.md</a>
+<p>#### ✅ Components (Production-Ready)</p>
+<strong>40+ UI components organized by layer:</strong>
+<ul><li>Core: pan-layout, pan-header, pan-footer, pan-theme-provider, pan-icon</li>
+<li>Data: pan-data-table, pan-data-list, pan-data-grid, pan-chart</li>
+<li>Forms: pan-form, pan-field, pan-input, pan-select, pan-button, etc.</li>
+<li>Content: pan-markdown-renderer, pan-markdown-editor, pan-code-viewer, pan-files</li>
+<li>Feedback: pan-toast, pan-dialog, pan-tooltip, pan-progress</li>
+<li>Building Blocks: pan-card, pan-badge, pan-tabs, pan-accordion, pan-breadcrumbs, pan-pagination</li>
+</ul>
+<strong>Security Status:</strong>
+<ul><li>✅ High-risk components audited and approved</li>
+<li>✅ Defense-in-depth architecture verified</li>
+<li>⚠️ Limited browser compatibility testing (Chrome-only, multi-browser testing planned for v1.1)</li>
+</ul>
+<strong>Demo Applications:</strong>
+<ul><li>Invoice Manager - CRUD operations with data table</li>
+<li>Markdown Notes - Markdown editor with file management</li>
+<li>Contact Manager - Contact list with search and filtering</li>
+<li>Building Blocks - Reusable UI component library</li>
+</ul>
+<h3>Added</h3>
+<ul><li><strong>Component Autoload System</strong> (<code>pan-autoload.mjs</code>): Automatic on-demand loading of components from the <code>components/</code> directory. No manual imports required—just use custom elements and they load automatically when approaching the viewport.</li>
+</ul>  - Configurable components path and root margin
+  - Per-element module override with <code>data-module</code> attribute
+  - Automatic registration of default exports
+<ul><li><strong>Router & Navigation</strong>:</li>
+</ul>  - <code><pan-router></code>: URL routing with <code>nav.state</code> topic synchronization
+    - History and hash mode support
+    - Route guards with auth integration
+    - Path parameters and query string parsing
+    - Programmatic navigation via <code>nav.goto</code>, <code>nav.back</code>, <code>nav.forward</code> topics
+  - <code><pan-link></code>: Declarative navigation links with automatic active class management
+    - Exact matching support
+    - Intercepts clicks for SPA navigation
+<ul><li><strong>WebSocket Bridge</strong> (<code><pan-websocket></code>): Bidirectional WebSocket ↔ PAN communication</li>
+</ul>  - Automatic reconnection with exponential backoff
+  - Heartbeat/ping support
+  - Topic filtering for inbound and outbound messages
+  - Connection status events (<code>ws.connected</code>, <code>ws.disconnected</code>, <code>ws.error</code>)
+<ul><li><strong>IndexedDB Bridge</strong> (<code><pan-idb></code>): Client-side database operations via PAN topics</li>
+</ul>  - Full CRUD operations through topic-based API
+  - Index support with queries
+  - Multiple stores and databases
+  - Automatic schema migration
+  - Operations: <code>get</code>, <code>put</code>, <code>add</code>, <code>delete</code>, <code>clear</code>, <code>list</code>, <code>query</code>, <code>count</code>
+<ul><li><strong>Component Gallery</strong> (<code>gallery.html</code>): Interactive component showcase</li>
+</ul>  - Live playground with code editor and preview
+  - Search and category filtering
+  - Direct links to component source code
+  - Real-time examples for all components
+<ul><li><strong>New Examples</strong>:</li>
+</ul>  - <code>15-router.html</code>: SPA routing with navigation and route parameters
+  - <code>16-websocket.html</code>: Real-time chat demo with WebSocket bridge
+  - <code>17-indexeddb.html</code>: Contact manager with IndexedDB persistence
+<ul><li><strong>Component Migration</strong>: All components moved from <code>dist/</code> to <code>components/</code> with <code>.mjs</code> extension for better ES module support and consistency</li>
+</ul>
+<h3>Changed</h3>
+<ul><li>All examples updated to use the new autoload system</li>
+<li>Modernized landing page (<code>index.html</code>) with hero section, features showcase, and improved documentation</li>
+<li>Updated README with comprehensive autoload documentation and installation instructions</li>
+<li>Migrated 24 component files to new <code>components/</code> directory structure</li>
+</ul>
+<h3>Fixed</h3>
+<ul><li><code>pan-form</code> retained subscription loop causing freeze on row click; subscribe once per selected id</li>
+</ul>
+<h3>Previous Unreleased Items</h3>
+<ul><li>Added: Demo Browser SPA using <code>pan-demo-nav</code> and <code>pan-demo-viewer</code> over PAN <code>nav.*</code> topics</li>
+<li>Added: <code>pan-schema</code> and <code>pan-schema-form</code> for JSON Schema–driven UIs</li>
+<li>Added: <code>pan-php-connector</code> (api.php bridge) and <code>pan-graphql-connector</code> (GraphQL CRUD bridge)</li>
+<li>Added: Examples <code>09-schema-form.html</code>, <code>11-graphql-connector.html</code>, <code>12-php-connector.html</code>, and <code>pan-grid.html</code></li>
+</ul>
+<h3>🎯 Breaking Changes (from 0.x)</h3>
+<p>None. This is the first stable release. All core APIs are now locked.</p>
+<h3>🐛 Known Issues</h3>
+<li><strong>Browser Support:</strong> Limited to Chrome for v1.0 (multi-browser support in v1.1)</li>
+<li><strong>Component Security:</strong> UI components need security audit (experimental status)</li>
+<li><strong>TypeScript:</strong> No .d.ts definitions yet (planned for v1.1)</li>
+<li><strong>Mobile:</strong> Not yet tested on mobile browsers</li>
+<h3>📝 Migration from 0.x to 1.0</h3>
+<p>Core APIs remain compatible. No breaking changes for existing users of pan-bus and pan-client.</p>
+<strong>What's stable now:</strong>
+<ul><li>✅ All core API signatures locked</li>
+<li>✅ PanMessage envelope format locked</li>
+<li>✅ Topic conventions locked</li>
+<li>✅ CustomEvent names locked</li>
+</ul>
+<strong>What's still experimental:</strong>
+<ul><li>⚠️ UI components (may have breaking changes)</li>
+<li>⚠️ Component-specific APIs</li>
+</ul>
+<hr>
+<h2>[0.1.0] - 2025-10-17</h2>
+<ul><li>Added: <code><pan-sse></code> bridge to translate Server-Sent Events into PAN topics.</li>
+</ul>  - Attributes: <code>src</code>, <code>topics</code>, <code>persist-last-event</code>, <code>backoff</code>, <code>with-credentials</code>.
+<ul><li>Added: Tiny reactive store utilities.</li>
+</ul>  - <code>pan-store</code>: <code>createStore()</code>, <code>bind()</code> for wiring forms ↔ state.
+  - <code>pan-store-pan</code>: <code>syncItem()</code> and <code>syncList()</code> to connect stores to PAN topics (live updates, optional auto-save).
+<ul><li>Added: <code><pan-table></code> alias for <code><pan-data-table></code>.</li>
+<li>Added: Live per-item update pathway across components.</li>
+</ul>  - <code>pan-data-table</code>: listens to <code>${resource}.item.state.*</code> for granular updates.
+  - <code>pan-form</code>: follows <code>${resource}.item.select</code> and live-syncs the selected item.
+  - Data providers now publish per-item snapshots (retained) and deletions (non-retained).
+<ul><li>Added: Example “SSE + Store (Auto‑save)” at <code>examples/10-sse-store.html</code>.</li>
+<li>Added: Minimal Node sidecar for SSE + REST at <code>examples/server/sse-server.js</code>.</li>
+<li>Changed: Refreshed demo suite UI and navigation; added shared styles at <code>examples/assets/grail.css</code>.</li>
+<li>Docs: Expanded README with realtime bridges and store APIs.</li>
+</ul>
+<hr>
+<p>Past history (pre-0.1.0) included the initial CRUD suite, examples, and foundational PAN bus/client helpers.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/apps/src/ui/CHANGELOG.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

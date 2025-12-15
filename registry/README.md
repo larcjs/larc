@@ -214,7 +214,7 @@ npm run dev
 - [LARC Framework](https://github.com/larcjs/larc)
 - [Component Playground](https://larcjs.com/playground)
 - [Documentation](https://larcjs.com/docs)
-- [Discord Community](https://discord.gg/larc)
+- [Discord Community](https://discord.gg/zjUPsWTu)
 
 ## 📄 License
 

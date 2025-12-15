@@ -130,7 +130,10 @@ def get_data(params):
                 'results': results
             }
     except Exception as e:
-        return {'status': 'error', 'msg': str(e)}
+        # Log full error internally, return generic message to client
+        import logging
+        logging.exception('Database query error')
+        return {'status': 'error', 'msg': 'Database query failed'}
 
 # List resources - show available tables
 def list_resources(params):
@@ -157,7 +160,10 @@ def list_resources(params):
         tables = [row[0] for row in rows]
         return {'Resources': tables}
     except Exception as e:
-        return {'status': 'error', 'msg': str(e)}
+        # Log full error internally, return generic message to client
+        import logging
+        logging.exception('Database query error')
+        return {'status': 'error', 'msg': 'Database query failed'}
 
 # List fields - describe table structure
 def list_fields(params):
@@ -211,7 +217,10 @@ def list_fields(params):
 
         return {'Resource': rsc, 'PrimaryKey': pk, 'Fields': fields}
     except Exception as e:
-        return {'status': 'error', 'msg': str(e)}
+        # Log full error internally, return generic message to client
+        import logging
+        logging.exception('Database query error')
+        return {'status': 'error', 'msg': 'Database query failed'}
 
 # Route handler
 @app.route('/', methods=['GET', 'POST'])

@@ -87,7 +87,10 @@ def append_event(topic, data, retain=False):
 
         return {'ok': True, 'id': event_id}
     except Exception as e:
-        return {'ok': False, 'error': str(e)}
+        # Log full error internally, return generic message to client
+        import logging
+        logging.exception('Error appending event')
+        return {'ok': False, 'error': 'Failed to append event'}
 
 # Check if topic matches patterns
 def topic_matches(topic, patterns):

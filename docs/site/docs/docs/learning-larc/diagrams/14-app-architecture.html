@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Complete Application Architecture · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Complete Application Architecture">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>14-app-architecture</span>
+      </div>
+      <article class="docs-content">
+        <h1>Complete Application Architecture</h1>
+<h2>E-Commerce Application Example</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Frontend - LARC Application&quot;
+        subgraph &quot;Pages&quot;
+            Home[home-page]
+            Products[products-page]
+            Product[product-detail-page]
+            Cart[cart-page]
+            Checkout[checkout-page]
+            Profile[user-profile-page]
+        end
+
+        subgraph &quot;Layout Components&quot;
+            Header[app-header]
+            Nav[main-nav]
+            Footer[app-footer]
+            Sidebar[user-sidebar]
+        end
+
+        subgraph &quot;Feature Components&quot;
+            ProductCard[product-card]
+            CartWidget[cart-widget]
+            SearchBox[search-box]
+            FilterPanel[filter-panel]
+            UserMenu[user-menu]
+        end
+
+        subgraph &quot;UI Components&quot;
+            Button[pan-button]
+            Modal[pan-modal]
+            Toast[toast-notification]
+            Spinner[loading-spinner]
+        end
+
+        subgraph &quot;Communication Layer&quot;
+            PAN[PAN Bus]
+        end
+
+        subgraph &quot;State Management&quot;
+            AuthStore[Authentication State]
+            CartStore[Shopping Cart State]
+            UserPrefs[User Preferences]
+        end
+
+        subgraph &quot;Data Layer&quot;
+            API[API Client]
+            Cache[Cache Layer&lt;br/&gt;IndexedDB]
+            SyncQueue[Offline Sync Queue]
+        end
+    end
+
+    subgraph &quot;Backend Services&quot;
+        subgraph &quot;API Server&quot;
+            REST[REST API&lt;br/&gt;Node.js/Express]
+            Auth[Auth Service&lt;br/&gt;JWT]
+            Products[Product Service]
+            Orders[Order Service]
+            Payments[Payment Service]
+        end
+
+        subgraph &quot;Database&quot;
+            DB[(PostgreSQL)]
+        end
+
+        subgraph &quot;External Services&quot;
+            Stripe[Stripe API]
+            Email[Email Service]
+            Analytics[Analytics]
+        end
+    end
+
+    Pages --&gt; Layout Components
+    Pages --&gt; Feature Components
+    Feature Components --&gt; UI Components
+
+    Pages &lt;--&gt; PAN
+    Layout Components &lt;--&gt; PAN
+    Feature Components &lt;--&gt; PAN
+
+    PAN &lt;--&gt; State Management
+    State Management &lt;--&gt; Data Layer
+
+    Data Layer &lt;-.HTTP.-&gt; REST
+    Data Layer &lt;-.Cache.-&gt; Cache
+
+    REST --&gt; Auth &amp; Products &amp; Orders &amp; Payments
+    Auth &amp; Products &amp; Orders &amp; Payments &lt;--&gt; DB
+
+    Payments &lt;-.API.-&gt; Stripe
+    Orders &lt;-.API.-&gt; Email
+    Pages &lt;-.Events.-&gt; Analytics
+
+    style PAN fill:#764ba2,color:#fff
+    style REST fill:#667eea,color:#fff
+    style DB fill:#48bb78,color:#fff</code></pre>
+<h2>Component Interaction Flow</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant ProductCard
+    participant PAN as PAN Bus
+    participant CartStore
+    participant CartWidget
+    participant API
+    participant Backend
+
+    User-&gt;&gt;ProductCard: Click &quot;Add to Cart&quot;
+
+    ProductCard-&gt;&gt;PAN: publish(&#039;cart.item.add&#039;, {product})
+
+    PAN-&gt;&gt;CartStore: Receive event
+    CartStore-&gt;&gt;CartStore: Update cart state
+    CartStore-&gt;&gt;CartStore: Save to IndexedDB
+
+    CartStore-&gt;&gt;PAN: publish(&#039;cart.updated&#039;, {cart})
+
+    PAN-&gt;&gt;CartWidget: Notify subscriber
+    CartWidget-&gt;&gt;CartWidget: Update badge count
+
+    Note over CartStore,Backend: Background sync
+    CartStore-&gt;&gt;API: POST /api/cart
+    API-&gt;&gt;Backend: Sync cart to server
+    Backend--&gt;&gt;API: Success
+    API--&gt;&gt;CartStore: Confirm sync</code></pre>
+<h2>Application Startup Sequence</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant Browser
+    participant HTML
+    participant ImportMap
+    participant Router
+    participant Auth
+    participant App
+
+    Browser-&gt;&gt;HTML: Load index.html
+
+    HTML-&gt;&gt;ImportMap: Parse import map
+    ImportMap-&gt;&gt;ImportMap: Resolve @larcjs/core
+
+    HTML-&gt;&gt;App: Load app.js module
+
+    App-&gt;&gt;Auth: Initialize auth service
+    Auth-&gt;&gt;Auth: Check localStorage for token
+
+    alt Token exists
+        Auth-&gt;&gt;Auth: Validate token
+        Auth-&gt;&gt;PAN: publish(&#039;auth.login&#039;, {user})
+    else No token
+        Auth-&gt;&gt;PAN: publish(&#039;auth.logout&#039;)
+    end
+
+    App-&gt;&gt;Router: Initialize router
+    Router-&gt;&gt;Router: Parse current URL
+    Router-&gt;&gt;Router: Match route
+    Router-&gt;&gt;Page: Render initial page
+
+    Page-&gt;&gt;Page: connectedCallback()
+    Page-&gt;&gt;API: Fetch initial data
+    API--&gt;&gt;Page: Data loaded
+    Page-&gt;&gt;Page: Render complete
+
+    Note over Browser,Page: Application ready</code></pre>
+<h2>Authentication Flow</h2>
+<pre><code class="language-mermaid">graph TB
+    Start[User visits /dashboard]
+
+    Start --&gt; Router[Router checks route]
+    Router --&gt; Guard{Has auth&lt;br/&gt;guard?}
+
+    Guard --&gt;|Yes| Check{User&lt;br/&gt;authenticated?}
+    Guard --&gt;|No| Render[Render page]
+
+    Check --&gt;|Yes| Render
+    Check --&gt;|No| Redirect[Redirect to /login]
+
+    Redirect --&gt; Login[login-page]
+    Login --&gt; Form[User submits form]
+
+    Form --&gt; API[POST /api/auth/login]
+    API --&gt; Validate{Valid&lt;br/&gt;credentials?}
+
+    Validate --&gt;|Yes| Success[Return {token, user}]
+    Validate --&gt;|No| Error[Return error]
+
+    Success --&gt; Store[Store token in localStorage]
+    Store --&gt; Publish[PAN: publish(&#039;auth.login&#039;)]
+    Publish --&gt; NavToDash[Navigate to /dashboard]
+    NavToDash --&gt; Router
+
+    Error --&gt; ShowError[Show error message]
+    ShowError --&gt; Login
+
+    style Check fill:#f59e42,color:#fff
+    style Success fill:#48bb78,color:#fff
+    style Error fill:#f56565,color:#fff</code></pre>
+<h2>Data Flow Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;View Layer&quot;
+        Components[Components]
+    end
+
+    subgraph &quot;State Layer&quot;
+        LocalState[Component State]
+        SharedState[Shared State]
+        PAN[PAN Bus]
+    end
+
+    subgraph &quot;Data Layer&quot;
+        Memory[Memory Cache]
+        IDB[IndexedDB]
+        SyncQueue[Sync Queue]
+    end
+
+    subgraph &quot;Network Layer&quot;
+        API[API Client]
+        WS[WebSocket]
+    end
+
+    subgraph &quot;Backend&quot;
+        Server[API Server]
+        DB[(Database)]
+    end
+
+    Components &lt;--&gt; LocalState
+    Components &lt;--&gt; PAN
+    PAN &lt;--&gt; SharedState
+
+    SharedState &lt;--&gt; Memory
+    Memory &lt;--&gt; IDB
+    IDB &lt;--&gt; SyncQueue
+
+    Components --&gt; API
+    API &lt;--&gt; Server
+    SyncQueue --&gt; API
+
+    Components &lt;--&gt; WS
+    WS &lt;--&gt; Server
+
+    Server &lt;--&gt; DB
+
+    style PAN fill:#764ba2,color:#fff
+    style SharedState fill:#667eea,color:#fff
+    style IDB fill:#48bb78,color:#fff</code></pre>
+<h2>Deployment Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Development&quot;
+        Dev[Developer]
+        Git[Git Repo]
+
+        Dev --&gt;|Push| Git
+    end
+
+    subgraph &quot;CI/CD - GitHub Actions&quot;
+        CI[CI Pipeline]
+        Test[Run Tests]
+        Build[Optional Build&lt;br/&gt;Minify assets]
+
+        Git --&gt;|Trigger| CI
+        CI --&gt; Test
+        Test --&gt; Build
+    end
+
+    subgraph &quot;CDN - CloudFlare&quot;
+        CDN[Static Assets&lt;br/&gt;JS, CSS, Images]
+        Cache[Edge Cache]
+
+        Build --&gt;|Deploy| CDN
+        CDN --&gt; Cache
+    end
+
+    subgraph &quot;Hosting - Netlify&quot;
+        Host[Static Hosting&lt;br/&gt;HTML files]
+        SSL[SSL/HTTPS]
+
+        Build --&gt;|Deploy| Host
+        Host --&gt; SSL
+    end
+
+    subgraph &quot;Backend - AWS&quot;
+        API[API Server&lt;br/&gt;EC2/ECS]
+        DB[(RDS Database)]
+        S3[S3 Storage&lt;br/&gt;User uploads]
+
+        API &lt;--&gt; DB
+        API &lt;--&gt; S3
+    end
+
+    subgraph &quot;Users&quot;
+        Browser[User Browser]
+
+        SSL --&gt; Browser
+        Cache --&gt; Browser
+        Browser &lt;--&gt; API
+    end
+
+    subgraph &quot;Monitoring&quot;
+        Errors[Error Tracking&lt;br/&gt;Sentry]
+        Analytics[Analytics&lt;br/&gt;Plausible]
+        Perf[Performance&lt;br/&gt;Web Vitals]
+
+        Browser -.reports to.-&gt; Errors
+        Browser -.reports to.-&gt; Analytics
+        Browser -.reports to.-&gt; Perf
+    end
+
+    style Git fill:#667eea,color:#fff
+    style CDN fill:#48bb78,color:#fff
+    style Host fill:#48bb78,color:#fff
+    style API fill:#764ba2,color:#fff</code></pre>
+<h2>Offline-First Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    User[User Action]
+
+    User --&gt; UI[Update UI&lt;br/&gt;Optimistic]
+
+    UI --&gt; Local{Online?}
+
+    Local --&gt;|Yes| API[API Call]
+    Local --&gt;|No| Queue[Sync Queue]
+
+    API --&gt; Success{Success?}
+
+    Success --&gt;|Yes| Update[Update local state]
+    Success --&gt;|No| Retry[Add to retry queue]
+
+    Queue --&gt; Store[Store in IndexedDB]
+
+    Store -.Wait for.-&gt; Online[Go online]
+    Online --&gt; Process[Process queue]
+
+    Process --&gt; API
+
+    Retry -.Exponential backoff.-&gt; API
+
+    Update --&gt; Persist[Persist to IndexedDB]
+
+    style UI fill:#48bb78,color:#fff
+    style Queue fill:#f59e42,color:#fff
+    style Store fill:#48bb78,color:#fff</code></pre>
+<h2>Real-Time Updates Flow</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User1 as User 1 Browser
+    participant WS1 as WebSocket Client 1
+    participant Server as WebSocket Server
+    participant WS2 as WebSocket Client 2
+    participant User2 as User 2 Browser
+
+    User1-&gt;&gt;WS1: Add item to cart
+    WS1-&gt;&gt;Server: Send update
+    Server-&gt;&gt;Server: Update database
+    Server-&gt;&gt;WS2: Broadcast update
+    WS2-&gt;&gt;User2: Reflect change in UI
+
+    User2-&gt;&gt;WS2: Update quantity
+    WS2-&gt;&gt;Server: Send update
+    Server-&gt;&gt;Server: Update database
+    Server-&gt;&gt;WS1: Broadcast update
+    WS1-&gt;&gt;User1: Reflect change in UI
+
+    Note over User1,User2: Both users see real-time updates</code></pre>
+<h2>Error Handling Strategy</h2>
+<pre><code class="language-mermaid">graph TB
+    Error[Error Occurs]
+
+    Error --&gt; Type{Error Type}
+
+    Type --&gt;|Network| Network[Network Error Handler]
+    Type --&gt;|Validation| Validation[Validation Error Handler]
+    Type --&gt;|Auth| Auth[Auth Error Handler]
+    Type --&gt;|Unknown| Unknown[Unknown Error Handler]
+
+    Network --&gt; Retry{Retry?}
+    Retry --&gt;|Yes| Queue[Add to sync queue]
+    Retry --&gt;|No| Show[Show error message]
+
+    Validation --&gt; Show
+    Auth --&gt; Redirect[Redirect to login]
+    Unknown --&gt; Log[Log to Sentry]
+
+    Show --&gt; Toast[Show toast notification]
+    Queue --&gt; Toast
+
+    Log --&gt; Toast
+
+    Toast --&gt; User[User sees friendly message]
+
+    style Network fill:#f59e42,color:#fff
+    style Validation fill:#f56565,color:#fff
+    style Auth fill:#f56565,color:#fff
+    style User fill:#48bb78,color:#fff</code></pre>
+<h2>Performance Optimization Strategy</h2>
+<pre><code class="language-mermaid">graph TB
+    Load[Initial Load]
+
+    Load --&gt; Critical{Critical&lt;br/&gt;resources?}
+
+    Critical --&gt;|Yes| Priority[Load immediately]
+    Critical --&gt;|No| Defer[Defer loading]
+
+    Priority --&gt; Parse[Parse HTML]
+    Parse --&gt; Render[First render]
+
+    Defer --&gt; Lazy{Lazy load?}
+
+    Lazy --&gt;|Viewport| Intersection[Intersection Observer]
+    Lazy --&gt;|Interaction| Event[Event listener]
+    Lazy --&gt;|Time| Timeout[setTimeout]
+
+    Intersection --&gt; LoadWhen[Load when visible]
+    Event --&gt; LoadWhen2[Load on click]
+    Timeout --&gt; LoadWhen3[Load after delay]
+
+    Render --&gt; Interactive[Time to Interactive]
+
+    LoadWhen --&gt; Hydrate[Hydrate component]
+    LoadWhen2 --&gt; Hydrate
+    LoadWhen3 --&gt; Hydrate
+
+    style Priority fill:#48bb78,color:#fff
+    style Defer fill:#667eea,color:#fff
+    style Interactive fill:#48bb78,color:#fff</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/learning-larc/diagrams/14-app-architecture.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

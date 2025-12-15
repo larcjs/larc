@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hacker News Launch Checklist · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Hacker News Launch Checklist">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">processes</a> / <span>LAUNCH_CHECKLIST</span>
+      </div>
+      <article class="docs-content">
+        <h1>Hacker News Launch Checklist</h1>
+<strong>Target Launch Date:</strong> _____________
+<strong>Target Time:</strong> 7-9 AM PT (Tuesday-Thursday recommended)
+<strong>Launch Team:</strong> _____________
+<hr>
+<h2>📅 Timeline Overview</h2>
+<ul><li><strong>7 days before:</strong> Complete all "1 Week Before" tasks</li>
+<li><strong>3 days before:</strong> Complete all "3 Days Before" tasks</li>
+<li><strong>1 day before:</strong> Complete all "Day Before" tasks</li>
+<li><strong>Launch day:</strong> Follow "Launch Day" timeline</li>
+<li><strong>Post-launch:</strong> Monitor for 48 hours</li>
+</ul>
+<hr>
+<h2>✅ 1 WEEK BEFORE LAUNCH</h2>
+<h3>Repository & Code</h3>
+<ul><li>[ ] All submodules updated to latest commits</li>
+<li>[ ] All tests passing in CI (261/261 core tests)</li>
+<li>[ ] No critical or high-severity npm audit issues</li>
+<li>[ ] Latest versions published to npm:</li>
+</ul>  - [ ] @larcjs/core@2.0.0 ✅
+  - [ ] @larcjs/core@2.0.0 ✅
+  - [ ] @larcjs/ui@2.0.0 ✅
+  - [ ] @larcjs/core@2.0.0 ✅
+<ul><li>[ ] GitHub Actions workflows all green</li>
+<li>[ ] All TODO/FIXME comments resolved or documented</li>
+</ul>
+<h3>Documentation</h3>
+<ul><li>[ ] README.md up to date with latest features</li>
+<li>[ ] All docs/ files reviewed and current</li>
+<li>[ ] API documentation complete</li>
+<li>[ ] CONTRIBUTING.md, CODE_OF_CONDUCT.md, SECURITY.md in place</li>
+<li>[ ] CHANGELOG.md updated with latest release</li>
+<li>[ ] All links in documentation verified working</li>
+<li>[ ] TypeScript documentation complete</li>
+</ul>
+<h3>Examples & Demos</h3>
+<ul><li>[ ] Playground working and up-to-date (https://larcjs.github.io/larc/playground/)</li>
+<li>[ ] Hybrid dashboard demo working</li>
+<li>[ ] All examples/ demos tested and working</li>
+<li>[ ] Mobile responsiveness verified</li>
+<li>[ ] Examples work in incognito mode (no cache dependencies)</li>
+</ul>
+<hr>
+<h2>✅ 3 DAYS BEFORE LAUNCH</h2>
+<h3>Content Creation</h3>
+<ul><li>[ ] <strong>Demo video recorded</strong> (2-3 minutes)</li>
+</ul>  - [ ] Shows problem (Web Component silos)
+  - [ ] Shows solution (PAN messaging)
+  - [ ] Shows wow moment (hybrid dashboard, bundle savings)
+  - [ ] Shows playground
+  - [ ] Uploaded to YouTube/Vimeo with good title/description
+  - [ ] Thumbnail created
+  - [ ] Video URL added to README
+<ul><li>[ ] <strong>HN post drafted:</strong></li>
+</ul>  - [ ] Title (60 chars max, compelling)
+  - [ ] URL (direct to GitHub or playground)
+  - [ ] First comment prepared (pin this)
+<ul><li>[ ] <strong>FAQ prepared</strong> for common questions:</li>
+</ul>  - [ ] "How is this different from React/Vue?"
+  - [ ] "What's the browser support?"
+  - [ ] "Is it production-ready?"
+  - [ ] "How does bundle size compare?"
+  - [ ] "Can I use TypeScript?"
+  - [ ] "What's the learning curve?"
+  - [ ] "Who's using this in production?"
+  - [ ] "How does PAN compare to Redux/other state management?"
+<h3>Website & Infrastructure</h3>
+<ul><li>[ ] GitHub Pages deployed and current</li>
+<li>[ ] All CDN links working (test unpkg.com URLs)</li>
+<li>[ ] Site works on mobile devices</li>
+<li>[ ] Playground loads in <3 seconds</li>
+<li>[ ] SSL/HTTPS working correctly</li>
+<li>[ ] No broken images or assets</li>
+<li>[ ] Analytics set up (optional: Plausible, Simple Analytics)</li>
+<li>[ ] Error monitoring ready (optional: Sentry, LogRocket)</li>
+</ul>
+<h3>Social Media Prep</h3>
+<ul><li>[ ] Twitter/X account ready (if applicable)</li>
+<li>[ ] LinkedIn post drafted (if applicable)</li>
+<li>[ ] Screenshots prepared for social sharing</li>
+<li>[ ] Hashtags prepared: #webcomponents #javascript #opensource</li>
+</ul>
+<hr>
+<h2>✅ DAY BEFORE LAUNCH</h2>
+<h3>Final Testing (Critical!)</h3>
+<strong>Test on multiple browsers:</strong>
+<ul><li>[ ] Chrome (desktop) - Latest version</li>
+<li>[ ] Firefox (desktop) - Latest version</li>
+<li>[ ] Safari (desktop) - Latest version</li>
+<li>[ ] Edge (desktop) - Latest version</li>
+<li>[ ] Chrome (mobile) - iOS</li>
+<li>[ ] Safari (mobile) - iOS</li>
+<li>[ ] Chrome (mobile) - Android</li>
+</ul>
+<strong>Test all key pages in incognito/private mode:</strong>
+<ul><li>[ ] Main README renders correctly on GitHub</li>
+<li>[ ] Playground loads and works</li>
+<li>[ ] Examples work</li>
+<li>[ ] Documentation site loads</li>
+<li>[ ] All links work (click every link!)</li>
+<li>[ ] Demo video plays</li>
+</ul>
+<strong>Test specific scenarios:</strong>
+<ul><li>[ ] Clone fresh repo and follow Quick Start</li>
+<li>[ ] Install from npm and verify it works</li>
+<li>[ ] TypeScript imports work correctly</li>
+<li>[ ] CDN imports work</li>
+<li>[ ] Examples work without local server (if applicable)</li>
+</ul>
+<h3>Performance Check</h3>
+<ul><li>[ ] Playground loads in <3 seconds on 3G</li>
+<li>[ ] Core bundle size: 40KB minified (128KB unminified) (verify on unpkg.com)</li>
+<li>[ ] No console errors on any page</li>
+<li>[ ] No 404s in network tab</li>
+<li>[ ] Lighthouse score >90 (optional but nice)</li>
+</ul>
+<h3>Team Coordination</h3>
+<ul><li>[ ] Team members available on launch day?</li>
+<li>[ ] Backup person assigned if primary unavailable</li>
+<li>[ ] Communication channel set up (Slack, Discord, etc.)</li>
+<li>[ ] Response strategy discussed</li>
+<li>[ ] Roles assigned:</li>
+</ul>  - [ ] Technical questions responder: _____________
+  - [ ] Community/enthusiasm responder: _____________
+  - [ ] Bug report triager: _____________
+<h3>HN Post Review</h3>
+<ul><li>[ ] Title finalized (test on friends for clarity)</li>
+<li>[ ] First comment refined and ready to paste</li>
+<li>[ ] FAQ answers ready to copy/paste</li>
+<li>[ ] Screenshots ready for threads that ask</li>
+<li>[ ] Comparison tables ready (LARC vs React, etc.)</li>
+</ul>
+<hr>
+<h2>✅ LAUNCH DAY</h2>
+<h3>Pre-Launch (6:00 AM PT)</h3>
+<ul><li>[ ] Double-check all services are up:</li>
+</ul>  - [ ] GitHub.com accessible
+  - [ ] GitHub Pages working
+  - [ ] npm packages available
+  - [ ] CDN links working
+<ul><li>[ ] Demo video still accessible</li>
+<li>[ ] Team members online and ready</li>
+<li>[ ] Notifications enabled for GitHub issues/discussions</li>
+<li>[ ] Close all unrelated tabs, prepare to focus</li>
+</ul>
+<h3>Launch (7:00-9:00 AM PT)</h3>
+<strong>Optimal time: 7:30 AM PT on Tuesday, Wednesday, or Thursday</strong>
+<ul><li>[ ] Post to Hacker News:</li>
+</ul>  - [ ] Go to https://news.ycombinator.com/submit
+  - [ ] Title: ________________________________________________
+  - [ ] URL: https://github.com/larcjs/larc (or playground URL)
+  - [ ] Submit!
+<ul><li>[ ] Immediately post first comment (within 2 minutes):</li>
+</ul>  <pre><code class="language-plaintext">Hi HN! I built LARC to solve the &quot;Web Component coordination problem.&quot;
+
+  Quick demo: Load one script tag, use &lt;pan-card&gt; in HTML, done. No build step.
+
+  The killer feature is PAN (Page Area Network) - a message bus that lets
+  components coordinate without knowing about each other. Mix React, Vue,
+  and LARC components on the same page.
+
+  Try it: https://larcjs.github.io/larc/playground/
+
+  Tech: 261 passing tests, TypeScript support, 5KB core, zero dependencies.
+
+  Happy to answer questions!</code></pre>
+<ul><li>[ ] Save HN post URL</li>
+<li>[ ] Share HN post URL with team</li>
+</ul>
+<h3>First 2 Hours (Critical Window)</h3>
+<strong>Goal: Respond to EVERY comment within 10 minutes</strong>
+<ul><li>[ ] Set timer: Check HN every 5 minutes</li>
+<li>[ ] Respond thoughtfully to every comment</li>
+<li>[ ] Be humble, grateful, and educational</li>
+<li>[ ] Don't be defensive if criticized</li>
+<li>[ ] Fix any obvious bugs immediately</li>
+<li>[ ] Update README if confusion is widespread</li>
+<li>[ ] Thank people for compliments and feedback</li>
+</ul>
+<strong>Response templates ready:</strong>
+<em>For "How is this different from X?"</em>
+<blockquote>Great question! The main difference is [specific technical difference]. LARC is designed to complement React/Vue, not replace them. You keep your framework for complex UIs and use LARC for [specific use case].</blockquote>
+<em>For "What about Y concern?"</em>
+<blockquote>That's a valid concern. Here's how we handle it: [technical explanation]. We also document this in [link to docs].</blockquote>
+<em>For bug reports:</em>
+<blockquote>Thanks for catching this! Can you share more details? [specific questions]. I'll look into this right away.</blockquote>
+<em>For positive feedback:</em>
+<blockquote>Thank you! That means a lot. If you try it out, I'd love to hear your feedback.</blockquote>
+<h3>Hours 2-6</h3>
+<ul><li>[ ] Continue monitoring, but can reduce to every 15-30 minutes</li>
+<li>[ ] Address any critical bugs or issues</li>
+<li>[ ] Update FAQ if common questions emerge</li>
+<li>[ ] Track metrics:</li>
+</ul>  - [ ] HN points
+  - [ ] Comments count
+  - [ ] GitHub stars
+  - [ ] npm downloads
+  - [ ] Website traffic
+<h3>Evening (After 6 hours)</h3>
+<ul><li>[ ] Final check-in before EOD</li>
+<li>[ ] Respond to any unanswered comments</li>
+<li>[ ] Document any issues to address tomorrow</li>
+<li>[ ] Thank the team</li>
+<li>[ ] Get rest!</li>
+</ul>
+<hr>
+<h2>✅ POST-LAUNCH (Days 1-2)</h2>
+<h3>Day 1 Evening / Day 2</h3>
+<ul><li>[ ] Respond to all HN comments within 24 hours</li>
+<li>[ ] Address any critical bugs reported</li>
+<li>[ ] Monitor GitHub issues/discussions</li>
+<li>[ ] Thank contributors and early adopters</li>
+<li>[ ] Track metrics and record for future reference</li>
+<li>[ ] Write brief post-mortem (what went well, what to improve)</li>
+</ul>
+<h3>Days 2-7</h3>
+<ul><li>[ ] Continue responding to comments daily</li>
+<li>[ ] Triage and prioritize reported issues</li>
+<li>[ ] Update documentation based on feedback</li>
+<li>[ ] Plan next steps based on community response</li>
+<li>[ ] Send thank-you notes to significant contributors</li>
+</ul>
+<hr>
+<h2>📊 Success Metrics</h2>
+<p>Track these metrics before/after launch:</p>
+<strong>Before Launch:</strong>
+<ul><li>GitHub stars: ______</li>
+<li>npm downloads (weekly): ______</li>
+<li>Twitter followers: ______</li>
+</ul>
+<strong>After Launch (24h):</strong>
+<ul><li>HN points: ______</li>
+<li>HN comments: ______</li>
+<li>GitHub stars: ______</li>
+<li>npm downloads: ______</li>
+<li>Website visitors: ______</li>
+</ul>
+<strong>After Launch (1 week):</strong>
+<ul><li>Total GitHub stars: ______</li>
+<li>Total npm downloads: ______</li>
+<li>Issues opened: ______</li>
+<li>PRs submitted: ______</li>
+<li>Community discussions: ______</li>
+</ul>
+<hr>
+<h2>🚨 Emergency Contacts</h2>
+<strong>If something goes wrong:</strong>
+<ul><li>[ ] GitHub down: Check https://www.githubstatus.com/</li>
+<li>[ ] npm down: Check https://status.npmjs.org/</li>
+<li>[ ] CDN down: Check unpkg.com status</li>
+<li>[ ] Website down: Check GitHub Pages status</li>
+</ul>
+<strong>Rollback plan:</strong>
+<ul><li>[ ] If critical bug found: Can we hotfix? Or acknowledge and promise fix?</li>
+<li>[ ] If infrastructure down: Link to backup locations</li>
+<li>[ ] If overwhelmed: Tag in backup team member</li>
+</ul>
+<hr>
+<h2>📝 Post-Launch Retrospective</h2>
+<strong>Complete within 1 week of launch:</strong>
+<h3>What Went Well</h3>
+<ul><li>_______________________________</li>
+<li>_______________________________</li>
+<li>_______________________________</li>
+</ul>
+<h3>What Could Improve</h3>
+<ul><li>_______________________________</li>
+<li>_______________________________</li>
+<li>_______________________________</li>
+</ul>
+<h3>Action Items</h3>
+<ul><li>[ ] _______________________________</li>
+<li>[ ] _______________________________</li>
+<li>[ ] _______________________________</li>
+</ul>
+<h3>Community Feedback Themes</h3>
+<ul><li>_______________________________</li>
+<li>_______________________________</li>
+<li>_______________________________</li>
+</ul>
+<hr>
+<h2>🎉 Celebration!</h2>
+<strong>Don't forget to celebrate the launch!</strong>
+<ul><li>[ ] Team celebration (virtual or in-person)</li>
+<li>[ ] Document the journey (blog post, Twitter thread)</li>
+<li>[ ] Thank everyone who helped</li>
+<li>[ ] Plan the next milestone</li>
+</ul>
+<hr>
+<h2>📚 Resources</h2>
+<ul><li>HN Guidelines: https://news.ycombinator.com/newsguidelines.html</li>
+<li>Show HN: https://news.ycombinator.com/showhn.html</li>
+<li>HN FAQ: https://news.ycombinator.com/newsfaq.html</li>
+<li>Launch timing research: Tuesday-Thursday, 7-9 AM PT is optimal</li>
+</ul>
+<hr>
+<strong>Good luck! You've got this! 🚀</strong>
+<em>Remember: Be humble, be helpful, be responsive. The HN community appreciates authenticity and technical depth.</em>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/processes/LAUNCH_CHECKLIST.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

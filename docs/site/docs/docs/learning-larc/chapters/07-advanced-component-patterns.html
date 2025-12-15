@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chapter 7: Advanced Component Patterns · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Chapter 7: Advanced Component Patterns">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>07-advanced-component-patterns</span>
+      </div>
+      <article class="docs-content">
+        <h1>Chapter 7: Advanced Component Patterns</h1>
+<p>As your LARC applications grow, you'll encounter scenarios that require sophisticated component architectures. This chapter explores advanced patterns that enable code reuse, flexible composition, and optimal performance.</p>
+<p>These patterns come from years of component-based development across frameworks. LARC implements them using web standards, making them portable and future-proof.</p>
+<h2>Compound Components</h2>
+<p>Compound components work together as a set, sharing implicit state. Think of HTML's <code><select></code> and <code><option></code> elements—they form a cohesive unit.</p>
+<h3>Basic Compound Component</h3>
+<pre><code class="language-javascript">// tabs.js - Container component
+class TabGroup extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.activeTab = 0;
+  }
+
+  connectedCallback() {
+    this.render();
+    this.setupTabs();
+  }
+
+  setupTabs() {
+    // Get all tab headers
+    const headers = this.querySelectorAll(&#039;tab-header&#039;);
+    headers.forEach((header, index) =&gt; {
+      header.addEventListener(&#039;click&#039;, () =&gt; {
+        this.activeTab = index;
+        this.updateTabs();
+      });
+    });
+
+    this.updateTabs();
+  }
+
+  updateTabs() {
+    // Update headers
+    const headers = this.querySelectorAll(&#039;tab-header&#039;);
+    headers.forEach((header, index) =&gt; {
+      header.active = index === this.activeTab;
+    });
+
+    // Update panels
+    const panels = this.querySelectorAll(&#039;tab-panel&#039;);
+    panels.forEach((panel, index) =&gt; {
+      panel.active = index === this.activeTab;
+    });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+        }
+        .headers {
+          display: flex;
+          border-bottom: 2px solid #e2e8f0;
+        }
+        .panels {
+          padding: 16px 0;
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;headers&quot;&gt;
+        &lt;slot name=&quot;headers&quot;&gt;&lt;/slot&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;panels&quot;&gt;
+        &lt;slot name=&quot;panels&quot;&gt;&lt;/slot&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+// tab-header.js
+class TabHeader extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  set active(value) {
+    this._active = value;
+    this.render();
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        button {
+          padding: 12px 24px;
+          border: none;
+          background: ${this._active ? &#039;#667eea&#039; : &#039;transparent&#039;};
+          color: ${this._active ? &#039;white&#039; : &#039;#4a5568&#039;};
+          cursor: pointer;
+          font-weight: ${this._active ? &#039;600&#039; : &#039;400&#039;};
+          transition: all 0.2s;
+        }
+        button:hover {
+          background: ${this._active ? &#039;#5a67d8&#039; : &#039;#f7fafc&#039;};
+        }
+      &lt;/style&gt;
+      &lt;button&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/button&gt;
+    `;
+  }
+}
+
+// tab-panel.js
+class TabPanel extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  set active(value) {
+    this._active = value;
+    this.style.display = value ? &#039;block&#039; : &#039;none&#039;;
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+        }
+      &lt;/style&gt;
+      &lt;slot&gt;&lt;/slot&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;tab-group&#039;, TabGroup);
+customElements.define(&#039;tab-header&#039;, TabHeader);
+customElements.define(&#039;tab-panel&#039;, TabPanel);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;tab-group&gt;
+  &lt;tab-header slot=&quot;headers&quot;&gt;Profile&lt;/tab-header&gt;
+  &lt;tab-header slot=&quot;headers&quot;&gt;Settings&lt;/tab-header&gt;
+  &lt;tab-header slot=&quot;headers&quot;&gt;Billing&lt;/tab-header&gt;
+
+  &lt;tab-panel slot=&quot;panels&quot;&gt;
+    &lt;h2&gt;Profile Content&lt;/h2&gt;
+    &lt;p&gt;User profile information...&lt;/p&gt;
+  &lt;/tab-panel&gt;
+
+  &lt;tab-panel slot=&quot;panels&quot;&gt;
+    &lt;h2&gt;Settings Content&lt;/h2&gt;
+    &lt;p&gt;Application settings...&lt;/p&gt;
+  &lt;/tab-panel&gt;
+
+  &lt;tab-panel slot=&quot;panels&quot;&gt;
+    &lt;h2&gt;Billing Content&lt;/h2&gt;
+    &lt;p&gt;Billing information...&lt;/p&gt;
+  &lt;/tab-panel&gt;
+&lt;/tab-group&gt;</code></pre>
+<h3>Context API for Compound Components</h3>
+<p>Share state without prop drilling:</p>
+<pre><code class="language-javascript">// lib/context.js
+const contexts = new WeakMap();
+
+export function createContext(defaultValue) {
+  return {
+    Provider: class extends HTMLElement {
+      constructor() {
+        super();
+        this.value = defaultValue;
+        contexts.set(this, this.value);
+      }
+
+      provide(value) {
+        this.value = value;
+        contexts.set(this, value);
+        this.notifyConsumers();
+      }
+
+      notifyConsumers() {
+        const consumers = this.querySelectorAll(&#039;[data-context-consumer]&#039;);
+        consumers.forEach(consumer =&gt; {
+          if (consumer.onContextChange) {
+            consumer.onContextChange(this.value);
+          }
+        });
+      }
+
+      connectedCallback() {
+        this.innerHTML = `&lt;slot&gt;&lt;/slot&gt;`;
+      }
+    },
+
+    Consumer: class extends HTMLElement {
+      connectedCallback() {
+        this.setAttribute(&#039;data-context-consumer&#039;, &#039;&#039;);
+
+        // Find provider up the tree
+        let provider = this.closest(&#039;[data-context-provider]&#039;);
+        if (provider &amp;&amp; contexts.has(provider)) {
+          this.onContextChange(contexts.get(provider));
+        }
+      }
+
+      onContextChange(value) {
+        // Override in subclasses
+      }
+    }
+  };
+}</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Create context
+const ThemeContext = createContext({ theme: &#039;light&#039; });
+
+// Provider component
+class ThemeProvider extends ThemeContext.Provider {
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute(&#039;data-context-provider&#039;, &#039;&#039;);
+
+    this.provide({
+      theme: &#039;light&#039;,
+      toggleTheme: () =&gt; {
+        const newTheme = this.value.theme === &#039;light&#039; ? &#039;dark&#039; : &#039;light&#039;;
+        this.provide({ ...this.value, theme: newTheme });
+      }
+    });
+  }
+}
+
+// Consumer component
+class ThemedButton extends ThemeContext.Consumer {
+  onContextChange(context) {
+    this.context = context;
+    this.render();
+  }
+
+  render() {
+    const { theme } = this.context || { theme: &#039;light&#039; };
+
+    this.innerHTML = `
+      &lt;button style=&quot;
+        background: ${theme === &#039;dark&#039; ? &#039;#333&#039; : &#039;#fff&#039;};
+        color: ${theme === &#039;dark&#039; ? &#039;#fff&#039; : &#039;#333&#039;};
+      &quot;&gt;
+        &lt;slot&gt;&lt;/slot&gt;
+      &lt;/button&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;theme-provider&#039;, ThemeProvider);
+customElements.define(&#039;themed-button&#039;, ThemedButton);</code></pre>
+<pre><code class="language-html">&lt;theme-provider&gt;
+  &lt;themed-button&gt;Light/Dark&lt;/themed-button&gt;
+  &lt;themed-button&gt;Another Button&lt;/themed-button&gt;
+&lt;/theme-provider&gt;</code></pre>
+<h2>Higher-Order Components</h2>
+<p>Higher-order components (HOCs) wrap other components to add functionality.</p>
+<h3>Mixin Pattern</h3>
+<p>JavaScript mixins add functionality to classes:</p>
+<pre><code class="language-javascript">// mixins/observable.js
+export const ObservableMixin = (Base) =&gt; class extends Base {
+  constructor() {
+    super();
+    this._observers = new Map();
+  }
+
+  observe(property, callback) {
+    if (!this._observers.has(property)) {
+      this._observers.set(property, new Set());
+    }
+    this._observers.get(property).add(callback);
+
+    // Return unobserve function
+    return () =&gt; {
+      this._observers.get(property)?.delete(callback);
+    };
+  }
+
+  notify(property, value) {
+    this._observers.get(property)?.forEach(callback =&gt; {
+      callback(value);
+    });
+  }
+
+  set(property, value) {
+    this[`_${property}`] = value;
+    this.notify(property, value);
+  }
+
+  get(property) {
+    return this[`_${property}`];
+  }
+};
+
+// mixins/resizable.js
+export const ResizableMixin = (Base) =&gt; class extends Base {
+  connectedCallback() {
+    super.connectedCallback?.();
+
+    this.resizeObserver = new ResizeObserver((entries) =&gt; {
+      for (const entry of entries) {
+        this.onResize?.(entry.contentRect);
+      }
+    });
+
+    this.resizeObserver.observe(this);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback?.();
+    this.resizeObserver?.disconnect();
+  }
+};
+
+// mixins/loading.js
+export const LoadingMixin = (Base) =&gt; class extends Base {
+  constructor() {
+    super();
+    this._loading = false;
+  }
+
+  startLoading() {
+    this._loading = true;
+    this.setAttribute(&#039;loading&#039;, &#039;&#039;);
+    this.onLoadingChange?.(true);
+  }
+
+  stopLoading() {
+    this._loading = false;
+    this.removeAttribute(&#039;loading&#039;);
+    this.onLoadingChange?.(false);
+  }
+
+  get loading() {
+    return this._loading;
+  }
+};</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">import { ObservableMixin } from &#039;./mixins/observable.js&#039;;
+import { ResizableMixin } from &#039;./mixins/resizable.js&#039;;
+import { LoadingMixin } from &#039;./mixins/loading.js&#039;;
+
+// Compose multiple mixins
+class DataTable extends LoadingMixin(ResizableMixin(ObservableMixin(HTMLElement))) {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  async connectedCallback() {
+    super.connectedCallback();
+
+    // Use Observable mixin
+    this.observe(&#039;data&#039;, (data) =&gt; {
+      console.log(&#039;Data changed:&#039;, data);
+      this.render();
+    });
+
+    // Use Loading mixin
+    this.startLoading();
+    const data = await this.fetchData();
+    this.set(&#039;data&#039;, data);
+    this.stopLoading();
+  }
+
+  // Use Resizable mixin
+  onResize(rect) {
+    console.log(&#039;Component resized:&#039;, rect.width, rect.height);
+    this.updateLayout();
+  }
+
+  onLoadingChange(loading) {
+    this.render();
+  }
+
+  async fetchData() {
+    const response = await fetch(&#039;/api/data&#039;);
+    return response.json();
+  }
+
+  render() {
+    // Render based on state
+  }
+}
+
+customElements.define(&#039;data-table&#039;, DataTable);</code></pre>
+<h3>Decorator Pattern</h3>
+<p>Wrap components to enhance them:</p>
+<pre><code class="language-javascript">// decorators/with-loading.js
+export function withLoading(ComponentClass) {
+  return class extends ComponentClass {
+    constructor() {
+      super();
+      this._originalConnectedCallback = this.connectedCallback;
+    }
+
+    connectedCallback() {
+      // Inject loading overlay
+      const loadingOverlay = document.createElement(&#039;div&#039;);
+      loadingOverlay.className = &#039;loading-overlay&#039;;
+      loadingOverlay.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255,255,255,0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+      `;
+      loadingOverlay.innerHTML = &#039;&lt;div class=&quot;spinner&quot;&gt;&lt;/div&gt;&#039;;
+
+      this.appendChild(loadingOverlay);
+      this._loadingOverlay = loadingOverlay;
+
+      // Call original
+      if (this._originalConnectedCallback) {
+        this._originalConnectedCallback.call(this);
+      }
+    }
+
+    showLoading() {
+      if (this._loadingOverlay) {
+        this._loadingOverlay.style.display = &#039;flex&#039;;
+      }
+    }
+
+    hideLoading() {
+      if (this._loadingOverlay) {
+        this._loadingOverlay.style.display = &#039;none&#039;;
+      }
+    }
+  };
+}
+
+// Usage
+class UserProfile extends HTMLElement {
+  async connectedCallback() {
+    this.showLoading();
+
+    const user = await fetch(&#039;/api/user&#039;).then(r =&gt; r.json());
+    this.render(user);
+
+    this.hideLoading();
+  }
+
+  render(user) {
+    this.innerHTML = `&lt;h1&gt;${user.name}&lt;/h1&gt;`;
+  }
+}
+
+// Apply decorator
+const UserProfileWithLoading = withLoading(UserProfile);
+customElements.define(&#039;user-profile&#039;, UserProfileWithLoading);</code></pre>
+<h2>Component Composition</h2>
+<p>Build complex UIs from simple, focused components.</p>
+<h3>Container/Presentational Pattern</h3>
+<p>Separate logic from presentation:</p>
+<pre><code class="language-javascript">// Presentational - no logic, just rendering
+class UserCard extends HTMLElement {
+  set user(value) {
+    this._user = value;
+    this.render();
+  }
+
+  render() {
+    if (!this._user) return;
+
+    this.innerHTML = `
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;img src=&quot;${this._user.avatar}&quot; alt=&quot;${this._user.name}&quot;&gt;
+        &lt;h3&gt;${this._user.name}&lt;/h3&gt;
+        &lt;p&gt;${this._user.email}&lt;/p&gt;
+        &lt;button class=&quot;follow-btn&quot;&gt;Follow&lt;/button&gt;
+      &lt;/div&gt;
+    `;
+
+    // Emit events, don&#039;t handle logic
+    this.querySelector(&#039;.follow-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.dispatchEvent(new CustomEvent(&#039;follow&#039;, {
+        detail: { userId: this._user.id }
+      }));
+    });
+  }
+}
+
+// Container - handles logic and data
+class UserCardContainer extends HTMLElement {
+  async connectedCallback() {
+    const userId = this.getAttribute(&#039;user-id&#039;);
+
+    // Fetch data
+    this.user = await this.fetchUser(userId);
+
+    // Create presentational component
+    const card = document.createElement(&#039;user-card&#039;);
+    card.user = this.user;
+
+    // Handle events
+    card.addEventListener(&#039;follow&#039;, (e) =&gt; {
+      this.followUser(e.detail.userId);
+    });
+
+    this.appendChild(card);
+  }
+
+  async fetchUser(id) {
+    const response = await fetch(`/api/users/${id}`);
+    return response.json();
+  }
+
+  async followUser(userId) {
+    await fetch(`/api/users/${userId}/follow`, { method: &#039;POST&#039; });
+    pan.publish(&#039;user.followed&#039;, { userId });
+  }
+}
+
+customElements.define(&#039;user-card&#039;, UserCard);
+customElements.define(&#039;user-card-container&#039;, UserCardContainer);</code></pre>
+<h3>Render Props Pattern</h3>
+<p>Pass rendering logic as a slot:</p>
+<pre><code class="language-javascript">class DataProvider extends HTMLElement {
+  async connectedCallback() {
+    const url = this.getAttribute(&#039;url&#039;);
+
+    // Render loading state
+    this.innerHTML = &#039;&lt;slot name=&quot;loading&quot;&gt;Loading...&lt;/slot&gt;&#039;;
+
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+
+      // Render with data
+      const renderSlot = this.querySelector(&#039;[slot=&quot;render&quot;]&#039;);
+      if (renderSlot) {
+        renderSlot.data = data;
+        this.innerHTML = &#039;&#039;;
+        this.appendChild(renderSlot);
+      }
+    } catch (error) {
+      // Render error state
+      this.innerHTML = `&lt;slot name=&quot;error&quot;&gt;Error: ${error.message}&lt;/slot&gt;`;
+    }
+  }
+}
+
+customElements.define(&#039;data-provider&#039;, DataProvider);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;data-provider url=&quot;/api/users&quot;&gt;
+  &lt;div slot=&quot;loading&quot;&gt;
+    &lt;spinner-component&gt;&lt;/spinner-component&gt;
+  &lt;/div&gt;
+
+  &lt;user-list slot=&quot;render&quot;&gt;&lt;/user-list&gt;
+
+  &lt;div slot=&quot;error&quot;&gt;
+    &lt;error-message&gt;&lt;/error-message&gt;
+  &lt;/div&gt;
+&lt;/data-provider&gt;</code></pre>
+<h2>Slots and Content Projection</h2>
+<p>Slots are powerful for flexible component composition.</p>
+<h3>Named Slots</h3>
+<pre><code class="language-javascript">class CardComponent extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .card {
+          border: 1px solid #e2e8f0;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+        .header {
+          background: #f7fafc;
+          padding: 16px;
+          border-bottom: 1px solid #e2e8f0;
+        }
+        .body {
+          padding: 16px;
+        }
+        .footer {
+          background: #f7fafc;
+          padding: 12px 16px;
+          border-top: 1px solid #e2e8f0;
+          display: flex;
+          justify-content: flex-end;
+          gap: 8px;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;div class=&quot;header&quot;&gt;
+          &lt;slot name=&quot;header&quot;&gt;Default Header&lt;/slot&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;body&quot;&gt;
+          &lt;slot&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;footer&quot;&gt;
+          &lt;slot name=&quot;footer&quot;&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;card-component&#039;, CardComponent);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;card-component&gt;
+  &lt;h2 slot=&quot;header&quot;&gt;User Profile&lt;/h2&gt;
+
+  &lt;!-- Default slot --&gt;
+  &lt;p&gt;User profile content goes here...&lt;/p&gt;
+
+  &lt;div slot=&quot;footer&quot;&gt;
+    &lt;button&gt;Save&lt;/button&gt;
+    &lt;button&gt;Cancel&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/card-component&gt;</code></pre>
+<h3>Slot Change Detection</h3>
+<p>React to slot content changes:</p>
+<pre><code class="language-javascript">class DynamicList extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .count { font-weight: bold; color: #667eea; }
+      &lt;/style&gt;
+      &lt;div class=&quot;count&quot;&gt;&lt;/div&gt;
+      &lt;slot&gt;&lt;/slot&gt;
+    `;
+
+    // Listen for slot changes
+    const slot = this.shadowRoot.querySelector(&#039;slot&#039;);
+    slot.addEventListener(&#039;slotchange&#039;, () =&gt; {
+      this.updateCount();
+    });
+
+    this.updateCount();
+  }
+
+  updateCount() {
+    const slot = this.shadowRoot.querySelector(&#039;slot&#039;);
+    const elements = slot.assignedElements();
+
+    const count = this.shadowRoot.querySelector(&#039;.count&#039;);
+    count.textContent = `${elements.length} items`;
+  }
+}
+
+customElements.define(&#039;dynamic-list&#039;, DynamicList);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;dynamic-list&gt;
+  &lt;div&gt;Item 1&lt;/div&gt;
+  &lt;div&gt;Item 2&lt;/div&gt;
+  &lt;div&gt;Item 3&lt;/div&gt;
+&lt;/dynamic-list&gt;
+
+&lt;script&gt;
+  const list = document.querySelector(&#039;dynamic-list&#039;);
+
+  // Add item dynamically
+  const newItem = document.createElement(&#039;div&#039;);
+  newItem.textContent = &#039;Item 4&#039;;
+  list.appendChild(newItem);
+  // Count automatically updates!
+&lt;/script&gt;</code></pre>
+<h3>Conditional Slots</h3>
+<p>Show/hide content based on slot presence:</p>
+<pre><code class="language-javascript">class ConditionalCard extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+
+    const hasHeader = this.querySelector(&#039;[slot=&quot;header&quot;]&#039;) !== null;
+    const hasFooter = this.querySelector(&#039;[slot=&quot;footer&quot;]&#039;) !== null;
+
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .card { border: 1px solid #ddd; border-radius: 8px; }
+        .header, .footer { background: #f5f5f5; padding: 16px; }
+        .body { padding: 16px; }
+        .hidden { display: none; }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;div class=&quot;header ${hasHeader ? &#039;&#039; : &#039;hidden&#039;}&quot;&gt;
+          &lt;slot name=&quot;header&quot;&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;body&quot;&gt;
+          &lt;slot&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;footer ${hasFooter ? &#039;&#039; : &#039;hidden&#039;}&quot;&gt;
+          &lt;slot name=&quot;footer&quot;&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;conditional-card&#039;, ConditionalCard);</code></pre>
+<h2>Dynamic Component Loading</h2>
+<p>Load components on demand for better performance.</p>
+<h3>Lazy Loading</h3>
+<pre><code class="language-javascript">class LazyLoader extends HTMLElement {
+  async connectedCallback() {
+    const component = this.getAttribute(&#039;component&#039;);
+    const src = this.getAttribute(&#039;src&#039;);
+
+    // Show placeholder
+    this.innerHTML = &#039;&lt;div&gt;Loading component...&lt;/div&gt;&#039;;
+
+    try {
+      // Dynamically import component
+      await import(src);
+
+      // Wait for component to be defined
+      await customElements.whenDefined(component);
+
+      // Create and append component
+      const element = document.createElement(component);
+
+      // Copy attributes
+      Array.from(this.attributes).forEach(attr =&gt; {
+        if (attr.name !== &#039;component&#039; &amp;&amp; attr.name !== &#039;src&#039;) {
+          element.setAttribute(attr.name, attr.value);
+        }
+      });
+
+      this.innerHTML = &#039;&#039;;
+      this.appendChild(element);
+    } catch (error) {
+      this.innerHTML = `&lt;div class=&quot;error&quot;&gt;Failed to load component: ${error.message}&lt;/div&gt;`;
+    }
+  }
+}
+
+customElements.define(&#039;lazy-loader&#039;, LazyLoader);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;!-- Component loads when added to DOM --&gt;
+&lt;lazy-loader
+  component=&quot;heavy-chart&quot;
+  src=&quot;/components/heavy-chart.js&quot;
+  data-url=&quot;/api/chart-data&quot;&gt;
+&lt;/lazy-loader&gt;</code></pre>
+<h3>Intersection Observer for Viewport Loading</h3>
+<p>Load components when they enter the viewport:</p>
+<pre><code class="language-javascript">class ViewportLoader extends HTMLElement {
+  connectedCallback() {
+    this.observer = new IntersectionObserver((entries) =&gt; {
+      entries.forEach(entry =&gt; {
+        if (entry.isIntersecting &amp;&amp; !this.loaded) {
+          this.load();
+        }
+      });
+    }, {
+      rootMargin: &#039;50px&#039;  // Start loading 50px before visible
+    });
+
+    this.observer.observe(this);
+  }
+
+  disconnectedCallback() {
+    this.observer?.disconnect();
+  }
+
+  async load() {
+    this.loaded = true;
+    const component = this.getAttribute(&#039;component&#039;);
+    const src = this.getAttribute(&#039;src&#039;);
+
+    await import(src);
+    await customElements.whenDefined(component);
+
+    const element = document.createElement(component);
+    Array.from(this.attributes).forEach(attr =&gt; {
+      if (![&#039;component&#039;, &#039;src&#039;].includes(attr.name)) {
+        element.setAttribute(attr.name, attr.value);
+      }
+    });
+
+    this.appendChild(element);
+  }
+}
+
+customElements.define(&#039;viewport-loader&#039;, ViewportLoader);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;!-- Heavy image gallery - only loads when scrolled into view --&gt;
+&lt;viewport-loader
+  component=&quot;image-gallery&quot;
+  src=&quot;/components/image-gallery.js&quot;
+  album-id=&quot;123&quot;&gt;
+&lt;/viewport-loader&gt;</code></pre>
+<h2>Performance Optimization</h2>
+<h3>Virtual Scrolling</h3>
+<p>Render only visible items in long lists:</p>
+<pre><code class="language-javascript">class VirtualList extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+
+    this.items = [];
+    this.itemHeight = 50;
+    this.visibleCount = 20;
+    this.scrollTop = 0;
+  }
+
+  set data(items) {
+    this.items = items;
+    this.render();
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+          height: 100%;
+          overflow-y: auto;
+          position: relative;
+        }
+        .viewport {
+          position: relative;
+        }
+        .item {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: ${this.itemHeight}px;
+          display: flex;
+          align-items: center;
+          padding: 0 16px;
+          border-bottom: 1px solid #eee;
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;viewport&quot;&gt;&lt;/div&gt;
+    `;
+
+    this.viewport = this.shadowRoot.querySelector(&#039;.viewport&#039;);
+
+    this.addEventListener(&#039;scroll&#039;, () =&gt; {
+      this.scrollTop = this.scrollTop;
+      this.renderVisibleItems();
+    });
+  }
+
+  render() {
+    if (!this.viewport) return;
+
+    // Set total height
+    const totalHeight = this.items.length * this.itemHeight;
+    this.viewport.style.height = `${totalHeight}px`;
+
+    this.renderVisibleItems();
+  }
+
+  renderVisibleItems() {
+    const startIndex = Math.floor(this.scrollTop / this.itemHeight);
+    const endIndex = Math.min(
+      startIndex + this.visibleCount,
+      this.items.length
+    );
+
+    // Clear existing items
+    this.viewport.innerHTML = &#039;&#039;;
+
+    // Render only visible items
+    for (let i = startIndex; i &lt; endIndex; i++) {
+      const item = document.createElement(&#039;div&#039;);
+      item.className = &#039;item&#039;;
+      item.style.top = `${i * this.itemHeight}px`;
+      item.textContent = this.items[i];
+
+      this.viewport.appendChild(item);
+    }
+  }
+}
+
+customElements.define(&#039;virtual-list&#039;, VirtualList);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">const list = document.createElement(&#039;virtual-list&#039;);
+list.data = Array.from({ length: 10000 }, (_, i) =&gt; `Item ${i + 1}`);
+list.style.height = &#039;400px&#039;;
+document.body.appendChild(list);</code></pre>
+<h3>Memoization</h3>
+<p>Cache expensive computations:</p>
+<pre><code class="language-javascript">class MemoizedComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.cache = new Map();
+  }
+
+  memoize(fn, keyFn) {
+    return (...args) =&gt; {
+      const key = keyFn ? keyFn(...args) : JSON.stringify(args);
+
+      if (this.cache.has(key)) {
+        return this.cache.get(key);
+      }
+
+      const result = fn(...args);
+      this.cache.set(key, result);
+
+      return result;
+    };
+  }
+
+  computeExpensiveValue = this.memoize(
+    (data) =&gt; {
+      // Expensive computation
+      console.log(&#039;Computing...&#039;);
+      return data.reduce((acc, val) =&gt; acc + val.price, 0);
+    },
+    (data) =&gt; data.map(d =&gt; d.id).join(&#039;,&#039;)
+  );
+
+  connectedCallback() {
+    const data = [
+      { id: 1, price: 100 },
+      { id: 2, price: 200 }
+    ];
+
+    // First call - computes
+    console.log(this.computeExpensiveValue(data));
+
+    // Second call - cached
+    console.log(this.computeExpensiveValue(data));
+  }
+}</code></pre>
+<h3>Debouncing and Throttling</h3>
+<p>Limit expensive operations:</p>
+<pre><code class="language-javascript">// lib/performance.js
+export function debounce(fn, delay) {
+  let timeoutId;
+
+  return function(...args) {
+    clearTimeout(timeoutId);
+
+    timeoutId = setTimeout(() =&gt; {
+      fn.apply(this, args);
+    }, delay);
+  };
+}
+
+export function throttle(fn, limit) {
+  let inThrottle;
+
+  return function(...args) {
+    if (!inThrottle) {
+      fn.apply(this, args);
+      inThrottle = true;
+
+      setTimeout(() =&gt; {
+        inThrottle = false;
+      }, limit);
+    }
+  };
+}
+
+// Usage
+class SearchBox extends HTMLElement {
+  constructor() {
+    super();
+
+    // Debounce search - wait for user to stop typing
+    this.handleSearch = debounce(this.search.bind(this), 300);
+
+    // Throttle scroll - limit updates
+    this.handleScroll = throttle(this.onScroll.bind(this), 100);
+  }
+
+  connectedCallback() {
+    this.innerHTML = &#039;&lt;input type=&quot;search&quot; placeholder=&quot;Search...&quot;&gt;&#039;;
+
+    this.querySelector(&#039;input&#039;).addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.handleSearch(e.target.value);
+    });
+
+    window.addEventListener(&#039;scroll&#039;, this.handleScroll);
+  }
+
+  search(query) {
+    console.log(&#039;Searching for:&#039;, query);
+    // Perform search
+  }
+
+  onScroll() {
+    console.log(&#039;Scrolled&#039;);
+    // Update UI based on scroll
+  }
+}</code></pre>
+<h2>Summary</h2>
+<p>This chapter explored advanced component patterns:</p>
+<ul><li><strong>Compound Components</strong>: Components that work together as a cohesive unit</li>
+<li><strong>Higher-Order Components</strong>: Mixins and decorators for code reuse</li>
+<li><strong>Component Composition</strong>: Container/presentational pattern and render props</li>
+<li><strong>Slots</strong>: Named slots, slot change detection, and conditional rendering</li>
+<li><strong>Dynamic Loading</strong>: Lazy loading and viewport-based loading</li>
+<li><strong>Performance</strong>: Virtual scrolling, memoization, debouncing, and throttling</li>
+</ul>
+These patterns enable you to build sophisticated, performant applications while keeping code maintainable and testable.
+<hr>
+<h2>Best Practices</h2>
+<li><strong>Favor composition over inheritance</strong></li>
+   - Build complex components from simple ones
+   - Use slots for flexibility
+   - Keep components focused
+<li><strong>Use mixins for cross-cutting concerns</strong></li>
+   - Observable behavior
+   - Resize handling
+   - Loading states
+<li><strong>Separate logic from presentation</strong></li>
+   - Container components handle data
+   - Presentational components handle UI
+   - Easier to test and reuse
+<li><strong>Lazy load heavy components</strong></li>
+   - Reduce initial bundle size
+   - Load on demand or when visible
+   - Show loading states
+<li><strong>Optimize expensive operations</strong></li>
+   - Memoize pure functions
+   - Debounce user input
+   - Throttle scroll/resize handlers
+   - Use virtual scrolling for long lists
+<li><strong>Keep performance in mind</strong></li>
+   - Profile before optimizing
+   - Measure impact of changes
+   - Don't over-optimize prematurely
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/learning-larc/chapters/07-advanced-component-patterns.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

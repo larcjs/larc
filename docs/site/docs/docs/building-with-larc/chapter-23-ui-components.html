@@ -1,0 +1,1080 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>UI Components · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - UI Components">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">building-with-larc</a> / <span>chapter-23-ui-components</span>
+      </div>
+      <article class="docs-content">
+        <h1>UI Components</h1>
+<blockquote>"The best components are like good appliances: they do one thing well, fit perfectly into your existing setup, and you never have to think about how they work—until you need to, and then the manual is actually helpful."</blockquote>
+>
+<blockquote>— A Developer Who's Read Too Many Component APIs</blockquote>
+<p>If LARC's PAN bus is the nervous system and custom components are the organs, then LARC's built-in UI components are the power tools in your workshop. They're purpose-built solutions for common UI patterns: file management, markdown editing, and content rendering. Each component is designed to work seamlessly with the PAN bus while remaining usable as a standalone web component.</p>
+<p>This chapter provides comprehensive API documentation for three essential UI components: <code>pan-files</code>, <code>pan-markdown-editor</code>, and <code>pan-markdown-renderer</code>. These aren't just reference docs—you'll learn when to use each component, how to integrate them into your applications, and how to troubleshoot common issues.</p>
+<h2>pan-files: File System Browser</h2>
+<p>The <code>pan-files</code> component provides a complete file browser interface backed by the browser's Origin Private File System (OPFS). It's designed for applications that need client-side file management without server storage.</p>
+<h3>Overview and Purpose</h3>
+<code>pan-files</code> is a file system manager that combines a visual file browser UI with programmatic file operations. It gives users a familiar folder-and-file interface while providing developers with a clean API for reading, writing, and managing files entirely in the browser.
+<p>Under the hood, <code>pan-files</code> uses OPFS, a browser-native storage API that provides fast, private file system access. Files stored in OPFS persist across sessions, survive page reloads, and remain sandboxed to your origin—they're never sent to a server unless you explicitly choose to do so.</p>
+<p>Key features include:</p>
+<ul><li>Visual file browser with icons and metadata</li>
+<li>File and folder creation, renaming, and deletion</li>
+<li>Real-time search and filtering</li>
+<li>Drag-and-drop support (UI ready, extensible)</li>
+<li>PAN bus integration for file events</li>
+<li>Programmatic API for file operations</li>
+</ul>
+<h3>When to Use pan-files</h3>
+<strong>Use <code>pan-files</code> when:</strong>
+<ul><li>Building offline-first applications that need local file storage</li>
+<li>Creating note-taking apps, code editors, or document managers</li>
+<li>You need client-side file persistence without backend infrastructure</li>
+<li>Building progressive web apps (PWAs) with file management features</li>
+<li>You want users to manage their own files privately in their browser</li>
+</ul>
+<strong>Don't use <code>pan-files</code> when:</strong>
+<ul><li>You need server-side file storage or sharing between users</li>
+<li>Files must be accessible from multiple devices (OPFS is device-specific)</li>
+<li>You need file system operations outside the browser (use Node.js fs module)</li>
+<li>Your files are large enough to approach storage quota limits</li>
+<li>You just need simple key-value storage (use localStorage or IndexedDB)</li>
+</ul>
+<h3>Installation and Setup</h3>
+<p>Add the component to your HTML:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;/path/to/pan-files.mjs&#039;;
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-files&gt;&lt;/pan-files&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>The component automatically initializes OPFS when connected to the DOM. No additional configuration is required for basic usage.</p>
+<h3>Attributes Reference</h3>
+<p>#### <code>path</code>
+<ul><li><strong>Type</strong>: <code>String</code></li>
+<li><strong>Default</strong>: <code>'/'</code></li>
+<li><strong>Description</strong>: The current directory path to display. Currently, the component primarily operates at the root level, but this attribute is designed for future nested directory navigation.</li>
+</ul>
+<pre><code class="language-html">&lt;pan-files path=&quot;/&quot;&gt;&lt;/pan-files&gt;</code></pre></p>
+<p>#### <code>filter</code>
+<ul><li><strong>Type</strong>: <code>String</code></li>
+<li><strong>Default</strong>: <code>''</code> (empty string, no filtering)</li>
+<li><strong>Description</strong>: Comma-separated list of file extensions to display. Only files matching these extensions will be shown. Directories are always visible.</li>
+</ul>
+<pre><code class="language-html">&lt;!-- Show only markdown and text files --&gt;
+&lt;pan-files filter=&quot;.md,.txt&quot;&gt;&lt;/pan-files&gt;</code></pre></p>
+<p>#### <code>show-hidden</code>
+<ul><li><strong>Type</strong>: <code>Boolean</code> (as string)</li>
+<li><strong>Default</strong>: <code>'false'</code></li>
+<li><strong>Description</strong>: Whether to display hidden files (files starting with a dot).</li>
+</ul>
+<pre><code class="language-html">&lt;!-- Show hidden files --&gt;
+&lt;pan-files show-hidden=&quot;true&quot;&gt;&lt;/pan-files&gt;</code></pre></p>
+<h3>Methods Reference</h3>
+<p>All methods are asynchronous and return Promises. Methods that manipulate files automatically trigger UI refreshes and publish PAN bus events.</p>
+<p>#### <code>writeFile(path, content)</code>
+Writes content to a file, creating it if it doesn't exist or overwriting it if it does.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul>
+  - <code>path</code> (String): File path (e.g., '/notes.txt')
+  - <code>content</code> (String): Content to write
+<ul><li><strong>Returns</strong>: <code>Promise<void></code></li>
+<li><strong>Throws</strong>: Error if write operation fails</li>
+</ul>
+<pre><code class="language-javascript">const files = document.querySelector(&#039;pan-files&#039;);
+await files.writeFile(&#039;/hello.txt&#039;, &#039;Hello, World!&#039;);</code></pre>
+<p>#### <code>readFile(path)</code>
+Reads the contents of a file as text.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul>
+  - <code>path</code> (String): File path to read
+<ul><li><strong>Returns</strong>: <code>Promise<String></code> - File contents</li>
+<li><strong>Throws</strong>: Error if file doesn't exist or read fails</li>
+</ul>
+<pre><code class="language-javascript">const files = document.querySelector(&#039;pan-files&#039;);
+const content = await files.readFile(&#039;/hello.txt&#039;);
+console.log(content); // &quot;Hello, World!&quot;</code></pre>
+<p>#### <code>deleteFile(path)</code>
+Deletes a file and publishes a deletion event.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul>
+  - <code>path</code> (String): File path to delete
+<ul><li><strong>Returns</strong>: <code>Promise<void></code></li>
+<li><strong>Throws</strong>: Error if deletion fails</li>
+<li><strong>Side Effects</strong>: Publishes <code>file.deleted</code> event to PAN bus</li>
+</ul>
+<pre><code class="language-javascript">const files = document.querySelector(&#039;pan-files&#039;);
+await files.deleteFile(&#039;/old-notes.txt&#039;);</code></pre>
+<p>#### <code>listFiles()</code>
+Returns an array of all files in the current directory.</p>
+<ul><li><strong>Parameters</strong>: None</li>
+<li><strong>Returns</strong>: <code>Promise<Array<FileInfo>></code> - Array of file objects</li>
+</ul>
+Each <code>FileInfo</code> object contains:
+<pre><code class="language-javascript">{
+  name: &#039;example.txt&#039;,      // File name
+  path: &#039;/example.txt&#039;,     // Full path
+  isDirectory: false,       // Whether it&#039;s a directory
+  size: 1024,              // File size in bytes
+  entry: FileSystemHandle  // Native OPFS handle
+}</code></pre>
+<pre><code class="language-javascript">const files = document.querySelector(&#039;pan-files&#039;);
+const allFiles = await files.listFiles();
+console.log(`Found ${allFiles.length} files`);</code></pre>
+<p>#### <code>refresh()</code>
+Reloads the file list from OPFS and updates the UI.</p>
+<ul><li><strong>Parameters</strong>: None</li>
+<li><strong>Returns</strong>: <code>Promise<void></code></li>
+</ul>
+<pre><code class="language-javascript">const files = document.querySelector(&#039;pan-files&#039;);
+await files.refresh();</code></pre>
+<h3>Events Reference</h3>
+<code>pan-files</code> publishes and subscribes to PAN bus events for integration with other components.
+<p>#### Published Events</p>
+<strong><code>file.selected</code></strong>
+Published when a user clicks on a file in the browser.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/example.txt&#039;,    // Full file path
+  name: &#039;example.txt&#039;,     // File name
+  isDirectory: false       // Whether it&#039;s a directory
+}</code></pre></p>
+<strong><code>file.created</code></strong>
+Published when a file or folder is created.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/new-file.txt&#039;,
+  name: &#039;new-file.txt&#039;,
+  isDirectory: false      // true for folders
+}</code></pre></p>
+<strong><code>file.deleted</code></strong>
+Published when a file is deleted.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/deleted.txt&#039;
+}</code></pre></p>
+<strong><code>file.renamed</code></strong>
+Published when a file is renamed.
+<p>Payload:
+<pre><code class="language-javascript">{
+  oldPath: &#039;/old-name.txt&#039;,
+  newPath: &#039;/new-name.txt&#039;
+}</code></pre></p>
+<strong><code>file.content-loaded</code></strong>
+Published in response to a <code>file.load</code> event.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/example.txt&#039;,
+  content: &#039;File contents here...&#039;
+}</code></pre></p>
+<p>#### Subscribed Events</p>
+<strong><code>file.save</code></strong>
+Saves a file with the provided content.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/save-me.txt&#039;,
+  content: &#039;Content to save&#039;
+}</code></pre></p>
+<strong><code>file.load</code></strong>
+Loads a file and publishes its content via <code>file.content-loaded</code>.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/load-me.txt&#039;
+}</code></pre></p>
+<strong><code>file.delete</code></strong>
+Deletes a file.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/delete-me.txt&#039;
+}</code></pre></p>
+<strong><code>file.create</code></strong>
+Creates a file with optional content.
+<p>Payload:
+<pre><code class="language-javascript">{
+  path: &#039;/new.txt&#039;,
+  content: &#039;Optional initial content&#039;  // Defaults to empty string
+}</code></pre></p>
+<h3>Complete Working Example</h3>
+<p>Here's a complete example showing <code>pan-files</code> integrated with the PAN bus:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-files.mjs&#039;;
+
+    // Wait for components to load
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const bus = document.querySelector(&#039;pan-bus&#039;);
+
+      // Listen for file selections
+      bus.subscribe(&#039;file.selected&#039;, (msg) =&gt; {
+        console.log(&#039;File selected:&#039;, msg.data.path);
+
+        // Load the file&#039;s contents
+        bus.publish(&#039;file.load&#039;, { path: msg.data.path });
+      });
+
+      // Listen for file content
+      bus.subscribe(&#039;file.content-loaded&#039;, (msg) =&gt; {
+        console.log(&#039;File content:&#039;, msg.data.content);
+        document.getElementById(&#039;preview&#039;).textContent = msg.data.content;
+      });
+
+      // Programmatic file operations
+      window.createQuickNote = async () =&gt; {
+        const files = document.querySelector(&#039;pan-files&#039;);
+        const timestamp = new Date().toISOString();
+        await files.writeFile(`/note-${Date.now()}.txt`,
+          `Note created at ${timestamp}`);
+        await files.refresh();
+      };
+    });
+  &lt;/script&gt;
+  &lt;style&gt;
+    body {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 1rem;
+      height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    pan-files {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    #preview {
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      font-family: monospace;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;pan-files filter=&quot;.txt,.md&quot;&gt;&lt;/pan-files&gt;
+
+  &lt;div&gt;
+    &lt;button onclick=&quot;createQuickNote()&quot;&gt;Create Quick Note&lt;/button&gt;
+    &lt;pre id=&quot;preview&quot;&gt;Select a file to preview...&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Related Components</h3>
+<ul><li><strong><code>pan-markdown-editor</code></strong>: Use alongside <code>pan-files</code> for editing markdown files</li>
+<li><strong><code>pan-bus</code></strong>: Required for event-based file operations</li>
+<li><strong><code>pan-markdown-renderer</code></strong>: Display rendered markdown from files</li>
+</ul>
+<h3>Common Issues and Solutions</h3>
+<strong>Issue: Files don't persist after closing the browser</strong>
+<p>OPFS storage persists by default, but it can be cleared if:</p>
+<ul><li>User clears browser data</li>
+<li>Browser is in private/incognito mode</li>
+<li>Storage quota is exceeded</li>
+</ul>
+Solution: Inform users about persistence limitations and provide export functionality for critical data.
+<strong>Issue: "Failed to initialize OPFS" error</strong>
+<p>Cause: OPFS requires a secure context (HTTPS) and isn't available in all browsers.</p>
+<p>Solution:</p>
+<ul><li>Ensure your site runs on HTTPS (or localhost for development)</li>
+<li>Check browser support: OPFS works in Chrome 102+, Edge 102+, Opera 88+</li>
+<li>Provide fallback storage (IndexedDB) for unsupported browsers</li>
+</ul>
+<strong>Issue: File list doesn't update after programmatic changes</strong>
+<p>Cause: The UI doesn't automatically refresh after calling <code>writeFile()</code> or <code>deleteFile()</code>.</p>
+<p>Solution: Call <code>refresh()</code> after file operations:
+<pre><code class="language-javascript">await files.writeFile(&#039;/new.txt&#039;, &#039;content&#039;);
+await files.refresh();</code></pre></p>
+<strong>Issue: Can't access files from network requests or other origins</strong>
+<p>Cause: OPFS is origin-private—files aren't accessible via URLs or from other domains.</p>
+<p>Solution: This is by design for security. To share files, explicitly read content and send via fetch/WebSocket.</p>
+<hr>
+<h2>pan-markdown-editor: Rich Markdown Editor</h2>
+<p>The <code>pan-markdown-editor</code> component is a full-featured markdown editor with formatting toolbar, live preview, keyboard shortcuts, and auto-save capabilities.</p>
+<h3>Overview and Purpose</h3>
+<code>pan-markdown-editor</code> transforms a simple textarea into a powerful markdown editing environment. It's designed for content-heavy applications like note-taking apps, documentation tools, blogs, and content management systems.
+<p>The editor provides a rich formatting toolbar with common markdown operations, supports keyboard shortcuts for power users, and includes a live preview pane that renders markdown as you type. It integrates seamlessly with the PAN bus, broadcasting changes and responding to external commands.</p>
+<p>Key features include:</p>
+<ul><li>Rich formatting toolbar (bold, italic, headings, lists, etc.)</li>
+<li>Keyboard shortcuts (Ctrl+B, Ctrl+I, Ctrl+K, etc.)</li>
+<li>Optional live preview with split-pane view</li>
+<li>Auto-indent and list continuation</li>
+<li>Word and character count</li>
+<li>Optional auto-save with debouncing</li>
+<li>Tab key support for indentation</li>
+</ul>
+<h3>When to Use pan-markdown-editor</h3>
+<strong>Use <code>pan-markdown-editor</code> when:</strong>
+<ul><li>Building markdown-based content applications</li>
+<li>You need a WYSIWYG-lite editing experience</li>
+<li>Users benefit from a formatting toolbar</li>
+<li>You want keyboard shortcuts for common formatting</li>
+<li>Live preview helps users understand markdown rendering</li>
+</ul>
+<strong>Don't use <code>pan-markdown-editor</code> when:</strong>
+<ul><li>You need WYSIWYG rich text editing (use a rich text editor)</li>
+<li>Users don't know markdown (provide alternatives or training)</li>
+<li>You're editing non-markdown content (use plain textarea)</li>
+<li>You need mobile-optimized input (the toolbar can be cramped)</li>
+</ul>
+<h3>Installation and Setup</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-markdown-editor.mjs&#039;;
+    import &#039;./pan-markdown-renderer.mjs&#039;; // Required for preview mode
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-markdown-editor
+    value=&quot;# Hello World&quot;
+    preview=&quot;true&quot;&gt;
+  &lt;/pan-markdown-editor&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Attributes Reference</h3>
+<p>#### <code>value</code>
+<ul><li><strong>Type</strong>: <code>String</code></li>
+<li><strong>Default</strong>: <code>''</code></li>
+<li><strong>Description</strong>: Initial markdown content for the editor.</li>
+</ul>
+<pre><code class="language-html">&lt;pan-markdown-editor value=&quot;# My Document
+
+Start writing here...&quot;&gt;&lt;/pan-markdown-editor&gt;</code></pre></p>
+<p>#### <code>placeholder</code>
+<ul><li><strong>Type</strong>: <code>String</code></li>
+<li><strong>Default</strong>: <code>'Start writing...'</code></li>
+<li><strong>Description</strong>: Placeholder text shown when the editor is empty.</li>
+</ul>
+<pre><code class="language-html">&lt;pan-markdown-editor placeholder=&quot;Enter your markdown here...&quot;&gt;&lt;/pan-markdown-editor&gt;</code></pre></p>
+<p>#### <code>preview</code>
+<ul><li><strong>Type</strong>: <code>Boolean</code> (as string)</li>
+<li><strong>Default</strong>: <code>'false'</code></li>
+<li><strong>Description</strong>: Whether to show the live preview pane alongside the editor.</li>
+</ul>
+<pre><code class="language-html">&lt;pan-markdown-editor preview=&quot;true&quot;&gt;&lt;/pan-markdown-editor&gt;</code></pre></p>
+<p>#### <code>autosave</code>
+<ul><li><strong>Type</strong>: <code>Boolean</code> (as string)</li>
+<li><strong>Default</strong>: <code>'false'</code></li>
+<li><strong>Description</strong>: Whether to enable auto-save with 1-second debouncing. When enabled, publishes <code>markdown.saved</code> events automatically.</li>
+</ul>
+<pre><code class="language-html">&lt;pan-markdown-editor autosave=&quot;true&quot;&gt;&lt;/pan-markdown-editor&gt;</code></pre></p>
+<h3>Methods Reference</h3>
+<p>#### <code>setValue(value)</code>
+Sets the editor content programmatically.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul>
+  - <code>value</code> (String): New markdown content
+<ul><li><strong>Returns</strong>: <code>void</code></li>
+<li><strong>Side Effects</strong>: Updates stats, preview, and triggers change events</li>
+</ul>
+<pre><code class="language-javascript">const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+editor.setValue(&#039;# New Content\n\nThis replaces all existing content.&#039;);</code></pre>
+<p>#### <code>getValue()</code>
+Returns the current editor content.</p>
+<ul><li><strong>Parameters</strong>: None</li>
+<li><strong>Returns</strong>: <code>String</code> - Current markdown content</li>
+</ul>
+<pre><code class="language-javascript">const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+const markdown = editor.getValue();
+console.log(markdown);</code></pre>
+<p>#### <code>insertText(text)</code>
+Inserts text at the current cursor position.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul>
+  - <code>text</code> (String): Text to insert
+<ul><li><strong>Returns</strong>: <code>void</code></li>
+</ul>
+<pre><code class="language-javascript">const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+editor.insertText(&#039;\n\n---\n\n&#039;); // Insert horizontal rule</code></pre>
+<p>#### <code>focus()</code>
+Focuses the editor textarea.</p>
+<ul><li><strong>Parameters</strong>: None</li>
+<li><strong>Returns</strong>: <code>void</code></li>
+</ul>
+<pre><code class="language-javascript">const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+editor.focus();</code></pre>
+<h3>Toolbar Actions</h3>
+<p>The toolbar provides buttons for common markdown operations. Each button has a corresponding keyboard shortcut.</p>
+<p>| Button | Action | Keyboard | Result |
+|--------|--------|----------|--------|
+| <strong>B</strong> | Bold | Ctrl+B | <code><strong>text</strong></code> |
+| <strong>I</strong> | Italic | Ctrl+I | <code><em>text</em></code> |
+| <strong>S</strong> | Strikethrough | - | <code>~~text~~</code> |
+| H1-H3 | Headings | - | <code># text</code> |
+| <em> List | Bullet list | - | <code></em> item</code> |
+| 1. List | Numbered list | - | <code>1. item</code> |
+| [v] Task | Task list | - | <code>- [ ] task</code> |
+| [link] Link | Insert link | Ctrl+K | <code><a href="url">text</a></code> |
+| [image] Image | Insert image | - | <code>!<a href="url">alt</a></code> |
+| { } | Inline code | - | `<code> </code>code<code> </code><code> |
+| </> | Code block | - | </code> ``<code>lang\ncode\n</code>`<code> </code> |
+| " Quote | Blockquote | - | <code>> quote</code> |
+| - | Horizontal rule | - | <code>---</code> |
+| [+] Table | Insert table | - | Markdown table template |
+| [eye] Preview | Toggle preview | - | Shows/hides preview pane |</p>
+<h3>Keyboard Shortcuts</h3>
+<ul><li><strong>Ctrl+B</strong>: Bold selection</li>
+<li><strong>Ctrl+I</strong>: Italic selection</li>
+<li><strong>Ctrl+K</strong>: Insert link</li>
+<li><strong>Ctrl+S</strong>: Save (publishes <code>markdown.saved</code> event)</li>
+<li><strong>Tab</strong>: Insert two spaces (for indentation)</li>
+<li><strong>Enter</strong>: Auto-continue lists (bullets, numbers, tasks)</li>
+</ul>
+<h3>Events Reference</h3>
+<p>#### Published Events</p>
+<strong><code>markdown.changed</code></strong>
+Published whenever the content changes.
+<p>Payload:
+<pre><code class="language-javascript">{
+  content: &#039;# Markdown content&#039;,
+  wordCount: 42,
+  charCount: 256
+}</code></pre></p>
+<strong><code>markdown.saved</code></strong>
+Published when Ctrl+S is pressed or auto-save triggers.
+<p>Payload:
+<pre><code class="language-javascript">{
+  content: &#039;# Current markdown content&#039;
+}</code></pre></p>
+<p>#### Subscribed Events</p>
+<strong><code>markdown.set-content</code></strong>
+Sets the editor content externally.
+<p>Payload:
+<pre><code class="language-javascript">{
+  content: &#039;# New content to set&#039;
+}</code></pre></p>
+<strong><code>markdown.get-content</code></strong>
+Requests current content. The editor responds by publishing <code>markdown.content-response</code>.
+<p>Payload: None (empty object)</p>
+<p>Response via <code>markdown.content-response</code>:
+<pre><code class="language-javascript">{
+  content: &#039;# Current content&#039;
+}</code></pre></p>
+<h3>Complete Working Example</h3>
+<p>Here's a markdown editor integrated with file storage:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-files.mjs&#039;;
+    import &#039;./pan-markdown-editor.mjs&#039;;
+    import &#039;./pan-markdown-renderer.mjs&#039;;
+
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const bus = document.querySelector(&#039;pan-bus&#039;);
+      let currentFile = null;
+
+      // Load file content into editor when selected
+      bus.subscribe(&#039;file.selected&#039;, (msg) =&gt; {
+        if (msg.data.path.endsWith(&#039;.md&#039;)) {
+          currentFile = msg.data.path;
+          bus.publish(&#039;file.load&#039;, { path: msg.data.path });
+        }
+      });
+
+      bus.subscribe(&#039;file.content-loaded&#039;, (msg) =&gt; {
+        const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+        editor.setValue(msg.data.content);
+        document.getElementById(&#039;filename&#039;).textContent =
+          msg.data.path.split(&#039;/&#039;).pop();
+      });
+
+      // Save editor content back to file
+      bus.subscribe(&#039;markdown.saved&#039;, async (msg) =&gt; {
+        if (currentFile) {
+          bus.publish(&#039;file.save&#039;, {
+            path: currentFile,
+            content: msg.data.content
+          });
+          showNotification(&#039;Saved!&#039;);
+        }
+      });
+
+      window.createNewNote = () =&gt; {
+        currentFile = `/note-${Date.now()}.md`;
+        document.getElementById(&#039;filename&#039;).textContent =
+          currentFile.split(&#039;/&#039;).pop();
+        const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+        editor.setValue(&#039;# New Note\n\n&#039;);
+        editor.focus();
+      };
+
+      function showNotification(message) {
+        const notif = document.getElementById(&#039;notification&#039;);
+        notif.textContent = message;
+        notif.style.display = &#039;block&#039;;
+        setTimeout(() =&gt; notif.style.display = &#039;none&#039;, 2000);
+      }
+    });
+  &lt;/script&gt;
+  &lt;style&gt;
+    body {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+    }
+    .toolbar {
+      padding: 1rem;
+      border-bottom: 1px solid #ccc;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    #filename {
+      font-weight: bold;
+      flex: 1;
+    }
+    #notification {
+      display: none;
+      background: #4caf50;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+    }
+    .content {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 1rem;
+      padding: 1rem;
+      overflow: hidden;
+    }
+    pan-files, pan-markdown-editor {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      overflow: auto;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;div class=&quot;toolbar&quot;&gt;
+    &lt;span id=&quot;filename&quot;&gt;No file selected&lt;/span&gt;
+    &lt;button onclick=&quot;createNewNote()&quot;&gt;New Note&lt;/button&gt;
+    &lt;div id=&quot;notification&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;div class=&quot;content&quot;&gt;
+    &lt;pan-files filter=&quot;.md&quot;&gt;&lt;/pan-files&gt;
+    &lt;pan-markdown-editor
+      preview=&quot;true&quot;
+      autosave=&quot;true&quot;
+      placeholder=&quot;Select a file or create a new note...&quot;&gt;
+    &lt;/pan-markdown-editor&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Related Components</h3>
+<ul><li><strong><code>pan-files</code></strong>: Store and retrieve markdown files</li>
+<li><strong><code>pan-markdown-renderer</code></strong>: Display rendered output</li>
+<li><strong><code>pan-bus</code></strong>: Coordinate between editor and other components</li>
+</ul>
+<h3>Common Issues and Solutions</h3>
+<strong>Issue: Toolbar buttons don't work on mobile</strong>
+<p>Cause: Mobile browsers handle focus and selection differently.</p>
+<p>Solution: The component is optimized for desktop. For mobile, consider hiding the toolbar and relying on keyboard shortcuts or providing a simplified mobile UI.</p>
+<strong>Issue: Preview pane doesn't update</strong>
+<p>Cause: <code>pan-markdown-renderer</code> component isn't loaded.</p>
+<p>Solution: Ensure you import both components:
+<pre><code class="language-javascript">import &#039;./pan-markdown-editor.mjs&#039;;
+import &#039;./pan-markdown-renderer.mjs&#039;;</code></pre></p>
+<strong>Issue: Large documents cause lag</strong>
+<p>Cause: Real-time rendering of very large documents can be slow.</p>
+<p>Solution:</p>
+<ul><li>Disable preview for large documents</li>
+<li>Add debouncing to preview updates</li>
+<li>Split large documents into smaller sections</li>
+</ul>
+<strong>Issue: Keyboard shortcuts conflict with browser shortcuts</strong>
+<p>Cause: Some browsers intercept Ctrl+S, Ctrl+K, etc.</p>
+<p>Solution: The component calls <code>preventDefault()</code> for most shortcuts, but browser behavior varies. Consider documenting known conflicts.</p>
+<hr>
+<h2>pan-markdown-renderer: Markdown Display</h2>
+<p>The <code>pan-markdown-renderer</code> component takes markdown text and renders it as formatted HTML with syntax highlighting, tables, and GitHub-flavored markdown support.</p>
+<h3>Overview and Purpose</h3>
+<code>pan-markdown-renderer</code> is a read-only component that displays markdown content as formatted HTML. It's the display counterpart to <code>pan-markdown-editor</code>—while the editor lets users write markdown, the renderer shows them what it looks like.
+<p>The renderer implements a custom markdown parser that supports standard markdown syntax plus GitHub-flavored extensions like task lists and tables. It's designed to be lightweight (no external dependencies), secure (HTML sanitization), and styleable (CSS custom properties).</p>
+<p>Key features include:</p>
+<ul><li>Complete markdown syntax support</li>
+<li>GitHub-flavored markdown (tables, task lists)</li>
+<li>Safe HTML rendering (sanitized by default)</li>
+<li>Syntax highlighting structure (CSS-based)</li>
+<li>Responsive design</li>
+<li>Custom styling via CSS variables</li>
+</ul>
+<h3>When to Use pan-markdown-renderer</h3>
+<strong>Use <code>pan-markdown-renderer</code> when:</strong>
+<ul><li>Displaying markdown content to users</li>
+<li>Building preview panes for editors</li>
+<li>Rendering blog posts, documentation, or comments</li>
+<li>You need sanitized HTML output from markdown</li>
+<li>You want consistent markdown rendering across your app</li>
+</ul>
+<strong>Don't use <code>pan-markdown-renderer</code> when:</strong>
+<ul><li>You need a full-featured markdown parser (use marked.js, markdown-it)</li>
+<li>You require advanced syntax highlighting (use Prism or highlight.js)</li>
+<li>You're rendering non-markdown content</li>
+<li>You need to edit content (use <code>pan-markdown-editor</code>)</li>
+</ul>
+<h3>Installation and Setup</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-markdown-renderer.mjs&#039;;
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-markdown-renderer content=&quot;# Hello World
+
+This is **bold** and this is *italic*.&quot;&gt;&lt;/pan-markdown-renderer&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Attributes Reference</h3>
+<p>#### <code>content</code>
+<ul><li><strong>Type</strong>: <code>String</code></li>
+<li><strong>Default</strong>: <code>''</code></li>
+<li><strong>Description</strong>: Markdown content to render. Changes to this attribute trigger re-rendering.</li>
+</ul>
+<pre><code class="language-html">&lt;pan-markdown-renderer content=&quot;# Title
+
+Paragraph text here.&quot;&gt;&lt;/pan-markdown-renderer&gt;</code></pre></p>
+<p>#### <code>sanitize</code>
+<ul><li><strong>Type</strong>: <code>Boolean</code> (as string)</li>
+<li><strong>Default</strong>: <code>'true'</code></li>
+<li><strong>Description</strong>: Whether to sanitize HTML in markdown content. When true, raw HTML is escaped. Set to false only if you trust the content source.</li>
+</ul>
+<pre><code class="language-html">&lt;!-- Allow raw HTML (use with caution) --&gt;
+&lt;pan-markdown-renderer
+  content=&quot;# Title
+
+&lt;div class=&#039;custom&#039;&gt;Raw HTML&lt;/div&gt;&quot;
+  sanitize=&quot;false&quot;&gt;
+&lt;/pan-markdown-renderer&gt;</code></pre></p>
+<h3>Methods Reference</h3>
+<p>#### <code>setContent(content)</code>
+Sets the markdown content programmatically and triggers rendering.</p>
+<ul><li><strong>Parameters</strong>:</li>
+</ul>
+  - <code>content</code> (String): Markdown content to render
+<ul><li><strong>Returns</strong>: <code>void</code></li>
+</ul>
+<pre><code class="language-javascript">const renderer = document.querySelector(&#039;pan-markdown-renderer&#039;);
+renderer.setContent(&#039;# Dynamic Content\n\nUpdated at runtime.&#039;);</code></pre>
+<p>#### <code>getContent()</code>
+Returns the current markdown content (not the rendered HTML).</p>
+<ul><li><strong>Parameters</strong>: None</li>
+<li><strong>Returns</strong>: <code>String</code> - Current markdown content</li>
+</ul>
+<pre><code class="language-javascript">const renderer = document.querySelector(&#039;pan-markdown-renderer&#039;);
+console.log(renderer.getContent());</code></pre>
+<p>#### <code>getHtml()</code>
+Returns the rendered HTML output.</p>
+<ul><li><strong>Parameters</strong>: None</li>
+<li><strong>Returns</strong>: <code>String</code> - Rendered HTML</li>
+</ul>
+<pre><code class="language-javascript">const renderer = document.querySelector(&#039;pan-markdown-renderer&#039;);
+const html = renderer.getHtml();
+console.log(html); // &quot;&lt;h1&gt;Title&lt;/h1&gt;&lt;p&gt;Content...&lt;/p&gt;&quot;</code></pre>
+<h3>Supported Markdown Syntax</h3>
+<p>The renderer supports the following markdown features:</p>
+<strong>Headings</strong>
+<pre><code class="language-markdown"># H1
+## H2
+### H3
+#### H4
+##### H5
+###### H6</code></pre>
+<strong>Emphasis</strong>
+<pre><code class="language-markdown">**bold** or __bold__
+*italic* or _italic_
+~~strikethrough~~</code></pre>
+<strong>Lists</strong>
+<pre><code class="language-markdown">* Bullet item
+* Another item
+
+1. Numbered item
+2. Another item
+
+- [ ] Unchecked task
+- [x] Checked task</code></pre>
+<strong>Links and Images</strong>
+<pre><code class="language-markdown">[Link text](https://example.com)
+![Alt text](https://example.com/image.png)</code></pre>
+<strong>Code</strong>
+<pre><code class="language-markdown">Inline `code`</code></pre>javascript
+// Code block with language
+function hello() {
+  console.log('Hello');
+}
+<pre><code class="language-plaintext"></code></pre>
+<strong>Blockquotes</strong>
+<pre><code class="language-markdown">&gt; This is a quote
+&gt; with multiple lines</code></pre>
+<strong>Horizontal Rules</strong>
+<pre><code class="language-markdown">---
+***
+___</code></pre>
+<strong>Tables</strong>
+<pre><code class="language-markdown">| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |</code></pre>
+<h3>Styling with CSS Variables</h3>
+<p>The renderer uses CSS custom properties for easy theming:</p>
+<pre><code class="language-css">pan-markdown-renderer {
+  /* Text colors */
+  --color-text: #1e293b;
+  --color-text-muted: #64748b;
+
+  /* Backgrounds */
+  --color-bg-alt: #f8fafc;
+  --color-border: #e2e8f0;
+
+  /* Code blocks */
+  --color-code-bg: #1e293b;
+  --color-code-text: #e2e8f0;
+
+  /* Links */
+  --color-primary: #006699;
+
+  /* Fonts */
+  --font-mono: &#039;Courier New&#039;, monospace;
+}</code></pre>
+<p>Example: Dark mode theme
+<pre><code class="language-css">pan-markdown-renderer.dark-mode {
+  --color-text: #e2e8f0;
+  --color-text-muted: #94a3b8;
+  --color-bg-alt: #1e293b;
+  --color-border: #334155;
+  --color-code-bg: #0f172a;
+  --color-code-text: #e2e8f0;
+  --color-primary: #38bdf8;
+}</code></pre></p>
+<h3>Events Reference</h3>
+<p>#### Subscribed Events</p>
+<strong><code>markdown.render</code></strong>
+Triggers rendering with new content.
+<p>Payload:
+<pre><code class="language-javascript">{
+  content: &#039;# Content to render&#039;
+}</code></pre></p>
+<p>Example:
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+bus.publish(&#039;markdown.render&#039;, {
+  content: &#039;# Hello from PAN bus&#039;
+});</code></pre></p>
+<h3>Complete Working Example</h3>
+<p>Here's a complete example showing a markdown documentation viewer:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-markdown-renderer.mjs&#039;;
+
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const bus = document.querySelector(&#039;pan-bus&#039;);
+      const renderer = document.querySelector(&#039;pan-markdown-renderer&#039;);
+
+      // Sample documentation sections
+      const docs = {
+        intro: `# Getting Started
+
+Welcome to our documentation! This guide will help you understand the basics.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- A modern web browser
+- Basic knowledge of HTML and JavaScript
+- 15 minutes of free time
+
+## Installation
+
+1. Download the package
+2. Extract to your project
+3. Import the components
+
+\`\`\`javascript
+import &#039;./components/app.mjs&#039;;
+\`\`\``,
+
+        api: `# API Reference
+
+## Core Methods
+
+### \`initialize(config)\`
+
+Initializes the application with the provided configuration.
+
+**Parameters:**
+- \`config\` (Object): Configuration object
+  - \`debug\` (Boolean): Enable debug mode
+  - \`theme\` (String): Theme name
+
+**Returns:** Promise&lt;void&gt;
+
+**Example:**
+\`\`\`javascript
+await initialize({
+  debug: true,
+  theme: &#039;dark&#039;
+});
+\`\`\``,
+
+        examples: `# Examples
+
+## Hello World
+
+The simplest example:
+
+\`\`\`html
+&lt;hello-world&gt;&lt;/hello-world&gt;
+\`\`\`
+
+## Task List
+
+- [x] Create component
+- [x] Write documentation
+- [ ] Deploy to production
+
+## Data Table
+
+| Feature | Supported | Version |
+|---------|-----------|---------|
+| Import  | [check] | 1.0 |
+| Export  | [check] | 1.0 |
+| Sync    | [hourglass] | 2.0 |`
+      };
+
+      // Navigation
+      window.showDoc = (section) =&gt; {
+        renderer.setContent(docs[section]);
+
+        // Update active state
+        document.querySelectorAll(&#039;nav button&#039;).forEach(btn =&gt; {
+          btn.classList.toggle(&#039;active&#039;, btn.dataset.section === section);
+        });
+      };
+
+      // Show initial doc
+      showDoc(&#039;intro&#039;);
+    });
+  &lt;/script&gt;
+  &lt;style&gt;
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      height: 100vh;
+    }
+    nav {
+      background: #f8fafc;
+      padding: 1rem;
+      border-right: 1px solid #e2e8f0;
+    }
+    nav h2 {
+      margin-top: 0;
+      font-size: 1rem;
+      color: #64748b;
+    }
+    nav button {
+      display: block;
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      border: none;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.15s;
+    }
+    nav button:hover {
+      background: #e2e8f0;
+    }
+    nav button.active {
+      background: #006699;
+      color: white;
+    }
+    main {
+      padding: 2rem;
+      overflow-y: auto;
+    }
+    pan-markdown-renderer {
+      display: block;
+      max-width: 800px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;nav&gt;
+    &lt;h2&gt;Documentation&lt;/h2&gt;
+    &lt;button data-section=&quot;intro&quot; onclick=&quot;showDoc(&#039;intro&#039;)&quot; class=&quot;active&quot;&gt;
+      Getting Started
+    &lt;/button&gt;
+    &lt;button data-section=&quot;api&quot; onclick=&quot;showDoc(&#039;api&#039;)&quot;&gt;
+      API Reference
+    &lt;/button&gt;
+    &lt;button data-section=&quot;examples&quot; onclick=&quot;showDoc(&#039;examples&#039;)&quot;&gt;
+      Examples
+    &lt;/button&gt;
+  &lt;/nav&gt;
+
+  &lt;main&gt;
+    &lt;pan-markdown-renderer&gt;&lt;/pan-markdown-renderer&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Related Components</h3>
+<ul><li><strong><code>pan-markdown-editor</code></strong>: Edit markdown content</li>
+<li><strong><code>pan-files</code></strong>: Store markdown files</li>
+<li><strong><code>pan-bus</code></strong>: Coordinate rendering with other components</li>
+</ul>
+<h3>Common Issues and Solutions</h3>
+<strong>Issue: Code blocks don't have syntax highlighting</strong>
+<p>Cause: The renderer provides structure but not syntax coloring.</p>
+<p>Solution: Add a CSS-based syntax highlighter or a library like Prism.js:
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;prism.css&quot;&gt;
+&lt;script src=&quot;prism.js&quot;&gt;&lt;/script&gt;</code></pre></p>
+<strong>Issue: Tables render incorrectly</strong>
+<p>Cause: Table markdown must follow strict formatting with alignment rows.</p>
+<p>Solution: Ensure tables have a header separator row:
+<pre><code class="language-markdown">| Header 1 | Header 2 |
+|----------|----------|  &lt;- Required separator
+| Cell 1   | Cell 2   |</code></pre></p>
+<strong>Issue: Raw HTML appears in output</strong>
+<p>Cause: HTML sanitization is enabled by default.</p>
+<p>Solution: Only disable sanitization if you trust the content source:
+<pre><code class="language-html">&lt;pan-markdown-renderer sanitize=&quot;false&quot; content=&quot;&lt;div&gt;Raw HTML&lt;/div&gt;&quot;&gt;
+&lt;/pan-markdown-renderer&gt;</code></pre></p>
+<strong>Issue: Custom markdown extensions not supported</strong>
+<p>Cause: The built-in parser implements standard markdown only.</p>
+<p>Solution: For advanced features, consider replacing the internal parser with markdown-it or marked.js and subclassing the component.</p>
+<strong>Issue: Markdown doesn't wrap in mobile views</strong>
+<p>Cause: Long code blocks or wide tables can overflow.</p>
+<p>Solution: Add responsive styling:
+<pre><code class="language-css">pan-markdown-renderer {
+  overflow-x: auto;
+}
+pan-markdown-renderer pre {
+  max-width: 100%;
+  overflow-x: auto;
+}</code></pre></p>
+<hr>
+<h2>Component Integration Patterns</h2>
+<p>The three components work best when integrated together. Here are common patterns:</p>
+<h3>Pattern 1: Markdown Note-Taking App</h3>
+<pre><code class="language-javascript">// Connect file selection -&gt; editor -&gt; auto-save -&gt; file storage
+bus.subscribe(&#039;file.selected&#039;, (msg) =&gt; {
+  bus.publish(&#039;file.load&#039;, { path: msg.data.path });
+});
+
+bus.subscribe(&#039;file.content-loaded&#039;, (msg) =&gt; {
+  const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+  editor.setValue(msg.data.content);
+});
+
+bus.subscribe(&#039;markdown.saved&#039;, (msg) =&gt; {
+  bus.publish(&#039;file.save&#039;, {
+    path: currentFile,
+    content: msg.data.content
+  });
+});</code></pre>
+<h3>Pattern 2: Documentation Viewer</h3>
+<pre><code class="language-javascript">// Render markdown files as formatted documentation
+bus.subscribe(&#039;file.selected&#039;, async (msg) =&gt; {
+  if (msg.data.path.endsWith(&#039;.md&#039;)) {
+    const files = document.querySelector(&#039;pan-files&#039;);
+    const content = await files.readFile(msg.data.path);
+
+    const renderer = document.querySelector(&#039;pan-markdown-renderer&#039;);
+    renderer.setContent(content);
+  }
+});</code></pre>
+<h3>Pattern 3: Split-View Editor</h3>
+<pre><code class="language-html">&lt;div class=&quot;split-view&quot;&gt;
+  &lt;pan-markdown-editor&gt;&lt;/pan-markdown-editor&gt;
+  &lt;pan-markdown-renderer&gt;&lt;/pan-markdown-renderer&gt;
+&lt;/div&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  // Sync editor to renderer
+  bus.subscribe(&#039;markdown.changed&#039;, (msg) =&gt; {
+    const renderer = document.querySelector(&#039;pan-markdown-renderer&#039;);
+    renderer.setContent(msg.data.content);
+  });
+&lt;/script&gt;</code></pre>
+<hr>
+<h2>Conclusion</h2>
+<p>LARC's UI components demonstrate the power of web components: they're self-contained, reusable, and work with or without a framework. <code>pan-files</code> handles storage, <code>pan-markdown-editor</code> handles input, and <code>pan-markdown-renderer</code> handles display—each focused on doing one thing well.</p>
+<p>The PAN bus ties them together, allowing components to communicate without tight coupling. You can use these components individually or compose them into full applications. And because they're built on web standards, they'll work in browsers long after today's frameworks fade into obscurity.</p>
+<p>In the next chapter, we'll explore advanced component patterns: building custom UI components that follow these same principles, creating reusable component libraries, and designing component APIs that stand the test of time.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/building-with-larc/chapter-23-ui-components.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

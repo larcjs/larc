@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client-Side Routing · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Client-Side Routing">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>08-routing</span>
+      </div>
+      <article class="docs-content">
+        <h1>Client-Side Routing</h1>
+<h2>Routing Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Browser&quot;
+        URL[URL Bar&lt;br/&gt;/users/123]
+        History[History API]
+        Links[&quot;&amp;lt;a href=&#039;/users/123&#039;&amp;gt;&quot;]
+    end
+
+    subgraph &quot;pan-router&quot;
+        Router[Router Component]
+        Routes[Route Registry&lt;br/&gt;{path, component, guard}]
+        Matcher[Pattern Matcher]
+        Outlet[Router Outlet&lt;br/&gt;&amp;lt;div&amp;gt;]
+    end
+
+    subgraph &quot;Pages&quot;
+        Home[home-page]
+        Users[user-page]
+        NotFound[not-found-page]
+    end
+
+    URL --&gt; Router
+    Links -.intercept click.-&gt; Router
+    History &lt;-.pushState.-&gt; Router
+
+    Router --&gt; Routes
+    Routes --&gt; Matcher
+    Matcher --&gt;|match| Outlet
+
+    Outlet --&gt;|render| Home
+    Outlet --&gt;|render| Users
+    Outlet --&gt;|render| NotFound
+
+    style Router fill:#764ba2,color:#fff
+    style Outlet fill:#667eea,color:#fff</code></pre>
+<h2>Navigation Flow</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant Link as &amp;lt;a href=&quot;/users/123&quot;&amp;gt;
+    participant Router as pan-router
+    participant Guard as Route Guard
+    participant Page as user-page
+    participant Browser
+
+    User-&gt;&gt;Link: Click
+    Link-&gt;&gt;Router: preventDefault()&lt;br/&gt;navigate(&#039;/users/123&#039;)
+
+    Router-&gt;&gt;Router: Match route pattern
+    Router-&gt;&gt;Guard: Check guard(&#039;auth&#039;)
+
+    alt Guard Passes
+        Guard--&gt;&gt;Router: true
+
+        Router-&gt;&gt;Browser: pushState(&#039;/users/123&#039;)
+        Router-&gt;&gt;Router: Extract params {id: &#039;123&#039;}
+        Router-&gt;&gt;Page: Create component&lt;br/&gt;setAttribute(&#039;id&#039;, &#039;123&#039;)
+        Router-&gt;&gt;Router: Replace outlet content
+
+        Page-&gt;&gt;Page: connectedCallback()
+        Page-&gt;&gt;Page: Load data
+    else Guard Fails
+        Guard--&gt;&gt;Router: false
+        Router-&gt;&gt;Router: Redirect to /login
+    end</code></pre>
+<h2>Route Matching Algorithm</h2>
+<pre><code class="language-mermaid">graph TB
+    Start[URL: /users/123/posts/456]
+
+    Start --&gt; Parse[Parse URL&lt;br/&gt;[&#039;users&#039;, &#039;123&#039;, &#039;posts&#039;, &#039;456&#039;]]
+
+    Parse --&gt; Routes{Check Routes}
+
+    Routes --&gt; R1[&quot;/users/:id/posts/:postId&quot;]
+    Routes --&gt; R2[&quot;/users/:id&quot;]
+    Routes --&gt; R3[&quot;/posts/:id&quot;]
+    Routes --&gt; R4[&quot;*&quot;]
+
+    R1 --&gt; Match1{Match?}
+    Match1 --&gt;|Yes| Extract1[Extract params&lt;br/&gt;{id: &#039;123&#039;, postId: &#039;456&#039;}]
+    Match1 --&gt;|No| R2
+
+    R2 --&gt; Match2{Match?}
+    Match2 --&gt;|No| R3
+
+    R3 --&gt; Match3{Match?}
+    Match3 --&gt;|No| R4
+
+    R4 --&gt; Fallback[404 Not Found]
+
+    Extract1 --&gt; Render[Render Component&lt;br/&gt;with params]
+
+    style Extract1 fill:#48bb78,color:#fff
+    style Fallback fill:#f56565,color:#fff</code></pre>
+<h2>Nested Routes</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Route Tree&quot;
+        Root[&quot;/&quot;]
+
+        Root --&gt; Dashboard[&quot;/dashboard&quot;]
+        Root --&gt; Settings[&quot;/settings&quot;]
+
+        Settings --&gt; Profile[&quot;/settings/profile&quot;]
+        Settings --&gt; Security[&quot;/settings/security&quot;]
+        Settings --&gt; Billing[&quot;/settings/billing&quot;]
+    end
+
+    subgraph &quot;Component Tree&quot;
+        DashComp[&quot;&amp;lt;dashboard-page&amp;gt;&quot;]
+
+        SettingsComp[&quot;&amp;lt;settings-layout&amp;gt;&quot;]
+
+        SettingsComp --&gt; ProfileComp[&quot;&amp;lt;profile-settings&amp;gt;&quot;]
+        SettingsComp --&gt; SecurityComp[&quot;&amp;lt;security-settings&amp;gt;&quot;]
+        SettingsComp --&gt; BillingComp[&quot;&amp;lt;billing-settings&amp;gt;&quot;]
+    end
+
+    Dashboard -.renders.-&gt; DashComp
+    Settings -.renders.-&gt; SettingsComp
+    Profile -.renders.-&gt; ProfileComp
+    Security -.renders.-&gt; SecurityComp
+    Billing -.renders.-&gt; BillingComp
+
+    style SettingsComp fill:#764ba2,color:#fff
+    style ProfileComp fill:#667eea,color:#fff
+    style SecurityComp fill:#667eea,color:#fff
+    style BillingComp fill:#667eea,color:#fff</code></pre>
+<h2>Route Guards</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant Router
+    participant AuthGuard
+    participant RoleGuard
+    participant Page
+
+    User-&gt;&gt;Router: Navigate to /admin
+    Router-&gt;&gt;AuthGuard: Check &#039;auth&#039; guard
+
+    alt Not Authenticated
+        AuthGuard--&gt;&gt;Router: false
+        Router-&gt;&gt;Router: Redirect to /login
+    else Authenticated
+        AuthGuard--&gt;&gt;Router: true
+        Router-&gt;&gt;RoleGuard: Check &#039;admin&#039; guard
+
+        alt Not Admin
+            RoleGuard--&gt;&gt;Router: false
+            Router-&gt;&gt;Router: Redirect to /unauthorized
+        else Is Admin
+            RoleGuard--&gt;&gt;Router: true
+            Router-&gt;&gt;Page: Render admin-page
+        end
+    end</code></pre>
+<h2>History Management</h2>
+<pre><code class="language-mermaid">graph LR
+    subgraph &quot;Browser History Stack&quot;
+        H1[&quot;/&quot;]
+        H2[&quot;/products&quot;]
+        H3[&quot;/products/123&quot;]
+        H4[&quot;/cart&quot;]
+
+        H1 --&gt; H2 --&gt; H3 --&gt; H4
+    end
+
+    subgraph &quot;Navigation Actions&quot;
+        Push[pushState&lt;br/&gt;Add to history]
+        Replace[replaceState&lt;br/&gt;Replace current]
+        Back[back&lt;br/&gt;Go backward]
+        Forward[forward&lt;br/&gt;Go forward]
+    end
+
+    Push -.adds.-&gt; H4
+    Replace -.replaces.-&gt; H4
+    Back -.navigates to.-&gt; H3
+    Forward -.navigates to.-&gt; H4
+
+    style H4 fill:#667eea,color:#fff
+    style Push fill:#48bb78,color:#fff
+    style Replace fill:#f59e42,color:#fff</code></pre>
+<h2>URL Structure and Query Params</h2>
+<pre><code class="language-mermaid">graph TB
+    URL[&quot;https://app.com/products/123?sort=price&amp;filter=sale#reviews&quot;]
+
+    URL --&gt; Protocol[Protocol&lt;br/&gt;https://]
+    URL --&gt; Domain[Domain&lt;br/&gt;app.com]
+    URL --&gt; Path[Path&lt;br/&gt;/products/123]
+    URL --&gt; Query[Query Params&lt;br/&gt;?sort=price&amp;filter=sale]
+    URL --&gt; Hash[Hash&lt;br/&gt;#reviews]
+
+    Path --&gt; Routing[Used for Routing]
+    Query --&gt; State[Used for State&lt;br/&gt;filters, pagination]
+    Hash --&gt; Scroll[Used for Scroll&lt;br/&gt;or client-side routing]
+
+    style Path fill:#764ba2,color:#fff
+    style Query fill:#667eea,color:#fff
+    style Hash fill:#48bb78,color:#fff</code></pre>
+<h2>Router Lifecycle</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Initialized: router created
+
+    Initialized --&gt; Listening: Start listening
+
+    Listening --&gt; NavigationTriggered: URL changes
+
+    NavigationTriggered --&gt; MatchingRoute: Find matching route
+
+    MatchingRoute --&gt; RunningGuards: Execute guards
+
+    RunningGuards --&gt; GuardCheck: Guards pass?
+
+    GuardCheck --&gt; LoadingComponent: Yes
+    GuardCheck --&gt; Redirecting: No
+
+    LoadingComponent --&gt; RenderingComponent: Component ready
+
+    RenderingComponent --&gt; Listening: Complete
+
+    Redirecting --&gt; NavigationTriggered: New URL
+
+    Listening --&gt; [*]: router destroyed</code></pre>
+<h2>Programmatic Navigation</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Navigation Methods&quot;
+        M1[&quot;pan.publish(&#039;router.navigate&#039;, {path})&quot;]
+        M2[&quot;pan.publish(&#039;router.back&#039;)&quot;]
+        M3[&quot;pan.publish(&#039;router.forward&#039;)&quot;]
+        M4[&quot;pan.publish(&#039;router.replace&#039;, {path})&quot;]
+    end
+
+    subgraph &quot;Router&quot;
+        Router[Router Component]
+        History[History API]
+    end
+
+    subgraph &quot;Results&quot;
+        R1[New Entry in History]
+        R2[Go Back]
+        R3[Go Forward]
+        R4[Replace Current Entry]
+    end
+
+    M1 --&gt; Router --&gt; R1
+    M2 --&gt; Router --&gt; R2
+    M3 --&gt; Router --&gt; R3
+    M4 --&gt; Router --&gt; R4
+
+    Router &lt;--&gt; History
+
+    style Router fill:#764ba2,color:#fff</code></pre>
+<h2>Link Interception</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant Link as &amp;lt;a href=&quot;/page&quot;&amp;gt;
+    participant Document
+    participant Router
+    participant Browser
+
+    User-&gt;&gt;Link: Click
+
+    Link-&gt;&gt;Document: click event bubbles
+
+    Document-&gt;&gt;Router: Event listener catches
+
+    Router-&gt;&gt;Router: Check if internal link
+
+    alt Internal Link (/page)
+        Router-&gt;&gt;Link: preventDefault()
+        Router-&gt;&gt;Router: Handle navigation
+        Router-&gt;&gt;Browser: pushState(&#039;/page&#039;)
+        Router-&gt;&gt;Router: Render component
+    else External Link (https://external.com)
+        Router-&gt;&gt;Browser: Allow default behavior
+        Browser-&gt;&gt;Browser: Full page navigation
+    end</code></pre>
+<h2>404 Not Found Handling</h2>
+<pre><code class="language-mermaid">graph TB
+    Request[User navigates to URL]
+
+    Request --&gt; Router[Router]
+
+    Router --&gt; Match{Match&lt;br/&gt;route?}
+
+    Match --&gt;|Yes| Render[Render Component]
+    Match --&gt;|No| Wildcard{Has wildcard&lt;br/&gt;route &#039;*&#039;?}
+
+    Wildcard --&gt;|Yes| Render404[Render not-found-page]
+    Wildcard --&gt;|No| Default[Default 404 handling]
+
+    Render404 --&gt; Log[Log 404 event]
+    Default --&gt; Log
+
+    Log --&gt; Analytics[Send to Analytics]
+
+    style Render fill:#48bb78,color:#fff
+    style Render404 fill:#f59e42,color:#fff
+    style Default fill:#f56565,color:#fff</code></pre>
+<h2>Scroll Restoration</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant User
+    participant Page
+    participant Router
+    participant Browser
+
+    Note over User,Browser: User scrolls down page
+
+    User-&gt;&gt;Page: Scroll to position 500px
+    Page-&gt;&gt;Router: Store scroll position
+
+    User-&gt;&gt;Router: Navigate to different page
+
+    Router-&gt;&gt;Router: Save {url: &#039;/page1&#039;, scroll: 500}
+    Router-&gt;&gt;Browser: pushState(&#039;/page2&#039;)
+    Router-&gt;&gt;Page: Render new page
+    Browser-&gt;&gt;Browser: Scroll to top
+
+    User-&gt;&gt;Router: Press back button
+
+    Router-&gt;&gt;Router: Get stored position for /page1
+    Router-&gt;&gt;Browser: popState
+    Router-&gt;&gt;Page: Render previous page
+    Router-&gt;&gt;Browser: scrollTo(0, 500)
+
+    Note over User,Browser: Restored to previous scroll position</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/learning-larc/diagrams/08-routing.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

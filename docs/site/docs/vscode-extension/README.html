@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC VS Code Extension · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC VS Code Extension">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">vscode-extension</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC VS Code Extension</h1>
+<p>Official Visual Studio Code extension for the LARC framework.</p>
+<h2>Features</h2>
+<h3>Code Snippets</h3>
+<ul><li><strong>Component boilerplate</strong> - Type <code>larc-component</code> to create a full web component</li>
+<li><strong>PAN bus integration</strong> - Type <code>larc-pan-component</code> for PAN-enabled components</li>
+<li><strong>PAN utilities</strong> - Quick snippets for <code>pan-subscribe</code> and <code>pan-publish</code></li>
+<li><strong>Import maps</strong> - Type <code>larc-importmap</code> for import map setup</li>
+<li><strong>HTML elements</strong> - Quick insertion of LARC components in HTML</li>
+</ul>
+<h3>Commands</h3>
+<ul><li><strong>LARC: New Component</strong> - Interactive component generation</li>
+<li><strong>LARC: Add Component from Registry</strong> - Browse and add components from the registry</li>
+<li><strong>LARC: View Documentation</strong> - Open LARC documentation</li>
+</ul>
+<h3>IntelliSense</h3>
+<ul><li>Auto-completion for component names</li>
+<li>Component descriptions in hover tooltips</li>
+<li>Registry-powered suggestions</li>
+</ul>
+<h2>Installation</h2>
+<h3>From VS Code Marketplace</h3>
+<li>Open VS Code</li>
+<li>Press <code>Ctrl+Shift+X</code> (or <code>Cmd+Shift+X</code> on Mac)</li>
+<li>Search for "LARC"</li>
+<li>Click Install</li>
+<h3>From VSIX</h3>
+<pre><code class="language-bash">code --install-extension larc-vscode-1.0.0.vsix</code></pre>
+<h2>Usage</h2>
+<h3>Creating a Component</h3>
+<li>Open Command Palette (<code>Ctrl+Shift+P</code> or <code>Cmd+Shift+P</code>)</li>
+<li>Type "LARC: New Component"</li>
+<li>Enter component name (kebab-case)</li>
+<li>Component file is created and opened</li>
+<p>Or use the snippet:</p>
+<pre><code class="language-javascript">// Type &#039;larc-component&#039; and press Tab</code></pre>
+<h3>Adding from Registry</h3>
+<li>Open Command Palette</li>
+<li>Type "LARC: Add Component from Registry"</li>
+<li>Select a component from the list</li>
+<li>Component is added to your project</li>
+<h3>Code Snippets</h3>
+<p>#### JavaScript</p>
+<p>| Trigger | Description |
+|---------|-------------|
+| <code>larc-component</code> | Full web component boilerplate |
+| <code>larc-pan-component</code> | Component with PAN bus integration |
+| <code>pan-subscribe</code> | Subscribe to PAN bus topic |
+| <code>pan-publish</code> | Publish to PAN bus topic |
+| <code>import-larc</code> | Import LARC core utilities |</p>
+<p>#### HTML</p>
+<p>| Trigger | Description |
+|---------|-------------|
+| <code>larc-importmap</code> | Import map script tag |
+| <code>larc-import</code> | Module script tag |
+| <code>pan-bus</code> | PAN bus element |
+| <code>larc-comp</code> | Generic LARC component element |</p>
+<h2>Settings</h2>
+<p>Configure the extension in your VS Code settings:</p>
+<pre><code class="language-json">{
+  &quot;larc.autoImport&quot;: true,
+  &quot;larc.snippetsEnabled&quot;: true,
+  &quot;larc.registryUrl&quot;: &quot;https://raw.githubusercontent.com/larcjs/registry/main/registry.json&quot;
+}</code></pre>
+<h3>Available Settings</h3>
+<ul><li><strong><code>larc.autoImport</code></strong> - Automatically add imports for LARC components (default: <code>true</code>)</li>
+<li><strong><code>larc.snippetsEnabled</code></strong> - Enable LARC code snippets (default: <code>true</code>)</li>
+<li><strong><code>larc.registryUrl</code></strong> - URL to the LARC component registry</li>
+</ul>
+<h2>Requirements</h2>
+<ul><li>Visual Studio Code 1.80.0 or higher</li>
+<li>Node.js 18+ (for CLI commands)</li>
+</ul>
+<h2>Example Workflow</h2>
+<li>Create a new LARC project:</li>
+   <pre><code class="language-bash">npx create-larc-app my-app
+   code my-app</code></pre>
+<li>Use Command Palette to add a component from registry:</li>
+   - <code>Ctrl+Shift+P</code> → "LARC: Add Component from Registry"
+<li>Generate a custom component:</li>
+   - <code>Ctrl+Shift+P</code> → "LARC: New Component"
+<li>Use snippets for quick coding:</li>
+   - Type <code>larc-component</code> and press Tab
+   - Type <code>pan-subscribe</code> for PAN bus subscriptions
+<h2>Known Issues</h2>
+<ul><li>Registry loading may take a few seconds on first activation</li>
+<li>Auto-completion works best with JavaScript and HTML files</li>
+</ul>
+<h2>Release Notes</h2>
+<h3>1.0.0</h3>
+<ul><li>Initial release</li>
+<li>Component snippets</li>
+<li>Registry integration</li>
+<li>Commands for component generation</li>
+<li>IntelliSense support</li>
+</ul>
+<h2>Contributing</h2>
+<p>See <a href="https://github.com/larcjs/vscode-extension/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a></p>
+<h2>License</h2>
+<p>MIT</p>
+<h2>Links</h2>
+<ul><li><a href="https://github.com/larcjs/larc">LARC Framework</a></li>
+<li><a href="https://larcjs.com/components">Component Registry</a></li>
+<li><a href="https://larcjs.com/docs">Documentation</a></li>
+<li><a href="https://github.com/larcjs/vscode-extension/issues">Issues</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/vscode-extension/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

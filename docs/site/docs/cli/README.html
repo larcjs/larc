@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>create-larc-app · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - create-larc-app">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">cli</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>create-larc-app</h1>
+<p>Official CLI tool for creating and managing LARC applications.</p>
+<h2>Quick Start</h2>
+<pre><code class="language-bash"># Create a new LARC app
+npx create-larc-app my-app
+
+# Or with options
+npx create-larc-app my-app --template=dashboard --yes</code></pre>
+<h2>Features</h2>
+<ul><li>🚀 <strong>Zero Config</strong> - No build step required</li>
+<li>📦 <strong>Template System</strong> - Start with pre-built templates</li>
+<li>🔥 <strong>Hot Reload</strong> - Development server with live updates</li>
+<li>🎨 <strong>Component Generator</strong> - Scaffold new components quickly</li>
+<li>📚 <strong>Registry Integration</strong> - Add components from the LARC registry</li>
+</ul>
+<h2>Commands</h2>
+<h3>create-larc-app</h3>
+<p>Create a new LARC application:</p>
+<pre><code class="language-bash">npx create-larc-app &lt;project-directory&gt; [options]</code></pre>
+<strong>Options:</strong>
+<ul><li><code>-t, --template <template></code> - Template to use (minimal, dashboard, blog)</li>
+<li><code>-y, --yes</code> - Skip prompts and use defaults</li>
+<li><code>--no-install</code> - Skip npm install</li>
+<li><code>--no-git</code> - Skip git initialization</li>
+</ul>
+<strong>Examples:</strong>
+<pre><code class="language-bash"># Interactive mode
+npx create-larc-app my-app
+
+# With template
+npx create-larc-app my-dashboard --template=dashboard
+
+# Skip prompts
+npx create-larc-app my-app --yes</code></pre>
+<h3>larc dev</h3>
+<p>Start development server:</p>
+<pre><code class="language-bash">larc dev [options]</code></pre>
+<strong>Options:</strong>
+<ul><li><code>-p, --port <port></code> - Port number (default: 3000)</li>
+<li><code>--no-open</code> - Don't open browser</li>
+<li><code>--no-hot</code> - Disable hot module reload</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-bash">larc dev --port=8080</code></pre>
+<h3>larc add</h3>
+<p>Add a component from the registry:</p>
+<pre><code class="language-bash">larc add &lt;component&gt; [options]</code></pre>
+<strong>Options:</strong>
+<ul><li><code>-y, --yes</code> - Skip confirmation</li>
+</ul>
+<strong>Examples:</strong>
+<pre><code class="language-bash"># Interactive
+larc add pan-card
+
+# Skip confirmation
+larc add @larcjs/ui --yes
+
+# By npm package
+larc add @username/my-component</code></pre>
+<h3>larc generate</h3>
+<p>Generate boilerplate code:</p>
+<pre><code class="language-bash">larc generate &lt;type&gt; &lt;name&gt; [options]</code></pre>
+<strong>Alias:</strong> <code>larc g</code>
+<strong>Options:</strong>
+<ul><li><code>-d, --dir <directory></code> - Output directory (default: src/components)</li>
+</ul>
+<strong>Examples:</strong>
+<pre><code class="language-bash"># Generate a component
+larc generate component my-widget
+
+# Generate in custom directory
+larc g component my-widget --dir=src/widgets</code></pre>
+<h3>larc preview</h3>
+<p>Preview production build:</p>
+<pre><code class="language-bash">larc preview [options]</code></pre>
+<strong>Options:</strong>
+<ul><li><code>-p, --port <port></code> - Port number (default: 4000)</li>
+</ul>
+<h2>Project Structure</h2>
+<pre><code class="language-plaintext">my-app/
+├── index.html          # Entry point
+├── src/
+│   ├── app.js         # Main application
+│   └── components/    # Custom components
+├── public/
+│   ├── styles.css    # Global styles
+│   └── assets/       # Static assets
+├── larc.config.json  # LARC configuration
+├── package.json
+└── README.md</code></pre>
+<h2>larc.config.json</h2>
+<p>Configuration file for LARC projects:</p>
+<pre><code class="language-json">{
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;importmap&quot;: {
+    &quot;imports&quot;: {
+      &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@latest/dist/index.js&quot;,
+      &quot;@larcjs/ui&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@latest/dist/index.js&quot;
+    }
+  },
+  &quot;devServer&quot;: {
+    &quot;port&quot;: 3000,
+    &quot;hot&quot;: true,
+    &quot;open&quot;: true
+  }
+}</code></pre>
+<h2>Templates</h2>
+<h3>minimal</h3>
+<p>Basic starter with essential structure:
+<ul><li>Clean HTML/CSS/JS setup</li>
+<li>Import map configuration</li>
+<li>Example component structure</li>
+</ul>
+<h3>dashboard</h3></p>
+<p>Admin dashboard starter:
+<ul><li>Pre-built layout with sidebar</li>
+<li>Navigation components</li>
+<li>Data table examples</li>
+<li>Chart integration</li>
+</ul>
+<h3>blog</h3></p>
+<p>Blog/content site starter:
+<ul><li>Article layout</li>
+<li>Markdown rendering</li>
+<li>Routing setup</li>
+<li>Content components</li>
+</ul>
+<h2>Development Workflow</h2></p>
+<li><strong>Create project:</strong></li>
+   <pre><code class="language-bash">npx create-larc-app my-app
+   cd my-app</code></pre>
+<li><strong>Start dev server:</strong></li>
+   <pre><code class="language-bash">npm run dev</code></pre>
+<li><strong>Add components:</strong></li>
+   <pre><code class="language-bash">larc add pan-card</code></pre>
+<li><strong>Generate custom components:</strong></li>
+   <pre><code class="language-bash">larc generate component my-widget</code></pre>
+<li><strong>Build for production:</strong></li>
+   <pre><code class="language-bash"># No build needed! Just deploy your files</code></pre>
+<h2>Hot Module Reload</h2>
+<p>The dev server includes hot reload:</p>
+<ul><li>Watches <code>src/</code>, <code>public/</code>, and HTML files</li>
+<li>Auto-refreshes on changes</li>
+<li>SSE-based communication</li>
+<li>Zero configuration</li>
+</ul>
+<h2>Import Maps</h2>
+<p>LARC uses native import maps for dependency management:</p>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@latest/dist/index.js&quot;
+  }
+}
+&lt;/script&gt;</code></pre>
+<p>Managed automatically via <code>larc.config.json</code>.</p>
+<h2>No Build Step</h2>
+<p>LARC embraces the no-build philosophy:</p>
+<ul><li>Native ES modules</li>
+<li>Import maps for dependencies</li>
+<li>Direct CDN usage</li>
+<li>Browser-native features</li>
+</ul>
+<h2>Requirements</h2>
+<ul><li>Node.js 18+</li>
+<li>Modern browser with:</li>
+</ul>  - ES Modules support
+  - Import Maps support
+  - Custom Elements support
+<h2>Contributing</h2>
+<p>See <a href="./CONTRIBUTING.md">CONTRIBUTING.md</a></p>
+<h2>License</h2>
+<p>MIT</p>
+<h2>Links</h2>
+<ul><li><a href="https://github.com/larcjs/larc">LARC Framework</a></li>
+<li><a href="https://larcjs.com/components">Component Registry</a></li>
+<li><a href="https://larcjs.com/docs">Documentation</a></li>
+<li><a href="https://larcjs.com/playground">Playground</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/cli/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

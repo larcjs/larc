@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Core · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Core">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">core</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Core</h1>
+<a href="https://img.shields.io/npm/v/@larcjs/core.svg">![Version</a>](https://www.npmjs.com/package/@larcjs/core)
+<a href="https://img.shields.io/badge/license-MIT-green.svg">![License</a>](LICENSE)
+<a href="https://img.shields.io/badge/status-production--ready-brightgreen.svg">![Status</a>](CHANGELOG.md)
+<a href="https://img.shields.io/badge/tests-335%20passing-brightgreen.svg">![Tests</a>](#)
+<a href="https://img.shields.io/npm/dm/@larcjs/core.svg">![npm</a>](https://www.npmjs.com/package/@larcjs/core)
+<blockquote><strong>Full-featured PAN messaging bus</strong> — Complete messaging infrastructure with routing & debugging</blockquote>
+<p>LARC Core provides the foundational messaging infrastructure for building loosely-coupled, event-driven web applications. It implements the PAN (Page Area Network) protocol, enabling seamless communication between components, iframes, workers, and tabs.</p>
+<h2>📦 Package Options</h2>
+<p>| Package | Size | Use When |
+|---------|------|----------|
+| <strong><a href="../packages/core-lite">@larcjs/core-lite</a></strong> | 9KB | ✅ You want the smallest bundle<br>✅ You only need pub/sub messaging |
+| <strong>@larcjs/core</strong> (this package) | 40KB | ✅ You need routing or debugging<br>✅ You want batteries-included |
+| <strong>À la carte</strong> | Custom | ✅ core-lite + <a href="../packages/core-routing">@larcjs/core-routing</a><br>✅ core-lite + <a href="../packages/core-debug">@larcjs/core-debug</a> |</p>
+<strong>💡 Recommendation:</strong> Start with <code>@larcjs/core-lite</code> (9KB) and add routing/debug only if needed.
+<p>See <a href="../PACKAGES.md">PACKAGES.md</a> for detailed comparison and migration guide.</p>
+<h2>Features</h2>
+<ul><li>🚀 <strong>Zero build required</strong> — Drop-in <code><pan-bus></code> element, communicate via CustomEvents</li>
+<li>🔌 <strong>Loose coupling</strong> — Components depend on topic contracts, not imports</li>
+<li>🌐 <strong>Framework friendly</strong> — Works <em>with</em> React, Vue, Angular - not as a replacement</li>
+<li>📬 <strong>Rich messaging</strong> — Pub/sub, request/reply, retained messages, cross-tab mirroring</li>
+<li>🎯 <strong>Lightweight</strong> — 40KB minified (128KB unminified), no dependencies (vs 400-750KB for typical React stack)</li>
+<li>⚡ <strong>Performance</strong> — 300k+ messages/second, zero memory leaks</li>
+<li>🔒 <strong>Security</strong> — Built-in message validation and sanitization</li>
+<li>🔀 <strong>Dynamic Routing</strong> — Runtime-configurable message routing with transforms and actions</li>
+</ul>
+<h2>Why PAN Messaging?</h2>
+<strong>The Web Component "silo problem" solved.</strong>
+<p>Web Components give you encapsulation, but they're useless if they can't communicate. Without PAN, every component needs custom glue code:</p>
+<pre><code class="language-javascript">// Without PAN - tightly coupled nightmare ❌
+const search = document.querySelector(&#039;search-box&#039;);
+const results = document.querySelector(&#039;results-list&#039;);
+search.addEventListener(&#039;change&#039;, (e) =&gt; {
+  results.updateQuery(e.detail.query);  // Tight coupling!
+});</code></pre>
+<strong>With PAN - loosely coupled, reusable</strong> ✅
+<pre><code class="language-javascript">// Components just work together via topics
+// No custom integration code needed!
+&lt;search-box&gt;&lt;/search-box&gt;     &lt;!-- publishes &quot;search:query&quot; --&gt;
+&lt;results-list&gt;&lt;/results-list&gt; &lt;!-- subscribes to &quot;search:query&quot; --&gt;</code></pre>
+<p>This is why Web Components haven't replaced frameworks - <strong>they lacked coordination</strong>. PAN fixes that.</p>
+<h2>Quick Start</h2>
+<h3>Installation</h3>
+<pre><code class="language-bash">npm install @larcjs/core</code></pre>
+<h3>CDN Usage (No Build Required)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;!-- Load the autoloader --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- The pan-bus is automatically created --&gt;
+  &lt;script&gt;
+    // Publish a message
+    document.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+      detail: {
+        topic: &#039;greeting.message&#039;,
+        payload: { text: &#039;Hello, PAN!&#039; }
+      }
+    }));
+
+    // Subscribe to messages
+    document.addEventListener(&#039;pan:message&#039;, (e) =&gt; {
+      if (e.detail.topic === &#039;greeting.message&#039;) {
+        console.log(&#039;Received:&#039;, e.detail.payload.text);
+      }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Module Usage</h3>
+<pre><code class="language-javascript">import { PanBus } from &#039;@larcjs/core&#039;;
+
+// Create a bus instance
+const bus = new PanBus();
+
+// Subscribe to a topic
+bus.subscribe(&#039;user.login&#039;, (message) =&gt; {
+  console.log(&#039;User logged in:&#039;, message.payload);
+});
+
+// Publish a message
+bus.publish(&#039;user.login&#039;, { userId: 123, name: &#039;Alice&#039; });
+
+// Request/reply pattern
+const response = await bus.request(&#039;user.get&#039;, { id: 123 });
+console.log(&#039;User data:&#039;, response);</code></pre>
+<h2>Core Components</h2>
+<h3><code><pan-bus></code></h3>
+<p>The central message hub that routes all PAN messages.</p>
+<pre><code class="language-html">&lt;pan-bus id=&quot;myBus&quot; mirror=&quot;false&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Attributes:</strong>
+<ul><li><code>mirror</code> — Enable cross-tab message mirroring (default: false)</li>
+<li><code>debug</code> — Enable debug logging (default: false)</li>
+</ul>
+<h3><code><pan-client></code></h3>
+<p>Simplifies publishing and subscribing for components.</p>
+<pre><code class="language-html">&lt;pan-client id=&quot;client&quot;&gt;&lt;/pan-client&gt;
+
+&lt;script&gt;
+  const client = document.getElementById(&#039;client&#039;);
+
+  client.subscribe(&#039;data.changed&#039;, (msg) =&gt; {
+    console.log(&#039;Data updated:&#039;, msg.payload);
+  });
+
+  client.publish(&#039;data.request&#039;, { id: 42 });
+&lt;/script&gt;</code></pre>
+<h2>Message Patterns</h2>
+<h3>Publish/Subscribe</h3>
+<pre><code class="language-javascript">// Publisher
+bus.publish(&#039;notifications.new&#039;, {
+  type: &#039;info&#039;,
+  message: &#039;Welcome!&#039;
+});
+
+// Subscriber
+bus.subscribe(&#039;notifications.new&#039;, (msg) =&gt; {
+  showNotification(msg.payload);
+});</code></pre>
+<h3>Request/Reply</h3>
+<pre><code class="language-javascript">// Responder
+bus.subscribe(&#039;user.get&#039;, async (msg) =&gt; {
+  const user = await fetchUser(msg.payload.id);
+  return { ok: true, user };
+});
+
+// Requester
+const result = await bus.request(&#039;user.get&#039;, { id: 123 });
+if (result.ok) {
+  console.log(&#039;User:&#039;, result.user);
+}</code></pre>
+<h3>Retained Messages (State)</h3>
+<pre><code class="language-javascript">// Publish with retain flag
+bus.publish(&#039;app.state&#039;, { theme: &#039;dark&#039; }, { retain: true });
+
+// Late subscribers immediately receive the retained message
+bus.subscribe(&#039;app.state&#039;, (msg) =&gt; {
+  applyTheme(msg.payload.theme);
+});</code></pre>
+<h2>Topic Conventions</h2>
+<p>LARC uses hierarchical topic naming:</p>
+<ul><li><code>${resource}.list.get</code> — Request list of items</li>
+<li><code>${resource}.list.state</code> — Current list state (retained)</li>
+<li><code>${resource}.item.select</code> — User selected an item</li>
+<li><code>${resource}.item.get</code> — Request single item</li>
+<li><code>${resource}.item.save</code> — Save an item</li>
+<li><code>${resource}.item.delete</code> — Delete an item</li>
+<li><code>${resource}.changed</code> — Item(s) changed notification</li>
+<li><code>${resource}.error</code> — Error occurred</li>
+</ul>
+Example:
+<pre><code class="language-javascript">// Request list of products
+await bus.request(&#039;products.list.get&#039;, {});
+
+// Subscribe to product selection
+bus.subscribe(&#039;products.item.select&#039;, (msg) =&gt; {
+  loadProductDetails(msg.payload.id);
+});
+
+// Save a product
+await bus.request(&#039;products.item.save&#039;, {
+  item: { id: 1, name: &#039;Widget&#039;, price: 9.99 }
+});</code></pre>
+<h2>Dynamic Message Routing 🔥</h2>
+<strong>NEW:</strong> Configure message flows declaratively at runtime! PAN Routes lets you define routing rules that match, transform, and act on messages without hardcoding logic in your components.
+<h3>Why Routing Changes Everything</h3>
+<strong>Before (Tightly Coupled):</strong>
+<pre><code class="language-javascript">// Hardcoded message handling scattered across components ❌
+bus.subscribe(&#039;sensor.temperature&#039;, (msg) =&gt; {
+  if (msg.payload.value &gt; 30) {
+    const alert = { type: &#039;alert.highTemp&#039;, temp: msg.payload.value };
+    bus.publish(&#039;alerts&#039;, alert);
+    console.warn(`High temp: ${alert.temp}°C`);
+  }
+});</code></pre>
+<strong>After (Declarative Routes):</strong>
+<pre><code class="language-javascript">// Define routing rules once, reuse everywhere ✅
+pan.routes.add({
+  name: &#039;High Temperature Alert&#039;,
+  match: {
+    type: &#039;sensor.temperature&#039;,
+    where: { op: &#039;gt&#039;, path: &#039;payload.value&#039;, value: 30 }
+  },
+  actions: [
+    { type: &#039;EMIT&#039;, message: { type: &#039;alert.highTemp&#039; }, inherit: [&#039;payload&#039;] },
+    { type: &#039;LOG&#039;, level: &#039;warn&#039;, template: &#039;High temp: {{payload.value}}°C&#039; }
+  ]
+});</code></pre>
+<h3>Enable Routing</h3>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<pre><code class="language-javascript">// Access routing manager
+const routes = window.pan.routes;</code></pre>
+<h3>Powerful Matching</h3>
+<p>Match messages by type, topic, tags, or complex predicates:</p>
+<pre><code class="language-javascript">// Match high-value VIP orders
+routes.add({
+  name: &#039;VIP Order Priority&#039;,
+  match: {
+    type: &#039;order.created&#039;,
+    where: {
+      op: &#039;and&#039;,
+      children: [
+        { op: &#039;gte&#039;, path: &#039;payload.total&#039;, value: 1000 },
+        { op: &#039;eq&#039;, path: &#039;payload.customerTier&#039;, value: &#039;vip&#039; }
+      ]
+    }
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: {
+        type: &#039;notification.vip-order&#039;,
+        payload: { priority: &#039;high&#039;, channels: [&#039;email&#039;, &#039;sms&#039;] }
+      }
+    },
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;info&#039;,
+      template: &#039;💎 VIP Order: ${{payload.total}}&#039;
+    }
+  ]
+});</code></pre>
+<h3>Transform Messages</h3>
+<p>Pick fields, map values, or apply custom transformations:</p>
+<pre><code class="language-javascript">// Register custom transform
+routes.registerTransform(&#039;normalize-email&#039;, (email) =&gt; {
+  return email.toLowerCase().trim();
+});
+
+// Use in route
+routes.add({
+  name: &#039;User Email Normalizer&#039;,
+  match: { type: &#039;user.register&#039; },
+  transform: {
+    op: &#039;map&#039;,
+    path: &#039;payload.email&#039;,
+    fnId: &#039;normalize-email&#039;
+  },
+  actions: [
+    { type: &#039;EMIT&#039;, message: { type: &#039;user.normalized&#039; }, inherit: [&#039;payload&#039;] }
+  ]
+});</code></pre>
+<h3>Multiple Actions</h3>
+<p>Chain actions for complex workflows:</p>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;Critical Error Pipeline&#039;,
+  match: {
+    type: &#039;error&#039;,
+    where: { op: &#039;eq&#039;, path: &#039;payload.severity&#039;, value: &#039;critical&#039; }
+  },
+  actions: [
+    { type: &#039;LOG&#039;, level: &#039;error&#039;, template: &#039;🚨 CRITICAL: {{payload.message}}&#039; },
+    { type: &#039;EMIT&#039;, message: { type: &#039;alert.critical&#039; }, inherit: [&#039;payload&#039;] },
+    { type: &#039;FORWARD&#039;, topic: &#039;error-tracking.events&#039; },
+    { type: &#039;CALL&#039;, handlerId: &#039;send-slack-alert&#039; }
+  ]
+});</code></pre>
+<h3>Runtime Configuration</h3>
+<p>Add, update, or remove routes on the fly:</p>
+<pre><code class="language-javascript">// Add route
+const route = routes.add({ /* route config */ });
+
+// Update route
+routes.update(route.id, { enabled: false });
+
+// Remove route
+routes.remove(route.id);
+
+// List all routes
+console.table(routes.list());
+
+// Get stats
+console.log(routes.getStats());
+// {
+//   routesEvaluated: 1234,
+//   routesMatched: 456,
+//   actionsExecuted: 789
+// }</code></pre>
+<h3>Real-World Use Cases</h3>
+<strong>🔍 Analytics Tracking</strong>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;Track User Events&#039;,
+  match: { tagsAny: [&#039;trackable&#039;], type: [&#039;user.click&#039;, &#039;user.view&#039;] },
+  actions: [{ type: &#039;FORWARD&#039;, topic: &#039;analytics.events&#039; }]
+});</code></pre>
+<strong>🔔 Smart Notifications</strong>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;Notification Router&#039;,
+  match: { type: &#039;notification.send&#039; },
+  actions: [
+    { type: &#039;CALL&#039;, handlerId: &#039;check-user-preferences&#039; },
+    { type: &#039;EMIT&#039;, message: { type: &#039;notification.queued&#039; } }
+  ]
+});</code></pre>
+<strong>🚦 Feature Flags</strong>
+<pre><code class="language-javascript">routes.registerHandler(&#039;feature-router&#039;, (msg) =&gt; {
+  const flags = getFeatureFlags();
+  const topic = flags.newUI ? &#039;ui.v2&#039; : &#039;ui.v1&#039;;
+  window.pan.bus.publish(topic, msg.payload);
+});
+
+routes.add({
+  name: &#039;Feature Flag Router&#039;,
+  match: { type: &#039;app.init&#039; },
+  actions: [{ type: &#039;CALL&#039;, handlerId: &#039;feature-router&#039; }]
+});</code></pre>
+<strong>📊 Data Enrichment</strong>
+<pre><code class="language-javascript">routes.registerTransform(&#039;enrich-user&#039;, async (msg) =&gt; {
+  const userData = await fetchUserProfile(msg.payload.userId);
+  return {
+    ...msg,
+    payload: { ...msg.payload, user: userData }
+  };
+});
+
+routes.add({
+  name: &#039;Enrich Order Data&#039;,
+  match: { type: &#039;order.created&#039; },
+  transform: { op: &#039;custom&#039;, fnId: &#039;enrich-user&#039; },
+  actions: [{ type: &#039;EMIT&#039;, message: { type: &#039;order.enriched&#039; }, inherit: [&#039;payload&#039;] }]
+});</code></pre>
+<h3>Why This Matters</h3>
+<ul><li><strong>🎯 Separation of Concerns</strong> - Routing logic separate from business logic</li>
+<li><strong>🔄 Dynamic Reconfiguration</strong> - Change message flows without code changes</li>
+<li><strong>📦 Reusable Rules</strong> - Share and persist routing configurations</li>
+<li><strong>🐛 Debuggable</strong> - See all routing rules in one place</li>
+<li><strong>🧪 Testable</strong> - Test routing rules in isolation</li>
+<li><strong>⚡ Performant</strong> - Sub-millisecond message evaluation</li>
+</ul>
+<h3>Learn More</h3>
+<p>See <a href="docs/ROUTING.md">Dynamic Routing Documentation</a> for complete API reference, predicates, transforms, actions, and advanced examples.</p>
+<h2>Cross-Tab Communication</h2>
+<p>Enable the <code>mirror</code> attribute to sync messages across browser tabs:</p>
+<pre><code class="language-html">&lt;pan-bus mirror=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<p>Only non-sensitive topics should be mirrored. Use topic filters:</p>
+<pre><code class="language-javascript">bus.setMirrorFilter((topic) =&gt; {
+  // Don&#039;t mirror authentication tokens
+  return !topic.startsWith(&#039;auth.&#039;);
+});</code></pre>
+<h2>TypeScript Support</h2>
+<p>LARC Core is written in pure JavaScript with <strong>zero build requirements</strong>. TypeScript support is available via the optional <strong><a href="https://github.com/larcjs/core-types">@larcjs/core-types</a></strong> package:</p>
+<pre><code class="language-bash">npm install @larcjs/core
+npm install -D @larcjs/core-types</code></pre>
+<p>Full type definitions for all APIs:</p>
+<pre><code class="language-typescript">import { PanClient } from &#039;@larcjs/core/pan-client.mjs&#039;;
+import type { PanMessage, SubscribeOptions } from &#039;@larcjs/core-types&#039;;
+
+interface UserData {
+  id: number;
+  name: string;
+}
+
+const client = new PanClient();
+
+// Fully typed publish
+client.publish&lt;UserData&gt;({
+  topic: &#039;user.updated&#039;,
+  data: { id: 123, name: &#039;Alice&#039; }
+});
+
+// Fully typed subscribe
+client.subscribe&lt;UserData&gt;(&#039;user.updated&#039;, (msg: PanMessage&lt;UserData&gt;) =&gt; {
+  console.log(msg.data.name); // TypeScript knows this is a string!
+});</code></pre>
+<strong>Why separate types?</strong> We keep runtime code lean (zero dependencies) and let TypeScript users opt-in to types. Best of both worlds!
+<h2>Architecture</h2>
+<pre><code class="language-plaintext">┌─────────────────────────────────────────────────┐
+│                   Application                    │
+├─────────────┬─────────────┬─────────────────────┤
+│  Component  │  Component  │     Component       │
+│      A      │      B      │         C           │
+└──────┬──────┴──────┬──────┴──────┬──────────────┘
+       │             │             │
+       └─────────────┼─────────────┘
+                     │
+              ┌──────▼──────┐
+              │  &lt;pan-bus&gt;  │  ← Central Message Hub
+              └──────┬──────┘
+                     │
+       ┌─────────────┼─────────────┐
+       │             │             │
+┌──────▼──────┐ ┌───▼────┐ ┌──────▼──────┐
+│   Worker    │ │ iframe │ │ Other Tabs  │
+└─────────────┘ └────────┘ └─────────────┘</code></pre>
+<h2>Use With Your Framework</h2>
+<strong>PAN complements React/Vue/Angular - it doesn't replace them.</strong>
+<h3>React Example</h3>
+<pre><code class="language-jsx">import { usePanSubscribe, usePanPublish } from &#039;@larcjs/react-adapter&#039;;
+
+function Dashboard() {
+  const theme = usePanSubscribe(&#039;theme:current&#039;);
+  const { publish } = usePanPublish();
+
+  return (
+    &lt;div&gt;
+      {/* React component */}
+      &lt;button onClick={() =&gt; publish(&#039;theme:toggle&#039;)}&gt;
+        Toggle Theme
+      &lt;/button&gt;
+
+      {/* LARC components respond automatically */}
+      &lt;pan-card theme={theme}&gt;
+        &lt;pan-data-table resource=&quot;users&quot;&gt;&lt;/pan-data-table&gt;
+      &lt;/pan-card&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+<h3>Vue Example</h3>
+<pre><code class="language-vue">&lt;script setup&gt;
+import { usePanSubscribe, usePanPublish } from &#039;@larcjs/vue-adapter&#039;;
+
+const theme = usePanSubscribe(&#039;theme:current&#039;);
+const { publish } = usePanPublish();
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;!-- Vue component --&gt;
+    &lt;button @click=&quot;publish(&#039;theme:toggle&#039;)&quot;&gt;Toggle Theme&lt;/button&gt;
+
+    &lt;!-- LARC components respond automatically --&gt;
+    &lt;pan-card :theme=&quot;theme&quot;&gt;
+      &lt;pan-data-table resource=&quot;users&quot;&gt;&lt;/pan-data-table&gt;
+    &lt;/pan-card&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</code></pre>
+<strong>Keep your framework for complex UIs. Use LARC for cards, modals, tables, navigation - reduce bundle size by 60%+.</strong>
+<h2>Related Packages</h2>
+<ul><li><strong><a href="https://github.com/larcjs/core-types">@larcjs/core-types</a></strong> — TypeScript type definitions (opt-in)</li>
+<li><strong><a href="https://github.com/larcjs/components">@larcjs/ui</a></strong> — UI components built on LARC Core</li>
+<li><strong><a href="https://github.com/larcjs/react-adapter">@larcjs/react-adapter</a></strong> — React hooks for PAN messaging</li>
+<li><strong><a href="https://github.com/larcjs/vue-adapter">@larcjs/vue-adapter</a></strong> — Vue composables for PAN messaging</li>
+<li><strong><a href="https://github.com/larcjs/devtools">@larcjs/devtools</a></strong> — Chrome DevTools for debugging PAN messages</li>
+<li><strong><a href="https://github.com/larcjs/examples">@larcjs/examples</a></strong> — Demo applications and examples</li>
+</ul>
+<h2>Documentation</h2>
+<ul><li><a href="docs/API_REFERENCE.md">API Reference</a></li>
+<li><a href="docs/LARC_SPEC.v0.md">LARC Specification</a></li>
+<li><a href="docs/LARC_ROADMAP.md">Roadmap</a></li>
+<li><a href="https://larcjs.github.io/site/">Full Documentation</a></li>
+</ul>
+<h2>Browser Support</h2>
+<ul><li>✅ Chrome/Edge 90+</li>
+<li>✅ Firefox 88+</li>
+<li>✅ Safari 14+</li>
+<li>✅ Opera 76+</li>
+</ul>
+<h2>Performance</h2>
+<ul><li><strong>Throughput:</strong> 300,000+ messages/second</li>
+<li><strong>Latency:</strong> <1ms per message (local)</li>
+<li><strong>Memory:</strong> Zero leaks, constant memory usage</li>
+<li><strong>Bundle size:</strong> 40KB minified (128KB unminified source)</li>
+</ul>  - <code>pan.min.mjs</code>: 3.4KB (13KB unminified)
+  - <code>pan-bus.min.mjs</code>: 12KB (23KB unminified)
+  - <code>pan-client.min.mjs</code>: 8KB (15KB unminified)
+  - <code>pan-routes.min.mjs</code>: 6KB (28KB unminified)
+  - <code>pan-storage.min.mjs</code>: 5KB (18KB unminified)
+  - <code>pan-debug.min.mjs</code>: 5KB (13KB unminified)
+<h2>Contributing</h2>
+<p>Contributions are welcome! Please see our <a href="CONTRIBUTING.md">Contributing Guide</a>.</p>
+<h2>License</h2>
+<p>MIT © Chris Robison</p>
+<h2>Support</h2>
+<ul><li>📖 <a href="https://larcjs.github.io/site/">Documentation</a></li>
+<li>💬 <a href="https://github.com/larcjs/core/discussions">Discussions</a></li>
+<li>🐛 <a href="https://github.com/larcjs/core/issues">Issue Tracker</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/core/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,1237 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Fetching and APIs · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Data Fetching and APIs">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">building-with-larc</a> / <span>chapter-11-data-fetching-and-apis</span>
+      </div>
+      <article class="docs-content">
+        <h1>Data Fetching and APIs</h1>
+<em>In which we learn to retrieve data from distant servers without losing our minds (or our users' patience)</em>
+<p>Modern web applications are essentially elaborate interfaces for remote data. They fetch JSON from APIs, subscribe to WebSocket streams, poll for updates, and cache responses like digital squirrels preparing for winter. The challenge isn't just getting data—it's getting it reliably, efficiently, and without making users stare at loading spinners longer than they stare at the actual content.</p>
+<p>In this chapter, we'll explore LARC's approach to data fetching, from basic REST API calls to sophisticated real-time communication. We'll cover error handling strategies that acknowledge the chaos of distributed systems, caching patterns that balance freshness with performance, and retry logic that persists without becoming annoying. By the end, you'll be equipped to build applications that fetch data like they know what they're doing, even when the network doesn't.</p>
+<h2>The Foundation: Fetch API</h2>
+<p>JavaScript's Fetch API is the modern standard for making HTTP requests. It's promise-based, supports streaming, and doesn't require external libraries. Let's start with the basics and build up to production-ready patterns.</p>
+<h3>Basic GET Request</h3>
+<pre><code class="language-javascript">class ProductList extends LarcComponent {
+  constructor() {
+    super();
+    this.products = [];
+    this.loading = true;
+    this.error = null;
+  }
+
+  async onMount() {
+    await this.loadProducts();
+  }
+
+  async loadProducts() {
+    this.loading = true;
+    this.error = null;
+    this.render();
+
+    try {
+      const response = await fetch(&#039;/api/products&#039;);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      this.products = await response.json();
+    } catch (error) {
+      this.error = error.message;
+      console.error(&#039;Failed to load products:&#039;, error);
+    } finally {
+      this.loading = false;
+      this.render();
+    }
+  }
+
+  template() {
+    if (this.loading) {
+      return &#039;&lt;div class=&quot;loading&quot;&gt;Loading products...&lt;/div&gt;&#039;;
+    }
+
+    if (this.error) {
+      return `
+        &lt;div class=&quot;error&quot;&gt;
+          &lt;p&gt;Failed to load products: ${this.error}&lt;/p&gt;
+          &lt;button onclick=&quot;this.loadProducts()&quot;&gt;Retry&lt;/button&gt;
+        &lt;/div&gt;
+      `;
+    }
+
+    return `
+      &lt;div class=&quot;product-list&quot;&gt;
+        ${this.products.map(product =&gt; `
+          &lt;div class=&quot;product-card&quot;&gt;
+            &lt;h3&gt;${product.name}&lt;/h3&gt;
+            &lt;p&gt;${product.description}&lt;/p&gt;
+            &lt;span class=&quot;price&quot;&gt;$${product.price}&lt;/span&gt;
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h3>POST Request with JSON</h3>
+<pre><code class="language-javascript">class ProductForm extends LarcComponent {
+  async submitProduct(formData) {
+    const product = {
+      name: formData.get(&#039;name&#039;),
+      description: formData.get(&#039;description&#039;),
+      price: parseFloat(formData.get(&#039;price&#039;)),
+      category: formData.get(&#039;category&#039;)
+    };
+
+    try {
+      const response = await fetch(&#039;/api/products&#039;, {
+        method: &#039;POST&#039;,
+        headers: {
+          &#039;Content-Type&#039;: &#039;application/json&#039;,
+          &#039;Authorization&#039;: `Bearer ${this.getAuthToken()}`
+        },
+        body: JSON.stringify(product)
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || &#039;Failed to create product&#039;);
+      }
+
+      const created = await response.json();
+      navigate(`/products/${created.id}`);
+    } catch (error) {
+      this.showError(error.message);
+    }
+  }
+
+  getAuthToken() {
+    return localStorage.getItem(&#039;auth_token&#039;);
+  }
+}</code></pre>
+<h3>Request Configuration</h3>
+<p>For consistent API communication, create a configured fetch wrapper:</p>
+<pre><code class="language-javascript">class APIClient {
+  constructor(baseURL, options = {}) {
+    this.baseURL = baseURL;
+    this.defaultHeaders = options.headers || {};
+    this.timeout = options.timeout || 30000;
+  }
+
+  async request(endpoint, options = {}) {
+    const url = `${this.baseURL}${endpoint}`;
+    const config = {
+      ...options,
+      headers: {
+        &#039;Content-Type&#039;: &#039;application/json&#039;,
+        ...this.defaultHeaders,
+        ...options.headers
+      }
+    };
+
+    // Add auth token if available
+    const token = this.getAuthToken();
+    if (token) {
+      config.headers[&#039;Authorization&#039;] = `Bearer ${token}`;
+    }
+
+    // Create timeout promise
+    const timeoutPromise = new Promise((_, reject) =&gt; {
+      setTimeout(() =&gt; reject(new Error(&#039;Request timeout&#039;)), this.timeout);
+    });
+
+    // Race between fetch and timeout
+    try {
+      const response = await Promise.race([
+        fetch(url, config),
+        timeoutPromise
+      ]);
+
+      if (!response.ok) {
+        await this.handleHTTPError(response);
+      }
+
+      return await response.json();
+    } catch (error) {
+      throw this.enhanceError(error);
+    }
+  }
+
+  async handleHTTPError(response) {
+    let message = `HTTP ${response.status}: ${response.statusText}`;
+
+    try {
+      const body = await response.json();
+      if (body.message) {
+        message = body.message;
+      }
+    } catch {
+      // Response body wasn&#039;t JSON
+    }
+
+    const error = new Error(message);
+    error.status = response.status;
+    error.response = response;
+    throw error;
+  }
+
+  enhanceError(error) {
+    if (error.name === &#039;AbortError&#039;) {
+      error.message = &#039;Request was cancelled&#039;;
+    } else if (!navigator.onLine) {
+      error.message = &#039;No internet connection&#039;;
+      error.offline = true;
+    }
+    return error;
+  }
+
+  getAuthToken() {
+    return localStorage.getItem(&#039;auth_token&#039;);
+  }
+
+  // Convenience methods
+  get(endpoint, options) {
+    return this.request(endpoint, { ...options, method: &#039;GET&#039; });
+  }
+
+  post(endpoint, data, options) {
+    return this.request(endpoint, {
+      ...options,
+      method: &#039;POST&#039;,
+      body: JSON.stringify(data)
+    });
+  }
+
+  put(endpoint, data, options) {
+    return this.request(endpoint, {
+      ...options,
+      method: &#039;PUT&#039;,
+      body: JSON.stringify(data)
+    });
+  }
+
+  patch(endpoint, data, options) {
+    return this.request(endpoint, {
+      ...options,
+      method: &#039;PATCH&#039;,
+      body: JSON.stringify(data)
+    });
+  }
+
+  delete(endpoint, options) {
+    return this.request(endpoint, { ...options, method: &#039;DELETE&#039; });
+  }
+}
+
+// Create global API client instance
+const api = new APIClient(&#039;/api&#039;, {
+  timeout: 10000,
+  headers: {
+    &#039;X-App-Version&#039;: &#039;1.0.0&#039;
+  }
+});</code></pre>
+<p>Now use the API client throughout your application:</p>
+<pre><code class="language-javascript">class ProductDetail extends LarcComponent {
+  async onRoute(params) {
+    try {
+      this.product = await api.get(`/products/${params.id}`);
+      this.render();
+    } catch (error) {
+      if (error.status === 404) {
+        navigate(&#039;/not-found&#039;);
+      } else {
+        this.showError(error.message);
+      }
+    }
+  }
+
+  async handleDelete() {
+    if (!confirm(&#039;Delete this product?&#039;)) {
+      return;
+    }
+
+    try {
+      await api.delete(`/products/${this.product.id}`);
+      navigate(&#039;/products&#039;);
+    } catch (error) {
+      this.showError(&#039;Failed to delete product&#039;);
+    }
+  }
+}</code></pre>
+<h2>Error Handling and Retries</h2>
+<p>Networks are unreliable, servers crash, and APIs return errors. Good error handling is what separates professional applications from abandoned side projects.</p>
+<h3>Retry Logic</h3>
+<p>Implement exponential backoff for transient failures:</p>
+<pre><code class="language-javascript">class RetryableAPIClient extends APIClient {
+  async requestWithRetry(endpoint, options = {}, retries = 3) {
+    let lastError;
+    let delay = 1000; // Start with 1 second
+
+    for (let attempt = 0; attempt &lt;= retries; attempt++) {
+      try {
+        return await this.request(endpoint, options);
+      } catch (error) {
+        lastError = error;
+
+        // Don&#039;t retry client errors (4xx) except 429 (rate limit)
+        if (error.status &gt;= 400 &amp;&amp; error.status &lt; 500 &amp;&amp; error.status !== 429) {
+          throw error;
+        }
+
+        // Don&#039;t retry if we&#039;re out of attempts
+        if (attempt === retries) {
+          break;
+        }
+
+        // Wait before retrying (exponential backoff with jitter)
+        const jitter = Math.random() * 1000;
+        await this.sleep(delay + jitter);
+        delay *= 2; // Double the delay each time
+      }
+    }
+
+    throw lastError;
+  }
+
+  sleep(ms) {
+    return new Promise(resolve =&gt; setTimeout(resolve, ms));
+  }
+
+  // Override convenience methods to use retry logic
+  get(endpoint, options) {
+    return this.requestWithRetry(endpoint, { ...options, method: &#039;GET&#039; });
+  }
+
+  post(endpoint, data, options) {
+    return this.requestWithRetry(endpoint, {
+      ...options,
+      method: &#039;POST&#039;,
+      body: JSON.stringify(data)
+    });
+  }
+}
+
+const api = new RetryableAPIClient(&#039;/api&#039;);</code></pre>
+<h3>Circuit Breaker Pattern</h3>
+<p>Prevent cascading failures by temporarily disabling requests to failing services:</p>
+<pre><code class="language-javascript">class CircuitBreaker {
+  constructor(threshold = 5, timeout = 60000) {
+    this.failureThreshold = threshold;
+    this.timeout = timeout;
+    this.failures = 0;
+    this.state = &#039;CLOSED&#039;; // CLOSED, OPEN, HALF_OPEN
+    this.nextAttempt = Date.now();
+  }
+
+  async execute(fn) {
+    if (this.state === &#039;OPEN&#039;) {
+      if (Date.now() &lt; this.nextAttempt) {
+        throw new Error(&#039;Circuit breaker is OPEN&#039;);
+      }
+      // Try to recover
+      this.state = &#039;HALF_OPEN&#039;;
+    }
+
+    try {
+      const result = await fn();
+      this.onSuccess();
+      return result;
+    } catch (error) {
+      this.onFailure();
+      throw error;
+    }
+  }
+
+  onSuccess() {
+    this.failures = 0;
+    if (this.state === &#039;HALF_OPEN&#039;) {
+      this.state = &#039;CLOSED&#039;;
+    }
+  }
+
+  onFailure() {
+    this.failures++;
+    if (this.failures &gt;= this.failureThreshold) {
+      this.state = &#039;OPEN&#039;;
+      this.nextAttempt = Date.now() + this.timeout;
+    }
+  }
+
+  getState() {
+    return this.state;
+  }
+}
+
+// Use with API client
+class ResilientAPIClient extends APIClient {
+  constructor(baseURL, options = {}) {
+    super(baseURL, options);
+    this.circuitBreaker = new CircuitBreaker();
+  }
+
+  async request(endpoint, options = {}) {
+    return this.circuitBreaker.execute(async () =&gt; {
+      return await super.request(endpoint, options);
+    });
+  }
+}</code></pre>
+<h2>Caching Strategies</h2>
+<p>Caching reduces server load, speeds up your application, and works when the network doesn't. But cache invalidation is one of computer science's hardest problems, so tread carefully.</p>
+<h3>In-Memory Cache</h3>
+<pre><code class="language-javascript">class CacheManager {
+  constructor(defaultTTL = 5 * 60 * 1000) { // 5 minutes default
+    this.cache = new Map();
+    this.defaultTTL = defaultTTL;
+  }
+
+  set(key, value, ttl = this.defaultTTL) {
+    this.cache.set(key, {
+      value,
+      expires: Date.now() + ttl
+    });
+  }
+
+  get(key) {
+    const item = this.cache.get(key);
+
+    if (!item) {
+      return null;
+    }
+
+    if (Date.now() &gt; item.expires) {
+      this.cache.delete(key);
+      return null;
+    }
+
+    return item.value;
+  }
+
+  invalidate(key) {
+    this.cache.delete(key);
+  }
+
+  invalidatePattern(pattern) {
+    const regex = new RegExp(pattern);
+    for (const key of this.cache.keys()) {
+      if (regex.test(key)) {
+        this.cache.delete(key);
+      }
+    }
+  }
+
+  clear() {
+    this.cache.clear();
+  }
+}
+
+class CachedAPIClient extends APIClient {
+  constructor(baseURL, options = {}) {
+    super(baseURL, options);
+    this.cache = new CacheManager();
+  }
+
+  async get(endpoint, options = {}) {
+    const cacheKey = this.getCacheKey(&#039;GET&#039;, endpoint);
+    const cached = this.cache.get(cacheKey);
+
+    if (cached &amp;&amp; !options.bypassCache) {
+      return cached;
+    }
+
+    const data = await super.get(endpoint, options);
+    this.cache.set(cacheKey, data, options.cacheTTL);
+    return data;
+  }
+
+  getCacheKey(method, endpoint) {
+    return `${method}:${endpoint}`;
+  }
+
+  invalidateCache(endpoint) {
+    this.cache.invalidatePattern(endpoint);
+  }
+}
+
+const api = new CachedAPIClient(&#039;/api&#039;);
+
+// Usage
+class ProductList extends LarcComponent {
+  async loadProducts() {
+    // This will use cache if available
+    this.products = await api.get(&#039;/products&#039;);
+    this.render();
+  }
+
+  async refreshProducts() {
+    // Bypass cache and get fresh data
+    this.products = await api.get(&#039;/products&#039;, { bypassCache: true });
+    this.render();
+  }
+}</code></pre>
+<h3>LocalStorage Cache</h3>
+<p>For persistence across sessions:</p>
+<pre><code class="language-javascript">class PersistentCache extends CacheManager {
+  constructor(prefix = &#039;cache:&#039;, defaultTTL = 5 * 60 * 1000) {
+    super(defaultTTL);
+    this.prefix = prefix;
+    this.loadFromStorage();
+  }
+
+  loadFromStorage() {
+    try {
+      for (let i = 0; i &lt; localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith(this.prefix)) {
+          const data = JSON.parse(localStorage.getItem(key));
+          const originalKey = key.substring(this.prefix.length);
+          this.cache.set(originalKey, data);
+        }
+      }
+    } catch (error) {
+      console.error(&#039;Failed to load cache from storage:&#039;, error);
+    }
+  }
+
+  set(key, value, ttl = this.defaultTTL) {
+    super.set(key, value, ttl);
+
+    try {
+      localStorage.setItem(
+        this.prefix + key,
+        JSON.stringify({ value, expires: Date.now() + ttl })
+      );
+    } catch (error) {
+      console.error(&#039;Failed to persist cache:&#039;, error);
+    }
+  }
+
+  invalidate(key) {
+    super.invalidate(key);
+    localStorage.removeItem(this.prefix + key);
+  }
+
+  clear() {
+    super.clear();
+    const keysToRemove = [];
+
+    for (let i = 0; i &lt; localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key.startsWith(this.prefix)) {
+        keysToRemove.push(key);
+      }
+    }
+
+    keysToRemove.forEach(key =&gt; localStorage.removeItem(key));
+  }
+}</code></pre>
+<h3>Stale-While-Revalidate</h3>
+<p>Serve cached data immediately while fetching fresh data in the background:</p>
+<pre><code class="language-javascript">class SWRAPIClient extends APIClient {
+  constructor(baseURL, options = {}) {
+    super(baseURL, options);
+    this.cache = new CacheManager();
+  }
+
+  async get(endpoint, options = {}) {
+    const cacheKey = `GET:${endpoint}`;
+    const cached = this.cache.get(cacheKey);
+
+    // Return cached data immediately if available
+    if (cached &amp;&amp; !options.bypassCache) {
+      // Fetch fresh data in background
+      this.revalidate(endpoint, cacheKey, options);
+      return cached;
+    }
+
+    // No cache, fetch fresh data
+    const data = await super.get(endpoint, options);
+    this.cache.set(cacheKey, data);
+    return data;
+  }
+
+  async revalidate(endpoint, cacheKey, options) {
+    try {
+      const fresh = await super.get(endpoint, options);
+      this.cache.set(cacheKey, fresh);
+
+      // Notify subscribers of new data
+      this.notifySubscribers(cacheKey, fresh);
+    } catch (error) {
+      console.error(&#039;Revalidation failed:&#039;, error);
+    }
+  }
+
+  notifySubscribers(key, data) {
+    const event = new CustomEvent(&#039;cache-update&#039;, {
+      detail: { key, data }
+    });
+    window.dispatchEvent(event);
+  }
+}</code></pre>
+<h2>GraphQL Integration</h2>
+<p>GraphQL provides a more flexible alternative to REST, allowing clients to request exactly the data they need.</p>
+<h3>GraphQL Client</h3>
+<pre><code class="language-javascript">class GraphQLClient {
+  constructor(endpoint) {
+    this.endpoint = endpoint;
+  }
+
+  async query(query, variables = {}) {
+    const response = await fetch(this.endpoint, {
+      method: &#039;POST&#039;,
+      headers: {
+        &#039;Content-Type&#039;: &#039;application/json&#039;,
+        &#039;Authorization&#039;: `Bearer ${this.getAuthToken()}`
+      },
+      body: JSON.stringify({ query, variables })
+    });
+
+    const result = await response.json();
+
+    if (result.errors) {
+      throw new Error(result.errors.map(e =&gt; e.message).join(&#039;, &#039;));
+    }
+
+    return result.data;
+  }
+
+  async mutate(mutation, variables = {}) {
+    return this.query(mutation, variables);
+  }
+
+  getAuthToken() {
+    return localStorage.getItem(&#039;auth_token&#039;);
+  }
+}
+
+const graphql = new GraphQLClient(&#039;/graphql&#039;);</code></pre>
+<h3>Using GraphQL Queries</h3>
+<pre><code class="language-javascript">class ProductList extends LarcComponent {
+  async loadProducts() {
+    const query = `
+      query GetProducts($category: String, $limit: Int) {
+        products(category: $category, limit: $limit) {
+          id
+          name
+          description
+          price
+          category
+          imageUrl
+          inStock
+        }
+      }
+    `;
+
+    try {
+      const data = await graphql.query(query, {
+        category: this.selectedCategory,
+        limit: 20
+      });
+
+      this.products = data.products;
+      this.render();
+    } catch (error) {
+      this.showError(error.message);
+    }
+  }
+
+  async createProduct(product) {
+    const mutation = `
+      mutation CreateProduct($input: ProductInput!) {
+        createProduct(input: $input) {
+          id
+          name
+          price
+        }
+      }
+    `;
+
+    try {
+      const data = await graphql.mutate(mutation, {
+        input: product
+      });
+
+      navigate(`/products/${data.createProduct.id}`);
+    } catch (error) {
+      this.showError(error.message);
+    }
+  }
+}</code></pre>
+<h2>WebSocket Communication</h2>
+<p>WebSockets enable real-time bidirectional communication, perfect for chat applications, live updates, and collaborative features.</p>
+<h3>WebSocket Client</h3>
+<pre><code class="language-javascript">class WebSocketClient {
+  constructor(url) {
+    this.url = url;
+    this.ws = null;
+    this.listeners = new Map();
+    this.reconnectDelay = 1000;
+    this.maxReconnectDelay = 30000;
+    this.reconnectAttempts = 0;
+  }
+
+  connect() {
+    this.ws = new WebSocket(this.url);
+
+    this.ws.onopen = () =&gt; {
+      console.log(&#039;WebSocket connected&#039;);
+      this.reconnectAttempts = 0;
+      this.reconnectDelay = 1000;
+      this.emit(&#039;connected&#039;);
+    };
+
+    this.ws.onmessage = (event) =&gt; {
+      try {
+        const message = JSON.parse(event.data);
+        this.handleMessage(message);
+      } catch (error) {
+        console.error(&#039;Failed to parse message:&#039;, error);
+      }
+    };
+
+    this.ws.onerror = (error) =&gt; {
+      console.error(&#039;WebSocket error:&#039;, error);
+      this.emit(&#039;error&#039;, error);
+    };
+
+    this.ws.onclose = () =&gt; {
+      console.log(&#039;WebSocket disconnected&#039;);
+      this.emit(&#039;disconnected&#039;);
+      this.attemptReconnect();
+    };
+  }
+
+  attemptReconnect() {
+    this.reconnectAttempts++;
+    const delay = Math.min(
+      this.reconnectDelay * Math.pow(2, this.reconnectAttempts),
+      this.maxReconnectDelay
+    );
+
+    console.log(`Reconnecting in ${delay}ms...`);
+
+    setTimeout(() =&gt; {
+      this.connect();
+    }, delay);
+  }
+
+  handleMessage(message) {
+    const { type, data } = message;
+    this.emit(type, data);
+  }
+
+  send(type, data) {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify({ type, data }));
+    } else {
+      console.error(&#039;WebSocket not connected&#039;);
+    }
+  }
+
+  on(event, callback) {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, []);
+    }
+    this.listeners.get(event).push(callback);
+  }
+
+  off(event, callback) {
+    const callbacks = this.listeners.get(event);
+    if (callbacks) {
+      const filtered = callbacks.filter(cb =&gt; cb !== callback);
+      this.listeners.set(event, filtered);
+    }
+  }
+
+  emit(event, data) {
+    const callbacks = this.listeners.get(event);
+    if (callbacks) {
+      callbacks.forEach(callback =&gt; callback(data));
+    }
+  }
+
+  disconnect() {
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+  }
+}
+
+// Create global WebSocket client
+const ws = new WebSocketClient(&#039;wss://api.example.com/ws&#039;);
+ws.connect();</code></pre>
+<h3>Real-Time Chat Component</h3>
+<pre><code class="language-javascript">class ChatRoom extends LarcComponent {
+  constructor() {
+    super();
+    this.messages = [];
+    this.connected = false;
+
+    this.handleMessage = this.handleMessage.bind(this);
+    this.handleConnected = this.handleConnected.bind(this);
+    this.handleDisconnected = this.handleDisconnected.bind(this);
+  }
+
+  onMount() {
+    ws.on(&#039;message&#039;, this.handleMessage);
+    ws.on(&#039;connected&#039;, this.handleConnected);
+    ws.on(&#039;disconnected&#039;, this.handleDisconnected);
+
+    // Request message history
+    ws.send(&#039;get_history&#039;, { room: this.roomId });
+  }
+
+  onUnmount() {
+    ws.off(&#039;message&#039;, this.handleMessage);
+    ws.off(&#039;connected&#039;, this.handleConnected);
+    ws.off(&#039;disconnected&#039;, this.handleDisconnected);
+  }
+
+  handleMessage(message) {
+    this.messages.push(message);
+    this.render();
+    this.scrollToBottom();
+  }
+
+  handleConnected() {
+    this.connected = true;
+    this.render();
+  }
+
+  handleDisconnected() {
+    this.connected = false;
+    this.render();
+  }
+
+  sendMessage(event) {
+    event.preventDefault();
+
+    const input = this.querySelector(&#039;input[name=&quot;message&quot;]&#039;);
+    const message = input.value.trim();
+
+    if (!message) {
+      return;
+    }
+
+    ws.send(&#039;message&#039;, {
+      room: this.roomId,
+      text: message,
+      timestamp: Date.now()
+    });
+
+    input.value = &#039;&#039;;
+  }
+
+  scrollToBottom() {
+    const container = this.querySelector(&#039;.messages&#039;);
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }
+
+  template() {
+    return `
+      &lt;div class=&quot;chat-room&quot;&gt;
+        &lt;div class=&quot;status ${this.connected ? &#039;connected&#039; : &#039;disconnected&#039;}&quot;&gt;
+          ${this.connected ? &#039;Connected&#039; : &#039;Disconnected&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;messages&quot;&gt;
+          ${this.messages.map(msg =&gt; `
+            &lt;div class=&quot;message&quot;&gt;
+              &lt;span class=&quot;author&quot;&gt;${msg.author}:&lt;/span&gt;
+              &lt;span class=&quot;text&quot;&gt;${msg.text}&lt;/span&gt;
+              &lt;span class=&quot;time&quot;&gt;${this.formatTime(msg.timestamp)}&lt;/span&gt;
+            &lt;/div&gt;
+          `).join(&#039;&#039;)}
+        &lt;/div&gt;
+
+        &lt;form onsubmit=&quot;this.sendMessage(event)&quot;&gt;
+          &lt;input
+            type=&quot;text&quot;
+            name=&quot;message&quot;
+            placeholder=&quot;Type a message...&quot;
+            ?disabled=&quot;${!this.connected}&quot;&gt;
+          &lt;button type=&quot;submit&quot; ?disabled=&quot;${!this.connected}&quot;&gt;
+            Send
+          &lt;/button&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+    `;
+  }
+
+  formatTime(timestamp) {
+    return new Date(timestamp).toLocaleTimeString();
+  }
+}</code></pre>
+<h2>Server-Sent Events (SSE)</h2>
+<p>SSE provides one-way real-time communication from server to client—simpler than WebSockets but perfect for live updates, notifications, and progress tracking.</p>
+<h3>SSE Client</h3>
+<pre><code class="language-javascript">class SSEClient {
+  constructor(url) {
+    this.url = url;
+    this.eventSource = null;
+    this.listeners = new Map();
+  }
+
+  connect() {
+    this.eventSource = new EventSource(this.url);
+
+    this.eventSource.onopen = () =&gt; {
+      console.log(&#039;SSE connected&#039;);
+      this.emit(&#039;connected&#039;);
+    };
+
+    this.eventSource.onerror = (error) =&gt; {
+      console.error(&#039;SSE error:&#039;, error);
+      this.emit(&#039;error&#039;, error);
+
+      if (this.eventSource.readyState === EventSource.CLOSED) {
+        this.emit(&#039;disconnected&#039;);
+      }
+    };
+
+    this.eventSource.onmessage = (event) =&gt; {
+      try {
+        const data = JSON.parse(event.data);
+        this.emit(&#039;message&#039;, data);
+      } catch (error) {
+        console.error(&#039;Failed to parse SSE data:&#039;, error);
+      }
+    };
+  }
+
+  on(event, callback) {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, []);
+    }
+    this.listeners.get(event).push(callback);
+
+    // Subscribe to custom event types
+    if (event !== &#039;connected&#039; &amp;&amp; event !== &#039;error&#039; &amp;&amp; event !== &#039;disconnected&#039; &amp;&amp; event !== &#039;message&#039;) {
+      this.eventSource?.addEventListener(event, (e) =&gt; {
+        try {
+          const data = JSON.parse(e.data);
+          callback(data);
+        } catch (error) {
+          callback(e.data);
+        }
+      });
+    }
+  }
+
+  off(event, callback) {
+    const callbacks = this.listeners.get(event);
+    if (callbacks) {
+      const filtered = callbacks.filter(cb =&gt; cb !== callback);
+      this.listeners.set(event, filtered);
+    }
+  }
+
+  emit(event, data) {
+    const callbacks = this.listeners.get(event);
+    if (callbacks) {
+      callbacks.forEach(callback =&gt; callback(data));
+    }
+  }
+
+  disconnect() {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
+  }
+}</code></pre>
+<h3>Live Notifications</h3>
+<pre><code class="language-javascript">class NotificationCenter extends LarcComponent {
+  constructor() {
+    super();
+    this.notifications = [];
+    this.sse = new SSEClient(&#039;/api/notifications/stream&#039;);
+
+    this.handleNotification = this.handleNotification.bind(this);
+  }
+
+  onMount() {
+    this.sse.on(&#039;notification&#039;, this.handleNotification);
+    this.sse.connect();
+  }
+
+  onUnmount() {
+    this.sse.off(&#039;notification&#039;, this.handleNotification);
+    this.sse.disconnect();
+  }
+
+  handleNotification(notification) {
+    this.notifications.unshift(notification);
+
+    // Keep only last 50 notifications
+    if (this.notifications.length &gt; 50) {
+      this.notifications = this.notifications.slice(0, 50);
+    }
+
+    this.render();
+    this.showToast(notification);
+  }
+
+  showToast(notification) {
+    // Show temporary toast notification
+    const toast = document.createElement(&#039;div&#039;);
+    toast.className = &#039;toast&#039;;
+    toast.textContent = notification.message;
+    document.body.appendChild(toast);
+
+    setTimeout(() =&gt; {
+      toast.classList.add(&#039;fade-out&#039;);
+      setTimeout(() =&gt; toast.remove(), 300);
+    }, 3000);
+  }
+
+  dismissNotification(id) {
+    this.notifications = this.notifications.filter(n =&gt; n.id !== id);
+    this.render();
+
+    // Mark as read on server
+    api.post(`/notifications/${id}/read`);
+  }
+
+  template() {
+    return `
+      &lt;div class=&quot;notification-center&quot;&gt;
+        &lt;h2&gt;Notifications&lt;/h2&gt;
+
+        ${this.notifications.length === 0 ? `
+          &lt;p class=&quot;empty&quot;&gt;No notifications&lt;/p&gt;
+        ` : `
+          &lt;ul class=&quot;notification-list&quot;&gt;
+            ${this.notifications.map(notif =&gt; `
+              &lt;li class=&quot;notification ${notif.read ? &#039;read&#039; : &#039;unread&#039;}&quot;&gt;
+                &lt;div class=&quot;content&quot;&gt;
+                  &lt;strong&gt;${notif.title}&lt;/strong&gt;
+                  &lt;p&gt;${notif.message}&lt;/p&gt;
+                  &lt;time&gt;${this.formatTime(notif.timestamp)}&lt;/time&gt;
+                &lt;/div&gt;
+                &lt;button onclick=&quot;this.dismissNotification(&#039;${notif.id}&#039;)&quot;&gt;
+                  Dismiss
+                &lt;/button&gt;
+              &lt;/li&gt;
+            `).join(&#039;&#039;)}
+          &lt;/ul&gt;
+        `}
+      &lt;/div&gt;
+    `;
+  }
+
+  formatTime(timestamp) {
+    const date = new Date(timestamp);
+    const now = Date.now();
+    const diff = now - date;
+
+    if (diff &lt; 60000) {
+      return &#039;Just now&#039;;
+    } else if (diff &lt; 3600000) {
+      return `${Math.floor(diff / 60000)}m ago`;
+    } else if (diff &lt; 86400000) {
+      return `${Math.floor(diff / 3600000)}h ago`;
+    } else {
+      return date.toLocaleDateString();
+    }
+  }
+}</code></pre>
+<h2>Request Cancellation</h2>
+<p>Long-running requests should be cancellable to avoid wasting resources and confusing users.</p>
+<h3>AbortController</h3>
+<pre><code class="language-javascript">class SearchComponent extends LarcComponent {
+  constructor() {
+    super();
+    this.query = &#039;&#039;;
+    this.results = [];
+    this.searching = false;
+    this.abortController = null;
+  }
+
+  async handleSearch(event) {
+    this.query = event.target.value;
+
+    // Cancel previous search
+    if (this.abortController) {
+      this.abortController.abort();
+    }
+
+    if (!this.query) {
+      this.results = [];
+      this.render();
+      return;
+    }
+
+    this.searching = true;
+    this.render();
+
+    // Create new abort controller
+    this.abortController = new AbortController();
+
+    try {
+      const response = await fetch(
+        `/api/search?q=${encodeURIComponent(this.query)}`,
+        { signal: this.abortController.signal }
+      );
+
+      this.results = await response.json();
+    } catch (error) {
+      if (error.name === &#039;AbortError&#039;) {
+        console.log(&#039;Search cancelled&#039;);
+        return;
+      }
+      console.error(&#039;Search failed:&#039;, error);
+    } finally {
+      this.searching = false;
+      this.abortController = null;
+      this.render();
+    }
+  }
+
+  template() {
+    return `
+      &lt;div class=&quot;search&quot;&gt;
+        &lt;input
+          type=&quot;search&quot;
+          placeholder=&quot;Search...&quot;
+          value=&quot;${this.query}&quot;
+          oninput=&quot;this.handleSearch(event)&quot;&gt;
+
+        ${this.searching ? &#039;&lt;div class=&quot;spinner&quot;&gt;&lt;/div&gt;&#039; : &#039;&#039;}
+
+        &lt;ul class=&quot;results&quot;&gt;
+          ${this.results.map(result =&gt; `
+            &lt;li&gt;${result.title}&lt;/li&gt;
+          `).join(&#039;&#039;)}
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h2>Putting It All Together</h2>
+<p>Let's create a complete data layer that combines all these concepts:</p>
+<pre><code class="language-javascript">// data-layer.js
+class DataLayer {
+  constructor() {
+    this.api = new RetryableAPIClient(&#039;/api&#039;);
+    this.cache = new PersistentCache();
+    this.ws = null;
+    this.sse = null;
+  }
+
+  // REST API methods
+  async getProducts(options = {}) {
+    return this.api.get(&#039;/products&#039;, options);
+  }
+
+  async getProduct(id) {
+    return this.api.get(`/products/${id}`);
+  }
+
+  async createProduct(data) {
+    const product = await this.api.post(&#039;/products&#039;, data);
+    this.cache.invalidatePattern(&#039;/products&#039;);
+    return product;
+  }
+
+  async updateProduct(id, data) {
+    const product = await this.api.put(`/products/${id}`, data);
+    this.cache.invalidate(`/products/${id}`);
+    this.cache.invalidatePattern(&#039;/products&#039;);
+    return product;
+  }
+
+  async deleteProduct(id) {
+    await this.api.delete(`/products/${id}`);
+    this.cache.invalidate(`/products/${id}`);
+    this.cache.invalidatePattern(&#039;/products&#039;);
+  }
+
+  // WebSocket methods
+  connectWebSocket(url) {
+    this.ws = new WebSocketClient(url);
+    this.ws.connect();
+    return this.ws;
+  }
+
+  // SSE methods
+  subscribeToNotifications(callback) {
+    if (!this.sse) {
+      this.sse = new SSEClient(&#039;/api/notifications/stream&#039;);
+      this.sse.connect();
+    }
+    this.sse.on(&#039;notification&#039;, callback);
+  }
+
+  unsubscribeFromNotifications(callback) {
+    if (this.sse) {
+      this.sse.off(&#039;notification&#039;, callback);
+    }
+  }
+
+  // Cleanup
+  destroy() {
+    this.ws?.disconnect();
+    this.sse?.disconnect();
+    this.cache.clear();
+  }
+}
+
+// Export singleton instance
+export const dataLayer = new DataLayer();</code></pre>
+<p>Data fetching is the nervous system of your application—it connects your UI to the outside world and keeps everything in sync. With proper error handling, intelligent caching, and real-time communication, you can build applications that feel fast, reliable, and responsive, even when the network isn't cooperating. The patterns in this chapter will help you navigate the chaos of distributed systems and emerge with applications that users can actually depend on.</p>
+<p>And with that, we've covered the essential patterns for building robust, maintainable applications with LARC. From routing to forms to data fetching, you now have the tools to create web applications that don't just work—they work well.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/building-with-larc/chapter-11-data-fetching-and-apis.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

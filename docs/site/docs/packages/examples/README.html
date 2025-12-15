@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Examples · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Examples">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">examples</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Examples</h1>
+<a href="https://img.shields.io/badge/license-MIT-green.svg">![License</a>](LICENSE)
+<a href="https://img.shields.io/badge/examples-30+-blue.svg">![Examples</a>](examples/)
+<a href="https://img.shields.io/badge/demo--apps-5-green.svg">![Apps</a>](apps/)
+<blockquote><strong>Comprehensive examples and demo applications</strong> for the LARC/PAN messaging system</blockquote>
+<p>This repository contains a complete collection of examples, tutorials, and full-featured demo applications demonstrating the capabilities of the LARC (Lightweight Asynchronous Relay Core) framework.</p>
+<h2>🆕 New: Core Lite Package</h2>
+<p>LARC now offers <strong>@larcjs/core-lite</strong> - just <strong>9KB minified (3KB gzipped)</strong>! That's 94% smaller than React.</p>
+<p>Perfect for:
+<ul><li>📦 Bundle-conscious projects</li>
+<li>⚡ Fast-loading pages</li>
+<li>🎯 Simple pub/sub needs (no routing/debug)</li>
+</ul>
+See <a href="examples/00a-core-lite-demo.html">00a-core-lite-demo.html</a> for a working example!</p>
+<a href="../PACKAGES.md">Learn more about package options →</a>
+<hr>
+<h2>📚 What's Inside</h2>
+<h3>🎓 Examples (<code>/examples</code>)</h3>
+30+ progressive examples from basic concepts to advanced patterns:
+<li><strong><a href="examples/00-intro.html">00-intro.html</a></strong> - Introduction to PAN concepts</li>
+<li><strong><a href="examples/00a-core-lite-demo.html">00a-core-lite-demo.html</a></strong> ⭐ <strong>NEW!</strong> - @larcjs/core-lite demo (9KB bundle)</li>
+<li><strong><a href="examples/01-hello.html">01-hello.html</a></strong> - Hello World with PAN</li>
+<li><strong><a href="examples/02-todos-and-inspector.html">02-todos-and-inspector.html</a></strong> - Simple todo app with debugging</li>
+<li><strong><a href="examples/03-broadcastchannel.html">03-broadcastchannel.html</a></strong> - Cross-tab communication</li>
+<li><strong><a href="examples/04-react-wrapper.html">04-react-wrapper.html</a></strong> - Integration with React</li>
+<li><strong><a href="examples/05-lit-wrapper.html">05-lit-wrapper.html</a></strong> - Integration with Lit</li>
+<li><strong><a href="examples/06-crud.html">06-crud.html</a></strong> - Basic CRUD operations</li>
+<li><strong><a href="examples/07-rest-connector.html">07-rest-connector.html</a></strong> - REST API integration</li>
+<li><strong><a href="examples/08-workers.html">08-workers.html</a></strong> - Web Workers with PAN</li>
+<li><strong><a href="examples/09-schema-form.html">09-schema-form.html</a></strong> - JSON Schema forms</li>
+<li><strong><a href="examples/10-sse-store.html">10-sse-store.html</a></strong> - Server-Sent Events</li>
+<li><strong><a href="examples/11-graphql-connector.html">11-graphql-connector.html</a></strong> - GraphQL integration</li>
+<li><strong><a href="examples/12-php-connector.html">12-php-connector.html</a></strong> - PHP backend integration</li>
+<li><strong><a href="examples/13-sse-pan.html">13-sse-pan.html</a></strong> - SSE with PAN messaging</li>
+<li><strong><a href="examples/14-forwarder.html">14-forwarder.html</a></strong> - Message forwarding patterns</li>
+<li><strong><a href="examples/15-router.html">15-router.html</a></strong> - Client-side routing</li>
+<li><strong><a href="examples/16-websocket.html">16-websocket.html</a></strong> - WebSocket integration</li>
+<li><strong><a href="examples/17-enhanced-security.html">17-enhanced-security.html</a></strong> - Security features</li>
+<li><strong><a href="examples/17-indexeddb.html">17-indexeddb.html</a></strong> - IndexedDB integration</li>
+<li><strong><a href="examples/18-jwt-auth.html">18-jwt-auth.html</a></strong> - JWT authentication</li>
+<li><strong><a href="examples/18-typescript-usage.ts">18-typescript-usage.ts</a></strong> - TypeScript examples</li>
+<p>...and more!</p>
+<h3>🎯 Featured Demo: Hybrid Dashboard</h3>
+<strong><a href="hybrid-dashboard/">Hybrid Dashboard</a></strong> - <strong>React + Vue + LARC working together</strong>
+<p>This killer demo proves LARC's value proposition:
+<ul><li><strong>Mix frameworks seamlessly</strong> - React chart, Vue filters, LARC components</li>
+<li><strong>60% bundle size reduction</strong> - 322 KB vs 837 KB traditional approach</li>
+<li><strong>PAN coordination</strong> - All components communicate without tight coupling</li>
+<li><strong>Real bundle comparison</strong> - See actual savings in the demo</li>
+</ul>
+<strong>Start here</strong> to understand how LARC complements frameworks rather than replacing them.</p>
+<a href="hybrid-dashboard/">📊 View Demo</a> | <a href="hybrid-dashboard/README.md">📖 Read Guide</a>
+<hr>
+<h3>🚀 Demo Applications (<code>/apps</code>)</h3>
+<p>Full-featured applications showcasing real-world usage:</p>
+<p>#### 1. <strong>Contact Manager</strong> (<code>/apps/contact-manager</code>)
+Complete contact management system with CRUD operations.</p>
+<strong>Features:</strong>
+<ul><li>Add, edit, delete contacts</li>
+<li>Search and filtering</li>
+<li>Persistent storage</li>
+<li>Responsive UI</li>
+</ul>
+#### 2. <strong>Invoice Studio</strong> (<code>/apps/invoice-studio</code>)
+Professional invoice creation and management application.
+<strong>Features:</strong>
+<ul><li>Create and edit invoices</li>
+<li>Line item management</li>
+<li>PDF export</li>
+<li>Client database</li>
+<li>Invoice templates</li>
+</ul>
+#### 3. <strong>Data Browser</strong> (<code>/apps/data-browser</code>)
+Generic data browsing and editing interface.
+<strong>Features:</strong>
+<ul><li>Connect to any data source</li>
+<li>Grid view with sorting/filtering</li>
+<li>Inline editing</li>
+<li>Export capabilities</li>
+</ul>
+#### 4. <strong>Markdown Notes</strong> (<code>/apps/markdown-notes</code>)
+Simple note-taking app with Markdown support.
+<strong>Features:</strong>
+<ul><li>Real-time Markdown preview</li>
+<li>Note organization</li>
+<li>Local storage</li>
+<li>Export to HTML/PDF</li>
+</ul>
+#### 5. <strong>Invoice App</strong> (<code>/apps/invoice</code>)
+Streamlined invoice creation tool.
+<strong>Features:</strong>
+<ul><li>Quick invoice generation</li>
+<li>Client management</li>
+<li>Product catalog</li>
+<li>Payment tracking</li>
+</ul>
+<hr>
+<h2>🚀 Quick Start</h2>
+<h3>Running Examples Locally</h3>
+<li><strong>Clone the repository:</strong></li>
+   <pre><code class="language-bash">git clone https://github.com/larcjs/examples.git
+   cd examples</code></pre>
+<li><strong>Install dependencies (optional):</strong></li>
+   <pre><code class="language-bash">npm install</code></pre>
+<li><strong>Start a local server:</strong></li>
+   <pre><code class="language-bash">npm run dev
+   # or use any static server
+   # python3 -m http.server 8000
+   # npx serve</code></pre>
+<li><strong>Open in browser:</strong></li>
+   <pre><code class="language-plaintext">http://localhost:8000/examples/
+   http://localhost:8000/apps/</code></pre>
+<h3>Running with CDN (No Installation)</h3>
+<p>Most examples work directly with CDN links:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;!-- Option 1: Core Lite (9KB - recommended) --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core-lite@latest/src/pan.js&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Option 2: Full Core (40KB - includes routing &amp; debug) --&gt;
+  &lt;!-- &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.js&quot;&gt;&lt;/script&gt; --&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Your PAN components here --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<hr>
+<h2>📖 Learning Path</h2>
+<h3>Beginner (Start Here)</h3>
+<li><a href="examples/00-intro.html">00-intro.html</a> - Understand PAN concepts</li>
+<li><a href="examples/01-hello.html">01-hello.html</a> - First PAN app</li>
+<li><a href="examples/02-todos-and-inspector.html">02-todos-and-inspector.html</a> - Learn debugging</li>
+<li><a href="examples/06-crud.html">06-crud.html</a> - Basic data operations</li>
+<h3>Intermediate</h3>
+<li><a href="examples/07-rest-connector.html">07-rest-connector.html</a> - Connect to APIs</li>
+<li><a href="examples/09-schema-form.html">09-schema-form.html</a> - Dynamic forms</li>
+<li><a href="examples/15-router.html">15-router.html</a> - Add routing</li>
+<li><a href="apps/contact-manager/">Contact Manager</a> - Real app example</li>
+<h3>Advanced</h3>
+<li><a href="examples/08-workers.html">08-workers.html</a> - Offload work to workers</li>
+<li><a href="examples/11-graphql-connector.html">11-graphql-connector.html</a> - GraphQL</li>
+<li><a href="examples/17-enhanced-security.html">17-enhanced-security.html</a> - Security patterns</li>
+<li><a href="examples/18-jwt-auth.html">18-jwt-auth.html</a> - Authentication</li>
+<li><a href="apps/invoice-studio/">Invoice Studio</a> - Complex application</li>
+<hr>
+<h2>🔧 Backend Setup (Optional)</h2>
+<p>Some examples require backend services:</p>
+<h3>PHP Backend</h3>
+<li><strong>Requirements:</strong></li>
+   - PHP 7.4+
+   - SQLite or MySQL
+<li><strong>Setup:</strong></li>
+   <pre><code class="language-bash">cd apps
+   php -S localhost:8080</code></pre>
+<li><strong>Database:</strong></li>
+   <pre><code class="language-bash"># Initialize demo database
+   sqlite3 pan_demo.db &lt; setup-demo-db.sqlite.sql</code></pre>
+<h3>Node.js Backend (Coming Soon)</h3>
+<p>Node/Express alternatives for PHP examples.</p>
+<hr>
+<h2>📂 Repository Structure</h2>
+<pre><code class="language-plaintext">examples/
+├── examples/               # Progressive examples (00-18)
+│   ├── 00-intro.html
+│   ├── 01-hello.html
+│   ├── ...
+│   ├── index.html         # Examples index page
+│   └── assets/            # Shared assets
+│
+├── apps/                  # Full demo applications
+│   ├── contact-manager/
+│   ├── invoice-studio/
+│   ├── data-browser/
+│   ├── markdown-notes/
+│   ├── invoice/
+│   ├── api.php           # Shared backend API
+│   └── README.md         # Apps documentation
+│
+├── test-*.html           # Manual test pages
+├── auth.php              # Authentication backend
+├── sse.php               # Server-Sent Events endpoint
+└── api-legacy.php        # Legacy API (for reference)</code></pre>
+<hr>
+<h2>🎯 Example Categories</h2>
+<h3>By Topic</h3>
+<strong>Core Concepts:</strong>
+<ul><li>00-intro, 01-hello, 02-todos-and-inspector</li>
+</ul>
+<strong>Data Management:</strong>
+<ul><li>06-crud, 07-rest-connector, 09-schema-form, 17-indexeddb</li>
+</ul>
+<strong>Real-Time Communication:</strong>
+<ul><li>10-sse-store, 13-sse-pan, 16-websocket</li>
+</ul>
+<strong>Framework Integration:</strong>
+<ul><li>04-react-wrapper, 05-lit-wrapper</li>
+</ul>
+<strong>Advanced Patterns:</strong>
+<ul><li>08-workers, 14-forwarder, 15-router</li>
+</ul>
+<strong>Security & Auth:</strong>
+<ul><li>17-enhanced-security, 18-jwt-auth</li>
+</ul>
+<h3>By Difficulty</h3>
+<strong>Easy:</strong> 00-03, 06
+<strong>Medium:</strong> 04-05, 07, 09-10, 15
+<strong>Advanced:</strong> 08, 11-14, 16-18
+<hr>
+<h2>🛠️ Using Examples as Templates</h2>
+<p>Each example is self-contained and can serve as a template:</p>
+<li><strong>Copy the example file</strong></li>
+<li><strong>Modify for your use case</strong></li>
+<li><strong>Update topic names and data structures</strong></li>
+<li><strong>Add your business logic</strong></li>
+<p>Example:</p>
+<pre><code class="language-bash"># Start from CRUD example
+cp examples/06-crud.html my-app.html
+
+# Customize for your data model
+# Edit topic names: &quot;items.*&quot; → &quot;products.*&quot;
+# Update schema to match your data</code></pre>
+<hr>
+<h2>🧪 Testing</h2>
+<p>Run tests for examples:</p>
+<pre><code class="language-bash">npm test</code></pre>
+<p>Individual example tests:</p>
+<pre><code class="language-bash">npm run test:example -- 06-crud</code></pre>
+<hr>
+<h2>📋 Requirements</h2>
+<h3>Browser Requirements</h3>
+<ul><li>Chrome 90+</li>
+<li>Firefox 88+</li>
+<li>Safari 14+</li>
+<li>Edge 90+</li>
+</ul>
+<h3>Optional Backend Requirements</h3>
+<ul><li>PHP 7.4+ (for PHP examples)</li>
+<li>SQLite or MySQL (for database examples)</li>
+<li>Node.js 16+ (for build tools)</li>
+</ul>
+<hr>
+<h2>🔗 Related Packages</h2>
+<ul><li><strong><a href="https://github.com/larcjs/core">@larcjs/core</a></strong> — Core PAN messaging bus</li>
+<li><strong><a href="https://github.com/larcjs/components">@larcjs/ui</a></strong> — UI components library</li>
+<li><strong><a href="https://github.com/larcjs/devtools">@larcjs/devtools</a></strong> — Chrome DevTools extension</li>
+<li><strong><a href="https://github.com/larcjs/site">@larcjs/site</a></strong> — Documentation website</li>
+</ul>
+<hr>
+<h2>💡 Contributing</h2>
+<p>Have a great example to share?</p>
+<li>Fork the repository</li>
+<li>Add your example to <code>examples/</code> or <code>apps/</code></li>
+<li>Follow naming convention: <code>XX-descriptive-name.html</code></li>
+<li>Include comments explaining key concepts</li>
+<li>Submit a pull request</li>
+<p>See <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> for guidelines.</p>
+<hr>
+<h2>📄 License</h2>
+<p>MIT © Chris Robison</p>
+<hr>
+<h2>🆘 Support</h2>
+<ul><li>📖 <a href="https://larcjs.github.io/site/">Documentation</a></li>
+<li>💬 <a href="https://github.com/larcjs/examples/discussions">Discussions</a></li>
+<li>🐛 <a href="https://github.com/larcjs/examples/issues">Issue Tracker</a></li>
+</ul>
+<hr>
+<h2>🎉 Explore & Learn</h2>
+<p>Start with <a href="examples/00-intro.html">examples/00-intro.html</a> and work your way up!</p>
+<p>Each example builds on previous concepts, providing a comprehensive learning path for mastering LARC/PAN development.</p>
+<strong>Happy coding!</strong> 🚀
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/examples/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contributing to LARC · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Contributing to LARC">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>CONTRIBUTING</span>
+      </div>
+      <article class="docs-content">
+        <h1>Contributing to LARC</h1>
+<p>Thank you for your interest in contributing to LARC! We welcome contributions from the community.</p>
+<h2>📋 Table of Contents</h2>
+<ul><li><a href="#code-of-conduct">Code of Conduct</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#repository-structure">Repository Structure</a></li>
+<li><a href="#development-workflow">Development Workflow</a></li>
+<li><a href="#pull-request-process">Pull Request Process</a></li>
+<li><a href="#coding-standards">Coding Standards</a></li>
+<li><a href="#testing-guidelines">Testing Guidelines</a></li>
+<li><a href="#documentation">Documentation</a></li>
+<li><a href="#community">Community</a></li>
+</ul>
+<hr>
+<h2>Code of Conduct</h2>
+<p>This project and everyone participating in it is governed by our <a href="CODE_OF_CONDUCT.md">Code of Conduct</a>. By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.</p>
+<hr>
+<h2>Getting Started</h2>
+<h3>Prerequisites</h3>
+<ul><li>Node.js 18.x or higher</li>
+<li>Git</li>
+<li>A modern web browser (Chrome, Firefox, Safari, or Edge)</li>
+</ul>
+<h3>Setting Up the Development Environment</h3>
+<li><strong>Clone the repository:</strong></li>
+   <pre><code class="language-bash">git clone https://github.com/larcjs/larc.git
+   cd larc</code></pre>
+<li><strong>Install dependencies:</strong></li>
+   <pre><code class="language-bash">npm install</code></pre>
+<li><strong>Run the setup script (optional):</strong></li>
+   <pre><code class="language-bash">./setup.sh      # Mac/Linux
+   # OR
+   setup.bat       # Windows</code></pre>
+<li><strong>Start a local server:</strong></li>
+   <pre><code class="language-bash">python3 -m http.server 8000
+   # OR
+   npx serve</code></pre>
+<li><strong>Test the setup:</strong></li>
+   - Open http://localhost:8000/test-config.html
+   - Open http://localhost:8000/playground/
+<hr>
+<h2>Repository Structure</h2>
+<p>LARC is organized as an <strong>npm workspaces monorepo</strong>:</p>
+<pre><code class="language-plaintext">larc/
+├── packages/                      # Published packages (npm workspaces)
+│   ├── core/                      # @larcjs/core
+│   ├── components/                # @larcjs/ui
+│   ├── core-lite/                 # @larcjs/core-lite
+│   ├── core-routing/              # @larcjs/core-routing
+│   ├── core-debug/                # @larcjs/core-debug
+│   ├── core-types/                # @larcjs/core-types
+│   ├── components-types/          # @larcjs/ui-types
+│   ├── apps/                      # Demo applications
+│   ├── examples/                  # Code examples
+│   └── devtools/                  # Chrome DevTools extension
+├── cli/                           # create-larc-app CLI
+├── react-adapter/                 # React integration
+├── registry/                      # Component registry
+├── vscode-extension/              # VS Code extension
+├── docs/                          # Documentation &amp; guides
+└── playground/                    # Interactive component explorer</code></pre>
+<h3>Where to Contribute</h3>
+<p>All packages are in this monorepo. Choose the appropriate directory based on your contribution:</p>
+<p>| Contribution Type | Directory |
+|------------------|-----------|
+| Core messaging bus, autoloader | <code>packages/core/</code> |
+| TypeScript types for core | <code>packages/core-types/</code> |
+| UI components | <code>packages/ui/</code> |
+| TypeScript types for components | <code>packages/ui-types/</code> |
+| Example applications | <code>packages/examples/</code> |
+| Documentation website | <code>docs/site/</code> |
+| DevTools extension | <code>packages/devtools/</code> |
+| CLI tool | <code>cli/</code> |
+| React adapter | <code>react-adapter/</code> |
+| Playground, config, docs | Root directory |</p>
+<hr>
+<h2>Development Workflow</h2>
+<h3>1. Fork and Branch</h3>
+<pre><code class="language-bash"># Fork the appropriate repository on GitHub, then:
+git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
+cd REPO_NAME
+git checkout -b feature/your-feature-name</code></pre>
+<h3>2. Make Changes</h3>
+<ul><li>Write clear, concise code</li>
+<li>Follow the existing code style</li>
+<li>Add tests for new features</li>
+<li>Update documentation as needed</li>
+</ul>
+<h3>3. Test Your Changes</h3>
+<strong>For core package:</strong>
+<pre><code class="language-bash">cd core
+npm install
+npm test</code></pre>
+<strong>For UI components:</strong>
+<pre><code class="language-bash">cd ui
+npm install
+npm test</code></pre>
+<strong>For examples:</strong>
+<ul><li>Test in multiple browsers</li>
+<li>Verify all links work</li>
+<li>Check mobile responsiveness</li>
+</ul>
+<h3>4. Commit Your Changes</h3>
+<p>Follow conventional commit format:</p>
+<pre><code class="language-bash">git commit -m &quot;feat: add new pan-wizard component&quot;
+git commit -m &quot;fix: resolve memory leak in pan-bus&quot;
+git commit -m &quot;docs: update API reference for pan-client&quot;
+git commit -m &quot;test: add tests for message routing&quot;</code></pre>
+<strong>Commit message format:</strong>
+<ul><li><code>feat:</code> - New feature</li>
+<li><code>fix:</code> - Bug fix</li>
+<li><code>docs:</code> - Documentation only</li>
+<li><code>style:</code> - Code style changes (formatting, no logic change)</li>
+<li><code>refactor:</code> - Code refactoring</li>
+<li><code>test:</code> - Adding or updating tests</li>
+<li><code>chore:</code> - Maintenance tasks</li>
+</ul>
+<hr>
+<h2>Version Management & Changesets</h2>
+<p>We use <a href="https://github.com/changesets/changesets">Changesets</a> for managing versions and publishing packages. If your contribution changes functionality or fixes bugs in a published package, you need to create a changeset.</p>
+<h3>When to Create a Changeset</h3>
+<p>Create a changeset if your PR:
+<ul><li>Adds a new feature</li>
+<li>Fixes a bug</li>
+<li>Makes breaking changes</li>
+<li>Updates dependencies that affect functionality</li>
+</ul>
+<strong>Don't create a changeset for:</strong>
+<ul><li>Documentation-only changes</li>
+<li>Internal refactoring without behavior changes</li>
+<li>Example updates</li>
+<li>Test additions</li>
+</ul>
+<h3>How to Create a Changeset</h3></p>
+<li><strong>Run the changeset command:</strong></li>
+   <pre><code class="language-bash">npm run changeset</code></pre>
+<li><strong>Select packages</strong> that your changes affect (use spacebar to select)</li>
+<li><strong>Choose the change type:</strong></li>
+   - <code>major</code> - Breaking changes (bumps to next major version)
+   - <code>minor</code> - New features (bumps to next minor version)
+   - <code>patch</code> - Bug fixes (bumps to next patch version)
+<li><strong>Write a summary</strong> describing your changes (this becomes the changelog entry)</li>
+<li><strong>Commit the changeset</strong> with your changes:</li>
+   <pre><code class="language-bash">git add .changeset
+   git commit -m &quot;feat: add new feature with changeset&quot;</code></pre>
+<h3>Example Changeset Workflow</h3>
+<pre><code class="language-bash"># Make your changes
+vim packages/core/src/pan-bus.mjs
+
+# Create a changeset
+npm run changeset
+# Select: @larcjs/core
+# Type: minor (new feature)
+# Summary: &quot;Add support for wildcard message subscriptions&quot;
+
+# Commit everything together
+git add packages/core .changeset
+git commit -m &quot;feat(core): add wildcard subscriptions&quot;
+git push</code></pre>
+<h3>Automated Release Process</h3>
+<p>When your PR with a changeset is merged:
+<li>GitHub Action creates a "Version Packages" PR</li>
+<li>Maintainers review and merge the version PR</li>
+<li>Packages are automatically published to npm</li>
+<li>Changelog is automatically updated</li></p>
+<hr>
+<h2>Pull Request Process</h2>
+<h3>Before Submitting</h3>
+<ul><li>[ ] All tests pass locally</li>
+<li>[ ] Code follows project style guidelines</li>
+<li>[ ] Documentation is updated</li>
+<li>[ ] Commit messages are clear and follow conventions</li>
+<li>[ ] No console.log statements left in code</li>
+<li>[ ] TypeScript types are updated (if applicable)</li>
+</ul>
+<h3>Submitting a PR</h3>
+<li><strong>Push to your fork:</strong></li>
+   <pre><code class="language-bash">git push origin feature/your-feature-name</code></pre>
+<li><strong>Create a Pull Request on GitHub:</strong></li>
+   - Use a clear, descriptive title
+   - Reference any related issues (#123)
+   - Describe what changed and why
+   - Include screenshots for UI changes
+   - List any breaking changes
+<li><strong>PR Template:</strong></li>
+   <pre><code class="language-markdown">## Description
+   Brief description of changes
+
+   ## Type of Change
+   - [ ] Bug fix
+   - [ ] New feature
+   - [ ] Breaking change
+   - [ ] Documentation update
+
+   ## Testing
+   - [ ] Tests pass locally
+   - [ ] Tested in Chrome
+   - [ ] Tested in Firefox
+   - [ ] Tested in Safari
+   - [ ] Tested on mobile
+
+   ## Related Issues
+   Fixes #123
+
+   ## Screenshots (if applicable)</code></pre>
+<h3>Review Process</h3>
+<ul><li>Maintainers will review your PR within 1-3 business days</li>
+<li>Address any requested changes</li>
+<li>Once approved, a maintainer will merge your PR</li>
+<li>Your contribution will be included in the next release</li>
+</ul>
+<hr>
+<h2>Coding Standards</h2>
+<h3>JavaScript/ES Modules</h3>
+<ul><li>Use ES modules (<code>.mjs</code> extension for core files)</li>
+<li>Use modern JavaScript (ES2020+)</li>
+<li>Avoid dependencies when possible</li>
+<li>Prefer <code>const</code> over <code>let</code>, avoid <code>var</code></li>
+<li>Use arrow functions for callbacks</li>
+<li>Use template literals for strings</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Good
+const client = new PanClient();
+const message = { topic: &#039;user.updated&#039;, data: { id: 123 } };
+client.publish(message);
+
+// Bad
+var client = new PanClient();
+var message = { topic: &#039;user.updated&#039;, data: { id: 123 } };
+client.publish(message);</code></pre>
+<h3>Web Components</h3>
+<ul><li>Extend <code>HTMLElement</code></li>
+<li>Use Shadow DOM for encapsulation</li>
+<li>Clean up subscriptions in <code>disconnectedCallback</code></li>
+<li>Use descriptive attribute names</li>
+<li>Document all attributes and events</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">class PanCard extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.client = new PanClient(this);
+    this.render();
+  }
+
+  disconnectedCallback() {
+    this.client?.destroy();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `&lt;div class=&quot;card&quot;&gt;...&lt;/div&gt;`;
+  }
+}</code></pre>
+<h3>CSS</h3>
+<ul><li>Use CSS custom properties for theming</li>
+<li>Follow BEM naming conventions</li>
+<li>Keep specificity low</li>
+<li>Mobile-first responsive design</li>
+</ul>
+<h3>TypeScript</h3>
+<ul><li>Keep type definitions in separate repos</li>
+<li>Export all public types</li>
+<li>Use JSDoc for documentation</li>
+<li>Avoid <code>any</code> type</li>
+</ul>
+<hr>
+<h2>Testing Guidelines</h2>
+<h3>Core Package Tests</h3>
+<ul><li>Use Playwright for browser testing</li>
+<li>Test across multiple browsers (Chromium, Firefox, WebKit)</li>
+<li>Cover edge cases and error conditions</li>
+<li>Test async behavior thoroughly</li>
+</ul>
+<strong>Example test:</strong>
+<pre><code class="language-javascript">import { test, expect } from &#039;@playwright/test&#039;;
+
+test(&#039;should publish and deliver message&#039;, async ({ page }) =&gt; {
+  await page.goto(&#039;/test.html&#039;);
+
+  const result = await page.evaluate(() =&gt; {
+    const client = new PanClient();
+    return new Promise(resolve =&gt; {
+      client.subscribe(&#039;test.topic&#039;, msg =&gt; resolve(msg));
+      client.publish({ topic: &#039;test.topic&#039;, data: { value: 42 } });
+    });
+  });
+
+  expect(result.data.value).toBe(42);
+});</code></pre>
+<h3>UI Component Tests</h3>
+<ul><li>Test component rendering</li>
+<li>Test attribute changes</li>
+<li>Test PAN message handling</li>
+<li>Test accessibility (ARIA labels, keyboard navigation)</li>
+</ul>
+<h3>Test Coverage</h3>
+<ul><li>Aim for 80%+ code coverage</li>
+<li>100% coverage for critical paths</li>
+<li>All public APIs must be tested</li>
+<li>Edge cases and error handling must be tested</li>
+</ul>
+<hr>
+<h2>Documentation</h2>
+<h3>Code Documentation</h3>
+<ul><li>Add JSDoc comments to all public APIs</li>
+<li>Include examples in JSDoc</li>
+<li>Document parameters, return values, and exceptions</li>
+<li>Keep comments up to date</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">/**
+ * Publishes a message to the PAN bus
+ *
+ * @param {Object} message - Message to publish
+ * @param {string} message.topic - Topic name (e.g., &#039;user.updated&#039;)
+ * @param {*} message.data - Message payload
+ * @param {boolean} [message.retained=false] - Whether to retain message
+ *
+ * @returns {Promise&lt;void&gt;} Resolves when message is published
+ *
+ * @example
+ * await client.publish({
+ *   topic: &#039;user.updated&#039;,
+ *   data: { id: 123, name: &#039;John&#039; }
+ * });
+ */
+async publish(message) {
+  // Implementation
+}</code></pre>
+<h3>Markdown Documentation</h3>
+<ul><li>Update relevant docs when changing APIs</li>
+<li>Include code examples</li>
+<li>Use clear headings and structure</li>
+<li>Add a table of contents for long documents</li>
+</ul>
+<h3>Component Documentation</h3>
+<p>Every component should have:
+<ul><li>Description of purpose</li>
+<li>List of attributes</li>
+<li>List of events</li>
+<li>Usage examples</li>
+<li>Accessibility notes</li>
+</ul>
+<hr></p>
+<h2>Community</h2>
+<h3>Getting Help</h3>
+<ul><li>💬 <a href="https://github.com/larcjs/core/discussions">GitHub Discussions</a> - Ask questions, share ideas</li>
+<li>🐛 <a href="https://github.com/larcjs/core/issues">GitHub Issues</a> - Report bugs</li>
+<li>📖 <a href="https://larcjs.github.io/site/">Documentation</a> - Read the docs</li>
+</ul>
+<h3>Reporting Bugs</h3>
+<p>When reporting bugs, please include:</p>
+<li><strong>Description:</strong> Clear description of the issue</li>
+<li><strong>Steps to Reproduce:</strong> Numbered list of steps</li>
+<li><strong>Expected Behavior:</strong> What should happen</li>
+<li><strong>Actual Behavior:</strong> What actually happens</li>
+<li><strong>Environment:</strong></li>
+   - Browser and version
+   - LARC version
+   - Operating system
+<li><strong>Code Sample:</strong> Minimal reproducible example</li>
+<li><strong>Screenshots:</strong> If applicable</li>
+<strong>Use this template:</strong>
+<pre><code class="language-markdown">**Description:**
+Brief description of the bug
+
+**Steps to Reproduce:**
+1. Load page with pan-bus
+2. Subscribe to topic
+3. Publish message
+4. See error
+
+**Expected Behavior:**
+Message should be delivered
+
+**Actual Behavior:**
+Error is thrown
+
+**Environment:**
+- Browser: Chrome 120
+- LARC: v1.1.1
+- OS: macOS 14
+
+**Code Sample:**
+\`\`\`javascript
+const client = new PanClient();
+client.subscribe(&#039;test&#039;, msg =&gt; console.log(msg));
+\`\`\`
+
+**Screenshots:**
+[Attach if applicable]</code></pre>
+<h3>Suggesting Features</h3>
+<p>Before suggesting a feature:
+<ul><li>Check if it already exists</li>
+<li>Search existing issues and discussions</li>
+<li>Consider if it fits LARC's philosophy</li>
+</ul>
+When suggesting features:
+<ul><li>Explain the use case</li>
+<li>Provide examples</li>
+<li>Consider backward compatibility</li>
+<li>Be open to feedback</li>
+</ul>
+<hr></p>
+<h2>Recognition</h2>
+<p>Contributors will be:
+<ul><li>Listed in release notes</li>
+<li>Added to CONTRIBUTORS.md (if you make substantial contributions)</li>
+<li>Credited in documentation (for significant docs contributions)</li>
+</ul>
+<hr></p>
+<h2>Questions?</h2>
+<p>Feel free to:
+<ul><li>Open a <a href="https://github.com/larcjs/core/discussions">Discussion</a></li>
+<li>Comment on an existing issue</li>
+<li>Reach out to maintainers</li>
+</ul>
+<strong>Thank you for contributing to LARC!</strong> 🎉</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/CONTRIBUTING.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

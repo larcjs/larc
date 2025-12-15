@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@larcjs/ui-types · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - @larcjs/ui-types">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">components-types</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>@larcjs/ui-types</h1>
+<p>TypeScript type definitions for <a href="https://github.com/larcjs/components">@larcjs/ui</a>.</p>
+<h2>Installation</h2>
+<pre><code class="language-bash">npm install @larcjs/ui
+npm install -D @larcjs/ui-types @larcjs/core-types</code></pre>
+<h2>Usage</h2>
+<p>Import types alongside your LARC components:</p>
+<pre><code class="language-typescript">import type { PanRouter, PanStore, PanTable } from &#039;@larcjs/ui-types&#039;;
+
+const router: PanRouter = document.querySelector(&#039;pan-router&#039;)!;
+const store: PanStore&lt;AppState&gt; = document.querySelector(&#039;pan-store&#039;)!;
+const table: PanTable = document.querySelector(&#039;pan-table&#039;)!;
+
+// Fully typed!
+router.navigate(&#039;/home&#039;);
+store.setState({ user: { name: &#039;Alice&#039; } });
+table.setData(users);</code></pre>
+<h2>Why Separate Type Packages?</h2>
+<p>LARC follows a <strong>zero-build</strong> philosophy. The runtime packages are pure JavaScript with no dependencies or build step required. TypeScript support is <strong>opt-in</strong> via separate type packages.</p>
+<strong>Benefits:</strong>
+<ul><li>Zero-build users never download unnecessary type files</li>
+<li>Types can evolve independently from runtime code</li>
+<li>Keeps runtime packages lean and fast</li>
+<li>TypeScript users get full type safety</li>
+</ul>
+<h2>Available Component Types</h2>
+<h3>Routing & Navigation</h3>
+<ul><li><strong><code>PanRouter</code></strong> - Client-side routing with navigation</li>
+<li><strong><code>PanLink</code></strong> - Link component for routing</li>
+</ul>
+<h3>State Management</h3>
+<ul><li><strong><code>PanStore<T></code></strong> - Reactive state management</li>
+<li><strong><code>PanIDB</code></strong> - IndexedDB persistence</li>
+</ul>
+<h3>Data Display</h3>
+<ul><li><strong><code>PanTable</code></strong> - Data table with sorting, filtering</li>
+<li><strong><code>PanChart</code></strong> - Chart visualization</li>
+<li><strong><code>PanPagination</code></strong> - Pagination controls</li>
+</ul>
+<h3>Forms & Input</h3>
+<ul><li><strong><code>PanForm</code></strong> - Form handling with validation</li>
+<li><strong><code>PanSchemaForm</code></strong> - Dynamic forms from JSON schema</li>
+<li><strong><code>PanDropdown</code></strong> - Dropdown select</li>
+<li><strong><code>PanDatePicker</code></strong> - Date picker</li>
+<li><strong><code>PanSearchBar</code></strong> - Search input</li>
+<li><strong><code>PanValidation</code></strong> - Validation utilities</li>
+<li><strong><code>FileUpload</code></strong> - File upload with drag-and-drop</li>
+<li><strong><code>DragDropList</code></strong> - Sortable lists</li>
+</ul>
+<h3>UI Components</h3>
+<ul><li><strong><code>PanCard</code></strong> - Content card</li>
+<li><strong><code>PanModal</code></strong> - Modal dialog</li>
+<li><strong><code>PanTabs</code></strong> - Tabbed interface</li>
+</ul>
+<h3>Content & Editing</h3>
+<ul><li><strong><code>PanMarkdownEditor</code></strong> - Markdown editor</li>
+<li><strong><code>PanMarkdownRenderer</code></strong> - Markdown renderer</li>
+</ul>
+<h3>Data Connectivity</h3>
+<ul><li><strong><code>PanDataConnector</code></strong> - REST API connector</li>
+<li><strong><code>PanGraphQLConnector</code></strong> - GraphQL client</li>
+<li><strong><code>PanWebSocket</code></strong> - WebSocket connection</li>
+<li><strong><code>PanSSE</code></strong> - Server-sent events</li>
+<li><strong><code>PanFetch</code></strong> - HTTP fetch wrapper</li>
+</ul>
+<h3>Authentication & Security</h3>
+<ul><li><strong><code>PanJWT</code></strong> - JWT token management</li>
+</ul>
+<h3>Theming</h3>
+<ul><li><strong><code>PanThemeProvider</code></strong> - Theme provider</li>
+<li><strong><code>PanThemeToggle</code></strong> - Theme switcher</li>
+</ul>
+<h3>Developer Tools</h3>
+<ul><li><strong><code>PanInspector</code></strong> - PAN message inspector for debugging</li>
+</ul>
+<h3>Advanced</h3>
+<ul><li><strong><code>PanWorker</code></strong> - Web worker integration</li>
+</ul>
+<h2>Examples</h2>
+<h3>Router</h3>
+<pre><code class="language-typescript">import type { PanRouter } from &#039;@larcjs/ui-types&#039;;
+
+const router: PanRouter = document.querySelector(&#039;pan-router&#039;)!;
+
+// Navigate programmatically
+router.navigate(&#039;/users/123&#039;);
+
+// Get current route
+const current = router.getCurrentRoute();
+console.log(current.path, current.params);
+
+// Register route handler
+router.addRoute(&#039;/users/:id&#039;, (params) =&gt; {
+  console.log(&#039;User ID:&#039;, params.id);
+});</code></pre>
+<h3>Store</h3>
+<pre><code class="language-typescript">import type { PanStore } from &#039;@larcjs/ui-types&#039;;
+
+interface AppState {
+  user: { name: string; email: string } | null;
+  theme: &#039;light&#039; | &#039;dark&#039;;
+}
+
+const store: PanStore&lt;AppState&gt; = document.querySelector(&#039;pan-store&#039;)!;
+
+// Get current state
+const state = store.getState();
+
+// Update state
+store.setState({
+  user: { name: &#039;Alice&#039;, email: &#039;alice@example.com&#039; }
+});
+
+// Subscribe to changes
+const unsubscribe = store.subscribe((state) =&gt; {
+  console.log(&#039;State changed:&#039;, state);
+});</code></pre>
+<h3>Table</h3>
+<pre><code class="language-typescript">import type { PanTable } from &#039;@larcjs/ui-types&#039;;
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const table: PanTable = document.querySelector(&#039;pan-table&#039;)!;
+
+// Set data
+const users: User[] = [
+  { id: 1, name: &#039;Alice&#039;, email: &#039;alice@example.com&#039; },
+  { id: 2, name: &#039;Bob&#039;, email: &#039;bob@example.com&#039; }
+];
+
+table.setData(users);
+
+// Get selected rows
+const selected = table.getSelectedRows();</code></pre>
+<h3>Form</h3>
+<pre><code class="language-typescript">import type { PanForm } from &#039;@larcjs/ui-types&#039;;
+
+const form: PanForm = document.querySelector(&#039;pan-form&#039;)!;
+
+// Get form data
+const data = form.getData();
+console.log(data);
+
+// Set form data
+form.setData({
+  name: &#039;Alice&#039;,
+  email: &#039;alice@example.com&#039;
+});
+
+// Validate
+if (form.validate()) {
+  console.log(&#039;Form is valid!&#039;);
+}
+
+// Reset
+form.reset();</code></pre>
+<h3>WebSocket</h3>
+<pre><code class="language-typescript">import type { PanWebSocket } from &#039;@larcjs/ui-types&#039;;
+
+const ws: PanWebSocket = document.querySelector(&#039;pan-websocket&#039;)!;
+
+// Connect
+ws.connect(&#039;wss://example.com/socket&#039;);
+
+// Check connection
+if (ws.isConnected()) {
+  // Send message
+  ws.send({ type: &#039;ping&#039;, data: {} });
+}
+
+// Disconnect
+ws.disconnect();</code></pre>
+<h3>JWT</h3>
+<pre><code class="language-typescript">import type { PanJWT } from &#039;@larcjs/ui-types&#039;;
+
+const jwt: PanJWT = document.querySelector(&#039;pan-jwt&#039;)!;
+
+// Set token
+jwt.setToken(&#039;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&#039;);
+
+// Get token
+const token = jwt.getToken();
+
+// Decode token
+const payload = jwt.decode();
+console.log(payload);
+
+// Check expiration
+if (jwt.isExpired()) {
+  console.log(&#039;Token expired, please login&#039;);
+  jwt.clearToken();
+}</code></pre>
+<h2>Base Component Type</h2>
+<p>All LARC components extend the <code>LarcComponent</code> interface:</p>
+<pre><code class="language-typescript">import type { LarcComponent } from &#039;@larcjs/ui-types&#039;;
+import type { PanClient } from &#039;@larcjs/core-types&#039;;
+
+const component: LarcComponent = document.querySelector(&#039;my-component&#039;)!;
+
+// All components have these standard methods
+component.connectedCallback?.();
+component.disconnectedCallback?.();
+component.attributeChangedCallback?.(&#039;attr&#039;, &#039;old&#039;, &#039;new&#039;);
+
+// Most components include a PAN client
+if (component.client) {
+  component.client.publish({ topic: &#039;event&#039;, data: {} });
+}</code></pre>
+<h2>Creating Custom Types</h2>
+<p>For components not yet typed, you can create your own type definitions:</p>
+<pre><code class="language-typescript">import type { LarcComponent } from &#039;@larcjs/ui-types&#039;;
+
+interface MyCustomComponent extends LarcComponent {
+  // Add your component&#039;s public API
+  myMethod(): void;
+  myProperty: string;
+}
+
+// Use it
+const custom: MyCustomComponent = document.querySelector(&#039;my-custom-component&#039;)!;
+custom.myMethod();</code></pre>
+<h2>Type-Only Imports</h2>
+<p>Use <code>import type</code> to import types without importing runtime code:</p>
+<pre><code class="language-typescript">// This adds NO runtime code
+import type {
+  PanRouter,
+  PanStore,
+  PanTable
+} from &#039;@larcjs/ui-types&#039;;
+
+// This is the actual runtime import
+import &#039;@larcjs/ui/pan-router.mjs&#039;;
+
+const router: PanRouter = document.querySelector(&#039;pan-router&#039;)!;</code></pre>
+<h2>VS Code IntelliSense</h2>
+<p>Even if you're writing plain JavaScript, you'll get autocomplete and type hints in VS Code when <code>@larcjs/ui-types</code> is installed:</p>
+<pre><code class="language-javascript">// JavaScript file
+const router = document.querySelector(&#039;pan-router&#039;);
+
+router.nav // VS Code suggests &quot;navigate&quot;
+router.navigate(&#039;/home&#039;); // VS Code shows method signature</code></pre>
+<h2>Component Coverage</h2>
+<p>This package provides type definitions for the most commonly used LARC components. The complete list of 49 components includes:</p>
+<ul><li>✅ <strong>Typed (24 components)</strong>: Router, Store, Table, Form, Modal, Card, Tabs, Dropdown, DatePicker, WebSocket, SSE, JWT, ThemeProvider, ThemeToggle, Pagination, SearchBar, MarkdownEditor, MarkdownRenderer, Chart, FileUpload, DragDropList, DataConnector, GraphQLConnector, IDB, SchemaForm, Validation, Worker, Link, Fetch, Inspector</li>
+</ul>
+<ul><li>📝 <strong>Extend yourself (25 components)</strong>: Other specialized components can use the base <code>LarcComponent</code> type or you can create custom interfaces as needed.</li>
+</ul>
+<h2>Related Packages</h2>
+<ul><li><strong><a href="https://github.com/larcjs/components">@larcjs/ui</a></strong> — UI component library</li>
+<li><strong><a href="https://github.com/larcjs/core-types">@larcjs/core-types</a></strong> — Type definitions for LARC Core</li>
+<li><strong><a href="https://github.com/larcjs/core">@larcjs/core</a></strong> — Core PAN messaging bus</li>
+</ul>
+<h2>License</h2>
+<p>MIT</p>
+<h2>Links</h2>
+<ul><li><a href="https://github.com/larcjs/components">LARC Components</a></li>
+<li><a href="https://larcjs.com">LARC Documentation</a></li>
+<li><a href="https://github.com/larcjs/components-types/issues">Report Issues</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/components-types/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

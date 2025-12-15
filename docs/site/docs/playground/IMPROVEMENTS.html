@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Playground Improvements · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Playground Improvements">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>IMPROVEMENTS</span>
+      </div>
+      <article class="docs-content">
+        <h1>Playground Improvements</h1>
+<h2>Changes Made</h2>
+<h3>1. Fixed Property Updates Not Applying ✅</h3>
+<strong>Problem:</strong> Component properties weren't updating when changed in the properties panel.
+<strong>Solution:</strong>
+<ul><li>Improved property listener logic to handle different input types correctly</li>
+<li>Added explicit property setter in addition to setAttribute for better component compatibility</li>
+<li>Boolean attributes now properly set/remove (empty string for true, removed for false)</li>
+<li>Empty values now properly remove attributes instead of setting them to empty string</li>
+</ul>
+<h3>2. Badges Only for Non-UI Components ✅</h3>
+<strong>Problem:</strong> All components showed badges cluttering the canvas, even UI components that have visible elements.
+<strong>Solution:</strong>
+<ul><li>Added logic to detect non-UI components by category: <code>state</code>, <code>routing</code>, <code>data</code>, <code>devtools</code>, <code>advanced</code>, <code>auth</code></li>
+<li>Non-UI components (like <code>pan-bus</code>, <code>pan-store</code>, <code>pan-computed-state</code>) now show a badge and description</li>
+<li>UI components (like <code>pan-card</code>, <code>pan-button</code>, <code>pan-tabs</code>) render cleanly without badges</li>
+<li>Canvas is now a clean, functional preview area</li>
+</ul>
+<h3>3. Clean Canvas for UI Components ✅</h3>
+<strong>Problem:</strong> UI components had unnecessary hints and placeholders cluttering the view.
+<strong>Solution:</strong>
+<ul><li>Removed the generic fallback that added hints to all components</li>
+<li>UI components now render naturally with their default content</li>
+<li>Pre-defined demo content for common components (cards, forms, tables, tabs, modals)</li>
+<li>Canvas feels like a real preview area, not a debug interface</li>
+</ul>
+<h3>4. Per-Component Help Text System ✅</h3>
+<strong>Problem:</strong> No way to describe complex configurations like JSON objects, tabs structure, or special attribute formats.
+<strong>Solution:</strong>
+<ul><li>Added <code>helpText</code> field support at both component and attribute levels</li>
+<li>Component-level help text shows in an expandable "Usage Guide" section</li>
+<li>Attribute-level help text shows as "Show example" expandable details</li>
+<li>Uses <code><details></code> elements for clean, collapsible help</li>
+<li>Help text is displayed in monospace for code examples</li>
+</ul>
+<h3>5. Better Input Types for Complex Data ✅</h3>
+<strong>Problem:</strong> JSON and object attributes had no good way to be edited.
+<strong>Solution:</strong>
+<ul><li>Added support for <code>json</code>, <code>object</code>, <code>array</code>, and <code>textarea</code> input types</li>
+<li>These render as <code><textarea></code> elements with appropriate styling</li>
+<li>Monospace font for easier JSON editing</li>
+<li>Updates on blur to avoid constant re-rendering while typing</li>
+</ul>
+<h2>How to Use Help Text</h2>
+<h3>Component-Level Help Text</h3>
+<p>Edit the <code>component-registry.json</code> or add to your component metadata:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;pan-tabs&quot;,
+  &quot;displayName&quot;: &quot;Tabs&quot;,
+  &quot;description&quot;: &quot;Tabbed interface component&quot;,
+  &quot;helpText&quot;: &quot;&lt;p&gt;To add tabs, use the &lt;code&gt;tabs&lt;/code&gt; attribute with a JSON array:&lt;/p&gt;&lt;pre&gt;[\n  { \&quot;label\&quot;: \&quot;Tab 1\&quot;, \&quot;content\&quot;: \&quot;Content 1\&quot; },\n  { \&quot;label\&quot;: \&quot;Tab 2\&quot;, \&quot;content\&quot;: \&quot;Content 2\&quot; }\n]&lt;/pre&gt;&lt;p&gt;Or add tab elements as children in HTML.&lt;/p&gt;&quot;,
+  &quot;attributes&quot;: [...]
+}</code></pre>
+<h3>Attribute-Level Help Text</h3>
+<p>For complex attributes that need examples:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;config&quot;,
+  &quot;type&quot;: &quot;json&quot;,
+  &quot;description&quot;: &quot;Configuration object&quot;,
+  &quot;helpText&quot;: &quot;{\n  \&quot;theme\&quot;: \&quot;dark\&quot;,\n  \&quot;autoSave\&quot;: true,\n  \&quot;interval\&quot;: 5000\n}&quot;,
+  &quot;required&quot;: false
+}</code></pre>
+<h3>Supported Input Types</h3>
+<ul><li><code>string</code> (default) - Text input</li>
+<li><code>number</code> - Number input</li>
+<li><code>boolean</code> - Checkbox</li>
+<li><code>select</code> - Dropdown (requires <code>options</code> array)</li>
+<li><code>json</code> / <code>object</code> / <code>array</code> - Textarea with monospace font</li>
+<li><code>textarea</code> - Multiline text input</li>
+</ul>
+<h2>Examples</h2>
+<h3>State Management Component (Non-UI)</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;pan-computed-state&quot;,
+  &quot;displayName&quot;: &quot;Computed State&quot;,
+  &quot;description&quot;: &quot;Derived state with automatic dependency tracking&quot;,
+  &quot;category&quot;: &quot;state&quot;,
+  &quot;helpText&quot;: &quot;&lt;p&gt;Use to create computed values from other state:&lt;/p&gt;&lt;pre&gt;&amp;lt;pan-computed-state sources=\&quot;todos.list\&quot; output=\&quot;todos.stats\&quot;&amp;gt;\n  &amp;lt;script&amp;gt;\n    (todos) =&gt; ({\n      total: todos.length,\n      completed: todos.filter(t =&gt; t.completed).length\n    })\n  &amp;lt;/script&amp;gt;\n&amp;lt;/pan-computed-state&amp;gt;&lt;/pre&gt;&quot;,
+  &quot;attributes&quot;: [
+    {
+      &quot;name&quot;: &quot;sources&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Comma-separated list of topics to watch&quot;,
+      &quot;helpText&quot;: &quot;todos.list,user.preferences&quot;,
+      &quot;required&quot;: true
+    },
+    {
+      &quot;name&quot;: &quot;output&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Topic to publish computed result to&quot;,
+      &quot;required&quot;: true
+    }
+  ]
+}</code></pre>
+<h3>UI Component (Shows Cleanly)</h3>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;pan-card&quot;,
+  &quot;displayName&quot;: &quot;Card&quot;,
+  &quot;description&quot;: &quot;Card container with header and content&quot;,
+  &quot;category&quot;: &quot;ui&quot;,
+  &quot;attributes&quot;: [
+    {
+      &quot;name&quot;: &quot;header&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;description&quot;: &quot;Card header text&quot;,
+      &quot;default&quot;: &quot;Card Title&quot;
+    },
+    {
+      &quot;name&quot;: &quot;elevation&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;description&quot;: &quot;Shadow depth&quot;,
+      &quot;options&quot;: [&quot;0&quot;, &quot;1&quot;, &quot;2&quot;, &quot;3&quot;],
+      &quot;default&quot;: &quot;1&quot;
+    }
+  ]
+}</code></pre>
+<h2>Testing the Changes</h2>
+<li>Start the playground:</li>
+   <pre><code class="language-bash">cd playground
+   python3 -m http.server 8080</code></pre>
+<li>Open http://localhost:8080/</li>
+<li>Try adding components:</li>
+   - <strong>UI Component</strong> (like <code>pan-card</code>): Should render cleanly without badges
+   - <strong>State Component</strong> (like <code>pan-store</code>): Should show a badge at the top
+<li>Select a component and test property editing:</li>
+   - Text inputs should update on typing
+   - Checkboxes should toggle attributes
+   - Textareas should update on blur
+   - Changes should reflect in the component immediately
+<li>Look for help text:</li>
+   - Check if any components have the "💡 Usage Guide" section
+   - Check if attributes have "Show example" links
+<h2>Future Enhancements</h2>
+<ul><li>Add more pre-defined demo content for components</li>
+<li>Create a help text generator script</li>
+<li>Add validation for JSON inputs with error messages</li>
+<li>Add "Copy example" button for help text code snippets</li>
+<li>Create templates for common component configurations</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/IMPROVEMENTS.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -397,10 +397,10 @@ class MyCard extends LitElement { ... }
 
 ### "How do I get help?"
 
+- 🗣️ **Discord:** https://discord.gg/zjUPsWTu
 - 💬 **GitHub Discussions:** https://github.com/larcjs/core/discussions
 - 🐛 **Issues:** https://github.com/larcjs/core/issues
 - 📧 **Email:** (use GitHub issues for now)
-- 🗣️ **Discord:** (Coming soon)
 
 ### "How can I contribute?"
 

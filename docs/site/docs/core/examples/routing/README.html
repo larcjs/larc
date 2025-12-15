@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Routing Examples · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Routing Examples">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">core</a> / <a href="#">examples</a> / <a href="#">routing</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Routing Examples</h1>
+<p>This directory contains interactive examples demonstrating the PAN routing system.</p>
+<h2>Examples</h2>
+<h3>01. Basic Routing</h3>
+<strong>File:</strong> <code>01-basic-routing.html</code>
+<p>Demonstrates the simplest routing scenario: when a user login succeeds, automatically show the dashboard.</p>
+<strong>Key Concepts:</strong>
+<ul><li>Basic route definition</li>
+<li>EMIT action</li>
+<li>LOG action</li>
+<li>Route matching on message type</li>
+</ul>
+<h3>02. Filtered Routing</h3>
+<strong>File:</strong> <code>02-filtered-routing.html</code>
+<p>Shows how to use predicates to filter messages based on payload values. Creates an alert when temperature exceeds a threshold.</p>
+<strong>Key Concepts:</strong>
+<ul><li>Route predicates (<code>where</code> clause)</li>
+<li>Conditional routing</li>
+<li>Transform operations (pick)</li>
+<li>Inheriting payload in actions</li>
+</ul>
+<h3>03. Dynamic Route Management</h3>
+<strong>File:</strong> <code>03-dynamic-routes.html</code>
+<p>Interactive demo for adding, enabling/disabling, and removing routes at runtime.</p>
+<strong>Key Concepts:</strong>
+<ul><li>Runtime route management</li>
+<li><code>pan.routes.add()</code>, <code>enable()</code>, <code>disable()</code>, <code>remove()</code></li>
+<li>Route change listeners</li>
+<li>Route listing and filtering</li>
+</ul>
+<h3>04. Storage Persistence</h3>
+<strong>File:</strong> <code>04-storage-persistence.html</code>
+<p>Demonstrates route persistence using localStorage. Routes survive page refreshes.</p>
+<strong>Key Concepts:</strong>
+<ul><li>Storage adapters</li>
+<li>LocalStorageAdapter</li>
+<li>Route persistence</li>
+<li>Loading routes on startup</li>
+</ul>
+<h3>05. Control Messages</h3>
+<strong>File:</strong> <code>05-control-messages.html</code>
+<p>Shows how to configure routes by sending control messages over the bus itself (useful for admin panels).</p>
+<strong>Key Concepts:</strong>
+<ul><li>Control messages</li>
+<li><code>pan:control</code> event</li>
+<li>Remote route configuration</li>
+<li>Control message types</li>
+</ul>
+<h3>06. Debug & Tracing</h3>
+<strong>File:</strong> <code>06-debug-tracing.html</code>
+<p>Real-time monitoring of message flow through routes with statistics and trace export.</p>
+<strong>Key Concepts:</strong>
+<ul><li>Message tracing</li>
+<li>Debug manager API</li>
+<li>Statistics tracking</li>
+<li>Trace export/import</li>
+</ul>
+<h2>Running the Examples</h2>
+<li><strong>Simple HTTP Server:</strong></li>
+   <pre><code class="language-bash">cd core
+   python3 -m http.server 8000</code></pre>
+<li><strong>Open in Browser:</strong></li>
+   Navigate to <code>http://localhost:8000/examples/routing/01-basic-routing.html</code>
+<li><strong>Browser Console:</strong></li>
+   All examples log to the browser console. Open DevTools (F12) to see detailed logs.
+<h2>Key Routing Concepts</h2>
+<h3>Route Structure</h3>
+<pre><code class="language-javascript">{
+  name: &#039;Route Name&#039;,
+  enabled: true,
+  order: 0,
+  match: {
+    type: &#039;message.type&#039;,
+    topic: &#039;topic-name&#039;,
+    where: { op: &#039;gt&#039;, path: &#039;payload.value&#039;, value: 100 }
+  },
+  transform: {
+    op: &#039;pick&#039;,
+    paths: [&#039;payload.field1&#039;, &#039;payload.field2&#039;]
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: { type: &#039;new.message&#039; },
+      inherit: [&#039;payload&#039;]
+    },
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;info&#039;,
+      template: &#039;Message: {{payload.field1}}&#039;
+    }
+  ]
+}</code></pre>
+<h3>Predicate Operators</h3>
+<ul><li><code>eq</code>, <code>neq</code> - Equality/inequality</li>
+<li><code>gt</code>, <code>gte</code>, <code>lt</code>, <code>lte</code> - Numeric comparisons</li>
+<li><code>in</code> - Value in array</li>
+<li><code>regex</code> - Regular expression match</li>
+<li><code>and</code>, <code>or</code>, <code>not</code> - Logical operators</li>
+</ul>
+<h3>Actions</h3>
+<ul><li><strong>EMIT</strong> - Emit a new message</li>
+<li><strong>FORWARD</strong> - Forward original message to different topic</li>
+<li><strong>LOG</strong> - Log to console</li>
+<li><strong>CALL</strong> - Call registered handler function</li>
+</ul>
+<h3>Transform Operations</h3>
+<ul><li><strong>identity</strong> - Pass through unchanged</li>
+<li><strong>pick</strong> - Select specific fields</li>
+<li><strong>map</strong> - Apply function to field</li>
+<li><strong>custom</strong> - Apply custom transform function</li>
+</ul>
+<h2>API Reference</h2>
+<h3>Global API</h3>
+<pre><code class="language-javascript">// Routing
+window.pan.routes.add(route)
+window.pan.routes.update(id, patch)
+window.pan.routes.remove(id)
+window.pan.routes.enable(id)
+window.pan.routes.disable(id)
+window.pan.routes.get(id)
+window.pan.routes.list(filter)
+window.pan.routes.clear()
+
+// Debug
+window.pan.debug.enableTracing(options)
+window.pan.debug.disableTracing()
+window.pan.debug.getTrace()
+window.pan.debug.clearTrace()
+window.pan.debug.getStats()
+window.pan.debug.export()</code></pre>
+<h2>Tips</h2>
+<li><strong>Enable Debug Mode:</strong></li>
+   <pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot; debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<li><strong>Enable Tracing:</strong></li>
+   <pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot; enable-tracing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<li><strong>Check Route Execution:</strong></li>
+   Use <code>window.pan.routes.getStats()</code> to see how many routes have been evaluated and matched.
+<li><strong>Inspect Trace:</strong></li>
+   Use <code>window.pan.debug.getTrace()</code> to see message flow through routes.
+<h2>Next Steps</h2>
+<ul><li>Read the <a href="../../docs/PAN-ROUTING.md">API Reference</a></li>
+<li>Check the <a href="../../src/types/index.d.ts">TypeScript Definitions</a></li>
+<li>Explore <a href="../../pan-storage.mjs">Storage Adapters</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/core/examples/routing/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>StorageAdapter - PAN Documentation</title>
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">
+      <a href="../index.html">PAN Docs</a>
+    </div>
+    <div class="nav-section">
+      <a href="../index.html">← Back to Index</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <header class="page-header">
+      <h1>StorageAdapter</h1>
+      <div class="file-path">packages/core/pan-storage.mjs</div>
+    </header>
+
+    <section class="section">
+      <div class="description">
+        Provides pluggable storage backends for persisting routing configuration.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 id="StorageAdapter">Class: StorageAdapter</h2>
+      
+      <div class="description">Provides pluggable storage backends for persisting routing configuration.</div>
+
+      <h3>Examples</h3>
+
+      <pre><code>// Use localStorage
+const storage = new LocalStorageAdapter(&#039;pan-routes&#039;);
+pan.routes.useStorage(storage);</code></pre>
+
+      <pre><code>// Use custom HTTP backend
+const storage = new HttpStorageAdapter({
+  loadUrl: &#039;/api/routes&#039;,
+  saveUrl: &#039;/api/routes&#039;
+});
+pan.routes.useStorage(storage);
+/
+/**
+Base storage interface</code></pre>
+
+    </section>
+
+    <section class="section">
+      <h2 id="LocalStorageAdapter">Class: LocalStorageAdapter</h2>
+      
+      <div class="description">LocalStorage adapter for route persistence</div>
+
+    </section>
+
+    <section class="section">
+      <h2 id="SessionStorageAdapter">Class: SessionStorageAdapter</h2>
+      
+      <div class="description">SessionStorage adapter for route persistence</div>
+
+    </section>
+
+    <section class="section">
+      <h2 id="HttpStorageAdapter">Class: HttpStorageAdapter</h2>
+      
+      <div class="description">HTTP storage adapter for remote route persistence</div>
+
+    </section>
+
+    <section class="section">
+      <h2 id="MemoryStorageAdapter">Class: MemoryStorageAdapter</h2>
+      
+      <div class="description">In-memory storage (no persistence, for testing)</div>
+
+    </section>
+
+    <section class="section">
+      <h2 id="CompositeStorageAdapter">Class: CompositeStorageAdapter</h2>
+      
+      <div class="description">Composite storage adapter (tries multiple backends)</div>
+
+    </section>
+
+    <section class="section">
+      <h2 id="DebouncedStorageAdapter">Class: DebouncedStorageAdapter</h2>
+      
+      <div class="description">Debounced storage wrapper<br>Useful for reducing save frequency during rapid route changes</div>
+
+    </section>
+
+  </main>
+</body>
+</html>

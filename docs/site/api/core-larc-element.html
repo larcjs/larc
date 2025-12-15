@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LarcElement - PAN Documentation</title>
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">
+      <a href="../index.html">PAN Docs</a>
+    </div>
+    <div class="nav-section">
+      <a href="../index.html">← Back to Index</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <header class="page-header">
+      <h1>LarcElement</h1>
+      <div class="file-path">packages/core/larc-element.mjs</div>
+    </header>
+
+    <section class="section">
+      <div class="description">
+        LarcElement - Base class for PAN-compatible web components<br>Provides convenient helpers for pub/sub messaging and automatic<br>subscription cleanup on disconnect.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 id="LarcElement">Class: LarcElement</h2>
+      
+      <div class="description">LarcElement - Base class for PAN-compatible web components<br>Provides convenient helpers for pub/sub messaging and automatic<br>subscription cleanup on disconnect.</div>
+
+      <h3>Examples</h3>
+
+      <pre><code>import { LarcElement } from &#039;@larcjs/core/larc-element.mjs&#039;;
+class MyWidget extends LarcElement {
+  connected() {
+    // Subscribe with auto-cleanup
+    this.subscribe(&#039;data:updated&#039;, (data) =&gt; this.render(data));
+    // Publish events
+    this.pub(&#039;widget:ready&#039;, { id: this.id });
+  }
+  disconnected() {
+    // Optional cleanup (subscriptions auto-cleaned)
+  }
+}
+customElements.define(&#039;my-widget&#039;, MyWidget);</code></pre>
+
+    </section>
+
+  </main>
+</body>
+</html>

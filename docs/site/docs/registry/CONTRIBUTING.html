@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contributing to LARC Component Registry · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Contributing to LARC Component Registry">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">registry</a> / <span>CONTRIBUTING</span>
+      </div>
+      <article class="docs-content">
+        <h1>Contributing to LARC Component Registry</h1>
+<p>Thank you for your interest in contributing to the LARC ecosystem! This guide will help you submit your component to the registry.</p>
+<h2>📋 Before You Start</h2>
+<h3>Component Checklist</h3>
+<ul><li>[ ] Component is published on npm</li>
+<li>[ ] Component name follows kebab-case (e.g., <code>my-component</code>)</li>
+<li>[ ] README with usage examples</li>
+<li>[ ] MIT-compatible license</li>
+<li>[ ] Follows web component standards</li>
+<li>[ ] Works without build tools</li>
+<li>[ ] No breaking CORS issues</li>
+</ul>
+<h3>Recommended (for higher quality score)</h3>
+<ul><li>[ ] TypeScript type definitions</li>
+<li>[ ] Unit tests (Jest, Vitest, Web Test Runner, etc.)</li>
+<li>[ ] Live demo page</li>
+<li>[ ] Multiple usage examples</li>
+<li>[ ] PAN bus integration</li>
+<li>[ ] Accessibility features</li>
+<li>[ ] Documentation site</li>
+</ul>
+<h2>🚀 Submission Process</h2>
+<h3>Step 1: Publish to npm</h3>
+<p>Your component must be available on npm before submitting to the registry.</p>
+<pre><code class="language-bash"># In your component directory
+npm publish</code></pre>
+<strong>Package name conventions:</strong>
+<ul><li>Scoped: <code>@username/component-name</code> (recommended)</li>
+<li>Unscoped: <code>larc-component-name</code> (must start with <code>larc-</code>)</li>
+</ul>
+<h3>Step 2: Fork the Registry</h3>
+<pre><code class="language-bash">git clone https://github.com/larcjs/registry.git
+cd registry
+git checkout -b add-my-component</code></pre>
+<h3>Step 3: Create Component Entry</h3>
+<p>Create a file in <code>components/</code> named after your component:</p>
+<pre><code class="language-bash"># Example: components/my-awesome-widget.json</code></pre>
+<p>Use this template:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;my-awesome-widget&quot;,
+  &quot;displayName&quot;: &quot;Awesome Widget&quot;,
+  &quot;description&quot;: &quot;A brief, clear description of what your component does&quot;,
+  &quot;category&quot;: &quot;ui&quot;,
+  &quot;icon&quot;: &quot;🎨&quot;,
+  &quot;tags&quot;: [&quot;ui&quot;, &quot;widget&quot;, &quot;awesome&quot;],
+  &quot;status&quot;: &quot;stable&quot;,
+  &quot;since&quot;: &quot;1.0.0&quot;,
+
+  &quot;npm&quot;: {
+    &quot;package&quot;: &quot;@username/my-awesome-widget&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;url&quot;: &quot;https://www.npmjs.com/package/@username/my-awesome-widget&quot;
+  },
+
+  &quot;cdn&quot;: {
+    &quot;jsdelivr&quot;: &quot;https://cdn.jsdelivr.net/npm/@username/my-awesome-widget@1.0.0/dist/index.js&quot;,
+    &quot;unpkg&quot;: &quot;https://unpkg.com/@username/my-awesome-widget@1.0.0/dist/index.js&quot;,
+    &quot;esm&quot;: &quot;https://esm.sh/@username/my-awesome-widget@1.0.0&quot;
+  },
+
+  &quot;repository&quot;: {
+    &quot;type&quot;: &quot;github&quot;,
+    &quot;url&quot;: &quot;https://github.com/username/my-awesome-widget&quot;
+  },
+
+  &quot;demo&quot;: &quot;https://username.github.io/my-awesome-widget&quot;,
+
+  &quot;author&quot;: {
+    &quot;name&quot;: &quot;Your Name&quot;,
+    &quot;email&quot;: &quot;you@example.com&quot;,
+    &quot;url&quot;: &quot;https://yoursite.com&quot;,
+    &quot;github&quot;: &quot;username&quot;
+  },
+
+  &quot;license&quot;: &quot;MIT&quot;,
+
+  &quot;panTopics&quot;: [
+    &quot;widget:update&quot;,
+    &quot;widget:close&quot;,
+    &quot;data:widget&quot;
+  ],
+
+  &quot;attributes&quot;: [
+    {
+      &quot;name&quot;: &quot;color&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;default&quot;: &quot;blue&quot;,
+      &quot;description&quot;: &quot;The color of the widget&quot;,
+      &quot;required&quot;: false
+    },
+    {
+      &quot;name&quot;: &quot;size&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;default&quot;: &quot;medium&quot;,
+      &quot;description&quot;: &quot;Widget size: small, medium, or large&quot;,
+      &quot;required&quot;: false
+    }
+  ],
+
+  &quot;properties&quot;: [
+    {
+      &quot;name&quot;: &quot;isOpen&quot;,
+      &quot;type&quot;: &quot;boolean&quot;,
+      &quot;description&quot;: &quot;Whether the widget is currently open&quot;,
+      &quot;readonly&quot;: false
+    }
+  ],
+
+  &quot;methods&quot;: [
+    {
+      &quot;name&quot;: &quot;toggle&quot;,
+      &quot;description&quot;: &quot;Toggle the widget open/closed state&quot;,
+      &quot;parameters&quot;: [],
+      &quot;returns&quot;: {
+        &quot;type&quot;: &quot;void&quot;
+      }
+    }
+  ],
+
+  &quot;events&quot;: [
+    {
+      &quot;name&quot;: &quot;widget-change&quot;,
+      &quot;description&quot;: &quot;Fired when widget state changes&quot;,
+      &quot;detail&quot;: {
+        &quot;type&quot;: &quot;{ isOpen: boolean }&quot;,
+        &quot;description&quot;: &quot;Contains the new state&quot;
+      }
+    }
+  ],
+
+  &quot;slots&quot;: [
+    {
+      &quot;name&quot;: &quot;default&quot;,
+      &quot;description&quot;: &quot;Main content slot&quot;
+    },
+    {
+      &quot;name&quot;: &quot;header&quot;,
+      &quot;description&quot;: &quot;Optional header content&quot;
+    }
+  ],
+
+  &quot;cssProperties&quot;: [
+    {
+      &quot;name&quot;: &quot;--widget-bg&quot;,
+      &quot;description&quot;: &quot;Background color&quot;,
+      &quot;default&quot;: &quot;#ffffff&quot;
+    }
+  ],
+
+  &quot;cssParts&quot;: [
+    {
+      &quot;name&quot;: &quot;container&quot;,
+      &quot;description&quot;: &quot;Main container element&quot;
+    }
+  ],
+
+  &quot;examples&quot;: [
+    {
+      &quot;title&quot;: &quot;Basic Usage&quot;,
+      &quot;description&quot;: &quot;Simple widget with default settings&quot;,
+      &quot;code&quot;: &quot;&lt;my-awesome-widget color=\&quot;blue\&quot;&gt;Content&lt;/my-awesome-widget&gt;&quot;
+    },
+    {
+      &quot;title&quot;: &quot;With Custom Styles&quot;,
+      &quot;description&quot;: &quot;Using CSS custom properties&quot;,
+      &quot;code&quot;: &quot;&lt;my-awesome-widget style=\&quot;--widget-bg: #f0f0f0\&quot;&gt;Styled content&lt;/my-awesome-widget&gt;&quot;
+    }
+  ],
+
+  &quot;dependencies&quot;: [
+    &quot;@larcjs/core&quot;
+  ],
+
+  &quot;related&quot;: [
+    &quot;other-component&quot;
+  ],
+
+  &quot;quality&quot;: {
+    &quot;tests&quot;: true,
+    &quot;types&quot;: true,
+    &quot;docs&quot;: true,
+    &quot;examples&quot;: true
+  }
+}</code></pre>
+<h3>Step 4: Validate Your Entry</h3>
+<pre><code class="language-bash">npm install
+npm run validate</code></pre>
+<p>This checks:
+<ul><li>JSON syntax</li>
+<li>Required fields</li>
+<li>Schema compliance</li>
+<li>npm package exists</li>
+<li>URLs are accessible</li>
+</ul>
+<h3>Step 5: Submit Pull Request</h3></p>
+<pre><code class="language-bash">git add components/my-awesome-widget.json
+git commit -m &quot;Add my-awesome-widget component&quot;
+git push origin add-my-component</code></pre>
+<p>Then open a PR on GitHub with:</p>
+<strong>Title:</strong> <code>Add [component-name] component</code>
+<strong>Description:</strong>
+<pre><code class="language-markdown">## Component Information
+
+- **Name**: my-awesome-widget
+- **Category**: UI Components
+- **NPM**: [@username/my-awesome-widget](https://www.npmjs.com/package/@username/my-awesome-widget)
+- **Demo**: [View Demo](https://username.github.io/my-awesome-widget)
+
+## Description
+
+Brief description of what your component does and why it&#039;s useful.
+
+## Checklist
+
+- [x] Component published on npm
+- [x] README with examples
+- [x] MIT license
+- [x] JSON validated
+- [x] Demo available
+- [x] Tests included
+- [x] TypeScript types included
+
+## Screenshots
+
+![Component Preview](https://your-image-url.png)</code></pre>
+<h2>📐 Component Guidelines</h2>
+<h3>Naming</h3>
+<p>✅ <strong>Good:</strong>
+<ul><li><code>user-card</code></li>
+<li><code>data-table</code></li>
+<li><code>pan-custom-widget</code></li>
+</ul>
+❌ <strong>Bad:</strong>
+<ul><li><code>UserCard</code> (not lowercase)</li>
+<li><code>card</code> (needs hyphen)</li>
+<li><code>my_component</code> (use hyphen, not underscore)</li>
+</ul>
+<h3>Categories</h3></p>
+<p>Choose the most appropriate category:</p>
+<ul><li><strong>routing</strong> - Navigation, routing, links</li>
+<li><strong>state</strong> - State management, storage</li>
+<li><strong>forms</strong> - Form inputs, validation</li>
+<li><strong>data</strong> - Data fetching, APIs, connectors</li>
+<li><strong>ui</strong> - Visual components, layouts</li>
+<li><strong>content</strong> - Content display, editors</li>
+<li><strong>auth</strong> - Authentication, security</li>
+<li><strong>theme</strong> - Theming, styling</li>
+<li><strong>devtools</strong> - Development utilities</li>
+<li><strong>advanced</strong> - Complex/specialized components</li>
+</ul>
+<h3>Status Levels</h3>
+<ul><li><strong>experimental</strong> - Early development, API may change</li>
+<li><strong>beta</strong> - Feature complete, stabilizing API</li>
+<li><strong>stable</strong> - Production ready, stable API</li>
+<li><strong>deprecated</strong> - No longer recommended</li>
+</ul>
+<h3>PAN Topics</h3>
+<p>Document all PAN bus topics your component uses:</p>
+<pre><code class="language-json">&quot;panTopics&quot;: [
+  &quot;user:login&quot;,      // Listens for login events
+  &quot;user:logout&quot;,     // Listens for logout events
+  &quot;nav:change&quot;       // Publishes navigation changes
+]</code></pre>
+<p>Use wildcards for topic families:
+<pre><code class="language-json">&quot;panTopics&quot;: [
+  &quot;widget:*&quot;,        // All widget topics
+  &quot;data:products:*&quot;  // All product data topics
+]</code></pre></p>
+<h3>Documentation</h3>
+<p>Your npm package README should include:</p>
+<li><strong>Installation</strong> - npm install and CDN usage</li>
+<li><strong>Quick Start</strong> - Basic usage example</li>
+<li><strong>API</strong> - All attributes, properties, methods, events</li>
+<li><strong>Examples</strong> - Multiple usage scenarios</li>
+<li><strong>Styling</strong> - CSS variables and parts</li>
+<li><strong>PAN Bus</strong> - Topics used for communication</li>
+<h3>Code Quality</h3>
+<p>Your component should:</p>
+<ul><li>✅ Use standard Web Components API</li>
+<li>✅ Work without build tools (native ES modules)</li>
+<li>✅ Handle errors gracefully</li>
+<li>✅ Clean up resources (event listeners, timers)</li>
+<li>✅ Follow accessibility best practices</li>
+<li>✅ Be responsive</li>
+<li>✅ Not pollute global scope</li>
+</ul>
+<h3>Testing</h3>
+<p>Include tests for:</p>
+<ul><li>Component initialization</li>
+<li>Attribute changes</li>
+<li>Method functionality</li>
+<li>Event firing</li>
+<li>PAN bus integration</li>
+<li>Error cases</li>
+</ul>
+<h2>🏆 Quality Score</h2>
+<p>Components are scored A-F based on:</p>
+<h3>Grade A (90-100 points)</h3>
+<ul><li>✅ Comprehensive tests (25 pts)</li>
+<li>✅ TypeScript definitions (20 pts)</li>
+<li>✅ Detailed documentation (20 pts)</li>
+<li>✅ Multiple examples (15 pts)</li>
+<li>✅ Live demo (10 pts)</li>
+<li>✅ Accessibility (10 pts)</li>
+</ul>
+<h3>Grade B (75-89 points)</h3>
+<ul><li>✅ Basic tests</li>
+<li>✅ TypeScript definitions</li>
+<li>✅ Good documentation</li>
+<li>✅ Some examples</li>
+</ul>
+<h3>Grade C (60-74 points)</h3>
+<ul><li>✅ Documentation</li>
+<li>✅ Basic examples</li>
+</ul>
+<h3>Grade D (50-59 points)</h3>
+<ul><li>✅ Minimal documentation</li>
+</ul>
+<h3>Grade F (<50 points)</h3>
+<ul><li>❌ Missing documentation</li>
+</ul>
+<h2>🔍 Review Process</h2>
+<p>After submitting your PR:</p>
+<li><strong>Automated checks</strong> run (JSON validation, linting)</li>
+<li><strong>Manual review</strong> by LARC team member</li>
+<li><strong>Feedback</strong> provided if changes needed</li>
+<li><strong>Approval</strong> and merge when ready</li>
+<li><strong>Registry update</strong> (usually within 24 hours)</li>
+<h3>What We Check</h3>
+<ul><li>✅ Component works as described</li>
+<li>✅ No security vulnerabilities</li>
+<li>✅ Follows web standards</li>
+<li>✅ Documentation is accurate</li>
+<li>✅ Examples work</li>
+<li>✅ No copyright violations</li>
+</ul>
+<h2>🔄 Updating Your Component</h2>
+<p>To update your component entry:</p>
+<li>Update your npm package</li>
+<li>Submit PR updating the JSON file</li>
+<li>Update version numbers</li>
+<li>Add changelog notes</li>
+<h2>❓ Questions?</h2>
+<ul><li>💬 <a href="https://discord.gg/larc">Discord Community</a></li>
+<li>📧 Email: components@larcjs.com</li>
+<li>📝 <a href="https://github.com/larcjs/registry/issues">Open an Issue</a></li>
+</ul>
+<h2>📄 License</h2>
+<p>By contributing, you agree that your component listing is licensed under MIT.</p>
+<h2>🎉 Thank You!</h2>
+<p>Your contributions make LARC better for everyone!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/registry/CONTRIBUTING.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

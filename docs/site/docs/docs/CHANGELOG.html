@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Changelog · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Changelog">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <span>CHANGELOG</span>
+      </div>
+      <article class="docs-content">
+        <h1>Changelog</h1>
+<p>All notable changes to the LARC project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2>[Unreleased]</h2>
+<h3>Added - Ecosystem Expansion (December 2024)</h3>
+<p>#### CLI Tooling
+<ul><li><strong>create-larc-app</strong> - Project scaffolding tool for creating new LARC applications</li>
+</ul>  - Interactive project creation with multiple templates
+  - Zero-config setup with automatic dependency installation
+  - Git initialization and project structure generation
+<ul><li><strong>larc CLI</strong> - Development tooling suite</li>
+</ul>  - <code>larc dev</code> - Hot-reload development server with SSE-based HMR
+  - <code>larc add</code> - Component installation from registry
+  - <code>larc generate</code> - Code generation for new components
+  - <code>larc preview</code> - Production preview server
+<ul><li>Project templates (minimal, with plans for dashboard and blog)</li>
+</ul>
+#### Component Registry
+<ul><li>Web-based component discovery and browsing interface</li>
+<li>JSON Schema-based component metadata system</li>
+<li>Quality scoring and verification badges</li>
+<li>Registry build and validation tools</li>
+<li>Component submission workflow for community contributions</li>
+<li>Example components (pan-card, pan-button)</li>
+</ul>
+#### VS Code Extension
+<ul><li>Code snippets for LARC components and PAN bus patterns</li>
+<li>IntelliSense with component auto-completion</li>
+<li>Registry integration for browsing and installing components</li>
+<li>Commands for creating and managing components</li>
+<li>Configuration settings for customization</li>
+</ul>
+#### Documentation
+<ul><li>Learning LARC guide with chapters and diagrams</li>
+<li>Component registry documentation (README, CONTRIBUTING)</li>
+<li>CLI tool documentation and usage guides</li>
+<li>VS Code extension documentation</li>
+<li>Implementation completion summary</li>
+<li>Hacker News launch checklist</li>
+</ul>
+#### Community & Governance
+<ul><li>CODE_OF_CONDUCT.md - Contributor Covenant Code of Conduct</li>
+<li>CONTRIBUTING.md - Comprehensive contributing guidelines</li>
+<li>SECURITY.md - Security policy and vulnerability reporting process</li>
+</ul>
+<h3>Changed</h3></p>
+<p>#### Component Registry Updates
+<ul><li>Updated component paths from <code>@larcjs/ui</code> to <code>@larcjs/ui</code></li>
+<li>Regenerated component registry with latest component discoveries</li>
+<li>Added 8 new components to registry:</li>
+</ul>  - <code>pan-computed-state</code> - Derived state management
+  - <code>pan-json-form</code> - JSON-based form generation
+  - <code>pan-offline-sync</code> - Offline-first synchronization
+  - <code>pan-persistence-strategy</code> - Storage strategy management
+  - <code>pan-schema-validator</code> - JSON Schema validation
+  - <code>pan-state-sync</code> - Cross-tab state synchronization
+  - <code>pan-tree</code> - Tree view component
+  - <code>pan-undo-redo</code> - Undo/redo state management</p>
+<p>#### Repository Structure
+<ul><li>Added <code>/cli</code> directory for CLI tooling</li>
+<li>Added <code>/registry</code> directory for component registry</li>
+<li>Added <code>/vscode-extension</code> directory for VS Code extension</li>
+<li>Added <code>/docs/learning-larc</code> directory for learning materials</li>
+<li>Added <code>registry-schema.json</code> for component metadata validation</li>
+</ul>
+#### Documentation Updates
+<ul><li>Updated main README with ecosystem tools section</li>
+<li>Enhanced Quick Start with CLI-first approach</li>
+<li>Added three quick start options (CLI, automated, manual)</li>
+<li>Updated repository table with ecosystem tool references</li>
+</ul>
+<h3>Fixed</h3>
+<ul><li>Submodule SSH connection issues by converting to HTTPS URLs</li>
+<li>Component path references in playground registry</li>
+</ul>
+<h2>[1.1.1] - 2024-11-28</h2></p>
+<h3>Core (@larcjs/core)</h3>
+<ul><li>Published version 1.1.1 with bug fixes and improvements</li>
+<li>All 261 tests passing across Chromium, Firefox, and WebKit</li>
+</ul>
+<h3>Components (@larcjs/ui)</h3>
+<ul><li>Published version 1.1.0 with new state management components</li>
+<li>Enhanced state management suite with cross-tab sync, offline support, and validation</li>
+</ul>
+<h3>Types</h3>
+<ul><li>@larcjs/core-types version 1.1.1</li>
+<li>@larcjs/ui-types version 1.0.2</li>
+</ul>
+<h2>[1.1.0] - 2024-11-20</h2>
+<h3>Added</h3>
+<ul><li>Comprehensive state management components</li>
+<li>Advanced state synchronization features</li>
+<li>Offline-first capabilities</li>
+<li>Enhanced developer tooling</li>
+</ul>
+<h3>Documentation</h3>
+<ul><li>Development philosophy documentation</li>
+<li>Production roadmap</li>
+<li>State management patterns guide</li>
+<li>Browser compatibility matrix</li>
+</ul>
+<h2>[1.0.0] - 2024-11-01</h2>
+<h3>Added</h3>
+<ul><li>Initial release of LARC framework</li>
+<li>PAN (Page Area Network) messaging bus</li>
+<li>Auto-loading system for web components</li>
+<li>Configuration system for path management</li>
+<li>TypeScript support</li>
+<li>Interactive playground</li>
+<li>Core component library</li>
+<li>Documentation website</li>
+</ul>
+<h3>Features</h3>
+<ul><li>Zero-build development workflow</li>
+<li>Framework-agnostic component system</li>
+<li>Cross-tab state synchronization</li>
+<li>Progressive component loading</li>
+<li>CDN-ready architecture</li>
+<li>Wide browser support (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+)</li>
+</ul>
+<hr>
+<h2>Version History</h2>
+<ul><li><strong>Unreleased</strong> - Ecosystem expansion (CLI, Registry, VS Code Extension)</li>
+<li><strong>1.1.1</strong> (2024-11-28) - Bug fixes and stability improvements</li>
+<li><strong>1.1.0</strong> (2024-11-20) - State management enhancements</li>
+<li><strong>1.0.0</strong> (2024-11-01) - Initial release</li>
+</ul>
+[Unreleased]: https://github.com/larcjs/larc/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/larcjs/larc/compare/v1.1.0...v1.1.1
+[1.1.0]: https://github.com/larcjs/larc/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/larcjs/larc/releases/tag/v1.0.0
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/CHANGELOG.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

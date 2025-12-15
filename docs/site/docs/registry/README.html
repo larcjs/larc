@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Component Registry · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Component Registry">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">registry</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Component Registry</h1>
+<p>The official registry for LARC web components. Browse, discover, and share components built for the LARC framework.</p>
+<h2>🌟 Features</h2>
+<ul><li><strong>Searchable Directory</strong>: Find components by category, tags, or keywords</li>
+<li><strong>Quality Verified</strong>: Components reviewed and verified by the LARC team</li>
+<li><strong>Try Before Install</strong>: Test components directly in the playground</li>
+<li><strong>NPM Integration</strong>: All components available via npm</li>
+<li><strong>CDN Ready</strong>: Use components directly from CDN without build steps</li>
+</ul>
+<h2>📦 Browse Components</h2>
+<p>Visit <a href="https://larcjs.com/components">larcjs.com/components</a> to browse the full registry.</p>
+<h3>Categories</h3>
+<ul><li>🧭 <strong>Routing & Navigation</strong> - Client-side routing solutions</li>
+<li>💾 <strong>State Management</strong> - Data persistence and state handling</li>
+<li>📝 <strong>Forms & Input</strong> - Form handling and validation</li>
+<li>🔌 <strong>Data & Connectivity</strong> - API integration and data fetching</li>
+<li>🎨 <strong>UI Components</strong> - Interface building blocks</li>
+<li>📄 <strong>Content & Media</strong> - Content display and editing</li>
+<li>🔐 <strong>Authentication</strong> - Security and authentication</li>
+<li>🎭 <strong>Theming</strong> - Theme management</li>
+<li>🔧 <strong>Developer Tools</strong> - Debugging utilities</li>
+<li>⚙️ <strong>Advanced</strong> - Advanced functionality</li>
+</ul>
+<h2>🚀 Quick Start</h2>
+<h3>Using a Component</h3>
+<pre><code class="language-bash"># Install from npm
+npm install @larcjs/ui
+
+# Or use from CDN</code></pre>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@larcjs/ui&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@latest/dist/index.js&quot;
+  }
+}
+&lt;/script&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  import &#039;@larcjs/ui/pan-card&#039;;
+&lt;/script&gt;
+
+&lt;pan-card header=&quot;Hello World&quot;&gt;
+  Your content here
+&lt;/pan-card&gt;</code></pre>
+<h3>Using the CLI</h3>
+<pre><code class="language-bash"># Create a new LARC app
+npx create-larc-app my-app
+
+# Add a component
+cd my-app
+npx larc add @username/component-name
+
+# Generate a new component
+npx larc generate component my-widget</code></pre>
+<h2>🤝 Contributing a Component</h2>
+<p>We welcome community contributions! Here's how to add your component to the registry:</p>
+<h3>Prerequisites</h3>
+<li><strong>Publish to npm</strong> - Your component must be available on npm</li>
+<li><strong>Follow LARC conventions</strong> - Use PAN bus for communication</li>
+<li><strong>Include documentation</strong> - README with examples</li>
+<li><strong>Add tests</strong> (recommended) - Improves quality score</li>
+<h3>Submission Process</h3>
+<li><strong>Fork this repository</strong></li>
+<li><strong>Create a component entry</strong> in <code>components/your-component.json</code>:</li>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;your-component&quot;,
+  &quot;displayName&quot;: &quot;Your Component&quot;,
+  &quot;description&quot;: &quot;Brief description of what it does&quot;,
+  &quot;category&quot;: &quot;ui&quot;,
+  &quot;npm&quot;: {
+    &quot;package&quot;: &quot;@username/your-component&quot;,
+    &quot;version&quot;: &quot;1.0.0&quot;,
+    &quot;url&quot;: &quot;https://www.npmjs.com/package/@username/your-component&quot;
+  },
+  &quot;repository&quot;: {
+    &quot;type&quot;: &quot;github&quot;,
+    &quot;url&quot;: &quot;https://github.com/username/your-component&quot;
+  },
+  &quot;demo&quot;: &quot;https://username.github.io/your-component&quot;,
+  &quot;icon&quot;: &quot;🎨&quot;,
+  &quot;tags&quot;: [&quot;ui&quot;, &quot;widget&quot;],
+  &quot;status&quot;: &quot;stable&quot;,
+  &quot;author&quot;: {
+    &quot;name&quot;: &quot;Your Name&quot;,
+    &quot;github&quot;: &quot;username&quot;
+  },
+  &quot;license&quot;: &quot;MIT&quot;,
+  &quot;panTopics&quot;: [&quot;widget:*&quot;],
+  &quot;attributes&quot;: [
+    {
+      &quot;name&quot;: &quot;color&quot;,
+      &quot;type&quot;: &quot;string&quot;,
+      &quot;default&quot;: &quot;blue&quot;,
+      &quot;description&quot;: &quot;Widget color&quot;,
+      &quot;required&quot;: false
+    }
+  ]
+}</code></pre>
+<li><strong>Submit a Pull Request</strong></li>
+<p>See <a href="./CONTRIBUTING.md">CONTRIBUTING.md</a> for detailed guidelines.</p>
+<h2>📋 Component Requirements</h2>
+<h3>Required</h3>
+<ul><li>✅ Published on npm</li>
+<li>✅ Valid component name (kebab-case with at least one hyphen)</li>
+<li>✅ Basic documentation</li>
+<li>✅ MIT-compatible license</li>
+<li>✅ Follows web component standards</li>
+</ul>
+<h3>Recommended (for better quality score)</h3>
+<ul><li>⭐ TypeScript definitions</li>
+<li>⭐ Unit tests</li>
+<li>⭐ Live demo</li>
+<li>⭐ Usage examples</li>
+<li>⭐ PAN bus integration</li>
+</ul>
+<h2>🏆 Quality Badges</h2>
+<p>Components receive quality scores based on:</p>
+<ul><li><strong>A Grade</strong>: Tests, types, docs, examples, verified</li>
+<li><strong>B Grade</strong>: Types, docs, examples</li>
+<li><strong>C Grade</strong>: Basic docs</li>
+<li><strong>D Grade</strong>: Minimal docs</li>
+<li><strong>F Grade</strong>: No docs</li>
+</ul>
+<h2>🔍 Verification</h2>
+<p>The LARC team reviews submitted components for:</p>
+<ul><li>✅ Security (no malicious code)</li>
+<li>✅ Standards compliance (proper web component implementation)</li>
+<li>✅ PAN bus usage (correct topic patterns)</li>
+<li>✅ Documentation quality</li>
+<li>✅ Code quality</li>
+</ul>
+Verified components get a ✓ badge in the registry.
+<h2>📊 Statistics</h2>
+<p>Components with npm packages get automatic stats:</p>
+<ul><li>Monthly downloads</li>
+<li>GitHub stars</li>
+<li>Last updated date</li>
+<li>Bundle size</li>
+</ul>
+<h2>🛠️ Development</h2>
+<h3>Building the Registry</h3>
+<pre><code class="language-bash"># Install dependencies
+npm install
+
+# Generate registry from component files
+npm run build
+
+# Validate registry
+npm run validate
+
+# Run tests
+npm test</code></pre>
+<h3>Local Preview</h3>
+<pre><code class="language-bash"># Start registry browser locally
+npm run dev
+
+# Open http://localhost:3000</code></pre>
+<h2>📚 Documentation</h2>
+<ul><li><a href="./docs/SUBMISSION_GUIDELINES.md">Submission Guidelines</a></li>
+<li><a href="./docs/COMPONENT_STANDARDS.md">Component Standards</a></li>
+<li><a href="./docs/QUALITY_CRITERIA.md">Quality Criteria</a></li>
+<li><a href="./docs/API_REFERENCE.md">API Reference</a></li>
+</ul>
+<h2>🔗 Links</h2>
+<ul><li><a href="https://github.com/larcjs/larc">LARC Framework</a></li>
+<li><a href="https://larcjs.com/playground">Component Playground</a></li>
+<li><a href="https://larcjs.com/docs">Documentation</a></li>
+<li><a href="https://discord.gg/larc">Discord Community</a></li>
+</ul>
+<h2>📄 License</h2>
+<p>MIT License - see <a href="./LICENSE">LICENSE</a> for details</p>
+<h2>🙏 Credits</h2>
+<p>Built with ❤️ by the LARC community.</p>
+<p>Special thanks to all <a href="./CONTRIBUTORS.md">contributors</a>!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/registry/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

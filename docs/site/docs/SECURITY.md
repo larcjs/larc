@@ -568,8 +568,6 @@ client.publish({
 
 **DO NOT** file public issues for security vulnerabilities.
 
-Email: security@example.com (encrypted preferred)
-
-PGP Key: [link to public key]
+Email: security@larcjs.com
 
 We aim to respond within 48 hours.
