@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC — Lightweight Asynchronous Relay Core · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC — Lightweight Asynchronous Relay Core">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.github</a> / <a href="#">profile</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC — Lightweight Asynchronous Relay Core</h1>
+<a href="https://img.shields.io/badge/version-1.1.1-blue.svg">![Version</a>](https://github.com/larcjs/core)
+<a href="https://img.shields.io/badge/license-MIT-green.svg">![License</a>](https://github.com/larcjs/core/blob/main/LICENSE)
+<a href="https://img.shields.io/badge/status-production--ready-brightgreen.svg">![Status</a>](https://github.com/larcjs/core)
+<blockquote><strong>Build loosely-coupled, event-driven web applications</strong> with zero build tooling</blockquote>
+<p>LARC implements the PAN (Page Area Network) messaging protocol — a framework-agnostic message bus that enables seamless communication between components, iframes, workers, and browser tabs.</p>
+<hr>
+<h2>🌟 Key Features</h2>
+<ul><li>🚀 <strong>Zero Build Required</strong> — Drop-in <code><pan-bus></code> element, no bundler needed</li>
+<li>🔌 <strong>Framework Complement</strong> — Reduce React/Vue bundles by 60%+, keep frameworks for complex UIs</li>
+<li>🎯 <strong>Lightweight</strong> — ~5KB core, components load on demand</li>
+<li>⚡ <strong>High Performance</strong> — 300k+ messages/second, zero memory leaks</li>
+<li>🔒 <strong>Security Audited</strong> — Production-ready with comprehensive security review</li>
+<li>🛠️ <strong>DevTools</strong> — Chrome extension for debugging message flows</li>
+</ul>
+<hr>
+<h2>📦 Packages</h2>
+<p>| Package | Description | Version | Links |
+|---------|-------------|---------|-------|
+| <strong><a href="https://github.com/larcjs/core">@larcjs/core</a></strong> | Core PAN messaging bus | 1.1.1 | <a href="https://npmjs.com/package/@larcjs/core">NPM</a> · <a href="https://larcjs.github.io/site/">Docs</a> |
+| <strong><a href="https://github.com/larcjs/components">@larcjs/ui</a></strong> | UI components library | 1.1.0 | <a href="https://npmjs.com/package/@larcjs/ui">NPM</a> · <a href="https://larcjs.github.io/site/gallery.html">Gallery</a> |
+| <strong><a href="https://github.com/larcjs/devtools">@larcjs/devtools</a></strong> | Chrome DevTools extension | 1.0.0 | <a href="https://chrome.google.com/webstore">Chrome Store</a> · <a href="https://github.com/larcjs/devtools">Docs</a> |
+| <strong><a href="https://github.com/larcjs/examples">@larcjs/examples</a></strong> | Examples & demo apps | 1.0.1 | <a href="https://larcjs.github.io/examples/">Examples</a> · <a href="https://github.com/larcjs/examples/tree/main/apps">Apps</a> |
+| <strong><a href="https://github.com/larcjs/site">@larcjs/site</a></strong> | Documentation website | 1.0.0 | <a href="https://larcjs.github.io/site/">Live Site</a> |</p>
+<hr>
+<h2>⚡ Quick Start</h2>
+<h3>CDN (No Installation)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Components load automatically --&gt;
+  &lt;pan-data-table resource=&quot;users&quot; columns=&#039;[&quot;id&quot;,&quot;name&quot;,&quot;email&quot;]&#039;&gt;&lt;/pan-data-table&gt;
+  &lt;pan-inspector&gt;&lt;/pan-inspector&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>NPM Installation</h3>
+<pre><code class="language-bash">npm install @larcjs/core @larcjs/ui</code></pre>
+<pre><code class="language-javascript">import &#039;@larcjs/core&#039;;
+import &#039;@larcjs/ui/pan-data-table&#039;;
+
+// Use in your HTML</code></pre>
+<hr>
+<h2>🎯 Use Cases</h2>
+<h3>Microservices & Microfrontends</h3>
+Decouple independent UI components that communicate via messages instead of direct dependencies.
+<h3>Real-Time Collaboration</h3>
+Sync state across tabs, iframes, and WebSockets with built-in cross-context messaging.
+<h3>Web Workers Integration</h3>
+Offload heavy computation to workers while maintaining clean message contracts.
+<h3>Progressive Enhancement</h3>
+Add interactive components to existing pages without framework rewrites.
+<hr>
+<h2>📚 Documentation</h2>
+<ul><li><strong><a href="https://larcjs.github.io/site/">Getting Started</a></strong> — Quick introduction</li>
+<li><strong><a href="https://larcjs.github.io/site/docs/API_REFERENCE.html">API Reference</a></strong> — Complete API docs</li>
+<li><strong><a href="https://larcjs.github.io/examples/">Examples</a></strong> — 30+ progressive examples</li>
+<li><strong><a href="https://larcjs.github.io/site/gallery.html">Component Gallery</a></strong> — Visual showcase</li>
+<li><strong><a href="https://larcjs.github.io/site/docs/LARC_SPEC.v0.html">Architecture Guide</a></strong> — System design</li>
+</ul>
+<hr>
+<h2>🔍 Example: Simple Todo App</h2>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core/pan.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;h1&gt;Todos&lt;/h1&gt;
+  &lt;todo-list&gt;&lt;/todo-list&gt;
+  &lt;todo-provider&gt;&lt;/todo-provider&gt;
+  &lt;pan-inspector&gt;&lt;/pan-inspector&gt;
+
+  &lt;script&gt;
+    // Components communicate via PAN messages
+    // No direct coupling between todo-list and todo-provider
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>The todo list publishes <code>todo.add</code> messages. The provider listens and updates state. Zero coupling!</p>
+<hr>
+<h2>🛠️ Development</h2>
+<h3>Clone a Package</h3>
+<pre><code class="language-bash">git clone https://github.com/larcjs/core.git
+cd core
+npm install
+npm test</code></pre>
+<h3>Link Packages Locally</h3>
+<pre><code class="language-bash">cd core &amp;&amp; npm link
+cd ../components &amp;&amp; npm link @larcjs/core</code></pre>
+<hr>
+<h2>🌐 Architecture</h2>
+<pre><code class="language-plaintext">┌─────────────────────────────────────────┐
+│            Application                  │
+├──────────┬──────────┬──────────────────┤
+│ Component│ Component│    Component     │
+│    A     │    B     │       C          │
+└────┬─────┴────┬─────┴────┬────────────┘
+     │          │          │
+     └──────────┼──────────┘
+                │
+         ┌──────▼──────┐
+         │  &lt;pan-bus&gt;  │  ← Message Hub
+         └──────┬──────┘
+                │
+     ┌──────────┼──────────┐
+     │          │          │
+┌────▼───┐  ┌──▼───┐  ┌───▼────┐
+│ Worker │  │iframe│  │ Tabs   │
+└────────┘  └──────┘  └────────┘</code></pre>
+<hr>
+<h2>🤝 Contributing</h2>
+<p>We welcome contributions! Please see:
+<ul><li><a href="https://github.com/larcjs/.github/blob/main/CONTRIBUTING.md">Contributing Guide</a></li>
+<li><a href="https://github.com/larcjs/.github/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a></li>
+</ul>
+<hr></p>
+<h2>📊 Status</h2>
+<p>| Package | Build | Tests | Coverage | Security |
+|---------|-------|-------|----------|----------|
+| core | ✅ | ✅ | 85%+ | ✅ |
+| components | ✅ | ✅ | 80%+ | ✅ |
+| devtools | ✅ | ✅ | - | ✅ |
+| examples | ✅ | - | - | ✅ |</p>
+<hr>
+<h2>📄 License</h2>
+<p>MIT © Chris Robison</p>
+<p>All packages are licensed under the MIT License. See individual repositories for details.</p>
+<hr>
+<h2>🆘 Support</h2>
+<ul><li>📖 <a href="https://larcjs.github.io/site/">Documentation</a></li>
+<li>💬 <a href="https://github.com/orgs/larcjs/discussions">Discussions</a></li>
+<li>🐛 <a href="https://github.com/larcjs/core/issues">Issue Tracker</a></li>
+</ul>
+<hr>
+<h2>🎉 Featured Apps</h2>
+<p>Check out full-featured applications built with LARC:</p>
+<ul><li><strong><a href="https://github.com/larcjs/examples/tree/main/apps/invoice-studio">Invoice Studio</a></strong> — Professional invoice creation</li>
+<li><strong><a href="https://github.com/larcjs/examples/tree/main/apps/contact-manager">Contact Manager</a></strong> — CRUD with data grid</li>
+<li><strong><a href="https://github.com/larcjs/examples/tree/main/apps/data-browser">Data Browser</a></strong> — Generic data exploration</li>
+<li><strong><a href="https://github.com/larcjs/examples/tree/main/apps/markdown-notes">Markdown Notes</a></strong> — Note-taking with live preview</li>
+</ul>
+<hr>
+<strong>Build better web apps with LARC!</strong> 🚀
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.github/profile/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PanStateSync - PAN Documentation</title>
+  <link rel="stylesheet" href="../styles/docs.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="logo">
+      <a href="../index.html">PAN Docs</a>
+    </div>
+    <div class="nav-section">
+      <a href="../index.html">← Back to Index</a>
+    </div>
+  </nav>
+
+  <main class="content">
+    <header class="page-header">
+      <h1>PanStateSync</h1>
+      <div class="file-path">packages/components/pan-state-sync.mjs</div>
+    </header>
+
+    <section class="section">
+      <div class="description">
+        pan-state-sync - Cross-tab state synchronization component<br>Synchronizes state across multiple browser tabs using BroadcastChannel.<br>Provides leader election to prevent sync loops and configurable conflict resolution.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 id="PanStateSync">Class: PanStateSync</h2>
+      
+      <div class="description">pan-state-sync - Cross-tab state synchronization component<br>Synchronizes state across multiple browser tabs using BroadcastChannel.<br>Provides leader election to prevent sync loops and configurable conflict resolution.</div>
+
+      <h3>Attributes</h3>
+      <table class="params-table">
+        <thead>
+          <tr>
+            <th>Attribute</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+
+          <tr>
+            <td><code>channel</code></td>
+            <td><code>string</code></td>
+            <td>Name of the BroadcastChannel (default: 'pan-state-sync')</td>
+          </tr>
+
+          <tr>
+            <td><code>topics</code></td>
+            <td><code>string</code></td>
+            <td>Comma-separated topic patterns to sync (supports wildcards)</td>
+          </tr>
+
+          <tr>
+            <td><code>strategy</code></td>
+            <td><code>string</code></td>
+            <td>Conflict resolution: 'last-write-wins' | 'merge' | 'custom'</td>
+          </tr>
+
+          <tr>
+            <td><code>leader</code></td>
+            <td><code>string</code></td>
+            <td>Leader election: 'auto' | 'always' | 'never'</td>
+          </tr>
+
+          <tr>
+            <td><code>debug</code></td>
+            <td><code>boolean</code></td>
+            <td>Enable debug logging</td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <h3>Examples</h3>
+
+      <pre><code>&lt;pan-state-sync
+  channel=&quot;myapp-sync&quot;
+  topics=&quot;users.*,todos.*&quot;
+  strategy=&quot;last-write-wins&quot;
+  leader=&quot;auto&quot;&gt;
+&lt;/pan-state-sync&gt;</code></pre>
+
+    </section>
+
+  </main>
+</body>
+</html>

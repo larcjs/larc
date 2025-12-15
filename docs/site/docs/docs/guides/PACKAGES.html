@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Package Guide · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Package Guide">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">guides</a> / <span>PACKAGES</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Package Guide</h1>
+<p>Complete guide to choosing the right LARC Core package for your needs.</p>
+<h2>📊 Package Comparison</h2>
+<p>| Feature | @larcjs/core-lite | @larcjs/core | core-lite + routing + debug |
+|---------|-------------------|--------------|----------------------------|
+| <strong>Bundle Size (minified)</strong> | <strong>9KB</strong> ✅ | 40KB | 20KB |
+| <strong>Pub/Sub Messaging</strong> | ✅ | ✅ | ✅ |
+| <strong>Retained Messages</strong> | ✅ | ✅ | ✅ |
+| <strong>Request/Reply</strong> | ✅ | ✅ | ✅ |
+| <strong>Dynamic Routing</strong> | ❌ | ✅ | ✅ (8KB add-on) |
+| <strong>Debug/Tracing</strong> | ❌ | ✅ | ✅ (3KB add-on) |
+| <strong>Rate Limiting</strong> | ❌ | ✅ | ❌ |
+| <strong>Message Validation</strong> | ❌ | ✅ | ❌ |
+| <strong>Statistics</strong> | ❌ | ✅ | ❌ |
+| <strong>LRU Cache</strong> | ❌ | ✅ | ❌ |
+| <strong>Zero Dependencies</strong> | ✅ | ✅ | ✅ |</p>
+<h2>🎯 Which Package Should I Use?</h2>
+<h3>Use @larcjs/core-lite (9KB)</h3>
+<p>✅ <strong>Perfect for:</strong>
+<ul><li>Production applications prioritizing bundle size</li>
+<li>Simple pub/sub messaging needs</li>
+<li>Component communication without complex routing</li>
+<li>Projects that don't need debugging tools in production</li>
+</ul>
+✅ <strong>Best practices:</strong>
+<ul><li>Add <code>@larcjs/core-debug</code> only in development builds</li>
+<li>Upgrade to full version if routing becomes necessary</li>
+<li>78% smaller than full version</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-bash">npm install @larcjs/core-lite</code></pre></p>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core-lite@latest/src/pan.js&quot;&gt;&lt;/script&gt;</code></pre>
+<hr>
+<h3>Use @larcjs/core (40KB)</h3>
+<p>✅ <strong>Perfect for:</strong>
+<ul><li>Applications needing dynamic routing</li>
+<li>Development environments with debugging enabled</li>
+<li>Complex message flows with transforms and predicates</li>
+<li>Teams wanting batteries-included solution</li>
+</ul>
+✅ <strong>Best practices:</strong>
+<ul><li>Ideal for rapid prototyping</li>
+<li>Use when bundle size isn't the primary concern</li>
+<li>Includes all features out of the box</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-bash">npm install @larcjs/core</code></pre></p>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot; debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<hr>
+<h3>Use À La Carte (core-lite + add-ons)</h3>
+<p>✅ <strong>Perfect for:</strong>
+<ul><li>Fine-grained control over bundle size</li>
+<li>Need routing OR debug, but not both</li>
+<li>Conditional loading based on environment</li>
+<li>Optimizing production vs development builds</li>
+</ul>
+✅ <strong>Best practices:</strong>
+<ul><li>Use core-lite as base (9KB)</li>
+<li>Add <code>@larcjs/core-routing</code> (8KB) only if needed</li>
+<li>Add <code>@larcjs/core-debug</code> (3KB) only in dev builds</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-bash">npm install @larcjs/core-lite
+npm install --save-dev @larcjs/core-debug
+npm install @larcjs/core-routing  # if routing needed</code></pre></p>
+<pre><code class="language-javascript">// Production
+import &#039;@larcjs/core-lite&#039;;
+
+// Development only
+if (process.env.NODE_ENV === &#039;development&#039;) {
+  await import(&#039;@larcjs/core-debug&#039;);
+}</code></pre>
+<h2>📦 Package Details</h2>
+<h3>@larcjs/core-lite</h3>
+<strong>Size:</strong> 9KB minified (3KB gzipped)
+<strong>Includes:</strong>
+<ul><li><code>pan.mjs</code> (autoloader) - 3.6KB</li>
+<li><code>pan-bus-lite.mjs</code> (message bus) - 3.0KB</li>
+<li><code>pan-client.mjs</code> (client API) - 2.0KB</li>
+<li><code>pan-storage.mjs</code> (optional persistence) - 3.2KB</li>
+</ul>
+<strong>Use cases:</strong>
+<ul><li>Landing pages with minimal JavaScript</li>
+<li>Component libraries</li>
+<li>Micro-frontends</li>
+<li>Mobile-first applications</li>
+</ul>
+<strong>Limitations:</strong>
+<ul><li>No dynamic routing</li>
+<li>No debug/tracing tools</li>
+<li>No rate limiting</li>
+<li>No message size validation</li>
+<li>Simple retained message storage (no LRU)</li>
+</ul>
+<hr>
+<h3>@larcjs/core</h3>
+<strong>Size:</strong> 40KB minified (12KB gzipped)
+<strong>Includes:</strong>
+<ul><li>Everything in core-lite</li>
+<li><code>pan-routes.mjs</code> (routing system) - 8.3KB</li>
+<li><code>pan-debug.mjs</code> (debug manager) - 3.0KB</li>
+<li>Rate limiting & security features</li>
+<li>Message size validation</li>
+<li>Statistics tracking</li>
+<li>LRU cache for retained messages</li>
+</ul>
+<strong>Use cases:</strong>
+<ul><li>Complex applications</li>
+<li>Admin dashboards</li>
+<li>Development environments</li>
+<li>Applications with sophisticated message flows</li>
+</ul>
+<strong>Advantages:</strong>
+<ul><li>Batteries included</li>
+<li>No additional setup</li>
+<li>Full feature set</li>
+<li>Lazy-loads routing/debug when enabled</li>
+</ul>
+<hr>
+<h3>@larcjs/core-routing</h3>
+<strong>Size:</strong> 8.3KB minified (3KB gzipped)
+<strong>Add to:</strong> core-lite
+<strong>Provides:</strong>
+<ul><li>Declarative route definitions</li>
+<li>Pattern matching with predicates</li>
+<li>Message transformations</li>
+<li>Multiple action types (EMIT, LOG, FORWARD, CALL)</li>
+<li>Runtime route management</li>
+<li>Performance statistics</li>
+</ul>
+<strong>When to add:</strong>
+<ul><li>Need conditional message routing</li>
+<li>Want to decouple routing logic from components</li>
+<li>Implementing feature flags via routing</li>
+<li>Building analytics pipelines</li>
+<li>Need transform/enrich messages</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">import &#039;@larcjs/core-lite&#039;;
+import &#039;@larcjs/core-routing&#039;;
+
+window.pan.routes.add({
+  name: &#039;Route VIP Orders&#039;,
+  match: {
+    type: &#039;order.created&#039;,
+    where: { op: &#039;gte&#039;, path: &#039;payload.total&#039;, value: 1000 }
+  },
+  actions: [
+    { type: &#039;EMIT&#039;, message: { type: &#039;alert.vip-order&#039; } }
+  ]
+});</code></pre>
+<hr>
+<h3>@larcjs/core-debug</h3>
+<strong>Size:</strong> 3.0KB minified (1KB gzipped)
+<strong>Add to:</strong> core-lite
+<strong>Provides:</strong>
+<ul><li>Message tracing and history</li>
+<li>Performance metrics</li>
+<li>State snapshots (export/import)</li>
+<li>Timeline visualization</li>
+<li>Filtering by topic patterns</li>
+</ul>
+<strong>When to add:</strong>
+<ul><li>Development environment</li>
+<li>Debugging complex message flows</li>
+<li>Profiling performance</li>
+<li>Capturing state for bug reports</li>
+<li>Integration with <code><pan-inspector></code></li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Only in development
+if (process.env.NODE_ENV === &#039;development&#039;) {
+  await import(&#039;@larcjs/core-debug&#039;);
+  window.pan.debug.enableTracing();
+}</code></pre>
+<h2>🔄 Migration Between Packages</h2>
+<h3>From core-lite to core</h3>
+<pre><code class="language-bash">npm uninstall @larcjs/core-lite
+npm install @larcjs/core</code></pre>
+<strong>Code changes:</strong> None required! API is identical.
+<h3>From core to core-lite</h3>
+<pre><code class="language-bash">npm uninstall @larcjs/core
+npm install @larcjs/core-lite</code></pre>
+<strong>Check for:</strong>
+<ul><li>Remove <code>enable-routing</code> attribute if present</li>
+<li>Remove routing-specific code</li>
+<li>Remove debug-specific code</li>
+<li>Verify no dependencies on rate limiting or validation</li>
+</ul>
+<h3>Adding routing to core-lite</h3>
+<pre><code class="language-bash">npm install @larcjs/core-routing</code></pre>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import &#039;@larcjs/core-lite&#039;;
+import &#039;@larcjs/core-routing&#039;;
+
+// Now you have window.pan.routes
+&lt;/script&gt;</code></pre>
+<h3>Adding debug to core-lite</h3>
+<pre><code class="language-bash">npm install --save-dev @larcjs/core-debug</code></pre>
+<pre><code class="language-html">&lt;pan-bus debug=&quot;true&quot; enable-tracing=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import &#039;@larcjs/core-lite&#039;;
+import &#039;@larcjs/core-debug&#039;;
+
+// Now you have window.pan.debug
+&lt;/script&gt;</code></pre>
+<h2>💰 Cost-Benefit Analysis</h2>
+<h3>Scenario 1: Simple SPA</h3>
+<strong>Need:</strong> Pub/sub between 10-20 components
+<strong>Recommendation:</strong> @larcjs/core-lite (9KB)
+<ul><li><strong>Savings:</strong> 31KB vs full version</li>
+<li><strong>Trade-off:</strong> None (don't need routing/debug)</li>
+<li><strong>ROI:</strong> ⭐⭐⭐⭐⭐</li>
+</ul>
+<h3>Scenario 2: Admin Dashboard</h3>
+<strong>Need:</strong> Complex routing, debugging, analytics
+<strong>Recommendation:</strong> @larcjs/core (40KB)
+<ul><li><strong>Savings:</strong> None, but worth it for features</li>
+<li><strong>Trade-off:</strong> Larger bundle, more capabilities</li>
+<li><strong>ROI:</strong> ⭐⭐⭐⭐ (worth the features)</li>
+</ul>
+<h3>Scenario 3: E-commerce Site</h3>
+<strong>Need:</strong> Pub/sub + routing for feature flags
+<strong>Recommendation:</strong> core-lite + routing (17KB)
+<ul><li><strong>Savings:</strong> 23KB vs full version</li>
+<li><strong>Trade-off:</strong> No debug in production (good!)</li>
+<li><strong>ROI:</strong> ⭐⭐⭐⭐⭐</li>
+</ul>
+<h3>Scenario 4: Component Library</h3>
+<strong>Need:</strong> Minimal messaging, distributed to many apps
+<strong>Recommendation:</strong> @larcjs/core-lite (9KB)
+<ul><li><strong>Savings:</strong> 31KB, critical for libraries</li>
+<li><strong>Trade-off:</strong> Users can add routing if needed</li>
+<li><strong>ROI:</strong> ⭐⭐⭐⭐⭐</li>
+</ul>
+<h2>📚 Additional Resources</h2>
+<ul><li><strong><a href="./core/README.md">@larcjs/core</a></strong> - Full-featured version</li>
+<li><strong><a href="./packages/core-lite/README.md">@larcjs/core-lite</a></strong> - Lightweight version</li>
+<li><strong><a href="./packages/core-routing/README.md">@larcjs/core-routing</a></strong> - Routing add-on</li>
+<li><strong><a href="./packages/core-debug/README.md">@larcjs/core-debug</a></strong> - Debug add-on</li>
+</ul>
+<h2>🤔 Still Unsure?</h2>
+<strong>Start with @larcjs/core-lite</strong> (9KB). You can always upgrade later if you need routing or debugging. The API is identical across all packages.
+<pre><code class="language-bash">npm install @larcjs/core-lite</code></pre>
+<p>If you later need routing:
+<pre><code class="language-bash">npm install @larcjs/core-routing</code></pre></p>
+<p>If you later need everything:
+<pre><code class="language-bash">npm uninstall @larcjs/core-lite
+npm install @larcjs/core</code></pre></p>
+<strong>The modular approach saves 78% bundle size while maintaining full flexibility.</strong>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/guides/PACKAGES.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

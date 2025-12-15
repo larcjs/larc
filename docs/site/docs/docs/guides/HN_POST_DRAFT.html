@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hacker News Post - LARC Launch · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Hacker News Post - LARC Launch">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">guides</a> / <span>HN_POST_DRAFT</span>
+      </div>
+      <article class="docs-content">
+        <h1>Hacker News Post - LARC Launch</h1>
+<h2>🎯 Title Options (Pick One)</h2>
+<h3>Option 1: Direct & Technical (Recommended)</h3>
+<strong>Show HN: LARC – Web Components with zero-build dev and PAN messaging</strong>
+(63 chars - under 80 limit)
+<h3>Option 2: Problem-Focused</h3>
+<strong>Show HN: Solving the Web Component coordination problem with PAN</strong>
+(67 chars)
+<h3>Option 3: Benefit-Focused</h3>
+<strong>Show HN: Framework-agnostic components that work everywhere (5KB)</strong>
+(68 chars)
+<h3>Option 4: Pragmatic</h3>
+<strong>Show HN: Web Components framework – reduce React bundle by 60%</strong>
+(65 chars)
+<hr>
+<h2>📝 First Comment (Post within 2 minutes of submission)</h2>
+<pre><code class="language-plaintext">Hi HN! Creator here.
+
+LARC solves two pain points I hit when building with Web Components:
+
+1. **Coordination:** Web Components are silos. They can&#039;t communicate without
+   tight coupling. PAN (Page Area Network) provides a lightweight message bus
+   so components coordinate without knowing about each other.
+
+2. **Development friction:** No one wants to run webpack to add a card component.
+   LARC loads components automatically—just write HTML and refresh your browser.
+
+Technical highlights:
+• 5KB core (gzipped), zero dependencies
+• 261 tests passing (Chromium, Firefox, WebKit)
+• Works with React, Vue, Svelte—mix and match
+• TypeScript support
+• Published on npm (@larcjs/core@2.0.0)
+
+Live playground: https://larcjs.github.io/larc/playground/
+
+The &quot;killer&quot; demo is the hybrid dashboard—React, Vue, and LARC components
+on the same page, coordinating via PAN messages. No framework knows
+about the others.
+
+New this week: CLI tool (create-larc-app), component registry, and VS Code extension.
+
+Philosophy: Zero-build in dev for fast iteration. Optional build in prod
+for optimization. Framework complement, not replacement.
+
+Happy to answer questions!
+
+GitHub: https://github.com/larcjs/larc
+Docs: https://larcjs.github.io/site/</code></pre>
+<hr>
+<h2>🎯 Alternative First Comments</h2>
+<h3>Shorter Version (If needed)</h3>
+<pre><code class="language-plaintext">Hi HN! Built LARC to solve the Web Component &quot;silo problem.&quot;
+
+The core insight: Web Components need a coordination layer. PAN (Page Area Network)
+provides lightweight pub/sub messaging so components communicate without coupling.
+
+Tech: 5KB core, 261 tests, works with React/Vue/Svelte, TypeScript support.
+
+Playground: https://larcjs.github.io/larc/playground/
+Hybrid demo: React + Vue + LARC components coordinating via PAN messages.
+
+Just shipped: CLI tool (create-larc-app), component registry, VS Code extension.
+
+Zero-build dev, optional build prod. Complement frameworks, don&#039;t replace them.
+
+Questions welcome!</code></pre>
+<h3>With More Context Version</h3>
+<pre><code class="language-plaintext">Hi HN! I&#039;m the creator of LARC.
+
+**The problem:** Web Components are great for encapsulation but terrible for
+coordination. Every component is an island. Making them work together requires
+custom integration code, defeating the purpose of reusable components.
+
+**The solution:** PAN (Page Area Network) - a message bus for Web Components.
+
+Think MQTT for the browser. Components publish and subscribe to topics.
+A theme toggle publishes &quot;theme.changed&quot;, cards/tables/modals subscribe
+and update automatically. No coupling, no imports, no framework required.
+
+**Why it matters:**
+• Reduce framework overhead 60%+ (5KB core vs 140KB React)
+• True framework interop (React, Vue, Svelte on same page)
+• Zero build in dev (write code, refresh browser)
+• No vendor lock-in (it&#039;s just Web Components + messaging)
+
+**What&#039;s new (this week):**
+• create-larc-app CLI tool
+• Component registry with web UI
+• VS Code extension
+
+**Technical details:**
+• 261 tests passing (Chromium, Firefox, WebKit)
+• 0 vulnerabilities (npm audit)
+• TypeScript support
+• Published to npm (@larcjs/core@2.0.0)
+
+**Try it:**
+Playground: https://larcjs.github.io/larc/playground/
+Hybrid demo: https://larcjs.github.io/examples/hybrid-dashboard.html
+
+**Get started:**</code></pre>bash
+npx create-larc-app my-app
+<pre><code class="language-plaintext">Philosophy: LARC is designed for zero-build development while supporting
+optimized builds for production. Fast iteration + optimal delivery.
+
+I&#039;m here all day to answer questions!
+
+Docs: https://larcjs.github.io/site/
+GitHub: https://github.com/larcjs/larc</code></pre>
+<hr>
+<h2>📋 Preparation Checklist</h2>
+<p>Before posting:</p>
+<ul><li>[ ] Choose title (Option 1 recommended)</li>
+<li>[ ] Choose first comment style (Standard or Shorter)</li>
+<li>[ ] Verify all links work</li>
+<li>[ ] Have FAQ.md open for quick copy/paste</li>
+<li>[ ] Test playground loads properly</li>
+<li>[ ] Have code examples ready to share</li>
+<li>[ ] Clear schedule for 2-hour response window</li>
+<li>[ ] Team members on standby</li>
+<li>[ ] GitHub repo ready for traffic</li>
+</ul>
+<hr>
+<h2>🎯 Key Talking Points</h2>
+<p>Keep these ready for comments:</p>
+<li><strong>vs React/Vue:</strong> Complement, not replace. Keep React for complex UIs.</li>
+<li><strong>Why Web Components:</strong> Only true framework-agnostic solution.</li>
+<li><strong>Production ready:</strong> 261 tests, 0 vulnerabilities, v1.1 on npm.</li>
+<li><strong>Bundle size:</strong> 5KB vs 140KB (React) or 90KB (Vue).</li>
+<li><strong>PAN bus:</strong> Like MQTT for browser—pub/sub messaging.</li>
+<li><strong>Zero build:</strong> Write .mjs files, refresh browser. No webpack required.</li>
+<li><strong>Learning curve:</strong> HTML + vanilla JS knowledge is enough.</li>
+<li><strong>TypeScript:</strong> Full support with @larcjs/core-types.</li>
+<li><strong>Browser support:</strong> Chrome 90+, Firefox 88+, Safari 14+, Edge 90+.</li>
+<li><strong>Community:</strong> Young (Nov 2024) but growing. Early adopter opportunity.</li>
+<hr>
+<h2>⏰ Launch Timing</h2>
+<strong>Optimal times (Pacific Time):</strong>
+<ul><li>Tuesday: 7:30 AM - 9:00 AM PT</li>
+<li>Wednesday: 7:30 AM - 9:00 AM PT</li>
+<li>Thursday: 7:30 AM - 9:00 AM PT</li>
+</ul>
+<strong>Avoid:</strong>
+<ul><li>Monday (slower engagement)</li>
+<li>Friday (weekend approaching)</li>
+<li>Weekends (low HN traffic)</li>
+<li>After 12 PM PT (less visibility)</li>
+</ul>
+<hr>
+<h2>🔗 Important Links (Keep Handy)</h2>
+<ul><li>Main repo: https://github.com/larcjs/larc</li>
+<li>Core repo: https://github.com/larcjs/core</li>
+<li>Playground: https://larcjs.github.io/larc/playground/</li>
+<li>Docs site: https://larcjs.github.io/site/</li>
+<li>Examples: https://larcjs.github.io/examples/</li>
+<li>npm: https://npmjs.com/package/@larcjs/core</li>
+<li>Discussions: https://github.com/larcjs/core/discussions</li>
+</ul>
+<hr>
+<h2>🚀 Ready to Launch!</h2>
+<p>When ready to post:
+<li>Go to: https://news.ycombinator.com/submit</li>
+<li>Enter title (Option 1 recommended)</li>
+<li>Enter URL: https://github.com/larcjs/larc</li>
+<li>Submit</li>
+<li><strong>Immediately</strong> post first comment (within 2 minutes)</li>
+<li>Share HN post URL with team</li>
+<li>Begin monitoring every 5 minutes</li>
+<li>Respond to every comment within 10 minutes (first 2 hours)</li></p>
+<strong>Good luck! 🎉</strong>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/guides/HN_POST_DRAFT.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

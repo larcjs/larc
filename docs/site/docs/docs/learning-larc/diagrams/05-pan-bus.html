@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Bus Communication Patterns · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Bus Communication Patterns">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>05-pan-bus</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Bus Communication Patterns</h1>
+<h2>Pub/Sub Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Publishers&quot;
+        P1[Login Button]
+        P2[Cart Component]
+        P3[API Service]
+    end
+
+    subgraph &quot;PAN Bus&quot;
+        PAN[Topic Router]
+
+        subgraph &quot;Topics&quot;
+            T1[user.login]
+            T2[cart.item.added]
+            T3[data.loaded]
+        end
+    end
+
+    subgraph &quot;Subscribers&quot;
+        S1[User Menu]
+        S2[Sidebar]
+        S3[Notification]
+        S4[Analytics]
+    end
+
+    P1 --&gt;|publish| T1
+    P2 --&gt;|publish| T2
+    P3 --&gt;|publish| T3
+
+    T1 --&gt; PAN
+    T2 --&gt; PAN
+    T3 --&gt; PAN
+
+    PAN --&gt;|notify| S1
+    PAN --&gt;|notify| S2
+    PAN --&gt;|notify| S3
+    PAN --&gt;|notify| S4
+
+    style PAN fill:#764ba2,color:#fff
+    style P1 fill:#667eea,color:#fff
+    style P2 fill:#667eea,color:#fff
+    style P3 fill:#667eea,color:#fff</code></pre>
+<h2>Message Flow Sequence</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant LoginBtn as Login Button
+    participant PAN as PAN Bus
+    participant UserMenu as User Menu
+    participant Sidebar as Sidebar
+    participant Analytics as Analytics
+    participant API as Backend
+
+    Note over LoginBtn,Analytics: User clicks login button
+
+    LoginBtn-&gt;&gt;PAN: publish(&#039;user.login.started&#039;)
+    PAN-&gt;&gt;UserMenu: notify
+    PAN-&gt;&gt;Sidebar: notify
+    UserMenu-&gt;&gt;UserMenu: Show loading state
+
+    LoginBtn-&gt;&gt;API: POST /api/login
+    API--&gt;&gt;LoginBtn: {token, user}
+
+    LoginBtn-&gt;&gt;PAN: publish(&#039;user.login.success&#039;, {user})
+
+    PAN-&gt;&gt;UserMenu: notify
+    PAN-&gt;&gt;Sidebar: notify
+    PAN-&gt;&gt;Analytics: notify
+
+    UserMenu-&gt;&gt;UserMenu: Update with user data
+    Sidebar-&gt;&gt;Sidebar: Show user panel
+    Analytics-&gt;&gt;API: Track event</code></pre>
+<h2>Topic Namespace Structure</h2>
+<pre><code class="language-mermaid">graph TB
+    Root[*&lt;br/&gt;All Events]
+
+    Root --&gt; User[user.*]
+    Root --&gt; Cart[cart.*]
+    Root --&gt; App[app.*]
+
+    User --&gt; UserAuth[user.auth.*]
+    User --&gt; UserProfile[user.profile.*]
+
+    UserAuth --&gt; Login[user.auth.login]
+    UserAuth --&gt; Logout[user.auth.logout]
+    UserAuth --&gt; Refresh[user.auth.refresh]
+
+    UserProfile --&gt; ProfileUpdate[user.profile.update]
+    UserProfile --&gt; ProfileFetch[user.profile.fetch]
+
+    Cart --&gt; CartItem[cart.item.*]
+    Cart --&gt; CartCheckout[cart.checkout]
+
+    CartItem --&gt; ItemAdd[cart.item.add]
+    CartItem --&gt; ItemRemove[cart.item.remove]
+    CartItem --&gt; ItemUpdate[cart.item.update]
+
+    App --&gt; AppTheme[app.theme.change]
+    App --&gt; AppRoute[app.route.change]
+    App --&gt; AppError[app.error]
+
+    style Root fill:#764ba2,color:#fff
+    style User fill:#667eea,color:#fff
+    style Cart fill:#667eea,color:#fff
+    style App fill:#667eea,color:#fff</code></pre>
+<h2>Wildcard Subscription Matching</h2>
+<pre><code class="language-mermaid">graph LR
+    subgraph &quot;Published Events&quot;
+        E1[user.login]
+        E2[user.logout]
+        E3[user.profile.update]
+        E4[cart.item.add]
+    end
+
+    subgraph &quot;Subscriptions&quot;
+        S1[&quot;subscribe(&#039;user.login&#039;)&quot;]
+        S2[&quot;subscribe(&#039;user.*&#039;)&quot;]
+        S3[&quot;subscribe(&#039;*.update&#039;)&quot;]
+        S4[&quot;subscribe(&#039;*&#039;)&quot;]
+    end
+
+    E1 -.matches.-&gt; S1
+    E1 -.matches.-&gt; S2
+    E1 -.matches.-&gt; S4
+
+    E2 -.matches.-&gt; S2
+    E2 -.matches.-&gt; S4
+
+    E3 -.matches.-&gt; S2
+    E3 -.matches.-&gt; S3
+    E3 -.matches.-&gt; S4
+
+    E4 -.matches.-&gt; S4
+
+    style E1 fill:#667eea,color:#fff
+    style E2 fill:#667eea,color:#fff
+    style E3 fill:#667eea,color:#fff
+    style E4 fill:#667eea,color:#fff
+    style S4 fill:#f56565,color:#fff</code></pre>
+<h2>Request/Response Pattern</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant Requester as Component A
+    participant PAN as PAN Bus
+    participant Responder as Auth Service
+
+    Note over Responder: Registers responder
+    Responder-&gt;&gt;PAN: respond(&#039;auth.token.get&#039;, handler)
+
+    Note over Requester: Needs auth token
+    Requester-&gt;&gt;PAN: request(&#039;auth.token.get&#039;)
+
+    PAN-&gt;&gt;PAN: Generate response ID
+    PAN-&gt;&gt;Responder: Trigger handler
+
+    Responder-&gt;&gt;Responder: Get token from storage
+    Responder-&gt;&gt;PAN: publish response
+
+    PAN-&gt;&gt;Requester: Return token
+
+    Note over Requester: Uses token for API call
+    Requester-&gt;&gt;API: GET /api/data&lt;br/&gt;Authorization: Bearer {token}</code></pre>
+<h2>Event Patterns Comparison</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Fire and Forget&quot;
+        FF1[Publisher]
+        FF2[PAN Bus]
+        FF3[Subscribers]
+
+        FF1 --&gt;|publish| FF2
+        FF2 --&gt;|notify all| FF3
+        FF1 -.-x|no wait| FF3
+    end
+
+    subgraph &quot;Request/Response&quot;
+        RR1[Requester]
+        RR2[PAN Bus]
+        RR3[Responder]
+
+        RR1 --&gt;|request| RR2
+        RR2 --&gt;|invoke| RR3
+        RR3 --&gt;|respond| RR2
+        RR2 --&gt;|return| RR1
+    end
+
+    subgraph &quot;Command&quot;
+        C1[Commander]
+        C2[PAN Bus]
+        C3[Handler]
+
+        C1 --&gt;|command| C2
+        C2 --&gt;|execute| C3
+        C3 --&gt;|acknowledge| C2
+        C2 -.optional.-&gt; C1
+    end
+
+    style FF2 fill:#667eea,color:#fff
+    style RR2 fill:#764ba2,color:#fff
+    style C2 fill:#48bb78,color:#fff</code></pre>
+<h2>PAN Bus Internal Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;PAN Bus Core&quot;
+        Router[Topic Router]
+
+        subgraph &quot;Subscription Registry&quot;
+            Exact[Exact Matches&lt;br/&gt;Map&amp;lt;topic, Set&amp;lt;handler&amp;gt;&amp;gt;]
+            Wildcard[Wildcard Patterns&lt;br/&gt;Array&amp;lt;{pattern, handlers}&amp;gt;]
+        end
+
+        subgraph &quot;Message Queue&quot;
+            Queue[Event Queue]
+            Batch[Batch Processor]
+        end
+
+        Router --&gt; Exact
+        Router --&gt; Wildcard
+        Router --&gt; Queue
+        Queue --&gt; Batch
+    end
+
+    subgraph &quot;API Methods&quot;
+        Publish[publish]
+        Subscribe[subscribe]
+        Request[request]
+        Respond[respond]
+    end
+
+    Publish --&gt; Router
+    Subscribe --&gt; Exact &amp; Wildcard
+    Request --&gt; Router
+    Respond --&gt; Router
+
+    style Router fill:#764ba2,color:#fff
+    style Queue fill:#667eea,color:#fff</code></pre>
+<h2>Debugging with Event Inspector</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Application&quot;
+        C1[Component 1]
+        C2[Component 2]
+        C3[Component 3]
+    end
+
+    subgraph &quot;PAN Bus&quot;
+        PAN[Message Router]
+    end
+
+    subgraph &quot;Inspector&quot;
+        Monitor[&quot;subscribe(&#039;*&#039;)&quot;]
+        Log[Event Log]
+        Filter[Filter Panel]
+        Viz[Visualization]
+    end
+
+    C1 --&gt;|publish| PAN
+    C2 --&gt;|publish| PAN
+    C3 --&gt;|publish| PAN
+
+    PAN --&gt;|notify| C1
+    PAN --&gt;|notify| C2
+    PAN --&gt;|notify| C3
+
+    PAN -.all events.-&gt; Monitor
+    Monitor --&gt; Log
+    Log --&gt; Filter
+    Log --&gt; Viz
+
+    style PAN fill:#764ba2,color:#fff
+    style Monitor fill:#f59e42,color:#fff
+    style Viz fill:#48bb78,color:#fff</code></pre>
+<h2>Event Lifecycle</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Published: publish(topic, data)
+    Published --&gt; Routing: Route to subscribers
+    Routing --&gt; MatchExact: Check exact matches
+    Routing --&gt; MatchWildcard: Check wildcards
+
+    MatchExact --&gt; Notify: Found subscribers
+    MatchWildcard --&gt; Notify: Found subscribers
+
+    MatchExact --&gt; Complete: No matches
+    MatchWildcard --&gt; Complete: No matches
+
+    Notify --&gt; HandleAsync: Async handlers
+    Notify --&gt; HandleSync: Sync handlers
+
+    HandleAsync --&gt; Complete
+    HandleSync --&gt; Complete
+
+    Complete --&gt; [*]
+
+    note right of Routing
+        • Look up topic in registry
+        • Match wildcards
+        • Collect all handlers
+    end note
+
+    note right of Notify
+        • Call each handler
+        • Pass message data
+        • Handle errors
+    end note</code></pre>
+<h2>Error Handling in PAN Bus</h2>
+<pre><code class="language-mermaid">graph TB
+    Publisher[Publisher]
+    PAN[PAN Bus]
+
+    Publisher --&gt;|publish| PAN
+
+    PAN --&gt; S1[Subscriber 1]
+    PAN --&gt; S2[Subscriber 2]
+    PAN --&gt; S3[Subscriber 3]
+
+    S1 --&gt;|success| End1[✓]
+    S2 --&gt;|throws error| Error[Error Handler]
+    S3 --&gt;|success| End3[✓]
+
+    Error --&gt;|log error| Console[Console]
+    Error --&gt;|publish| ErrorTopic[app.error]
+
+    ErrorTopic --&gt; ErrorHandler[Error Component]
+
+    Error -.doesn&#039;t stop.-&gt; S3
+
+    style Error fill:#f56565,color:#fff
+    style PAN fill:#764ba2,color:#fff
+    style End1 fill:#48bb78,color:#fff
+    style End3 fill:#48bb78,color:#fff</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/learning-larc/diagrams/05-pan-bus.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

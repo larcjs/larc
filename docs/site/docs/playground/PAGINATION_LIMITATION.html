@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pagination Example Limitation · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Pagination Example Limitation">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>PAGINATION_LIMITATION</span>
+      </div>
+      <article class="docs-content">
+        <h1>Pagination Example Limitation</h1>
+<h2>Current Behavior</h2>
+<p>The "Paginated Data Table" example shows <strong>pagination UI controls</strong> but doesn't actually paginate the data in the table. All 100 posts are displayed at once.</p>
+<h2>Why?</h2>
+<p>The example has three components:
+<li><strong><code>pan-data-connector</code></strong> - Fetches all posts from JSONPlaceholder (100 items)</li>
+<li><strong><code>pan-data-table</code></strong> - Displays ALL items it receives</li>
+<li><strong><code>pan-pagination</code></strong> - Shows page controls and publishes pagination events</li></p>
+<h3>The Gap</h3>
+<ul><li>✅ Pagination controls work (click pages, see PAN messages)</li>
+<li>✅ Data fetches correctly (all 100 posts)</li>
+<li>❌ Table doesn't filter/slice data based on current page</li>
+</ul>
+The <code>pan-data-table</code> component doesn't have built-in pagination support - it renders whatever data it receives from <code>{resource}.list.state</code>.
+<h2>Solutions</h2>
+<h3>Option 1: Server-Side Pagination (Best)</h3>
+<p>The API should return paginated data:</p>
+<pre><code class="language-javascript">// pan-data-connector would need to:
+// 1. Listen to pagination.changed events
+// 2. Append page/limit params to API request
+// 3. Fetch only one page at a time
+
+GET /posts?_page=1&amp;_limit=10  // Returns posts 1-10
+GET /posts?_page=2&amp;_limit=10  // Returns posts 11-20</code></pre>
+<strong>Status</strong>: Requires <code>pan-data-connector</code> enhancement to support query params from PAN topics.
+<h3>Option 2: Client-Side Pagination with Computed State</h3>
+<p>Use <code>pan-computed-state</code> to slice the data:</p>
+<pre><code class="language-html">&lt;!-- Fetch all data --&gt;
+&lt;pan-data-connector
+  resource=&quot;posts&quot;
+  base-url=&quot;https://jsonplaceholder.typicode.com&quot;&gt;
+&lt;/pan-data-connector&gt;
+
+&lt;!-- Slice data based on current page --&gt;
+&lt;pan-computed-state
+  sources=&quot;posts.list.state,pagination.changed&quot;
+  output=&quot;posts.page.state&quot;&gt;
+  &lt;script&gt;
+    (postsState, paginationEvent) =&gt; {
+      const items = postsState?.items || [];
+      const page = paginationEvent?.page || 1;
+      const pageSize = paginationEvent?.pageSize || 10;
+
+      const start = (page - 1) * pageSize;
+      const end = start + pageSize;
+      const pageItems = items.slice(start, end);
+
+      return { items: pageItems };
+    }
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;
+
+&lt;!-- Display paginated data --&gt;
+&lt;pan-data-table
+  resource=&quot;posts.page&quot;
+  columns=&quot;id,title,body&quot;&gt;
+&lt;/pan-data-table&gt;
+
+&lt;!-- Pagination controls --&gt;
+&lt;pan-pagination
+  total-items=&quot;100&quot;
+  page-size=&quot;10&quot;
+  topic=&quot;pagination&quot;&gt;
+&lt;/pan-pagination&gt;</code></pre>
+<strong>Status</strong>: Requires playground support for adding <code><script></code> content to components (not currently supported).
+<h3>Option 3: Dedicated Paginated Table Component</h3>
+<p>Create a new <code><pan-paginated-table></code> component that combines table + pagination:</p>
+<pre><code class="language-javascript">class PanPaginatedTable extends HTMLElement {
+  // Internal state: allItems, currentPage, pageSize
+  // Renders only one page of items
+  // Has built-in pagination controls
+}</code></pre>
+<strong>Status</strong>: Would require creating a new component.
+<h3>Option 4: Documentation-Only (Current)</h3>
+<p>Simply document that this example shows the pagination <strong>UI controls</strong> working and publishing PAN events, but doesn't actually filter the table data.</p>
+<strong>Status</strong>: ✅ <strong>This is what we're doing now</strong>
+<h2>Current Example Purpose</h2>
+<p>The "Paginated Data Table" example demonstrates:
+<ul><li>✅ How to use <code>pan-pagination</code> component</li>
+<li>✅ Pagination controls UI (first, prev, pages, next, last)</li>
+<li>✅ PAN message flow when clicking pages</li>
+<li>✅ Page info display ("Showing 1-10 of 100")</li>
+<li>✅ How pagination integrates with PAN bus</li>
+</ul>
+It does NOT demonstrate:
+<ul><li>❌ Actual data filtering/slicing</li>
+<li>❌ Server-side pagination</li>
+<li>❌ Client-side pagination logic</li>
+</ul>
+<h2>Testing the Pagination Controls</h2></p>
+<p>Even though data isn't paginated, you can verify the controls work:</p>
+<li><strong>Load the example</strong></li>
+<li><strong>Open PAN Monitor</strong> (click "PAN Monitor" button)</li>
+<li><strong>Click pagination buttons</strong>:</li>
+   - Click "Page 2" → See <code>pagination.changed</code> with <code>{page: 2, pageSize: 10}</code>
+   - Click "Next" → See page increment
+   - Click "Last" → Jump to page 10
+<li><strong>Page info updates</strong>: "Showing 11-20 of 100" (even though table shows all)</li>
+<h2>Future Enhancement</h2>
+<p>To make this a fully functional paginated table example, we'd need to:</p>
+<li><strong>Add query param support to <code>pan-data-connector</code></strong>:</li>
+   <pre><code class="language-javascript">// Listen to pagination events and merge params
+   this.pc.subscribe(&#039;pagination.changed&#039;, (msg) =&gt; {
+     const { page, pageSize } = msg.data;
+     this.fetchList({ _page: page, _limit: pageSize });
+   });</code></pre>
+<li><strong>Or add <code><script></code> support to playground</strong>:</li>
+   - Allow adding script content to <code>pan-computed-state</code>
+   - Implement client-side slicing logic
+<li><strong>Or create dedicated component</strong>:</li>
+   - <code><pan-paginated-table></code> with built-in pagination
+   - Handles both server-side and client-side pagination
+<h2>Recommendation</h2>
+<p>For now, keep the example as-is with updated description:
+<pre><code class="language-plaintext">&quot;Pagination UI controls (demonstrates PAN integration)&quot;</code></pre></p>
+<p>Users who need actual pagination should:
+<ul><li>Implement server-side pagination in their API</li>
+<li>Add a computed state component with slicing logic</li>
+<li>Use a dedicated paginated table component</li>
+</ul>
+The current example successfully demonstrates the pagination <strong>controls</strong> and how they integrate with the PAN bus, which is valuable on its own.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/PAGINATION_LIMITATION.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Date Picker Example Fix · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Date Picker Example Fix">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>DATE_PICKER_FIX</span>
+      </div>
+      <article class="docs-content">
+        <h1>Date Picker Example Fix</h1>
+<h2>Problem</h2>
+<p>The Date Selection example didn't work - clicking the input did nothing, and the calendar wouldn't open.</p>
+<h2>Root Cause</h2>
+<p>Same issue as the file-upload component: <strong>duplicate event listeners</strong> caused by calling <code>setupEvents()</code> multiple times.</p>
+<h3>The Bug</h3>
+<pre><code class="language-javascript">// BAD - Sets up events twice
+connectedCallback() {
+  // ...
+  this.render();        // This calls setupEvents() at the end
+  this.setupTopics();
+  this.setupEvents();   // Called AGAIN here ❌
+}
+
+render() {
+  this.shadowRoot.innerHTML = `...`;
+
+  // ...
+
+  if (this.isConnected) {
+    setTimeout(() =&gt; this.setupEvents(), 0);  // Called yet AGAIN ❌
+  }
+}</code></pre>
+<p>When <code>setupEvents()</code> is called multiple times without guards:
+<li>Multiple click listeners added to input</li>
+<li>Multiple outside-click listeners added to document</li>
+<li>Events fire multiple times or interfere with each other</li>
+<li>Calendar may not open or behave erratically</li></p>
+<h2>Solution</h2>
+<p>Applied the same fix pattern used for file-upload:</p>
+<h3>1. Add Guard Variable</h3>
+<pre><code class="language-javascript">constructor() {
+  super();
+  this.attachShadow({ mode: &#039;open&#039; });
+  this.pc = new PanClient(this);
+  this.isOpen = false;
+  this.currentMonth = new Date();
+  this.selectedDate = null;
+  this.eventsSetup = false; // Guard against duplicate event listeners ✅
+}</code></pre>
+<h3>2. Guard setupEvents()</h3>
+<pre><code class="language-javascript">setupEvents() {
+  // Skip if already set up to prevent duplicate listeners ✅
+  if (this.eventsSetup) return;
+  this.eventsSetup = true;
+
+  const input = this.shadowRoot.querySelector(&#039;.date-input&#039;);
+  // ... rest of setup
+}</code></pre>
+<h3>3. Remove Duplicate Call</h3>
+<pre><code class="language-javascript">// GOOD - Only render (which calls setupEvents)
+connectedCallback() {
+  if (this.value) {
+    this.selectedDate = new Date(this.value);
+    this.currentMonth = new Date(this.selectedDate);
+  }
+  this.setupTopics();
+  this.render();  // This will call setupEvents() once ✅
+  // Removed: this.setupEvents(); ❌
+}</code></pre>
+<h3>4. Reset Guard on Re-render</h3>
+<pre><code class="language-javascript">render() {
+  // Reset events guard so setupEvents can run fresh after re-render ✅
+  this.eventsSetup = false;
+
+  const displayValue = this.selectedDate ? this.formatDate(this.selectedDate) : &#039;&#039;;
+  this.shadowRoot.innerHTML = `...`;
+
+  // ... render calendar ...
+
+  if (this.isConnected) {
+    setTimeout(() =&gt; this.setupEvents(), 0);  // Now runs only once ✅
+  }
+}</code></pre>
+<h2>How It Works Now</h2>
+<h3>Event Flow</h3>
+<pre><code class="language-plaintext">User clicks input
+↓
+1 click listener fires (not 2 or 3)
+↓
+toggleCalendar() called once
+↓
+Calendar opens ✅
+↓
+User clicks a date
+↓
+selectDate() called once
+↓
+PAN message published once
+↓
+Calendar closes ✅</code></pre>
+<h2>Component Features</h2>
+<p>The date picker now works with all its features:</p>
+<h3>Main Features</h3>
+<ul><li><strong>Input field</strong> - Click to open calendar</li>
+<li><strong>Calendar icon</strong> - Visual indicator (📅)</li>
+<li><strong>Clear button</strong> (✕) - Appears when date is selected</li>
+<li><strong>Month navigation</strong> - Previous/next month buttons (‹ ›)</li>
+<li><strong>Today button</strong> - Jump to current date</li>
+<li><strong>Date selection</strong> - Click any day to select</li>
+</ul>
+<h3>Visual States</h3>
+<ul><li><strong>Today</strong> - Highlighted in purple</li>
+<li><strong>Selected</strong> - Purple background</li>
+<li><strong>Hover</strong> - Light gray background</li>
+<li><strong>Disabled</strong> - Gray text (when min/max set)</li>
+</ul>
+<h3>Format Support</h3>
+The component supports custom date formats:
+<pre><code class="language-javascript">&#039;format&#039;: &#039;YYYY-MM-DD&#039;  // 2025-12-02
+&#039;format&#039;: &#039;MM/DD/YYYY&#039;  // 12/02/2025
+&#039;format&#039;: &#039;DD-MM-YYYY&#039;  // 02-12-2025</code></pre>
+<h3>Date Constraints</h3>
+You can set min/max dates:
+<pre><code class="language-javascript">attributes: {
+  &#039;topic&#039;: &#039;date.selected&#039;,
+  &#039;min&#039;: &#039;2025-01-01&#039;,
+  &#039;max&#039;: &#039;2025-12-31&#039;,
+  &#039;placeholder&#039;: &#039;Select a date in 2025&#039;
+}</code></pre>
+<h2>Testing</h2>
+<h3>Before Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;Date Selection&quot; example
+2. Click date input
+3. See: Nothing happens ❌
+4. Calendar doesn&#039;t open ❌</code></pre>
+<h3>After Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;Date Selection&quot; example
+2. See: Input field with &quot;Select a date&quot; placeholder
+3. Click input
+4. See: Calendar opens with current month ✅
+5. Click a date (e.g., today)
+6. See: Input shows formatted date ✅
+7. See: Clear button (✕) appears ✅
+8. Open PAN Monitor
+9. Click another date
+10. See: date.selected.change message with date and formatted value ✅
+11. Click clear button
+12. See: Input clears, PAN message shows null date ✅</code></pre>
+<h3>Advanced Testing</h3>
+<pre><code class="language-plaintext">1. Click input to open calendar
+2. Click ‹ button to go to previous month ✅
+3. Click › button to go to next month ✅
+4. Click &quot;Today&quot; button - jumps to current date and selects it ✅
+5. Select a date
+6. Click outside calendar - closes ✅
+7. Click input again - reopens at selected month ✅</code></pre>
+<h2>PAN Messages</h2>
+<p>The component publishes to <code>{topic}.change</code>:</p>
+<h3>When selecting a date:</h3>
+<pre><code class="language-javascript">Topic: date.selected.change
+Data: {
+  date: &quot;2025-12-02&quot;,
+  formatted: &quot;2025-12-02&quot;
+}</code></pre>
+<h3>When clearing:</h3>
+<pre><code class="language-javascript">Topic: date.selected.change
+Data: {
+  date: null,
+  formatted: &quot;&quot;
+}</code></pre>
+<h3>Subscribing to set date:</h3>
+You can also control the date picker via PAN:
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;date.selected.setValue&#039;,
+  data: { date: &#039;2025-12-25&#039; }
+});</code></pre>
+<h2>Example Enhancements</h2>
+<h3>With Validation</h3>
+The example includes <code>pan-validation</code> which can validate date selections:
+<pre><code class="language-javascript">components: [
+  {
+    name: &#039;pan-date-picker&#039;,
+    attributes: {
+      &#039;topic&#039;: &#039;date.selected&#039;,
+      &#039;min&#039;: &#039;2025-01-01&#039;,
+      &#039;max&#039;: &#039;2025-12-31&#039;,
+      &#039;format&#039;: &#039;YYYY-MM-DD&#039;,
+      &#039;placeholder&#039;: &#039;Select a date&#039;
+    }
+  },
+  {
+    name: &#039;pan-validation&#039;,
+    attributes: {
+      &#039;topic&#039;: &#039;date.selected&#039;,
+      &#039;rules&#039;: JSON.stringify({
+        required: true,
+        message: &#039;Please select a date&#039;
+      })
+    }
+  }
+]</code></pre>
+<h3>Date Range Picker</h3>
+You could create a date range by using two date pickers:
+<pre><code class="language-javascript">components: [
+  {
+    name: &#039;pan-date-picker&#039;,
+    attributes: {
+      &#039;topic&#039;: &#039;dateRange.start&#039;,
+      &#039;placeholder&#039;: &#039;Start date&#039;
+    }
+  },
+  {
+    name: &#039;pan-date-picker&#039;,
+    attributes: {
+      &#039;topic&#039;: &#039;dateRange.end&#039;,
+      &#039;placeholder&#039;: &#039;End date&#039;
+    }
+  }
+]</code></pre>
+<p>Then use computed-state to ensure end > start.</p>
+<h2>Files Changed</h2>
+<h3><code>/Users/cdr/Projects/larc-repos/ui/pan-date-picker.mjs</code></h3>
+<strong>Lines Changed:</strong>
+<ul><li>Line 28: Added <code>this.eventsSetup = false;</code> guard variable</li>
+<li>Lines 31-38: Removed duplicate <code>setupEvents()</code> call from <code>connectedCallback()</code></li>
+<li>Lines 64-67: Added guard check at start of <code>setupEvents()</code></li>
+<li>Lines 261-262: Reset guard in <code>render()</code></li>
+</ul>
+<h2>Pattern Applied</h2>
+<p>This is the third component we've fixed with this pattern:</p>
+<li><strong>file-upload</strong> - Had duplicate upload events</li>
+<li><strong>pan-date-picker</strong> - Calendar wouldn't open</li>
+<li>Future candidates to check for same issue</li>
+<h3>The Pattern</h3>
+<pre><code class="language-javascript">class Component extends HTMLElement {
+  constructor() {
+    super();
+    this.eventsSetup = false;  // 1. Add guard
+  }
+
+  connectedCallback() {
+    this.render();  // 2. Only render (don&#039;t call setupEvents twice)
+  }
+
+  setupEvents() {
+    if (this.eventsSetup) return;  // 3. Guard check
+    this.eventsSetup = true;
+
+    // ... add listeners ...
+  }
+
+  render() {
+    this.eventsSetup = false;  // 4. Reset for re-render
+    this.shadowRoot.innerHTML = `...`;
+    this.setupEvents();  // 5. Set up once
+  }
+}</code></pre>
+<h2>Prevention</h2>
+<p>When creating new components:
+<ul><li>✅ Call <code>setupEvents()</code> only from <code>render()</code></li>
+<li>✅ Add guard variable and check</li>
+<li>✅ Reset guard before re-render</li>
+<li>❌ Don't call <code>setupEvents()</code> from <code>connectedCallback()</code></li>
+</ul>
+<h2>Summary</h2></p>
+<p>The date picker was fixed by preventing duplicate event listener setup. The component now works correctly:
+<ul><li>Click input to open calendar ✅</li>
+<li>Navigate months with prev/next buttons ✅</li>
+<li>Click dates to select ✅</li>
+<li>Today button works ✅</li>
+<li>Clear button works ✅</li>
+<li>PAN messages publish correctly ✅</li>
+<li>Calendar closes on outside click ✅</li>
+</ul>
+The same duplicate event listener pattern affected both file-upload and pan-date-picker, and the fix was identical: guard the <code>setupEvents()</code> call and only invoke it once per render cycle.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/DATE_PICKER_FIX.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

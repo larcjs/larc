@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Playground Examples Test Plan · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Playground Examples Test Plan">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>EXAMPLE_TEST_PLAN</span>
+      </div>
+      <article class="docs-content">
+        <h1>Playground Examples Test Plan</h1>
+<p>This document tracks the testing status of all playground examples.</p>
+<h2>Test Criteria</h2>
+<p>For each example, verify:
+<ul><li>✅ <strong>Loads</strong>: Components load without console errors</li>
+<li>✅ <strong>Renders</strong>: Components display correctly in canvas</li>
+<li>✅ <strong>Functions</strong>: Core functionality works as expected</li>
+<li>✅ <strong>PAN</strong>: PAN messages flow (check monitor)</li>
+</ul>
+<h2>Examples Status</h2></p>
+<h3>1. Simple Store ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-store</code>
+<strong>Expected</strong>: Badge in toolbar, can be selected and configured
+<strong>Issues</strong>: None yet
+<hr>
+<h3>2. Router with Navigation ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-router</code>, <code>pan-link</code> (x2)
+<strong>Expected</strong>:
+<ul><li>Router badge in toolbar</li>
+<li>Two link buttons visible</li>
+<li>Links change URL on click</li>
+</ul><strong>Issues</strong>: None yet
+<hr>
+<h3>3. Dashboard Layout ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-card</code>, <code>pan-table</code>, <code>pan-chart</code>
+<strong>Expected</strong>:
+<ul><li>Card with "User Statistics" header</li>
+<li>Table with demo data</li>
+<li>Chart placeholder</li>
+</ul><strong>Issues</strong>: <code>pan-chart</code> needs data to display
+<hr>
+<h3>4. Form with Validation ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-form</code>, <code>pan-validation</code>
+<strong>Expected</strong>:
+<ul><li>Form fields render</li>
+<li>Validation badge in toolbar</li>
+</ul><strong>Issues</strong>: Need to check if form renders without <code>resource</code> or <code>fields</code> attributes
+<hr>
+<h3>5. Theme Switcher ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-theme-provider</code>, <code>pan-theme-toggle</code>
+<strong>Expected</strong>:
+<ul><li>Theme provider badge in toolbar</li>
+<li>Toggle button visible</li>
+<li>Clicking toggle changes theme</li>
+</ul><strong>Issues</strong>: None yet
+<hr>
+<h3>6. Data Flow ✅</h3>
+<strong>Status</strong>: FIXED (in this session)
+<strong>Components</strong>: <code>pan-data-connector</code>, <code>pan-data-table</code>
+<strong>Expected</strong>:
+<ul><li>Connector badge in toolbar</li>
+<li>Table loads with user data from JSONPlaceholder</li>
+<li>Shows name, email, phone columns</li>
+</ul><strong>Issues</strong>: FIXED - Changed from non-existent <code>pan-fetch</code> to <code>pan-data-connector</code>
+<hr>
+<h3>7. Markdown Editor & Preview ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-markdown-editor</code>, <code>pan-markdown-renderer</code>
+<strong>Expected</strong>:
+<ul><li>Editor textarea visible</li>
+<li>Preview area visible</li>
+<li>Typing in editor updates preview</li>
+<li>PAN messages flow on input</li>
+</ul><strong>Issues</strong>: None yet
+<hr>
+<h3>8. Search & Filter ✅</h3>
+<strong>Status</strong>: FIXED (in this session)
+<strong>Components</strong>: <code>pan-search-bar</code>, <code>pan-data-connector</code>, <code>pan-data-table</code>
+<strong>Expected</strong>:
+<ul><li>Search input visible</li>
+<li>Connector badge in toolbar</li>
+<li>Table loads posts data</li>
+<li>Search filters table (if implemented)</li>
+</ul><strong>Issues</strong>: FIXED - Changed from <code>pan-fetch</code> to <code>pan-data-connector</code>
+<hr>
+<h3>9. Modal Dialog ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-modal</code>, <code>pan-card</code>
+<strong>Expected</strong>:
+<ul><li>Modal visible or trigger button</li>
+<li>Card content inside modal</li>
+</ul><strong>Issues</strong>: Need to check if modal auto-opens or needs trigger
+<hr>
+<h3>10. Tabs Layout ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-tabs</code>
+<strong>Expected</strong>:
+<ul><li>Three tabs: Home, Profile, Settings</li>
+<li>Tabs are clickable</li>
+<li>Active tab is highlighted</li>
+</ul><strong>Issues</strong>: Tabs attribute is JSON string, may need parsing
+<hr>
+<h3>11. Authentication System ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-auth</code>, <code>pan-jwt</code>
+<strong>Expected</strong>:
+<ul><li>Both badges in toolbar</li>
+<li>No visible UI (infrastructure components)</li>
+</ul><strong>Issues</strong>: Can't test auth without backend, but should load without errors
+<hr>
+<h3>12. File Upload Manager ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>file-upload</code>, <code>pan-files</code>
+<strong>Expected</strong>:
+<ul><li>Upload zone with drag-drop</li>
+<li>Preview area</li>
+<li>File list component</li>
+</ul><strong>Issues</strong>: None yet
+<hr>
+<h3>13. IndexedDB Storage ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-idb</code>, <code>pan-store</code>
+<strong>Expected</strong>:
+<ul><li>Both badges in toolbar</li>
+<li>No visible UI</li>
+</ul><strong>Issues</strong>: None yet
+<hr>
+<h3>14. Paginated Data Table ✅</h3>
+<strong>Status</strong>: FIXED (in this session)
+<strong>Components</strong>: <code>pan-data-connector</code>, <code>pan-data-table</code>, <code>pan-pagination</code>
+<strong>Expected</strong>:
+<ul><li>Connector badge</li>
+<li>Table with posts data</li>
+<li>Pagination controls</li>
+</ul><strong>Issues</strong>: FIXED - Changed from <code>pan-fetch</code> to <code>pan-data-connector</code>
+<hr>
+<h3>15. WebSocket Real-time ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-websocket</code>, <code>pan-card</code>
+<strong>Expected</strong>:
+<ul><li>WebSocket badge</li>
+<li>Card shows "Live Updates"</li>
+<li>Messages appear when WS receives data</li>
+</ul><strong>Issues</strong>: echo.websocket.org may not respond without sending
+<hr>
+<h3>16. Server-Sent Events ❌</h3>
+<strong>Status</strong>: BROKEN
+<strong>Components</strong>: <code>pan-sse</code>, <code>pan-data-table</code>
+<strong>Expected</strong>:
+<ul><li>SSE badge</li>
+<li>Table receives streamed data</li>
+</ul><strong>Issues</strong>:
+<ul><li><code>/api/events</code> endpoint doesn't exist (playground is static)</li>
+<li>Table uses <code>listen-topic</code> (deprecated?) instead of <code>resource</code></li>
+</ul>
+<hr>
+<h3>17. GraphQL Integration ❌</h3>
+<strong>Status</strong>: BROKEN
+<strong>Components</strong>: <code>pan-graphql-connector</code>, <code>pan-data-table</code>
+<strong>Expected</strong>:
+<ul><li>Connector badge</li>
+<li>Table loads GraphQL data</li>
+</ul><strong>Issues</strong>:
+<ul><li><code>https://api.example.com/graphql</code> is a fake endpoint</li>
+<li>Should use a real GraphQL API</li>
+</ul>
+<hr>
+<h3>18. Schema-based Form ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-schema</code>, <code>pan-schema-form</code>
+<strong>Expected</strong>:
+<ul><li>Schema badge</li>
+<li>Form renders from schema</li>
+</ul><strong>Issues</strong>: Need to check if works without schema data
+<hr>
+<h3>19. Drag & Drop List ✅</h3>
+<strong>Status</strong>: WORKING (tested this session with PAN monitor)
+<strong>Components</strong>: <code>drag-drop-list</code>
+<strong>Expected</strong>:
+<ul><li>List with 3 items</li>
+<li>Items are draggable</li>
+<li>PAN messages on reorder</li>
+</ul><strong>Issues</strong>: None - confirmed working
+<hr>
+<h3>20. Date Selection ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-date-picker</code>, <code>pan-validation</code>
+<strong>Expected</strong>:
+<ul><li>Date picker input</li>
+<li>Validation badge</li>
+</ul><strong>Issues</strong>: None yet
+<hr>
+<h3>21. Dropdown Menu ⚠️</h3>
+<strong>Status</strong>: Needs Testing
+<strong>Components</strong>: <code>pan-dropdown</code>
+<strong>Expected</strong>:
+<ul><li>Dropdown button with "Actions"</li>
+<li>Opens menu with Edit, Delete, Share</li>
+</ul><strong>Issues</strong>: Items is JSON array string
+<hr>
+<h2>Quick Fixes Needed</h2>
+<h3>1. SSE Stream Example</h3>
+Change to use mock data or remove:
+<pre><code class="language-javascript">// Option 1: Remove example (SSE needs backend)
+// Option 2: Use mock data with pan-store</code></pre>
+<h3>2. GraphQL Example</h3>
+Use a real public GraphQL API:
+<pre><code class="language-javascript">{
+  name: &#039;pan-graphql-connector&#039;,
+  attributes: {
+    &#039;endpoint&#039;: &#039;https://countries.trevorblades.com/&#039;,
+    &#039;resource&#039;: &#039;countries&#039;,
+    &#039;query&#039;: &#039;{ countries { code name } }&#039;
+  }
+}</code></pre>
+<h3>3. Form Examples</h3>
+Add <code>resource</code> and <code>fields</code> attributes:
+<pre><code class="language-javascript">{
+  name: &#039;pan-form&#039;,
+  attributes: {
+    &#039;resource&#039;: &#039;users&#039;,
+    &#039;fields&#039;: &#039;name,email,role&#039;
+  }
+}</code></pre>
+<h3>4. Chart Example</h3>
+Add chart data:
+<pre><code class="language-javascript">{
+  name: &#039;pan-chart&#039;,
+  attributes: {
+    &#039;type&#039;: &#039;bar&#039;,
+    &#039;data&#039;: JSON.stringify({
+      labels: [&#039;Q1&#039;, &#039;Q2&#039;, &#039;Q3&#039;, &#039;Q4&#039;],
+      datasets: [{
+        label: &#039;Sales&#039;,
+        data: [12, 19, 3, 5]
+      }]
+    })
+  }
+}</code></pre>
+<h2>Testing Checklist</h2>
+<ul><li>[ ] 1. Simple Store</li>
+<li>[ ] 2. Router with Navigation</li>
+<li>[ ] 3. Dashboard Layout</li>
+<li>[ ] 4. Form with Validation</li>
+<li>[ ] 5. Theme Switcher</li>
+<li>[x] 6. Data Flow</li>
+<li>[ ] 7. Markdown Editor & Preview</li>
+<li>[x] 8. Search & Filter</li>
+<li>[ ] 9. Modal Dialog</li>
+<li>[ ] 10. Tabs Layout</li>
+<li>[ ] 11. Authentication System</li>
+<li>[ ] 12. File Upload Manager</li>
+<li>[ ] 13. IndexedDB Storage</li>
+<li>[x] 14. Paginated Data Table</li>
+<li>[ ] 15. WebSocket Real-time</li>
+<li>[ ] 16. Server-Sent Events</li>
+<li>[ ] 17. GraphQL Integration</li>
+<li>[ ] 18. Schema-based Form</li>
+<li>[x] 19. Drag & Drop List</li>
+<li>[ ] 20. Date Selection</li>
+<li>[ ] 21. Dropdown Menu</li>
+</ul>
+<h2>Next Steps</h2>
+<li>Fix SSE and GraphQL examples (broken endpoints)</li>
+<li>Add missing attributes (data, resource, fields)</li>
+<li>Test each example systematically</li>
+<li>Document expected behavior</li>
+<li>Add troubleshooting tips</li>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/EXAMPLE_TEST_PLAN.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

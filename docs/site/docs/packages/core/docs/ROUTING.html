@@ -1,0 +1,733 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Routes - Dynamic Message Routing · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Routes - Dynamic Message Routing">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core</a> / <a href="#">docs</a> / <span>ROUTING</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Routes - Dynamic Message Routing</h1>
+<strong>Runtime-configurable message routing for declarative event-driven architectures</strong>
+<p>PAN Routes extends the PAN bus with a powerful routing system that lets you configure message flows declaratively at runtime. Instead of hardcoding message transformations and forwarding in your application code, you define routing rules that:</p>
+<ul><li>✅ Match messages based on type, topic, tags, or custom predicates</li>
+<li>✅ Transform message data with pick, map, or custom functions</li>
+<li>✅ Execute actions like emit, forward, log, or call custom handlers</li>
+<li>✅ Can be added, updated, or removed at runtime</li>
+<li>✅ Work seamlessly with the existing PAN bus message flow</li>
+</ul>
+<h2>Why Use Routing?</h2>
+<strong>Before PAN Routes (Tightly Coupled):</strong>
+<pre><code class="language-javascript">// Components must know about each other and transformation logic
+bus.subscribe(&#039;sensor.temperature&#039;, (msg) =&gt; {
+  if (msg.payload.value &gt; 30) {
+    const alert = {
+      type: &#039;alert.highTemp&#039;,
+      severity: &#039;warning&#039;,
+      temp: msg.payload.value,
+      sensor: msg.meta.source
+    };
+    bus.publish(&#039;alerts&#039;, alert);
+    console.warn(`High temp alert: ${alert.temp}°C from ${alert.sensor}`);
+  }
+});</code></pre>
+<strong>With PAN Routes (Declarative & Decoupled):</strong>
+<pre><code class="language-javascript">// Define routing rules declaratively
+pan.routes.add({
+  name: &#039;High Temperature Alert&#039;,
+  match: {
+    type: &#039;sensor.temperature&#039;,
+    where: { op: &#039;gt&#039;, path: &#039;payload.value&#039;, value: 30 }
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: {
+        type: &#039;alert.highTemp&#039;,
+        payload: { severity: &#039;warning&#039; }
+      },
+      inherit: [&#039;payload&#039;, &#039;meta&#039;]
+    },
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;warn&#039;,
+      template: &#039;High temp: {{payload.value}}°C from {{meta.source}}&#039;
+    }
+  ]
+});</code></pre>
+<strong>Benefits:</strong>
+<ul><li>🎯 <strong>Separation of Concerns</strong> - Routing logic separate from business logic</li>
+<li>🔄 <strong>Runtime Configuration</strong> - Change message flows without code changes</li>
+<li>📦 <strong>Reusable</strong> - Route definitions can be shared and stored</li>
+<li>🐛 <strong>Debuggable</strong> - See all routing rules in one place</li>
+<li>🧪 <strong>Testable</strong> - Test routing rules in isolation</li>
+</ul>
+<h2>Quick Start</h2>
+<h3>Enable Routing</h3>
+<p>Add the <code>enable-routing</code> attribute to your <code><pan-bus></code>:</p>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<p>Or enable it programmatically:</p>
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+bus.setAttribute(&#039;enable-routing&#039;, &#039;true&#039;);</code></pre>
+<h3>Add Your First Route</h3>
+<pre><code class="language-javascript">// Access the routing manager
+const routes = window.pan.routes;
+
+// Add a simple route
+routes.add({
+  name: &#039;Welcome Message Logger&#039;,
+  match: { type: &#039;user.login.success&#039; },
+  actions: [
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;info&#039;,
+      template: &#039;User {{payload.name}} logged in&#039;
+    }
+  ]
+});</code></pre>
+<h2>Core Concepts</h2>
+<h3>Routes</h3>
+<p>A <strong>route</strong> is a declarative rule with three parts:</p>
+<li><strong>Match</strong> - Conditions that determine if a message matches this route</li>
+<li><strong>Transform</strong> (optional) - How to modify the message before actions</li>
+<li><strong>Actions</strong> - What to do when a message matches</li>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;Route Name&#039;,           // Human-readable name
+  enabled: true,                // Enable/disable route
+  order: 0,                     // Execution order (lower first)
+  match: { /* conditions */ },  // Matching criteria
+  transform: { /* transform */ }, // Optional transformation
+  actions: [ /* actions */ ]    // Actions to execute
+});</code></pre>
+<h3>Matching</h3>
+<p>Routes match messages based on multiple criteria:</p>
+<p>#### Match by Type</p>
+<pre><code class="language-javascript">match: {
+  type: &#039;user.login&#039;           // Single type
+}
+
+match: {
+  type: [&#039;user.login&#039;, &#039;user.signup&#039;]  // Multiple types
+}</code></pre>
+<p>#### Match by Topic</p>
+<pre><code class="language-javascript">match: {
+  topic: &#039;users.data&#039;
+}</code></pre>
+<p>#### Match by Source</p>
+<pre><code class="language-javascript">match: {
+  source: &#039;mobile-app&#039;
+}</code></pre>
+<p>#### Match by Tags</p>
+<pre><code class="language-javascript">match: {
+  tagsAny: [&#039;important&#039;, &#039;urgent&#039;]  // At least one tag
+}
+
+match: {
+  tagsAll: [&#039;priority&#039;, &#039;verified&#039;]  // All tags required
+}</code></pre>
+<p>#### Match with Predicates</p>
+<p>Predicates let you filter messages based on their data:</p>
+<pre><code class="language-javascript">match: {
+  type: &#039;sensor.update&#039;,
+  where: {
+    op: &#039;gt&#039;,                    // Greater than
+    path: &#039;payload.temperature&#039;, // Field to check
+    value: 30                    // Threshold
+  }
+}</code></pre>
+<strong>Available Predicate Operators:</strong>
+<p>| Operator | Description | Example |
+|----------|-------------|---------|
+| <code>eq</code> | Equal | <code>{ op: 'eq', path: 'payload.status', value: 'active' }</code> |
+| <code>neq</code> | Not equal | <code>{ op: 'neq', path: 'payload.type', value: 'test' }</code> |
+| <code>gt</code> | Greater than | <code>{ op: 'gt', path: 'payload.count', value: 100 }</code> |
+| <code>gte</code> | Greater than or equal | <code>{ op: 'gte', path: 'payload.score', value: 80 }</code> |
+| <code>lt</code> | Less than | <code>{ op: 'lt', path: 'payload.age', value: 18 }</code> |
+| <code>lte</code> | Less than or equal | <code>{ op: 'lte', path: 'payload.price', value: 50 }</code> |
+| <code>in</code> | Value in array | <code>{ op: 'in', path: 'payload.role', value: ['admin', 'moderator'] }</code> |
+| <code>regex</code> | Regular expression | <code>{ op: 'regex', path: 'payload.email', value: '^[^@]+@example\\.com$' }</code> |
+| <code>and</code> | Logical AND | <code>{ op: 'and', children: [pred1, pred2] }</code> |
+| <code>or</code> | Logical OR | <code>{ op: 'or', children: [pred1, pred2] }</code> |
+| <code>not</code> | Logical NOT | <code>{ op: 'not', child: pred }</code> |</p>
+<strong>Complex Predicate Example:</strong>
+<pre><code class="language-javascript">match: {
+  type: &#039;order.created&#039;,
+  where: {
+    op: &#039;and&#039;,
+    children: [
+      { op: &#039;gte&#039;, path: &#039;payload.total&#039;, value: 100 },
+      { op: &#039;eq&#039;, path: &#039;payload.status&#039;, value: &#039;pending&#039; },
+      {
+        op: &#039;or&#039;,
+        children: [
+          { op: &#039;eq&#039;, path: &#039;payload.priority&#039;, value: &#039;high&#039; },
+          { op: &#039;in&#039;, path: &#039;meta.tags&#039;, value: [&#039;vip&#039;, &#039;urgent&#039;] }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+<h3>Transforms</h3>
+<p>Transforms modify messages before actions execute:</p>
+<p>#### Identity Transform (No Change)</p>
+<pre><code class="language-javascript">transform: {
+  op: &#039;identity&#039;
+}</code></pre>
+<p>#### Pick Transform (Select Fields)</p>
+<pre><code class="language-javascript">transform: {
+  op: &#039;pick&#039;,
+  paths: [&#039;payload.userId&#039;, &#039;payload.email&#039;, &#039;meta.timestamp&#039;]
+}</code></pre>
+<p>#### Map Transform (Apply Function to Field)</p>
+<pre><code class="language-javascript">// Register transform function
+routes.registerTransform(&#039;normalize-email&#039;, (email) =&gt; {
+  return email.toLowerCase().trim();
+});
+
+// Use in route
+transform: {
+  op: &#039;map&#039;,
+  path: &#039;payload.email&#039;,
+  fnId: &#039;normalize-email&#039;
+}</code></pre>
+<p>#### Custom Transform (Full Message Transformation)</p>
+<pre><code class="language-javascript">// Register custom transform
+routes.registerTransform(&#039;enrich-user-data&#039;, (msg) =&gt; {
+  return {
+    ...msg,
+    payload: {
+      ...msg.payload,
+      timestamp: Date.now(),
+      source: &#039;enriched&#039;
+    }
+  };
+});
+
+// Use in route
+transform: {
+  op: &#039;custom&#039;,
+  fnId: &#039;enrich-user-data&#039;
+}</code></pre>
+<h3>Actions</h3>
+<p>Actions define what happens when a message matches a route:</p>
+<p>#### EMIT Action</p>
+<p>Publish a new message on the bus:</p>
+<pre><code class="language-javascript">actions: [
+  {
+    type: &#039;EMIT&#039;,
+    message: {
+      type: &#039;notification.send&#039;,
+      payload: {
+        title: &#039;New Order&#039;,
+        body: &#039;Order received&#039;
+      }
+    }
+  }
+]</code></pre>
+<strong>With Inheritance:</strong>
+<pre><code class="language-javascript">actions: [
+  {
+    type: &#039;EMIT&#039;,
+    message: {
+      type: &#039;order.processed&#039;,
+      payload: { status: &#039;processing&#039; }
+    },
+    inherit: [&#039;payload&#039;, &#039;meta&#039;]  // Merge original payload and meta
+  }
+]</code></pre>
+<p>#### FORWARD Action</p>
+<p>Forward the message to a different topic:</p>
+<pre><code class="language-javascript">actions: [
+  {
+    type: &#039;FORWARD&#039;,
+    topic: &#039;analytics.events&#039;
+  }
+]</code></pre>
+<strong>With Type Override:</strong>
+<pre><code class="language-javascript">actions: [
+  {
+    type: &#039;FORWARD&#039;,
+    topic: &#039;backup.events&#039;,
+    typeOverride: &#039;archived.event&#039;
+  }
+]</code></pre>
+<p>#### LOG Action</p>
+<p>Log message with template interpolation:</p>
+<pre><code class="language-javascript">actions: [
+  {
+    type: &#039;LOG&#039;,
+    level: &#039;info&#039;,  // debug, info, warn, error
+    template: &#039;User {{payload.username}} performed {{payload.action}}&#039;
+  }
+]</code></pre>
+<p>#### CALL Action</p>
+<p>Call a registered handler function:</p>
+<pre><code class="language-javascript">// Register handler
+routes.registerHandler(&#039;process-payment&#039;, (msg) =&gt; {
+  console.log(&#039;Processing payment:&#039;, msg.payload);
+  // ... payment processing logic
+});
+
+// Use in route
+actions: [
+  {
+    type: &#039;CALL&#039;,
+    handlerId: &#039;process-payment&#039;
+  }
+]</code></pre>
+<p>#### Multiple Actions</p>
+<p>Routes can execute multiple actions in sequence:</p>
+<pre><code class="language-javascript">actions: [
+  {
+    type: &#039;LOG&#039;,
+    level: &#039;info&#039;,
+    template: &#039;Processing order {{payload.orderId}}&#039;
+  },
+  {
+    type: &#039;CALL&#039;,
+    handlerId: &#039;validate-order&#039;
+  },
+  {
+    type: &#039;EMIT&#039;,
+    message: {
+      type: &#039;order.validated&#039;,
+      payload: { valid: true }
+    }
+  }
+]</code></pre>
+<h2>API Reference</h2>
+<h3>Route Management</h3>
+<p>#### <code>add(route)</code></p>
+<p>Add a new route:</p>
+<pre><code class="language-javascript">const route = routes.add({
+  name: &#039;My Route&#039;,
+  match: { type: &#039;test&#039; },
+  actions: [{ type: &#039;LOG&#039;, level: &#039;info&#039; }]
+});
+
+console.log(route.id); // Auto-generated ID</code></pre>
+<p>#### <code>list(options)</code></p>
+<p>List all routes (with optional filtering):</p>
+<pre><code class="language-javascript">const allRoutes = routes.list();
+const enabledOnly = routes.list({ enabled: true });
+const byTag = routes.list({ meta: { tags: [&#039;production&#039;] } });</code></pre>
+<p>#### <code>update(id, patch)</code></p>
+<p>Update an existing route:</p>
+<pre><code class="language-javascript">routes.update(&#039;route-123&#039;, {
+  name: &#039;Updated Name&#039;,
+  enabled: false
+});</code></pre>
+<p>#### <code>remove(id)</code></p>
+<p>Remove a route:</p>
+<pre><code class="language-javascript">routes.remove(&#039;route-123&#039;);</code></pre>
+<p>#### <code>enable(id)</code> / <code>disable(id)</code></p>
+<p>Enable or disable a route:</p>
+<pre><code class="language-javascript">routes.enable(&#039;route-123&#039;);
+routes.disable(&#039;route-123&#039;);</code></pre>
+<p>#### <code>clear()</code></p>
+<p>Remove all routes:</p>
+<pre><code class="language-javascript">routes.clear();</code></pre>
+<h3>Transform & Handler Registration</h3>
+<p>#### <code>registerTransform(fnId, fn)</code></p>
+<p>Register a transform function:</p>
+<pre><code class="language-javascript">routes.registerTransform(&#039;upper&#039;, (val) =&gt; val.toUpperCase());
+
+// Unregister
+routes.unregisterTransform(&#039;upper&#039;);</code></pre>
+<p>#### <code>registerHandler(handlerId, handler)</code></p>
+<p>Register an action handler:</p>
+<pre><code class="language-javascript">routes.registerHandler(&#039;my-handler&#039;, (msg) =&gt; {
+  console.log(&#039;Handling:&#039;, msg);
+});
+
+// Unregister
+routes.unregisterHandler(&#039;my-handler&#039;);</code></pre>
+<h3>Statistics</h3>
+<p>#### <code>getStats()</code></p>
+<p>Get routing statistics:</p>
+<pre><code class="language-javascript">const stats = routes.getStats();
+console.log(stats);
+// {
+//   routesEvaluated: 1234,
+//   routesMatched: 456,
+//   actionsExecuted: 789,
+//   errors: 0,
+//   routeCount: 5,
+//   enabledRouteCount: 4,
+//   transformFnCount: 2,
+//   handlerCount: 3
+// }</code></pre>
+<p>#### <code>resetStats()</code></p>
+<p>Reset statistics counters:</p>
+<pre><code class="language-javascript">routes.resetStats();</code></pre>
+<h3>Event Listeners</h3>
+<p>#### <code>onChange(listener)</code></p>
+<p>Listen for route changes:</p>
+<pre><code class="language-javascript">const unsubscribe = routes.onChange((allRoutes) =&gt; {
+  console.log(&#039;Routes changed:&#039;, allRoutes);
+});
+
+// Later: unsubscribe()</code></pre>
+<p>#### <code>onError(listener)</code></p>
+<p>Listen for routing errors:</p>
+<pre><code class="language-javascript">const unsubscribe = routes.onError((error) =&gt; {
+  console.error(&#039;Routing error:&#039;, error);
+});</code></pre>
+<h3>Control via Messages</h3>
+<p>You can also control routing via PAN control messages:</p>
+<pre><code class="language-javascript">// Add route
+document.dispatchEvent(new CustomEvent(&#039;pan:control&#039;, {
+  detail: {
+    type: &#039;pan.routes.add&#039;,
+    payload: {
+      route: {
+        name: &#039;My Route&#039;,
+        match: { type: &#039;test&#039; },
+        actions: [{ type: &#039;LOG&#039; }]
+      }
+    }
+  }
+}));
+
+// Remove route
+document.dispatchEvent(new CustomEvent(&#039;pan:control&#039;, {
+  detail: {
+    type: &#039;pan.routes.remove&#039;,
+    payload: { id: &#039;route-123&#039; }
+  }
+}));
+
+// List routes
+document.dispatchEvent(new CustomEvent(&#039;pan:control&#039;, {
+  detail: {
+    type: &#039;pan.routes.list&#039;,
+    payload: {}
+  }
+}));</code></pre>
+<h2>Real-World Examples</h2>
+<h3>Example 1: User Activity Tracking</h3>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;Track User Actions&#039;,
+  match: {
+    type: [&#039;user.click&#039;, &#039;user.view&#039;, &#039;user.interact&#039;],
+    tagsAny: [&#039;trackable&#039;]
+  },
+  actions: [
+    {
+      type: &#039;FORWARD&#039;,
+      topic: &#039;analytics.user-events&#039;
+    },
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;debug&#039;,
+      template: &#039;[Analytics] {{type}}: {{payload.element}}&#039;
+    }
+  ]
+});</code></pre>
+<h3>Example 2: Error Monitoring</h3>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;Critical Error Monitor&#039;,
+  match: {
+    type: &#039;error&#039;,
+    where: {
+      op: &#039;or&#039;,
+      children: [
+        { op: &#039;eq&#039;, path: &#039;payload.severity&#039;, value: &#039;critical&#039; },
+        { op: &#039;eq&#039;, path: &#039;payload.severity&#039;, value: &#039;fatal&#039; }
+      ]
+    }
+  },
+  actions: [
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;error&#039;,
+      template: &#039;🚨 CRITICAL: {{payload.message}} in {{payload.component}}&#039;
+    },
+    {
+      type: &#039;EMIT&#039;,
+      message: {
+        type: &#039;notification.alert&#039;,
+        payload: {
+          title: &#039;Critical Error&#039;,
+          priority: &#039;high&#039;
+        }
+      },
+      inherit: [&#039;payload&#039;]
+    },
+    {
+      type: &#039;CALL&#039;,
+      handlerId: &#039;send-to-error-tracking&#039;
+    }
+  ]
+});</code></pre>
+<h3>Example 3: Data Transformation Pipeline</h3>
+<pre><code class="language-javascript">// Register transforms
+routes.registerTransform(&#039;validate-email&#039;, (email) =&gt; {
+  const valid = /^[^@]+@[^@]+\.[^@]+$/.test(email);
+  return { email, valid };
+});
+
+routes.registerTransform(&#039;normalize-user&#039;, (msg) =&gt; ({
+  ...msg,
+  payload: {
+    id: msg.payload.id,
+    email: msg.payload.email.toLowerCase().trim(),
+    name: msg.payload.name.trim(),
+    createdAt: Date.now()
+  }
+}));
+
+// Add transformation route
+routes.add({
+  name: &#039;User Registration Pipeline&#039;,
+  match: { type: &#039;user.register&#039; },
+  transform: {
+    op: &#039;custom&#039;,
+    fnId: &#039;normalize-user&#039;
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: { type: &#039;user.normalized&#039; },
+      inherit: [&#039;payload&#039;]
+    }
+  ]
+});</code></pre>
+<h3>Example 4: Conditional Notification Routing</h3>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;VIP Customer Notifications&#039;,
+  match: {
+    type: &#039;order.created&#039;,
+    where: {
+      op: &#039;and&#039;,
+      children: [
+        { op: &#039;gte&#039;, path: &#039;payload.total&#039;, value: 1000 },
+        { op: &#039;eq&#039;, path: &#039;payload.customerTier&#039;, value: &#039;vip&#039; }
+      ]
+    }
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: {
+        type: &#039;notification.vip-order&#039;,
+        payload: {
+          priority: &#039;high&#039;,
+          channels: [&#039;email&#039;, &#039;sms&#039;, &#039;push&#039;]
+        }
+      },
+      inherit: [&#039;payload&#039;, &#039;meta&#039;]
+    },
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;info&#039;,
+      template: &#039;💎 VIP Order: ${{payload.total}} from {{payload.customerId}}&#039;
+    }
+  ]
+});</code></pre>
+<h3>Example 5: Feature Flag Routing</h3>
+<pre><code class="language-javascript">// Register handler that checks feature flags
+routes.registerHandler(&#039;check-feature&#039;, (msg) =&gt; {
+  const features = getFeatureFlags(); // Your feature flag system
+  if (features.newCheckout) {
+    window.pan.bus.publish(&#039;checkout.v2&#039;, msg.payload);
+  } else {
+    window.pan.bus.publish(&#039;checkout.v1&#039;, msg.payload);
+  }
+});
+
+routes.add({
+  name: &#039;Checkout Version Router&#039;,
+  match: { type: &#039;checkout.start&#039; },
+  actions: [
+    {
+      type: &#039;CALL&#039;,
+      handlerId: &#039;check-feature&#039;
+    }
+  ]
+});</code></pre>
+<h2>Best Practices</h2>
+<h3>1. Name Routes Descriptively</h3>
+<pre><code class="language-javascript">// ✅ Good
+name: &#039;High-Priority Order Alert&#039;
+
+// ❌ Bad
+name: &#039;Route 1&#039;</code></pre>
+<h3>2. Use Tags for Organization</h3>
+<pre><code class="language-javascript">meta: {
+  tags: [&#039;production&#039;, &#039;alerts&#039;, &#039;v1&#039;]
+}</code></pre>
+<h3>3. Order Routes Appropriately</h3>
+<pre><code class="language-javascript">// Lower order executes first
+{ name: &#039;Validation&#039;, order: 10, ... }
+{ name: &#039;Transformation&#039;, order: 20, ... }
+{ name: &#039;Logging&#039;, order: 30, ... }</code></pre>
+<h3>4. Handle Errors Gracefully</h3>
+<pre><code class="language-javascript">routes.onError((error) =&gt; {
+  console.error(&#039;Routing error:&#039;, error);
+  // Send to error tracking service
+});</code></pre>
+<h3>5. Use Control Guards for Security</h3>
+<pre><code class="language-javascript">routes.setControlGuard((message) =&gt; {
+  // Only allow control messages from admin users
+  return message.meta?.userId === &#039;admin&#039;;
+});</code></pre>
+<h3>6. Test Routes in Isolation</h3>
+<pre><code class="language-javascript">// Test that route matches correctly
+const testMsg = { type: &#039;test&#039;, payload: { value: 50 } };
+const matched = routes.processMessage(testMsg);
+console.log(&#039;Routes matched:&#039;, matched.length);</code></pre>
+<h3>7. Monitor Performance</h3>
+<pre><code class="language-javascript">const stats = routes.getStats();
+console.log(`${stats.routesMatched}/${stats.routesEvaluated} matches`);
+console.log(`${stats.actionsExecuted} actions executed`);</code></pre>
+<h2>Performance Considerations</h2>
+<ul><li><strong>Route Evaluation</strong>: All enabled routes are evaluated for every message. Keep the number of routes reasonable (<100).</li>
+<li><strong>Predicate Complexity</strong>: Complex predicates (deep <code>and</code>/<code>or</code> trees) can impact performance.</li>
+<li><strong>Transform Functions</strong>: Custom transforms should be fast. Avoid expensive operations.</li>
+<li><strong>Action Ordering</strong>: Actions execute sequentially. Put faster actions first.</li>
+</ul>
+<h2>Security</h2>
+<h3>Control Message Guard</h3>
+<p>Protect routing configuration from unauthorized changes:</p>
+<pre><code class="language-javascript">routes.setControlGuard((message) =&gt; {
+  const user = getCurrentUser();
+  return user &amp;&amp; user.role === &#039;admin&#039;;
+});</code></pre>
+<h3>Validate Route Sources</h3>
+<pre><code class="language-javascript">match: {
+  source: [&#039;trusted-app&#039;, &#039;internal-service&#039;]  // Only match trusted sources
+}</code></pre>
+<h3>Sanitize Log Templates</h3>
+<p>Be careful with user-provided data in log templates:</p>
+<pre><code class="language-javascript">// ⚠️ Potentially unsafe if payload.message contains sensitive data
+template: &#039;Error: {{payload.message}}&#039;
+
+// ✅ Better: use specific, known-safe fields
+template: &#039;Error code: {{payload.errorCode}}&#039;</code></pre>
+<h2>TypeScript Support</h2>
+<p>Use with <code>@larcjs/core-types</code>:</p>
+<pre><code class="language-typescript">import type { PanRoute, PanMessage } from &#039;@larcjs/core-types&#039;;
+
+const route: PanRoute = {
+  name: &#039;Typed Route&#039;,
+  match: { type: &#039;user.action&#039; },
+  actions: [{ type: &#039;LOG&#039;, level: &#039;info&#039; }]
+};
+
+window.pan.routes.add(route);</code></pre>
+<h2>Debugging</h2>
+<h3>Enable Debug Logging</h3>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot; debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<h3>Inspect Routes</h3>
+<pre><code class="language-javascript">// List all routes
+console.table(routes.list());
+
+// Get specific route
+const route = routes.list().find(r =&gt; r.name === &#039;My Route&#039;);
+console.log(route);</code></pre>
+<h3>View Statistics</h3>
+<pre><code class="language-javascript">console.log(routes.getStats());</code></pre>
+<h3>Trace Message Flow</h3>
+<pre><code class="language-javascript">routes.onChange((routes) =&gt; {
+  console.log(&#039;Routes updated:&#039;, routes.map(r =&gt; r.name));
+});
+
+routes.onError((error) =&gt; {
+  console.error(&#039;Routing error:&#039;, error);
+});</code></pre>
+<h2>Migration Guide</h2>
+<h3>From Manual Subscriptions</h3>
+<strong>Before:</strong>
+<pre><code class="language-javascript">bus.subscribe(&#039;data.fetch&#039;, async (msg) =&gt; {
+  const result = await fetchData(msg.payload.id);
+  bus.publish(&#039;data.loaded&#039;, result);
+});</code></pre>
+<strong>After:</strong>
+<pre><code class="language-javascript">routes.registerHandler(&#039;fetch-data&#039;, async (msg) =&gt; {
+  const result = await fetchData(msg.payload.id);
+  return result;
+});
+
+routes.add({
+  name: &#039;Data Fetcher&#039;,
+  match: { type: &#039;data.fetch&#039; },
+  actions: [
+    {
+      type: &#039;CALL&#039;,
+      handlerId: &#039;fetch-data&#039;
+    },
+    {
+      type: &#039;EMIT&#039;,
+      message: { type: &#039;data.loaded&#039; },
+      inherit: [&#039;payload&#039;]
+    }
+  ]
+});</code></pre>
+<h2>FAQ</h2>
+<strong>Q: Do routes affect normal PAN bus subscriptions?</strong>
+A: No. Routes run in parallel with subscriptions. Both will receive messages.
+<strong>Q: Can routes create infinite loops?</strong>
+A: Yes, if a route emits a message that matches itself. Be careful with EMIT actions.
+<strong>Q: How do I persist routes across page reloads?</strong>
+A: Use <code>routes.setStorage()</code> with localStorage or your own storage adapter.
+<strong>Q: Can I use routes in Web Workers?</strong>
+A: Yes, but the routing manager must be initialized in each worker context.
+<strong>Q: What's the performance impact?</strong>
+A: Minimal for <50 routes. Each message evaluation is ~0.1ms on average hardware.
+<h2>Resources</h2>
+<ul><li><a href="./API_REFERENCE.md">API Reference</a></li>
+<li><a href="../README.md">LARC Core Documentation</a></li>
+<li><a href="https://github.com/larcjs/examples">Examples Repository</a></li>
+</ul>
+<h2>License</h2>
+<p>MIT © Chris Robison</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core/docs/ROUTING.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

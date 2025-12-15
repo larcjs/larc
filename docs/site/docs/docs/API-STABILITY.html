@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Core API Stability Guarantee · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Core API Stability Guarantee">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <span>API-STABILITY</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Core API Stability Guarantee</h1>
+<strong>Version:</strong> 1.0.0
+<strong>Status:</strong> FROZEN for v1.x releases
+<strong>Last Updated:</strong> November 24, 2024
+<hr>
+<h2>Overview</h2>
+<p>This document defines the <strong>public API surface</strong> of LARC Core and commits to maintaining backward compatibility for all APIs marked as <strong>STABLE</strong> throughout the v1.x release cycle.</p>
+<h3>API Stability Levels</h3>
+<ul><li><strong>STABLE</strong>: API is frozen and guaranteed backward compatible in v1.x</li>
+<li><strong>EXPERIMENTAL</strong>: API may change in minor versions (use at own risk)</li>
+<li><strong>DEPRECATED</strong>: API will be removed in next major version</li>
+</ul>
+<hr>
+<h2>Public API Surface</h2>
+<h3>1. PAN Autoloader (<code>pan.mjs</code>)</h3>
+<p>#### Status: <strong>STABLE</strong></p>
+<p>#### Global Configuration</p>
+<pre><code class="language-javascript">window.panAutoload = {
+  baseUrl: string | null,           // STABLE
+  componentsPath: string,           // STABLE
+  extension: string,                // STABLE
+  rootMargin: number,               // STABLE
+  resolveComponent: (tag) =&gt; string, // STABLE
+  componentPaths: Record&lt;string, string&gt;, // STABLE
+  paths: { resolve: (path) =&gt; string }    // STABLE
+}</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>All configuration properties will remain supported</li>
+<li>New optional properties may be added</li>
+<li>Default values will not change</li>
+<li>Configuration merge behavior will not change</li>
+</ul>
+#### Public Functions
+<pre><code class="language-javascript">// STABLE - Load component for element
+maybeLoadFor(element: Element): Promise&lt;void&gt;
+
+// STABLE - Observe DOM tree for custom elements
+observeTree(root?: Document | Element): void</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Function signatures will not change</li>
+<li>Return types will not change</li>
+<li>Behavior will remain consistent</li>
+<li>Error handling will not throw new error types</li>
+</ul>
+#### Exported Module
+<pre><code class="language-javascript">// STABLE
+export { maybeLoadFor, observeTree, panAutoload }
+export default panAutoload</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Named exports will remain available</li>
+<li>Default export will remain available</li>
+<li>No exports will be removed</li>
+</ul>
+<hr>
+<h3>2. PAN Bus (<code>components/pan-bus.mjs</code>)</h3>
+<p>#### Status: <strong>STABLE</strong></p>
+<p>#### Custom Element</p>
+<pre><code class="language-javascript">// STABLE
+customElements.define(&#039;pan-bus&#039;, PanBus)</code></pre>
+<p>#### Attributes</p>
+<p>All attributes are <strong>STABLE</strong>:</p>
+<pre><code class="language-html">&lt;pan-bus
+  max-retained=&quot;1000&quot;
+  max-message-size=&quot;1048576&quot;
+  max-payload-size=&quot;524288&quot;
+  rate-limit=&quot;1000&quot;
+  allow-global-wildcard=&quot;true&quot;
+  debug=&quot;false&quot;
+&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>All attributes will remain supported</li>
+<li>Attribute names will not change</li>
+<li>Default values will not change</li>
+<li>Attribute coercion rules will not change</li>
+</ul>
+#### Configuration Object
+<pre><code class="language-javascript">// STABLE
+bus.config = {
+  maxRetained: number,        // STABLE - default 1000
+  maxMessageSize: number,     // STABLE - default 1048576
+  maxPayloadSize: number,     // STABLE - default 524288
+  rateLimit: number,          // STABLE - default 1000
+  allowGlobalWildcard: boolean, // STABLE - default true
+  debug: boolean              // STABLE - default false
+}</code></pre>
+<p>#### Events Dispatched</p>
+<p>All events are <strong>STABLE</strong>:</p>
+<pre><code class="language-javascript">// STABLE - Bus ready for messaging
+&#039;pan:sys.ready&#039; {
+  detail: {
+    enhanced: boolean,
+    config: Config
+  }
+}
+
+// STABLE - Message delivery to subscribers
+&#039;pan:deliver&#039; {
+  detail: {
+    topic: string,
+    data: any,
+    id: string,
+    ts: number,
+    retain?: boolean,
+    replyTo?: string,
+    correlationId?: string,
+    headers?: Record&lt;string, string&gt;
+  }
+}
+
+// STABLE - System errors
+&#039;pan:sys.error&#039; {
+  detail: {
+    code: string,
+    message: string,
+    details?: any
+  }
+}</code></pre>
+<p>#### Events Listened</p>
+<p>All events are <strong>STABLE</strong>:</p>
+<pre><code class="language-javascript">// STABLE - Publish message
+&#039;pan:publish&#039; {
+  detail: {
+    topic: string,       // required
+    data: any,          // required
+    retain?: boolean,
+    replyTo?: string,
+    correlationId?: string,
+    headers?: Record&lt;string, string&gt;
+  }
+}
+
+// STABLE - Subscribe to topics
+&#039;pan:subscribe&#039; {
+  detail: {
+    clientId: string,
+    topics: string[],
+    options?: {
+      retained: boolean
+    }
+  }
+}
+
+// STABLE - Unsubscribe from topics
+&#039;pan:unsubscribe&#039; {
+  detail: {
+    clientId: string,
+    topics: string[]
+  }
+}
+
+// STABLE - Client hello
+&#039;pan:hello&#039; {
+  detail: {
+    id: string,
+    caps: string[]
+  }
+}</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Event names will not change</li>
+<li>Event detail structures will not break</li>
+<li>New optional fields may be added</li>
+<li>Required fields will remain required</li>
+</ul>
+<hr>
+<h3>3. PAN Client (<code>components/pan-client.mjs</code>)</h3>
+<p>#### Status: <strong>STABLE</strong></p>
+<p>#### Class Export</p>
+<pre><code class="language-javascript">// STABLE
+export class PanClient { ... }
+export default PanClient</code></pre>
+<p>#### Constructor</p>
+<pre><code class="language-javascript">// STABLE
+constructor(
+  host?: HTMLElement | Document,
+  busSelector?: string
+)</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Parameter order will not change</li>
+<li>Default values will not change</li>
+<li>Parameter types will not change</li>
+</ul>
+#### Public Methods
+<pre><code class="language-javascript">// STABLE - Wait for bus ready
+ready(): Promise&lt;void&gt;
+
+// STABLE - Publish message
+publish(msg: {
+  topic: string,
+  data: any,
+  retain?: boolean,
+  replyTo?: string,
+  correlationId?: string,
+  headers?: Record&lt;string, string&gt;
+}): void
+
+// STABLE - Subscribe to topics
+subscribe(
+  topics: string | string[],
+  handler: (msg: Message) =&gt; void,
+  options?: {
+    retained?: boolean,
+    signal?: AbortSignal
+  }
+): () =&gt; void
+
+// STABLE - Request/reply pattern
+request(
+  topic: string,
+  data: any,
+  options?: {
+    timeoutMs?: number
+  }
+): Promise&lt;Message&gt;</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Method names will not change</li>
+<li>Method signatures will not break</li>
+<li>Return types will remain compatible</li>
+<li>Default parameter values will not change</li>
+<li>Error types will not change</li>
+</ul>
+#### Static Methods
+<pre><code class="language-javascript">// STABLE - Topic matching utility
+static matches(
+  topic: string,
+  pattern: string
+): boolean</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Method signature will not change</li>
+<li>Matching algorithm will remain consistent</li>
+<li>Return type will not change</li>
+</ul>
+#### Public Properties
+<pre><code class="language-javascript">// STABLE (read-only)
+client.host: HTMLElement | Document
+client.clientId: string</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Property names will not change</li>
+<li>Property types will not change</li>
+<li>Read-only properties will remain read-only</li>
+</ul>
+<hr>
+<h2>Message Format</h2>
+<h3>Status: <strong>STABLE</strong></h3>
+<pre><code class="language-typescript">interface Message {
+  topic: string;              // STABLE - required
+  data: any;                  // STABLE - required
+  id?: string;                // STABLE - UUID generated by bus
+  ts?: number;                // STABLE - timestamp in ms
+  retain?: boolean;           // STABLE - retain for late subscribers
+  replyTo?: string;           // STABLE - reply topic
+  correlationId?: string;     // STABLE - request correlation
+  headers?: Record&lt;string, string&gt;; // STABLE - metadata
+}</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Required fields will remain required</li>
+<li>Optional fields will remain optional</li>
+<li>Field types will not change</li>
+<li>Field names will not change</li>
+<li>New optional fields may be added</li>
+</ul>
+<hr>
+<h2>Wildcard Patterns</h2>
+<h3>Status: <strong>STABLE</strong></h3>
+<p>#### Single Segment Wildcard</p>
+<pre><code class="language-javascript">// STABLE
+&#039;users.*&#039;      // matches: users.created, users.updated
+               // does NOT match: users.list.all</code></pre>
+<p>#### Multi-Segment Wildcard</p>
+<pre><code class="language-javascript">// STABLE
+&#039;app.*.*&#039;      // matches: app.users.created, app.posts.updated
+               // does NOT match: app.users (too short)</code></pre>
+<p>#### Global Wildcard</p>
+<pre><code class="language-javascript">// STABLE
+&#039;*&#039;            // matches: ALL messages</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Wildcard syntax will not change</li>
+<li>Matching behavior will remain consistent</li>
+<li>Wildcard segment boundaries (<code>.</code>) will not change</li>
+</ul>
+<hr>
+<h2>Error Codes</h2>
+<h3>Status: <strong>STABLE</strong></h3>
+<p>All error codes dispatched via <code>pan:sys.error</code>:</p>
+<pre><code class="language-javascript">// STABLE
+&#039;MESSAGE_INVALID&#039;    // Invalid message format
+&#039;TOPIC_INVALID&#039;      // Invalid topic format
+&#039;RATE_LIMIT&#039;         // Rate limit exceeded
+&#039;MESSAGE_TOO_LARGE&#039;  // Message exceeds size limit
+&#039;PAYLOAD_TOO_LARGE&#039;  // Payload exceeds size limit</code></pre>
+<strong>Guarantees:</strong>
+<ul><li>Error codes will not be removed</li>
+<li>Error code strings will not change</li>
+<li>New error codes may be added</li>
+<li>Error message formats may improve</li>
+</ul>
+<hr>
+<h2>Deprecation Policy</h2>
+<h3>Rules</h3>
+<li><strong>Minimum Notice</strong>: 6 months OR 1 major version (whichever is longer)</li>
+<li><strong>Documentation</strong>: Deprecated APIs must be marked in docs</li>
+<li><strong>Warnings</strong>: Console warnings for deprecated API usage</li>
+<li><strong>Alternatives</strong>: Migration path must be provided</li>
+<h3>Current Deprecations</h3>
+<strong>None</strong> - All v1.0 APIs are stable and will be supported throughout v1.x
+<hr>
+<h2>Version Compatibility</h2>
+<h3>v1.x Compatibility Promise</h3>
+<strong>Within v1.x releases:</strong>
+<ul><li>✅ All STABLE APIs will remain backward compatible</li>
+<li>✅ New optional features may be added</li>
+<li>✅ Bug fixes will not break APIs</li>
+<li>✅ Performance improvements will not break APIs</li>
+<li>✅ New optional parameters may be added (with defaults)</li>
+<li>❌ Required parameters will NOT be added</li>
+<li>❌ Parameter order will NOT change</li>
+<li>❌ Return types will NOT change incompatibly</li>
+</ul>
+<h3>Breaking Changes Allowed in v2.0+</h3>
+<p>The following changes would require a major version bump:
+<ul><li>Removing public APIs</li>
+<li>Changing required parameters</li>
+<li>Changing return types incompatibly</li>
+<li>Changing event detail structure (breaking)</li>
+<li>Changing wildcard matching behavior</li>
+<li>Removing error codes</li>
+</ul>
+<hr></p>
+<h2>API Compatibility Tests</h2>
+<p>All STABLE APIs have dedicated compatibility tests to prevent accidental breakage:</p>
+<pre><code class="language-plaintext">tests/api-compatibility/
+  ├── autoloader-api.test.mjs
+  ├── bus-api.test.mjs
+  ├── client-api.test.mjs
+  └── message-format.test.mjs</code></pre>
+<p>These tests will fail if any STABLE API changes in an incompatible way.</p>
+<hr>
+<h2>Using Experimental APIs</h2>
+<p>Some features may be marked <strong>EXPERIMENTAL</strong>. These:
+<ul><li>May change in minor versions</li>
+<li>May be removed in minor versions</li>
+<li>Should not be used in production</li>
+<li>Will be documented with <code>@experimental</code> tag</li>
+</ul>
+<strong>Currently:</strong> No experimental APIs in v1.0.0</p>
+<hr>
+<h2>Support Policy</h2>
+<p>| Version | Status | Support Until | Breaking Changes |
+|---------|--------|---------------|------------------|
+| v1.0.x | <strong>Current</strong> | v2.0.0 release | ❌ None allowed |
+| v1.1.x | Future | v2.0.0 release | ❌ None allowed |
+| v1.x.x | Future | v2.0.0 release | ❌ None allowed |
+| v2.0.0 | Future | TBD | ✅ Allowed |</p>
+<hr>
+<h2>Reporting API Issues</h2>
+<p>If you encounter behavior that violates this stability guarantee:</p>
+<li><strong>Check Documentation</strong>: Verify the API is marked STABLE</li>
+<li><strong>Check Version</strong>: Ensure you're using a v1.x release</li>
+<li><strong>File Issue</strong>: Report via GitHub Issues with:</li>
+   - API being used
+   - Expected behavior (per this doc)
+   - Actual behavior
+   - Version numbers
+<strong>API stability violations are considered critical bugs</strong> and will be fixed with high priority.
+<hr>
+<h2>Summary</h2>
+<h3>What You Can Depend On (v1.x)</h3>
+<p>✅ All function signatures
+✅ All event names and basic structure
+✅ All configuration options
+✅ All error codes
+✅ Wildcard matching behavior
+✅ Message format structure</p>
+<h3>What May Change (v1.x)</h3>
+<p>✅ Performance improvements
+✅ Bug fixes
+✅ New optional parameters (with defaults)
+✅ New optional fields in messages
+✅ New optional configuration
+✅ Error message text (not codes)
+✅ Internal implementation</p>
+<h3>What Will NOT Change (v1.x)</h3>
+<p>❌ Required parameters
+❌ Parameter types
+❌ Return types
+❌ Event names
+❌ Required message fields
+❌ Wildcard syntax
+❌ Public API removal</p>
+<hr>
+<h2>Commitment</h2>
+<p>LARC Core v1.x is committed to <strong>100% backward compatibility</strong> for all STABLE APIs. Your code written against v1.0 will continue to work with v1.1, v1.2, v1.x without modification.</p>
+<strong>Last Review:</strong> November 24, 2024
+<strong>Next Review:</strong> Prior to v1.1.0 release
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/API-STABILITY.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

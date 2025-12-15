@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Component Header Template · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Component Header Template">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">ui</a> / <span>COMPONENT_TEMPLATE</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Component Header Template</h1>
+<p>Use this standard header format for all component files. The documentation generator will extract this metadata to create rich, categorized documentation.</p>
+<h2>Standard Header Format</h2>
+<pre><code class="language-javascript">/**
+ * @component pan-example
+ * @category Data &amp; State
+ * @status stable
+ * @since 1.0.0
+ * 
+ * @description
+ * Brief one-line description of what this component does
+ * 
+ * Longer description with details about the component&#039;s purpose,
+ * behavior, and key features. Explain when to use this component
+ * and what problems it solves.
+ * 
+ * @attr {string} resource - Resource name for PAN topic prefix (default: &#039;example&#039;)
+ * @attr {string} data - JSON string for initial data
+ * @attr {string} url - URL to fetch data from
+ * @attr {boolean} auto-load - Automatically load data on connect
+ * @attr {number} refresh-interval - Auto-refresh interval in milliseconds
+ * 
+ * @subscribes {resource}.data.set { data } - Set component data
+ * @subscribes {resource}.data.refresh - Trigger data refresh
+ * @subscribes {resource}.reset - Reset to initial state
+ * 
+ * @publishes {resource}.data.loaded { data, timestamp } - Data loaded successfully
+ * @publishes {resource}.data.error { error, message } - Error loading data
+ * @publishes {resource}.state.changed { oldState, newState } - State changed
+ * 
+ * @slot default - Main content slot
+ * @slot header - Optional header content
+ * @slot footer - Optional footer content
+ * 
+ * @related pan-store, pan-data-provider, pan-query
+ * 
+ * @example
+ *</code></pre>html
+ * <!-- Basic usage -->
+ * <pan-example resource="users" auto-load>
+ *   <span slot="header">User List</span>
+ *   <div id="content"></div>
+ * </pan-example>
+ * <pre><code class="language-plaintext">* 
+ * @example
+ *</code></pre>html
+ * <!-- With URL data source -->
+ * <pan-example 
+ *   resource="products"
+ *   url="/api/products"
+ *   refresh-interval="30000">
+ * </pan-example>
+ * <pre><code class="language-plaintext">* 
+ * @example
+ *</code></pre>javascript
+ * // Programmatic usage with PAN
+ * import { PanClient } from '@larcjs/core';
+ * 
+ * const pc = new PanClient();
+ * 
+ * // Set data
+ * pc.publish({
+ *   topic: 'users.data.set',
+ *   data: { users: [...] }
+ * });
+ * 
+ * // Listen for changes
+ * pc.subscribe('users.state.changed', (msg) => {
+ *   console.log('State changed:', msg.data);
+ * });
+ * <pre><code class="language-plaintext">*/
+
+import { PanClient } from &#039;../../../core/pan-client.mjs&#039;;
+
+export class PanExample extends HTMLElement {
+  static get observedAttributes() {
+    return [&#039;resource&#039;, &#039;data&#039;, &#039;url&#039;, &#039;auto-load&#039;, &#039;refresh-interval&#039;];
+  }
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.pc = new PanClient(this);
+    // ... component implementation
+  }
+
+  // ... rest of implementation
+}
+
+customElements.define(&#039;pan-example&#039;, PanExample);</code></pre>
+<h2>Available Categories</h2>
+<p>Choose the most appropriate category for your component:</p>
+<ul><li><strong>Data & State</strong> - State management, data providers, stores, databases</li>
+<li><strong>Forms & Input</strong> - Form controls, inputs, validation</li>
+<li><strong>Data Display</strong> - Tables, charts, lists, pagination, cards</li>
+<li><strong>Navigation</strong> - Routers, links, tabs, menus</li>
+<li><strong>Dialogs & Overlays</strong> - Modals, popups, tooltips</li>
+<li><strong>Layout & UI</strong> - Themes, layouts, containers</li>
+<li><strong>API & Connectivity</strong> - HTTP, WebSocket, SSE, GraphQL clients</li>
+<li><strong>Auth & Security</strong> - Authentication, authorization, validation</li>
+<li><strong>Content</strong> - Markdown, rich text, media players</li>
+<li><strong>Dev Tools</strong> - Debugging, inspection, development utilities</li>
+<li><strong>Utilities</strong> - Helper components, workers, schemas</li>
+<li><strong>Specialized</strong> - Domain-specific components</li>
+</ul>
+<h2>Status Values</h2>
+<ul><li><strong>stable</strong> - Production ready, fully tested (default)</li>
+<li><strong>beta</strong> - Feature complete, testing in progress</li>
+<li><strong>experimental</strong> - Early stage, API may change</li>
+<li><strong>deprecated</strong> - Being phased out, use alternative</li>
+</ul>
+<h2>Metadata Tags Reference</h2>
+<h3>Required</h3>
+<ul><li><code>@component</code> - Component tag name (e.g., pan-example)</li>
+<li><code>@description</code> - Component purpose and usage</li>
+</ul>
+<h3>Optional but Recommended</h3>
+<ul><li><code>@category</code> - Component category (see list above)</li>
+<li><code>@status</code> - Development status (stable, beta, experimental, deprecated)</li>
+<li><code>@since</code> - Version when component was introduced</li>
+<li><code>@attr</code> - Attribute with <code>{type} name - description</code> format</li>
+<li><code>@subscribes</code> - PAN topics this component listens to</li>
+<li><code>@publishes</code> - PAN topics this component publishes</li>
+<li><code>@slot</code> - Named slots available in the component</li>
+<li><code>@related</code> - Comma-separated list of related components</li>
+<li><code>@example</code> - Usage examples with code blocks</li>
+</ul>
+<h2>Attribute Type Hints</h2>
+<p>Common types to use in <code>@attr</code> declarations:
+<ul><li><code>string</code> - Text values</li>
+<li><code>boolean</code> - True/false flags (presence = true)</li>
+<li><code>number</code> - Numeric values</li>
+<li><code>array</code> - JSON array</li>
+<li><code>object</code> - JSON object</li>
+<li><code>enum</code> - Limited set of values (specify options)</li>
+</ul>
+<h2>PAN Topic Format</h2></p>
+<p>Document topics with:
+<ul><li>Full topic pattern including <code>{resource}</code> placeholder</li>
+<li>Payload structure in curly braces</li>
+<li>Clear description of when/why it fires</li>
+</ul>
+Example:
+<pre><code class="language-javascript">@subscribes {resource}.data.set { data: any[] } - Sets the component&#039;s data array
+@publishes {resource}.loaded { count: number, timestamp: number } - Fires after data loads</code></pre></p>
+<h2>Tips</h2>
+<li><strong>Be Specific</strong>: Describe exact behavior, not just what attributes do</li>
+<li><strong>Show Examples</strong>: Include both HTML and JS usage patterns</li>
+<li><strong>Document Edge Cases</strong>: Note special behaviors, limitations, warnings</li>
+<li><strong>Link Related</strong>: Help users discover complementary components</li>
+<li><strong>Keep Updated</strong>: Update header when adding features or changing API</li>
+<h2>Example: Well-Documented Component</h2>
+<p>See <code>pan-tree.mjs</code> for a good example of a well-documented component with:
+<ul><li>Clear description of purpose</li>
+<li>Complete attribute list with types</li>
+<li>All PAN topics documented</li>
+<li>Multiple usage examples</li>
+<li>Related components listed</li>
+</ul></p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/ui/COMPONENT_TEMPLATE.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Bus Monitor Fix · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Bus Monitor Fix">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>BUS_MONITOR_FIX</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Bus Monitor Fix</h1>
+<h2>Problem</h2>
+<p>The PAN Bus Monitor wasn't showing any events when components interacted. Testing with the drag-drop-list example showed no messages appearing in the monitor.</p>
+<h2>Root Cause</h2>
+<p>The monitor was listening for the wrong event type. It was trying to hook into <code>dispatchEvent</code> and looking for <code>pan-message</code> events, but the actual PAN bus uses:
+<ul><li><code>pan:publish</code> - When a message is published to the bus</li>
+<li><code>pan:deliver</code> - When a message is delivered to a subscriber</li>
+</ul>
+The old code:
+<pre><code class="language-javascript">// ❌ WRONG: Hooking dispatchEvent looking for &#039;pan-message&#039;
+bus.dispatchEvent = (event) =&gt; {
+  if (event.type === &#039;pan-message&#039;) {
+    this.logMessage(event.detail);
+  }
+  return this.originalDispatchEvent(event);
+};</code></pre></p>
+<h2>Solution</h2>
+<p>Changed to properly listen for the actual PAN bus events using document-level event listeners:</p>
+<pre><code class="language-javascript">// ✅ CORRECT: Listen for actual PAN bus events
+this.publishHandler = (event) =&gt; {
+  if (event.detail &amp;&amp; event.detail.topic) {
+    this.logMessage({
+      topic: event.detail.topic,
+      data: event.detail.data,
+      type: &#039;publish&#039;
+    });
+  }
+};
+
+this.deliverHandler = (event) =&gt; {
+  if (event.detail &amp;&amp; event.detail.topic) {
+    this.logMessage({
+      topic: event.detail.topic,
+      data: event.detail.data,
+      type: &#039;deliver&#039;
+    });
+  }
+};
+
+document.addEventListener(&#039;pan:publish&#039;, this.publishHandler, true);
+document.addEventListener(&#039;pan:deliver&#039;, this.deliverHandler, true);</code></pre>
+<h2>How PAN Bus Actually Works</h2>
+<p>From the core PAN bus implementation (<code>core/pan-bus.mjs</code>):</p>
+<h3>Publishing</h3>
+When a component publishes a message:
+<pre><code class="language-javascript">bus.publish(topic, data, options);
+// Dispatches: &#039;pan:publish&#039; event with { topic, data, ...options }</code></pre>
+<h3>Delivering</h3>
+When the bus delivers to subscribers:
+<pre><code class="language-javascript">target.dispatchEvent(new CustomEvent(&#039;pan:deliver&#039;, {
+  detail: { topic, data, id, ts }
+}));</code></pre>
+<h3>Why Two Event Types?</h3>
+<ul><li><strong><code>pan:publish</code></strong> - Captures the intent to send (one per publish call)</li>
+<li><strong><code>pan:deliver</code></strong> - Captures each delivery (multiple per publish if multiple subscribers)</li>
+</ul>
+This lets the monitor show both:
+<ul><li>What's being published (even if no subscribers)</li>
+<li>What's being delivered (shows the message flow)</li>
+</ul>
+<h2>Enhancements Made</h2>
+<h3>1. Message Type Display</h3>
+Messages now show whether they're publish or deliver:
+<ul><li>📤 PUBLISH - Green border (message sent)</li>
+<li>📥 DELIVER - Blue border (message received)</li>
+</ul>
+<h3>2. Better Layout</h3>
+<pre><code class="language-plaintext">┌────────────────────────────────────┐
+│ 📤 PUBLISH          10:30:45 AM    │
+├────────────────────────────────────┤
+│ list.reorder                       │
+│ {&quot;items&quot;: [...], &quot;from&quot;: 0}        │
+└────────────────────────────────────┘</code></pre>
+<h3>3. Improved Styling</h3>
+<ul><li>Header with type and timestamp</li>
+<li>Topic in monospace font</li>
+<li>Data with scrollable area (max 200px)</li>
+<li>Color-coded borders by message type</li>
+<li>Dark theme matching code panel</li>
+</ul>
+<h2>Files Changed</h2>
+<h3><code>components/pg-bus-monitor.mjs</code></h3>
+<ul><li><strong><code>startMonitoring()</code></strong>: Listen to <code>pan:publish</code> and <code>pan:deliver</code> on document</li>
+<li><strong><code>stopMonitoring()</code></strong>: Clean up event listeners properly</li>
+<li><strong><code>render()</code></strong>: Show message type (publish/deliver) with icons and header</li>
+</ul>
+<h3><code>styles/playground.css</code></h3>
+<ul><li>Added <code>.bus-message-publish</code> - Green border for published messages</li>
+<li>Added <code>.bus-message-deliver</code> - Blue border for delivered messages</li>
+<li>Added <code>.bus-message-header</code> - Header layout for type and time</li>
+<li>Added <code>.bus-message-type</code> - Styled message type badge</li>
+<li>Updated <code>.bus-message-data</code> - Scrollable area, better formatting</li>
+</ul>
+<h2>Testing</h2>
+<li><strong>Start playground:</strong></li>
+   <pre><code class="language-bash">cd playground
+   python3 -m http.server 8080
+   open http://localhost:8080/</code></pre>
+<li><strong>Load "Drag & Drop List" example:</strong></li>
+   - Click "Load Example..." dropdown
+   - Select "Drag & Drop List"
+<li><strong>Open PAN Monitor:</strong></li>
+   - Click "PAN Monitor" button in header
+   - Bottom panel should open
+<li><strong>Interact with the list:</strong></li>
+   - Drag and reorder items
+   - Watch messages appear in monitor
+<li><strong>Verify:</strong></li>
+   - ✅ Messages appear immediately when dragging
+   - ✅ Shows "📤 PUBLISH" messages
+   - ✅ Shows "📥 DELIVER" messages
+   - ✅ Topic is visible (e.g., <code>list.reorder</code>)
+   - ✅ Data is formatted and readable
+   - ✅ Timestamps are accurate
+<h2>Example Output</h2>
+<p>When dragging items in drag-drop-list, you should see:</p>
+<pre><code class="language-plaintext">📤 PUBLISH                           10:30:45.123
+list.reorder
+{&quot;items&quot;: [{&quot;id&quot;: 2, &quot;text&quot;: &quot;Item 2&quot;}, {&quot;id&quot;: 1, &quot;text&quot;: &quot;Item 1&quot;}], &quot;from&quot;: 0, &quot;to&quot;: 1}
+
+📥 DELIVER                           10:30:45.124
+list.reorder
+{&quot;items&quot;: [{&quot;id&quot;: 2, &quot;text&quot;: &quot;Item 2&quot;}, {&quot;id&quot;: 1, &quot;text&quot;: &quot;Item 1&quot;}], &quot;from&quot;: 0, &quot;to&quot;: 1}</code></pre>
+<p>The PUBLISH shows the message being sent, and DELIVER shows it being received by subscribers.</p>
+<h2>Why This Pattern?</h2>
+<h3>Using <code>capture: true</code></h3>
+<pre><code class="language-javascript">document.addEventListener(&#039;pan:publish&#039;, handler, true);
+                                                  ^^^^</code></pre>
+<p>The <code>true</code> flag enables <strong>capture phase</strong> listening, which ensures we catch events before they bubble up, even if other handlers stop propagation.</p>
+<h3>Document-level Listeners</h3>
+PAN bus events bubble through the document, so listening at the document level catches all messages regardless of which component sent them.
+<h3>Proper Cleanup</h3>
+<pre><code class="language-javascript">disconnectedCallback() {
+  this.stopMonitoring(); // Remove listeners when monitor closes
+}</code></pre>
+<p>This prevents memory leaks when the monitor is toggled on/off.</p>
+<h2>Benefits</h2>
+<p>✅ <strong>Actually works</strong> - Messages now appear in real-time
+✅ <strong>Shows message flow</strong> - See both publish and deliver events
+✅ <strong>Better debugging</strong> - Understand which components are communicating
+✅ <strong>Visual distinction</strong> - Color-coded by message type
+✅ <strong>Proper cleanup</strong> - No memory leaks</p>
+<p>The PAN Monitor is now fully functional for debugging component communication! 🎉</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/BUS_MONITOR_FIX.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

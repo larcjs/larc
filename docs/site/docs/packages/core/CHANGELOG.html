@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Changelog · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Changelog">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core</a> / <span>CHANGELOG</span>
+      </div>
+      <article class="docs-content">
+        <h1>Changelog</h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
+and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2>[Unreleased]</h2>
+<h3>Added</h3>
+<ul><li><strong>🔥 Dynamic Message Routing</strong> - Runtime-configurable routing system for declarative event-driven architectures</li>
+</ul>  - Match messages by type, topic, tags, source, or complex predicates (eq, neq, gt, lt, in, regex, and, or, not)
+  - Transform messages with pick, map, or custom transformation functions
+  - Execute actions: EMIT (publish new messages), FORWARD (reroute), LOG (with templates), CALL (custom handlers)
+  - Add, update, remove, enable/disable routes at runtime via API or control messages
+  - Route ordering, change listeners, error handlers, and performance statistics
+  - Comprehensive routing documentation (<code>docs/ROUTING.md</code>) with real-world examples
+<ul><li>Routing test suite with 20 tests covering route management, message matching, actions, control messages, statistics, and integration</li>
+<li>Export <code>pan-routes</code> component from package.json for direct import</li>
+<li>Routing showcase in README with compelling use cases (analytics, notifications, feature flags, data enrichment)</li>
+</ul>
+<h3>Changed</h3>
+<ul><li>Exposed <code>window.pan.routes</code> for easy access to routing manager</li>
+<li>Updated README features list to include Dynamic Routing</li>
+</ul>
+<h2>[1.1.0] - 2024-01-XX</h2>
+<h3>Added</h3>
+<ul><li>Comprehensive test suite with 335 tests across 5 browsers (Chromium, Firefox, WebKit, Mobile Chrome, Mobile Safari)</li>
+<li>GitHub Actions CI/CD workflows for automated testing and publishing</li>
+<li>Automated cross-browser testing on every push and pull request</li>
+<li>Code coverage reporting with Codecov integration</li>
+<li>GitHub Actions and Codecov status badges in README</li>
+</ul>
+<h3>Fixed</h3>
+<ul><li>Fixed 3 flaky autoloader tests by adding proper async waits for pan-bus initialization</li>
+<li>Fixed race conditions in component autoloading during tests</li>
+</ul>
+<h3>Changed</h3>
+<ul><li>Improved test reliability with proper async handling in autoloader tests</li>
+<li>Enhanced CI/CD infrastructure for automated npm publishing with provenance</li>
+</ul>
+<h2>[1.0.2] - 2024-XX-XX</h2>
+<h3>Added</h3>
+<ul><li>Routing system and debug manager</li>
+<li>Comprehensive testing infrastructure</li>
+</ul>
+<h3>Fixed</h3>
+<ul><li>PAN bus delivery to support document listeners with bubbles/composed</li>
+<li>Repository URL format</li>
+</ul>
+<h3>Changed</h3>
+<ul><li>Updated messaging and positioning of project</li>
+</ul>
+<h2>[1.0.1] - 2024-XX-XX</h2>
+<h3>Fixed</h3>
+<ul><li>Bug fixes and path corrections for apps migration</li>
+<li>Removed duplicate pan-bus-enhanced registration</li>
+</ul>
+<h2>[1.0.0] - 2024-XX-XX</h2>
+<h3>Added</h3>
+<ul><li>Initial release of LARC Core</li>
+<li>PAN (Page Area Network) messaging bus implementation</li>
+<li><code><pan-bus></code> and <code><pan-client></code> web components</li>
+<li>Pub/sub, request/reply, and retained message patterns</li>
+<li>Cross-tab communication support</li>
+<li>Zero-build development workflow</li>
+<li>Component autoloading system</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core/CHANGELOG.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

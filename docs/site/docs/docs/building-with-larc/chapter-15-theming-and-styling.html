@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theming and Styling · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Theming and Styling">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">building-with-larc</a> / <span>chapter-15-theming-and-styling</span>
+      </div>
+      <article class="docs-content">
+        <h1>Theming and Styling</h1>
+<blockquote>"CSS is the only language where two plus two equals five, sometimes three, and occasionally 'align-items: center' doesn't actually center things."</blockquote>
+>
+<blockquote>— Every web developer who's ever tried to center a div</blockquote>
+<p>Theming is the art of making your application look consistently beautiful (or at least consistently mediocre) across all components, all pages, and all user preferences. It's the difference between an application that feels like a cohesive product and one that looks like it was assembled by a committee that never met.</p>
+<p>In this chapter, we'll build a robust theming system for LARC applications using CSS custom properties, explore light and dark mode implementations, create a theme provider component that broadcasts theme changes through the PAN bus, handle dynamic theme switching without page reloads, and implement responsive design patterns that adapt to any screen size.</p>
+<p>Fair warning: we're going to spend quality time with CSS. If you thought JavaScript was weird, wait until you meet <code>:host-context()</code>, CSS cascade layers, and the eternal mystery of specificity. But by the end of this chapter, you'll have a theming system that's maintainable, performant, and doesn't require a PhD in CSS archaeology.</p>
+<h2>CSS Custom Properties: Variables That Actually Work</h2>
+<p>CSS custom properties (often called CSS variables) are the foundation of modern theming. Unlike Sass variables that compile away at build time, CSS custom properties are live—change them at runtime, and everything updates instantly.</p>
+<p>Here's the basic syntax:</p>
+<pre><code class="language-css">/* Define custom properties */
+:root {
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --text-color: #333;
+  --background-color: #fff;
+}
+
+/* Use custom properties */
+button {
+  background: var(--primary-color);
+  color: var(--background-color);
+}</code></pre>
+<p>Change <code>--primary-color</code> anywhere in your code, and all buttons update automatically. It's like magic, except it actually works consistently across browsers.</p>
+<h3>Defining a Theme System</h3>
+<p>Let's build a comprehensive theme system with semantic tokens:</p>
+<pre><code class="language-css">/* theme/base.css */
+
+/* Color primitives - raw colors */
+:root {
+  /* Blues */
+  --blue-50: #eff6ff;
+  --blue-100: #dbeafe;
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --blue-900: #1e3a8a;
+
+  /* Grays */
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-600: #4b5563;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+
+  /* Status colors */
+  --green-500: #10b981;
+  --red-500: #ef4444;
+  --yellow-500: #f59e0b;
+}
+
+/* Semantic tokens - what colors mean */
+:root {
+  /* Brand colors */
+  --color-primary: var(--blue-600);
+  --color-primary-hover: var(--blue-500);
+  --color-primary-active: var(--blue-900);
+
+  /* Text colors */
+  --color-text-primary: var(--gray-900);
+  --color-text-secondary: var(--gray-600);
+  --color-text-inverse: var(--gray-50);
+
+  /* Background colors */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: var(--gray-50);
+  --color-bg-tertiary: var(--gray-100);
+
+  /* Border colors */
+  --color-border: var(--gray-200);
+  --color-border-focus: var(--blue-500);
+
+  /* Status colors */
+  --color-success: var(--green-500);
+  --color-error: var(--red-500);
+  --color-warning: var(--yellow-500);
+
+  /* Typography */
+  --font-family-base: system-ui, -apple-system, &#039;Segoe UI&#039;, Roboto, sans-serif;
+  --font-family-mono: &#039;Courier New&#039;, Courier, monospace;
+
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-base: 1rem;    /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Spacing */
+  --space-xs: 0.25rem;  /* 4px */
+  --space-sm: 0.5rem;   /* 8px */
+  --space-md: 1rem;     /* 16px */
+  --space-lg: 1.5rem;   /* 24px */
+  --space-xl: 2rem;     /* 32px */
+  --space-2xl: 3rem;    /* 48px */
+  --space-3xl: 4rem;    /* 64px */
+
+  /* Borders */
+  --border-width: 1px;
+  --border-radius-sm: 0.25rem;  /* 4px */
+  --border-radius-md: 0.5rem;   /* 8px */
+  --border-radius-lg: 1rem;     /* 16px */
+  --border-radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* Z-index layers */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+}</code></pre>
+<p>This gives us a two-tier system: primitives (the actual colors) and semantic tokens (what the colors mean). Components use semantic tokens, never primitives directly.</p>
+<h3>Dark Mode: Inverting Without Inverting</h3>
+<p>Dark mode isn't just "make everything dark." Good dark mode is subtle, uses slightly muted colors, and maintains contrast ratios for accessibility.</p>
+<pre><code class="language-css">/* theme/dark.css */
+
+/* Dark mode overrides */
+[data-theme=&quot;dark&quot;] {
+  /* Text colors */
+  --color-text-primary: var(--gray-50);
+  --color-text-secondary: var(--gray-200);
+  --color-text-inverse: var(--gray-900);
+
+  /* Background colors */
+  --color-bg-primary: var(--gray-900);
+  --color-bg-secondary: var(--gray-800);
+  --color-bg-tertiary: var(--gray-600);
+
+  /* Border colors */
+  --color-border: var(--gray-600);
+
+  /* Adjust shadows for dark backgrounds */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+}</code></pre>
+<p>We override only semantic tokens, never primitives. This keeps dark mode maintainable—add a new component, and it automatically works in both themes.</p>
+<h3>System Preference Detection</h3>
+<p>Respect the user's OS preference:</p>
+<pre><code class="language-css">/* theme/system.css */
+
+/* Automatically use dark mode if system preference is dark */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=&quot;light&quot;]) {
+    --color-text-primary: var(--gray-50);
+    --color-text-secondary: var(--gray-200);
+    --color-text-inverse: var(--gray-900);
+    --color-bg-primary: var(--gray-900);
+    --color-bg-secondary: var(--gray-800);
+    --color-bg-tertiary: var(--gray-600);
+    --color-border: var(--gray-600);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+  }
+}</code></pre>
+<p>This respects the system preference unless the user explicitly chooses a theme (via <code>data-theme</code> attribute).</p>
+<h2>Theme Provider Component</h2>
+<p>Now let's build a component that manages theme state and publishes changes through the PAN bus:</p>
+<pre><code class="language-javascript">// components/theme-provider.mjs
+
+import { publish, subscribe } from &#039;../pan.js&#039;;
+
+class ThemeProvider extends HTMLElement {
+  constructor() {
+    super();
+    this.currentTheme = this.getInitialTheme();
+  }
+
+  connectedCallback() {
+    // Apply initial theme
+    this.applyTheme(this.currentTheme);
+
+    // Subscribe to theme change requests
+    this.subscriptions = [
+      subscribe(&#039;theme.change&#039;, (msg) =&gt; {
+        this.setTheme(msg.data.theme);
+      }),
+
+      subscribe(&#039;theme.toggle&#039;, () =&gt; {
+        this.toggleTheme();
+      }),
+
+      subscribe(&#039;theme.query&#039;, () =&gt; {
+        this.publishCurrentTheme();
+      })
+    ];
+
+    // Listen for system preference changes
+    this.mediaQuery = window.matchMedia(&#039;(prefers-color-scheme: dark)&#039;);
+    this.handleMediaChange = () =&gt; {
+      if (this.currentTheme === &#039;system&#039;) {
+        this.applyTheme(&#039;system&#039;);
+        this.publishCurrentTheme();
+      }
+    };
+    this.mediaQuery.addEventListener(&#039;change&#039;, this.handleMediaChange);
+
+    // Publish initial theme
+    this.publishCurrentTheme();
+  }
+
+  disconnectedCallback() {
+    this.subscriptions.forEach(unsub =&gt; unsub());
+    this.mediaQuery?.removeEventListener(&#039;change&#039;, this.handleMediaChange);
+  }
+
+  /**
+   * Get initial theme from localStorage or system preference
+   */
+  getInitialTheme() {
+    const stored = localStorage.getItem(&#039;theme&#039;);
+    if (stored &amp;&amp; [&#039;light&#039;, &#039;dark&#039;, &#039;system&#039;].includes(stored)) {
+      return stored;
+    }
+    return &#039;system&#039;;
+  }
+
+  /**
+   * Set theme and persist preference
+   */
+  setTheme(theme) {
+    if (![&#039;light&#039;, &#039;dark&#039;, &#039;system&#039;].includes(theme)) {
+      console.error(`Invalid theme: ${theme}`);
+      return;
+    }
+
+    this.currentTheme = theme;
+    this.applyTheme(theme);
+    localStorage.setItem(&#039;theme&#039;, theme);
+    this.publishCurrentTheme();
+  }
+
+  /**
+   * Toggle between light and dark (ignoring system preference)
+   */
+  toggleTheme() {
+    const resolvedTheme = this.getResolvedTheme();
+    const newTheme = resolvedTheme === &#039;light&#039; ? &#039;dark&#039; : &#039;light&#039;;
+    this.setTheme(newTheme);
+  }
+
+  /**
+   * Apply theme to document
+   */
+  applyTheme(theme) {
+    const resolvedTheme = this.resolveTheme(theme);
+    document.documentElement.setAttribute(&#039;data-theme&#039;, resolvedTheme);
+  }
+
+  /**
+   * Resolve &#039;system&#039; theme to actual theme
+   */
+  resolveTheme(theme) {
+    if (theme === &#039;system&#039;) {
+      return window.matchMedia(&#039;(prefers-color-scheme: dark)&#039;).matches
+        ? &#039;dark&#039;
+        : &#039;light&#039;;
+    }
+    return theme;
+  }
+
+  /**
+   * Get the currently resolved theme (not &#039;system&#039;)
+   */
+  getResolvedTheme() {
+    return document.documentElement.getAttribute(&#039;data-theme&#039;) || &#039;light&#039;;
+  }
+
+  /**
+   * Publish current theme state
+   */
+  publishCurrentTheme() {
+    const resolvedTheme = this.getResolvedTheme();
+    publish(&#039;theme.current&#039;, {
+      theme: this.currentTheme,
+      resolvedTheme,
+      isSystemPreference: this.currentTheme === &#039;system&#039;
+    });
+  }
+}
+
+customElements.define(&#039;theme-provider&#039;, ThemeProvider);</code></pre>
+<p>Add it to your HTML:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My App&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;./theme/base.css&quot;&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;./theme/dark.css&quot;&gt;
+  &lt;script type=&quot;module&quot; src=&quot;./src/pan.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;theme-provider&gt;&lt;/theme-provider&gt;
+
+  &lt;!-- Your app content --&gt;
+  &lt;main&gt;
+    &lt;h1&gt;Hello, World!&lt;/h1&gt;
+  &lt;/main&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Now any component can change the theme:</p>
+<pre><code class="language-javascript">import { publish } from &#039;../pan.js&#039;;
+
+// Set theme explicitly
+publish(&#039;theme.change&#039;, { theme: &#039;dark&#039; });
+
+// Toggle theme
+publish(&#039;theme.toggle&#039;, {});
+
+// Query current theme
+publish(&#039;theme.query&#039;, {});</code></pre>
+<h2>Theme-Aware Components</h2>
+<p>Components should respond to theme changes by subscribing to <code>theme.current</code>:</p>
+<pre><code class="language-javascript">// components/theme-display.mjs
+
+import { subscribe } from &#039;../pan.js&#039;;
+
+class ThemeDisplay extends HTMLElement {
+  connectedCallback() {
+    this.unsubscribe = subscribe(&#039;theme.current&#039;, (msg) =&gt; {
+      this.render(msg.data);
+    });
+  }
+
+  render({ theme, resolvedTheme, isSystemPreference }) {
+    this.innerHTML = `
+      &lt;div class=&quot;theme-display&quot;&gt;
+        &lt;p&gt;Current theme: &lt;strong&gt;${theme}&lt;/strong&gt;&lt;/p&gt;
+        ${isSystemPreference ? `
+          &lt;p&gt;Resolved from system: &lt;strong&gt;${resolvedTheme}&lt;/strong&gt;&lt;/p&gt;
+        ` : &#039;&#039;}
+        &lt;p&gt;Active theme: &lt;strong&gt;${resolvedTheme}&lt;/strong&gt;&lt;/p&gt;
+      &lt;/div&gt;
+    `;
+  }
+
+  disconnectedCallback() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+}
+
+customElements.define(&#039;theme-display&#039;, ThemeDisplay);</code></pre>
+<h2>Theme Switcher Component</h2>
+<p>Let's build a polished theme switcher with three options: light, dark, and system:</p>
+<pre><code class="language-javascript">// components/theme-switcher.mjs
+
+import { publish, subscribe } from &#039;../pan.js&#039;;
+
+class ThemeSwitcher extends HTMLElement {
+  constructor() {
+    super();
+    this.currentTheme = &#039;system&#039;;
+  }
+
+  connectedCallback() {
+    this.className = &#039;theme-switcher&#039;;
+
+    // Subscribe to theme updates
+    this.unsubscribe = subscribe(&#039;theme.current&#039;, (msg) =&gt; {
+      this.currentTheme = msg.data.theme;
+      this.render();
+    });
+
+    // Request current theme
+    publish(&#039;theme.query&#039;, {});
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;theme-switcher__container&quot;&gt;
+        &lt;button
+          class=&quot;theme-switcher__button ${this.currentTheme === &#039;light&#039; ? &#039;active&#039; : &#039;&#039;}&quot;
+          data-theme=&quot;light&quot;
+          aria-label=&quot;Light theme&quot;
+        &gt;
+          [sun] Light
+        &lt;/button&gt;
+        &lt;button
+          class=&quot;theme-switcher__button ${this.currentTheme === &#039;dark&#039; ? &#039;active&#039; : &#039;&#039;}&quot;
+          data-theme=&quot;dark&quot;
+          aria-label=&quot;Dark theme&quot;
+        &gt;
+          [moon] Dark
+        &lt;/button&gt;
+        &lt;button
+          class=&quot;theme-switcher__button ${this.currentTheme === &#039;system&#039; ? &#039;active&#039; : &#039;&#039;}&quot;
+          data-theme=&quot;system&quot;
+          aria-label=&quot;System theme&quot;
+        &gt;
+          [laptop] System
+        &lt;/button&gt;
+      &lt;/div&gt;
+    `;
+
+    // Attach event listeners
+    this.querySelectorAll(&#039;[data-theme]&#039;).forEach(button =&gt; {
+      button.addEventListener(&#039;click&#039;, () =&gt; {
+        const theme = button.dataset.theme;
+        publish(&#039;theme.change&#039;, { theme });
+      });
+    });
+  }
+
+  disconnectedCallback() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+}
+
+customElements.define(&#039;theme-switcher&#039;, ThemeSwitcher);</code></pre>
+<p>And the styles:</p>
+<pre><code class="language-css">/* components/theme-switcher.css */
+
+.theme-switcher__container {
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-xs);
+  background: var(--color-bg-secondary);
+  border-radius: var(--border-radius-lg);
+}
+
+.theme-switcher__button {
+  padding: var(--space-sm) var(--space-md);
+  border: var(--border-width) solid transparent;
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.theme-switcher__button:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.theme-switcher__button.active {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+  border-color: var(--color-primary);
+}
+
+.theme-switcher__button:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}</code></pre>
+<h2>Smooth Transitions Between Themes</h2>
+<p>Switching themes can be jarring. Let's add smooth transitions:</p>
+<pre><code class="language-css">/* theme/transitions.css */
+
+/* Transition all themed properties */
+
+* {
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+/* Disable transitions during page load */
+.no-transitions * {
+  transition: none !important;
+}
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+  * {
+    transition: none !important;
+  }
+}</code></pre>
+<p>Update the theme provider to disable transitions during initial load:</p>
+<pre><code class="language-javascript">class ThemeProvider extends HTMLElement {
+  connectedCallback() {
+    // Disable transitions during initial load
+    document.documentElement.classList.add(&#039;no-transitions&#039;);
+
+    this.applyTheme(this.currentTheme);
+
+    // Re-enable transitions after a frame
+    requestAnimationFrame(() =&gt; {
+      document.documentElement.classList.remove(&#039;no-transitions&#039;);
+    });
+
+    // ... rest of connectedCallback
+  }
+}</code></pre>
+<h2>Scoped Themes for Components</h2>
+<p>Sometimes a component needs its own theme, independent of the global theme:</p>
+<pre><code class="language-javascript">// components/branded-card.mjs
+
+class BrandedCard extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+
+          /* Define local theme */
+          --card-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          --card-text: #ffffff;
+          --card-border-radius: 1rem;
+          --card-padding: 2rem;
+        }
+
+        .card {
+          background: var(--card-bg);
+          color: var(--card-text);
+          border-radius: var(--card-border-radius);
+          padding: var(--card-padding);
+          box-shadow: var(--shadow-xl);
+        }
+
+        /* Allow customization via CSS custom properties */
+        :host([variant=&quot;flat&quot;]) {
+          --card-bg: var(--color-bg-secondary);
+          --card-text: var(--color-text-primary);
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;card&quot;&gt;
+        &lt;slot&gt;&lt;/slot&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;branded-card&#039;, BrandedCard);</code></pre>
+<p>Use it:</p>
+<pre><code class="language-html">&lt;!-- Uses gradient background --&gt;
+&lt;branded-card&gt;
+  &lt;h2&gt;Premium Feature&lt;/h2&gt;
+  &lt;p&gt;This card has its own theme!&lt;/p&gt;
+&lt;/branded-card&gt;
+
+&lt;!-- Uses flat background --&gt;
+&lt;branded-card variant=&quot;flat&quot;&gt;
+  &lt;h2&gt;Standard Feature&lt;/h2&gt;
+  &lt;p&gt;This one inherits from global theme.&lt;/p&gt;
+&lt;/branded-card&gt;</code></pre>
+<h2>Responsive Design with Custom Properties</h2>
+<p>CSS custom properties can adapt to viewport size:</p>
+<pre><code class="language-css">/* theme/responsive.css */
+
+:root {
+  /* Base spacing */
+  --space-page-horizontal: var(--space-md);
+  --space-page-vertical: var(--space-lg);
+
+  /* Base font sizes */
+  --font-size-display: var(--font-size-2xl);
+}
+
+/* Tablet and up */
+@media (min-width: 768px) {
+  :root {
+    --space-page-horizontal: var(--space-xl);
+    --space-page-vertical: var(--space-2xl);
+    --font-size-display: var(--font-size-3xl);
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 1024px) {
+  :root {
+    --space-page-horizontal: var(--space-2xl);
+    --space-page-vertical: var(--space-3xl);
+    --font-size-display: 2.5rem;
+  }
+}
+
+/* Container */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: var(--space-page-vertical) var(--space-page-horizontal);
+}
+
+/* Display text */
+.display {
+  font-size: var(--font-size-display);
+  line-height: var(--line-height-tight);
+  font-weight: var(--font-weight-bold);
+}</code></pre>
+<p>Components automatically adapt to these responsive tokens.</p>
+<h2>Multiple Brand Themes</h2>
+<p>Support multiple brands with theme switching:</p>
+<pre><code class="language-css">/* theme/brands.css */
+
+/* Default brand (Acme Corp) */
+:root {
+  --brand-primary: #667eea;
+  --brand-secondary: #764ba2;
+  --brand-logo-url: url(&#039;/logos/acme.svg&#039;);
+}
+
+/* Brand: TechStart */
+[data-brand=&quot;techstart&quot;] {
+  --brand-primary: #10b981;
+  --brand-secondary: #059669;
+  --brand-logo-url: url(&#039;/logos/techstart.svg&#039;);
+}
+
+/* Brand: Creative Co */
+[data-brand=&quot;creative&quot;] {
+  --brand-primary: #f59e0b;
+  --brand-secondary: #d97706;
+  --brand-logo-url: url(&#039;/logos/creative.svg&#039;);
+}
+
+/* Apply brand colors to components */
+.button-primary {
+  background: var(--brand-primary);
+}
+
+.button-secondary {
+  background: var(--brand-secondary);
+}
+
+.logo {
+  content: var(--brand-logo-url);
+}</code></pre>
+<p>Switch brands dynamically:</p>
+<pre><code class="language-javascript">// Set brand via data attribute
+document.documentElement.setAttribute(&#039;data-brand&#039;, &#039;techstart&#039;);</code></pre>
+<p>Or extend the theme provider to manage brands:</p>
+<pre><code class="language-javascript">class ThemeProvider extends HTMLElement {
+  setBrand(brand) {
+    document.documentElement.setAttribute(&#039;data-brand&#039;, brand);
+    publish(&#039;theme.brand.changed&#039;, { brand });
+  }
+}</code></pre>
+<h2>Performance Considerations</h2>
+<p>CSS custom properties are fast, but here are tips to keep themes performant:</p>
+<h3>1. Minimize Transitions</h3>
+<p>Don't transition everything:</p>
+<pre><code class="language-css">/* Bad: transitions on every property */
+
+* {
+  transition: all var(--transition-base);
+}
+
+/* Good: transition only themed properties */
+
+* {
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}</code></pre>
+<h3>2. Use CSS Containment</h3>
+<p>Help browsers optimize rendering:</p>
+<pre><code class="language-css">.card {
+  contain: layout style;
+}</code></pre>
+<h3>3. Avoid Deep Custom Property Lookups</h3>
+<p>Custom properties have inheritance cost. Don't nest too deeply:</p>
+<pre><code class="language-css">/* Bad: deep nesting */
+:root {
+  --color-1: #333;
+  --color-2: var(--color-1);
+  --color-3: var(--color-2);
+  --color-4: var(--color-3);
+}
+
+/* Good: direct references */
+:root {
+  --base-gray: #333;
+  --color-text: var(--base-gray);
+  --color-border: var(--base-gray);
+}</code></pre>
+<h3>4. Batch Theme Changes</h3>
+<p>If changing multiple properties, use a data attribute rather than individual properties:</p>
+<pre><code class="language-javascript">// Bad: multiple property changes
+document.documentElement.style.setProperty(&#039;--color-primary&#039;, &#039;#fff&#039;);
+document.documentElement.style.setProperty(&#039;--color-secondary&#039;, &#039;#000&#039;);
+document.documentElement.style.setProperty(&#039;--color-text&#039;, &#039;#333&#039;);
+
+// Good: single attribute change
+document.documentElement.setAttribute(&#039;data-theme&#039;, &#039;dark&#039;);</code></pre>
+<h2>Accessibility in Theming</h2>
+<p>Ensure your themes are accessible:</p>
+<h3>1. Maintain Contrast Ratios</h3>
+<p>Use tools like WebAIM's contrast checker. Aim for:</p>
+<ul><li><strong>4.5:1</strong> for normal text (WCAG AA)</li>
+<li><strong>7:1</strong> for normal text (WCAG AAA)</li>
+<li><strong>3:1</strong> for large text (WCAG AA)</li>
+</ul>
+<pre><code class="language-css">/* Good contrast */
+:root {
+  --color-text-primary: #111827;  /* Dark on light */
+  --color-bg-primary: #ffffff;
+}
+
+[data-theme=&quot;dark&quot;] {
+  --color-text-primary: #f9fafb;  /* Light on dark */
+  --color-bg-primary: #111827;
+}</code></pre>
+<h3>2. Respect Reduced Motion</h3>
+<pre><code class="language-css">@media (prefers-reduced-motion: reduce) {
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}</code></pre>
+<h3>3. Provide High Contrast Mode</h3>
+<pre><code class="language-css">@media (prefers-contrast: high) {
+  :root {
+    --color-text-primary: #000000;
+    --color-bg-primary: #ffffff;
+    --color-border: #000000;
+    --border-width: 2px;
+  }
+}</code></pre>
+<h3>4. Test with Screen Readers</h3>
+<p>Ensure theme changes are announced:</p>
+<pre><code class="language-javascript">class ThemeProvider extends HTMLElement {
+  applyTheme(theme) {
+    const resolvedTheme = this.resolveTheme(theme);
+    document.documentElement.setAttribute(&#039;data-theme&#039;, resolvedTheme);
+
+    // Announce theme change to screen readers
+    this.announceThemeChange(resolvedTheme);
+  }
+
+  announceThemeChange(theme) {
+    const announcement = document.createElement(&#039;div&#039;);
+    announcement.setAttribute(&#039;role&#039;, &#039;status&#039;);
+    announcement.setAttribute(&#039;aria-live&#039;, &#039;polite&#039;);
+    announcement.className = &#039;sr-only&#039;;
+    announcement.textContent = `Theme changed to ${theme} mode`;
+    document.body.appendChild(announcement);
+
+    setTimeout(() =&gt; announcement.remove(), 1000);
+  }
+}</code></pre>
+<p>With screen-reader-only CSS:</p>
+<pre><code class="language-css">.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}</code></pre>
+<h2>Wrapping Up</h2>
+<p>You now have a robust theming system for LARC applications. You understand CSS custom properties, how to implement light and dark modes that respect system preferences, how to build a theme provider that broadcasts changes through the PAN bus, and how to create accessible, performant themes.</p>
+<p>The key insights:</p>
+<ul><li>Use two-tier token system: primitives and semantic tokens</li>
+<li>Components use semantic tokens, never raw colors</li>
+<li>Theme provider manages state and publishes to PAN bus</li>
+<li>Respect system preferences but allow explicit overrides</li>
+<li>Smooth transitions make theme switching delightful</li>
+<li>Accessibility isn't optional—contrast, reduced motion, and screen readers matter</li>
+<li>CSS custom properties are fast; use them liberally</li>
+</ul>
+In the next chapter, we'll tackle performance optimization—making LARC applications fast through message filtering, lazy loading, virtual scrolling, and careful memory management. Because a beautiful theme doesn't matter if your app takes ten seconds to load.
+<p>Now go forth and theme your application. And remember: if users complain about your color choices, you can always blame it on "brand guidelines."</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/building-with-larc/chapter-15-theming-and-styling.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

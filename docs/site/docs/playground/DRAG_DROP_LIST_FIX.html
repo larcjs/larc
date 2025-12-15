@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Drag & Drop List Example Fix · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Drag & Drop List Example Fix">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>DRAG_DROP_LIST_FIX</span>
+      </div>
+      <article class="docs-content">
+        <h1>Drag & Drop List Example Fix</h1>
+<h2>Problem</h2>
+<p>The Drag & Drop List example had two issues:
+<li><strong>No PAN messages</strong> appeared in the monitor when reordering items</li>
+<li><strong>Console error</strong> at line 155 of <code>drag-drop-list.mjs</code> when dragging items</li></p>
+<h2>Root Cause</h2>
+<p>The example was passing a simple string array instead of an array of objects:</p>
+<pre><code class="language-javascript">// ❌ WRONG - String array
+&#039;items&#039;: &#039;[&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;]&#039;</code></pre>
+<p>But the component expects items to be <strong>objects with an <code>id</code> property</strong>:</p>
+<pre><code class="language-javascript">// From component documentation (line 4):
+//   - items: JSON array of items with { id, content } structure</code></pre>
+<h3>Why It Failed</h3>
+<p>Looking at the component code:</p>
+<strong>Line 154-156</strong> - Tries to manipulate items array:
+<pre><code class="language-javascript">const movedItem = this.items[oldIndex];  // Works for strings
+this.items.splice(oldIndex, 1);          // Works for strings
+this.items.splice(newIndex, 0, movedItem); // Works for strings</code></pre>
+<strong>Line 158-165</strong> - Publishes PAN message:
+<pre><code class="language-javascript">this.pc.publish({
+  topic: `${this.topic}.reorder`,
+  data: {
+    items: this.items,  // Array of strings instead of objects
+    from: oldIndex,
+    to: newIndex
+  }
+});</code></pre>
+<strong>Line 262</strong> - Rendering tries to access <code>.id</code>:
+<pre><code class="language-javascript">&lt;div class=&quot;list-item&quot; data-id=&quot;${item.id}&quot; data-index=&quot;${index}&quot;&gt;
+                                    ^^^^^^^^ undefined for strings!</code></pre>
+<strong>Line 266</strong> - Tries to use id for slot name:
+<pre><code class="language-javascript">&lt;slot name=&quot;item-${item.id}&quot;&gt;
+                   ^^^^^^^^ undefined for strings!</code></pre>
+<strong>Line 267</strong> - Falls back to content property:
+<pre><code class="language-javascript">${item.content || item.label || item.title || JSON.stringify(item)}
+     ^^^^^^^^^^^^  undefined for strings, eventually calls JSON.stringify(&quot;Item 1&quot;) = &#039;&quot;Item 1&quot;&#039;</code></pre>
+<h3>The Error</h3>
+<p>When items are strings:
+<li>Drag works visually (DOM manipulation)</li>
+<li>But <code>item.id</code> is <code>undefined</code></li>
+<li>Creates <code>data-id="undefined"</code> in HTML</li>
+<li>Creates <code>slot name="item-undefined"</code></li>
+<li>Eventually causes render issues or errors</li></p>
+<h2>Solution</h2>
+<p>Changed the example to use properly formatted item objects with <code>id</code> and <code>content</code>:</p>
+<pre><code class="language-javascript">{
+  id: &#039;drag-drop&#039;,
+  name: &#039;Drag &amp; Drop List&#039;,
+  description: &#039;Reorderable drag and drop list&#039;,
+  components: [
+    {
+      name: &#039;drag-drop-list&#039;,
+      attributes: {
+        &#039;topic&#039;: &#039;list&#039;,
+        &#039;items&#039;: JSON.stringify([
+          { id: 1, content: &#039;📝 Task 1: Review code&#039; },
+          { id: 2, content: &#039;🎨 Task 2: Update designs&#039; },
+          { id: 3, content: &#039;🚀 Task 3: Deploy to production&#039; },
+          { id: 4, content: &#039;📊 Task 4: Analyze metrics&#039; }
+        ])
+      }
+    }
+  ]
+}</code></pre>
+<h3>Enhancements Made</h3>
+<li><strong>Added proper object structure</strong> - Each item has <code>id</code> and <code>content</code></li>
+<li><strong>Added emojis</strong> - Makes the list more visually interesting</li>
+<li><strong>Changed topic</strong> from <code>list.reordered</code> to <code>list</code> (more standard)</li>
+<li><strong>Added 4th item</strong> - Shows drag-drop better with more items</li>
+<h2>Item Object Format</h2>
+<p>The component supports flexible item formats:</p>
+<h3>Required</h3>
+<ul><li><strong><code>id</code></strong> (number or string) - Unique identifier for the item</li>
+</ul>
+<h3>Content (one of these):</h3>
+<ul><li><strong><code>content</code></strong> - Main display content (preferred)</li>
+<li><strong><code>label</code></strong> - Alternative to content</li>
+<li><strong><code>title</code></strong> - Alternative to content</li>
+<li>Any other properties - Will be JSON.stringify'd</li>
+</ul>
+<h3>Example Formats</h3>
+<strong>Basic:</strong>
+<pre><code class="language-javascript">{ id: 1, content: &#039;Task 1&#039; }</code></pre>
+<strong>With emoji:</strong>
+<pre><code class="language-javascript">{ id: &#039;task-1&#039;, content: &#039;📝 Review code&#039; }</code></pre>
+<strong>With label:</strong>
+<pre><code class="language-javascript">{ id: &#039;item-1&#039;, label: &#039;First Item&#039; }</code></pre>
+<strong>With title:</strong>
+<pre><code class="language-javascript">{ id: 1, title: &#039;Important Task&#039; }</code></pre>
+<strong>Complex object (auto-stringified):</strong>
+<pre><code class="language-javascript">{ id: 1, name: &#039;Task&#039;, priority: &#039;high&#039;, completed: false }
+// Displays: {&quot;name&quot;:&quot;Task&quot;,&quot;priority&quot;:&quot;high&quot;,&quot;completed&quot;:false}</code></pre>
+<h2>Testing</h2>
+<h3>Before Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;Drag &amp; Drop List&quot; example
+2. See: Three items (&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;)
+3. Drag items to reorder
+4. Open PAN Monitor
+5. See: No messages appear ❌
+6. Check console
+7. See: Error at line 155 or undefined attribute values ❌</code></pre>
+<h3>After Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;Drag &amp; Drop List&quot; example
+2. See: Four tasks with emojis ✅
+3. Open PAN Monitor
+4. Drag &quot;Task 3&quot; above &quot;Task 1&quot;
+5. See: PAN message appears ✅
+   Topic: list.reorder
+   Data: {
+     items: [{id: 1, content: &#039;📝 Task 1: Review code&#039;}, ...],
+     from: 2,
+     to: 0
+   }
+6. Check console
+7. See: No errors ✅</code></pre>
+<h2>PAN Messages</h2>
+<h3>Reorder Event</h3>
+When you drag and drop an item:
+<pre><code class="language-javascript">Topic: {topic}.reorder
+Data: {
+  items: [
+    { id: 1, content: &#039;📝 Task 1: Review code&#039; },
+    { id: 2, content: &#039;🎨 Task 2: Update designs&#039; },
+    { id: 3, content: &#039;🚀 Task 3: Deploy to production&#039; },
+    { id: 4, content: &#039;📊 Task 4: Analyze metrics&#039; }
+  ],
+  from: 2,  // Original index
+  to: 0     // New index
+}</code></pre>
+<h3>Drop Event</h3>
+Published after drag completes:
+<pre><code class="language-javascript">Topic: {topic}.drop
+Data: {
+  item: { id: 3, content: &#039;🚀 Task 3: Deploy to production&#039; },
+  index: 0
+}</code></pre>
+<h2>PAN Subscriptions</h2>
+<p>The component also listens to control topics:</p>
+<h3>Set Items</h3>
+Replace entire list:
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;list.setItems&#039;,
+  data: {
+    items: [
+      { id: 1, content: &#039;New item 1&#039; },
+      { id: 2, content: &#039;New item 2&#039; }
+    ]
+  }
+});</code></pre>
+<h3>Add Item</h3>
+Insert item at position:
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;list.addItem&#039;,
+  data: {
+    item: { id: 5, content: &#039;New task&#039; },
+    index: 2  // Optional, defaults to end
+  }
+});</code></pre>
+<h3>Remove Item</h3>
+Remove by ID:
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;list.removeItem&#039;,
+  data: {
+    id: 3  // Remove item with id: 3
+  }
+});</code></pre>
+<h2>Component Features</h2>
+<h3>Drag Handle</h3>
+The <code>⋮⋮</code> icon indicates items are draggable. You can specify a custom handle:
+<pre><code class="language-javascript">attributes: {
+  &#039;handle&#039;: &#039;.drag-handle&#039;,
+  &#039;items&#039;: JSON.stringify([
+    { id: 1, content: &#039;&lt;span class=&quot;drag-handle&quot;&gt;⚡&lt;/span&gt; Item 1&#039; }
+  ])
+}</code></pre>
+<h3>Disabled State</h3>
+Disable dragging:
+<pre><code class="language-javascript">attributes: {
+  &#039;disabled&#039;: &#039;true&#039;,
+  &#039;items&#039;: &#039;...&#039;
+}</code></pre>
+<h3>Empty State</h3>
+Shows when no items:
+<pre><code class="language-html">&lt;div class=&quot;empty-state&quot;&gt;
+  &lt;slot name=&quot;empty&quot;&gt;No items to display&lt;/slot&gt;
+&lt;/div&gt;</code></pre>
+<h3>Custom Slots</h3>
+Use slots for custom content:
+<pre><code class="language-javascript">// In your HTML:
+&lt;drag-drop-list items=&#039;[{&quot;id&quot;:1,&quot;content&quot;:&quot;Item 1&quot;}]&#039;&gt;
+  &lt;div slot=&quot;item-1&quot;&gt;
+    &lt;strong&gt;Custom content for item 1&lt;/strong&gt;
+  &lt;/div&gt;
+&lt;/drag-drop-list&gt;</code></pre>
+<h2>Example Variations</h2>
+<h3>Task List with Priorities</h3>
+<pre><code class="language-javascript">&#039;items&#039;: JSON.stringify([
+  { id: 1, content: &#039;🔴 High: Fix critical bug&#039; },
+  { id: 2, content: &#039;🟡 Medium: Update docs&#039; },
+  { id: 3, content: &#039;🟢 Low: Refactor code&#039; }
+])</code></pre>
+<h3>Shopping List</h3>
+<pre><code class="language-javascript">&#039;items&#039;: JSON.stringify([
+  { id: 1, content: &#039;🥖 Bread&#039; },
+  { id: 2, content: &#039;🥛 Milk&#039; },
+  { id: 3, content: &#039;🍎 Apples&#039; },
+  { id: 4, content: &#039;🧀 Cheese&#039; }
+])</code></pre>
+<h3>File Manager</h3>
+<pre><code class="language-javascript">&#039;items&#039;: JSON.stringify([
+  { id: 1, content: &#039;📁 Documents&#039; },
+  { id: 2, content: &#039;📁 Pictures&#039; },
+  { id: 3, content: &#039;📁 Downloads&#039; },
+  { id: 4, content: &#039;📄 README.md&#039; }
+])</code></pre>
+<h3>Playlist</h3>
+<pre><code class="language-javascript">&#039;items&#039;: JSON.stringify([
+  { id: 1, content: &#039;🎵 Song 1 - Artist A&#039; },
+  { id: 2, content: &#039;🎵 Song 2 - Artist B&#039; },
+  { id: 3, content: &#039;🎵 Song 3 - Artist C&#039; }
+])</code></pre>
+<h2>Files Changed</h2>
+<h3><code>/Users/cdr/Projects/larc-repos/playground/examples.mjs</code></h3>
+<strong>Lines 382-400</strong>: Changed from string array to object array with proper structure
+<pre><code class="language-javascript">// Before:
+&#039;items&#039;: &#039;[&quot;Item 1&quot;, &quot;Item 2&quot;, &quot;Item 3&quot;]&#039;
+
+// After:
+&#039;items&#039;: JSON.stringify([
+  { id: 1, content: &#039;📝 Task 1: Review code&#039; },
+  { id: 2, content: &#039;🎨 Task 2: Update designs&#039; },
+  { id: 3, content: &#039;🚀 Task 3: Deploy to production&#039; },
+  { id: 4, content: &#039;📊 Task 4: Analyze metrics&#039; }
+])</code></pre>
+<p>Also changed topic from <code>list.reordered</code> to <code>list</code> (more standard).</p>
+<h2>Pattern Recognition</h2>
+<p>This is now the <strong>third example</strong> with the same issue:
+<li><strong>Dropdown Menu</strong> - Expected objects with <code>{label, value}</code>, got strings</li>
+<li><strong>Drag & Drop List</strong> - Expected objects with <code>{id, content}</code>, got strings</li>
+<li>Future: Check other components that take JSON arrays</li></p>
+<h3>Common Pattern</h3>
+Components that accept JSON array attributes usually expect objects with specific properties, not primitive values (strings/numbers).
+<h3>Rule of Thumb</h3>
+When a component has an <code>items</code> attribute:
+<li>Read the component documentation (first comment block)</li>
+<li>Look for expected structure (e.g., <code>{id, content}</code>)</li>
+<li>Use proper objects in examples</li>
+<li>Include IDs when required</li>
+<h2>Prevention</h2>
+<p>For new examples with array attributes:
+<ul><li>✅ Check component documentation first</li>
+<li>✅ Use objects with required properties</li>
+<li>✅ Include IDs when needed</li>
+<li>✅ Test with PAN Monitor open</li>
+<li>❌ Don't use simple string/number arrays</li>
+</ul>
+<h2>Summary</h2></p>
+<p>The drag & drop list was fixed by changing the items from a simple string array to an array of properly formatted objects with <code>id</code> and <code>content</code> properties. Now:
+<ul><li>✅ Items display correctly with emojis</li>
+<li>✅ Drag and drop works smoothly</li>
+<li>✅ PAN messages appear in monitor</li>
+<li>✅ No console errors</li>
+<li>✅ Reorder data includes full item objects</li>
+</ul>
+The example now demonstrates proper drag-drop functionality with real task-like items and full PAN integration.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/DRAG_DROP_LIST_FIX.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

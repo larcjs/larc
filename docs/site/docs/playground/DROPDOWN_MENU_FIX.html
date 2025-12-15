@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dropdown Menu Example Fix · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Dropdown Menu Example Fix">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>DROPDOWN_MENU_FIX</span>
+      </div>
+      <article class="docs-content">
+        <h1>Dropdown Menu Example Fix</h1>
+<h2>Problem</h2>
+<p>The Dropdown Menu example showed a button labeled "Actions" but when clicked, the dropdown menu was empty - no items were displayed.</p>
+<h2>Root Cause</h2>
+<p>The example was passing a simple string array to the <code>items</code> attribute:</p>
+<pre><code class="language-javascript">// ❌ WRONG - Simple string array
+&#039;items&#039;: &#039;[&quot;Edit&quot;, &quot;Delete&quot;, &quot;Share&quot;]&#039;</code></pre>
+<p>But the <code>pan-dropdown</code> component expects an array of <strong>objects</strong> with specific properties:</p>
+<pre><code class="language-javascript">// ✅ CORRECT - Array of objects with label, value, icon
+items: [
+  { label: &#039;Edit&#039;, value: &#039;edit&#039;, icon: &#039;✏️&#039; },
+  { label: &#039;Delete&#039;, value: &#039;delete&#039;, icon: &#039;🗑️&#039; },
+  { label: &#039;Share&#039;, value: &#039;share&#039;, icon: &#039;📤&#039; }
+]</code></pre>
+<h3>Why It Failed</h3>
+<p>Looking at the component code (<code>pan-dropdown.mjs</code>, lines 255-269):</p>
+<pre><code class="language-javascript">this.items.map(item =&gt; {
+  if (item.divider) {
+    return &#039;&lt;div class=&quot;dropdown-divider&quot;&gt;&lt;/div&gt;&#039;;
+  }
+  return `
+    &lt;div
+      class=&quot;dropdown-item&quot;
+      data-value=&quot;${item.value || item.label}&quot;
+      ${item.disabled ? &#039;disabled&#039; : &#039;&#039;}
+    &gt;
+      ${item.icon ? `&lt;span class=&quot;item-icon&quot;&gt;${item.icon}&lt;/span&gt;` : &#039;&#039;}
+      ${item.label}  // ❌ undefined when item is a string
+    &lt;/div&gt;
+  `;
+}).join(&#039;&#039;)</code></pre>
+<p>When the component receives <code>["Edit", "Delete", "Share"]</code>:
+<ul><li>Each <code>item</code> is a string (e.g., <code>"Edit"</code>)</li>
+<li><code>item.label</code> is <code>undefined</code> (strings don't have a <code>.label</code> property)</li>
+<li><code>item.value</code> is <code>undefined</code></li>
+<li><code>item.icon</code> is <code>undefined</code></li>
+<li>Result: Empty divs with no text</li>
+</ul>
+<h2>Expected Item Format</h2></p>
+<p>From the component documentation (lines 1-14):</p>
+<pre><code class="language-javascript">// Attributes:
+//   - items: JSON array of menu items [{label, value, icon?, disabled?}]</code></pre>
+<p>Each item object can have:
+<ul><li><strong><code>label</code></strong> (required) - Display text for the menu item</li>
+<li><strong><code>value</code></strong> (optional) - Value sent in PAN message (defaults to label)</li>
+<li><strong><code>icon</code></strong> (optional) - Icon/emoji to display before label</li>
+<li><strong><code>disabled</code></strong> (optional) - Whether item is disabled</li>
+<li><strong><code>divider</code></strong> (special) - Shows a divider line instead of an item</li>
+</ul>
+<h2>Solution</h2></p>
+<p>Updated the example to use properly formatted item objects:</p>
+<pre><code class="language-javascript">{
+  id: &#039;dropdown-menu&#039;,
+  name: &#039;Dropdown Menu&#039;,
+  description: &#039;Dropdown with menu items&#039;,
+  components: [
+    {
+      name: &#039;pan-dropdown&#039;,
+      attributes: {
+        &#039;label&#039;: &#039;Actions&#039;,
+        &#039;topic&#039;: &#039;action.selected&#039;,
+        &#039;items&#039;: JSON.stringify([
+          { label: &#039;Edit&#039;, value: &#039;edit&#039;, icon: &#039;✏️&#039; },
+          { label: &#039;Delete&#039;, value: &#039;delete&#039;, icon: &#039;🗑️&#039; },
+          { label: &#039;Share&#039;, value: &#039;share&#039;, icon: &#039;📤&#039; }
+        ])
+      }
+    }
+  ]
+}</code></pre>
+<h3>Why This Works</h3>
+<p>Now when the component renders:
+<ul><li><code>item.label</code> → <code>'Edit'</code> ✅</li>
+<li><code>item.value</code> → <code>'edit'</code> ✅</li>
+<li><code>item.icon</code> → <code>'✏️'</code> ✅</li>
+<li>Result: Visible menu item with icon and text</li>
+</ul>
+<h2>Enhanced Features</h2></p>
+<p>The fix also adds icons to make the menu more visually appealing:
+<ul><li>✏️ Edit</li>
+<li>🗑️ Delete</li>
+<li>📤 Share</li>
+</ul>
+<h3>Example with Dividers and Disabled Items</h3></p>
+<p>You can also use more advanced features:</p>
+<pre><code class="language-javascript">&#039;items&#039;: JSON.stringify([
+  { label: &#039;Edit&#039;, value: &#039;edit&#039;, icon: &#039;✏️&#039; },
+  { label: &#039;Duplicate&#039;, value: &#039;duplicate&#039;, icon: &#039;📋&#039; },
+  { divider: true },  // Adds a separator line
+  { label: &#039;Delete&#039;, value: &#039;delete&#039;, icon: &#039;🗑️&#039;, disabled: true },  // Grayed out
+  { divider: true },
+  { label: &#039;Share&#039;, value: &#039;share&#039;, icon: &#039;📤&#039; }
+])</code></pre>
+<h2>Testing</h2>
+<h3>Before Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;Dropdown Menu&quot; example
+2. See: &quot;Actions&quot; button
+3. Click button
+4. See: Empty dropdown (no items) ❌</code></pre>
+<h3>After Fix</h3>
+<pre><code class="language-plaintext">1. Load &quot;Dropdown Menu&quot; example
+2. See: &quot;Actions&quot; button
+3. Click button
+4. See: Dropdown with 3 items:
+   - ✏️ Edit
+   - 🗑️ Delete
+   - 📤 Share
+5. Click an item
+6. PAN Monitor shows: action.selected.select { value: &#039;edit&#039;, label: &#039;Edit&#039; }
+7. Dropdown closes ✅</code></pre>
+<h2>PAN Messages</h2>
+<p>When you click a menu item, the component publishes:</p>
+<pre><code class="language-javascript">Topic: {topic}.select
+Data: { value: &#039;edit&#039;, label: &#039;Edit&#039; }</code></pre>
+<p>For the example:
+<ul><li>Topic: <code>action.selected.select</code></li>
+<li>Data: <code>{ value: 'edit', label: 'Edit' }</code></li>
+</ul>
+You can also see:
+<ul><li><code>action.selected.opened</code> - When dropdown opens</li>
+<li><code>action.selected.closed</code> - When dropdown closes</li>
+</ul>
+<h2>Files Changed</h2></p>
+<h3><code>/Users/cdr/Projects/larc-repos/playground/examples.mjs</code></h3>
+<strong>Lines 425-429</strong>: Changed from string array to object array
+<pre><code class="language-javascript">// Before:
+&#039;items&#039;: &#039;[&quot;Edit&quot;, &quot;Delete&quot;, &quot;Share&quot;]&#039;
+
+// After:
+&#039;items&#039;: JSON.stringify([
+  { label: &#039;Edit&#039;, value: &#039;edit&#039;, icon: &#039;✏️&#039; },
+  { label: &#039;Delete&#039;, value: &#039;delete&#039;, icon: &#039;🗑️&#039; },
+  { label: &#039;Share&#039;, value: &#039;share&#039;, icon: &#039;📤&#039; }
+])</code></pre>
+<h2>Component Registry Update Needed?</h2>
+<p>Let me check if the component registry has proper help text for the <code>items</code> attribute...</p>
+<p>The component registry should document:
+<ul><li>Items must be objects, not strings</li>
+<li>Required: <code>label</code></li>
+<li>Optional: <code>value</code>, <code>icon</code>, <code>disabled</code>, <code>divider</code></li>
+<li>Example format</li>
+</ul>
+<h2>Related Components</h2></p>
+<p>Other components that might have similar issues with JSON attributes:
+<ul><li><code>pan-tabs</code> - Uses <code>tabs</code> attribute with array</li>
+<li><code>drag-drop-list</code> - Uses <code>items</code> attribute</li>
+<li>Any component with complex JSON data</li>
+</ul>
+<h2>Key Takeaway</h2></p>
+<p>When a component expects JSON data via attributes:
+<li><strong>Read the component documentation</strong> - Check the expected format</li>
+<li><strong>Use objects, not primitives</strong> - If it says <code>{label, value}</code>, use objects</li>
+<li><strong>Test with PAN Monitor</strong> - Verify the data structure in events</li>
+<li><strong>Check the render method</strong> - See what properties it accesses</li></p>
+<h2>Summary</h2>
+<p>The dropdown menu example was fixed by changing the <code>items</code> attribute from a simple string array to an array of properly formatted objects with <code>label</code>, <code>value</code>, and <code>icon</code> properties. The dropdown now displays menu items correctly and publishes proper PAN events when items are selected.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/DROPDOWN_MENU_FIX.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

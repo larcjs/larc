@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@larcjs/core-debug · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - @larcjs/core-debug">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core-debug</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>@larcjs/core-debug</h1>
+<a href="https://img.shields.io/npm/v/@larcjs/core-debug.svg">![Version</a>](https://www.npmjs.com/package/@larcjs/core-debug)
+<a href="https://img.shields.io/badge/license-MIT-green.svg">![License</a>](LICENSE)
+<a href="https://img.shields.io/badge/bundle-3KB%20minified-blue.svg">![Bundle Size</a>](#)
+<blockquote><strong>Debug and tracing tools</strong> - Advanced debugging capabilities for PAN messages</blockquote>
+<p>Add comprehensive debugging and message tracing to LARC Core or Core Lite. Essential for development and troubleshooting complex message flows.</p>
+<h2>Installation</h2>
+<pre><code class="language-bash"># Requires @larcjs/core or @larcjs/core-lite
+npm install @larcjs/core-debug</code></pre>
+<h2>Quick Start</h2>
+<pre><code class="language-html">&lt;pan-bus debug=&quot;true&quot; enable-tracing=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import &#039;@larcjs/core-debug&#039;;
+
+// Access debug manager
+const debug = window.pan.debug;
+
+// Enable tracing
+debug.enableTracing();
+
+// View message history
+console.log(debug.getMessageHistory());
+
+// Export state snapshot
+const snapshot = debug.captureSnapshot();
+console.log(JSON.stringify(snapshot, null, 2));
+&lt;/script&gt;</code></pre>
+<h2>Features</h2>
+<ul><li>🔍 <strong>Message Tracing</strong> - Track all messages with full metadata</li>
+<li>📊 <strong>Performance Metrics</strong> - Handler duration, message sizes</li>
+<li>📸 <strong>State Snapshots</strong> - Export/import complete bus state</li>
+<li>🎯 <strong>Filtering</strong> - Filter messages by topic patterns</li>
+<li>⏱️ <strong>Timeline</strong> - View message history with timestamps</li>
+<li>📦 <strong>Export/Import</strong> - Save and restore state for debugging</li>
+</ul>
+<h2>API Reference</h2>
+<h3>debug.enableTracing()</h3>
+<p>Start tracking all messages.</p>
+<pre><code class="language-javascript">window.pan.debug.enableTracing();</code></pre>
+<h3>debug.disableTracing()</h3>
+<p>Stop tracking messages.</p>
+<pre><code class="language-javascript">window.pan.debug.disableTracing();</code></pre>
+<h3>debug.getMessageHistory(filter?)</h3>
+<p>Get tracked messages, optionally filtered.</p>
+<pre><code class="language-javascript">// All messages
+const all = debug.getMessageHistory();
+
+// Filtered by topic pattern
+const filtered = debug.getMessageHistory(&#039;user.*&#039;);</code></pre>
+<h3>debug.captureSnapshot()</h3>
+<p>Capture current bus state.</p>
+<pre><code class="language-javascript">const snapshot = debug.captureSnapshot();
+// Returns: { timestamp, messages, retained, subscriptions, stats }</code></pre>
+<h3>debug.clear()</h3>
+<p>Clear message history.</p>
+<pre><code class="language-javascript">debug.clear();</code></pre>
+<h2>Usage with <pan-inspector></h2>
+<p>The debug manager powers the <code><pan-inspector></code> component:</p>
+<pre><code class="language-html">&lt;pan-inspector&gt;&lt;/pan-inspector&gt;</code></pre>
+<p>Features:
+<ul><li>Real-time message monitoring</li>
+<li>State tree visualization</li>
+<li>Performance metrics dashboard</li>
+<li>Export/import state snapshots</li>
+</ul>
+<h2>Development Workflow</h2></p>
+<h3>1. Enable Debug Mode</h3>
+<pre><code class="language-html">&lt;pan-bus debug=&quot;true&quot; enable-tracing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<h3>2. Monitor Messages</h3>
+<pre><code class="language-javascript">// Watch console for debug logs
+// [PAN Bus] Published { topic: &#039;user.login&#039;, delivered: 3, routes: 1 }</code></pre>
+<h3>3. Inspect State</h3>
+<pre><code class="language-javascript">// View current retained state
+const state = debug.captureSnapshot();
+console.table(state.retained);</code></pre>
+<h3>4. Export for Bug Reports</h3>
+<pre><code class="language-javascript">// Export state snapshot for sharing
+const snapshot = debug.captureSnapshot();
+navigator.clipboard.writeText(JSON.stringify(snapshot, null, 2));</code></pre>
+<h2>Performance Impact</h2>
+<ul><li><strong>Overhead:</strong> ~5% when tracing enabled</li>
+<li><strong>Memory:</strong> Stores last 1000 messages (configurable)</li>
+<li><strong>Production:</strong> Automatically stripped in minified builds</li>
+</ul>
+<h2>Bundle Size</h2>
+<ul><li><strong>Minified:</strong> 3.0KB</li>
+<li><strong>Gzipped:</strong> ~1KB</li>
+</ul>
+<h2>Related Packages</h2>
+<ul><li><strong><a href="../../core">@larcjs/core</a></strong> — Full-featured PAN bus (includes debug)</li>
+<li><strong><a href="../core-lite">@larcjs/core-lite</a></strong> — Lightweight bus (use this package to add debug)</li>
+<li><strong><a href="../core-routing">@larcjs/core-routing</a></strong> — Message routing system</li>
+<li><strong><a href="../../devtools">@larcjs/devtools</a></strong> — Chrome DevTools extension</li>
+</ul>
+<h2>License</h2>
+<p>MIT © Chris Robison</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core-debug/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

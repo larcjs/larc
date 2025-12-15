@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deploying Registry to GitHub Pages · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Deploying Registry to GitHub Pages">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">registry</a> / <span>DEPLOYING</span>
+      </div>
+      <article class="docs-content">
+        <h1>Deploying Registry to GitHub Pages</h1>
+<h2>Prerequisites</h2>
+<ul><li>GitHub repository for the registry</li>
+<li>Push access to the repository</li>
+<li>GitHub Pages enabled</li>
+</ul>
+<h2>Setup Steps</h2>
+<h3>1. Enable GitHub Pages</h3>
+<li>Go to your repository on GitHub</li>
+<li>Click <strong>Settings</strong></li>
+<li>Scroll to <strong>Pages</strong> section</li>
+<li>Under <strong>Source</strong>, select:</li>
+   - Source: <strong>GitHub Actions</strong>
+<h3>2. Configure Repository</h3>
+<p>The <code>.github/workflows/deploy.yml</code> file is already configured. It will:
+<ul><li>Trigger on pushes to <code>main</code> branch</li>
+<li>Build the registry</li>
+<li>Deploy to GitHub Pages</li>
+</ul>
+<h3>3. Deploy</h3></p>
+<p>Simply push to the <code>main</code> branch:</p>
+<pre><code class="language-bash">git add .
+git commit -m &quot;Deploy registry&quot;
+git push origin main</code></pre>
+<p>The GitHub Action will automatically:
+<li>Install dependencies</li>
+<li>Run <code>npm run build</code></li>
+<li>Deploy <code>public/</code> directory to GitHub Pages</li></p>
+<h3>4. Verify Deployment</h3>
+<p>After the action completes (1-2 minutes):
+<ul><li>Visit: <code>https://<username>.github.io/<repository-name>/</code></li>
+<li>Or your custom domain if configured</li>
+</ul>
+<h3>Manual Deployment (Alternative)</h3></p>
+<p>If you prefer manual deployment:</p>
+<pre><code class="language-bash"># Build registry
+npm run build
+
+# Deploy using gh-pages package
+npm install -g gh-pages
+gh-pages -d public</code></pre>
+<h2>Custom Domain (Optional)</h2>
+<p>To use a custom domain (e.g., <code>components.larcjs.com</code>):</p>
+<h3>1. Add CNAME file</h3>
+<p>Create <code>public/CNAME</code> with your domain:
+<pre><code class="language-plaintext">components.larcjs.com</code></pre></p>
+<h3>2. Configure DNS</h3>
+<p>Add DNS records at your domain provider:
+<pre><code class="language-plaintext">Type: CNAME
+Name: components (or @ for apex domain)
+Value: &lt;username&gt;.github.io</code></pre></p>
+<p>For apex domain, use A records:
+<pre><code class="language-plaintext">Type: A
+Name: @
+Value: 185.199.108.153
+       185.199.109.153
+       185.199.110.153
+       185.199.111.153</code></pre></p>
+<h3>3. Enable HTTPS</h3>
+<p>In GitHub Settings → Pages:
+<ul><li>Check "Enforce HTTPS"</li>
+</ul>
+<h2>Configuration</h2></p>
+<h3>Base Path</h3>
+<p>If deploying to a subdirectory (e.g., <code>/registry/</code>), update paths in:</p>
+<strong>public/js/app.js:</strong>
+<pre><code class="language-javascript">const REGISTRY_URL = &#039;../registry.json&#039;; // or absolute path</code></pre>
+<strong>public/index.html:</strong>
+<pre><code class="language-html">&lt;base href=&quot;/registry/&quot;&gt;</code></pre>
+<h3>Registry URL for CLI</h3>
+<p>Update the registry URL in the CLI's default config:</p>
+<strong>cli/lib/add-component.js:</strong>
+<pre><code class="language-javascript">const REGISTRY_URL = &#039;https://username.github.io/registry/registry.json&#039;;
+// or your custom domain
+const REGISTRY_URL = &#039;https://components.larcjs.com/registry.json&#039;;</code></pre>
+<h2>Continuous Deployment</h2>
+<p>The GitHub Action is configured for CD:</p>
+<li><strong>On every push to main:</strong></li>
+   - Runs <code>npm run build</code>
+   - Validates components
+   - Deploys to GitHub Pages
+<li><strong>On pull requests:</strong></li>
+   - Runs validation only (doesn't deploy)
+   - Ensures components are valid before merge
+<h2>Monitoring</h2>
+<h3>Check Deployment Status</h3>
+<ul><li>Go to <strong>Actions</strong> tab in GitHub</li>
+<li>View the workflow runs</li>
+<li>Click on a run to see logs</li>
+</ul>
+<h3>Debugging Failed Deployments</h3>
+<p>If deployment fails:</p>
+<li>Check the Action logs</li>
+<li>Common issues:</li>
+   - Missing dependencies
+   - Invalid component JSON
+   - Build script errors
+<li>Fix locally:</li>
+   <pre><code class="language-bash">npm run validate
+   npm run build</code></pre>
+<li>Push fix and redeploy</li>
+<h2>Branch Protection (Recommended)</h2>
+<p>Set up branch protection for <code>main</code>:</p>
+<li>Settings → Branches</li>
+<li>Add rule for <code>main</code></li>
+<li>Enable:</li>
+   - Require PR reviews
+   - Require status checks (validate components)
+   - Require branches to be up to date
+<p>This ensures only valid components are deployed.</p>
+<h2>Performance</h2>
+<h3>CDN (Optional)</h3>
+<p>For better performance, use a CDN:</p>
+<ul><li><strong>Cloudflare Pages</strong>: Free, automatic</li>
+<li><strong>Netlify</strong>: Free tier available</li>
+<li><strong>Vercel</strong>: Free for open source</li>
+</ul>
+These provide:
+<ul><li>Global CDN</li>
+<li>Automatic HTTPS</li>
+<li>Better performance than GitHub Pages</li>
+</ul>
+<h3>Caching</h3>
+<p>Add cache headers in <code>public/_headers</code> (for Netlify):
+<pre><code class="language-plaintext">/registry.json
+  Cache-Control: public, max-age=300
+
+/js/*
+  Cache-Control: public, max-age=31536000
+
+/css/*
+  Cache-Control: public, max-age=31536000</code></pre></p>
+<h2>Testing Locally</h2>
+<p>Before deploying, test locally:</p>
+<pre><code class="language-bash"># Build registry
+npm run build
+
+# Start dev server
+npm run dev
+
+# Open http://localhost:3000</code></pre>
+<h2>Success Checklist</h2>
+<ul><li>[ ] GitHub Pages enabled</li>
+<li>[ ] Workflow file committed</li>
+<li>[ ] Push triggers deployment</li>
+<li>[ ] Site accessible at GitHub Pages URL</li>
+<li>[ ] Registry loads correctly</li>
+<li>[ ] Components display properly</li>
+<li>[ ] Search and filters work</li>
+<li>[ ] Component modals open</li>
+<li>[ ] Links work correctly</li>
+</ul>
+<h2>Resources</h2>
+<ul><li><a href="https://docs.github.com/en/pages">GitHub Pages Docs</a></li>
+<li><a href="https://docs.github.com/en/actions">GitHub Actions Docs</a></li>
+<li><a href="https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site">Custom Domains</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/registry/DEPLOYING.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hacker News Launch - FAQ Answers · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Hacker News Launch - FAQ Answers">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">guides</a> / <span>HN_FAQ</span>
+      </div>
+      <article class="docs-content">
+        <h1>Hacker News Launch - FAQ Answers</h1>
+<p>Quick reference for responding to common questions during the HN launch.</p>
+<hr>
+<h2>🆚 Comparison Questions</h2>
+<h3>"How is this different from React/Vue/Svelte?"</h3>
+<strong>Short answer:</strong>
+LARC complements React/Vue rather than replacing them. Use React for complex UIs, LARC for cards, modals, tables, and shared components. Reduce framework overhead by 60%+.
+<strong>Detailed answer:</strong>
+<ul><li><strong>React/Vue</strong> are full application frameworks with virtual DOM, JSX/templates, and complete state management</li>
+<li><strong>LARC</strong> is a lightweight layer on top of Web Components that solves the "coordination problem"</li>
+<li><strong>Use both together:</strong> Keep React for your complex product UI, use LARC for design system components that work everywhere</li>
+<li><strong>Key difference:</strong> LARC components work with zero build in development, and mix across frameworks via PAN messaging</li>
+</ul>
+<strong>Bundle size comparison:</strong>
+<ul><li>React: ~140KB (React + ReactDOM + ecosystem)</li>
+<li>Vue: ~90KB (core + ecosystem)</li>
+<li><strong>LARC Core Lite:</strong> 9KB minified (~3KB gzipped) ✅</li>
+<li><strong>LARC Core (full):</strong> 40KB minified (12KB gzipped)</li>
+<li><strong>LARC Components:</strong> ~7KB per component minified</li>
+</ul>
+<h3>"How does PAN compare to Redux/Zustand/other state management?"</h3>
+<strong>Short answer:</strong>
+PAN is a message bus, not a state store. Think MQTT for the browser. Components coordinate without coupling.
+<strong>Detailed answer:</strong>
+<ul><li><strong>Redux/Zustand:</strong> Centralized state stores with reducers/actions</li>
+<li><strong>PAN:</strong> Decentralized messaging - components publish/subscribe to topics</li>
+<li><strong>When to use PAN:</strong> Cross-component coordination, micro-frontends, framework interop</li>
+<li><strong>When to use Redux:</strong> Complex app-wide state with strict rules and time-travel</li>
+<li><strong>Can use both:</strong> PAN for component communication, Redux inside React components</li>
+</ul>
+PAN is more like:
+<ul><li>MQTT (pub/sub messaging)</li>
+<li>Redis Pub/Sub</li>
+<li>EventBus patterns</li>
+</ul>
+But native to the browser with zero dependencies.
+<hr>
+<h2>🌐 Browser & Compatibility</h2>
+<h3>"What's the browser support?"</h3>
+<strong>Tested and supported:</strong>
+<ul><li>Chrome 90+ ✅</li>
+<li>Firefox 88+ ✅</li>
+<li>Safari 14+ ✅</li>
+<li>Edge 90+ ✅</li>
+</ul>
+<strong>Requirements:</strong>
+<ul><li>ES Modules (<code>import</code>/<code>export</code>)</li>
+<li>Custom Elements v1</li>
+<li>Shadow DOM v1</li>
+<li>IntersectionObserver</li>
+</ul>
+<strong>Missing features in older browsers:</strong>
+No polyfills included by default, but you can add them. Most modern devices (2020+) support everything natively.
+<strong>Mobile:</strong>
+Works great on iOS Safari 14+, Chrome Android 90+. Tested on real devices.
+<h3>"Does it work in Internet Explorer?"</h3>
+<p>No. IE doesn't support Custom Elements or ES Modules. Use polyfills if you must support IE, but we recommend modern browsers only.</p>
+<hr>
+<h2>🔨 Production & Readiness</h2>
+<h3>"Is it production-ready?"</h3>
+<strong>Yes, with caveats:</strong>
+<strong>Production-ready:</strong>
+<ul><li>✅ 261 tests passing (Chromium, Firefox, WebKit)</li>
+<li>✅ Zero security vulnerabilities (npm audit)</li>
+<li>✅ Published to npm (@larcjs/core@2.0.0)</li>
+<li>✅ Used in real applications</li>
+<li>✅ TypeScript support</li>
+<li>✅ Semantic versioning</li>
+</ul>
+<strong>Consider:</strong>
+<ul><li>🟡 Young ecosystem (v1.1, launched Nov 2024)</li>
+<li>🟡 Small community (growing)</li>
+<li>🟡 Component library still expanding</li>
+<li>🟡 Best practices still emerging</li>
+</ul>
+<strong>Recommendation:</strong>
+Perfect for:
+<ul><li>New projects willing to be early adopters</li>
+<li>Design systems and component libraries</li>
+<li>Micro-frontends</li>
+<li>Progressive enhancement</li>
+</ul>
+Evaluate carefully for:
+<ul><li>Large enterprise apps with long lifespans</li>
+<li>Projects requiring extensive third-party components</li>
+</ul>
+<h3>"Who's using this in production?"</h3>
+<p>Currently used by:
+<ul><li>Early adopters building design systems</li>
+<li>Micro-frontend architectures</li>
+<li>Progressive web apps</li>
+</ul>
+We're a young project (v1.1). If you adopt LARC, you're an early pioneer. We'd love to feature your project!</p>
+<hr>
+<h2>🛠️ Build & Tooling</h2>
+<h3>"Do I really not need a build step?"</h3>
+<strong>Development:</strong> Zero build required. Write <code>.mjs</code> files, refresh browser.
+<strong>Production:</strong> Build is optional but recommended:
+<ul><li>✅ Minification (reduce size)</li>
+<li>✅ Tree-shaking (remove unused code)</li>
+<li>✅ Bundling (reduce HTTP requests)</li>
+</ul>
+<strong>The philosophy:</strong>
+Fast iteration in dev (no build), optimized delivery in prod (with build).
+<strong>Use any bundler:</strong>
+<ul><li>esbuild ⚡ (recommended)</li>
+<li>Rollup</li>
+<li>Vite</li>
+<li>webpack</li>
+<li>Your choice</li>
+</ul>
+<h3>"What about TypeScript?"</h3>
+<strong>Full TypeScript support:</strong>
+<pre><code class="language-bash">npm install @larcjs/core-types
+npm install @larcjs/ui-types</code></pre>
+<strong>Features:</strong>
+<ul><li>✅ Type definitions for all components</li>
+<li>✅ IDE autocomplete and IntelliSense</li>
+<li>✅ Type-safe PAN messaging</li>
+<li>✅ Works in both <code>.ts</code> and <code>.js</code> files (JSDoc)</li>
+</ul>
+<strong>You can use TypeScript, or not. Your choice.</strong>
+<hr>
+<h2>📦 Dependencies & Size</h2>
+<h3>"What are the dependencies?"</h3>
+<strong>Core:</strong> Zero runtime dependencies.
+<strong>Dev dependencies:</strong>
+<ul><li>Playwright (testing)</li>
+<li>esbuild (optional build)</li>
+</ul>
+<strong>Total installed size:</strong>
+<ul><li><strong>@larcjs/core-lite:</strong> 9KB minified (~3KB gzipped) ← Start here!</li>
+<li>@larcjs/core: 40KB minified (~12KB gzipped) - includes routing & debug</li>
+<li>@larcjs/ui: 396KB minified (~110KB gzipped) - 57 components</li>
+</ul>
+<h3>"Why should I add another framework?"</h3>
+<strong>You're not adding a framework, you're reducing one.</strong>
+<strong>Before LARC:</strong>
+<ul><li>React app: 500KB bundle</li>
+<li>Every component tightly coupled</li>
+</ul>
+<strong>With LARC:</strong>
+<ul><li>React (complex UI): 350KB</li>
+<li>LARC (core + 8 components): ~100KB minified</li>
+<li>Total: 450KB (-10% from pure React approach)</li>
+</ul>
+<strong>Real savings come from:</strong>
+<ul><li>Components work in Vue, Svelte, vanilla JS</li>
+<li>No lock-in to React version</li>
+<li>Easier to migrate frameworks later</li>
+<li>Use only what you need (57 components available, load on demand)</li>
+</ul>
+<hr>
+<h2>🎯 Learning Curve</h2>
+<h3>"How hard is it to learn?"</h3>
+<strong>If you know:</strong>
+<ul><li>HTML ✅</li>
+<li>JavaScript ✅</li>
+<li>ES Modules ✅</li>
+</ul>
+<strong>You're ready!</strong>
+<strong>Learning path:</strong>
+<li><strong>5 minutes:</strong> Include script, use components</li>
+<li><strong>30 minutes:</strong> Understand PAN messaging (publish/subscribe)</li>
+<li><strong>1 hour:</strong> Build custom component</li>
+<li><strong>1 day:</strong> Comfortable building apps</li>
+<strong>Concepts to learn:</strong>
+<ul><li>Custom Elements (2 methods: <code>connectedCallback</code>, <code>disconnectedCallback</code>)</li>
+<li>Shadow DOM (optional, for style encapsulation)</li>
+<li>PAN publish/subscribe</li>
+</ul>
+<strong>No new syntax, no new language, no JSX.</strong>
+<h3>"Where are the docs?"</h3>
+<ul><li>📚 <strong>Main docs:</strong> https://larcjs.github.io/site/</li>
+<li>🎮 <strong>Interactive playground:</strong> https://larcjs.github.io/larc/playground/</li>
+<li>📖 <strong>Guides:</strong> https://github.com/larcjs/larc/tree/main/docs</li>
+<li>💬 <strong>Discussions:</strong> https://github.com/larcjs/core/discussions</li>
+<li>📹 <strong>Tutorial:</strong> (Coming soon - video walkthrough)</li>
+</ul>
+<hr>
+<h2>🏗️ Architecture & Design</h2>
+<h3>"Why Web Components instead of framework components?"</h3>
+<strong>Web Components advantages:</strong>
+<ul><li>✅ <strong>Native browser API</strong> - No framework lock-in</li>
+<li>✅ <strong>True interoperability</strong> - Work in React, Vue, Angular, vanilla JS</li>
+<li>✅ <strong>Long-term stability</strong> - Browser standard, not framework churn</li>
+<li>✅ <strong>No compilation required</strong> - Direct browser execution</li>
+<li>✅ <strong>Style encapsulation</strong> - Shadow DOM prevents CSS conflicts</li>
+</ul>
+<strong>Framework components:</strong>
+<ul><li>❌ Locked to one framework</li>
+<li>❌ Version coupling headaches</li>
+<li>❌ Require compilation</li>
+<li>❌ Framework churn (React 15, 16, 17, 18...)</li>
+</ul>
+<strong>The 80/20 principle:</strong>
+Web Components give you 80% of what you need. LARC provides the missing 20% (coordination, auto-loading, state management).
+<h3>"What's the PAN bus actually doing?"</h3>
+<strong>PAN (Page Area Network) is a lightweight message bus for component coordination.</strong>
+<strong>Without PAN:</strong>
+<pre><code class="language-javascript">// Components tightly coupled
+&lt;ThemeToggle onThemeChange={(theme) =&gt; {
+  card.setTheme(theme);
+  table.setTheme(theme);
+  modal.setTheme(theme);
+}} /&gt;</code></pre>
+<strong>With PAN:</strong>
+<pre><code class="language-html">&lt;!-- Theme toggle publishes --&gt;
+&lt;pan-theme-toggle&gt;&lt;/pan-theme-toggle&gt;
+
+&lt;!-- Components subscribe automatically --&gt;
+&lt;pan-card&gt;&lt;/pan-card&gt;
+&lt;pan-table&gt;&lt;/pan-table&gt;
+&lt;pan-modal&gt;&lt;/pan-modal&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Pub/sub with topic wildcards</li>
+<li>Retained messages (like MQTT)</li>
+<li>Request/reply pattern</li>
+<li>Message routing</li>
+<li>No coupling between components</li>
+</ul>
+<hr>
+<h2>🔐 Security</h2>
+<h3>"What about security vulnerabilities?"</h3>
+<strong>Current status:</strong>
+<ul><li>✅ <code>npm audit</code>: 0 vulnerabilities</li>
+<li>✅ Zero runtime dependencies</li>
+<li>✅ Regular security updates</li>
+<li>✅ Security policy: <a href="./SECURITY.md">SECURITY.md</a></li>
+</ul>
+<strong>Reporting vulnerabilities:</strong>
+Email: (use GitHub Security Advisories)
+<strong>Best practices:</strong>
+<ul><li>Keep packages updated</li>
+<li>Review component code before use</li>
+<li>Use Content Security Policy</li>
+<li>Sanitize user input (standard web security)</li>
+</ul>
+<hr>
+<h2>🚀 Performance</h2>
+<h3>"How's the performance?"</h3>
+<strong>Metrics:</strong>
+<ul><li>⚡ <strong>First load:</strong> <50ms (core)</li>
+<li>📦 <strong>Bundle size:</strong> 9KB core-lite minified (~3KB gzipped) ✅</li>
+<li>🎯 <strong>Per component:</strong> ~7KB each minified (~2KB gzipped)</li>
+<li>🔄 <strong>Autoload time:</strong> <5ms per component</li>
+</ul>
+<strong>Compared to frameworks:</strong>
+<ul><li><strong>React:</strong> ~140KB initial bundle</li>
+<li><strong>Vue:</strong> ~90KB initial bundle</li>
+<li><strong>LARC Core Lite:</strong> 9KB + components used (94% smaller than React!)</li>
+</ul>
+<strong>Progressive loading:</strong>
+Components load as they enter viewport (IntersectionObserver). Only pay for what you use.
+<strong>Test yourself:</strong>
+Run Lighthouse on our playground: https://larcjs.github.io/larc/playground/
+<hr>
+<h2>🤔 Common Concerns</h2>
+<h3>"What if the project gets abandoned?"</h3>
+<strong>Mitigation strategies:</strong>
+<li><strong>Web Standards:</strong> Built on Custom Elements (won't break)</li>
+<li><strong>Zero dependencies:</strong> No dependency hell</li>
+<li><strong>Simple codebase:</strong> Easy to fork and maintain</li>
+<li><strong>MIT License:</strong> Free to fork and continue</li>
+<strong>Even if LARC stops:</strong>
+<ul><li>Your components keep working (they're just Web Components)</li>
+<li>You can maintain your own fork</li>
+<li>Easy to migrate to vanilla Web Components</li>
+</ul>
+<h3>"Can I use this with X framework?"</h3>
+<strong>Yes! LARC works with:</strong>
+<ul><li>✅ React (via React 19's Web Component support)</li>
+<li>✅ Vue (native Web Component support)</li>
+<li>✅ Angular (native Web Component support)</li>
+<li>✅ Svelte (compile target)</li>
+<li>✅ Vanilla JavaScript</li>
+<li>✅ Any framework that supports Custom Elements</li>
+</ul>
+<strong>Integration:</strong>
+<pre><code class="language-jsx">// React
+&lt;pan-card title=&quot;Hello&quot;&gt;Content&lt;/pan-card&gt;
+
+// Vue
+&lt;pan-card title=&quot;Hello&quot;&gt;Content&lt;/pan-card&gt;
+
+// Svelte
+&lt;pan-card title=&quot;Hello&quot;&gt;Content&lt;/pan-card&gt;</code></pre>
+<p>It's just HTML elements!</p>
+<h3>"Why not use Lit or Stencil instead?"</h3>
+<strong>Great question! LARC is complementary:</strong>
+<strong>Lit/Stencil:</strong>
+<ul><li>Component authoring libraries</li>
+<li>Help you <em>build</em> Web Components</li>
+<li>Provide templating, reactivity, decorators</li>
+</ul>
+<strong>LARC:</strong>
+<ul><li>Component <em>coordination</em> system</li>
+<li>Helps components <em>communicate</em></li>
+<li>Provides auto-loading, messaging bus</li>
+</ul>
+<strong>Use together:</strong>
+<pre><code class="language-typescript">// Build components with Lit
+@customElement(&#039;my-card&#039;)
+class MyCard extends LitElement { ... }
+
+// Coordinate with LARC
+// Components auto-load and communicate via PAN</code></pre>
+<strong>LARC's unique features:</strong>
+<ul><li>Zero-build dev workflow</li>
+<li>PAN messaging bus</li>
+<li>Auto-loading system</li>
+<li>Config management</li>
+</ul>
+<hr>
+<h2>📞 Contact & Community</h2>
+<h3>"How do I get help?"</h3>
+<ul><li>💬 <strong>GitHub Discussions:</strong> https://github.com/larcjs/core/discussions</li>
+<li>🐛 <strong>Issues:</strong> https://github.com/larcjs/core/issues</li>
+<li>📧 <strong>Email:</strong> (use GitHub issues for now)</li>
+<li>🗣️ <strong>Discord:</strong> (Coming soon)</li>
+</ul>
+<h3>"How can I contribute?"</h3>
+<p>We welcome contributions!</p>
+<li><strong>Code:</strong> PRs to any repository</li>
+<li><strong>Components:</strong> Submit to component registry</li>
+<li><strong>Docs:</strong> Improve documentation</li>
+<li><strong>Examples:</strong> Share your projects</li>
+<li><strong>Feedback:</strong> Tell us what works/doesn't work</li>
+<p>See <a href="./CONTRIBUTING.md">CONTRIBUTING.md</a> for guidelines.</p>
+<hr>
+<h2>🎯 Quick Copy-Paste Responses</h2>
+<h3>For "Yet another framework?"</h3>
+<blockquote>LARC isn't a framework replacement—it's framework reduction. Keep React for complex UIs, use LARC for components that work everywhere. Reduce bundle by 60%+ and eliminate vendor lock-in.</blockquote>
+<h3>For "Why Web Components?"</h3>
+<blockquote>Web Components are the only way to build truly framework-agnostic components. LARC solves the coordination problem that makes them practical for real applications.</blockquote>
+<h3>For "Production ready?"</h3>
+<blockquote>Yes: 335 tests passing, 0 vulnerabilities, v1.1 on npm. Young ecosystem (Nov 2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!</blockquote>
+<h3>For "Performance?"</h3>
+<blockquote>9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.github.io/larc/playground/</blockquote>
+<h3>For "Learning curve?"</h3>
+<blockquote>If you know HTML + vanilla JS, you're ready. No JSX, no new syntax. 5 min to use components, 1 hour to build custom ones.</blockquote>
+<hr>
+<strong>Remember: Be humble, helpful, and responsive. Good luck! 🚀</strong>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/guides/HN_FAQ.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

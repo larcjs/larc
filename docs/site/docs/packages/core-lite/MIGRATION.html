@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Migration Guide: @larcjs/core → @larcjs/core-lite · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Migration Guide: @larcjs/core → @larcjs/core-lite">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core-lite</a> / <span>MIGRATION</span>
+      </div>
+      <article class="docs-content">
+        <h1>Migration Guide: @larcjs/core → @larcjs/core-lite</h1>
+<p>Quick guide for migrating from the full <code>@larcjs/core</code> package to the lightweight <code>@larcjs/core-lite</code>.</p>
+<h2>Why Migrate?</h2>
+<ul><li>✅ <strong>78% smaller bundle</strong> - 9KB vs 40KB</li>
+<li>✅ <strong>Faster load times</strong> - Essential features only</li>
+<li>✅ <strong>Same API</strong> - Drop-in replacement</li>
+<li>✅ <strong>Add features later</strong> - Routing and debug available as add-ons</li>
+</ul>
+<h2>Quick Migration</h2>
+<h3>Step 1: Update package.json</h3>
+<pre><code class="language-bash">npm uninstall @larcjs/core
+npm install @larcjs/core-lite</code></pre>
+<h3>Step 2: Update imports</h3>
+<p>No changes needed! The API is identical:</p>
+<pre><code class="language-javascript">// Before (with @larcjs/core)
+import &#039;@larcjs/core&#039;;
+
+// After (with @larcjs/core-lite)
+import &#039;@larcjs/core-lite&#039;;
+// Everything works the same!</code></pre>
+<h3>Step 3: Test</h3>
+<p>Your code should work without any changes. The core messaging API is identical.</p>
+<h2>What Changes?</h2>
+<h3>Features Removed from Lite</h3>
+<p>| Feature | Available in | Alternative |
+|---------|-------------|-------------|
+| <strong>Dynamic Routing</strong> | Full version only | Add <code>@larcjs/core-routing</code> |
+| <strong>Debug/Tracing</strong> | Full version only | Add <code>@larcjs/core-debug</code> |
+| <strong>Rate Limiting</strong> | Full version only | Not available |
+| <strong>Message Validation</strong> | Full version only | Not available |
+| <strong>Statistics</strong> | Full version only | Not available |
+| <strong>LRU Cache</strong> | Full version only | Simple Map instead |</p>
+<h3>Features Kept in Lite ✅</h3>
+<ul><li>✅ Pub/sub messaging</li>
+<li>✅ Retained messages</li>
+<li>✅ Request/reply pattern</li>
+<li>✅ Topic pattern matching with wildcards</li>
+<li>✅ Custom element autoloading</li>
+<li>✅ Zero dependencies</li>
+</ul>
+<h2>API Compatibility</h2>
+<h3>100% Compatible</h3>
+<p>These APIs work identically in both versions:</p>
+<pre><code class="language-javascript">// Publishing
+bus.publish(&#039;topic&#039;, data);
+bus.publish(&#039;topic&#039;, data, { retain: true });
+
+// Subscribing
+bus.subscribe(&#039;topic&#039;, handler);
+bus.subscribe(&#039;topic.*&#039;, handler); // Wildcards work!
+
+// Request/reply
+const result = await bus.request(&#039;topic&#039;, data);
+
+// Unsubscribe
+const unsub = bus.subscribe(&#039;topic&#039;, handler);
+unsub(); // Cleanup</code></pre>
+<h3>Not Available in Lite</h3>
+<pre><code class="language-javascript">// ❌ These require full version or add-ons:
+
+// Routing (requires @larcjs/core-routing)
+window.pan.routes.add({ /* ... */ });
+
+// Debug (requires @larcjs/core-debug)
+window.pan.debug.enableTracing();
+
+// Configuration (not in lite)
+&lt;pan-bus
+  max-retained=&quot;1000&quot;
+  rate-limit=&quot;100&quot;
+  enable-routing=&quot;true&quot;
+&gt;&lt;/pan-bus&gt;</code></pre>
+<h2>Migration Scenarios</h2>
+<h3>Scenario 1: You Only Use Pub/Sub</h3>
+<p>✅ <strong>Perfect candidate for lite!</strong></p>
+<pre><code class="language-javascript">// Your code
+bus.publish(&#039;user.login&#039;, { userId: 123 });
+bus.subscribe(&#039;user.*&#039;, (msg) =&gt; {
+  console.log(&#039;User event:&#039;, msg);
+});</code></pre>
+<strong>Action:</strong> Switch to core-lite immediately. Zero code changes.
+<hr>
+<h3>Scenario 2: You Use Routing</h3>
+<p>⚠️ <strong>Need routing add-on</strong></p>
+<pre><code class="language-javascript">// You have routing code
+window.pan.routes.add({
+  match: { type: &#039;user.login&#039; },
+  actions: [{ type: &#039;EMIT&#039;, message: { type: &#039;analytics.track&#039; } }]
+});</code></pre>
+<strong>Options:</strong>
+<li>Keep using <code>@larcjs/core</code> (40KB)</li>
+<li>Use <code>core-lite</code> + <code>@larcjs/core-routing</code> (17KB)</li>
+<strong>To add routing:</strong>
+<pre><code class="language-bash">npm install @larcjs/core-lite @larcjs/core-routing</code></pre>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import &#039;@larcjs/core-lite&#039;;
+import &#039;@larcjs/core-routing&#039;;
+// Now window.pan.routes is available
+&lt;/script&gt;</code></pre>
+<hr>
+<h3>Scenario 3: You Use Debug Tools</h3>
+<p>⚠️ <strong>Need debug add-on (dev only)</strong></p>
+<pre><code class="language-javascript">// You use debugging
+window.pan.debug.enableTracing();
+const snapshot = window.pan.debug.captureSnapshot();</code></pre>
+<strong>Best practice:</strong> Add debug only in development:
+<pre><code class="language-javascript">// Production
+import &#039;@larcjs/core-lite&#039;;
+
+// Development only
+if (process.env.NODE_ENV === &#039;development&#039;) {
+  await import(&#039;@larcjs/core-debug&#039;);
+  window.pan.debug.enableTracing();
+}</code></pre>
+<strong>Install:</strong>
+<pre><code class="language-bash">npm install @larcjs/core-lite
+npm install --save-dev @larcjs/core-debug</code></pre>
+<hr>
+<h3>Scenario 4: You Use Both Routing and Debug</h3>
+<p>⚠️ <strong>Consider your priorities</strong></p>
+<strong>Option A: Stay with full version (simplest)</strong>
+<pre><code class="language-bash"># No changes needed
+npm install @larcjs/core  # 40KB</code></pre>
+<strong>Option B: À la carte (optimized)</strong>
+<pre><code class="language-bash">npm install @larcjs/core-lite @larcjs/core-routing
+npm install --save-dev @larcjs/core-debug</code></pre>
+<p>Result: 17KB in production, 20KB in dev (vs 40KB for full)</p>
+<h2>Performance Impact</h2>
+<h3>Bundle Size</h3>
+<p>| Configuration | Size | Savings |
+|--------------|------|---------|
+| @larcjs/core (full) | 40KB | Baseline |
+| @larcjs/core-lite | 9KB | <strong>-31KB (78%)</strong> |
+| core-lite + routing | 17KB | -23KB (57%) |
+| core-lite + debug | 12KB | -28KB (70%) |
+| core-lite + both | 20KB | -20KB (50%) |</p>
+<h3>Load Time Impact</h3>
+<p>Assuming 3G connection (750KB/s):</p>
+<p>| Package | Download Time |
+|---------|---------------|
+| @larcjs/core | ~53ms |
+| @larcjs/core-lite | ~12ms |</p>
+<strong>Result:</strong> 41ms faster initial load!
+<h2>Checklist</h2>
+<p>Before migrating, verify:</p>
+<ul><li>[ ] You don't use <code>window.pan.routes.*</code> (or add routing package)</li>
+<li>[ ] You don't use <code>window.pan.debug.*</code> (or add debug package)</li>
+<li>[ ] You don't rely on rate limiting</li>
+<li>[ ] You don't rely on message size validation</li>
+<li>[ ] You don't rely on statistics tracking</li>
+</ul>
+If all checked, you're ready to migrate! 🎉
+<h2>Rollback Plan</h2>
+<p>If you need to go back:</p>
+<pre><code class="language-bash">npm uninstall @larcjs/core-lite
+npm install @larcjs/core</code></pre>
+<p>No code changes needed - the API is identical.</p>
+<h2>Need Help?</h2>
+<ul><li>📖 <a href="../../PACKAGES.md">Package Comparison</a></li>
+<li>💬 <a href="https://github.com/larcjs/larc/discussions">Discussions</a></li>
+<li>🐛 <a href="https://github.com/larcjs/larc/issues">Issues</a></li>
+</ul>
+<h2>Summary</h2>
+<strong>TL;DR:</strong>
+<ul><li>Same API, 78% smaller</li>
+<li>Drop-in replacement if you only use pub/sub</li>
+<li>Add routing/debug as separate packages if needed</li>
+<li>Can always switch back with zero code changes</li>
+</ul>
+<strong>Recommended approach:</strong> Migrate to lite and add features only if you need them. Start small, grow as needed.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core-lite/MIGRATION.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Archive Old Repositories - Instructions · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Archive Old Repositories - Instructions">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">migration</a> / <span>ARCHIVE-REPOSITORIES</span>
+      </div>
+      <article class="docs-content">
+        <h1>Archive Old Repositories - Instructions</h1>
+<strong>Date:</strong> December 7, 2025
+<strong>Status:</strong> ✅ READMEs updated and pushed, ⚠️ Manual archiving required
+<hr>
+<h2>✅ Completed: README Updates</h2>
+<p>All three repositories have been updated with archive notices and pushed to GitHub:</p>
+<li>✅ <strong>larcjs/core-types</strong></li>
+   - README updated with archive notice
+   - Points to <code>larcjs/larc/packages/core-types</code>
+   - Commit: <code>9a41fc9</code>
+<li>✅ <strong>larcjs/components-types</strong></li>
+   - README updated with archive notice
+   - Points to <code>larcjs/larc/packages/ui-types</code>
+   - Commit: <code>5ddcfeb</code>
+<li>✅ <strong>larcjs/site</strong></li>
+   - README updated with archive notice
+   - Points to <code>larcjs/larc/docs/site</code>
+   - Commit: <code>81f5066</code>
+<hr>
+<h2>⚠️ Next Step: Archive on GitHub</h2>
+<p>These repositories need to be <strong>archived</strong> on GitHub (not deleted). Archiving makes them read-only while preserving all history, issues, and pull requests.</p>
+<h3>How to Archive a Repository on GitHub</h3>
+<p>For each repository listed above:</p>
+<li><strong>Navigate to the repository on GitHub:</strong></li>
+   - https://github.com/larcjs/core-types
+   - https://github.com/larcjs/components-types
+   - https://github.com/larcjs/site
+<li><strong>Go to Settings:</strong></li>
+   - Click the "Settings" tab at the top of the repository page
+   - (You need admin/owner access)
+<li><strong>Scroll to the Danger Zone:</strong></li>
+   - Scroll all the way down to the bottom
+   - Find the "Danger Zone" section
+<li><strong>Archive the repository:</strong></li>
+   - Click "Archive this repository"
+   - Read the warning about what archiving does
+   - Type the repository name to confirm
+   - Click "I understand the consequences, archive this repository"
+<li><strong>Verify:</strong></li>
+   - The repository will show an "Archived" badge
+   - You can unarchive it later if needed
+   - All content remains accessible (read-only)
+<hr>
+<h2>📋 Repositories to Archive</h2>
+<h3>1. larcjs/core-types</h3>
+<ul><li><strong>URL:</strong> https://github.com/larcjs/core-types</li>
+<li><strong>Reason:</strong> Moved to monorepo at <code>larcjs/larc/packages/core-types</code></li>
+<li><strong>Archive Message Suggestion:</strong> "This repository has been archived and moved to larcjs/larc/packages/core-types"</li>
+</ul>
+<h3>2. larcjs/components-types</h3>
+<ul><li><strong>URL:</strong> https://github.com/larcjs/components-types</li>
+<li><strong>Reason:</strong> Moved to monorepo at <code>larcjs/larc/packages/ui-types</code></li>
+<li><strong>Archive Message Suggestion:</strong> "This repository has been archived and moved to larcjs/larc/packages/ui-types"</li>
+</ul>
+<h3>3. larcjs/site</h3>
+<ul><li><strong>URL:</strong> https://github.com/larcjs/site</li>
+<li><strong>Reason:</strong> Moved to monorepo at <code>larcjs/larc/docs/site</code></li>
+<li><strong>Archive Message Suggestion:</strong> "This repository has been archived and moved to larcjs/larc/docs/site"</li>
+</ul>
+<hr>
+<h2>❌ What NOT to Do</h2>
+<ul><li><strong>DO NOT DELETE</strong> these repositories</li>
+<li><strong>DO NOT</strong> transfer ownership</li>
+<li><strong>DO NOT</strong> make them private</li>
+<li><strong>DO NOT</strong> remove issues or pull requests</li>
+</ul>
+<hr>
+<h2>✅ What Archiving Does</h2>
+<h3>Preserves:</h3>
+<ul><li>✅ All git history</li>
+<li>✅ All issues and pull requests</li>
+<li>✅ All releases</li>
+<li>✅ All documentation</li>
+<li>✅ All stars and watchers</li>
+<li>✅ All commits and branches</li>
+</ul>
+<h3>Changes:</h3>
+<ul><li>⚠️ Makes repository read-only</li>
+<li>⚠️ Shows "Archived" badge prominently</li>
+<li>⚠️ Disables new issues and pull requests</li>
+<li>⚠️ Disables new commits (existing code remains)</li>
+</ul>
+<h3>Benefits:</h3>
+<ul><li>✅ People can still clone and read the code</li>
+<li>✅ Old links continue to work</li>
+<li>✅ npm packages that depend on these URLs still work</li>
+<li>✅ History is preserved for reference</li>
+<li>✅ Clear signal that development moved elsewhere</li>
+</ul>
+<hr>
+<h2>🔄 If You Need to Unarchive</h2>
+<p>If you ever need to unarchive a repository:</p>
+<li>Go to Settings</li>
+<li>Scroll to "Danger Zone"</li>
+<li>Click "Unarchive this repository"</li>
+<li>Confirm</li>
+<hr>
+<h2>📊 Archive Summary</h2>
+<p>| Repository | Status | New Location | README Updated |
+|------------|--------|--------------|----------------|
+| larcjs/core-types | ⚠️ Need to archive | <code>larcjs/larc/packages/core-types</code> | ✅ Yes |
+| larcjs/components-types | ⚠️ Need to archive | <code>larcjs/larc/packages/ui-types</code> | ✅ Yes |
+| larcjs/site | ⚠️ Need to archive | <code>larcjs/larc/docs/site</code> | ✅ Yes |</p>
+<hr>
+<h2>🎯 After Archiving</h2>
+<p>Once all three repositories are archived:</p>
+<li>✅ Visitors will see archive notice in README</li>
+<li>✅ Repository will show "Archived" badge</li>
+<li>✅ All links will continue to work</li>
+<li>✅ Documentation points to new locations</li>
+<li>✅ People can still clone for historical reference</li>
+<hr>
+<h2>📝 Alternative: Add Repository Description</h2>
+<p>While archiving, you can also update the repository description (visible at the top):</p>
+<strong>Suggested descriptions:</strong>
+<ul><li><strong>core-types:</strong> "⚠️ ARCHIVED - Moved to larcjs/larc monorepo"</li>
+<li><strong>components-types:</strong> "⚠️ ARCHIVED - Moved to larcjs/larc monorepo"</li>
+<li><strong>site:</strong> "⚠️ ARCHIVED - Moved to larcjs/larc monorepo"</li>
+</ul>
+<hr>
+<h2>✅ Checklist</h2>
+<ul><li>[x] Update README for larcjs/core-types</li>
+<li>[x] Update README for larcjs/components-types</li>
+<li>[x] Update README for larcjs/site</li>
+<li>[x] Push all README changes</li>
+<li>[ ] Archive larcjs/core-types on GitHub</li>
+<li>[ ] Archive larcjs/components-types on GitHub</li>
+<li>[ ] Archive larcjs/site on GitHub</li>
+<li>[ ] (Optional) Update repository descriptions</li>
+</ul>
+<hr>
+<strong>Once you complete the manual archiving step on GitHub, the migration will be 100% complete!</strong> 🎉
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/migration/ARCHIVE-REPOSITORIES.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>@larcjs/core-routing · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - @larcjs/core-routing">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core-routing</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>@larcjs/core-routing</h1>
+<a href="https://img.shields.io/npm/v/@larcjs/core-routing.svg">![Version</a>](https://www.npmjs.com/package/@larcjs/core-routing)
+<a href="https://img.shields.io/badge/license-MIT-green.svg">![License</a>](LICENSE)
+<a href="https://img.shields.io/badge/bundle-8KB%20minified-blue.svg">![Bundle Size</a>](#)
+<blockquote><strong>Dynamic message routing system</strong> - Declarative routing rules for PAN messages</blockquote>
+<p>Add powerful message routing capabilities to LARC Core or Core Lite. Configure message flows declaratively at runtime without hardcoding logic in components.</p>
+<h2>Installation</h2>
+<pre><code class="language-bash"># Requires @larcjs/core or @larcjs/core-lite
+npm install @larcjs/core-routing</code></pre>
+<h2>Quick Start</h2>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import &#039;@larcjs/core-routing&#039;;
+
+// Access routing manager
+const routes = window.pan.routes;
+
+// Add a route
+routes.add({
+  name: &#039;High Temperature Alert&#039;,
+  match: {
+    type: &#039;sensor.temperature&#039;,
+    where: { op: &#039;gt&#039;, path: &#039;payload.value&#039;, value: 30 }
+  },
+  actions: [
+    { type: &#039;EMIT&#039;, message: { type: &#039;alert.highTemp&#039; }, inherit: [&#039;payload&#039;] },
+    { type: &#039;LOG&#039;, level: &#039;warn&#039;, template: &#039;High temp: {{payload.value}}°C&#039; }
+  ]
+});
+&lt;/script&gt;</code></pre>
+<h2>Features</h2>
+<ul><li>🎯 <strong>Declarative Routing</strong> - Define message flows as configuration</li>
+<li>🔀 <strong>Multiple Actions</strong> - Chain EMIT, LOG, FORWARD, CALL actions</li>
+<li>🔍 <strong>Powerful Matching</strong> - Pattern matching with complex predicates</li>
+<li>🔄 <strong>Transform Messages</strong> - Pick, map, or custom transformations</li>
+<li>⚡ <strong>Runtime Configuration</strong> - Add/update/remove routes on the fly</li>
+<li>📊 <strong>Statistics</strong> - Track routing performance and matches</li>
+</ul>
+<h2>Use Cases</h2>
+<h3>Analytics Tracking</h3>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;Track User Events&#039;,
+  match: { tagsAny: [&#039;trackable&#039;], type: [&#039;user.click&#039;, &#039;user.view&#039;] },
+  actions: [{ type: &#039;FORWARD&#039;, topic: &#039;analytics.events&#039; }]
+});</code></pre>
+<h3>Smart Notifications</h3>
+<pre><code class="language-javascript">routes.add({
+  name: &#039;VIP Order Priority&#039;,
+  match: {
+    type: &#039;order.created&#039;,
+    where: {
+      op: &#039;and&#039;,
+      children: [
+        { op: &#039;gte&#039;, path: &#039;payload.total&#039;, value: 1000 },
+        { op: &#039;eq&#039;, path: &#039;payload.customerTier&#039;, value: &#039;vip&#039; }
+      ]
+    }
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: {
+        type: &#039;notification.vip-order&#039;,
+        payload: { priority: &#039;high&#039;, channels: [&#039;email&#039;, &#039;sms&#039;] }
+      }
+    }
+  ]
+});</code></pre>
+<h3>Feature Flags</h3>
+<pre><code class="language-javascript">routes.registerHandler(&#039;feature-router&#039;, (msg) =&gt; {
+  const flags = getFeatureFlags();
+  const topic = flags.newUI ? &#039;ui.v2&#039; : &#039;ui.v1&#039;;
+  window.pan.bus.publish(topic, msg.payload);
+});
+
+routes.add({
+  name: &#039;Feature Flag Router&#039;,
+  match: { type: &#039;app.init&#039; },
+  actions: [{ type: &#039;CALL&#039;, handlerId: &#039;feature-router&#039; }]
+});</code></pre>
+<h2>API Reference</h2>
+<h3>routes.add(config)</h3>
+<p>Add a new route.</p>
+<pre><code class="language-javascript">const route = routes.add({
+  name: &#039;My Route&#039;,
+  match: { /* matching rules */ },
+  transform: { /* optional transform */ },
+  actions: [ /* actions to execute */ ]
+});</code></pre>
+<h3>routes.update(id, changes)</h3>
+<p>Update an existing route.</p>
+<pre><code class="language-javascript">routes.update(route.id, { enabled: false });</code></pre>
+<h3>routes.remove(id)</h3>
+<p>Remove a route.</p>
+<pre><code class="language-javascript">routes.remove(route.id);</code></pre>
+<h3>routes.list()</h3>
+<p>Get all routes.</p>
+<pre><code class="language-javascript">const allRoutes = routes.list();
+console.table(allRoutes);</code></pre>
+<h3>routes.getStats()</h3>
+<p>Get routing statistics.</p>
+<pre><code class="language-javascript">console.log(routes.getStats());
+// {
+//   routesEvaluated: 1234,
+//   routesMatched: 456,
+//   actionsExecuted: 789
+// }</code></pre>
+<h2>Predicates</h2>
+<p>Available operators for matching:</p>
+<ul><li><strong>Comparison:</strong> <code>eq</code>, <code>ne</code>, <code>gt</code>, <code>gte</code>, <code>lt</code>, <code>lte</code></li>
+<li><strong>String:</strong> <code>startsWith</code>, <code>endsWith</code>, <code>contains</code>, <code>matches</code> (regex)</li>
+<li><strong>Logic:</strong> <code>and</code>, <code>or</code>, <code>not</code></li>
+<li><strong>Membership:</strong> <code>in</code>, <code>notIn</code></li>
+<li><strong>Existence:</strong> <code>exists</code>, <code>notExists</code></li>
+</ul>
+<h2>Actions</h2>
+<ul><li><strong>EMIT</strong> - Publish a new message</li>
+<li><strong>FORWARD</strong> - Forward to another topic</li>
+<li><strong>LOG</strong> - Log message (console.log/warn/error)</li>
+<li><strong>CALL</strong> - Call a registered handler function</li>
+</ul>
+<h2>Performance</h2>
+<ul><li>Sub-millisecond message evaluation</li>
+<li>Efficient predicate matching</li>
+<li>Minimal overhead when no routes match</li>
+</ul>
+<h2>Bundle Size</h2>
+<ul><li><strong>Minified:</strong> 8.3KB</li>
+<li><strong>Gzipped:</strong> ~3KB</li>
+</ul>
+<h2>Related Packages</h2>
+<ul><li><strong><a href="../../core">@larcjs/core</a></strong> — Full-featured PAN bus (includes routing)</li>
+<li><strong><a href="../core-lite">@larcjs/core-lite</a></strong> — Lightweight bus (use this package to add routing)</li>
+<li><strong><a href="../core-debug">@larcjs/core-debug</a></strong> — Debug tools</li>
+</ul>
+<h2>License</h2>
+<p>MIT © Chris Robison</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core-routing/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC/PAN Backend Examples · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC/PAN Backend Examples">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">examples</a> / <a href="#">backends</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC/PAN Backend Examples</h1>
+<p>Backend API implementations for LARC/PAN in multiple languages. Choose the language you're most comfortable with!</p>
+<h2>Available Languages</h2>
+<h3>📦 PHP (Recommended for Examples)</h3>
+<strong>Location:</strong> <code>backends/php/</code>
+<p>PHP backends are recommended for the examples because they run directly with PHP's built-in server without requiring a separate process. Perfect for quick prototyping and learning.</p>
+<ul><li>✅ No separate server process needed</li>
+<li>✅ Works with <code>php -S localhost:8000</code></li>
+<li>✅ Commonly available on shared hosting</li>
+<li>✅ Simple deployment</li>
+</ul>
+<strong><a href="php/">View PHP Documentation →</a></strong>
+<h3>🟢 Node.js</h3>
+<strong>Location:</strong> <code>backends/nodejs/</code>
+<p>Modern JavaScript backend implementations using native Node.js HTTP server (no Express). Great for JavaScript developers who want to keep everything in one language.</p>
+<ul><li>✅ Same language as frontend</li>
+<li>✅ Non-blocking I/O</li>
+<li>✅ Rich npm ecosystem</li>
+<li>✅ Great for real-time apps</li>
+</ul>
+<strong><a href="nodejs/README.md">View Node.js Documentation →</a></strong>
+<h3>🐍 Python</h3>
+<strong>Location:</strong> <code>backends/python/</code>
+<p>Flask-based implementations perfect for Python developers and data science workflows. Python's simplicity makes these backends very approachable for beginners.</p>
+<ul><li>✅ Extremely readable code</li>
+<li>✅ Built-in SQLite support</li>
+<li>✅ Flask is lightweight and simple</li>
+<li>✅ Great for data-driven apps</li>
+</ul>
+<strong><a href="python/README.md">View Python Documentation →</a></strong>
+<h2>Backend APIs</h2>
+<p>Each language implements the same set of APIs:</p>
+<h3>1. <strong>Legacy API</strong> (Simple Database API)</h3>
+<ul><li>Port: 3000</li>
+<li>No authentication</li>
+<li>List resources, get data, describe tables</li>
+<li>Perfect for getting started</li>
+</ul>
+<h3>2. <strong>Secure API</strong> (Production-Ready)</h3>
+<ul><li>Port: 3001</li>
+<li>Authentication required</li>
+<li>CSRF protection, rate limiting</li>
+<li>Resource whitelisting</li>
+<li>Security headers</li>
+</ul>
+<h3>3. <strong>Authentication API</strong></h3>
+<ul><li>Port: 3002</li>
+<li>JWT token-based auth</li>
+<li>Login, logout, refresh, check status</li>
+<li>Demo credentials provided</li>
+</ul>
+<h3>4. <strong>SSE Server</strong> (Real-Time Events)</h3>
+<ul><li>Port: 3003</li>
+<li>Server-Sent Events for PAN messaging</li>
+<li>Subscribe to topics with wildcards</li>
+<li>Publish and broadcast events</li>
+<li>File-backed persistence</li>
+</ul>
+<h2>Quick Start</h2>
+<h3>PHP</h3>
+<pre><code class="language-bash">cd backends/php
+php -S localhost:3000 api-legacy.php</code></pre>
+<h3>Node.js</h3>
+<pre><code class="language-bash">cd backends/nodejs
+npm install
+npm run all  # Runs all servers</code></pre>
+<h3>Python</h3>
+<pre><code class="language-bash">cd backends/python
+pip install -r requirements.txt
+python3 api-legacy.py</code></pre>
+<h2>Database Configuration</h2>
+<p>All backends share the same <code>.env</code> configuration format:</p>
+<pre><code class="language-ini">[db]
+type=mysql          # or sqlite
+host=localhost
+user=root
+pass=
+db=test
+
+# For SQLite
+# type=sqlite
+# file=pan_demo.db
+
+[demo]
+mode=true
+
+[security]
+jwt_secret=change-this-secret-in-production</code></pre>
+<h2>Which Language Should You Choose?</h2>
+<h3>Choose PHP if:</h3>
+<ul><li>You're running the examples for learning</li>
+<li>You want the simplest setup</li>
+<li>You have shared hosting</li>
+<li>You don't want to manage server processes</li>
+</ul>
+<h3>Choose Node.js if:</h3>
+<ul><li>You're already using JavaScript for frontend</li>
+<li>You want non-blocking I/O</li>
+<li>You're building real-time applications</li>
+<li>You prefer the npm ecosystem</li>
+</ul>
+<h3>Choose Python if:</h3>
+<ul><li>You're a Python developer</li>
+<li>You're working with data science/ML</li>
+<li>You want the most readable code</li>
+<li>You're building data-driven applications</li>
+</ul>
+<h2>Feature Comparison</h2>
+<p>| Feature | PHP | Node.js | Python |
+|---------|-----|---------|--------|
+| <strong>Setup Simplicity</strong> | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| <strong>Built-in Server</strong> | ✓ | ✓ | ✓ (dev) |
+| <strong>MySQL Support</strong> | ✓ | ✓ | ✓ |
+| <strong>SQLite Support</strong> | ✓ | ✓ | ✓ (built-in) |
+| <strong>Shared Hosting</strong> | ✓ | Limited | Limited |
+| <strong>Real-time</strong> | ✓ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| <strong>Async/Await</strong> | ✓ | ✓ (native) | ✓ |
+| <strong>Type Safety</strong> | ✓ (8.0+) | ✓ (TypeScript) | ✓ (type hints) |</p>
+<h2>Example HTML Files</h2>
+<p>The HTML examples in the parent directory use <strong>PHP backends by default</strong> because they're the easiest to get started with. To use Node.js or Python backends instead, simply change the API URLs in the HTML files:</p>
+<pre><code class="language-javascript">// Default (PHP)
+const API_URL = &#039;api.php&#039;;
+
+// Node.js
+const API_URL = &#039;http://localhost:3001/&#039;;
+
+// Python
+const API_URL = &#039;http://localhost:3001/&#039;;</code></pre>
+<h2>Production Deployment</h2>
+<h3>PHP</h3>
+<pre><code class="language-bash"># With Apache/Nginx + PHP-FPM
+# Or use PHP&#039;s built-in server (dev only)
+php -S 0.0.0.0:8000 api.php</code></pre>
+<h3>Node.js</h3>
+<pre><code class="language-bash"># With PM2
+npm install -g pm2
+pm2 start api.js --name &quot;larc-api&quot;</code></pre>
+<h3>Python</h3>
+<pre><code class="language-bash"># With Gunicorn
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:3000 api-legacy:app</code></pre>
+<h2>Security Notes</h2>
+<p>⚠️ <strong>Important:</strong> These examples are configured for <strong>development</strong> use. Before deploying to production:</p>
+<li>Change all secrets and JWT keys</li>
+<li>Disable demo mode</li>
+<li>Use HTTPS everywhere</li>
+<li>Configure proper CORS origins</li>
+<li>Set up proper database authentication</li>
+<li>Enable logging and monitoring</li>
+<li>Use environment variables (not <code>.env</code> files)</li>
+<li>Review and harden security settings</li>
+<h2>Contributing</h2>
+<p>When adding new backend functionality:</p>
+<li>Implement in PHP first (as the reference)</li>
+<li>Port to Node.js and Python</li>
+<li>Ensure consistent API interfaces</li>
+<li>Update all three README files</li>
+<li>Test with the example HTML files</li>
+<h2>License</h2>
+<p>MIT © LARC Contributors</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/packages/examples/backends/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

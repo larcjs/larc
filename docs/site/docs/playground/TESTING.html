@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Playground - Testing Guide · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Playground - Testing Guide">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">playground</a> / <span>TESTING</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Playground - Testing Guide</h1>
+<h2>Setup</h2>
+<li><strong>Server is running at:</strong> http://localhost:8080</li>
+<li><strong>Playground URL:</strong> http://localhost:8080/playground/</li>
+<li><strong>Registry:</strong> 49 components across 10 categories</li>
+<h2>Testing Checklist</h2>
+<h3>Initial Load</h3>
+<ul><li>[ ] Page loads without errors</li>
+<li>[ ] All 3 panels visible (palette, canvas, properties)</li>
+<li>[ ] Header shows "LARC Playground" with buttons</li>
+<li>[ ] Component palette shows categories</li>
+<li>[ ] Canvas shows empty state message</li>
+<li>[ ] Properties panel shows "Select a component" message</li>
+</ul>
+<h3>Component Palette</h3>
+<ul><li>[ ] All 10 categories are displayed</li>
+<li>[ ] Each category shows component count</li>
+<li>[ ] Components have icons and names</li>
+<li>[ ] Search box is visible and functional</li>
+<li>[ ] Can expand/collapse categories</li>
+</ul>
+<h3>Search Functionality</h3>
+<ul><li>[ ] Type "router" - should show routing components</li>
+<li>[ ] Type "store" - should show state management components</li>
+<li>[ ] Type "form" - should show form components</li>
+<li>[ ] Clear search - all components return</li>
+<li>[ ] Case-insensitive search works</li>
+</ul>
+<h3>Adding Components to Canvas</h3>
+<ul><li>[ ] Click "pan-router" - adds to canvas</li>
+<li>[ ] Click "pan-store" - adds to canvas</li>
+<li>[ ] Click "pan-table" - adds to canvas</li>
+<li>[ ] Empty state message disappears</li>
+<li>[ ] Components appear in preview area</li>
+<li>[ ] Each component gets selection border on add</li>
+</ul>
+<h3>Component Selection</h3>
+<ul><li>[ ] Click a component - gets selected (blue border)</li>
+<li>[ ] Properties panel updates with component info</li>
+<li>[ ] Component icon appears in properties</li>
+<li>[ ] Component name and description show</li>
+<li>[ ] Attributes list appears (if any)</li>
+<li>[ ] Click another component - selection changes</li>
+<li>[ ] Click canvas background - deselects all</li>
+</ul>
+<h3>Properties Editing</h3>
+<ul><li>[ ] Select component with attributes</li>
+<li>[ ] Change text attribute - updates live</li>
+<li>[ ] Change number attribute - updates live</li>
+<li>[ ] Toggle boolean attribute - updates live</li>
+<li>[ ] Changes reflect immediately on canvas</li>
+</ul>
+<h3>Canvas Controls</h3>
+<ul><li>[ ] Viewport dropdown shows Desktop/Tablet/Mobile</li>
+<li>[ ] Change to Tablet - canvas resizes</li>
+<li>[ ] Change to Mobile - canvas resizes smaller</li>
+<li>[ ] Change back to Desktop - full width</li>
+<li>[ ] "Clear All" button removes all components</li>
+<li>[ ] Empty state returns after clear</li>
+</ul>
+<h3>Code Export</h3>
+<ul><li>[ ] Click "View Code" button</li>
+<li>[ ] Bottom panel appears</li>
+<li>[ ] HTML code is displayed</li>
+<li>[ ] Code includes DOCTYPE and proper structure</li>
+<li>[ ] Code includes pan-bus</li>
+<li>[ ] Code includes all added components</li>
+<li>[ ] Components have correct attributes</li>
+<li>[ ] Click "Copy" - copies to clipboard</li>
+<li>[ ] Button shows "Copied!" feedback</li>
+<li>[ ] Click "Download" - downloads HTML file</li>
+<li>[ ] Click "Hide Code" - panel disappears</li>
+</ul>
+<h3>PAN Bus Monitor</h3>
+<ul><li>[ ] Click "PAN Monitor" button</li>
+<li>[ ] Bottom panel shows bus monitor</li>
+<li>[ ] Code exporter hides</li>
+<li>[ ] Monitor shows message list</li>
+<li>[ ] Add component - see messages</li>
+<li>[ ] Filter by topic works</li>
+<li>[ ] Clear log button works</li>
+<li>[ ] Click "Hide Monitor" - panel disappears</li>
+</ul>
+<h3>Delete Component</h3>
+<ul><li>[ ] Select a component</li>
+<li>[ ] Click "Delete Component" in properties</li>
+<li>[ ] Component removed from canvas</li>
+<li>[ ] Properties panel returns to "no selection"</li>
+<li>[ ] Other components remain</li>
+</ul>
+<h3>Edge Cases</h3>
+<ul><li>[ ] Add same component multiple times</li>
+<li>[ ] Delete all components one by one</li>
+<li>[ ] Search with no results</li>
+<li>[ ] Rapid clicking components</li>
+<li>[ ] Export code with no components</li>
+<li>[ ] Change properties rapidly</li>
+<li>[ ] Switch between viewport sizes rapidly</li>
+</ul>
+<h3>Browser Compatibility</h3>
+<ul><li>[ ] Test in Chrome</li>
+<li>[ ] Test in Firefox</li>
+<li>[ ] Test in Safari</li>
+<li>[ ] Test in Edge</li>
+</ul>
+<h3>Console Checks</h3>
+<ul><li>[ ] Open browser dev tools</li>
+<li>[ ] No errors in console</li>
+<li>[ ] No 404s for resources</li>
+<li>[ ] Component imports successful</li>
+<li>[ ] Registry loads successfully</li>
+</ul>
+<h2>Known Issues to Watch For</h2>
+<li><strong>Path Resolution</strong>: Components should load from <code>../components/</code></li>
+<li><strong>Pan-bus</strong>: Should initialize without errors</li>
+<li><strong>Dynamic Imports</strong>: May fail for components not yet implemented</li>
+<li><strong>CORS</strong>: Should not be an issue with local server</li>
+<li><strong>Missing Components</strong>: Some components may not have full implementation</li>
+<h2>Success Criteria</h2>
+<ul><li>✅ Can add at least 5 different components</li>
+<li>✅ Properties panel shows and edits attributes</li>
+<li>✅ Code export generates valid HTML</li>
+<li>✅ Search filters components correctly</li>
+<li>✅ No critical errors in console</li>
+<li>✅ Responsive viewport controls work</li>
+<li>✅ Delete and clear functionality works</li>
+</ul>
+<h2>Reporting Issues</h2>
+<p>If you find bugs, note:
+<li>Component name (if applicable)</li>
+<li>Steps to reproduce</li>
+<li>Expected vs actual behavior</li>
+<li>Browser and version</li>
+<li>Console errors (if any)</li></p>
+<h2>Next Steps After Testing</h2>
+<li>Fix any critical bugs found</li>
+<li>Add missing component implementations</li>
+<li>Improve error handling</li>
+<li>Add keyboard shortcuts</li>
+<li>Deploy to GitHub Pages</li>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/playground/TESTING.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
