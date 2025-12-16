@@ -6,6 +6,13 @@
 (function() {
   'use strict';
 
+  // Debug logging - enable via: chrome.storage.local.set({ panDevToolsDebug: true })
+  let debugEnabled = false;
+  chrome.storage.local.get('panDevToolsDebug', (result) => {
+    debugEnabled = result.panDevToolsDebug === true;
+  });
+  const debug = (...args) => debugEnabled && console.log('[PAN DevTools]', ...args);
+
   // State
   const state = {
     messages: [],
@@ -235,7 +242,7 @@
           messageId: state.selectedMessage.id
         });
 
-        console.log('Replaying message:', state.selectedMessage.id);
+        debug('Replaying message:', state.selectedMessage.id);
       }
     });
   }
@@ -321,7 +328,7 @@
         if (data.messages && Array.isArray(data.messages)) {
           state.messages = data.messages;
           applyFilters();
-          console.log(`Imported ${data.messages.length} messages`);
+          debug(`Imported ${data.messages.length} messages`);
         }
       } catch (err) {
         alert('Failed to import messages: ' + err.message);
@@ -355,7 +362,7 @@
     // Use the inspected tab ID, not the active tab
     chrome.tabs.sendMessage(tabId, { type: 'GET_COMPONENTS' }, (response) => {
       if (chrome.runtime.lastError) {
-        console.error('[PAN DevTools] Failed to get components:', chrome.runtime.lastError);
+        debug('Failed to get components:', chrome.runtime.lastError);
         renderComponents([]);
         return;
       }
@@ -404,11 +411,11 @@
         if (response && Array.isArray(response)) {
           state.messages = response;
           applyFilters();
-          console.log(`Loaded ${response.length} messages from page`);
+          debug(`Loaded ${response.length} messages from page`);
         }
       });
     }
   });
 
-  console.log('[PAN Inspector] Panel loaded');
+  debug('Panel loaded');
 })();

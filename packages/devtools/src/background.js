@@ -3,6 +3,18 @@
  * Routes messages between content scripts and DevTools panels
  */
 
+// Debug logging - enable via: chrome.storage.local.set({ panDevToolsDebug: true })
+let debugEnabled = false;
+chrome.storage.local.get('panDevToolsDebug', (result) => {
+  debugEnabled = result.panDevToolsDebug === true;
+});
+chrome.storage.onChanged.addListener((changes) => {
+  if (changes.panDevToolsDebug) {
+    debugEnabled = changes.panDevToolsDebug.newValue === true;
+  }
+});
+const debug = (...args) => debugEnabled && console.log('[PAN DevTools]', ...args);
+
 // Store connections to DevTools panels
 const connections = new Map();
 
@@ -17,7 +29,7 @@ chrome.runtime.onConnect.addListener(function(port) {
         // Store connection with inspected tab ID
         connections.set(tabId, port);
 
-        console.log('[PAN DevTools] Panel connected for tab', tabId);
+        debug('Panel connected for tab', tabId);
       }
     });
 
@@ -27,7 +39,7 @@ chrome.runtime.onConnect.addListener(function(port) {
       for (const [tabId, p] of connections.entries()) {
         if (p === port) {
           connections.delete(tabId);
-          console.log('[PAN DevTools] Panel disconnected for tab', tabId);
+          debug('Panel disconnected for tab', tabId);
           break;
         }
       }
@@ -46,7 +58,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       try {
         port.postMessage(message);
       } catch (e) {
-        console.error('[PAN DevTools] Error forwarding message:', e);
+        debug('Error forwarding message:', e);
         connections.delete(tabId);
       }
     }
@@ -55,4 +67,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return true;
 });
 
-console.log('[PAN DevTools] Background service worker loaded');
+debug('Background service worker loaded');

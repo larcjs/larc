@@ -10,6 +10,13 @@
   if (window.__panDevToolsInjected) return;
   window.__panDevToolsInjected = true;
 
+  // Debug logging - only outputs if pan-bus has debug="true" attribute
+  const isDebug = () => {
+    const bus = document.querySelector('pan-bus');
+    return bus?.hasAttribute('debug') && bus.getAttribute('debug') !== 'false';
+  };
+  const debug = (...args) => isDebug() && console.log('[PAN DevTools]', ...args);
+
   // Storage for message history
   const messageHistory = [];
   const maxHistory = 10000;
@@ -20,7 +27,7 @@
   EventTarget.prototype.dispatchEvent = function(event) {
     // Check if this is a PAN event
     if (event instanceof CustomEvent && event.type && event.type.startsWith('pan:')) {
-      console.log('[PAN DevTools] Intercepted event:', event.type, event.detail);
+      debug('Intercepted event:', event.type, event.detail);
 
       const message = {
         type: event.type,
@@ -36,7 +43,7 @@
         messageHistory.shift();
       }
 
-      console.log('[PAN DevTools] Posting message to content script:', message);
+      debug('Posting message to content script:', message);
 
       // Send to content script
       window.postMessage({
@@ -151,5 +158,5 @@
     }
   });
 
-  console.log('[PAN DevTools] Injected and monitoring PAN messages');
+  debug('Injected and monitoring PAN messages');
 })();

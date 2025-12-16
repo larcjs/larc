@@ -6,6 +6,13 @@
 (function() {
   'use strict';
 
+  // Debug logging - enable via: chrome.storage.local.set({ panDevToolsDebug: true })
+  let debugEnabled = false;
+  chrome.storage.local.get('panDevToolsDebug', (result) => {
+    debugEnabled = result.panDevToolsDebug === true;
+  });
+  const debug = (...args) => debugEnabled && console.log('[PAN DevTools]', ...args);
+
   // Inject the script into the page context
   const script = document.createElement('script');
   script.src = chrome.runtime.getURL('src/injected.js');
@@ -28,7 +35,7 @@
         data: event.data.data
       }).catch(err => {
         // Extension might not be ready, ignore
-        console.debug('[PAN DevTools] Failed to send message:', err);
+        debug('Failed to send message:', err);
       });
     }
   });
@@ -93,5 +100,5 @@
     }
   });
 
-  console.log('[PAN DevTools] Content script loaded');
+  debug('Content script loaded');
 })();
