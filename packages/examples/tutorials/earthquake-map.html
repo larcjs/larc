@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Demo Suite · Earthquake Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/grail.css">
+  <style>
+    .map-section {
+      margin-bottom: 24px;
+    }
+    .data-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .data-selector label {
+      font-size: 13px;
+      color: var(--fg-secondary);
+    }
+    .data-selector select {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg-secondary);
+      color: var(--fg);
+      font-family: inherit;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .stat-card {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-card .value {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--accent);
+    }
+    .stat-card .label {
+      font-size: 11px;
+      color: var(--fg-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .legend {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid white;
+    }
+    .split-view {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 16px;
+    }
+    @media (max-width: 900px) {
+      .split-view {
+        grid-template-columns: 1fr;
+      }
+    }
+    .table-container {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <main class="main-region">
+      <header class="main-header">
+        <h1>Live Earthquake Map</h1>
+        <p>
+          Real-time earthquake data from USGS displayed on an interactive Leaflet map.
+          Marker size corresponds to earthquake magnitude.
+        </p>
+        <div class="badge-row">
+          <span class="badge">USGS Data</span>
+          <span class="badge">Leaflet.js</span>
+          <span class="badge">OpenStreetMap</span>
+          <span class="badge">Auto-refresh</span>
+        </div>
+      </header>
+
+      <section class="content-area">
+        <div class="panel">
+          <div class="panel-header">
+            <div>
+              <h2>Earthquake Activity</h2>
+              <div class="subtitle">Data updates every 5 minutes from earthquake.usgs.gov</div>
+            </div>
+            <div class="toolbar">
+              <button type="button" class="button-link" id="refresh-btn">Refresh Now</button>
+              <button type="button" class="button-link" id="fit-bounds-btn">Fit All</button>
+            </div>
+          </div>
+
+          <div class="data-selector">
+            <label>Time Range:</label>
+            <select id="time-range">
+              <option value="hour">Past Hour</option>
+              <option value="day" selected>Past Day</option>
+              <option value="week">Past 7 Days</option>
+              <option value="month">Past 30 Days</option>
+            </select>
+            <label>Minimum Magnitude:</label>
+            <select id="min-mag">
+              <option value="significant">Significant</option>
+              <option value="4.5">4.5+</option>
+              <option value="2.5" selected>2.5+</option>
+              <option value="1.0">1.0+</option>
+              <option value="all">All</option>
+            </select>
+          </div>
+
+          <div class="stats-grid" id="stats">
+            <div class="stat-card">
+              <div class="value" id="stat-count">-</div>
+              <div class="label">Earthquakes</div>
+            </div>
+            <div class="stat-card">
+              <div class="value" id="stat-max-mag">-</div>
+              <div class="label">Max Magnitude</div>
+            </div>
+            <div class="stat-card">
+              <div class="value" id="stat-avg-mag">-</div>
+              <div class="label">Avg Magnitude</div>
+            </div>
+            <div class="stat-card">
+              <div class="value" id="stat-avg-depth">-</div>
+              <div class="label">Avg Depth (km)</div>
+            </div>
+          </div>
+
+          <div class="map-section">
+            <pan-leaflet-map
+              id="earthquake-map"
+              resource="earthquakes"
+              lat-field="lat"
+              lng-field="lng"
+              label-field="place"
+              detail-fields="mag,time,depth,type"
+              size-field="mag"
+              size-min="4"
+              size-max="30"
+              color="#e74c3c"
+              height="500px"
+              center-lat="20"
+              center-lng="-100"
+              zoom="3">
+            </pan-leaflet-map>
+
+            <div class="legend">
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #e74c3c; width: 8px; height: 8px;"></div>
+                <span>Mag 2.5</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #e74c3c; width: 14px; height: 14px;"></div>
+                <span>Mag 4.0</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #e74c3c; width: 20px; height: 20px;"></div>
+                <span>Mag 5.5</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-dot" style="background: #e74c3c; width: 28px; height: 28px;"></div>
+                <span>Mag 7.0+</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="split-view">
+            <div class="table-container">
+              <pan-data-table
+                resource="earthquakes"
+                columns="mag,place,time,depth">
+              </pan-data-table>
+            </div>
+            <div>
+              <h3 style="margin-bottom: 12px; font-size: 14px;">Component Code</h3>
+              <pre style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; font-size: 11px; overflow-x: auto; line-height: 1.6;">&lt;pan-leaflet-map
+  resource="earthquakes"
+  lat-field="lat"
+  lng-field="lng"
+  label-field="place"
+  detail-fields="mag,time,depth,type"
+  size-field="mag"
+  size-min="4"
+  size-max="30"
+  color="#e74c3c"
+  height="500px"&gt;
+&lt;/pan-leaflet-map&gt;
+
+&lt;pan-open-data-connector
+  resource="earthquakes"
+  url="...usgs.gov/summary/2.5_day.geojson"
+  path="features"
+  transform="transformEarthquake"
+  refresh-interval="300"&gt;
+&lt;/pan-open-data-connector&gt;</pre>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Data Connector - URL will be updated dynamically -->
+  <pan-open-data-connector
+    id="earthquake-connector"
+    resource="earthquakes"
+    url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson"
+    path="features"
+    transform="transformEarthquake"
+    refresh-interval="300">
+  </pan-open-data-connector>
+
+  <!-- Transform Function -->
+  <script>
+    // Transform USGS earthquake data - extract coordinates and flatten properties
+    window.transformEarthquake = function(feature) {
+      const props = feature.properties || {};
+      const coords = feature.geometry?.coordinates || [];
+
+      // USGS coordinates are [longitude, latitude, depth]
+      const lng = coords[0];
+      const lat = coords[1];
+      const depth = coords[2];
+
+      // Parse magnitude as number for proper sorting/sizing
+      const mag = typeof props.mag === 'number' ? props.mag : parseFloat(props.mag) || 0;
+
+      return {
+        id: feature.id,
+        lat: lat,
+        lng: lng,
+        mag: mag,
+        magDisplay: mag.toFixed(1),
+        place: props.place || 'Unknown location',
+        time: new Date(props.time).toLocaleString(),
+        timestamp: props.time,
+        depth: depth ? depth.toFixed(1) + ' km' : '-',
+        depthNum: depth || 0,
+        type: props.type || 'earthquake',
+        tsunami: props.tsunami ? 'Yes' : 'No',
+        url: props.url,
+        felt: props.felt || 0,
+        alert: props.alert || 'none'
+      };
+    };
+  </script>
+
+  <!-- Load PAN components -->
+  <script type="module">
+    import '../../core/pan-bus.mjs';
+    import '../../ui/pan-open-data-connector.mjs';
+    import '../../ui/pan-leaflet-map.mjs';
+    import '../src/pan.mjs';
+  </script>
+
+  <!-- App Logic -->
+  <script type="module">
+    import { PanClient } from '../../core/pan-client.mjs';
+    const pc = new PanClient();
+
+    const connector = document.getElementById('earthquake-connector');
+    const map = document.getElementById('earthquake-map');
+    const timeRange = document.getElementById('time-range');
+    const minMag = document.getElementById('min-mag');
+
+    // Build USGS URL from selections
+    function buildUrl() {
+      const time = timeRange.value;
+      const mag = minMag.value;
+      return `https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/${mag}_${time}.geojson`;
+    }
+
+    // Update connector URL
+    function updateData() {
+      const url = buildUrl();
+      connector.setAttribute('url', url);
+      // Trigger refresh
+      pc.publish({ topic: 'earthquakes.list.get', data: {} });
+    }
+
+    // Event listeners
+    timeRange.addEventListener('change', updateData);
+    minMag.addEventListener('change', updateData);
+
+    document.getElementById('refresh-btn')?.addEventListener('click', () => {
+      pc.publish({ topic: 'earthquakes.list.get', data: {} });
+    });
+
+    document.getElementById('fit-bounds-btn')?.addEventListener('click', () => {
+      map.fitBounds();
+    });
+
+    // Update stats when data changes
+    pc.subscribe('earthquakes.list.state', (m) => {
+      const items = m.data?.items || [];
+
+      // Count
+      document.getElementById('stat-count').textContent = items.length;
+
+      if (items.length > 0) {
+        // Max magnitude
+        const maxMag = Math.max(...items.map(i => i.mag || 0));
+        document.getElementById('stat-max-mag').textContent = maxMag.toFixed(1);
+
+        // Average magnitude
+        const avgMag = items.reduce((sum, i) => sum + (i.mag || 0), 0) / items.length;
+        document.getElementById('stat-avg-mag').textContent = avgMag.toFixed(1);
+
+        // Average depth
+        const avgDepth = items.reduce((sum, i) => sum + (i.depthNum || 0), 0) / items.length;
+        document.getElementById('stat-avg-depth').textContent = avgDepth.toFixed(1);
+      } else {
+        document.getElementById('stat-max-mag').textContent = '-';
+        document.getElementById('stat-avg-mag').textContent = '-';
+        document.getElementById('stat-avg-depth').textContent = '-';
+      }
+    }, { retained: true });
+  </script>
+
+  <pan-bus></pan-bus>
+</body>
+</html>

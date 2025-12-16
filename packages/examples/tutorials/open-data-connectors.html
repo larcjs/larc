@@ -256,8 +256,11 @@
     window.transformEarthquake = function(feature) {
       const props = feature.properties || {};
       const coords = feature.geometry?.coordinates || [];
+      // USGS coordinates are [longitude, latitude, depth]
       return {
         id: feature.id,
+        lat: coords[1],
+        lng: coords[0],
         mag: props.mag?.toFixed(1) || '-',
         place: props.place || 'Unknown',
         time: new Date(props.time).toLocaleString(),
