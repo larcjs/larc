@@ -79,6 +79,10 @@
       font-weight: 600;
       color: var(--accent);
     }
+    /* Override grail.css to allow scrolling */
+    .content-area {
+      overflow: auto !important;
+    }
   </style>
 </head>
 <body>
@@ -294,15 +298,11 @@
     };
   </script>
 
-  <script type="module">
-    // Load PAN components
-    import '../../core/pan-bus.mjs';
-    import '../../ui/pan-open-data-connector.mjs';
-    import '../src/pan.mjs';
-  </script>
+  <!-- Load PAN - auto-discovers and loads components -->
+  <script src="/pan.mjs" type="module"></script>
 
   <script type="module">
-    import { PanClient } from '../../core/pan-client.mjs';
+    import { PanClient } from '/core/pan-client.mjs';
     const pc = new PanClient();
 
     // Tab switching

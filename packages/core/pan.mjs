@@ -42,7 +42,7 @@ const userConfig = (typeof window !== 'undefined' && window.panAutoload) || {};
  * @type {AutoloadConfig}
  */
 const config = {
-  paths: userConfig.paths || ['./'],
+  paths: userConfig.paths || ['./', '/ui/', '/core/'],
   extension: userConfig.extension || '.mjs',
   rootMargin: userConfig.rootMargin ?? 600,
 };

@@ -4,6 +4,9 @@
  * Displays geographic data from PAN data sources on an OpenStreetMap base layer.
  * Automatically subscribes to resource list state and plots markers.
  *
+ * Note: This component uses Shadow DOM. Leaflet CSS is loaded inside the shadow root
+ * since external stylesheets don't penetrate Shadow DOM boundaries.
+ *
  * Attributes:
  * - resource: PAN resource name to subscribe to (e.g., "earthquakes")
  * - lat-field: field name containing latitude (default: "lat")
@@ -114,6 +117,7 @@ export class PanLeafletMap extends HTMLElement {
 
   _render() {
     this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="${LEAFLET_CSS}">
       <style>
         :host {
           display: block;

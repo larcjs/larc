@@ -93,6 +93,10 @@
       border: 1px solid var(--border);
       border-radius: 8px;
     }
+    /* Override grail.css to allow scrolling */
+    .content-area {
+      overflow: auto !important;
+    }
   </style>
 </head>
 <body>
@@ -281,17 +285,12 @@
     };
   </script>
 
-  <!-- Load PAN components -->
-  <script type="module">
-    import '../../core/pan-bus.mjs';
-    import '../../ui/pan-open-data-connector.mjs';
-    import '../../ui/pan-leaflet-map.mjs';
-    import '../src/pan.mjs';
-  </script>
+  <!-- Load PAN - auto-discovers and loads components -->
+  <script src="/pan.mjs" type="module"></script>
 
   <!-- App Logic -->
   <script type="module">
-    import { PanClient } from '../../core/pan-client.mjs';
+    import { PanClient } from '/core/pan-client.mjs';
     const pc = new PanClient();
 
     const connector = document.getElementById('earthquake-connector');
