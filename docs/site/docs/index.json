@@ -6,6 +6,18 @@
       "category": ".changeset"
     }
   ],
+  ".github/ISSUE_TEMPLATE": [
+    {
+      "title": "bug_report",
+      "path": ".github/ISSUE_TEMPLATE/bug_report.html",
+      "category": ".github/ISSUE_TEMPLATE"
+    },
+    {
+      "title": "feature_request",
+      "path": ".github/ISSUE_TEMPLATE/feature_request.html",
+      "category": ".github/ISSUE_TEMPLATE"
+    }
+  ],
   ".github/profile": [
     {
       "title": "LARC — Lightweight Asynchronous Relay Core",

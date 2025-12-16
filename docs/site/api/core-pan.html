@@ -24,118 +24,69 @@
 
     <section class="section">
       <div class="description">
-        Automatically discovers and loads custom elements as they approach the viewport using<br>IntersectionObserver. Eliminates the need for manual imports and customElements.define()<br>calls, enabling true zero-build development.
+        Automatically discovers and loads custom elements as they approach the viewport.<br>Zero build, zero config - just include pan.mjs and use your components.
       </div>
     </section>
 
     <section class="section">
       <h2>Methods</h2>
 
-      <div class="method" id="defaults">
-        <h3><code>defaults()</code></h3>
-        <div class="description">Automatically discovers and loads custom elements as they approach the viewport using<br>IntersectionObserver. Eliminates the need for manual imports and customElements.define()<br>calls, enabling true zero-build development.<br>/<br>/**<br>Default configuration for autoloader</div>
+      <div class="method" id="config">
+        <h3><code>config()</code></h3>
+        <div class="description">Automatically discovers and loads custom elements as they approach the viewport.<br>Zero build, zero config - just include pan.mjs and use your components.<br>/<br>// Merge user configuration from window.panAutoload if provided<br>const userConfig = (typeof window !== 'undefined' && window.panAutoload) || {};<br>/**<br>Active configuration</div>
 
         <h4>Examples</h4>
 
-        <pre><code>// Local development
-&lt;script type=&quot;module&quot; src=&quot;./pan.mjs&quot;&gt;&lt;/script&gt;
-&lt;!-- Just use your components --&gt;
-&lt;my-widget&gt;&lt;/my-widget&gt;
+        <pre><code>// Simplest usage - just include pan.mjs
+&lt;script type=&quot;module&quot; src=&quot;https://larcjs.com/pan.mjs&quot;&gt;&lt;/script&gt;
 &lt;pan-card&gt;&lt;/pan-card&gt;</code></pre>
 
-        <pre><code>// CDN usage with configuration
+        <pre><code>// Multiple paths - local first, CDN fallback
 &lt;script type=&quot;module&quot;&gt;
   window.panAutoload = {
-    baseUrl: &#039;https://unpkg.com/@larcjs/core/&#039;,
-    extension: &#039;.mjs&#039;
+    paths: [
+      &#039;./&#039;,                              // Check local first
+      &#039;/ui/&#039;,                            // Then project ui folder
+      &#039;https://unpkg.com/@larcjs/ui/&#039;    // CDN fallback
+    ]
   };
 &lt;/script&gt;
-&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core/pan.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+&lt;script type=&quot;module&quot; src=&quot;/pan.mjs&quot;&gt;&lt;/script&gt;</code></pre>
 
-        <pre><code>// CDN + local custom components using script attributes
-&lt;script type=&quot;module&quot;
-  src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core/pan.mjs&quot;
-  data-local-prefix=&quot;app-&quot;
-  data-local-path=&quot;/components/&quot;&gt;
-&lt;/script&gt;
-&lt;!-- app-* components load from /components/, others from CDN --&gt;
-&lt;app-header&gt;&lt;/app-header&gt;
-&lt;pan-data-table&gt;&lt;/pan-data-table&gt;</code></pre>
-
-        <pre><code>// Override component path per-element
-&lt;my-card data-module=&quot;/custom/path/special-card.mjs&quot;&gt;&lt;/my-card&gt;
+        <pre><code>// Override specific component path
+&lt;my-card data-module=&quot;/custom/special-card.mjs&quot;&gt;&lt;/my-card&gt;
 /
 /**</code></pre>
 
       </div>
 
-      <div class="method" id="config">
-        <h3><code>config()</code></h3>
-        <div class="description">Active configuration (merged defaults + script attrs + user config)</div>
+      <div class="method" id="resolvedComponents">
+        <h3><code>resolvedComponents()</code></h3>
+        <div class="description">Cache of successfully resolved component URLs</div>
 
       </div>
 
       <div class="method" id="loading">
         <h3><code>loading()</code></h3>
-        <div class="description">Set of currently loading module URLs to prevent duplicate loads</div>
+        <div class="description">Set of currently loading module URLs</div>
 
       </div>
 
       <div class="method" id="observed">
         <h3><code>observed()</code></h3>
-        <div class="description">WeakSet of observed elements to prevent duplicate observation</div>
-
-      </div>
-
-      <div class="method" id="hasIO">
-        <h3><code>hasIO()</code></h3>
-        <div class="description">Check if IntersectionObserver is available</div>
+        <div class="description">WeakSet of observed elements</div>
 
       </div>
 
       <div class="method" id="io">
         <h3><code>io()</code></h3>
-        <div class="description">IntersectionObserver instance for progressive loading<br>Loads components as they approach the viewport</div>
-
-      </div>
-
-      <div class="method" id="moduleFromTag">
-        <h3><code>moduleFromTag(tag)</code></h3>
-        <div class="description">Constructs module URL from tag name using configured paths</div>
-
-        <h4>Parameters</h4>
-        <table class="params-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-
-            <tr>
-              <td><code>tag</code></td>
-              <td><code>string</code></td>
-              <td>Tag name (e.g., 'my-widget')</td>
-            </tr>
-
-          </tbody>
-        </table>
-
-        <h4>Returns</h4>
-        <p><code>string</code> - Full URL to component module</p>
-
-        <h4>Examples</h4>
-
-        <pre><code>moduleFromTag(&#039;my-widget&#039;)
-// Returns: &#039;https://example.com/components/my-widget.mjs&#039;</code></pre>
+        <div class="description">IntersectionObserver for progressive loading</div>
 
       </div>
 
       <div class="method" id="isCustomTag">
         <h3><code>isCustomTag(node)</code></h3>
-        <div class="description">Checks if a node is a custom element tag that needs loading<br>A custom tag must:<br>- Be an Element (nodeType === 1)<br>- Have a dash in the tag name (web component standard)<br>- Not be already defined in customElements registry</div>
+        <div class="description">Check if a node is an undefined custom element</div>
 
         <h4>Parameters</h4>
         <table class="params-table">
@@ -151,26 +102,20 @@
             <tr>
               <td><code>node</code></td>
               <td><code>Node</code></td>
-              <td>DOM node to check</td>
+              <td></td>
             </tr>
 
           </tbody>
         </table>
 
         <h4>Returns</h4>
-        <p><code>boolean</code> - True if node is an undefined custom element</p>
-
-        <h4>Examples</h4>
-
-        <pre><code>isCustomTag(document.createElement(&#039;my-widget&#039;))  // true (if not defined)
-isCustomTag(document.createElement(&#039;div&#039;))        // false (no dash)
-isCustomTag(document.createElement(&#039;pan-bus&#039;))    // false (if already defined)</code></pre>
+        <p><code>boolean</code> - </p>
 
       </div>
 
-      <div class="method" id="urlFor">
-        <h3><code>urlFor(el)</code></h3>
-        <div class="description">Gets the module URL for an element<br>Respects data-module attribute for custom paths</div>
+      <div class="method" id="resolveComponent">
+        <h3><code>resolveComponent(tag)</code></h3>
+        <div class="description">Try to load a component from multiple paths</div>
 
         <h4>Parameters</h4>
         <table class="params-table">
@@ -184,31 +129,22 @@ isCustomTag(document.createElement(&#039;pan-bus&#039;))    // false (if already
           <tbody>
 
             <tr>
-              <td><code>el</code></td>
-              <td><code>Element</code></td>
-              <td>Element to get URL for</td>
+              <td><code>tag</code></td>
+              <td><code>string</code></td>
+              <td>Component tag name</td>
             </tr>
 
           </tbody>
         </table>
 
         <h4>Returns</h4>
-        <p><code>string</code> - Module URL</p>
-
-        <h4>Examples</h4>
-
-        <pre><code>// Default: uses tag name
-&lt;my-widget&gt;&lt;/my-widget&gt;
-urlFor(el) // Returns: &#039;./my-widget.mjs&#039;
-// Override with data-module
-&lt;my-card data-module=&quot;/custom/special-card.mjs&quot;&gt;&lt;/my-card&gt;
-urlFor(el) // Returns: &#039;/custom/special-card.mjs&#039;</code></pre>
+        <p><code>Promise<string|null></code> - - Resolved URL or null</p>
 
       </div>
 
       <div class="method" id="maybeLoadFor">
         <h3><code>maybeLoadFor(el)</code></h3>
-        <div class="description">Loads the component module for an element if needed<br>- Checks if element is a custom tag<br>- Prevents duplicate loads<br>- Dynamically imports the module<br>- Auto-defines the element if module exports a default class</div>
+        <div class="description">Load component module for an element</div>
 
         <h4>Parameters</h4>
         <table class="params-table">
@@ -224,27 +160,20 @@ urlFor(el) // Returns: &#039;/custom/special-card.mjs&#039;</code></pre>
             <tr>
               <td><code>el</code></td>
               <td><code>Element</code></td>
-              <td>Element to load component for</td>
+              <td></td>
             </tr>
 
           </tbody>
         </table>
 
         <h4>Returns</h4>
-        <p><code>Promise<void></code> - Resolves when load completes or skips</p>
-
-        <h4>Examples</h4>
-
-        <pre><code>// Manual loading (usually not needed - autoload handles this)
-const widget = document.createElement(&#039;my-widget&#039;);
-await maybeLoadFor(widget);
-// Component is now loaded and defined</code></pre>
+        <p><code>Promise<void></code> - </p>
 
       </div>
 
       <div class="method" id="observeTree">
-        <h3><code>observeTree([root=document])</code></h3>
-        <div class="description">Observes a DOM tree for undefined custom elements<br>- Finds all :not(:defined) elements<br>- Sets up IntersectionObserver (or loads immediately if not available)<br>- Prevents duplicate observation with WeakSet</div>
+        <h3><code>observeTree(root)</code></h3>
+        <div class="description">Observe a DOM tree for undefined custom elements</div>
 
         <h4>Parameters</h4>
         <table class="params-table">
@@ -258,62 +187,37 @@ await maybeLoadFor(widget);
           <tbody>
 
             <tr>
-              <td><code>[root=document]</code></td>
+              <td><code>root</code></td>
               <td><code>Document|Element</code></td>
-              <td>Root element to observe</td>
+              <td></td>
             </tr>
 
           </tbody>
         </table>
 
-        <h4>Returns</h4>
-        <p><code>void</code> - </p>
-
-        <h4>Examples</h4>
-
-        <pre><code>// Observe entire document (default)
-observeTree();
-// Observe specific subtree
-const container = document.querySelector(&#039;#dynamic-content&#039;);
-observeTree(container);</code></pre>
-
       </div>
 
       <div class="method" id="setupMutationObserver">
         <h3><code>setupMutationObserver()</code></h3>
-        <div class="description">Sets up MutationObserver to watch for new custom elements<br>Observes:<br>- childList: New elements added to DOM<br>- attributes: data-module attribute changes<br>- subtree: All descendants</div>
+        <div class="description">Set up MutationObserver for dynamic content</div>
 
       </div>
 
       <div class="method" id="ensurePanBus">
         <h3><code>ensurePanBus()</code></h3>
-        <div class="description">Ensures pan-bus element exists and is loaded<br>PAN bus is the backbone of PAN messaging, so it's loaded first<br>- Checks if pan-bus already exists<br>- Creates and inserts it if not found<br>- Loads the appropriate pan-bus version (lite by default)<br>- Uses enhanced version if enable-routing or debug attributes are set</div>
-
-        <h4>Returns</h4>
-        <p><code>Promise<void></code> - Resolves when pan-bus is ready</p>
+        <div class="description">Ensure pan-bus exists and is loaded</div>
 
       </div>
 
       <div class="method" id="init">
         <h3><code>init()</code></h3>
-        <div class="description">Initializes the autoloader<br>- Ensures pan-bus is loaded first<br>- Observes document for undefined elements<br>- Sets up MutationObserver for dynamic content<br>- Uses requestIdleCallback for non-blocking initial scan</div>
+        <div class="description">Initialize the autoloader</div>
 
       </div>
 
       <div class="method" id="panAutoload">
         <h3><code>panAutoload()</code></h3>
-        <div class="description">Public API for pan-autoload<br>Exposed as window.panAutoload and as module exports</div>
-
-        <h4>Examples</h4>
-
-        <pre><code>// Access configuration
-console.log(window.panAutoload.config);
-// Manually observe new content
-const newContent = document.querySelector(&#039;#dynamic&#039;);
-window.panAutoload.observeTree(newContent);
-// Manually load component
-const widget = document.createElement(&#039;my-widget&#039;);
-await window.panAutoload.maybeLoadFor(widget);</code></pre>
+        <div class="description">Public API</div>
 
       </div>
 
