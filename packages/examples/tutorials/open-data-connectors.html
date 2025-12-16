@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Demo Suite · Open Data Connectors</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./assets/grail.css">
+  <style>
+    .data-source-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .data-source-tabs button {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      background: var(--bg-secondary);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      color: var(--fg);
+      transition: all 0.15s ease;
+    }
+    .data-source-tabs button:hover {
+      border-color: var(--accent);
+    }
+    .data-source-tabs button.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .source-info {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+    .source-info code {
+      background: var(--bg-secondary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .source-info .url {
+      word-break: break-all;
+      color: var(--accent);
+    }
+    .connector-code {
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      overflow-x: auto;
+    }
+    .connector-code pre {
+      margin: 0;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .stat {
+      background: var(--bg-secondary);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .stat-value {
+      font-weight: 600;
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <main class="main-region">
+      <header class="main-header">
+        <h1>Open Data Connectors</h1>
+        <p>
+          Demonstrates <code>&lt;pan-open-data-connector&gt;</code> with real-world public APIs.
+          Each example shows how to connect to different data sources without any backend code.
+        </p>
+        <div class="badge-row">
+          <span class="badge">read-only APIs</span>
+          <span class="badge">no auth required</span>
+          <span class="badge">auto-refresh support</span>
+        </div>
+      </header>
+
+      <section class="content-area">
+        <div class="data-source-tabs">
+          <button class="active" data-source="earthquakes">USGS Earthquakes</button>
+          <button data-source="countries">REST Countries</button>
+          <button data-source="posts">JSONPlaceholder</button>
+          <button data-source="github">GitHub Repos</button>
+        </div>
+
+        <!-- Earthquakes Panel -->
+        <section class="panel" id="earthquakes-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Recent Earthquakes</h2>
+              <div class="subtitle">USGS Earthquake Hazards Program - Magnitude 2.5+ (Past Day)</div>
+            </div>
+            <div class="toolbar">
+              <button type="button" class="button-link" id="refresh-earthquakes">Refresh</button>
+            </div>
+          </div>
+          <div class="source-info">
+            <strong>API:</strong> <span class="url">https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson</span><br>
+            <strong>Path:</strong> <code>features</code> &nbsp;|&nbsp;
+            <strong>Transform:</strong> Flattens nested <code>properties</code> and <code>geometry</code>
+          </div>
+          <div class="stats-row" id="earthquakes-stats"></div>
+          <div class="panel-body">
+            <pan-data-table resource="earthquakes" columns="mag,place,time,depth,type"></pan-data-table>
+          </div>
+          <div class="connector-code">
+            <pre>&lt;pan-open-data-connector
+  resource="earthquakes"
+  url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson"
+  path="features"
+  transform="transformEarthquake"
+  refresh-interval="300"&gt;
+&lt;/pan-open-data-connector&gt;</pre>
+          </div>
+        </section>
+
+        <!-- Countries Panel -->
+        <section class="panel hidden" id="countries-panel">
+          <div class="panel-header">
+            <div>
+              <h2>World Countries</h2>
+              <div class="subtitle">REST Countries API - All countries with population data</div>
+            </div>
+            <div class="toolbar">
+              <button type="button" class="button-link" id="refresh-countries">Refresh</button>
+            </div>
+          </div>
+          <div class="source-info">
+            <strong>API:</strong> <span class="url">https://restcountries.com/v3.1/all?fields=name,capital,population,region,flags</span><br>
+            <strong>Path:</strong> <em>(root array)</em> &nbsp;|&nbsp;
+            <strong>Transform:</strong> Extracts <code>name.common</code>, <code>capital[0]</code>, formats population
+          </div>
+          <div class="stats-row" id="countries-stats"></div>
+          <div class="panel-body">
+            <pan-data-table resource="countries" columns="name,capital,population,region"></pan-data-table>
+          </div>
+          <div class="connector-code">
+            <pre>&lt;pan-open-data-connector
+  resource="countries"
+  url="https://restcountries.com/v3.1/all?fields=name,capital,population,region,flags"
+  transform="transformCountry"&gt;
+&lt;/pan-open-data-connector&gt;</pre>
+          </div>
+        </section>
+
+        <!-- Posts Panel -->
+        <section class="panel hidden" id="posts-panel">
+          <div class="panel-header">
+            <div>
+              <h2>Blog Posts</h2>
+              <div class="subtitle">JSONPlaceholder - Fake REST API for testing</div>
+            </div>
+            <div class="toolbar">
+              <button type="button" class="button-link" id="refresh-posts">Refresh</button>
+            </div>
+          </div>
+          <div class="source-info">
+            <strong>API:</strong> <span class="url">https://jsonplaceholder.typicode.com/posts</span><br>
+            <strong>Path:</strong> <em>(root array)</em> &nbsp;|&nbsp;
+            <strong>Transform:</strong> <em>none</em> - data is already flat
+          </div>
+          <div class="stats-row" id="posts-stats"></div>
+          <div class="panel-body">
+            <pan-data-table resource="posts" columns="id,userId,title"></pan-data-table>
+          </div>
+          <div class="connector-code">
+            <pre>&lt;pan-open-data-connector
+  resource="posts"
+  url="https://jsonplaceholder.typicode.com/posts"&gt;
+&lt;/pan-open-data-connector&gt;</pre>
+          </div>
+        </section>
+
+        <!-- GitHub Panel -->
+        <section class="panel hidden" id="github-panel">
+          <div class="panel-header">
+            <div>
+              <h2>GitHub Repositories</h2>
+              <div class="subtitle">GitHub API - Public repositories (no auth required)</div>
+            </div>
+            <div class="toolbar">
+              <button type="button" class="button-link" id="refresh-github">Refresh</button>
+            </div>
+          </div>
+          <div class="source-info">
+            <strong>API:</strong> <span class="url">https://api.github.com/repositories?per_page=50</span><br>
+            <strong>Path:</strong> <em>(root array)</em> &nbsp;|&nbsp;
+            <strong>Transform:</strong> Extracts owner login, formats dates
+          </div>
+          <div class="stats-row" id="github-stats"></div>
+          <div class="panel-body">
+            <pan-data-table resource="github" columns="id,name,owner,html_url"></pan-data-table>
+          </div>
+          <div class="connector-code">
+            <pre>&lt;pan-open-data-connector
+  resource="github"
+  url="https://api.github.com/repositories?per_page=50"
+  transform="transformGitHubRepo"&gt;
+&lt;/pan-open-data-connector&gt;</pre>
+          </div>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <!-- Data Connectors -->
+  <pan-open-data-connector
+    resource="earthquakes"
+    url="https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson"
+    path="features"
+    transform="transformEarthquake">
+  </pan-open-data-connector>
+
+  <pan-open-data-connector
+    resource="countries"
+    url="https://restcountries.com/v3.1/all?fields=name,capital,population,region,flags"
+    transform="transformCountry">
+  </pan-open-data-connector>
+
+  <pan-open-data-connector
+    resource="posts"
+    url="https://jsonplaceholder.typicode.com/posts">
+  </pan-open-data-connector>
+
+  <pan-open-data-connector
+    resource="github"
+    url="https://api.github.com/repositories?per_page=50"
+    transform="transformGitHubRepo">
+  </pan-open-data-connector>
+
+  <!-- Transform Functions -->
+  <script>
+    // Transform USGS earthquake data (nested properties/geometry)
+    window.transformEarthquake = function(feature) {
+      const props = feature.properties || {};
+      const coords = feature.geometry?.coordinates || [];
+      return {
+        id: feature.id,
+        mag: props.mag?.toFixed(1) || '-',
+        place: props.place || 'Unknown',
+        time: new Date(props.time).toLocaleString(),
+        depth: coords[2] ? coords[2].toFixed(1) + ' km' : '-',
+        type: props.type || 'earthquake',
+        tsunami: props.tsunami ? 'Yes' : 'No',
+        url: props.url
+      };
+    };
+
+    // Transform REST Countries data (nested name/capital)
+    window.transformCountry = function(country) {
+      return {
+        name: country.name?.common || 'Unknown',
+        capital: country.capital?.[0] || '-',
+        population: country.population?.toLocaleString() || '-',
+        region: country.region || '-',
+        flag: country.flags?.emoji || ''
+      };
+    };
+
+    // Transform GitHub repo data (extract owner)
+    window.transformGitHubRepo = function(repo) {
+      return {
+        id: repo.id,
+        name: repo.name,
+        owner: repo.owner?.login || '-',
+        html_url: repo.html_url,
+        description: repo.description || '-'
+      };
+    };
+  </script>
+
+  <script type="module">
+    // Load PAN components
+    import '../../core/pan-bus.mjs';
+    import '../../ui/pan-open-data-connector.mjs';
+    import '../src/pan.mjs';
+  </script>
+
+  <script type="module">
+    import { PanClient } from '../../core/pan-client.mjs';
+    const pc = new PanClient();
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.data-source-tabs button');
+    const panels = {
+      earthquakes: document.getElementById('earthquakes-panel'),
+      countries: document.getElementById('countries-panel'),
+      posts: document.getElementById('posts-panel'),
+      github: document.getElementById('github-panel')
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const source = tab.dataset.source;
+
+        // Update active tab
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Show/hide panels
+        Object.entries(panels).forEach(([key, panel]) => {
+          panel.classList.toggle('hidden', key !== source);
+        });
+      });
+    });
+
+    // Refresh buttons
+    document.getElementById('refresh-earthquakes')?.addEventListener('click', () => {
+      pc.publish({ topic: 'earthquakes.list.get', data: {} });
+    });
+    document.getElementById('refresh-countries')?.addEventListener('click', () => {
+      pc.publish({ topic: 'countries.list.get', data: {} });
+    });
+    document.getElementById('refresh-posts')?.addEventListener('click', () => {
+      pc.publish({ topic: 'posts.list.get', data: {} });
+    });
+    document.getElementById('refresh-github')?.addEventListener('click', () => {
+      pc.publish({ topic: 'github.list.get', data: {} });
+    });
+
+    // Stats display
+    function updateStats(resource, data) {
+      const statsEl = document.getElementById(`${resource}-stats`);
+      if (!statsEl) return;
+
+      const items = data.items || [];
+      const loading = data.loading;
+      const error = data.error;
+      const lastUpdated = data.lastUpdated ? new Date(data.lastUpdated).toLocaleTimeString() : '-';
+
+      statsEl.innerHTML = `
+        <div class="stat">Records: <span class="stat-value">${items.length}</span></div>
+        <div class="stat">Status: <span class="stat-value">${loading ? 'Loading...' : error ? 'Error' : 'Ready'}</span></div>
+        <div class="stat">Last Updated: <span class="stat-value">${lastUpdated}</span></div>
+        ${error ? `<div class="stat" style="color: var(--error)">Error: ${error}</div>` : ''}
+      `;
+    }
+
+    // Subscribe to state updates
+    pc.subscribe('earthquakes.list.state', (m) => updateStats('earthquakes', m.data), { retained: true });
+    pc.subscribe('countries.list.state', (m) => updateStats('countries', m.data), { retained: true });
+    pc.subscribe('posts.list.state', (m) => updateStats('posts', m.data), { retained: true });
+    pc.subscribe('github.list.state', (m) => updateStats('github', m.data), { retained: true });
+  </script>
+
+  <pan-bus></pan-bus>
+</body>
+</html>
