@@ -470,13 +470,6 @@
       "category": "docs/books/learning-larc"
     }
   ],
-  "docs/books/learning-larc/build/temp": [
-    {
-      "title": "Learning LARC",
-      "path": "docs/books/learning-larc/build/temp/learning-larc-complete.html",
-      "category": "docs/books/learning-larc/build/temp"
-    }
-  ],
   "docs/books/learning-larc/chapters": [
     {
       "title": "Chapter 1: Philosophy and Background",
