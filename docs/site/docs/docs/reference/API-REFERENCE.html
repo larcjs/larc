@@ -1,0 +1,1499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC API Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC API Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">reference</a> / <span>API-REFERENCE</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC API Reference</h1>
+<blockquote>Comprehensive API documentation for LARC (Lightweight Autonomous Reactive Components)</blockquote>
+<h2>Table of Contents</h2>
+<ul><li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#core-package-larcjscore">Core Package (@larcjs/core)</a></li>
+</ul>  - <a href="#pan-autoloader">PAN Autoloader</a>
+  - <a href="#pan-bus">PAN Bus</a>
+  - <a href="#pan-client">PAN Client</a>
+<ul><li><a href="#configuration">Configuration</a></li>
+<li><a href="#events-reference">Events Reference</a></li>
+<li><a href="#typescript-support">TypeScript Support</a></li>
+<li><a href="#best-practices">Best Practices</a></li>
+<li><a href="#common-pitfalls">Common Pitfalls</a></li>
+</ul>
+<hr>
+<h2>Getting Started</h2>
+<h3>Installation</h3>
+<p>LARC can be used in two ways:</p>
+<strong>1. Local Development (Zero Build)</strong>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My LARC App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Load autoloader --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Use components - they load automatically --&gt;
+  &lt;my-widget&gt;&lt;/my-widget&gt;
+  &lt;pan-card&gt;Hello World&lt;/pan-card&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<strong>2. CDN Usage</strong>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My LARC App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Configure for CDN --&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    window.panAutoload = {
+      baseUrl: &#039;https://unpkg.com/@larcjs/core@latest/&#039;,
+      extension: &#039;.js&#039;
+    };
+  &lt;/script&gt;
+
+  &lt;!-- Load autoloader from CDN --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@latest/src/pan.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Components load from CDN --&gt;
+  &lt;my-widget&gt;&lt;/my-widget&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Counter Demo&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Create a simple counter component --&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import { PanClient } from &#039;/core/pan-client.mjs&#039;;
+
+    class CounterElement extends HTMLElement {
+      constructor() {
+        super();
+        this.count = 0;
+        this.client = new PanClient(this);
+      }
+
+      async connectedCallback() {
+        await this.client.ready();
+
+        // Subscribe to counter updates
+        this.client.subscribe(&#039;counter.value&#039;, (msg) =&gt; {
+          this.count = msg.data;
+          this.render();
+        }, { retained: true });
+
+        this.render();
+
+        // Publish initial value
+        this.client.publish({
+          topic: &#039;counter.value&#039;,
+          data: this.count,
+          retain: true
+        });
+      }
+
+      increment() {
+        this.count++;
+        this.client.publish({
+          topic: &#039;counter.value&#039;,
+          data: this.count,
+          retain: true
+        });
+      }
+
+      render() {
+        this.innerHTML = `
+          &lt;div&gt;
+            &lt;h2&gt;Count: ${this.count}&lt;/h2&gt;
+            &lt;button onclick=&quot;this.parentElement.parentElement.increment()&quot;&gt;
+              Increment
+            &lt;/button&gt;
+          &lt;/div&gt;
+        `;
+      }
+    }
+
+    customElements.define(&#039;x-counter&#039;, CounterElement);
+  &lt;/script&gt;
+
+  &lt;x-counter&gt;&lt;/x-counter&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<hr>
+<h2>Core Package (@larcjs/core)</h2>
+<p>The core package provides three main APIs:</p>
+<li><strong>PAN Autoloader</strong> - Automatic component loading</li>
+<li><strong>PAN Bus</strong> - Message bus for pub/sub communication</li>
+<li><strong>PAN Client</strong> - Simplified API for components</li>
+<hr>
+<h2>PAN Autoloader</h2>
+<p>The autoloader automatically discovers and loads Web Components as they appear in the DOM, eliminating manual imports and <code>customElements.define()</code> calls.</p>
+<h3>Overview</h3>
+<ul><li>Progressive loading with IntersectionObserver</li>
+<li>Automatic component discovery via MutationObserver</li>
+<li>Configurable paths and file extensions</li>
+<li>Support for custom component resolvers</li>
+<li>Zero-build development workflow</li>
+</ul>
+<h3>Configuration</h3>
+<p>#### AutoloadConfig Interface</p>
+<pre><code class="language-typescript">interface AutoloadConfig {
+  baseUrl?: string | null;        // Full CDN URL (e.g., &#039;https://unpkg.com/pan@latest/&#039;)
+  componentsPath?: string;        // Relative path from baseUrl (default: &#039;./&#039;)
+  extension?: string;             // File extension (default: &#039;.mjs&#039;)
+  rootMargin?: number;            // IntersectionObserver margin in px (default: 600)
+  resolvedComponentsPath?: string; // Computed full path (readonly)
+}</code></pre>
+<p>#### Configuration Examples</p>
+<strong>Local Development</strong>
+<pre><code class="language-javascript">// Default configuration works out of the box
+// Components loaded from ./components/ relative to pan.mjs</code></pre>
+<strong>CDN Usage</strong>
+<pre><code class="language-html">&lt;script type=&quot;module&quot;&gt;
+  window.panAutoload = {
+    baseUrl: &#039;https://unpkg.com/@larcjs/core@2.0.0/&#039;,
+    componentsPath: &#039;src/components/&#039;,
+    extension: &#039;.js&#039;
+  };
+&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<strong>Custom Component Resolver</strong>
+<pre><code class="language-javascript">window.panAutoload = {
+  resolveComponent(tagName) {
+    // Custom logic to resolve component paths
+    if (tagName.startsWith(&#039;my-&#039;)) {
+      return `/custom/${tagName}.mjs`;
+    }
+    return null; // Use default resolution
+  }
+};</code></pre>
+<strong>Component Path Mapping</strong>
+<pre><code class="language-javascript">window.panAutoload = {
+  componentPaths: {
+    &#039;my-widget&#039;: &#039;/components/custom/widget.mjs&#039;,
+    &#039;special-card&#039;: &#039;/vendor/card-component.mjs&#039;
+  }
+};</code></pre>
+<h3>API Methods</h3>
+<p>#### <code>maybeLoadFor(el: HTMLElement): Promise<void></code></p>
+<p>Manually loads a component module for a specific element.</p>
+<strong>Parameters:</strong>
+<ul><li><code>el</code> (HTMLElement) - Element to load component for</li>
+</ul>
+<strong>Returns:</strong> Promise that resolves when loading completes or skips
+<strong>Example:</strong>
+<pre><code class="language-javascript">import { maybeLoadFor } from &#039;/core/pan.mjs&#039;;
+
+// Create element
+const widget = document.createElement(&#039;my-widget&#039;);
+document.body.appendChild(widget);
+
+// Manually load component
+await maybeLoadFor(widget);
+// Component is now loaded and defined</code></pre>
+<strong>Notes:</strong>
+<ul><li>Usually not needed - autoloader handles this automatically</li>
+<li>Checks if element is a custom tag (has dash in name)</li>
+<li>Prevents duplicate loads</li>
+<li>Auto-defines element if module exports a default class</li>
+<li>Errors are logged to console but don't throw</li>
+</ul>
+<hr>
+<p>#### <code>observeTree(root?: Document | Element): void</code></p>
+<p>Observes a DOM tree for undefined custom elements and sets up progressive loading.</p>
+<strong>Parameters:</strong>
+<ul><li><code>root</code> (Document | Element, optional) - Root element to observe. Defaults to <code>document</code></li>
+</ul>
+<strong>Returns:</strong> void
+<strong>Example:</strong>
+<pre><code class="language-javascript">import { observeTree } from &#039;/core/pan.mjs&#039;;
+
+// Observe entire document (default)
+observeTree();
+
+// Observe specific subtree
+const container = document.querySelector(&#039;#dynamic-content&#039;);
+observeTree(container);
+
+// Useful for dynamically added content
+function addDynamicContent() {
+  const div = document.createElement(&#039;div&#039;);
+  div.innerHTML = &#039;&lt;my-widget&gt;&lt;/my-widget&gt;&lt;another-component&gt;&lt;/another-component&gt;&#039;;
+  document.body.appendChild(div);
+
+  // Ensure new components are observed
+  observeTree(div);
+}</code></pre>
+<strong>Notes:</strong>
+<ul><li>Automatically called for <code>document</code> on initialization</li>
+<li>Finds all <code>:not(:defined)</code> elements</li>
+<li>Sets up IntersectionObserver for progressive loading</li>
+<li>Prevents duplicate observation with WeakSet</li>
+<li>Falls back to immediate loading if IntersectionObserver unavailable</li>
+</ul>
+<hr>
+<p>#### <code>panAutoload</code> Object</p>
+<p>Global API exposed on <code>window.panAutoload</code> and as module export.</p>
+<strong>Properties:</strong>
+<pre><code class="language-typescript">{
+  config: AutoloadConfig;           // Active configuration
+  observeTree: Function;            // Manual tree observation
+  maybeLoadFor: Function;           // Manual component loading
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Access configuration
+console.log(window.panAutoload.config);
+
+// Manually observe new content
+const newSection = document.querySelector(&#039;#ajax-loaded-content&#039;);
+window.panAutoload.observeTree(newSection);
+
+// Manually load component
+const element = document.createElement(&#039;my-component&#039;);
+await window.panAutoload.maybeLoadFor(element);</code></pre>
+<hr>
+<h3>Custom Module Path Override</h3>
+<p>Use the <code>data-module</code> attribute to override the default module path for a specific element:</p>
+<pre><code class="language-html">&lt;!-- Default: loads from ./my-card.mjs --&gt;
+&lt;my-card&gt;&lt;/my-card&gt;
+
+&lt;!-- Override: loads from custom path --&gt;
+&lt;my-card data-module=&quot;/custom/path/special-card.mjs&quot;&gt;&lt;/my-card&gt;</code></pre>
+<hr>
+<h3>How It Works</h3>
+<li><strong>Initialization</strong></li>
+   - Pan-bus is loaded first (backbone of messaging)
+   - MutationObserver watches for new elements
+   - IntersectionObserver set up for progressive loading
+<li><strong>Element Discovery</strong></li>
+   - All elements with dash in tag name are candidates
+   - Checks if element is already defined in <code>customElements</code>
+   - Adds to observation queue if undefined
+<li><strong>Progressive Loading</strong></li>
+   - Elements near viewport (600px margin by default) are loaded
+   - As user scrolls, more components load automatically
+   - Prevents loading off-screen components unnecessarily
+<li><strong>Module Loading</strong></li>
+   - Constructs module URL from tag name
+   - Dynamically imports the module
+   - Auto-defines element if module exports default class
+   - Prevents duplicate loads with Set tracking
+<hr>
+<h2>PAN Bus</h2>
+<p>The central message bus for publish/subscribe communication between components. Provides memory-safe, secure message delivery with advanced features.</p>
+<blockquote><strong>Note:</strong> As of v1.1.1, the PAN bus is <strong>automatically instantiated</strong> when you load <code>pan.mjs</code>. You no longer need to include a <code><pan-bus></code> element in your HTML. The bus is created and ready to use as soon as the script loads.</blockquote>
+<h3>Overview</h3>
+<ul><li>Publish/subscribe messaging with topic patterns</li>
+<li>Retained messages with LRU eviction</li>
+<li>Memory-bounded message store</li>
+<li>Rate limiting per publisher</li>
+<li>Message size validation</li>
+<li>Automatic cleanup of dead subscriptions</li>
+<li>Debug mode with comprehensive logging</li>
+<li>Security policies for wildcard subscriptions</li>
+<li><strong>Automatic instantiation</strong> — No manual setup required</li>
+</ul>
+<h3>Automatic Instantiation</h3>
+<p>When you load <code>pan.mjs</code>, the PAN bus is automatically created and made available globally:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- No &lt;pan-bus&gt; tag needed! --&gt;
+  &lt;!-- Bus is automatically ready --&gt;
+  &lt;my-component&gt;&lt;/my-component&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>HTML Element (Legacy)</h3>
+<p>The <code><pan-bus></code> element is still supported for backwards compatibility, but is no longer required:</p>
+<pre><code class="language-html">&lt;!-- This still works, but is no longer necessary --&gt;
+&lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+&lt;!-- With configuration --&gt;
+&lt;pan-bus
+  max-retained=&quot;1000&quot;
+  max-message-size=&quot;1048576&quot;
+  max-payload-size=&quot;524288&quot;
+  cleanup-interval=&quot;30000&quot;
+  rate-limit=&quot;1000&quot;
+  allow-global-wildcard=&quot;true&quot;
+  debug=&quot;true&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h3>Configuration Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>max-retained</code> | number | 1000 | Maximum retained messages |
+| <code>max-message-size</code> | number | 1048576 | Max total message size (1MB) |
+| <code>max-payload-size</code> | number | 524288 | Max data payload size (512KB) |
+| <code>cleanup-interval</code> | number | 30000 | Cleanup interval in ms (30s) |
+| <code>rate-limit</code> | number | 1000 | Max messages per client per second |
+| <code>allow-global-wildcard</code> | boolean | true | Allow '*' subscriptions |
+| <code>debug</code> | boolean | false | Enable debug logging |</p>
+<h3>Message Format</h3>
+<pre><code class="language-typescript">interface PanMessage&lt;T = any&gt; {
+  topic: string;              // Topic name (required)
+  data: T;                    // Message payload (required)
+  id?: string;                // Unique message ID (auto-generated)
+  ts?: number;                // Timestamp in ms (auto-generated)
+  retain?: boolean;           // Retain for late subscribers
+  replyTo?: string;           // Topic for replies
+  correlationId?: string;     // Correlation ID for request/reply
+  headers?: Record&lt;string, string&gt;; // Optional metadata
+}</code></pre>
+<h3>Topic Patterns</h3>
+<strong>Exact Match</strong>
+<pre><code class="language-javascript">// Publisher
+publish({ topic: &#039;users.updated&#039;, data: {...} });
+
+// Subscriber
+subscribe([&#039;users.updated&#039;], handler);</code></pre>
+<strong>Wildcard Match</strong>
+<pre><code class="language-javascript">// Matches users.created, users.updated, users.deleted
+subscribe([&#039;users.*&#039;], handler);
+
+// Matches all.messages.everywhere
+subscribe([&#039;*&#039;], handler); // Only if allow-global-wildcard=true</code></pre>
+<strong>Pattern Examples</strong>
+<ul><li><code>users.created</code> - Exact topic</li>
+<li><code>users.*</code> - All user events</li>
+<li><code>users.*.admin</code> - User admin events</li>
+<li><code>*</code> - Global wildcard (requires permission)</li>
+</ul>
+<h3>Events</h3>
+<p>The bus communicates via CustomEvents:</p>
+<p>#### <code>pan:publish</code></p>
+<p>Publish a message to the bus.</p>
+<strong>Detail:</strong>
+<pre><code class="language-typescript">{
+  topic: string;
+  data: any;
+  retain?: boolean;
+  replyTo?: string;
+  correlationId?: string;
+  clientId?: string;
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">document.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+  detail: {
+    topic: &#039;users.list.state&#039;,
+    data: { users: [...] },
+    retain: true
+  },
+  bubbles: true,
+  composed: true
+}));</code></pre>
+<hr>
+<p>#### <code>pan:subscribe</code></p>
+<p>Subscribe to topic patterns.</p>
+<strong>Detail:</strong>
+<pre><code class="language-typescript">{
+  clientId: string;
+  topics: string[];
+  options: {
+    retained?: boolean;
+  };
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">document.dispatchEvent(new CustomEvent(&#039;pan:subscribe&#039;, {
+  detail: {
+    clientId: &#039;my-component#123&#039;,
+    topics: [&#039;users.*&#039;, &#039;posts.*&#039;],
+    options: { retained: true }
+  },
+  bubbles: true,
+  composed: true
+}));</code></pre>
+<hr>
+<p>#### <code>pan:unsubscribe</code></p>
+<p>Unsubscribe from topics.</p>
+<strong>Detail:</strong>
+<pre><code class="language-typescript">{
+  clientId: string;
+  topics: string[];
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">document.dispatchEvent(new CustomEvent(&#039;pan:unsubscribe&#039;, {
+  detail: {
+    clientId: &#039;my-component#123&#039;,
+    topics: [&#039;users.*&#039;]
+  },
+  bubbles: true,
+  composed: true
+}));</code></pre>
+<hr>
+<p>#### <code>pan:deliver</code></p>
+<p>Message delivered to subscriber (received by subscriber).</p>
+<strong>Detail:</strong> PanMessage object
+<strong>Example:</strong>
+<pre><code class="language-javascript">element.addEventListener(&#039;pan:deliver&#039;, (e) =&gt; {
+  const msg = e.detail;
+  console.log(&#039;Received:&#039;, msg.topic, msg.data);
+});</code></pre>
+<hr>
+<p>#### <code>pan:request</code></p>
+<p>Send a request message (like publish, but signals intent for reply).</p>
+<strong>Detail:</strong> Same as <code>pan:publish</code>
+<hr>
+<p>#### <code>pan:reply</code></p>
+<p>Send a reply to a request.</p>
+<strong>Detail:</strong> PanMessage with <code>replyTo</code> and <code>correlationId</code>
+<hr>
+<p>#### <code>pan:hello</code></p>
+<p>Announce client presence to the bus.</p>
+<strong>Detail:</strong>
+<pre><code class="language-typescript">{
+  id: string;
+  caps?: string[];
+}</code></pre>
+<hr>
+<p>#### <code>pan:sys.ready</code></p>
+<p>Bus is ready for use (dispatched on document).</p>
+<strong>Detail:</strong>
+<pre><code class="language-typescript">{
+  enhanced: boolean;
+  config: object;
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">document.addEventListener(&#039;pan:sys.ready&#039;, (e) =&gt; {
+  console.log(&#039;Bus ready:&#039;, e.detail.config);
+});</code></pre>
+<hr>
+<p>#### <code>pan:sys.stats</code></p>
+<p>Request bus statistics (dispatch on element).</p>
+<strong>Response delivered as <code>pan:deliver</code> with:</strong>
+<pre><code class="language-typescript">{
+  topic: &#039;pan:sys.stats&#039;,
+  data: {
+    published: number;
+    delivered: number;
+    dropped: number;
+    retainedEvicted: number;
+    subsCleanedUp: number;
+    errors: number;
+    subscriptions: number;
+    clients: number;
+    retained: number;
+    config: object;
+  }
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">const getStats = () =&gt; {
+  return new Promise((resolve) =&gt; {
+    const handler = (e) =&gt; {
+      if (e.detail.topic === &#039;pan:sys.stats&#039;) {
+        document.removeEventListener(&#039;pan:deliver&#039;, handler);
+        resolve(e.detail.data);
+      }
+    };
+
+    document.addEventListener(&#039;pan:deliver&#039;, handler);
+    document.dispatchEvent(new CustomEvent(&#039;pan:sys.stats&#039;, {
+      bubbles: true,
+      composed: true
+    }));
+  });
+};
+
+const stats = await getStats();
+console.log(&#039;Bus stats:&#039;, stats);</code></pre>
+<hr>
+<p>#### <code>pan:sys.clear-retained</code></p>
+<p>Clear retained messages.</p>
+<strong>Detail:</strong>
+<pre><code class="language-typescript">{
+  pattern?: string; // Optional pattern to match (clears all if omitted)
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Clear all retained messages
+document.dispatchEvent(new CustomEvent(&#039;pan:sys.clear-retained&#039;, {
+  bubbles: true,
+  composed: true
+}));
+
+// Clear specific pattern
+document.dispatchEvent(new CustomEvent(&#039;pan:sys.clear-retained&#039;, {
+  detail: { pattern: &#039;users.*&#039; },
+  bubbles: true,
+  composed: true
+}));</code></pre>
+<hr>
+<p>#### <code>pan:sys.error</code></p>
+<p>Error event (dispatched globally).</p>
+<strong>Detail:</strong>
+<pre><code class="language-typescript">{
+  code: string;
+  message: string;
+  details: object;
+}</code></pre>
+<strong>Error Codes:</strong>
+<ul><li><code>RATE_LIMIT_EXCEEDED</code> - Client exceeded rate limit</li>
+<li><code>MESSAGE_INVALID</code> - Message validation failed</li>
+<li><code>SUBSCRIPTION_INVALID</code> - Subscription pattern rejected</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">document.addEventListener(&#039;pan:sys.error&#039;, (e) =&gt; {
+  const { code, message, details } = e.detail;
+  console.error(&#039;Bus error:&#039;, code, message, details);
+});</code></pre>
+<hr>
+<h3>Direct API Methods</h3>
+<p>The bus element also provides convenience methods:</p>
+<p>#### <code>publish(topic, data, options)</code></p>
+<p>Directly publish a message.</p>
+<strong>Parameters:</strong>
+<ul><li><code>topic</code> (string) - Topic name</li>
+<li><code>data</code> (any) - Message payload</li>
+<li><code>options</code> (object) - Additional options (retain, etc.)</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+bus.publish(&#039;users.created&#039;, { id: 123, name: &#039;Alice&#039; }, { retain: true });</code></pre>
+<hr>
+<p>#### <code>subscribe(topics, handler)</code></p>
+<p>Directly subscribe to topics.</p>
+<strong>Parameters:</strong>
+<ul><li><code>topics</code> (string | string[]) - Topic pattern(s)</li>
+<li><code>handler</code> (function) - Callback function(msg)</li>
+</ul>
+<strong>Returns:</strong> Unsubscribe function
+<strong>Example:</strong>
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+
+const unsubscribe = bus.subscribe([&#039;users.*&#039;, &#039;posts.*&#039;], (msg) =&gt; {
+  console.log(&#039;Message:&#039;, msg.topic, msg.data);
+});
+
+// Later: unsubscribe
+unsubscribe();</code></pre>
+<hr>
+<h3>Static Method</h3>
+<p>#### <code>PanBus.matches(topic, pattern): boolean</code></p>
+<p>Check if a topic matches a pattern.</p>
+<strong>Parameters:</strong>
+<ul><li><code>topic</code> (string) - Topic to test</li>
+<li><code>pattern</code> (string) - Pattern to match against</li>
+</ul>
+<strong>Returns:</strong> boolean
+<strong>Example:</strong>
+<pre><code class="language-javascript">import { PanBusEnhanced } from &#039;/core/pan-bus.mjs&#039;;
+
+PanBusEnhanced.matches(&#039;users.created&#039;, &#039;users.*&#039;);  // true
+PanBusEnhanced.matches(&#039;users.created&#039;, &#039;posts.*&#039;);  // false
+PanBusEnhanced.matches(&#039;users.created&#039;, &#039;*&#039;);        // true</code></pre>
+<hr>
+<h3>Security Features</h3>
+<strong>Message Validation</strong>
+<ul><li>Checks topic is a non-empty string</li>
+<li>Validates data is JSON-serializable</li>
+<li>Enforces message size limits</li>
+<li>Enforces payload size limits</li>
+</ul>
+<strong>Rate Limiting</strong>
+<ul><li>Tracks messages per client per second</li>
+<li>Configurable limit (default: 1000/sec)</li>
+<li>Automatic cleanup of old tracking data</li>
+</ul>
+<strong>Subscription Security</strong>
+<ul><li>Can disable global wildcard (*)</li>
+<li>Validates subscription patterns</li>
+<li>Prevents malicious subscriptions</li>
+</ul>
+<strong>Memory Management</strong>
+<ul><li>LRU eviction for retained messages</li>
+<li>Bounded message store</li>
+<li>Automatic cleanup of dead subscriptions</li>
+<li>Prevents memory leaks</li>
+</ul>
+<hr>
+<h2>PAN Client</h2>
+<p>A simplified, promise-based API for interacting with the PAN bus. Handles low-level CustomEvent details and provides convenient methods.</p>
+<h3>Overview</h3>
+<ul><li>Clean, promise-based API</li>
+<li>Automatic correlation for request/reply</li>
+<li>Subscription management with AbortSignal</li>
+<li>Retained message support</li>
+<li>Type-safe with TypeScript</li>
+</ul>
+<h3>Constructor</h3>
+<pre><code class="language-typescript">new PanClient(host?: HTMLElement | Document, busSelector?: string)</code></pre>
+<strong>Parameters:</strong>
+<ul><li><code>host</code> (HTMLElement | Document) - Element to dispatch/receive events from (default: <code>document</code>)</li>
+<li><code>busSelector</code> (string) - CSS selector for bus element (default: <code>'pan-bus'</code>)</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">import { PanClient } from &#039;/core/pan-client.mjs&#039;;
+
+// Use document as host
+const client = new PanClient();
+
+// Use custom element
+const myComponent = document.querySelector(&#039;my-component&#039;);
+const client = new PanClient(myComponent);</code></pre>
+<hr>
+<h3>Methods</h3>
+<p>#### <code>ready(): Promise<void></code></p>
+<p>Returns a promise that resolves when the PAN bus is ready.</p>
+<strong>Returns:</strong> Promise<void>
+<strong>Example:</strong>
+<pre><code class="language-javascript">const client = new PanClient();
+await client.ready();
+
+// Bus is ready, safe to publish/subscribe
+client.publish({
+  topic: &#039;app.started&#039;,
+  data: { timestamp: Date.now() }
+});</code></pre>
+<strong>Notes:</strong>
+<ul><li>Always call this before using the client</li>
+<li>Safe to call multiple times</li>
+<li>Waits for <code>pan:sys.ready</code> event if bus not ready</li>
+<li>Automatically announces client presence to bus</li>
+</ul>
+<hr>
+<p>#### <code>publish(message): void</code></p>
+<p>Publishes a message to the bus.</p>
+<strong>Parameters:</strong>
+<pre><code class="language-typescript">{
+  topic: string;              // Required
+  data: any;                  // Required
+  retain?: boolean;           // Optional
+  replyTo?: string;           // Optional
+  correlationId?: string;     // Optional
+  headers?: Record&lt;string, string&gt;; // Optional
+}</code></pre>
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Simple publish
+client.publish({
+  topic: &#039;user.updated&#039;,
+  data: { id: 123, name: &#039;Alice&#039; }
+});
+
+// Retained message
+client.publish({
+  topic: &#039;users.list.state&#039;,
+  data: { users: [...] },
+  retain: true
+});
+
+// With headers
+client.publish({
+  topic: &#039;analytics.event&#039;,
+  data: { action: &#039;click&#039; },
+  headers: { &#039;x-source&#039;: &#039;mobile-app&#039; }
+});</code></pre>
+<hr>
+<p>#### <code>subscribe(topics, handler, options): UnsubscribeFunction</code></p>
+<p>Subscribes to one or more topic patterns.</p>
+<strong>Parameters:</strong>
+<ul><li><code>topics</code> (string | string[]) - Topic pattern(s) to subscribe to</li>
+<li><code>handler</code> (function) - Callback function(msg)</li>
+<li><code>options</code> (object) - Subscription options</li>
+</ul>  - <code>retained</code> (boolean) - Receive retained messages immediately
+  - <code>signal</code> (AbortSignal) - AbortSignal for automatic cleanup
+<strong>Returns:</strong> Function to unsubscribe
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Subscribe to single topic
+const unsub = client.subscribe(&#039;users.updated&#039;, (msg) =&gt; {
+  console.log(&#039;User updated:&#039;, msg.data);
+});
+
+// Multiple topics with wildcard
+client.subscribe([&#039;users.*&#039;, &#039;posts.*&#039;], (msg) =&gt; {
+  console.log(&#039;Received:&#039;, msg.topic, msg.data);
+});
+
+// Get retained messages immediately
+client.subscribe(&#039;app.state&#039;, (msg) =&gt; {
+  console.log(&#039;Current state:&#039;, msg.data);
+}, { retained: true });
+
+// Automatic cleanup with AbortController
+const controller = new AbortController();
+client.subscribe(&#039;events.*&#039;, handler, {
+  signal: controller.signal
+});
+
+// Later: controller.abort(); // Unsubscribes automatically
+
+// Manual unsubscribe
+const unsubscribe = client.subscribe(&#039;users.*&#039;, handler);
+// Later: unsubscribe();</code></pre>
+<strong>Handler Function:</strong>
+<pre><code class="language-javascript">function handler(msg) {
+  // msg.topic - Topic name
+  // msg.data - Message payload
+  // msg.id - Unique message ID
+  // msg.ts - Timestamp
+  // msg.retain - Whether message was retained
+  // msg.correlationId - For request/reply correlation
+}</code></pre>
+<hr>
+<p>#### <code>request(topic, data, options): Promise<PanMessage></code></p>
+<p>Sends a request and waits for a reply (request/reply pattern).</p>
+<strong>Parameters:</strong>
+<ul><li><code>topic</code> (string) - Request topic</li>
+<li><code>data</code> (any) - Request payload</li>
+<li><code>options</code> (object) - Request options</li>
+</ul>  - <code>timeoutMs</code> (number) - Timeout in milliseconds (default: 5000)
+<strong>Returns:</strong> Promise that resolves with reply message
+<strong>Throws:</strong> Error if request times out
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Simple request
+try {
+  const response = await client.request(&#039;users.get&#039;, { id: 123 });
+  console.log(&#039;User:&#039;, response.data);
+} catch (err) {
+  console.error(&#039;Request failed:&#039;, err);
+}
+
+// Custom timeout
+const response = await client.request(&#039;slow.operation&#039;,
+  { param: &#039;value&#039; },
+  { timeoutMs: 10000 }  // 10 second timeout
+);
+
+// Request with error handling
+async function fetchUser(id) {
+  try {
+    const response = await client.request(&#039;users.get&#039;, { id });
+    return response.data;
+  } catch (err) {
+    if (err.message === &#039;PAN request timeout&#039;) {
+      console.error(&#039;Request timed out&#039;);
+    } else {
+      console.error(&#039;Request failed:&#039;, err);
+    }
+    return null;
+  }
+}</code></pre>
+<strong>Responding to Requests:</strong>
+<pre><code class="language-javascript">// Server component listens for requests
+client.subscribe(&#039;users.get&#039;, (msg) =&gt; {
+  const { id } = msg.data;
+  const user = getUserById(id);
+
+  // Reply to the request
+  client.publish({
+    topic: msg.replyTo,
+    data: user,
+    correlationId: msg.correlationId
+  });
+});</code></pre>
+<hr>
+<h3>Static Method</h3>
+<p>#### <code>PanClient.matches(topic, pattern): boolean</code></p>
+<p>Checks if a topic matches a pattern.</p>
+<strong>Parameters:</strong>
+<ul><li><code>topic</code> (string) - Topic to test</li>
+<li><code>pattern</code> (string) - Pattern to match against</li>
+</ul>
+<strong>Returns:</strong> boolean
+<strong>Example:</strong>
+<pre><code class="language-javascript">PanClient.matches(&#039;users.list.state&#039;, &#039;users.*&#039;);  // true
+PanClient.matches(&#039;users.list.state&#039;, &#039;users.list.state&#039;);  // true
+PanClient.matches(&#039;users.list.state&#039;, &#039;*&#039;);  // true
+PanClient.matches(&#039;users.list.state&#039;, &#039;posts.*&#039;);  // false
+PanClient.matches(&#039;users.item.123&#039;, &#039;users.item.*&#039;);  // true</code></pre>
+<hr>
+<h3>Complete Example</h3>
+<pre><code class="language-javascript">import { PanClient } from &#039;/core/pan-client.mjs&#039;;
+
+class UserListComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.client = new PanClient(this);
+    this.users = [];
+  }
+
+  async connectedCallback() {
+    // Wait for bus to be ready
+    await this.client.ready();
+
+    // Subscribe to user events
+    this.unsubscribe = this.client.subscribe(
+      [&#039;users.*&#039;],
+      (msg) =&gt; this.handleUserEvent(msg),
+      { retained: true }  // Get current state immediately
+    );
+
+    this.render();
+  }
+
+  disconnectedCallback() {
+    // Clean up subscription
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  handleUserEvent(msg) {
+    switch (msg.topic) {
+      case &#039;users.list.state&#039;:
+        this.users = msg.data.users;
+        this.render();
+        break;
+
+      case &#039;users.created&#039;:
+        this.users.push(msg.data);
+        this.render();
+        break;
+
+      case &#039;users.updated&#039;:
+        const index = this.users.findIndex(u =&gt; u.id === msg.data.id);
+        if (index !== -1) {
+          this.users[index] = msg.data;
+          this.render();
+        }
+        break;
+
+      case &#039;users.deleted&#039;:
+        this.users = this.users.filter(u =&gt; u.id !== msg.data.id);
+        this.render();
+        break;
+    }
+  }
+
+  async deleteUser(id) {
+    try {
+      // Request/reply pattern
+      await this.client.request(&#039;users.delete&#039;, { id });
+      console.log(&#039;User deleted successfully&#039;);
+    } catch (err) {
+      console.error(&#039;Delete failed:&#039;, err);
+    }
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;ul&gt;
+        ${this.users.map(user =&gt; `
+          &lt;li&gt;
+            ${user.name}
+            &lt;button onclick=&quot;this.closest(&#039;user-list-component&#039;).deleteUser(${user.id})&quot;&gt;
+              Delete
+            &lt;/button&gt;
+          &lt;/li&gt;
+        `).join(&#039;&#039;)}
+      &lt;/ul&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;user-list-component&#039;, UserListComponent);</code></pre>
+<hr>
+<h2>Configuration</h2>
+<h3>Using larc-config.mjs</h3>
+<p>LARC supports a centralized configuration file for path resolution across your application.</p>
+<strong>Basic Setup:</strong>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Step 1: Load config --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Step 2: Load autoloader --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Step 3: Use components --&gt;
+  &lt;pan-card&gt;Hello World&lt;/pan-card&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<strong>Configuration Structure:</strong>
+<pre><code class="language-javascript">// larc-config.mjs
+export const aliases = {
+  &#039;@larc/core&#039;: &#039;/core/src&#039;,
+  &#039;@larc/components&#039;: &#039;/components&#039;,
+  &#039;@larc/examples&#039;: &#039;/examples&#039;
+};
+
+export const componentPaths = {
+  &#039;pan-bus&#039;: &#039;@larc/core/pan-bus.mjs&#039;,
+  &#039;pan-client&#039;: &#039;@larc/core/pan-client.mjs&#039;,
+  &#039;pan-card&#039;: &#039;@larc/components/pan-card.mjs&#039;
+};
+
+export const paths = {
+  resolve(aliasOrPath, subpath = &#039;&#039;) {
+    // Resolve aliases to absolute paths
+    // ...
+  },
+
+  component(componentName) {
+    // Resolve component paths
+    // ...
+  }
+};
+
+export const autoloadConfig = {
+  baseUrl: null,
+  componentsPath: &#039;/ui/&#039;,
+  extension: &#039;.mjs&#039;,
+  rootMargin: 600,
+
+  // Custom component resolver
+  resolveComponent(tagName) {
+    return paths.component(tagName);
+  }
+};
+
+// Apply to window.panAutoload
+if (typeof window !== &#039;undefined&#039;) {
+  window.panAutoload = Object.assign(
+    window.panAutoload || {},
+    autoloadConfig,
+    { paths, aliases, componentPaths }
+  );
+
+  window.larcResolve = paths.resolve.bind(paths);
+}</code></pre>
+<strong>Using in Scripts:</strong>
+<pre><code class="language-javascript">import { paths } from &#039;/larc-config.mjs&#039;;
+
+// Resolve any alias
+const clientPath = paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;);
+
+// Import dynamically
+const { PanClient } = await import(clientPath);
+
+// Or use the global helper
+const resolved = window.larcResolve(&#039;@larc/core&#039;, &#039;components/pan-bus.mjs&#039;);</code></pre>
+<hr>
+<h2>Events Reference</h2>
+<h3>Event Flow</h3>
+<pre><code class="language-plaintext">Component                    Bus                      Component
+    |                        |                           |
+    |-- pan:publish --------&gt;|                           |
+    |                        |-- pan:deliver -----------&gt;|
+    |                        |                           |
+    |-- pan:subscribe ------&gt;|                           |
+    |                        |-- pan:deliver (retained)-&gt;|
+    |                        |                           |
+    |-- pan:request --------&gt;|                           |
+    |                        |-- pan:deliver -----------&gt;|
+    |                        |&lt;- pan:reply --------------|
+    |&lt;- pan:deliver ---------|                           |</code></pre>
+<h3>Event Summary</h3>
+<p>| Event | Direction | Purpose |
+|-------|-----------|---------|
+| <code>pan:publish</code> | Component → Bus | Publish a message |
+| <code>pan:subscribe</code> | Component → Bus | Subscribe to topics |
+| <code>pan:unsubscribe</code> | Component → Bus | Unsubscribe from topics |
+| <code>pan:deliver</code> | Bus → Component | Deliver message to subscriber |
+| <code>pan:request</code> | Component → Bus | Send request (signals reply expected) |
+| <code>pan:reply</code> | Component → Bus | Send reply to request |
+| <code>pan:hello</code> | Component → Bus | Announce presence |
+| <code>pan:sys.ready</code> | Bus → Document | Bus is ready |
+| <code>pan:sys.stats</code> | Component → Bus | Request statistics |
+| <code>pan:sys.clear-retained</code> | Component → Bus | Clear retained messages |
+| <code>pan:sys.error</code> | Bus → Document | Error occurred |</p>
+<hr>
+<h2>TypeScript Support</h2>
+<p>LARC includes comprehensive TypeScript definitions for all APIs.</p>
+<h3>Importing Types</h3>
+<pre><code class="language-typescript">import {
+  PanClient,
+  PanMessage,
+  SubscribeOptions,
+  RequestOptions
+} from &#039;/core/pan-client.mjs&#039;;
+
+import {
+  PanAutoloadConfig,
+  maybeLoadFor,
+  observeTree
+} from &#039;/core/pan.mjs&#039;;
+
+import { PanBusEnhanced } from &#039;/core/pan-bus.mjs&#039;;</code></pre>
+<h3>Type Definitions</h3>
+<strong>PanMessage</strong>
+<pre><code class="language-typescript">interface PanMessage&lt;T = unknown&gt; {
+  topic: string;
+  data: T;
+  id?: string;
+  ts?: number;
+  retain?: boolean;
+  replyTo?: string;
+  correlationId?: string;
+  headers?: Record&lt;string, string&gt;;
+}</code></pre>
+<strong>SubscribeOptions</strong>
+<pre><code class="language-typescript">interface SubscribeOptions {
+  retained?: boolean;
+  signal?: AbortSignal;
+}</code></pre>
+<strong>RequestOptions</strong>
+<pre><code class="language-typescript">interface RequestOptions {
+  timeoutMs?: number;
+}</code></pre>
+<strong>PanAutoloadConfig</strong>
+<pre><code class="language-typescript">interface PanAutoloadConfig {
+  baseUrl?: string | null;
+  componentsPath?: string;
+  extension?: string;
+  rootMargin?: number;
+  resolvedComponentsPath?: string;
+}</code></pre>
+<h3>Generic Type Parameters</h3>
+<pre><code class="language-typescript">// Typed message data
+interface User {
+  id: number;
+  name: string;
+}
+
+// Publish with type
+client.publish&lt;User&gt;({
+  topic: &#039;users.created&#039;,
+  data: { id: 123, name: &#039;Alice&#039; }
+});
+
+// Subscribe with type
+client.subscribe&lt;User&gt;(&#039;users.*&#039;, (msg) =&gt; {
+  // msg.data is typed as User
+  console.log(msg.data.name);
+});
+
+// Request with types
+interface UserRequest {
+  id: number;
+}
+
+interface UserResponse {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const response = await client.request&lt;UserRequest, UserResponse&gt;(
+  &#039;users.get&#039;,
+  { id: 123 }
+);
+
+// response.data is typed as UserResponse
+console.log(response.data.email);</code></pre>
+<h3>Component with TypeScript</h3>
+<pre><code class="language-typescript">import { PanClient, PanMessage } from &#039;/core/pan-client.mjs&#039;;
+
+interface TodoItem {
+  id: number;
+  text: string;
+  completed: boolean;
+}
+
+interface TodoState {
+  todos: TodoItem[];
+}
+
+class TodoListElement extends HTMLElement {
+  private client: PanClient;
+  private unsubscribe?: () =&gt; void;
+  private todos: TodoItem[] = [];
+
+  constructor() {
+    super();
+    this.client = new PanClient(this);
+  }
+
+  async connectedCallback(): Promise&lt;void&gt; {
+    await this.client.ready();
+
+    this.unsubscribe = this.client.subscribe&lt;TodoState&gt;(
+      &#039;todos.state&#039;,
+      (msg) =&gt; this.handleState(msg),
+      { retained: true }
+    );
+
+    this.render();
+  }
+
+  disconnectedCallback(): void {
+    this.unsubscribe?.();
+  }
+
+  private handleState(msg: PanMessage&lt;TodoState&gt;): void {
+    this.todos = msg.data.todos;
+    this.render();
+  }
+
+  private addTodo(text: string): void {
+    this.client.publish&lt;Partial&lt;TodoItem&gt;&gt;({
+      topic: &#039;todos.add&#039;,
+      data: { text, completed: false }
+    });
+  }
+
+  private render(): void {
+    // Render implementation
+  }
+}
+
+customElements.define(&#039;todo-list&#039;, TodoListElement);</code></pre>
+<hr>
+<h2>Best Practices</h2>
+<h3>1. Always Wait for Bus Ready</h3>
+<pre><code class="language-javascript">// Good
+async connectedCallback() {
+  await this.client.ready();
+  this.client.subscribe(&#039;topic&#039;, handler);
+}
+
+// Bad - may miss messages or fail
+connectedCallback() {
+  this.client.subscribe(&#039;topic&#039;, handler); // Bus might not be ready
+}</code></pre>
+<h3>2. Clean Up Subscriptions</h3>
+<pre><code class="language-javascript">// Good - cleanup in disconnectedCallback
+class MyComponent extends HTMLElement {
+  async connectedCallback() {
+    await this.client.ready();
+    this.unsubscribe = this.client.subscribe(&#039;topic&#039;, handler);
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe?.();
+  }
+}
+
+// Or use AbortSignal for automatic cleanup
+async connectedCallback() {
+  const controller = new AbortController();
+  this.client.subscribe(&#039;topic&#039;, handler, {
+    signal: controller.signal
+  });
+
+  // Store controller to abort later
+  this.abortController = controller;
+}
+
+disconnectedCallback() {
+  this.abortController?.abort();
+}</code></pre>
+<h3>3. Use Retained Messages for State</h3>
+<pre><code class="language-javascript">// Good - use retained messages for state
+client.publish({
+  topic: &#039;users.list.state&#039;,
+  data: { users: [...] },
+  retain: true  // New subscribers get current state
+});
+
+// Subscribe with retained option to get current state
+client.subscribe(&#039;users.list.state&#039;, handler, { retained: true });</code></pre>
+<h3>4. Namespace Your Topics</h3>
+<pre><code class="language-javascript">// Good - clear hierarchy
+&#039;app.users.list.state&#039;
+&#039;app.users.created&#039;
+&#039;app.posts.updated&#039;
+
+// Bad - flat structure
+&#039;userList&#039;
+&#039;newUser&#039;
+&#039;updatePost&#039;</code></pre>
+<h3>5. Use Request/Reply for RPC</h3>
+<pre><code class="language-javascript">// Good - request/reply for RPC-style operations
+const result = await client.request(&#039;users.get&#039;, { id: 123 });
+
+// Bad - publish and hope for response
+client.publish({ topic: &#039;users.get&#039;, data: { id: 123 } });
+// No way to correlate response</code></pre>
+<h3>6. Validate Message Data</h3>
+<pre><code class="language-javascript">// Good - validate incoming data
+client.subscribe(&#039;users.*&#039;, (msg) =&gt; {
+  if (!msg.data || typeof msg.data !== &#039;object&#039;) {
+    console.error(&#039;Invalid message data&#039;);
+    return;
+  }
+
+  const { id, name } = msg.data;
+  if (!id || !name) {
+    console.error(&#039;Missing required fields&#039;);
+    return;
+  }
+
+  // Process valid data
+  handleUser(msg.data);
+});</code></pre>
+<h3>7. Use Wildcards Wisely</h3>
+<pre><code class="language-javascript">// Good - specific wildcards
+client.subscribe(&#039;users.*&#039;, handler);
+client.subscribe(&#039;users.*.admin&#039;, handler);
+
+// Careful - global wildcard receives ALL messages
+client.subscribe(&#039;*&#039;, handler); // Only for debugging/monitoring</code></pre>
+<h3>8. Handle Request Timeouts</h3>
+<pre><code class="language-javascript">// Good - handle timeouts gracefully
+async function fetchUser(id) {
+  try {
+    const response = await client.request(&#039;users.get&#039;, { id }, {
+      timeoutMs: 5000
+    });
+    return response.data;
+  } catch (err) {
+    if (err.message === &#039;PAN request timeout&#039;) {
+      console.warn(&#039;Request timed out, using cached data&#039;);
+      return getCachedUser(id);
+    }
+    throw err;
+  }
+}</code></pre>
+<h3>9. Use Debug Mode During Development</h3>
+<pre><code class="language-html">&lt;!-- Enable debug logging --&gt;
+&lt;pan-bus debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<pre><code class="language-javascript">// Check bus statistics
+document.dispatchEvent(new CustomEvent(&#039;pan:sys.stats&#039;, {
+  bubbles: true,
+  composed: true
+}));</code></pre>
+<h3>10. Organize Components by Feature</h3>
+<pre><code class="language-plaintext">components/
+  users/
+    user-list.mjs
+    user-detail.mjs
+    user-form.mjs
+  posts/
+    post-list.mjs
+    post-detail.mjs
+  shared/
+    loading-spinner.mjs
+    error-message.mjs</code></pre>
+<hr>
+<h2>Common Pitfalls</h2>
+<h3>1. Forgetting to Wait for Bus Ready</h3>
+<pre><code class="language-javascript">// Wrong - bus might not be ready
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.client.publish({ topic: &#039;test&#039;, data: {} }); // Might fail
+  }
+}
+
+// Correct
+class MyComponent extends HTMLElement {
+  async connectedCallback() {
+    await this.client.ready();
+    this.client.publish({ topic: &#039;test&#039;, data: {} }); // Safe
+  }
+}</code></pre>
+<h3>2. Memory Leaks from Uncleared Subscriptions</h3>
+<pre><code class="language-javascript">// Wrong - subscription never cleaned up
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.client.subscribe(&#039;topic&#039;, handler); // Leaks!
+  }
+}
+
+// Correct
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.unsubscribe = this.client.subscribe(&#039;topic&#039;, handler);
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe();
+  }
+}</code></pre>
+<h3>3. Publishing Non-Serializable Data</h3>
+<pre><code class="language-javascript">// Wrong - DOM nodes, functions, circular refs not allowed
+client.publish({
+  topic: &#039;test&#039;,
+  data: {
+    element: document.body,        // DOM node - fails
+    callback: () =&gt; {},            // Function - fails
+    circular: { ref: null }        // Circular ref - fails
+  }
+});
+
+// Correct - use plain objects/arrays/primitives
+client.publish({
+  topic: &#039;test&#039;,
+  data: {
+    elementId: &#039;body&#039;,
+    callbackName: &#039;handleClick&#039;,
+    values: [1, 2, 3]
+  }
+});</code></pre>
+<h3>4. Exceeding Message Size Limits</h3>
+<pre><code class="language-javascript">// Wrong - huge payload
+client.publish({
+  topic: &#039;test&#039;,
+  data: hugeArray // &gt; 512KB - rejected
+});
+
+// Correct - paginate or chunk data
+const chunks = chunkArray(hugeArray, 100);
+chunks.forEach((chunk, i) =&gt; {
+  client.publish({
+    topic: `test.chunk.${i}`,
+    data: chunk
+  });
+});</code></pre>
+<h3>5. Rate Limiting Issues</h3>
+<pre><code class="language-javascript">// Wrong - burst of messages
+for (let i = 0; i &lt; 10000; i++) {
+  client.publish({ topic: &#039;test&#039;, data: i }); // Rate limited!
+}
+
+// Correct - batch or throttle
+const batch = [];
+for (let i = 0; i &lt; 10000; i++) {
+  batch.push(i);
+  if (batch.length &gt;= 100) {
+    client.publish({ topic: &#039;test.batch&#039;, data: batch });
+    batch.length = 0;
+    await new Promise(resolve =&gt; setTimeout(resolve, 10));
+  }
+}</code></pre>
+<h3>6. Not Handling Request Timeouts</h3>
+<pre><code class="language-javascript">// Wrong - uncaught timeout
+async function getData() {
+  const result = await client.request(&#039;data.get&#039;, {}); // Might timeout
+  return result.data;
+}
+
+// Correct
+async function getData() {
+  try {
+    const result = await client.request(&#039;data.get&#039;, {}, {
+      timeoutMs: 5000
+    });
+    return result.data;
+  } catch (err) {
+    console.error(&#039;Request failed:&#039;, err);
+    return null;
+  }
+}</code></pre>
+<h3>7. Circular Message Loops</h3>
+<pre><code class="language-javascript">// Wrong - infinite loop
+client.subscribe(&#039;test&#039;, (msg) =&gt; {
+  // Don&#039;t publish the same topic you&#039;re subscribed to!
+  client.publish({ topic: &#039;test&#039;, data: msg.data }); // Infinite loop!
+});
+
+// Correct - use different topics
+client.subscribe(&#039;test.request&#039;, (msg) =&gt; {
+  // Respond on different topic
+  client.publish({ topic: &#039;test.response&#039;, data: process(msg.data) });
+});</code></pre>
+<h3>8. Incorrect Topic Patterns</h3>
+<pre><code class="language-javascript">// Wrong - patterns don&#039;t match
+client.subscribe(&#039;users.*.admin&#039;, handler);
+// Won&#039;t match: &#039;users.created&#039; (only one segment after users)
+// Won&#039;t match: &#039;users.list.admin.settings&#039; (too many segments)
+
+// Correct understanding
+client.subscribe(&#039;users.*&#039;, handler);
+// Matches: &#039;users.created&#039;, &#039;users.updated&#039;, &#039;users.deleted&#039;
+// Doesn&#039;t match: &#039;users.list.state&#039; (two segments after users)
+
+client.subscribe(&#039;users.*.*&#039;, handler);
+// Matches: &#039;users.list.state&#039;, &#039;users.item.updated&#039;</code></pre>
+<h3>9. Missing Error Handlers</h3>
+<pre><code class="language-javascript">// Wrong - errors go unhandled
+document.addEventListener(&#039;pan:sys.error&#039;, (e) =&gt; {
+  // No handler - errors silent
+});
+
+// Correct - log or handle errors
+document.addEventListener(&#039;pan:sys.error&#039;, (e) =&gt; {
+  const { code, message, details } = e.detail;
+  console.error(`Bus error [${code}]:`, message, details);
+
+  // Show to user if needed
+  if (code === &#039;RATE_LIMIT_EXCEEDED&#039;) {
+    showNotification(&#039;Too many requests, please slow down&#039;);
+  }
+});</code></pre>
+<h3>10. Not Using TypeScript Types</h3>
+<pre><code class="language-javascript">// Wrong - no type safety
+const response = await client.request(&#039;users.get&#039;, { id: &#039;123&#039; }); // String instead of number
+console.log(response.data.email); // Might not exist
+
+// Correct - use TypeScript
+interface UserRequest {
+  id: number;
+}
+
+interface UserResponse {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const response = await client.request&lt;UserRequest, UserResponse&gt;(
+  &#039;users.get&#039;,
+  { id: 123 } // Type checked
+);
+
+console.log(response.data.email); // Type safe</code></pre>
+<hr>
+<h2>Additional Resources</h2>
+<ul><li><strong>Repository</strong>: <a href="https://github.com/larcjs/larc">https://github.com/larcjs/larc</a></li>
+<li><strong>Examples</strong>: <code>/examples/</code> directory in the repository</li>
+<li><strong>Quick Start</strong>: <code>/docs/QUICK-START-CONFIG.md</code></li>
+<li><strong>Browser Compatibility</strong>: <code>/docs/BROWSER-COMPATIBILITY.md</code></li>
+</ul>
+<hr>
+<h2>License</h2>
+<p>LARC is open source. Check the repository for license information.</p>
+<hr>
+<strong>Last Updated</strong>: 2025-11-24
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/reference/API-REFERENCE.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Playground - Implementation Plan · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Playground - Implementation Plan">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">archive</a> / <a href="#">2024</a> / <span>PLAYGROUND-IMPLEMENTATION</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Playground - Implementation Plan</h1>
+<h2>Overview</h2>
+<p>Build an interactive component playground that serves as:
+<ul><li>🔧 Development and testing tool</li>
+<li>🎨 Visual component explorer</li>
+<li>📖 Live documentation</li>
+<li>🚀 Marketing/demo tool</li>
+<li>🏗️ Foundation for future visual editor</li>
+</ul>
+<strong>Timeline:</strong> 7-10 days
+<strong>Priority:</strong> HIGH - Accelerates all other development</p>
+<h2>Core Features (MVP)</h2>
+<h3>1. Component Palette (Sidebar)</h3>
+<ul><li>Browse components by category</li>
+<li>Search/filter components</li>
+<li>Component icons and descriptions</li>
+<li>Click or drag to add to canvas</li>
+</ul>
+<h3>2. Live Canvas (Center)</h3>
+<ul><li>Drop zone for components</li>
+<li>Real-time preview (no build step!)</li>
+<li>Component selection/highlighting</li>
+<li>Basic layout (flexbox-based)</li>
+<li>Responsive preview modes</li>
+</ul>
+<h3>3. Properties Panel (Right)</h3>
+<ul><li>Edit component attributes</li>
+<li>Live updates as you type</li>
+<li>Type-appropriate inputs (text, number, boolean, select)</li>
+<li>Reset to defaults</li>
+</ul>
+<h3>4. Code Export</h3>
+<ul><li>View generated HTML</li>
+<li>Copy to clipboard</li>
+<li>Download as file</li>
+<li>Clean, hand-editable output</li>
+</ul>
+<h3>5. PAN Bus Visualizer</h3>
+<ul><li>Show messages flowing between components</li>
+<li>Message details (topic, data)</li>
+<li>Filter by topic</li>
+<li>Clear log</li>
+</ul>
+<h2>Architecture</h2>
+<pre><code class="language-plaintext">playground/
+├── index.html              # Main playground page
+├── playground.mjs          # Main playground controller
+├── components/
+│   ├── pg-palette.mjs     # Component palette sidebar
+│   ├── pg-canvas.mjs      # Live preview canvas
+│   ├── pg-properties.mjs  # Properties panel
+│   ├── pg-exporter.mjs    # Code export
+│   └── pg-bus-monitor.mjs # PAN bus visualizer
+├── component-registry.json # Generated component metadata
+├── styles/
+│   └── playground.css     # Playground styles
+└── scripts/
+    └── generate-registry.js # Registry generator</code></pre>
+<h2>Component Palette (pg-palette.mjs)</h2>
+<pre><code class="language-javascript">/**
+ * Component palette for selecting and adding components
+ */
+class PgPalette extends HTMLElement {
+  connectedCallback() {
+    this.loadRegistry();
+    this.render();
+  }
+
+  async loadRegistry() {
+    const response = await fetch(&#039;./component-registry.json&#039;);
+    this.registry = await response.json();
+  }
+
+  render() {
+    const categories = this.registry.categories;
+
+    this.innerHTML = `
+      &lt;div class=&quot;palette&quot;&gt;
+        &lt;input type=&quot;search&quot; placeholder=&quot;Search components...&quot; class=&quot;search&quot;&gt;
+
+        ${categories.map(cat =&gt; `
+          &lt;details open&gt;
+            &lt;summary&gt;${cat.icon} ${cat.name}&lt;/summary&gt;
+            &lt;div class=&quot;components&quot;&gt;
+              ${this.getComponentsInCategory(cat.id).map(c =&gt; `
+                &lt;button class=&quot;component-item&quot;
+                        data-component=&#039;${JSON.stringify(c)}&#039;
+                        title=&quot;${c.description}&quot;&gt;
+                  &lt;span class=&quot;icon&quot;&gt;${c.icon}&lt;/span&gt;
+                  &lt;span class=&quot;name&quot;&gt;${c.displayName}&lt;/span&gt;
+                &lt;/button&gt;
+              `).join(&#039;&#039;)}
+            &lt;/div&gt;
+          &lt;/details&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+
+    this.attachEventListeners();
+  }
+
+  getComponentsInCategory(categoryId) {
+    return this.registry.components.filter(c =&gt; c.category === categoryId);
+  }
+
+  attachEventListeners() {
+    // Click to add
+    this.querySelectorAll(&#039;.component-item&#039;).forEach(btn =&gt; {
+      btn.addEventListener(&#039;click&#039;, (e) =&gt; {
+        const component = JSON.parse(btn.dataset.component);
+        this.dispatchEvent(new CustomEvent(&#039;component-selected&#039;, {
+          detail: component,
+          bubbles: true
+        }));
+      });
+    });
+
+    // Search
+    const searchInput = this.querySelector(&#039;.search&#039;);
+    searchInput.addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.filterComponents(e.target.value);
+    });
+  }
+
+  filterComponents(query) {
+    // Filter component items based on search
+  }
+}
+
+customElements.define(&#039;pg-palette&#039;, PgPalette);</code></pre>
+<h2>Live Canvas (pg-canvas.mjs)</h2>
+<pre><code class="language-javascript">/**
+ * Live preview canvas where components are placed
+ */
+class PgCanvas extends HTMLElement {
+  constructor() {
+    super();
+    this.components = [];
+    this.selectedComponent = null;
+  }
+
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;div class=&quot;canvas&quot;&gt;
+        &lt;div class=&quot;canvas-toolbar&quot;&gt;
+          &lt;button class=&quot;btn-clear&quot;&gt;Clear All&lt;/button&gt;
+          &lt;select class=&quot;viewport-size&quot;&gt;
+            &lt;option value=&quot;desktop&quot;&gt;Desktop&lt;/option&gt;
+            &lt;option value=&quot;tablet&quot;&gt;Tablet&lt;/option&gt;
+            &lt;option value=&quot;mobile&quot;&gt;Mobile&lt;/option&gt;
+          &lt;/select&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;canvas-content&quot; id=&quot;preview-area&quot;&gt;
+          &lt;div class=&quot;empty-state&quot;&gt;
+            Click a component from the sidebar to add it here
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    this.setupEventListeners();
+  }
+
+  setupEventListeners() {
+    // Listen for component additions
+    document.addEventListener(&#039;component-selected&#039;, (e) =&gt; {
+      this.addComponent(e.detail);
+    });
+
+    // Clear button
+    this.querySelector(&#039;.btn-clear&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.clearAll();
+    });
+
+    // Viewport size
+    this.querySelector(&#039;.viewport-size&#039;).addEventListener(&#039;change&#039;, (e) =&gt; {
+      this.setViewportSize(e.target.value);
+    });
+  }
+
+  addComponent(componentMeta) {
+    const previewArea = this.querySelector(&#039;#preview-area&#039;);
+
+    // Remove empty state
+    const emptyState = previewArea.querySelector(&#039;.empty-state&#039;);
+    if (emptyState) emptyState.remove();
+
+    // Create component instance
+    const element = document.createElement(componentMeta.name);
+
+    // Apply default attributes
+    componentMeta.attributes?.forEach(attr =&gt; {
+      if (attr.default !== undefined) {
+        element.setAttribute(attr.name, attr.default);
+      }
+    });
+
+    // Make it selectable
+    element.classList.add(&#039;pg-component&#039;);
+    element.dataset.componentId = crypto.randomUUID();
+    element.dataset.componentMeta = JSON.stringify(componentMeta);
+
+    // Click to select
+    element.addEventListener(&#039;click&#039;, (e) =&gt; {
+      e.stopPropagation();
+      this.selectComponent(element);
+    });
+
+    previewArea.appendChild(element);
+    this.components.push(element);
+    this.selectComponent(element);
+  }
+
+  selectComponent(element) {
+    // Remove previous selection
+    this.querySelectorAll(&#039;.pg-component.selected&#039;).forEach(el =&gt; {
+      el.classList.remove(&#039;selected&#039;);
+    });
+
+    // Select new component
+    element.classList.add(&#039;selected&#039;);
+    this.selectedComponent = element;
+
+    // Notify properties panel
+    this.dispatchEvent(new CustomEvent(&#039;component-selected-canvas&#039;, {
+      detail: {
+        element,
+        meta: JSON.parse(element.dataset.componentMeta)
+      },
+      bubbles: true
+    }));
+  }
+
+  clearAll() {
+    const previewArea = this.querySelector(&#039;#preview-area&#039;);
+    previewArea.innerHTML = `
+      &lt;div class=&quot;empty-state&quot;&gt;
+        Click a component from the sidebar to add it here
+      &lt;/div&gt;
+    `;
+    this.components = [];
+    this.selectedComponent = null;
+  }
+
+  setViewportSize(size) {
+    const previewArea = this.querySelector(&#039;#preview-area&#039;);
+    previewArea.className = &#039;canvas-content viewport-&#039; + size;
+  }
+}
+
+customElements.define(&#039;pg-canvas&#039;, PgCanvas);</code></pre>
+<h2>Properties Panel (pg-properties.mjs)</h2>
+<pre><code class="language-javascript">/**
+ * Properties panel for editing selected component
+ */
+class PgProperties extends HTMLElement {
+  constructor() {
+    super();
+    this.selectedElement = null;
+    this.componentMeta = null;
+  }
+
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;div class=&quot;properties&quot;&gt;
+        &lt;div class=&quot;properties-header&quot;&gt;
+          &lt;h3&gt;Properties&lt;/h3&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;properties-content&quot;&gt;
+          &lt;div class=&quot;no-selection&quot;&gt;
+            Select a component to edit its properties
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    // Listen for component selection
+    document.addEventListener(&#039;component-selected-canvas&#039;, (e) =&gt; {
+      this.showProperties(e.detail.element, e.detail.meta);
+    });
+  }
+
+  showProperties(element, meta) {
+    this.selectedElement = element;
+    this.componentMeta = meta;
+
+    const content = this.querySelector(&#039;.properties-content&#039;);
+    content.innerHTML = `
+      &lt;div class=&quot;component-info&quot;&gt;
+        &lt;div class=&quot;component-icon&quot;&gt;${meta.icon}&lt;/div&gt;
+        &lt;div class=&quot;component-name&quot;&gt;${meta.displayName}&lt;/div&gt;
+        &lt;div class=&quot;component-desc&quot;&gt;${meta.description}&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;properties-section&quot;&gt;
+        &lt;h4&gt;Attributes&lt;/h4&gt;
+        ${this.renderAttributes(meta.attributes || [])}
+      &lt;/div&gt;
+
+      &lt;div class=&quot;properties-actions&quot;&gt;
+        &lt;button class=&quot;btn-delete&quot;&gt;Delete Component&lt;/button&gt;
+      &lt;/div&gt;
+    `;
+
+    this.attachPropertyListeners();
+  }
+
+  renderAttributes(attributes) {
+    if (attributes.length === 0) {
+      return &#039;&lt;p class=&quot;no-attributes&quot;&gt;No configurable attributes&lt;/p&gt;&#039;;
+    }
+
+    return attributes.map(attr =&gt; {
+      const currentValue = this.selectedElement.getAttribute(attr.name) || attr.default;
+
+      return `
+        &lt;div class=&quot;property&quot;&gt;
+          &lt;label&gt;
+            &lt;span class=&quot;property-name&quot;&gt;${attr.name}&lt;/span&gt;
+            &lt;span class=&quot;property-type&quot;&gt;${attr.type}&lt;/span&gt;
+          &lt;/label&gt;
+          ${this.renderInput(attr, currentValue)}
+          &lt;small class=&quot;property-desc&quot;&gt;${attr.description}&lt;/small&gt;
+        &lt;/div&gt;
+      `;
+    }).join(&#039;&#039;);
+  }
+
+  renderInput(attr, value) {
+    switch (attr.type) {
+      case &#039;boolean&#039;:
+        return `&lt;input type=&quot;checkbox&quot;
+                       data-attr=&quot;${attr.name}&quot;
+                       ${value === &#039;true&#039; ? &#039;checked&#039; : &#039;&#039;}&gt;`;
+
+      case &#039;number&#039;:
+        return `&lt;input type=&quot;number&quot;
+                       data-attr=&quot;${attr.name}&quot;
+                       value=&quot;${value}&quot;&gt;`;
+
+      case &#039;select&#039;:
+        return `&lt;select data-attr=&quot;${attr.name}&quot;&gt;
+                  ${attr.options.map(opt =&gt;
+                    `&lt;option value=&quot;${opt}&quot; ${value === opt ? &#039;selected&#039; : &#039;&#039;}&gt;${opt}&lt;/option&gt;`
+                  ).join(&#039;&#039;)}
+                &lt;/select&gt;`;
+
+      default:
+        return `&lt;input type=&quot;text&quot;
+                       data-attr=&quot;${attr.name}&quot;
+                       value=&quot;${value}&quot;
+                       placeholder=&quot;${attr.default || &#039;&#039;}&quot;&gt;`;
+    }
+  }
+
+  attachPropertyListeners() {
+    // Listen for property changes
+    this.querySelectorAll(&#039;[data-attr]&#039;).forEach(input =&gt; {
+      input.addEventListener(&#039;input&#039;, (e) =&gt; {
+        const attrName = e.target.dataset.attr;
+        let value;
+
+        if (e.target.type === &#039;checkbox&#039;) {
+          value = e.target.checked;
+        } else {
+          value = e.target.value;
+        }
+
+        // Update the actual component
+        this.selectedElement.setAttribute(attrName, value);
+      });
+    });
+
+    // Delete button
+    this.querySelector(&#039;.btn-delete&#039;)?.addEventListener(&#039;click&#039;, () =&gt; {
+      if (this.selectedElement) {
+        this.selectedElement.remove();
+        this.showNoSelection();
+      }
+    });
+  }
+
+  showNoSelection() {
+    const content = this.querySelector(&#039;.properties-content&#039;);
+    content.innerHTML = `
+      &lt;div class=&quot;no-selection&quot;&gt;
+        Select a component to edit its properties
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;pg-properties&#039;, PgProperties);</code></pre>
+<h2>Code Exporter (pg-exporter.mjs)</h2>
+<pre><code class="language-javascript">/**
+ * Code exporter for copying/downloading generated HTML
+ */
+class PgExporter extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;div class=&quot;exporter&quot;&gt;
+        &lt;div class=&quot;exporter-header&quot;&gt;
+          &lt;h3&gt;HTML Code&lt;/h3&gt;
+          &lt;div class=&quot;exporter-actions&quot;&gt;
+            &lt;button class=&quot;btn-copy&quot;&gt;Copy&lt;/button&gt;
+            &lt;button class=&quot;btn-download&quot;&gt;Download&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;pre&gt;&lt;code id=&quot;code-output&quot;&gt;&lt;/code&gt;&lt;/pre&gt;
+      &lt;/div&gt;
+    `;
+
+    this.setupListeners();
+    this.updateCode();
+  }
+
+  setupListeners() {
+    // Update code when canvas changes
+    document.addEventListener(&#039;component-selected&#039;, () =&gt; {
+      setTimeout(() =&gt; this.updateCode(), 100);
+    });
+
+    document.addEventListener(&#039;component-selected-canvas&#039;, () =&gt; {
+      this.updateCode();
+    });
+
+    // Copy button
+    this.querySelector(&#039;.btn-copy&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.copyCode();
+    });
+
+    // Download button
+    this.querySelector(&#039;.btn-download&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.downloadCode();
+    });
+  }
+
+  updateCode() {
+    const canvas = document.querySelector(&#039;pg-canvas&#039;);
+    if (!canvas) return;
+
+    const previewArea = canvas.querySelector(&#039;#preview-area&#039;);
+    const components = Array.from(previewArea.querySelectorAll(&#039;.pg-component&#039;));
+
+    if (components.length === 0) {
+      this.querySelector(&#039;#code-output&#039;).textContent = &#039;&lt;!-- No components yet --&gt;&#039;;
+      return;
+    }
+
+    // Generate clean HTML
+    const html = this.generateHTML(components);
+    this.querySelector(&#039;#code-output&#039;).textContent = html;
+  }
+
+  generateHTML(components) {
+    const lines = [&#039;&lt;!DOCTYPE html&gt;&#039;, &#039;&lt;html&gt;&#039;, &#039;&lt;head&gt;&#039;,
+      &#039;  &lt;meta charset=&quot;utf-8&quot;&gt;&#039;,
+      &#039;  &lt;title&gt;LARC Playground Export&lt;/title&gt;&#039;,
+      &#039;  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core/pan.mjs&quot;&gt;&lt;/script&gt;&#039;,
+      &#039;&lt;/head&gt;&#039;, &#039;&lt;body&gt;&#039;, &#039;  &lt;pan-bus&gt;&lt;/pan-bus&gt;&#039;, &#039;&#039;];
+
+    components.forEach(comp =&gt; {
+      const tag = comp.tagName.toLowerCase();
+      const attributes = Array.from(comp.attributes)
+        .filter(attr =&gt; !attr.name.startsWith(&#039;data-&#039;) &amp;&amp; attr.name !== &#039;class&#039;)
+        .map(attr =&gt; `${attr.name}=&quot;${attr.value}&quot;`)
+        .join(&#039; &#039;);
+
+      const content = comp.innerHTML.trim();
+
+      if (content) {
+        lines.push(`  &lt;${tag}${attributes ? &#039; &#039; + attributes : &#039;&#039;}&gt;`);
+        lines.push(`    ${content}`);
+        lines.push(`  &lt;/${tag}&gt;`);
+      } else {
+        lines.push(`  &lt;${tag}${attributes ? &#039; &#039; + attributes : &#039;&#039;}&gt;&lt;/${tag}&gt;`);
+      }
+    });
+
+    lines.push(&#039;&#039;, &#039;&lt;/body&gt;&#039;, &#039;&lt;/html&gt;&#039;);
+    return lines.join(&#039;\n&#039;);
+  }
+
+  copyCode() {
+    const code = this.querySelector(&#039;#code-output&#039;).textContent;
+    navigator.clipboard.writeText(code).then(() =&gt; {
+      // Show feedback
+      const btn = this.querySelector(&#039;.btn-copy&#039;);
+      const originalText = btn.textContent;
+      btn.textContent = &#039;Copied!&#039;;
+      setTimeout(() =&gt; btn.textContent = originalText, 2000);
+    });
+  }
+
+  downloadCode() {
+    const code = this.querySelector(&#039;#code-output&#039;).textContent;
+    const blob = new Blob([code], { type: &#039;text/html&#039; });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#039;a&#039;);
+    a.href = url;
+    a.download = &#039;larc-playground-export.html&#039;;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+}
+
+customElements.define(&#039;pg-exporter&#039;, PgExporter);</code></pre>
+<h2>Main Layout (index.html)</h2>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;LARC Playground&lt;/title&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;./styles/playground.css&quot;&gt;
+  &lt;script type=&quot;module&quot; src=&quot;./playground.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class=&quot;playground&quot;&gt;
+    &lt;!-- Header --&gt;
+    &lt;header class=&quot;pg-header&quot;&gt;
+      &lt;h1&gt;🎨 LARC Playground&lt;/h1&gt;
+      &lt;div class=&quot;pg-actions&quot;&gt;
+        &lt;button id=&quot;toggle-bus-monitor&quot;&gt;PAN Monitor&lt;/button&gt;
+        &lt;button id=&quot;toggle-code&quot;&gt;View Code&lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/header&gt;
+
+    &lt;!-- Main Layout --&gt;
+    &lt;div class=&quot;pg-main&quot;&gt;
+      &lt;!-- Left: Component Palette --&gt;
+      &lt;aside class=&quot;pg-sidebar&quot;&gt;
+        &lt;pg-palette&gt;&lt;/pg-palette&gt;
+      &lt;/aside&gt;
+
+      &lt;!-- Center: Canvas --&gt;
+      &lt;main class=&quot;pg-canvas-area&quot;&gt;
+        &lt;pg-canvas&gt;&lt;/pg-canvas&gt;
+      &lt;/main&gt;
+
+      &lt;!-- Right: Properties Panel --&gt;
+      &lt;aside class=&quot;pg-properties-area&quot;&gt;
+        &lt;pg-properties&gt;&lt;/pg-properties&gt;
+      &lt;/aside&gt;
+    &lt;/div&gt;
+
+    &lt;!-- Bottom: Code Export / Bus Monitor (toggleable) --&gt;
+    &lt;div class=&quot;pg-bottom&quot; id=&quot;bottom-panel&quot; hidden&gt;
+      &lt;pg-exporter id=&quot;code-panel&quot;&gt;&lt;/pg-exporter&gt;
+      &lt;pg-bus-monitor id=&quot;bus-panel&quot; hidden&gt;&lt;/pg-bus-monitor&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;pan-bus debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h2>Implementation Order</h2>
+<li><strong>Component Registry</strong> (Day 1)</li>
+   - Create generator script
+   - Add JSDoc to 5-10 key components
+   - Generate registry.json
+<li><strong>Base Structure</strong> (Day 1)</li>
+   - Create playground directory
+   - Basic HTML layout
+   - CSS framework (flexbox grid)
+<li><strong>Component Palette</strong> (Day 2)</li>
+   - Load registry.json
+   - Render categorized components
+   - Search functionality
+   - Click to add
+<li><strong>Live Canvas</strong> (Day 2-3)</li>
+   - Component instantiation
+   - Selection handling
+   - Basic layout
+   - Clear functionality
+<li><strong>Properties Panel</strong> (Day 3-4)</li>
+   - Attribute editing
+   - Type-specific inputs
+   - Live updates
+   - Delete component
+<li><strong>Code Export</strong> (Day 4)</li>
+   - HTML generation
+   - Copy to clipboard
+   - Download file
+<li><strong>PAN Bus Monitor</strong> (Day 5)</li>
+   - Message logging
+   - Topic filtering
+   - Message details
+<li><strong>Polish & Testing</strong> (Day 6-7)</li>
+   - Responsive design
+   - Error handling
+   - Edge cases
+   - Documentation
+<h2>Success Criteria</h2>
+<p>✅ Can browse and add 10+ components
+✅ Can edit component properties live
+✅ Can see components working together
+✅ Can export clean HTML
+✅ Can visualize PAN messages
+✅ Zero build step (runs directly in browser)
+✅ Built WITH LARC components (dogfooding)</p>
+<h2>Future Enhancements (Post-MVP)</h2>
+<ul><li>Drag-and-drop reordering</li>
+<li>Component nesting/children</li>
+<li>Save/load projects (localStorage)</li>
+<li>Share via URL</li>
+<li>Undo/redo</li>
+<li>Responsive preview modes</li>
+<li>CSS editor</li>
+<li>Component templates/presets</li>
+<li>Keyboard shortcuts</li>
+<li>Dark mode</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/archive/2024/PLAYGROUND-IMPLEMENTATION.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

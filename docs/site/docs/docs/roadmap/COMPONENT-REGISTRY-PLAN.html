@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Component Registry Plan · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Component Registry Plan">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">roadmap</a> / <span>COMPONENT-REGISTRY-PLAN</span>
+      </div>
+      <article class="docs-content">
+        <h1>Component Registry Plan</h1>
+<h2>Overview</h2>
+<p>Create a comprehensive JSON registry of all LARC components with metadata extracted from JSDoc comments. This registry will power:
+<ul><li>🎨 Playground component palette</li>
+<li>🛠️ Visual editor toolbox</li>
+<li>📖 Auto-generated documentation</li>
+<li>🔍 Component search/discovery</li>
+<li>💡 IntelliSense and tooltips</li>
+</ul>
+<h2>JSON Structure</h2></p>
+<pre><code class="language-json">{
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;generated&quot;: &quot;2025-11-12T21:45:00Z&quot;,
+  &quot;components&quot;: [
+    {
+      &quot;name&quot;: &quot;pan-router&quot;,
+      &quot;displayName&quot;: &quot;Router&quot;,
+      &quot;description&quot;: &quot;Client-side routing with navigation and history management&quot;,
+      &quot;category&quot;: &quot;routing&quot;,
+      &quot;path&quot;: &quot;./components/pan-router.mjs&quot;,
+      &quot;icon&quot;: &quot;🧭&quot;,
+      &quot;tags&quot;: [&quot;routing&quot;, &quot;navigation&quot;, &quot;spa&quot;],
+      &quot;status&quot;: &quot;stable&quot;,
+      &quot;since&quot;: &quot;1.0.0&quot;,
+
+      &quot;attributes&quot;: [
+        {
+          &quot;name&quot;: &quot;base-path&quot;,
+          &quot;type&quot;: &quot;string&quot;,
+          &quot;default&quot;: &quot;/&quot;,
+          &quot;description&quot;: &quot;Base path for all routes&quot;,
+          &quot;required&quot;: false
+        }
+      ],
+
+      &quot;properties&quot;: [
+        {
+          &quot;name&quot;: &quot;routes&quot;,
+          &quot;type&quot;: &quot;Array&lt;Route&gt;&quot;,
+          &quot;description&quot;: &quot;Registered routes&quot;,
+          &quot;readonly&quot;: true
+        }
+      ],
+
+      &quot;methods&quot;: [
+        {
+          &quot;name&quot;: &quot;navigate&quot;,
+          &quot;description&quot;: &quot;Navigate to a path&quot;,
+          &quot;parameters&quot;: [
+            {
+              &quot;name&quot;: &quot;path&quot;,
+              &quot;type&quot;: &quot;string&quot;,
+              &quot;description&quot;: &quot;Path to navigate to&quot;
+            },
+            {
+              &quot;name&quot;: &quot;options&quot;,
+              &quot;type&quot;: &quot;NavigateOptions&quot;,
+              &quot;optional&quot;: true,
+              &quot;description&quot;: &quot;Navigation options&quot;
+            }
+          ],
+          &quot;returns&quot;: {
+            &quot;type&quot;: &quot;void&quot;
+          }
+        },
+        {
+          &quot;name&quot;: &quot;getCurrentRoute&quot;,
+          &quot;description&quot;: &quot;Get current route information&quot;,
+          &quot;parameters&quot;: [],
+          &quot;returns&quot;: {
+            &quot;type&quot;: &quot;{ path: string, params: Record&lt;string, string&gt; }&quot;
+          }
+        }
+      ],
+
+      &quot;events&quot;: [
+        {
+          &quot;name&quot;: &quot;route-changed&quot;,
+          &quot;description&quot;: &quot;Fired when route changes&quot;,
+          &quot;detail&quot;: {
+            &quot;type&quot;: &quot;{ path: string, params: Record&lt;string, string&gt; }&quot;
+          }
+        }
+      ],
+
+      &quot;slots&quot;: [
+        {
+          &quot;name&quot;: &quot;default&quot;,
+          &quot;description&quot;: &quot;Router outlet content&quot;
+        }
+      ],
+
+      &quot;examples&quot;: [
+        {
+          &quot;title&quot;: &quot;Basic routing&quot;,
+          &quot;code&quot;: &quot;&lt;pan-router&gt;\n  &lt;pan-route path=\&quot;/home\&quot; component=\&quot;home-page\&quot;&gt;&lt;/pan-route&gt;\n  &lt;pan-route path=\&quot;/about\&quot; component=\&quot;about-page\&quot;&gt;&lt;/pan-route&gt;\n&lt;/pan-router&gt;&quot;
+        }
+      ],
+
+      &quot;dependencies&quot;: [&quot;@larcjs/core&quot;],
+      &quot;related&quot;: [&quot;pan-link&quot;, &quot;pan-route&quot;]
+    }
+  ],
+
+  &quot;categories&quot;: [
+    {
+      &quot;id&quot;: &quot;routing&quot;,
+      &quot;name&quot;: &quot;Routing &amp; Navigation&quot;,
+      &quot;icon&quot;: &quot;🧭&quot;,
+      &quot;description&quot;: &quot;Components for client-side routing&quot;
+    },
+    {
+      &quot;id&quot;: &quot;state&quot;,
+      &quot;name&quot;: &quot;State Management&quot;,
+      &quot;icon&quot;: &quot;💾&quot;,
+      &quot;description&quot;: &quot;State management and persistence&quot;
+    },
+    {
+      &quot;id&quot;: &quot;forms&quot;,
+      &quot;name&quot;: &quot;Forms &amp; Input&quot;,
+      &quot;icon&quot;: &quot;📝&quot;,
+      &quot;description&quot;: &quot;Form handling and user input&quot;
+    },
+    {
+      &quot;id&quot;: &quot;data&quot;,
+      &quot;name&quot;: &quot;Data &amp; Connectivity&quot;,
+      &quot;icon&quot;: &quot;🔌&quot;,
+      &quot;description&quot;: &quot;Data fetching and API integration&quot;
+    },
+    {
+      &quot;id&quot;: &quot;ui&quot;,
+      &quot;name&quot;: &quot;UI Components&quot;,
+      &quot;icon&quot;: &quot;🎨&quot;,
+      &quot;description&quot;: &quot;User interface building blocks&quot;
+    },
+    {
+      &quot;id&quot;: &quot;content&quot;,
+      &quot;name&quot;: &quot;Content &amp; Media&quot;,
+      &quot;icon&quot;: &quot;📄&quot;,
+      &quot;description&quot;: &quot;Content display and editing&quot;
+    },
+    {
+      &quot;id&quot;: &quot;auth&quot;,
+      &quot;name&quot;: &quot;Authentication&quot;,
+      &quot;icon&quot;: &quot;🔐&quot;,
+      &quot;description&quot;: &quot;Authentication and security&quot;
+    },
+    {
+      &quot;id&quot;: &quot;theme&quot;,
+      &quot;name&quot;: &quot;Theming&quot;,
+      &quot;icon&quot;: &quot;🎭&quot;,
+      &quot;description&quot;: &quot;Theme and styling management&quot;
+    },
+    {
+      &quot;id&quot;: &quot;devtools&quot;,
+      &quot;name&quot;: &quot;Developer Tools&quot;,
+      &quot;icon&quot;: &quot;🔧&quot;,
+      &quot;description&quot;: &quot;Debugging and development utilities&quot;
+    },
+    {
+      &quot;id&quot;: &quot;advanced&quot;,
+      &quot;name&quot;: &quot;Advanced&quot;,
+      &quot;icon&quot;: &quot;⚙️&quot;,
+      &quot;description&quot;: &quot;Advanced functionality&quot;
+    }
+  ]
+}</code></pre>
+<h2>Generator Script</h2>
+<h3>Approach 1: JSDoc Parser (Recommended)</h3>
+<p>Use existing JSDoc parsing tools to extract metadata:</p>
+<pre><code class="language-javascript">// scripts/generate-registry.js
+import { parse } from &#039;jsdoc-parse&#039;;
+import { glob } from &#039;glob&#039;;
+import fs from &#039;fs/promises&#039;;
+
+async function generateRegistry() {
+  const files = await glob(&#039;./components/**/*.mjs&#039;);
+  const components = [];
+
+  for (const file of files) {
+    const content = await fs.readFile(file, &#039;utf-8&#039;);
+    const docs = await parse(content);
+
+    // Extract component metadata
+    const component = {
+      name: extractComponentName(docs),
+      displayName: extractDisplayName(docs),
+      description: extractDescription(docs),
+      category: categorizeComponent(docs),
+      path: file,
+      icon: guessIcon(docs),
+      attributes: extractAttributes(docs),
+      properties: extractProperties(docs),
+      methods: extractMethods(docs),
+      events: extractEvents(docs),
+      slots: extractSlots(docs),
+      examples: extractExamples(docs)
+    };
+
+    components.push(component);
+  }
+
+  const registry = {
+    version: &#039;1.0.0&#039;,
+    generated: new Date().toISOString(),
+    components,
+    categories: getCategories()
+  };
+
+  await fs.writeFile(
+    &#039;./component-registry.json&#039;,
+    JSON.stringify(registry, null, 2)
+  );
+}</code></pre>
+<h3>Approach 2: Custom AST Parser</h3>
+<p>Parse JavaScript with @babel/parser or acorn:</p>
+<pre><code class="language-javascript">import { parse } from &#039;@babel/parser&#039;;
+import traverse from &#039;@babel/traverse&#039;;
+
+function extractComponentMetadata(code) {
+  const ast = parse(code, {
+    sourceType: &#039;module&#039;,
+    plugins: [&#039;classProperties&#039;]
+  });
+
+  let metadata = {};
+
+  traverse(ast, {
+    ClassDeclaration(path) {
+      if (path.node.superClass?.name === &#039;HTMLElement&#039;) {
+        metadata.name = path.node.id.name;
+        metadata.methods = extractMethods(path);
+        metadata.properties = extractProperties(path);
+      }
+    },
+
+    CallExpression(path) {
+      if (path.node.callee.object?.name === &#039;customElements&#039; &amp;&amp;
+          path.node.callee.property?.name === &#039;define&#039;) {
+        metadata.tagName = path.node.arguments[0].value;
+      }
+    }
+  });
+
+  return metadata;
+}</code></pre>
+<h3>Approach 3: Hybrid (Best)</h3>
+<p>Combine JSDoc for documentation + AST for code structure:</p>
+<pre><code class="language-javascript">async function analyzeComponent(file) {
+  const content = await fs.readFile(file, &#039;utf-8&#039;);
+
+  // Parse JSDoc comments
+  const jsdocInfo = parseJSDoc(content);
+
+  // Parse code structure
+  const codeInfo = parseAST(content);
+
+  // Merge both
+  return {
+    ...jsdocInfo,
+    ...codeInfo,
+    path: file
+  };
+}</code></pre>
+<h2>JSDoc Convention</h2>
+<p>Standardize JSDoc comments in components:</p>
+<pre><code class="language-javascript">/**
+ * @component pan-router
+ * @displayName Router
+ * @category routing
+ * @icon 🧭
+ * @status stable
+ * @since 1.0.0
+ * @description Client-side routing with navigation and history management
+ *
+ * @attribute {string} base-path=&quot;/&quot; - Base path for all routes
+ * @attribute {boolean} hash-mode=false - Use hash-based routing
+ *
+ * @property {Array&lt;Route&gt;} routes - Registered routes (readonly)
+ *
+ * @fires route-changed - Fired when route changes
+ * @fires navigation-error - Fired when navigation fails
+ *
+ * @method navigate
+ * @param {string} path - Path to navigate to
+ * @param {NavigateOptions} [options] - Navigation options
+ * @returns {void}
+ *
+ * @method getCurrentRoute
+ * @returns {{ path: string, params: Record&lt;string, string&gt; }}
+ *
+ * @slot default - Router outlet content
+ *
+ * @example
+ * &lt;pan-router base-path=&quot;/app&quot;&gt;
+ *   &lt;pan-route path=&quot;/home&quot; component=&quot;home-page&quot;&gt;&lt;/pan-route&gt;
+ * &lt;/pan-router&gt;
+ *
+ * @related pan-link
+ * @related pan-route
+ * @dependency @larcjs/core
+ */
+class PanRouter extends HTMLElement {
+  // implementation
+}</code></pre>
+<h2>Implementation Steps</h2>
+<li><strong>Define JSON Schema</strong> ✅ (above)</li>
+<li><strong>Choose parser approach</strong> (Hybrid recommended)</li>
+<li><strong>Create generator script</strong> (<code>scripts/generate-registry.js</code>)</li>
+<li><strong>Add JSDoc conventions</strong> to component files</li>
+<li><strong>Generate initial registry</strong></li>
+<li><strong>Add npm script</strong> (<code>npm run registry:generate</code>)</li>
+<li><strong>Integrate with build process</strong></li>
+<li><strong>Create TypeScript types</strong> for registry</li>
+<li><strong>Add validation</strong> (JSON schema validation)</li>
+<li><strong>Documentation</strong> on how to use registry</li>
+<h2>Usage Examples</h2>
+<h3>In Playground</h3>
+<pre><code class="language-javascript">import registry from &#039;./component-registry.json&#039;;
+
+// Render component palette
+function renderPalette() {
+  const categories = registry.categories;
+
+  return categories.map(cat =&gt; {
+    const components = registry.components
+      .filter(c =&gt; c.category === cat.id);
+
+    return `
+      &lt;div class=&quot;category&quot;&gt;
+        &lt;h3&gt;${cat.icon} ${cat.name}&lt;/h3&gt;
+        ${components.map(c =&gt; `
+          &lt;button class=&quot;component-item&quot;
+                  data-component=&quot;${c.name}&quot;
+                  title=&quot;${c.description}&quot;&gt;
+            ${c.icon} ${c.displayName}
+          &lt;/button&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }).join(&#039;&#039;);
+}
+
+// Get component details for property panel
+function getComponentDetails(name) {
+  return registry.components.find(c =&gt; c.name === name);
+}</code></pre>
+<h3>In Visual Editor</h3>
+<pre><code class="language-javascript">// Drag and drop from palette
+function onDragStart(e, componentName) {
+  const component = registry.components.find(c =&gt; c.name === componentName);
+  e.dataTransfer.setData(&#039;component&#039;, JSON.stringify(component));
+}
+
+// Show properties panel
+function showProperties(componentName) {
+  const component = registry.components.find(c =&gt; c.name === componentName);
+
+  return component.attributes.map(attr =&gt; `
+    &lt;label&gt;
+      ${attr.name}
+      &lt;input type=&quot;${getInputType(attr.type)}&quot;
+             value=&quot;${attr.default}&quot;
+             placeholder=&quot;${attr.description}&quot;&gt;
+    &lt;/label&gt;
+  `).join(&#039;&#039;);
+}</code></pre>
+<h3>In Documentation Generator</h3>
+<pre><code class="language-javascript">// Generate API docs
+function generateDocs() {
+  return registry.components.map(component =&gt; {
+    return `
+# ${component.displayName}
+
+${component.description}
+
+## Attributes
+
+${component.attributes.map(attr =&gt;
+  `- **${attr.name}** (${attr.type}): ${attr.description}`
+).join(&#039;\n&#039;)}
+
+## Methods
+
+${component.methods.map(method =&gt;
+  `### ${method.name}(${method.parameters.map(p =&gt; p.name).join(&#039;, &#039;)})`
+).join(&#039;\n&#039;)}
+
+## Examples
+
+\`\`\`html
+${component.examples[0].code}
+\`\`\`
+    `;
+  }).join(&#039;\n\n&#039;);
+}</code></pre>
+<h2>Benefits</h2>
+<li><strong>Single Source of Truth</strong> - All component metadata in one place</li>
+<li><strong>Automatic Documentation</strong> - Generate docs from code</li>
+<li><strong>Playground/Editor Ready</strong> - Metadata powers visual tools</li>
+<li><strong>Searchable</strong> - Easy to find components by category, tag, or name</li>
+<li><strong>Versioned</strong> - Track component changes over time</li>
+<li><strong>Validation</strong> - Can validate components implement what they document</li>
+<li><strong>Type Safety</strong> - TypeScript types from registry</li>
+<li><strong>Extensible</strong> - Easy to add new metadata fields</li>
+<h2>Timeline</h2>
+<strong>Recommended:</strong> Add to Phase 4 (Developer Experience) or Phase 5 (before Playground)
+<ul><li>Week 1: Design JSON schema and JSDoc conventions</li>
+<li>Week 2: Build generator script</li>
+<li>Week 3: Add JSDoc to all components</li>
+<li>Week 4: Generate registry and integrate</li>
+</ul>
+<strong>Alternative:</strong> Start now as it will benefit Playground development
+<h2>Open Questions</h2>
+<li>Should we include default styles/CSS in registry?</li>
+<li>Should we version the registry separately from components?</li>
+<li>Should we generate separate registries for categories?</li>
+<li>Should we include component dependencies graph?</li>
+<li>Should we track component size/bundle impact?</li>
+<h2>Next Steps</h2>
+<li>Finalize JSON schema</li>
+<li>Choose parser approach</li>
+<li>Create generator script</li>
+<li>Document JSDoc conventions</li>
+<li>Start adding JSDoc to key components</li>
+<li>Generate initial registry</li>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/roadmap/COMPONENT-REGISTRY-PLAN.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

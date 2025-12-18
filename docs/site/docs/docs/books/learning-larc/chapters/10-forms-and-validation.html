@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chapter 9: Forms and Validation · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Chapter 9: Forms and Validation">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>10-forms-and-validation</span>
+      </div>
+      <article class="docs-content">
+        <h1>Chapter 9: Forms and Validation</h1>
+<p>Forms are the primary way users input data into web applications. LARC provides patterns for building accessible, validated forms using web standards and the PAN bus.</p>
+<h2>Form Components</h2>
+<h3>Basic Form Component</h3>
+<pre><code class="language-javascript">class ContactForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  connectedCallback() {
+    this.render();
+    this.attachEventListeners();
+  }
+
+  attachEventListeners() {
+    const form = this.shadowRoot.querySelector(&#039;form&#039;);
+
+    form.addEventListener(&#039;submit&#039;, async (e) =&gt; {
+      e.preventDefault();
+
+      if (this.validate()) {
+        const data = this.getFormData();
+        await this.handleSubmit(data);
+      }
+    });
+  }
+
+  getFormData() {
+    const form = this.shadowRoot.querySelector(&#039;form&#039;);
+    const formData = new FormData(form);
+    return Object.fromEntries(formData);
+  }
+
+  validate() {
+    const form = this.shadowRoot.querySelector(&#039;form&#039;);
+    return form.checkValidity();
+  }
+
+  async handleSubmit(data) {
+    try {
+      const response = await fetch(&#039;/api/contact&#039;, {
+        method: &#039;POST&#039;,
+        headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+        body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+        pan.publish(&#039;form.submitted&#039;, { form: &#039;contact&#039;, data });
+        this.showSuccess();
+      } else {
+        throw new Error(&#039;Submission failed&#039;);
+      }
+    } catch (error) {
+      this.showError(error.message);
+    }
+  }
+
+  showSuccess() {
+    pan.publish(&#039;notification.success&#039;, { message: &#039;Form submitted successfully!&#039; });
+    this.shadowRoot.querySelector(&#039;form&#039;).reset();
+  }
+
+  showError(message) {
+    pan.publish(&#039;notification.error&#039;, { message });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        form { max-width: 500px; }
+        .field { margin-bottom: 16px; }
+        label {
+          display: block;
+          margin-bottom: 4px;
+          font-weight: 600;
+        }
+        input, textarea {
+          width: 100%;
+          padding: 8px 12px;
+          border: 1px solid #cbd5e0;
+          border-radius: 4px;
+        }
+        input:invalid, textarea:invalid {
+          border-color: #fc8181;
+        }
+        button {
+          background: #667eea;
+          color: white;
+          padding: 10px 24px;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+      &lt;/style&gt;
+
+      &lt;form&gt;
+        &lt;div class=&quot;field&quot;&gt;
+          &lt;label for=&quot;name&quot;&gt;Name *&lt;/label&gt;
+          &lt;input type=&quot;text&quot; id=&quot;name&quot; name=&quot;name&quot; required minlength=&quot;2&quot;&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;field&quot;&gt;
+          &lt;label for=&quot;email&quot;&gt;Email *&lt;/label&gt;
+          &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;field&quot;&gt;
+          &lt;label for=&quot;message&quot;&gt;Message *&lt;/label&gt;
+          &lt;textarea id=&quot;message&quot; name=&quot;message&quot; required minlength=&quot;10&quot; rows=&quot;5&quot;&gt;&lt;/textarea&gt;
+        &lt;/div&gt;
+
+        &lt;button type=&quot;submit&quot;&gt;Send Message&lt;/button&gt;
+      &lt;/form&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;contact-form&#039;, ContactForm);</code></pre>
+<h2>Two-Way Data Binding</h2>
+<p>Sync form inputs with component state:</p>
+<pre><code class="language-javascript">class DataBoundForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.state = {
+      firstName: &#039;&#039;,
+      lastName: &#039;&#039;,
+      email: &#039;&#039;
+    };
+  }
+
+  connectedCallback() {
+    this.render();
+    this.bindInputs();
+  }
+
+  bindInputs() {
+    const inputs = this.shadowRoot.querySelectorAll(&#039;input&#039;);
+
+    inputs.forEach(input =&gt; {
+      // Update state when input changes
+      input.addEventListener(&#039;input&#039;, (e) =&gt; {
+        this.state[e.target.name] = e.target.value;
+        pan.publish(&#039;form.state.changed&#039;, { state: this.state });
+      });
+
+      // Update input when state changes
+      pan.subscribe(&#039;form.state.update&#039;, (updates) =&gt; {
+        if (updates[input.name] !== undefined) {
+          input.value = updates[input.name];
+          this.state[input.name] = updates[input.name];
+        }
+      });
+    });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;form&gt;
+        &lt;input type=&quot;text&quot; name=&quot;firstName&quot; value=&quot;${this.state.firstName}&quot; placeholder=&quot;First Name&quot;&gt;
+        &lt;input type=&quot;text&quot; name=&quot;lastName&quot; value=&quot;${this.state.lastName}&quot; placeholder=&quot;Last Name&quot;&gt;
+        &lt;input type=&quot;email&quot; name=&quot;email&quot; value=&quot;${this.state.email}&quot; placeholder=&quot;Email&quot;&gt;
+      &lt;/form&gt;
+      &lt;div class=&quot;preview&quot;&gt;
+        &lt;p&gt;Hello, ${this.state.firstName} ${this.state.lastName}!&lt;/p&gt;
+        &lt;p&gt;Email: ${this.state.email}&lt;/p&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h2>Validation Strategies</h2>
+<h3>Native HTML5 Validation</h3>
+<pre><code class="language-html">&lt;input type=&quot;email&quot; required&gt;
+&lt;input type=&quot;number&quot; min=&quot;1&quot; max=&quot;100&quot;&gt;
+&lt;input type=&quot;text&quot; pattern=&quot;[A-Za-z]{3,}&quot; title=&quot;At least 3 letters&quot;&gt;
+&lt;input type=&quot;url&quot; required&gt;</code></pre>
+<h3>Custom Validation</h3>
+<pre><code class="language-javascript">class ValidatedInput extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;input type=&quot;text&quot; id=&quot;input&quot;&gt;
+      &lt;span class=&quot;error&quot;&gt;&lt;/span&gt;
+    `;
+
+    const input = this.querySelector(&#039;input&#039;);
+    const error = this.querySelector(&#039;.error&#039;);
+
+    input.addEventListener(&#039;blur&#039;, () =&gt; {
+      const validationResult = this.customValidate(input.value);
+
+      if (!validationResult.valid) {
+        error.textContent = validationResult.message;
+        input.classList.add(&#039;invalid&#039;);
+      } else {
+        error.textContent = &#039;&#039;;
+        input.classList.remove(&#039;invalid&#039;);
+      }
+    });
+  }
+
+  customValidate(value) {
+    // Custom validation logic
+    if (value.length &lt; 3) {
+      return { valid: false, message: &#039;Must be at least 3 characters&#039; };
+    }
+
+    if (!/^[a-zA-Z]+$/.test(value)) {
+      return { valid: false, message: &#039;Only letters allowed&#039; };
+    }
+
+    return { valid: true };
+  }
+}</code></pre>
+<h3>Async Validation</h3>
+<pre><code class="language-javascript">class UsernameInput extends HTMLElement {
+  connectedCallback() {
+    this.render();
+
+    const input = this.querySelector(&#039;input&#039;);
+    let timeoutId;
+
+    input.addEventListener(&#039;input&#039;, (e) =&gt; {
+      clearTimeout(timeoutId);
+
+      timeoutId = setTimeout(async () =&gt; {
+        await this.checkAvailability(e.target.value);
+      }, 500);
+    });
+  }
+
+  async checkAvailability(username) {
+    const status = this.querySelector(&#039;.status&#039;);
+
+    if (username.length &lt; 3) {
+      status.textContent = &#039;&#039;;
+      return;
+    }
+
+    status.textContent = &#039;Checking...&#039;;
+
+    try {
+      const response = await fetch(`/api/check-username?username=${username}`);
+      const { available } = await response.json();
+
+      if (available) {
+        status.textContent = &#039;✓ Available&#039;;
+        status.className = &#039;status success&#039;;
+      } else {
+        status.textContent = &#039;✗ Already taken&#039;;
+        status.className = &#039;status error&#039;;
+      }
+    } catch (error) {
+      status.textContent = &#039;Could not check availability&#039;;
+      status.className = &#039;status error&#039;;
+    }
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;label&gt;Username&lt;/label&gt;
+      &lt;input type=&quot;text&quot; placeholder=&quot;Choose a username&quot;&gt;
+      &lt;span class=&quot;status&quot;&gt;&lt;/span&gt;
+    `;
+  }
+}</code></pre>
+<h2>Error Handling</h2>
+<p>Display validation errors elegantly:</p>
+<pre><code class="language-javascript">class FormWithErrors extends HTMLElement {
+  constructor() {
+    super();
+    this.errors = {};
+  }
+
+  connectedCallback() {
+    this.render();
+
+    const form = this.querySelector(&#039;form&#039;);
+
+    form.addEventListener(&#039;submit&#039;, (e) =&gt; {
+      e.preventDefault();
+
+      this.clearErrors();
+      const errors = this.validateForm();
+
+      if (Object.keys(errors).length === 0) {
+        this.handleSubmit();
+      } else {
+        this.showErrors(errors);
+      }
+    });
+  }
+
+  validateForm() {
+    const errors = {};
+    const inputs = this.querySelectorAll(&#039;input&#039;);
+
+    inputs.forEach(input =&gt; {
+      if (!input.validity.valid) {
+        errors[input.name] = this.getErrorMessage(input);
+      }
+    });
+
+    return errors;
+  }
+
+  getErrorMessage(input) {
+    if (input.validity.valueMissing) {
+      return &#039;This field is required&#039;;
+    }
+    if (input.validity.typeMismatch) {
+      return `Please enter a valid ${input.type}`;
+    }
+    if (input.validity.tooShort) {
+      return `Must be at least ${input.minLength} characters`;
+    }
+    if (input.validity.tooLong) {
+      return `Must be no more than ${input.maxLength} characters`;
+    }
+    if (input.validity.patternMismatch) {
+      return input.title || &#039;Invalid format&#039;;
+    }
+
+    return &#039;Invalid input&#039;;
+  }
+
+  showErrors(errors) {
+    Object.entries(errors).forEach(([fieldName, message]) =&gt; {
+      const field = this.querySelector(`[name=&quot;${fieldName}&quot;]`);
+      const errorEl = field.parentElement.querySelector(&#039;.error&#039;);
+
+      if (errorEl) {
+        errorEl.textContent = message;
+        field.classList.add(&#039;invalid&#039;);
+      }
+    });
+  }
+
+  clearErrors() {
+    this.querySelectorAll(&#039;.error&#039;).forEach(el =&gt; {
+      el.textContent = &#039;&#039;;
+    });
+
+    this.querySelectorAll(&#039;.invalid&#039;).forEach(el =&gt; {
+      el.classList.remove(&#039;invalid&#039;);
+    });
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;form&gt;
+        &lt;div class=&quot;field&quot;&gt;
+          &lt;label&gt;Email&lt;/label&gt;
+          &lt;input type=&quot;email&quot; name=&quot;email&quot; required&gt;
+          &lt;span class=&quot;error&quot;&gt;&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;field&quot;&gt;
+          &lt;label&gt;Password&lt;/label&gt;
+          &lt;input type=&quot;password&quot; name=&quot;password&quot; required minlength=&quot;8&quot;&gt;
+          &lt;span class=&quot;error&quot;&gt;&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+      &lt;/form&gt;
+    `;
+  }
+}</code></pre>
+<h2>File Uploads</h2>
+<p>Handle file uploads with progress tracking:</p>
+<pre><code class="language-javascript">class FileUpload extends HTMLElement {
+  connectedCallback() {
+    this.render();
+
+    const input = this.querySelector(&#039;input[type=&quot;file&quot;]&#039;);
+    const button = this.querySelector(&#039;button&#039;);
+
+    input.addEventListener(&#039;change&#039;, (e) =&gt; {
+      const file = e.target.files[0];
+      if (file) {
+        this.showPreview(file);
+        button.disabled = false;
+      }
+    });
+
+    button.addEventListener(&#039;click&#039;, () =&gt; {
+      const file = input.files[0];
+      if (file) {
+        this.uploadFile(file);
+      }
+    });
+  }
+
+  showPreview(file) {
+    const preview = this.querySelector(&#039;.preview&#039;);
+
+    if (file.type.startsWith(&#039;image/&#039;)) {
+      const reader = new FileReader();
+      reader.onload = (e) =&gt; {
+        preview.innerHTML = `&lt;img src=&quot;${e.target.result}&quot; alt=&quot;Preview&quot;&gt;`;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.innerHTML = `
+        &lt;p&gt;${file.name}&lt;/p&gt;
+        &lt;p&gt;${this.formatFileSize(file.size)}&lt;/p&gt;
+      `;
+    }
+  }
+
+  async uploadFile(file) {
+    const formData = new FormData();
+    formData.append(&#039;file&#039;, file);
+
+    const xhr = new XMLHttpRequest();
+
+    xhr.upload.addEventListener(&#039;progress&#039;, (e) =&gt; {
+      const percent = (e.loaded / e.total) * 100;
+      this.updateProgress(percent);
+    });
+
+    xhr.addEventListener(&#039;load&#039;, () =&gt; {
+      if (xhr.status === 200) {
+        pan.publish(&#039;file.uploaded&#039;, {
+          filename: file.name,
+          response: JSON.parse(xhr.response)
+        });
+        this.showSuccess();
+      } else {
+        this.showError(&#039;Upload failed&#039;);
+      }
+    });
+
+    xhr.addEventListener(&#039;error&#039;, () =&gt; {
+      this.showError(&#039;Upload failed&#039;);
+    });
+
+    xhr.open(&#039;POST&#039;, &#039;/api/upload&#039;);
+    xhr.send(formData);
+  }
+
+  updateProgress(percent) {
+    const progress = this.querySelector(&#039;.progress-bar&#039;);
+    progress.style.width = `${percent}%`;
+    progress.textContent = `${Math.round(percent)}%`;
+  }
+
+  formatFileSize(bytes) {
+    if (bytes &lt; 1024) return bytes + &#039; B&#039;;
+    if (bytes &lt; 1024 * 1024) return (bytes / 1024).toFixed(1) + &#039; KB&#039;;
+    return (bytes / (1024 * 1024)).toFixed(1) + &#039; MB&#039;;
+  }
+
+  showSuccess() {
+    this.querySelector(&#039;.status&#039;).innerHTML = &#039;✓ Uploaded successfully&#039;;
+  }
+
+  showError(message) {
+    this.querySelector(&#039;.status&#039;).innerHTML = `✗ ${message}`;
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;upload-container&quot;&gt;
+        &lt;input type=&quot;file&quot; accept=&quot;image/*&quot;&gt;
+        &lt;div class=&quot;preview&quot;&gt;&lt;/div&gt;
+        &lt;div class=&quot;progress&quot;&gt;
+          &lt;div class=&quot;progress-bar&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;button disabled&gt;Upload&lt;/button&gt;
+        &lt;div class=&quot;status&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;file-upload&#039;, FileUpload);</code></pre>
+<h2>Form Submission</h2>
+<p>Handle form submission with loading states and error recovery:</p>
+<pre><code class="language-javascript">class SmartForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.submitting = false;
+  }
+
+  connectedCallback() {
+    this.render();
+
+    this.shadowRoot.querySelector(&#039;form&#039;).addEventListener(&#039;submit&#039;, async (e) =&gt; {
+      e.preventDefault();
+
+      if (this.submitting) return;
+
+      this.submitting = true;
+      this.disableForm();
+
+      try {
+        const data = this.getFormData();
+        await this.submitForm(data);
+        this.handleSuccess();
+      } catch (error) {
+        this.handleError(error);
+      } finally {
+        this.submitting = false;
+        this.enableForm();
+      }
+    });
+  }
+
+  getFormData() {
+    const form = this.shadowRoot.querySelector(&#039;form&#039;);
+    const formData = new FormData(form);
+    return Object.fromEntries(formData);
+  }
+
+  async submitForm(data) {
+    const response = await fetch(&#039;/api/submit&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || &#039;Submission failed&#039;);
+    }
+
+    return response.json();
+  }
+
+  disableForm() {
+    const inputs = this.shadowRoot.querySelectorAll(&#039;input, button, textarea&#039;);
+    inputs.forEach(el =&gt; el.disabled = true);
+
+    this.shadowRoot.querySelector(&#039;.loading&#039;).style.display = &#039;block&#039;;
+  }
+
+  enableForm() {
+    const inputs = this.shadowRoot.querySelectorAll(&#039;input, button, textarea&#039;);
+    inputs.forEach(el =&gt; el.disabled = false);
+
+    this.shadowRoot.querySelector(&#039;.loading&#039;).style.display = &#039;none&#039;;
+  }
+
+  handleSuccess() {
+    pan.publish(&#039;notification.success&#039;, { message: &#039;Form submitted successfully!&#039; });
+    this.shadowRoot.querySelector(&#039;form&#039;).reset();
+  }
+
+  handleError(error) {
+    pan.publish(&#039;notification.error&#039;, { message: error.message });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .loading {
+          display: none;
+          text-align: center;
+          padding: 16px;
+        }
+      &lt;/style&gt;
+
+      &lt;form&gt;
+        &lt;!-- Form fields --&gt;
+        &lt;button type=&quot;submit&quot;&gt;Submit&lt;/button&gt;
+      &lt;/form&gt;
+
+      &lt;div class=&quot;loading&quot;&gt;
+        &lt;div class=&quot;spinner&quot;&gt;&lt;/div&gt;
+        &lt;p&gt;Submitting...&lt;/p&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;smart-form&#039;, SmartForm);</code></pre>
+<h2>Summary</h2>
+<p>This chapter covered:</p>
+<ul><li>Building accessible form components</li>
+<li>Two-way data binding patterns</li>
+<li>Validation strategies (native and custom)</li>
+<li>Error handling and display</li>
+<li>File upload with progress tracking</li>
+<li>Form submission with loading states</li>
+</ul>
+<hr>
+<h2>Best Practices</h2>
+<li><strong>Use native validation first</strong> - HTML5 provides powerful built-in validation</li>
+<li><strong>Provide clear error messages</strong> - Tell users exactly what's wrong</li>
+<li><strong>Validate on blur</strong> - Don't show errors while user is typing</li>
+<li><strong>Disable during submission</strong> - Prevent double-submission</li>
+<li><strong>Show progress for uploads</strong> - Users want to see progress</li>
+<li><strong>Handle errors gracefully</strong> - Network can fail, handle it well</li>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/chapters/10-forms-and-validation.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

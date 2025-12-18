@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Project - Current Status · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Project - Current Status">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">archive</a> / <a href="#">2024</a> / <span>CURRENT-STATUS</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Project - Current Status</h1>
+<strong>Last Updated:</strong> November 12, 2025, 10:30 PM  
+<strong>Session Duration:</strong> 6+ hours  
+<strong>Overall Status:</strong> 🟢 Excellent Progress
+<hr>
+<h2>✅ COMPLETED</h2>
+<h3>Phase 1: TypeScript Type System</h3>
+<ul><li>✅ @larcjs/core-types v1.0.0 published to npm</li>
+<li>✅ @larcjs/ui-types v1.0.0 published to npm</li>
+<li>✅ 9 type definition files (37 kB total)</li>
+<li>✅ 24 component interfaces</li>
+<li>✅ Full TypeScript support without breaking zero-build</li>
+<li>✅ Documentation complete</li>
+</ul>
+<strong>NPM Links:</strong>
+<ul><li>https://www.npmjs.com/package/@larcjs/core-types</li>
+<li>https://www.npmjs.com/package/@larcjs/ui-types</li>
+</ul>
+<h3>Phase 5.5: LARC Playground</h3>
+<ul><li>✅ Component registry generator script</li>
+<li>✅ Generated registry JSON (49 components, 10 categories)</li>
+<li>✅ 5 playground components built:</li>
+</ul>  - pg-palette.mjs (component browser)
+  - pg-canvas.mjs (live preview)
+  - pg-properties.mjs (property editor)
+  - pg-exporter.mjs (code generator)
+  - pg-bus-monitor.mjs (message visualizer)
+<ul><li>✅ Complete CSS styling (527 lines)</li>
+<li>✅ Zero-build architecture</li>
+<li>✅ Documentation complete</li>
+<li>✅ Local server running</li>
+</ul>
+<strong>Total Code:</strong> 3,947 lines
+<h3>Documentation</h3>
+<ul><li>✅ PHASE-1-COMPLETE.md</li>
+<li>✅ PLAYGROUND-COMPLETE.md</li>
+<li>✅ PLAYGROUND-IMPLEMENTATION.md</li>
+<li>✅ PLAYGROUND-STATUS.md</li>
+<li>✅ SESSION-SUMMARY.md</li>
+<li>✅ playground/README.md</li>
+<li>✅ Main README.md updated</li>
+</ul>
+<h3>Git & GitHub</h3>
+<ul><li>✅ All code committed</li>
+<li>✅ All changes pushed to main branch</li>
+<li>✅ Clean git history with descriptive commits</li>
+</ul>
+<hr>
+<h2>🔄 IN PROGRESS</h2>
+<h3>React Adapter</h3>
+<ul><li>✅ Package structure created</li>
+<li>✅ 4 hooks implemented (usePanClient, usePanSubscribe, usePanPublish, usePanState)</li>
+<li>✅ Test configuration set up</li>
+<li>⏳ Tests not written yet</li>
+<li>⏳ Example app not created</li>
+<li>⏳ Documentation incomplete</li>
+<li>⏳ Not published to npm</li>
+</ul>
+<strong>Status:</strong> ~40% complete, paused to prioritize Playground
+<hr>
+<h2>⏳ PENDING (Immediate Tasks)</h2>
+<h3>1. Test Playground in Browser 🔴 HIGH PRIORITY</h3>
+<strong>Current Status:</strong> Built but not manually tested
+<strong>Server Running:</strong> http://localhost:8080/playground/
+<strong>Testing Checklist:</strong>
+<ul><li>[ ] Open URL in Chrome/Firefox/Safari</li>
+<li>[ ] Verify component palette loads with all 49 components</li>
+<li>[ ] Test search functionality</li>
+<li>[ ] Click component to add to canvas</li>
+<li>[ ] Verify component renders on canvas</li>
+<li>[ ] Select component and edit properties</li>
+<li>[ ] Test property changes update live</li>
+<li>[ ] Click "View Code" button</li>
+<li>[ ] Verify HTML code generates correctly</li>
+<li>[ ] Test "Copy" button</li>
+<li>[ ] Test "Download" button</li>
+<li>[ ] Click "PAN Monitor" button</li>
+<li>[ ] Interact with components and watch messages</li>
+<li>[ ] Test viewport controls (Desktop/Tablet/Mobile)</li>
+<li>[ ] Test "Clear All" button</li>
+<li>[ ] Test "Delete Component" button</li>
+</ul>
+<strong>Expected Issues:</strong>
+<ul><li>Path resolution errors (relative imports)</li>
+<li>Component loading failures (dynamic imports)</li>
+<li>CORS issues (if any)</li>
+<li>Missing dependencies</li>
+</ul>
+<strong>How to Test:</strong>
+<pre><code class="language-bash"># Server is already running at http://localhost:8080
+# Just open in browser and go through checklist
+open http://localhost:8080/playground/</code></pre>
+<h3>2. Fix Any Bugs Found 🔴 HIGH PRIORITY</h3>
+Once testing reveals issues, fix them immediately.
+<h3>3. Deploy to GitHub Pages 🟡 MEDIUM PRIORITY</h3>
+<strong>Current Status:</strong> Not configured
+<strong>Steps:</strong>
+<li>Go to https://github.com/larcjs/larc/settings/pages</li>
+<li>Under "Source", select "Deploy from a branch"</li>
+<li>Select branch: "main"</li>
+<li>Select folder: "/ (root)"</li>
+<li>Click "Save"</li>
+<li>Wait 2-3 minutes for deployment</li>
+<li>Test at https://larcjs.github.io/larc/playground/</li>
+<strong>Note:</strong> Because we need to serve from root (for relative paths), we deploy the whole repo. The playground will be at <code>/playground/</code> subdirectory.
+<hr>
+<h2>📋 REMAINING WORK (By Priority)</h2>
+<h3>High Priority (This Week)</h3>
+<li><strong>Test Playground</strong> ⬆️ Do this NOW</li>
+<li><strong>Fix bugs</strong> (if any found)</li>
+<li><strong>Deploy to GitHub Pages</strong></li>
+<li><strong>Update playground URLs</strong> in documentation</li>
+<li><strong>Complete React adapter</strong></li>
+   - Write tests
+   - Create example app
+   - Write README
+   - Publish to npm
+<h3>Medium Priority (Next Week)</h3>
+<li><strong>Vue adapter</strong> - Similar to React adapter</li>
+<li><strong>Production build guide</strong> - Vite, Rollup, esbuild</li>
+<li><strong>Example applications</strong> (2-3 real apps)</li>
+<li><strong>Test utilities</strong> package</li>
+<h3>Lower Priority (Next 2 Weeks)</h3>
+<li><strong>CLI tool</strong> - create-larc-app</li>
+<li><strong>Angular adapter</strong></li>
+<li><strong>Svelte adapter</strong></li>
+<li><strong>VS Code extension</strong></li>
+<li><strong>Community building</strong> (Discord, docs site)</li>
+<hr>
+<h2>📊 Progress Summary</h2>
+<h3>By Phase (from DEVELOPMENT-PLAN.md)</h3>
+<p>| Phase | Status | Progress |
+|-------|--------|----------|
+| Phase 1: Foundation (Types) | ✅ Complete | 100% |
+| Phase 2: Framework Integration | 🔄 Started | 20% |
+| Phase 3: Production Readiness | ⏳ Not Started | 0% |
+| Phase 4: Developer Experience | ⏳ Not Started | 0% |
+| Phase 5: Ecosystem Growth | 🔄 Partial | 15% |
+| Phase 6: Community & Polish | ⏳ Not Started | 0% |</p>
+<strong>Overall Project Progress:</strong> ~25% complete
+<h3>By Deliverables</h3>
+<p>| Deliverable | Status | Notes |
+|-------------|--------|-------|
+| TypeScript Types | ✅ | Both packages published |
+| Playground | ✅ | Built, needs testing |
+| React Adapter | 🔄 | 40% complete |
+| Vue Adapter | ⏳ | Not started |
+| Production Guide | ⏳ | Not started |
+| CLI Tool | ⏳ | Not started |
+| Example Apps | ⏳ | Not started |
+| Test Utils | ⏳ | Not started |</p>
+<hr>
+<h2>🎯 Success Metrics</h2>
+<h3>Achieved ✅</h3>
+<ul><li>[x] 2 npm packages published</li>
+<li>[x] Complete playground built</li>
+<li>[x] 49 components cataloged</li>
+<li>[x] 5,000+ lines of code</li>
+<li>[x] Zero-build maintained</li>
+<li>[x] Comprehensive docs</li>
+<li>[x] Git history clean</li>
+</ul>
+<h3>Pending ⏳</h3>
+<ul><li>[ ] Playground tested and working</li>
+<li>[ ] GitHub Pages live</li>
+<li>[ ] React adapter published</li>
+<li>[ ] 3+ example apps</li>
+<li>[ ] Production guide written</li>
+<li>[ ] CLI tool working</li>
+</ul>
+<hr>
+<h2>🚀 Next Actions (In Order)</h2>
+<h3>RIGHT NOW:</h3>
+<li><strong>Test playground</strong> - Open http://localhost:8080/playground/ in browser</li>
+<li><strong>Fix any bugs</strong> - Address issues found during testing</li>
+<li><strong>Verify all features work</strong> - Go through complete testing checklist</li>
+<h3>NEXT HOUR:</h3>
+<li><strong>Deploy to GitHub Pages</strong> - Enable in repo settings</li>
+<li><strong>Test live deployment</strong> - Verify paths work on GitHub Pages</li>
+<li><strong>Update documentation</strong> - Add live playground URL</li>
+<h3>TODAY/TOMORROW:</h3>
+<li><strong>Complete React adapter</strong> - Finish tests, examples, docs</li>
+<li><strong>Publish React adapter</strong> - Release to npm</li>
+<li><strong>Start Vue adapter</strong> - Similar patterns</li>
+<hr>
+<h2>💡 Key Decisions Made</h2>
+<li><strong>Skip React/Vue for now</strong> - Focus on Playground first</li>
+<li><strong>Serve from root</strong> - Enables relative paths for components</li>
+<li><strong>Auto-generate registry</strong> - Always in sync with code</li>
+<li><strong>Separate type packages</strong> - Optional TypeScript support</li>
+<li><strong>Zero-build everywhere</strong> - No exceptions</li>
+<hr>
+<h2>🐛 Known Issues</h2>
+<strong>None yet</strong> - Playground hasn't been tested in browser
+<strong>Potential Issues:</strong>
+<ul><li>Component loading might fail (dynamic imports)</li>
+<li>Path resolution might break (relative imports)</li>
+<li>CORS might block requests</li>
+<li>Pan-bus might not initialize properly</li>
+</ul>
+<hr>
+<h2>📁 Repository Structure</h2>
+<pre><code class="language-plaintext">/Users/cdr/Projects/larc-repos/
+├── core/                     ✅ Submodule
+├── core-types/              ✅ Published to npm
+├── components/              ✅ Submodule
+├── components-types/        ✅ Published to npm
+├── playground/              ✅ Built, needs testing
+│   ├── components/          ✅ 5 components
+│   ├── component-registry.json  ✅ 49 components
+│   └── scripts/             ✅ Generator
+├── react-adapter/           🔄 40% complete
+├── examples/                ✅ Submodule
+├── site/                    ✅ Submodule
+├── devtools/                ✅ Submodule
+└── [documentation files]    ✅ Complete</code></pre>
+<hr>
+<h2>🔗 Important Links</h2>
+<h3>Local</h3>
+<ul><li><strong>Playground:</strong> http://localhost:8080/playground/</li>
+<li><strong>Test Config:</strong> http://localhost:8080/test-config.html</li>
+</ul>
+<h3>GitHub</h3>
+<ul><li><strong>Main Repo:</strong> https://github.com/larcjs/larc</li>
+<li><strong>Core Types:</strong> https://github.com/larcjs/core-types</li>
+<li><strong>Components Types:</strong> https://github.com/larcjs/components-types</li>
+</ul>
+<h3>NPM</h3>
+<ul><li><strong>core-types:</strong> https://www.npmjs.com/package/@larcjs/core-types</li>
+<li><strong>components-types:</strong> https://www.npmjs.com/package/@larcjs/ui-types</li>
+</ul>
+<h3>Pending</h3>
+<ul><li><strong>GitHub Pages:</strong> https://larcjs.github.io/larc/playground/ (not live yet)</li>
+</ul>
+<hr>
+<h2>⚡ Quick Commands</h2>
+<pre><code class="language-bash"># Start server (already running)
+cd /Users/cdr/Projects/larc-repos
+python3 -m http.server 8080
+
+# Test playground
+open http://localhost:8080/playground/
+
+# Regenerate component registry
+cd playground
+node scripts/generate-registry.mjs
+
+# Check git status
+git status
+
+# View commits
+git log --oneline -10</code></pre>
+<hr>
+<strong>NEXT IMMEDIATE ACTION:</strong> Open http://localhost:8080/playground/ in your browser and test! 🚀
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/archive/2024/CURRENT-STATUS.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

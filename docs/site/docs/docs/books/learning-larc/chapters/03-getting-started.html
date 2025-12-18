@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chapter 3: Getting Started · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Chapter 3: Getting Started">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>03-getting-started</span>
+      </div>
+      <article class="docs-content">
+        <h1>Chapter 3: Getting Started</h1>
+<p>Theory is important, but there's no substitute for hands-on experience. In this chapter, you'll set up your development environment and build your first LARC application. By the end, you'll have a working project and understand the basic development workflow.</p>
+<h2>Setting Up Your Development Environment</h2>
+<p>One of LARC's strengths is minimal setup requirements. You don't need complex tooling or configuration—just a browser, a text editor, and a way to serve files.</p>
+<h3>Requirements</h3>
+<strong>Essential:</strong>
+<ul><li><strong>Modern browser</strong> — Chrome, Firefox, Safari, or Edge (latest version)</li>
+<li><strong>Text editor</strong> — VS Code, Sublime Text, Atom, or any editor you prefer</li>
+<li><strong>Local web server</strong> — Python's SimpleHTTPServer, Node's <code>http-server</code>, or VS Code's Live Server extension</li>
+</ul>
+<strong>Optional but Recommended:</strong>
+<ul><li><strong>VS Code</strong> with the LARC extension for snippets and IntelliSense</li>
+<li><strong>Browser DevTools</strong> familiarity for debugging</li>
+<li><strong>Git</strong> for version control</li>
+</ul>
+<h3>Quick Start with create-larc-app</h3>
+<p>The fastest way to start is using the LARC CLI:</p>
+<pre><code class="language-bash"># Install globally
+npm install -g create-larc-app
+
+# Create a new project
+create-larc-app my-first-app
+
+# Start development server
+cd my-first-app
+larc dev</code></pre>
+<p>Open <code>http://localhost:3000</code> and you'll see your new LARC application running.</p>
+<h3>Manual Setup (No CLI)</h3>
+<p>Don't want to install Node.js? You can set up a LARC project manually:</p>
+<strong>1. Create project structure:</strong>
+<pre><code class="language-bash">mkdir my-first-app
+cd my-first-app
+mkdir src
+mkdir src/components
+mkdir public</code></pre>
+<strong>2. Create <code>index.html</code>:</strong>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;My First LARC App&lt;/title&gt;
+
+  &lt;!-- Import Map for dependencies --&gt;
+  &lt;script type=&quot;importmap&quot;&gt;
+  {
+    &quot;imports&quot;: {
+      &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;
+    }
+  }
+  &lt;/script&gt;
+
+  &lt;style&gt;
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+
+  &lt;script type=&quot;module&quot; src=&quot;src/app.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<strong>3. Create <code>src/app.js</code>:</strong>
+<pre><code class="language-javascript">import { pan } from &#039;@larcjs/core&#039;;
+
+// Import your components
+import &#039;./components/hello-world.js&#039;;
+
+// Initialize app
+console.log(&#039;LARC app initialized&#039;);
+pan.publish(&#039;app.ready&#039;);
+
+// Add component to page
+document.getElementById(&#039;app&#039;).innerHTML = &#039;&lt;hello-world&gt;&lt;/hello-world&gt;&#039;;</code></pre>
+<strong>4. Create <code>src/components/hello-world.js</code>:</strong>
+<pre><code class="language-javascript">class HelloWorld extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;div style=&quot;
+        background: white;
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        text-align: center;
+      &quot;&gt;
+        &lt;h1&gt;Hello, LARC!&lt;/h1&gt;
+        &lt;p&gt;Welcome to your first LARC application.&lt;/p&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;hello-world&#039;, HelloWorld);</code></pre>
+<strong>5. Serve the files:</strong>
+<pre><code class="language-bash"># Python 3
+python3 -m http.server 3000
+
+# Or Python 2
+python -m SimpleHTTPServer 3000
+
+# Or with Node.js
+npx http-server -p 3000
+
+# Or use VS Code Live Server extension
+# (right-click index.html → &quot;Open with Live Server&quot;)</code></pre>
+<p>Open <code>http://localhost:3000</code> and you should see "Hello, LARC!" displayed.</p>
+<strong>That's it.</strong> No build step. No transpilation. No bundling. Just HTML, CSS, and JavaScript.
+<h3>Development Tools</h3>
+<p>#### VS Code Extensions</p>
+<p>Install these extensions for the best experience:</p>
+<strong>LARC Extension:</strong>
+<ul><li>Snippets for components and PAN patterns</li>
+<li>IntelliSense for LARC APIs</li>
+<li>Commands for creating components</li>
+</ul>
+Install: Search "LARC" in VS Code extensions marketplace
+<strong>Live Server:</strong>
+<ul><li>Auto-reload when files change</li>
+<li>Simple local web server</li>
+<li>Right-click HTML file to start</li>
+</ul>
+Install: Search "Live Server" by Ritwick Dey
+<strong>ES6 String HTML:</strong>
+<ul><li>Syntax highlighting for template literals</li>
+<li>Makes component templates more readable</li>
+</ul>
+Install: Search "ES6 String HTML"
+<p>#### Browser DevTools</p>
+<p>Learn these DevTools features for LARC development:</p>
+<strong>Elements Panel:</strong>
+<p>- Inspect shadow DOM (enable "Show user agent shadow DOM" in settings)
+    - View Custom Elements with their properties
+    - Debug CSS in shadow roots</p>
+<strong>Console:</strong>
+<p>- Subscribe to all PAN messages: <code>pan.subscribe('*', console.log)</code>
+    - Test components directly: <code>document.querySelector('my-component')</code>
+    - Check Custom Elements registry: <code>customElements.get('my-component')</code></p>
+<strong>Network Panel:</strong>
+<p>- Verify ES modules load correctly
+    - Check import map resolution
+    - Monitor API calls</p>
+<strong>Sources Panel:</strong>
+<p>- Set breakpoints in your source code (no source maps needed!)
+    - Step through component lifecycle
+    - Watch variables and state</p>
+<h2>Your First LARC Application</h2>
+<p>Let's build something more interesting than "Hello World"—a simple counter application with multiple components communicating via the PAN bus.</p>
+<h3>Project Goal</h3>
+<p>We'll create:</p>
+<p>- A counter display component
+    - Increment and decrement buttons
+    - A reset button
+    - Communication via PAN bus (no prop drilling!)</p>
+<h3>Step 1: Update index.html</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;Counter App - LARC&lt;/title&gt;
+
+  &lt;script type=&quot;importmap&quot;&gt;
+  {
+    &quot;imports&quot;: {
+      &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;
+    }
+  }
+  &lt;/script&gt;
+
+  &lt;style&gt;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, &#039;Segoe UI&#039;, Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #app {
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      min-width: 400px;
+    }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;app&quot;&gt;
+    &lt;counter-display&gt;&lt;/counter-display&gt;
+    &lt;counter-controls&gt;&lt;/counter-controls&gt;
+  &lt;/div&gt;
+
+  &lt;script type=&quot;module&quot; src=&quot;src/app.js&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Step 2: Create app.js</h3>
+<pre><code class="language-javascript">// src/app.js
+import { pan } from &#039;@larcjs/core&#039;;
+
+// Import components
+import &#039;./components/counter-display.js&#039;;
+import &#039;./components/counter-controls.js&#039;;
+
+// Initialize application state
+let count = 0;
+
+// Listen for increment requests
+pan.subscribe(&#039;counter.increment&#039;, () =&gt; {
+  count++;
+  pan.publish(&#039;counter.updated&#039;, { count });
+});
+
+// Listen for decrement requests
+pan.subscribe(&#039;counter.decrement&#039;, () =&gt; {
+  count--;
+  pan.publish(&#039;counter.updated&#039;, { count });
+});
+
+// Listen for reset requests
+pan.subscribe(&#039;counter.reset&#039;, () =&gt; {
+  count = 0;
+  pan.publish(&#039;counter.updated&#039;, { count });
+});
+
+// Publish initial state
+pan.publish(&#039;counter.updated&#039;, { count });
+
+console.log(&#039;Counter app initialized&#039;);</code></pre>
+<h3>Step 3: Create counter-display.js</h3>
+<pre><code class="language-javascript">// src/components/counter-display.js
+import { pan } from &#039;@larcjs/core&#039;;
+
+class CounterDisplay extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.count = 0;
+  }
+
+  connectedCallback() {
+    // Subscribe to count updates
+    this.unsubscribe = pan.subscribe(&#039;counter.updated&#039;, ({ count }) =&gt; {
+      this.count = count;
+      this.render();
+    });
+
+    this.render();
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+          text-align: center;
+          margin-bottom: 30px;
+        }
+
+        .display {
+          font-size: 72px;
+          font-weight: bold;
+          color: #667eea;
+          margin-bottom: 10px;
+          font-variant-numeric: tabular-nums;
+        }
+
+        .label {
+          font-size: 18px;
+          color: #666;
+          text-transform: uppercase;
+          letter-spacing: 2px;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;display&quot;&gt;${this.count}&lt;/div&gt;
+      &lt;div class=&quot;label&quot;&gt;Current Count&lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;counter-display&#039;, CounterDisplay);</code></pre>
+<h3>Step 4: Create counter-controls.js</h3>
+<pre><code class="language-javascript">// src/components/counter-controls.js
+import { pan } from &#039;@larcjs/core&#039;;
+
+class CounterControls extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  connectedCallback() {
+    this.render();
+    this.attachEventListeners();
+  }
+
+  attachEventListeners() {
+    this.shadowRoot.querySelector(&#039;#increment&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      pan.publish(&#039;counter.increment&#039;);
+    });
+
+    this.shadowRoot.querySelector(&#039;#decrement&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      pan.publish(&#039;counter.decrement&#039;);
+    });
+
+    this.shadowRoot.querySelector(&#039;#reset&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      pan.publish(&#039;counter.reset&#039;);
+    });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+        }
+
+        .controls {
+          display: flex;
+          gap: 10px;
+          margin-bottom: 15px;
+        }
+
+        button {
+          flex: 1;
+          padding: 15px;
+          font-size: 16px;
+          font-weight: 600;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        button:active {
+          transform: translateY(0);
+        }
+
+        #increment {
+          background: #48bb78;
+          color: white;
+        }
+
+        #increment:hover {
+          background: #38a169;
+        }
+
+        #decrement {
+          background: #f56565;
+          color: white;
+        }
+
+        #decrement:hover {
+          background: #e53e3e;
+        }
+
+        #reset {
+          background: #4a5568;
+          color: white;
+          width: 100%;
+        }
+
+        #reset:hover {
+          background: #2d3748;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;controls&quot;&gt;
+        &lt;button id=&quot;decrement&quot;&gt;− Decrement&lt;/button&gt;
+        &lt;button id=&quot;increment&quot;&gt;+ Increment&lt;/button&gt;
+      &lt;/div&gt;
+      &lt;button id=&quot;reset&quot;&gt;Reset&lt;/button&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;counter-controls&#039;, CounterControls);</code></pre>
+<h3>Step 5: Test Your App</h3>
+<p>Start your local server and open the page. You should see:</p>
+<p>- A large counter display showing "0"
+    - Increment and decrement buttons
+    - A reset button</p>
+<p>Click the buttons. Notice how:</p>
+<p>- Components update immediately
+    - State is managed centrally in <code>app.js</code>
+    - Components don't reference each other directly
+    - Adding new components is trivial (just subscribe to <code>counter.updated</code>)</p>
+<h3>What Just Happened?</h3>
+<p>Let's examine the architecture:</p>
+<strong>Data Flow:</strong>
+<pre><code class="language-plaintext">User clicks button
+     ↓
+Controls component publishes event
+     ↓
+App.js receives event and updates state
+     ↓
+App.js publishes updated state
+     ↓
+Display component receives update and re-renders</code></pre>
+<strong>Key Points:</strong>
+<li><strong>Decoupled Components:</strong> Display and controls don't know about each other</li>
+<li><strong>Central State:</strong> State lives in <code>app.js</code>, not in components</li>
+<li><strong>Pub/Sub Communication:</strong> All communication via PAN bus topics</li>
+<li><strong>No Props:</strong> No prop drilling or lifting state up</li>
+<li><strong>Easy Testing:</strong> Each component can be tested in isolation</li>
+<h2>Project Structure</h2>
+<p>!<a href="../images/01-architecture-overview-5.png"><strong>Figure 3.2:</strong> LARC Deployment Architecture</a></p>
+<strong><em>Figure 3.2:</strong> LARC Deployment Architecture</em>
+<p>As your application grows, organization becomes important. Here's a recommended structure:</p>
+<pre><code class="language-plaintext">my-app/
+├── index.html              # Entry point
+├── larc.config.json        # Optional config
+├── src/
+│   ├── app.js              # Main application logic
+│   ├── components/         # Reusable components
+│   │   ├── ui/             # Generic UI components
+│   │   │   ├── button.js
+│   │   │   ├── card.js
+│   │   │   └── modal.js
+│   │   ├── features/       # Feature-specific components
+│   │   │   ├── user-profile.js
+│   │   │   ├── todo-list.js
+│   │   │   └── dashboard.js
+│   │   └── layout/         # Layout components
+│   │       ├── header.js
+│   │       ├── sidebar.js
+│   │       └── footer.js
+│   ├── lib/                # Utilities and helpers
+│   │   ├── api.js          # API client
+│   │   ├── auth.js         # Authentication
+│   │   ├── router.js       # Routing logic
+│   │   └── utils.js        # General utilities
+│   ├── pages/              # Page-level components
+│   │   ├── home.js
+│   │   ├── dashboard.js
+│   │   └── settings.js
+│   └── styles/             # Global styles
+│       ├── reset.css
+│       ├── variables.css
+│       └── utilities.css
+├── public/                 # Static assets
+│   ├── images/
+│   ├── fonts/
+│   └── icons/
+└── tests/                  # Test files
+    ├── components/
+    └── integration/</code></pre>
+<h3>File Organization Principles</h3>
+<strong>Components:</strong>
+<p>- One component per file
+    - File name matches component name: <code>user-profile.js</code> defines <code><user-profile></code>
+    - Keep related components together in subdirectories</p>
+<strong>Lib:</strong>
+<p>- Utilities that don't render UI
+    - API clients, helpers, formatters
+    - Pure functions when possible</p>
+<strong>Pages:</strong>
+<p>- Top-level route components
+    - Compose smaller components
+    - Handle page-specific logic</p>
+<strong>Styles:</strong>
+<p>- Global styles in <code>styles/</code>
+    - Component-specific styles in Shadow DOM
+    - CSS custom properties for theming</p>
+<h2>Import Maps Explained</h2>
+<p>!<a href="../images/01-architecture-overview-4.png"><strong>Figure 3.1:</strong> Module Loading with Import Maps</a></p>
+<strong><em>Figure 3.1:</strong> Module Loading with Import Maps</em>
+<p>Import Maps are a browser standard that replaces the need for bundlers to resolve module paths.</p>
+<h3>Basic Import Map</h3>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;lodash&quot;: &quot;https://cdn.jsdelivr.net/npm/lodash-es@4/lodash.js&quot;,
+    &quot;dayjs&quot;: &quot;https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js&quot;
+  }
+}
+&lt;/script&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  // Use package names instead of URLs
+  import _ from &#039;lodash&#039;;
+  import dayjs from &#039;dayjs&#039;;
+
+  console.log(dayjs().format(&#039;YYYY-MM-DD&#039;));
+&lt;/script&gt;</code></pre>
+<h3>Path Aliases</h3>
+<p>Create shortcuts for your own modules:</p>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@/&quot;: &quot;/src/&quot;,
+    &quot;components/&quot;: &quot;/&quot;,
+    &quot;lib/&quot;: &quot;/src/lib/&quot;,
+    &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;
+  }
+}
+&lt;/script&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  // Instead of: import { api } from &#039;../../../lib/api.js&#039;;
+  import { api } from &#039;lib/api.js&#039;;
+
+  // Instead of: import Button from &#039;../components/ui/button.js&#039;;
+  import Button from &#039;components/ui/button.js&#039;;
+
+  // Instead of: import something from &#039;../../../src/utils.js&#039;;
+  import something from &#039;@/utils.js&#039;;
+&lt;/script&gt;</code></pre>
+<h3>Version Management</h3>
+<p>Pin dependencies to specific versions:</p>
+<pre><code class="language-json">{
+  &quot;imports&quot;: {
+    &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js&quot;,
+    &quot;@larcjs/ui&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.1/dist/index.js&quot;
+  }
+}</code></pre>
+<p>Or use version ranges for automatic updates:</p>
+<pre><code class="language-json">{
+  &quot;imports&quot;: {
+    &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;,
+    &quot;@larcjs/ui&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@2/dist/index.js&quot;
+  }
+}</code></pre>
+<h3>Multiple CDNs</h3>
+<p>Add fallbacks for reliability:</p>
+<pre><code class="language-json">{
+  &quot;imports&quot;: {
+    &quot;react&quot;: &quot;https://esm.sh/react@18&quot;,
+    &quot;react-fallback&quot;: &quot;https://cdn.skypack.dev/react@18&quot;
+  }
+}</code></pre>
+<p>Then in code:</p>
+<pre><code class="language-javascript">let React;
+try {
+  React = await import(&#039;react&#039;);
+} catch {
+  React = await import(&#039;react-fallback&#039;);
+}</code></pre>
+<h3>Development vs Production</h3>
+<p>Use different import maps for different environments:</p>
+<strong>development.importmap.json:</strong>
+<pre><code class="language-json">{
+  &quot;imports&quot;: {
+    &quot;@larcjs/core&quot;: &quot;/node_modules/@larcjs/core/dist/index.js&quot;,
+    &quot;app/&quot;: &quot;/src/&quot;
+  }
+}</code></pre>
+<strong>production.importmap.json:</strong>
+<pre><code class="language-json">{
+  &quot;imports&quot;: {
+    &quot;@larcjs/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js&quot;,
+    &quot;app/&quot;: &quot;/assets/js/&quot;
+  }
+}</code></pre>
+<p>Load the appropriate map:</p>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot; src=&quot;/config/production.importmap.json&quot;&gt;&lt;/script&gt;</code></pre>
+<h2>Development Workflow</h2>
+<h3>Daily Development</h3>
+<p>A typical development session:</p>
+<strong>1. Start dev server:</strong>
+<pre><code class="language-bash">larc dev</code></pre>
+<p>This starts a local server with hot reload.</p>
+<strong>2. Edit files:</strong>
+Open your editor and make changes. The browser automatically reloads when you save.
+<strong>3. Check the console:</strong>
+Open browser DevTools and check for errors or warnings.
+<strong>4. Test in browser:</strong>
+Interact with your app, verify behavior, check responsive design.
+<strong>5. Debug as needed:</strong>
+Set breakpoints, inspect elements, monitor network requests.
+<strong>6. Repeat:</strong>
+The edit-refresh cycle is instant with no build step.
+<h3>Debugging Tips</h3>
+<strong>Log all PAN messages:</strong>
+<pre><code class="language-javascript">pan.subscribe(&#039;*&#039;, (topic, data) =&gt; {
+  console.log(`[PAN] ${topic}:`, data);
+});</code></pre>
+<strong>Inspect custom elements:</strong>
+<pre><code class="language-javascript">// Get element
+const el = document.querySelector(&#039;my-component&#039;);
+
+// Check if defined
+console.log(customElements.get(&#039;my-component&#039;));
+
+// Access shadow root
+console.log(el.shadowRoot);
+
+// Call methods directly
+el.someMethod();</code></pre>
+<strong>Monitor attribute changes:</strong>
+<pre><code class="language-javascript">// Create observer
+const observer = new MutationObserver((mutations) =&gt; {
+  mutations.forEach(mutation =&gt; {
+    console.log(&#039;Attribute changed:&#039;, mutation.attributeName);
+  });
+});
+
+// Watch element
+observer.observe(element, { attributes: true });</code></pre>
+<h3>Testing</h3>
+<p>Run tests without a build step:</p>
+<pre><code class="language-html">&lt;!-- tests/counter.test.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Counter Tests&lt;/title&gt;
+  &lt;script type=&quot;importmap&quot;&gt;
+  {
+    &quot;imports&quot;: {
+      &quot;@larcjs/core&quot;: &quot;../node_modules/@larcjs/core/dist/index.js&quot;
+    }
+  }
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;test-container&quot;&gt;&lt;/div&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { pan } from &#039;@larcjs/core&#039;;
+    import &#039;../counter-display.js&#039;;
+
+    // Simple test framework
+    function test(name, fn) {
+      try {
+        fn();
+        console.log(`✓ ${name}`);
+      } catch (error) {
+        console.error(`✗ ${name}:`, error);
+      }
+    }
+
+    function assert(condition, message) {
+      if (!condition) throw new Error(message || &#039;Assertion failed&#039;);
+    }
+
+    // Tests
+    test(&#039;counter-display renders initial count&#039;, () =&gt; {
+      const el = document.createElement(&#039;counter-display&#039;);
+      document.getElementById(&#039;test-container&#039;).appendChild(el);
+
+      const display = el.shadowRoot.querySelector(&#039;.display&#039;);
+      assert(display.textContent === &#039;0&#039;, &#039;Initial count should be 0&#039;);
+
+      el.remove();
+    });
+
+    test(&#039;counter-display updates on PAN message&#039;, async () =&gt; {
+      const el = document.createElement(&#039;counter-display&#039;);
+      document.getElementById(&#039;test-container&#039;).appendChild(el);
+
+      // Wait for component to connect
+      await new Promise(resolve =&gt; setTimeout(resolve, 10));
+
+      // Publish update
+      pan.publish(&#039;counter.updated&#039;, { count: 42 });
+
+      // Wait for render
+      await new Promise(resolve =&gt; setTimeout(resolve, 10));
+
+      const display = el.shadowRoot.querySelector(&#039;.display&#039;);
+      assert(display.textContent === &#039;42&#039;, &#039;Count should update to 42&#039;);
+
+      el.remove();
+    });
+
+    console.log(&#039;All tests complete&#039;);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Open <code>tests/counter.test.html</code> in your browser to run tests.</p>
+<h2>Common Patterns</h2>
+<h3>Pattern 1: Loading States</h3>
+<pre><code class="language-javascript">class DataComponent extends HTMLElement {
+  async connectedCallback() {
+    this.render({ loading: true });
+
+    try {
+      const data = await this.fetchData();
+      this.render({ data });
+    } catch (error) {
+      this.render({ error: error.message });
+    }
+  }
+
+  render(state) {
+    if (state.loading) {
+      this.innerHTML = &#039;&lt;loading-spinner&gt;&lt;/loading-spinner&gt;&#039;;
+    } else if (state.error) {
+      this.innerHTML = `&lt;error-message&gt;${state.error}&lt;/error-message&gt;`;
+    } else {
+      this.innerHTML = `&lt;data-display .data=&quot;${state.data}&quot;&gt;&lt;/data-display&gt;`;
+    }
+  }
+}</code></pre>
+<h3>Pattern 2: Form Handling</h3>
+<pre><code class="language-javascript">class LoginForm extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;form&gt;
+        &lt;input type=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;input type=&quot;password&quot; name=&quot;password&quot; required&gt;
+        &lt;button type=&quot;submit&quot;&gt;Login&lt;/button&gt;
+      &lt;/form&gt;
+    `;
+
+    this.querySelector(&#039;form&#039;).addEventListener(&#039;submit&#039;, async (e) =&gt; {
+      e.preventDefault();
+
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData);
+
+      pan.publish(&#039;auth.login&#039;, data);
+    });
+  }
+}</code></pre>
+<h3>Pattern 3: Conditional Rendering</h3>
+<pre><code class="language-javascript">class UserMenu extends HTMLElement {
+  constructor() {
+    super();
+    this.user = null;
+  }
+
+  connectedCallback() {
+    pan.subscribe(&#039;auth.user.changed&#039;, ({ user }) =&gt; {
+      this.user = user;
+      this.render();
+    });
+
+    this.render();
+  }
+
+  render() {
+    if (this.user) {
+      this.innerHTML = `
+        &lt;div class=&quot;logged-in&quot;&gt;
+          &lt;span&gt;Hello, ${this.user.name}&lt;/span&gt;
+          &lt;button id=&quot;logout&quot;&gt;Logout&lt;/button&gt;
+        &lt;/div&gt;
+      `;
+
+      this.querySelector(&#039;#logout&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+        pan.publish(&#039;auth.logout&#039;);
+      });
+    } else {
+      this.innerHTML = `
+        &lt;button id=&quot;login&quot;&gt;Login&lt;/button&gt;
+      `;
+
+      this.querySelector(&#039;#login&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+        pan.publish(&#039;app.navigate&#039;, { path: &#039;/login&#039; });
+      });
+    }
+  }
+}</code></pre>
+<h3>Pattern 4: Lists and Iteration</h3>
+<pre><code class="language-javascript">class TodoList extends HTMLElement {
+  constructor() {
+    super();
+    this.todos = [];
+  }
+
+  connectedCallback() {
+    pan.subscribe(&#039;todos.updated&#039;, ({ todos }) =&gt; {
+      this.todos = todos;
+      this.render();
+    });
+
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;ul&gt;
+        ${this.todos.map(todo =&gt; `
+          &lt;li&gt;
+            &lt;input type=&quot;checkbox&quot;
+                   ${todo.completed ? &#039;checked&#039; : &#039;&#039;}
+                   data-id=&quot;${todo.id}&quot;&gt;
+            &lt;span class=&quot;${todo.completed ? &#039;completed&#039; : &#039;&#039;}&quot;&gt;
+              ${todo.text}
+            &lt;/span&gt;
+          &lt;/li&gt;
+        `).join(&#039;&#039;)}
+      &lt;/ul&gt;
+    `;
+
+    // Attach event listeners after rendering
+    this.querySelectorAll(&#039;input[type=&quot;checkbox&quot;]&#039;).forEach(checkbox =&gt; {
+      checkbox.addEventListener(&#039;change&#039;, (e) =&gt; {
+        const id = e.target.dataset.id;
+        pan.publish(&#039;todos.toggle&#039;, { id });
+      });
+    });
+  }
+}</code></pre>
+<h2>Summary</h2>
+<p>In this chapter, you:</p>
+<p>- Set up a LARC development environment (CLI or manual)
+    - Built your first multi-component application
+    - Learned project structure best practices
+    - Mastered Import Maps for dependency management
+    - Established an efficient development workflow
+    - Explored common component patterns</p>
+<p>You now have a solid foundation for building LARC applications. The next chapter dives deeper into creating sophisticated Web Components with proper lifecycle management, styling, and interactivity.</p>
+<hr>
+<h2>Exercises</h2>
+<strong>1. Enhance the Counter App:</strong>
+<p>- Add a history component that shows past values
+    - Add increment/decrement by custom amounts
+    - Persist count to localStorage</p>
+<strong>2. Build a Todo List:</strong>
+<p>- Add/remove todos
+    - Mark as complete/incomplete
+    - Filter by status (all/active/completed)
+    - Use PAN bus for state management</p>
+<strong>3. Create a Theme Switcher:</strong>
+<p>- Light/dark theme toggle
+    - Publish theme changes via PAN
+    - Multiple components respond to theme changes
+    - Persist theme preference</p>
+<strong>4. Experiment with Import Maps:</strong>
+<p>- Try different CDNs (jsDelivr, unpkg, esm.sh)
+    - Add path aliases for your components
+    - Import an external library (lodash, dayjs, etc.)</p>
+<p>Take your time with these exercises. Understanding these patterns now will make the rest of the book much easier.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/chapters/03-getting-started.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

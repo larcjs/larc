@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Architecture Overview · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Architecture Overview">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>01-architecture-overview</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Architecture Overview</h1>
+<h2>High-Level Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Browser&quot;
+        subgraph &quot;LARC Application&quot;
+            HTML[HTML Document]
+            IM[Import Map]
+
+            subgraph &quot;Components Layer&quot;
+                C1[Component 1]
+                C2[Component 2]
+                C3[Component 3]
+                C4[Component N...]
+            end
+
+            subgraph &quot;Communication Layer&quot;
+                PAN[PAN Bus&lt;br/&gt;Pub/Sub System]
+            end
+
+            subgraph &quot;State Layer&quot;
+                LS[Local State]
+                SS[Shared State]
+                PS[Persistent State&lt;br/&gt;localStorage/IndexedDB]
+            end
+
+            subgraph &quot;Router Layer&quot;
+                R[pan-router]
+            end
+        end
+
+        subgraph &quot;Browser APIs&quot;
+            CE[Custom Elements]
+            SD[Shadow DOM]
+            ESM[ES Modules]
+            F[Fetch API]
+            WS[WebSocket]
+        end
+    end
+
+    subgraph &quot;External&quot;
+        CDN[CDN&lt;br/&gt;jsDelivr/unpkg]
+        API[REST API]
+        WSS[WebSocket Server]
+    end
+
+    HTML --&gt; IM
+    IM --&gt; C1 &amp; C2 &amp; C3 &amp; C4
+    C1 &amp; C2 &amp; C3 &amp; C4 &lt;--&gt; PAN
+    C1 &amp; C2 &amp; C3 &amp; C4 --&gt; LS
+    PAN &lt;--&gt; SS
+    SS &lt;--&gt; PS
+    C1 &amp; C2 &amp; C3 &amp; C4 --&gt; CE &amp; SD &amp; ESM
+    C1 &amp; C2 &amp; C3 &amp; C4 --&gt; R
+
+    IM -.loads from.-&gt; CDN
+    C1 &amp; C2 &amp; C3 &amp; C4 -.HTTP.-&gt; API
+    C1 &amp; C2 &amp; C3 &amp; C4 -.WebSocket.-&gt; WSS
+
+    style HTML fill:#667eea,color:#fff
+    style PAN fill:#764ba2,color:#fff
+    style R fill:#667eea,color:#fff
+    style SS fill:#48bb78,color:#fff
+    style PS fill:#48bb78,color:#fff</code></pre>
+<h2>Component Communication Flow</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant U as User
+    participant C1 as Component 1
+    participant PAN as PAN Bus
+    participant C2 as Component 2
+    participant C3 as Component 3
+    participant API as Backend API
+
+    U-&gt;&gt;C1: Click Button
+    C1-&gt;&gt;PAN: publish(&#039;user.action&#039;, data)
+
+    PAN-&gt;&gt;C2: notify subscriber
+    PAN-&gt;&gt;C3: notify subscriber
+
+    C2-&gt;&gt;C2: Update UI
+
+    C3-&gt;&gt;API: fetch(&#039;/api/data&#039;)
+    API--&gt;&gt;C3: Response
+    C3-&gt;&gt;PAN: publish(&#039;data.loaded&#039;, result)
+
+    PAN-&gt;&gt;C1: notify subscriber
+    PAN-&gt;&gt;C2: notify subscriber
+
+    C1-&gt;&gt;C1: Update UI
+    C2-&gt;&gt;C2: Update UI</code></pre>
+<h2>No-Build Architecture</h2>
+<pre><code class="language-mermaid">graph LR
+    subgraph &quot;Traditional Framework&quot;
+        S1[Source Code]
+        T1[Transpile&lt;br/&gt;Babel]
+        B1[Bundle&lt;br/&gt;Webpack]
+        M1[Minify]
+        O1[Output]
+
+        S1 --&gt; T1 --&gt; B1 --&gt; M1 --&gt; O1
+    end
+
+    subgraph &quot;LARC&quot;
+        S2[Source Code]
+        BR[Browser]
+
+        S2 -.directly loads.-&gt; BR
+    end
+
+    style S2 fill:#667eea,color:#fff
+    style BR fill:#48bb78,color:#fff
+    style O1 fill:#f56565,color:#fff</code></pre>
+<h2>Module Loading with Import Maps</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;index.html&quot;
+        IM[&quot;&amp;lt;script type=&#039;importmap&#039;&amp;gt;&lt;br/&gt;{&lt;br/&gt;  &#039;@larcjs/core&#039;: &#039;https://cdn...&#039;,&lt;br/&gt;  &#039;app/&#039;: &#039;/src/&#039;&lt;br/&gt;}&quot;]
+        SM[&quot;&amp;lt;script type=&#039;module&#039;&amp;gt;&lt;br/&gt;import &#039;@larcjs/core&#039;&lt;br/&gt;import &#039;app/components/...&#039;&quot;]
+    end
+
+    subgraph &quot;Resolution&quot;
+        IM --&gt; R1[Resolve @larcjs/core]
+        IM --&gt; R2[Resolve app/]
+
+        R1 --&gt; CDN[Load from CDN]
+        R2 --&gt; Local[Load from /src/]
+    end
+
+    subgraph &quot;Browser&quot;
+        CDN --&gt; Cache1[Browser Cache]
+        Local --&gt; Cache2[Browser Cache]
+
+        Cache1 --&gt; Exec[Execute Modules]
+        Cache2 --&gt; Exec
+    end
+
+    style IM fill:#667eea,color:#fff
+    style SM fill:#667eea,color:#fff
+    style Exec fill:#48bb78,color:#fff</code></pre>
+<h2>Deployment Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Development&quot;
+        Dev[Developer]
+        Code[Source Code]
+        Git[Git Repository]
+
+        Dev --&gt;|writes| Code
+        Code --&gt;|commits| Git
+    end
+
+    subgraph &quot;CI/CD&quot;
+        GH[GitHub Actions]
+        Test[Run Tests]
+        Build[Optional Build&lt;br/&gt;Minify]
+
+        Git --&gt;|triggers| GH
+        GH --&gt; Test
+        Test --&gt; Build
+    end
+
+    subgraph &quot;Production&quot;
+        CDN[CDN&lt;br/&gt;CloudFlare/AWS]
+        Static[Static Host&lt;br/&gt;Netlify/Vercel]
+
+        Build --&gt;|deploy assets| CDN
+        Build --&gt;|deploy app| Static
+    end
+
+    subgraph &quot;Users&quot;
+        Browser[Browser]
+
+        Static --&gt;|HTML| Browser
+        CDN --&gt;|JS/CSS/Assets| Browser
+    end
+
+    style Code fill:#667eea,color:#fff
+    style Static fill:#48bb78,color:#fff
+    style CDN fill:#48bb78,color:#fff
+    style Browser fill:#764ba2,color:#fff</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/diagrams/01-architecture-overview.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chapter 8: Routing and Navigation · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Chapter 8: Routing and Navigation">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>09-routing-and-navigation</span>
+      </div>
+      <article class="docs-content">
+        <h1>Chapter 8: Routing and Navigation</h1>
+<p>Client-side routing enables single-page applications (SPAs) to feel like multi-page websites without full page reloads. LARC provides routing through web standards and the PAN bus, keeping things simple and framework-free.</p>
+<h2>Client-Side Routing Basics</h2>
+<p>Client-side routing intercepts link clicks and updates the URL without reloading:</p>
+<pre><code class="language-javascript">// lib/router.js
+class Router {
+  constructor() {
+    this.routes = new Map();
+    this.currentRoute = null;
+
+    // Intercept link clicks
+    document.addEventListener(&#039;click&#039;, (e) =&gt; {
+      if (e.target.matches(&#039;a[href^=&quot;/&quot;]&#039;)) {
+        e.preventDefault();
+        this.navigate(e.target.getAttribute(&#039;href&#039;));
+      }
+    });
+
+    // Handle browser back/forward
+    window.addEventListener(&#039;popstate&#039;, () =&gt; {
+      this.handleRoute(window.location.pathname);
+    });
+  }
+
+  register(path, handler) {
+    this.routes.set(path, handler);
+  }
+
+  navigate(path, state = {}) {
+    window.history.pushState(state, &#039;&#039;, path);
+    this.handleRoute(path);
+
+    // Publish navigation event
+    pan.publish(&#039;router.navigated&#039;, { path, state });
+  }
+
+  handleRoute(path) {
+    // Find matching route
+    for (const [pattern, handler] of this.routes) {
+      const params = this.matchRoute(pattern, path);
+      if (params) {
+        this.currentRoute = { path, pattern, params };
+        handler(params);
+        return;
+      }
+    }
+
+    // 404 - no match
+    pan.publish(&#039;router.not-found&#039;, { path });
+  }
+
+  matchRoute(pattern, path) {
+    // Simple pattern matching
+    const patternParts = pattern.split(&#039;/&#039;).filter(Boolean);
+    const pathParts = path.split(&#039;/&#039;).filter(Boolean);
+
+    if (patternParts.length !== pathParts.length) {
+      return null;
+    }
+
+    const params = {};
+
+    for (let i = 0; i &lt; patternParts.length; i++) {
+      const patternPart = patternParts[i];
+      const pathPart = pathParts[i];
+
+      if (patternPart.startsWith(&#039;:&#039;)) {
+        // Dynamic segment
+        params[patternPart.slice(1)] = pathPart;
+      } else if (patternPart !== pathPart) {
+        // Mismatch
+        return null;
+      }
+    }
+
+    return params;
+  }
+
+  start() {
+    this.handleRoute(window.location.pathname);
+  }
+}
+
+export const router = new Router();</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">import { router } from &#039;./lib/router.js&#039;;
+
+// Register routes
+router.register(&#039;/&#039;, () =&gt; {
+  document.getElementById(&#039;app&#039;).innerHTML = &#039;&lt;home-page&gt;&lt;/home-page&gt;&#039;;
+});
+
+router.register(&#039;/about&#039;, () =&gt; {
+  document.getElementById(&#039;app&#039;).innerHTML = &#039;&lt;about-page&gt;&lt;/about-page&gt;&#039;;
+});
+
+router.register(&#039;/users/:id&#039;, (params) =&gt; {
+  const page = document.createElement(&#039;user-page&#039;);
+  page.setAttribute(&#039;user-id&#039;, params.id);
+  document.getElementById(&#039;app&#039;).innerHTML = &#039;&#039;;
+  document.getElementById(&#039;app&#039;).appendChild(page);
+});
+
+// Start router
+router.start();</code></pre>
+<h2>The pan-router Component</h2>
+<p>LARC provides a declarative router component:</p>
+<pre><code class="language-html">&lt;pan-router&gt;
+  &lt;pan-route path=&quot;/&quot; component=&quot;home-page&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;/about&quot; component=&quot;about-page&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;/users/:id&quot; component=&quot;user-page&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;/posts/:postId/comments/:commentId&quot; component=&quot;comment-page&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;*&quot; component=&quot;not-found-page&quot;&gt;&lt;/pan-route&gt;
+&lt;/pan-router&gt;</code></pre>
+<strong>Implementation:</strong>
+<pre><code class="language-javascript">class PanRouter extends HTMLElement {
+  connectedCallback() {
+    this.routes = Array.from(this.querySelectorAll(&#039;pan-route&#039;)).map(route =&gt; ({
+      path: route.getAttribute(&#039;path&#039;),
+      component: route.getAttribute(&#039;component&#039;),
+      guard: route.getAttribute(&#039;guard&#039;)
+    }));
+
+    // Create outlet
+    this.outlet = document.createElement(&#039;div&#039;);
+    this.outlet.className = &#039;router-outlet&#039;;
+    this.appendChild(this.outlet);
+
+    // Listen for navigation
+    pan.subscribe(&#039;router.navigate&#039;, ({ path, params }) =&gt; {
+      this.navigate(path, params);
+    });
+
+    // Handle browser navigation
+    window.addEventListener(&#039;popstate&#039;, () =&gt; {
+      this.handleRoute(window.location.pathname);
+    });
+
+    // Intercept links
+    document.addEventListener(&#039;click&#039;, (e) =&gt; {
+      const link = e.target.closest(&#039;a[href^=&quot;/&quot;]&#039;);
+      if (link) {
+        e.preventDefault();
+        this.navigate(link.getAttribute(&#039;href&#039;));
+      }
+    });
+
+    // Initial route
+    this.handleRoute(window.location.pathname);
+  }
+
+  navigate(path, params = {}) {
+    window.history.pushState(params, &#039;&#039;, path);
+    this.handleRoute(path);
+  }
+
+  async handleRoute(path) {
+    // Find matching route
+    for (const route of this.routes) {
+      const params = this.matchRoute(route.path, path);
+
+      if (params) {
+        // Check route guard
+        if (route.guard) {
+          const canActivate = await this.runGuard(route.guard, params);
+          if (!canActivate) {
+            return;
+          }
+        }
+
+        // Render component
+        await this.renderComponent(route.component, params);
+        return;
+      }
+    }
+
+    // 404
+    pan.publish(&#039;router.not-found&#039;, { path });
+  }
+
+  matchRoute(pattern, path) {
+    if (pattern === &#039;*&#039;) return {};
+
+    const patternParts = pattern.split(&#039;/&#039;).filter(Boolean);
+    const pathParts = path.split(&#039;/&#039;).filter(Boolean);
+
+    if (patternParts.length !== pathParts.length) return null;
+
+    const params = {};
+
+    for (let i = 0; i &lt; patternParts.length; i++) {
+      if (patternParts[i].startsWith(&#039;:&#039;)) {
+        params[patternParts[i].slice(1)] = pathParts[i];
+      } else if (patternParts[i] !== pathParts[i]) {
+        return null;
+      }
+    }
+
+    return params;
+  }
+
+  async runGuard(guardName, params) {
+    const result = await pan.request(`guard.${guardName}`, params);
+    return result !== false;
+  }
+
+  async renderComponent(componentName, params) {
+    // Wait for component to be defined
+    await customElements.whenDefined(componentName);
+
+    // Create component
+    const component = document.createElement(componentName);
+
+    // Pass route params
+    Object.entries(params).forEach(([key, value]) =&gt; {
+      component.setAttribute(key, value);
+    });
+
+    // Clear outlet and add component
+    this.outlet.innerHTML = &#039;&#039;;
+    this.outlet.appendChild(component);
+
+    // Publish route change
+    pan.publish(&#039;router.changed&#039;, { component: componentName, params });
+  }
+}
+
+customElements.define(&#039;pan-router&#039;, PanRouter);
+customElements.define(&#039;pan-route&#039;, class extends HTMLElement {});</code></pre>
+<h2>Route Parameters</h2>
+<p>Access route parameters in components:</p>
+<pre><code class="language-javascript">class UserPage extends HTMLElement {
+  static get observedAttributes() {
+    return [&#039;user-id&#039;];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === &#039;user-id&#039; &amp;&amp; newValue) {
+      this.loadUser(newValue);
+    }
+  }
+
+  async loadUser(id) {
+    const response = await fetch(`/api/users/${id}`);
+    const user = await response.json();
+    this.render(user);
+  }
+
+  render(user) {
+    this.innerHTML = `
+      &lt;h1&gt;${user.name}&lt;/h1&gt;
+      &lt;p&gt;${user.email}&lt;/p&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;user-page&#039;, UserPage);</code></pre>
+<h2>Route Guards</h2>
+<p>Protect routes with authentication checks:</p>
+<pre><code class="language-javascript">// Respond to auth guard
+pan.respond(&#039;guard.auth&#039;, async () =&gt; {
+  const token = localStorage.getItem(&#039;authToken&#039;);
+
+  if (!token) {
+    // Redirect to login
+    pan.publish(&#039;router.navigate&#039;, { path: &#039;/login&#039; });
+    return false;
+  }
+
+  // Verify token
+  try {
+    const response = await fetch(&#039;/api/auth/verify&#039;, {
+      headers: { &#039;Authorization&#039;: `Bearer ${token}` }
+    });
+
+    return response.ok;
+  } catch {
+    return false;
+  }
+});
+
+// Respond to admin guard
+pan.respond(&#039;guard.admin&#039;, async () =&gt; {
+  const user = await pan.request(&#039;auth.user.get&#039;);
+  return user?.role === &#039;admin&#039;;
+});</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;pan-router&gt;
+  &lt;pan-route path=&quot;/login&quot; component=&quot;login-page&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;/dashboard&quot; component=&quot;dashboard-page&quot; guard=&quot;auth&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;/admin&quot; component=&quot;admin-page&quot; guard=&quot;admin&quot;&gt;&lt;/pan-route&gt;
+&lt;/pan-router&gt;</code></pre>
+<h2>Nested Routes</h2>
+<p>Support hierarchical routing:</p>
+<pre><code class="language-html">&lt;pan-router&gt;
+  &lt;pan-route path=&quot;/settings&quot; component=&quot;settings-layout&quot;&gt;
+    &lt;pan-route path=&quot;/settings/profile&quot; component=&quot;profile-settings&quot;&gt;&lt;/pan-route&gt;
+    &lt;pan-route path=&quot;/settings/security&quot; component=&quot;security-settings&quot;&gt;&lt;/pan-route&gt;
+    &lt;pan-route path=&quot;/settings/billing&quot; component=&quot;billing-settings&quot;&gt;&lt;/pan-route&gt;
+  &lt;/pan-route&gt;
+&lt;/pan-router&gt;</code></pre>
+<h2>Programmatic Navigation</h2>
+<p>Navigate from JavaScript:</p>
+<pre><code class="language-javascript">// Navigate to a path
+pan.publish(&#039;router.navigate&#039;, { path: &#039;/users/123&#039; });
+
+// Navigate with state
+pan.publish(&#039;router.navigate&#039;, {
+  path: &#039;/search&#039;,
+  state: { query: &#039;web components&#039; }
+});
+
+// Go back
+pan.publish(&#039;router.back&#039;);
+
+// Go forward
+pan.publish(&#039;router.forward&#039;);
+
+// Replace current route (no history entry)
+pan.publish(&#039;router.replace&#039;, { path: &#039;/new-path&#039; });</code></pre>
+<h2>Query Parameters</h2>
+<p>Parse and use query parameters:</p>
+<pre><code class="language-javascript">class SearchPage extends HTMLElement {
+  connectedCallback() {
+    // Parse query params
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get(&#039;q&#039;);
+    const page = parseInt(params.get(&#039;page&#039;) || &#039;1&#039;);
+
+    this.performSearch(query, page);
+
+    // Listen for query changes
+    pan.subscribe(&#039;router.changed&#039;, () =&gt; {
+      const params = new URLSearchParams(window.location.search);
+      const newQuery = params.get(&#039;q&#039;);
+      const newPage = parseInt(params.get(&#039;page&#039;) || &#039;1&#039;);
+
+      if (newQuery !== query || newPage !== page) {
+        this.performSearch(newQuery, newPage);
+      }
+    });
+  }
+
+  performSearch(query, page) {
+    // Search implementation
+  }
+}</code></pre>
+<strong>Update query params:</strong>
+<pre><code class="language-javascript">function updateQuery(params) {
+  const url = new URL(window.location);
+
+  Object.entries(params).forEach(([key, value]) =&gt; {
+    url.searchParams.set(key, value);
+  });
+
+  pan.publish(&#039;router.navigate&#039;, { path: url.pathname + url.search });
+}
+
+// Usage
+updateQuery({ q: &#039;web components&#039;, page: &#039;2&#039; });</code></pre>
+<h2>Summary</h2>
+<p>LARC routing provides:</p>
+<ul><li>Client-side navigation without page reloads</li>
+<li>Declarative route configuration</li>
+<li>Route parameters and guards</li>
+<li>Nested routing support</li>
+<li>Browser history integration</li>
+<li>PAN bus integration</li>
+</ul>
+<hr>
+<h2>Best Practices</h2>
+<li><strong>Use declarative routing</strong> - Prefer <code><pan-router></code> over imperative API</li>
+<li><strong>Implement route guards</strong> - Protect sensitive routes</li>
+<li><strong>Handle 404s gracefully</strong> - Always include catch-all route</li>
+<li><strong>Preserve scroll position</strong> - Restore scroll on back navigation</li>
+<li><strong>Use query params for filters</strong> - Makes URLs shareable</li>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/chapters/09-routing-and-navigation.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

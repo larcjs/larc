@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Component Structure · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Web Component Structure">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>02-component-structure</span>
+      </div>
+      <article class="docs-content">
+        <h1>Web Component Structure</h1>
+<h2>Component Anatomy</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Web Component: &amp;lt;user-card&amp;gt;&quot;
+        Class[UserCard Class&lt;br/&gt;extends HTMLElement]
+
+        subgraph &quot;Instance Properties&quot;
+            State[_user&lt;br/&gt;_loading&lt;br/&gt;_error]
+        end
+
+        subgraph &quot;Lifecycle Methods&quot;
+            Construct[constructor]
+            Connect[connectedCallback]
+            Disconnect[disconnectedCallback]
+            AttrChange[attributeChangedCallback]
+        end
+
+        subgraph &quot;Public API&quot;
+            Props[Properties&lt;br/&gt;getters/setters]
+            Methods[Public Methods&lt;br/&gt;loadUser, refresh]
+            Events[Custom Events&lt;br/&gt;user-selected]
+        end
+
+        subgraph &quot;Shadow DOM&quot;
+            SRoot[Shadow Root]
+            Style[&amp;lt;style&amp;gt;]
+            Template[HTML Template]
+            Slots[&amp;lt;slot&amp;gt;]
+        end
+
+        Class --&gt; State
+        Class --&gt; Lifecycle Methods
+        Class --&gt; Public API
+        Class --&gt; Shadow DOM
+    end
+
+    style Class fill:#667eea,color:#fff
+    style Shadow DOM fill:#764ba2,color:#fff
+    style Public API fill:#48bb78,color:#fff</code></pre>
+<h2>Component Lifecycle Flow</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Created: new UserCard()
+    Created --&gt; Created: constructor()
+
+    Created --&gt; Connected: Added to DOM
+    Connected --&gt; Connected: connectedCallback()
+
+    Connected --&gt; AttributeChanged: Attribute changes
+    AttributeChanged --&gt; AttributeChanged: attributeChangedCallback()
+    AttributeChanged --&gt; Connected
+
+    Connected --&gt; Disconnected: Removed from DOM
+    Disconnected --&gt; Disconnected: disconnectedCallback()
+    Disconnected --&gt; [*]
+
+    Connected --&gt; Moved: Moved to new document
+    Moved --&gt; Moved: adoptedCallback()
+    Moved --&gt; Connected
+
+    note right of Created
+        • Call super()
+        • Initialize properties
+        • Attach shadow DOM
+        • DON&#039;T access attributes
+    end note
+
+    note right of Connected
+        • Render initial content
+        • Add event listeners
+        • Subscribe to events
+        • Fetch initial data
+    end note
+
+    note right of Disconnected
+        • Remove event listeners
+        • Unsubscribe from events
+        • Cancel pending operations
+        • Clean up resources
+    end note</code></pre>
+<h2>Shadow DOM Tree Structure</h2>
+<pre><code class="language-mermaid">graph TB
+    Document[Document]
+
+    Document --&gt; Body[body]
+
+    Body --&gt; Component[&quot;&amp;lt;user-card&amp;gt;&lt;br/&gt;(Light DOM)&quot;]
+
+    Component --&gt; LightContent[&quot;Light DOM Content&lt;br/&gt;&amp;lt;div slot=&#039;actions&#039;&amp;gt;...&quot;]
+
+    Component -.Shadow boundary.-&gt; ShadowRoot[#shadow-root]
+
+    ShadowRoot --&gt; Style[&quot;&amp;lt;style&amp;gt;&lt;br/&gt;Scoped CSS&quot;]
+    ShadowRoot --&gt; Container[&quot;&amp;lt;div class=&#039;card&#039;&amp;gt;&quot;]
+
+    Container --&gt; Header[&quot;&amp;lt;div class=&#039;header&#039;&amp;gt;&quot;]
+    Container --&gt; Body2[&quot;&amp;lt;div class=&#039;body&#039;&amp;gt;&quot;]
+    Container --&gt; Footer[&quot;&amp;lt;div class=&#039;footer&#039;&amp;gt;&quot;]
+
+    Footer --&gt; Slot[&quot;&amp;lt;slot name=&#039;actions&#039;&amp;gt;&quot;]
+
+    Slot -.projects.-&gt; LightContent
+
+    style Component fill:#667eea,color:#fff
+    style ShadowRoot fill:#764ba2,color:#fff
+    style Style fill:#48bb78,color:#fff
+    style Slot fill:#f59e42,color:#fff</code></pre>
+<h2>Component Communication Patterns</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Parent Component&quot;
+        P[Parent]
+    end
+
+    subgraph &quot;Child Component&quot;
+        C[Child]
+    end
+
+    subgraph &quot;Sibling Components&quot;
+        S1[Sibling 1]
+        S2[Sibling 2]
+    end
+
+    subgraph &quot;PAN Bus&quot;
+        PAN[Event Bus]
+    end
+
+    P -.Attributes.-&gt; C
+    P -.Properties.-&gt; C
+    C -.Custom Events.-&gt; P
+
+    S1 &lt;-.PAN Messages.-&gt; PAN
+    S2 &lt;-.PAN Messages.-&gt; PAN
+    C &lt;-.PAN Messages.-&gt; PAN
+
+    style P fill:#667eea,color:#fff
+    style C fill:#667eea,color:#fff
+    style S1 fill:#667eea,color:#fff
+    style S2 fill:#667eea,color:#fff
+    style PAN fill:#764ba2,color:#fff</code></pre>
+<h2>Slots and Content Projection</h2>
+<pre><code class="language-mermaid">graph LR
+    subgraph &quot;Usage (Light DOM)&quot;
+        Usage[&quot;&amp;lt;card-component&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;h2 slot=&#039;header&#039;&amp;gt;Title&amp;lt;/h2&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;p&amp;gt;Default content&amp;lt;/p&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;button slot=&#039;footer&#039;&amp;gt;Save&amp;lt;/button&amp;gt;&lt;br/&gt;&amp;lt;/card-component&amp;gt;&quot;]
+    end
+
+    subgraph &quot;Shadow DOM Template&quot;
+        Template[&quot;&amp;lt;div class=&#039;card&#039;&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;slot name=&#039;header&#039;&amp;gt;&amp;lt;/slot&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;slot&amp;gt;&amp;lt;/slot&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;slot name=&#039;footer&#039;&amp;gt;&amp;lt;/slot&amp;gt;&lt;br/&gt;&amp;lt;/div&amp;gt;&quot;]
+    end
+
+    subgraph &quot;Rendered Result&quot;
+        Result[&quot;&amp;lt;div class=&#039;card&#039;&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;h2&amp;gt;Title&amp;lt;/h2&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;p&amp;gt;Default content&amp;lt;/p&amp;gt;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;lt;button&amp;gt;Save&amp;lt;/button&amp;gt;&lt;br/&gt;&amp;lt;/div&amp;gt;&quot;]
+    end
+
+    Usage --&gt;|Projects into| Template
+    Template --&gt;|Renders as| Result
+
+    style Usage fill:#667eea,color:#fff
+    style Template fill:#764ba2,color:#fff
+    style Result fill:#48bb78,color:#fff</code></pre>
+<h2>CSS Encapsulation</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Global CSS&quot;
+        Global[&quot;body { font-family: Arial; }&lt;br/&gt;button { background: red; }&quot;]
+    end
+
+    subgraph &quot;Component 1 Shadow DOM&quot;
+        C1Style[&quot;button { background: blue; }&quot;]
+        C1Button[&quot;&amp;lt;button&amp;gt;Click Me&amp;lt;/button&amp;gt;&quot;]
+
+        C1Style -.applies to.-&gt; C1Button
+    end
+
+    subgraph &quot;Component 2 Shadow DOM&quot;
+        C2Style[&quot;button { background: green; }&quot;]
+        C2Button[&quot;&amp;lt;button&amp;gt;Click Me&amp;lt;/button&amp;gt;&quot;]
+
+        C2Style -.applies to.-&gt; C2Button
+    end
+
+    subgraph &quot;Light DOM&quot;
+        LButton[&quot;&amp;lt;button&amp;gt;Click Me&amp;lt;/button&amp;gt;&quot;]
+    end
+
+    Global -.applies to.-&gt; LButton
+    Global -.-x C1Button
+    Global -.-x C2Button
+
+    C1Style -.-x C2Button
+    C1Style -.-x LButton
+
+    C2Style -.-x C1Button
+    C2Style -.-x LButton
+
+    style C1Button fill:#5a67d8,color:#fff
+    style C2Button fill:#48bb78,color:#fff
+    style LButton fill:#f56565,color:#fff</code></pre>
+<h2>:host and :host-context</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Document&quot;
+        Body[body.dark-theme]
+    end
+
+    Body --&gt; Component[&quot;&amp;lt;my-component class=&#039;highlighted&#039;&amp;gt;&quot;]
+
+    Component -.shadow boundary.-&gt; Shadow[#shadow-root]
+
+    Shadow --&gt; Styles[&quot;&amp;lt;style&amp;gt;&lt;br/&gt;:host { display: block; }&lt;br/&gt;:host(.highlighted) { border: 2px solid gold; }&lt;br/&gt;:host-context(.dark-theme) { background: #333; }&lt;br/&gt;&amp;lt;/style&amp;gt;&quot;]
+
+    Shadow --&gt; Content[&quot;&amp;lt;div&amp;gt;Content&amp;lt;/div&amp;gt;&quot;]
+
+    Styles -.&quot;:host applies to&quot;.-&gt; Component
+    Styles -.&quot;:host(.highlighted) applies to&quot;.-&gt; Component
+    Styles -.&quot;:host-context(.dark-theme) applies to&quot;.-&gt; Component
+
+    style Component fill:#667eea,color:#fff
+    style Shadow fill:#764ba2,color:#fff
+    style Styles fill:#48bb78,color:#fff</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/diagrams/02-component-structure.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

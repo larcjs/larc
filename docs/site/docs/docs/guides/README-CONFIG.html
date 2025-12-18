@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Configuration System · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Configuration System">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">guides</a> / <span>README-CONFIG</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Configuration System</h1>
+<p>Centralized path management for the LARC monorepo, eliminating hardcoded relative paths and enabling easy switching between development and production environments.</p>
+<h2>🎯 <strong>Why Use This?</strong></h2>
+<strong>Before:</strong>
+<pre><code class="language-javascript">// ❌ Hardcoded, breaks when file moves
+import { PanClient } from &#039;../../../../core/pan-client.mjs&#039;;
+import &#039;../../../components/pan-card.mjs&#039;;</code></pre>
+<strong>After:</strong>
+<pre><code class="language-javascript">// ✅ Clean, portable, environment-aware
+import { paths } from &#039;/larc-config.mjs&#039;;
+const PanClient = await import(paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;));
+
+// Or even simpler with autoload
+&lt;pan-card&gt;&lt;/pan-card&gt;  &lt;!-- Automatically resolves and loads --&gt;</code></pre>
+<hr>
+<h2>📦 <strong>Setup</strong></h2>
+<h3>Option 1: Manual Import (In Your Scripts)</h3>
+<pre><code class="language-html">&lt;script type=&quot;module&quot;&gt;
+  import { paths } from &#039;/larc-config.mjs&#039;;
+
+  // Use paths to resolve imports
+  const { PanClient } = await import(paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;));
+  const client = new PanClient();
+&lt;/script&gt;</code></pre>
+<h3>Option 2: With Autoloader (Automatic)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My LARC App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- 1. Load config first --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- 2. Load autoloader (it will use the config) --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- 3. Use components - they load automatically! --&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  &lt;pan-card&gt;
+    &lt;h2&gt;Hello World&lt;/h2&gt;
+  &lt;/pan-card&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    // Config is available globally
+    const resolved = window.larcResolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;);
+    console.log(resolved);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Option 3: Import Map (Modern Browsers)</h3>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@larc/core/&quot;: &quot;./core/&quot;,
+    &quot;@larc/components/&quot;: &quot;./components/&quot;,
+    &quot;pan-bus&quot;: &quot;./core/pan-bus.mjs&quot;,
+    &quot;pan-client&quot;: &quot;./core/pan-client.mjs&quot;
+  }
+}
+&lt;/script&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  // Now you can use clean imports!
+  import { PanClient } from &#039;pan-client&#039;;
+  import &#039;@larc/core/pan-bus.mjs&#039;;
+&lt;/script&gt;</code></pre>
+<hr>
+<h2>🔧 <strong>Configuration</strong></h2>
+<p>The <code>larc-config.mjs</code> file defines:</p>
+<h3><strong>Aliases</strong></h3>
+<p>Aliases map short names to actual paths, automatically switching between dev and production:</p>
+<pre><code class="language-javascript">export const aliases = {
+  &#039;@larc/core&#039;: isDevelopment
+    ? &#039;./core/src&#039;                                    // Local dev
+    : &#039;https://unpkg.com/@larcjs/core@2.0.0/src&#039;,    // Production CDN
+
+  &#039;@larc/components&#039;: isDevelopment
+    ? &#039;./components/src&#039;
+    : &#039;https://unpkg.com/@larcjs/ui@2.0.0/src&#039;,
+};</code></pre>
+<h3><strong>Component Mappings</strong></h3>
+<p>Explicit mappings for components used by the autoloader:</p>
+<pre><code class="language-javascript">export const componentPaths = {
+  &#039;pan-bus&#039;: &#039;@larc/core/pan-bus.mjs&#039;,
+  &#039;pan-card&#039;: &#039;@larc/components/pan-card.mjs&#039;,
+  &#039;pan-data-table&#039;: &#039;@larc/components/pan-data-table.mjs&#039;,
+  // ... more components
+};</code></pre>
+<h3><strong>Path Resolver</strong></h3>
+<p>The <code>paths</code> utility provides methods for resolving paths:</p>
+<pre><code class="language-javascript">// Resolve an alias
+paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-bus.mjs&#039;);
+// Dev:  =&gt; &#039;./core/pan-bus.mjs&#039;
+// Prod: =&gt; &#039;https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs&#039;
+
+// Get a component path
+paths.component(&#039;pan-card&#039;);
+// =&gt; &#039;./components/pan-card.mjs&#039; (dev)
+
+// Join paths
+paths.join(&#039;./base/&#039;, &#039;subpath/file.mjs&#039;);
+// =&gt; &#039;./base/subpath/file.mjs&#039;</code></pre>
+<hr>
+<h2>📝 <strong>Usage Examples</strong></h2>
+<h3><strong>Example 1: Dynamic Import with Path Resolution</strong></h3>
+<pre><code class="language-javascript">import { paths } from &#039;/larc-config.mjs&#039;;
+
+// Resolve and import
+const panClientPath = paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;);
+const { PanClient } = await import(panClientPath);
+
+const client = new PanClient();
+client.publish(&#039;app.ready&#039;, { timestamp: Date.now() });</code></pre>
+<h3><strong>Example 2: Building Import URLs</strong></h3>
+<pre><code class="language-html">&lt;script type=&quot;module&quot;&gt;
+  import { paths } from &#039;/larc-config.mjs&#039;;
+
+  // Build imports dynamically
+  const components = [&#039;pan-card&#039;, &#039;pan-modal&#039;, &#039;pan-tabs&#039;];
+
+  for (const comp of components) {
+    const path = paths.component(comp);
+    await import(path);
+  }
+&lt;/script&gt;</code></pre>
+<h3><strong>Example 3: Using Global Helper</strong></h3>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot;&gt;
+  // After loading config, use the global helper
+  const corePath = window.larcResolve(&#039;@larc/core&#039;);
+  console.log(&#039;Core is at:&#039;, corePath);
+
+  // Load a specific file
+  const clientPath = window.larcResolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;);
+  const { PanClient } = await import(clientPath);
+&lt;/script&gt;</code></pre>
+<h3><strong>Example 4: Component with Auto-Loading</strong></h3>
+<pre><code class="language-html">&lt;!-- No imports needed! Config + autoloader handles it --&gt;
+&lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;pan-data-table resource=&quot;users&quot;&gt;&lt;/pan-data-table&gt;
+&lt;pan-form resource=&quot;users&quot;&gt;&lt;/pan-form&gt;
+
+&lt;!-- Components load automatically when they enter viewport --&gt;</code></pre>
+<hr>
+<h2>🌍 <strong>Environment Detection</strong></h2>
+<p>The config automatically detects the environment:</p>
+<pre><code class="language-javascript">const isDevelopment = window.location.hostname === &#039;localhost&#039; ||
+                      window.location.hostname === &#039;127.0.0.1&#039; ||
+                      window.location.protocol === &#039;file:&#039;;</code></pre>
+<ul><li><strong>Development</strong>: Uses relative paths (<code>./core/src</code>, <code>./components/src</code>)</li>
+<li><strong>Production</strong>: Uses CDN URLs (<code>https://unpkg.com/@larcjs/...</code>)</li>
+</ul>
+<hr>
+<h2>⚙️ <strong>Customizing the Config</strong></h2>
+<h3><strong>Per-Page Override</strong></h3>
+<p>Override config before loading the main config:</p>
+<pre><code class="language-html">&lt;script&gt;
+  // Set custom paths before loading config
+  window.panAutoload = {
+    baseUrl: &#039;https://my-cdn.com/larc/&#039;,
+    componentsPath: &#039;my-components/&#039;
+  };
+&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<h3><strong>Custom Component Paths</strong></h3>
+<p>Add your own components to the mapping:</p>
+<pre><code class="language-javascript">// In larc-config.mjs
+export const componentPaths = {
+  // ... existing mappings
+
+  // Your custom components
+  &#039;my-widget&#039;: &#039;./my-app/components/my-widget.mjs&#039;,
+  &#039;my-dialog&#039;: &#039;@larc/components/my-dialog.mjs&#039;,
+};</code></pre>
+<h3><strong>Custom Resolver</strong></h3>
+<p>Provide your own resolution logic:</p>
+<pre><code class="language-javascript">export const autoloadConfig = {
+  // ... other config
+
+  resolveComponent(tagName) {
+    // Custom logic for resolving component paths
+    if (tagName.startsWith(&#039;my-&#039;)) {
+      return `./custom/${tagName}.mjs`;
+    }
+    // Return null to fall back to default behavior
+    return null;
+  }
+};</code></pre>
+<hr>
+<h2>🚀 <strong>Benefits</strong></h2>
+<li><strong>✅ No Hardcoded Paths</strong> - All paths are configurable</li>
+<li><strong>✅ Environment Aware</strong> - Auto-switches dev/prod</li>
+<li><strong>✅ Centralized</strong> - One place to manage all paths</li>
+<li><strong>✅ CDN Ready</strong> - Easy production deployment</li>
+<li><strong>✅ Portable</strong> - Move files without breaking imports</li>
+<li><strong>✅ Zero Build</strong> - Still no build step required</li>
+<li><strong>✅ Backward Compatible</strong> - Existing code still works</li>
+<hr>
+<h2>📚 <strong>API Reference</strong></h2>
+<h3><strong><code>paths.resolve(aliasOrPath, subpath?)</code></strong></h3>
+Resolves an alias or path to an absolute URL.
+<ul><li><strong>Parameters:</strong></li>
+</ul>  - <code>aliasOrPath</code> (string): Alias like <code>'@larc/core'</code> or a path
+  - <code>subpath</code> (string, optional): Subpath to append
+<ul><li><strong>Returns:</strong> (string) Resolved URL</li>
+</ul>
+<h3><strong><code>paths.component(componentName)</code></strong></h3>
+Gets the path for a specific component.
+<ul><li><strong>Parameters:</strong></li>
+</ul>  - <code>componentName</code> (string): Component tag name (e.g., <code>'pan-card'</code>)
+<ul><li><strong>Returns:</strong> (string) Resolved component path</li>
+</ul>
+<h3><strong><code>paths.join(base, path)</code></strong></h3>
+Joins two path segments correctly.
+<ul><li><strong>Parameters:</strong></li>
+</ul>  - <code>base</code> (string): Base path
+  - <code>path</code> (string): Path to append
+<ul><li><strong>Returns:</strong> (string) Joined path</li>
+</ul>
+<h3><strong><code>window.larcResolve(aliasOrPath, subpath?)</code></strong></h3>
+Global helper function (same as <code>paths.resolve</code>).
+<hr>
+<h2>🔍 <strong>Debugging</strong></h2>
+<p>Check the loaded configuration:</p>
+<pre><code class="language-javascript">// In browser console
+console.log(window.panAutoload);
+// Shows: { config, paths, aliases, componentPaths, ... }
+
+// Check a specific alias
+console.log(window.panAutoload.aliases[&#039;@larc/core&#039;]);
+
+// Test path resolution
+console.log(window.larcResolve(&#039;@larc/core&#039;, &#039;components/pan-bus.mjs&#039;));</code></pre>
+<hr>
+<h2>📖 <strong>Migration Guide</strong></h2>
+<p>To migrate existing code to use the config system:</p>
+<h3><strong>Step 1: Load the Config</strong></h3>
+<p>Add to your HTML:
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;</code></pre></p>
+<h3><strong>Step 2: Option A - Keep Using Autoloader</strong></h3>
+<p>If you're using custom elements, no changes needed! The autoloader will use the config automatically.</p>
+<h3><strong>Step 3: Option B - Update Manual Imports</strong></h3>
+<p>Replace hardcoded paths:</p>
+<pre><code class="language-javascript">// Before
+import { PanClient } from &#039;../../../core/pan-client.mjs&#039;;
+
+// After
+import { paths } from &#039;/larc-config.mjs&#039;;
+const { PanClient } = await import(paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;));
+
+// Or use window.larcResolve in non-module scripts
+const path = window.larcResolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;);
+const { PanClient } = await import(path);</code></pre>
+<hr>
+<h2>💡 <strong>Tips</strong></h2>
+<li><strong>Load config before autoloader</strong> - The autoloader will pick up the config automatically</li>
+<li><strong>Use aliases in new code</strong> - Makes it easier to refactor later</li>
+<li><strong>Test both environments</strong> - Make sure dev and prod paths work</li>
+<li><strong>Document custom components</strong> - Add them to componentPaths for clarity</li>
+<li><strong>Consider import maps</strong> - Modern browsers support them natively</li>
+<hr>
+<h2>🐛 <strong>Troubleshooting</strong></h2>
+<h3><strong>Component not loading?</strong></h3>
+<li>Check if it's in <code>componentPaths</code> mapping</li>
+<li>Verify the path with <code>paths.component('your-component')</code></li>
+<li>Check browser console for autoloader warnings</li>
+<h3><strong>Wrong path in production?</strong></h3>
+<li>Check <code>isDevelopment</code> detection logic</li>
+<li>Verify CDN URLs in <code>aliases</code></li>
+<li>Test with <code>window.location.hostname</code></li>
+<h3><strong>Config not loading?</strong></h3>
+<li>Load config before other modules</li>
+<li>Check for JavaScript errors</li>
+<li>Verify <code>larc-config.mjs</code> is accessible</li>
+<hr>
+<strong>Need help?</strong> Open an issue on GitHub or check the examples in <code>/examples/</code> directory.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/guides/README-CONFIG.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

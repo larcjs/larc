@@ -1,0 +1,1193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chapter 6: State Management · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Chapter 6: State Management">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>06-state-management</span>
+      </div>
+      <article class="docs-content">
+        <h1>Chapter 6: State Management</h1>
+<p>!<a href="../images/06-state-management-3.png"><strong>Figure 6.1:</strong> State Management Hierarchy</a></p>
+<strong><em>Figure 6.1:</strong> State Management Hierarchy</em>
+<p>State management is one of the most critical aspects of application development. Poor state management leads to bugs, performance issues, and maintenance nightmares. Good state management makes applications predictable, testable, and maintainable.</p>
+<p>LARC takes a pragmatic approach: start simple and scale complexity only when needed. This chapter explores state management at every level, from component-local state to distributed, offline-first architectures.</p>
+<h2>Component-Local State</h2>
+<p>The simplest form of state lives entirely within a single component. This is your first choice for most scenarios.</p>
+<h3>Instance Properties</h3>
+<p>Use instance properties for component-specific state:</p>
+<pre><code class="language-javascript">class ToggleSwitch extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+
+    // Local state
+    this.isOn = false;
+  }
+
+  connectedCallback() {
+    this.render();
+
+    this.shadowRoot.querySelector(&#039;button&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.isOn = !this.isOn;  // Update state
+      this.render();            // Re-render
+
+      // Notify others
+      this.dispatchEvent(new CustomEvent(&#039;toggle&#039;, {
+        detail: { isOn: this.isOn }
+      }));
+    });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        button {
+          background: ${this.isOn ? &#039;#48bb78&#039; : &#039;#cbd5e0&#039;};
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+      &lt;/style&gt;
+      &lt;button&gt;${this.isOn ? &#039;ON&#039; : &#039;OFF&#039;}&lt;/button&gt;
+    `;
+  }
+}</code></pre>
+<strong>When to use:</strong>
+<ul><li>UI state (expanded/collapsed, selected, etc.)</li>
+<li>Temporary values (search input, form drafts)</li>
+<li>Component-specific configuration</li>
+</ul>
+<strong>Advantages:</strong>
+<ul><li>Simple and straightforward</li>
+<li>No dependencies on external state</li>
+<li>Easy to reason about</li>
+<li>Easy to test</li>
+</ul>
+<h3>Private Fields</h3>
+<p>Use private fields (with <code>#</code>) for true encapsulation:</p>
+<pre><code class="language-javascript">class Counter extends HTMLElement {
+  // Private fields
+  #count = 0;
+  #max = 100;
+  #min = 0;
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  // Public getter
+  get count() {
+    return this.#count;
+  }
+
+  // Public setter with validation
+  set count(value) {
+    const newCount = Number(value);
+
+    if (isNaN(newCount)) {
+      throw new Error(&#039;Count must be a number&#039;);
+    }
+
+    if (newCount &lt; this.#min || newCount &gt; this.#max) {
+      throw new Error(`Count must be between ${this.#min} and ${this.#max}`);
+    }
+
+    this.#count = newCount;
+    this.render();
+  }
+
+  increment() {
+    this.count = Math.min(this.#count + 1, this.#max);
+  }
+
+  decrement() {
+    this.count = Math.max(this.#count - 1, this.#min);
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;div&gt;${this.#count}&lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<strong>Benefits:</strong>
+<ul><li>True privacy (can't access from outside)</li>
+<li>Validation at setter boundaries</li>
+<li>Clear public API</li>
+</ul>
+<h3>State Objects</h3>
+<p>Organize related state in objects:</p>
+<pre><code class="language-javascript">class UserProfile extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+
+    // Group related state
+    this.state = {
+      user: null,
+      loading: false,
+      error: null,
+      editMode: false
+    };
+  }
+
+  setState(updates) {
+    // Merge updates into state
+    this.state = {
+      ...this.state,
+      ...updates
+    };
+
+    this.render();
+  }
+
+  async loadUser(userId) {
+    this.setState({ loading: true, error: null });
+
+    try {
+      const response = await fetch(`/api/users/${userId}`);
+      const user = await response.json();
+
+      this.setState({ user, loading: false });
+    } catch (error) {
+      this.setState({ error: error.message, loading: false });
+    }
+  }
+
+  render() {
+    const { user, loading, error, editMode } = this.state;
+
+    if (loading) {
+      this.shadowRoot.innerHTML = &#039;&lt;div&gt;Loading...&lt;/div&gt;&#039;;
+    } else if (error) {
+      this.shadowRoot.innerHTML = `&lt;div class=&quot;error&quot;&gt;${error}&lt;/div&gt;`;
+    } else if (user) {
+      this.shadowRoot.innerHTML = `
+        &lt;div&gt;
+          &lt;h2&gt;${user.name}&lt;/h2&gt;
+          ${editMode ? this.renderEditForm() : this.renderDisplay()}
+        &lt;/div&gt;
+      `;
+    }
+  }
+}</code></pre>
+<strong>Benefits:</strong>
+<ul><li>Organized state structure</li>
+<li>Single method to update state</li>
+<li>Clear state shape</li>
+<li>Easier debugging (log entire state)</li>
+</ul>
+<h2>Shared State Patterns</h2>
+<p>When multiple components need access to the same data, you need shared state.</p>
+<h3>Simple Global State</h3>
+<p>Create a shared state object:</p>
+<pre><code class="language-javascript">// lib/state.js
+export const appState = {
+  user: null,
+  theme: &#039;light&#039;,
+  language: &#039;en&#039;,
+  notifications: []
+};
+
+// Update state
+export function updateState(updates) {
+  Object.assign(appState, updates);
+  pan.publish(&#039;app.state.changed&#039;, appState);
+}
+
+// Get state
+export function getState() {
+  return { ...appState };
+}</code></pre>
+<strong>Usage in components:</strong>
+<pre><code class="language-javascript">import { appState, updateState } from &#039;../lib/state.js&#039;;
+
+class ThemeSwitcher extends HTMLElement {
+  connectedCallback() {
+    // Read initial state
+    this.render(appState.theme);
+
+    // Subscribe to changes
+    this.unsubscribe = pan.subscribe(&#039;app.state.changed&#039;, (state) =&gt; {
+      this.render(state.theme);
+    });
+
+    // Add event listener
+    this.addEventListener(&#039;click&#039;, () =&gt; {
+      const newTheme = appState.theme === &#039;light&#039; ? &#039;dark&#039; : &#039;light&#039;;
+      updateState({ theme: newTheme });
+    });
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe();
+  }
+
+  render(theme) {
+    this.textContent = `Theme: ${theme}`;
+  }
+}</code></pre>
+<h3>Reactive State with Proxy</h3>
+<p>Make state changes automatically trigger updates:</p>
+<pre><code class="language-javascript">// lib/reactive-state.js
+export function createReactiveState(initialState) {
+  const listeners = new Set();
+
+  const state = new Proxy(initialState, {
+    set(target, property, value) {
+      const oldValue = target[property];
+      target[property] = value;
+
+      // Notify listeners
+      listeners.forEach(listener =&gt; {
+        listener(property, value, oldValue);
+      });
+
+      // Also publish via PAN
+      pan.publish(&#039;state.changed&#039;, {
+        property,
+        value,
+        oldValue
+      });
+
+      return true;
+    },
+
+    get(target, property) {
+      return target[property];
+    }
+  });
+
+  return {
+    state,
+    subscribe(listener) {
+      listeners.add(listener);
+      return () =&gt; listeners.delete(listener);
+    },
+    getState() {
+      return { ...state };
+    }
+  };
+}</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Create reactive state
+const { state, subscribe } = createReactiveState({
+  count: 0,
+  user: null,
+  theme: &#039;light&#039;
+});
+
+// Components automatically react to changes
+class CountDisplay extends HTMLElement {
+  connectedCallback() {
+    // Subscribe to specific property changes
+    this.unsubscribe = subscribe((property, value) =&gt; {
+      if (property === &#039;count&#039;) {
+        this.textContent = `Count: ${value}`;
+      }
+    });
+
+    // Initial render
+    this.textContent = `Count: ${state.count}`;
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe();
+  }
+}
+
+// Update state (automatically triggers updates)
+state.count++;  // All subscribers notified
+state.count = 42;  // All subscribers notified</code></pre>
+<h3>Store Pattern</h3>
+<p>Build a more sophisticated store:</p>
+<pre><code class="language-javascript">// lib/store.js
+class Store {
+  constructor(initialState = {}) {
+    this.state = initialState;
+    this.listeners = new Map();
+    this.middleware = [];
+  }
+
+  getState() {
+    return { ...this.state };
+  }
+
+  setState(updates) {
+    const oldState = { ...this.state };
+    this.state = { ...this.state, ...updates };
+
+    // Run middleware
+    this.middleware.forEach(fn =&gt; fn(this.state, oldState));
+
+    // Notify listeners
+    this.listeners.forEach((listeners, key) =&gt; {
+      if (key === &#039;*&#039; || key in updates) {
+        listeners.forEach(listener =&gt; {
+          listener(this.state, oldState);
+        });
+      }
+    });
+  }
+
+  subscribe(key, listener) {
+    if (!this.listeners.has(key)) {
+      this.listeners.set(key, new Set());
+    }
+
+    this.listeners.get(key).add(listener);
+
+    // Return unsubscribe function
+    return () =&gt; {
+      const listeners = this.listeners.get(key);
+      if (listeners) {
+        listeners.delete(listener);
+      }
+    };
+  }
+
+  use(middleware) {
+    this.middleware.push(middleware);
+  }
+
+  dispatch(action) {
+    // Action pattern: { type, payload }
+    switch (action.type) {
+      case &#039;user/login&#039;:
+        this.setState({ user: action.payload });
+        break;
+      case &#039;user/logout&#039;:
+        this.setState({ user: null });
+        break;
+      case &#039;theme/change&#039;:
+        this.setState({ theme: action.payload });
+        break;
+      default:
+        console.warn(`Unknown action: ${action.type}`);
+    }
+  }
+}
+
+// Create store instance
+export const store = new Store({
+  user: null,
+  theme: &#039;light&#039;,
+  notifications: []
+});
+
+// Add logging middleware
+store.use((state, oldState) =&gt; {
+  console.log(&#039;State changed:&#039;, { old: oldState, new: state });
+});
+
+// Add persistence middleware
+store.use((state) =&gt; {
+  localStorage.setItem(&#039;app-state&#039;, JSON.stringify(state));
+});</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">import { store } from &#039;../lib/store.js&#039;;
+
+class UserMenu extends HTMLElement {
+  connectedCallback() {
+    // Subscribe to user changes only
+    this.unsubscribe = store.subscribe(&#039;user&#039;, (state) =&gt; {
+      this.render(state.user);
+    });
+
+    // Initial render
+    this.render(store.getState().user);
+  }
+
+  disconnectedCallback() {
+    this.unsubscribe();
+  }
+
+  render(user) {
+    if (user) {
+      this.innerHTML = `
+        &lt;div&gt;Hello, ${user.name}&lt;/div&gt;
+        &lt;button id=&quot;logout&quot;&gt;Logout&lt;/button&gt;
+      `;
+
+      this.querySelector(&#039;#logout&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+        store.dispatch({ type: &#039;user/logout&#039; });
+      });
+    } else {
+      this.innerHTML = &#039;&lt;button id=&quot;login&quot;&gt;Login&lt;/button&gt;&#039;;
+
+      this.querySelector(&#039;#login&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+        // Trigger login flow
+        pan.publish(&#039;auth.login.requested&#039;);
+      });
+    }
+  }
+}</code></pre>
+<h2>The pan-store Component</h2>
+<p>!<a href="../images/06-state-management-9.png"><strong>Figure 6.2:</strong> pan-store Architecture</a></p>
+<strong><em>Figure 6.2:</strong> pan-store Architecture</em>
+<p>!<a href="../images/06-state-management-9.png"><strong>Figure 6.2:</strong> pan-store Architecture</a>
+<strong><em>Figure 6.2:</strong> pan-store Architecture</em></p>
+<p>LARC provides a built-in component for state management:</p>
+<pre><code class="language-html">&lt;pan-store id=&quot;app-store&quot; persist=&quot;true&quot;&gt;
+  &lt;!-- Initial state --&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+  {
+    &quot;user&quot;: null,
+    &quot;theme&quot;: &quot;light&quot;,
+    &quot;cart&quot;: {
+      &quot;items&quot;: [],
+      &quot;total&quot;: 0
+    }
+  }
+  &lt;/script&gt;
+&lt;/pan-store&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  const store = document.getElementById(&#039;app-store&#039;);
+
+  // Get state
+  const state = store.getState();
+
+  // Update state
+  store.setState({ theme: &#039;dark&#039; });
+
+  // Subscribe to changes
+  store.addEventListener(&#039;state-changed&#039;, (e) =&gt; {
+    console.log(&#039;State changed:&#039;, e.detail);
+  });
+
+  // Or use PAN bus
+  pan.subscribe(&#039;store.changed&#039;, (state) =&gt; {
+    console.log(&#039;State via PAN:&#039;, state);
+  });
+&lt;/script&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Declarative state initialization</li>
+<li>Optional persistence to localStorage</li>
+<li>Integrates with PAN bus</li>
+<li>Supports nested state updates</li>
+<li>Time-travel debugging in dev mode</li>
+</ul>
+<strong>Advanced usage:</strong>
+<pre><code class="language-javascript">// Get nested state
+const cartItems = store.getState(&#039;cart.items&#039;);
+
+// Update nested state
+store.setState(&#039;cart.items&#039;, [...items, newItem]);
+
+// Subscribe to specific paths
+store.subscribe(&#039;cart.total&#039;, (value) =&gt; {
+  console.log(&#039;Cart total changed:&#039;, value);
+});
+
+// Computed properties
+store.computed(&#039;cart.itemCount&#039;, (state) =&gt; {
+  return state.cart.items.length;
+});
+
+// Actions
+store.action(&#039;addToCart&#039;, (item) =&gt; {
+  const cart = store.getState(&#039;cart&#039;);
+  const items = [...cart.items, item];
+  const total = items.reduce((sum, item) =&gt; sum + item.price, 0);
+
+  store.setState({
+    &#039;cart.items&#039;: items,
+    &#039;cart.total&#039;: total
+  });
+});
+
+// Use action
+store.dispatch(&#039;addToCart&#039;, { id: 1, name: &#039;Product&#039;, price: 29.99 });</code></pre>
+<h2>IndexedDB Integration</h2>
+<p>For large datasets or offline capability, use IndexedDB:</p>
+<h3>Basic IndexedDB Wrapper</h3>
+<pre><code class="language-javascript">// lib/db.js
+class Database {
+  constructor(name, version = 1) {
+    this.name = name;
+    this.version = version;
+    this.db = null;
+  }
+
+  async open(stores) {
+    return new Promise((resolve, reject) =&gt; {
+      const request = indexedDB.open(this.name, this.version);
+
+      request.onerror = () =&gt; reject(request.error);
+      request.onsuccess = () =&gt; {
+        this.db = request.result;
+        resolve(this.db);
+      };
+
+      request.onupgradeneeded = (event) =&gt; {
+        const db = event.target.result;
+
+        stores.forEach(({ name, keyPath, indexes }) =&gt; {
+          if (!db.objectStoreNames.contains(name)) {
+            const store = db.createObjectStore(name, { keyPath });
+
+            indexes?.forEach(({ name, keyPath, options }) =&gt; {
+              store.createIndex(name, keyPath, options);
+            });
+          }
+        });
+      };
+    });
+  }
+
+  async add(storeName, data) {
+    const tx = this.db.transaction(storeName, &#039;readwrite&#039;);
+    const store = tx.objectStore(storeName);
+
+    return new Promise((resolve, reject) =&gt; {
+      const request = store.add(data);
+      request.onsuccess = () =&gt; resolve(request.result);
+      request.onerror = () =&gt; reject(request.error);
+    });
+  }
+
+  async get(storeName, key) {
+    const tx = this.db.transaction(storeName, &#039;readonly&#039;);
+    const store = tx.objectStore(storeName);
+
+    return new Promise((resolve, reject) =&gt; {
+      const request = store.get(key);
+      request.onsuccess = () =&gt; resolve(request.result);
+      request.onerror = () =&gt; reject(request.error);
+    });
+  }
+
+  async getAll(storeName) {
+    const tx = this.db.transaction(storeName, &#039;readonly&#039;);
+    const store = tx.objectStore(storeName);
+
+    return new Promise((resolve, reject) =&gt; {
+      const request = store.getAll();
+      request.onsuccess = () =&gt; resolve(request.result);
+      request.onerror = () =&gt; reject(request.error);
+    });
+  }
+
+  async update(storeName, data) {
+    const tx = this.db.transaction(storeName, &#039;readwrite&#039;);
+    const store = tx.objectStore(storeName);
+
+    return new Promise((resolve, reject) =&gt; {
+      const request = store.put(data);
+      request.onsuccess = () =&gt; resolve(request.result);
+      request.onerror = () =&gt; reject(request.error);
+    });
+  }
+
+  async delete(storeName, key) {
+    const tx = this.db.transaction(storeName, &#039;readwrite&#039;);
+    const store = tx.objectStore(storeName);
+
+    return new Promise((resolve, reject) =&gt; {
+      const request = store.delete(key);
+      request.onsuccess = () =&gt; resolve(request.result);
+      request.onerror = () =&gt; reject(request.error);
+    });
+  }
+
+  async clear(storeName) {
+    const tx = this.db.transaction(storeName, &#039;readwrite&#039;);
+    const store = tx.objectStore(storeName);
+
+    return new Promise((resolve, reject) =&gt; {
+      const request = store.clear();
+      request.onsuccess = () =&gt; resolve(request.result);
+      request.onerror = () =&gt; reject(request.error);
+    });
+  }
+}
+
+// Initialize database
+export const db = new Database(&#039;MyApp&#039;, 1);
+
+await db.open([
+  {
+    name: &#039;todos&#039;,
+    keyPath: &#039;id&#039;,
+    indexes: [
+      { name: &#039;by-status&#039;, keyPath: &#039;status&#039; },
+      { name: &#039;by-created&#039;, keyPath: &#039;createdAt&#039; }
+    ]
+  },
+  {
+    name: &#039;users&#039;,
+    keyPath: &#039;id&#039;
+  }
+]);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">import { db } from &#039;../lib/db.js&#039;;
+
+class TodoList extends HTMLElement {
+  async connectedCallback() {
+    // Load todos from IndexedDB
+    this.todos = await db.getAll(&#039;todos&#039;);
+    this.render();
+
+    // Subscribe to changes
+    pan.subscribe(&#039;todo.added&#039;, async ({ todo }) =&gt; {
+      await db.add(&#039;todos&#039;, todo);
+      this.todos = await db.getAll(&#039;todos&#039;);
+      this.render();
+    });
+
+    pan.subscribe(&#039;todo.updated&#039;, async ({ todo }) =&gt; {
+      await db.update(&#039;todos&#039;, todo);
+      this.todos = await db.getAll(&#039;todos&#039;);
+      this.render();
+    });
+
+    pan.subscribe(&#039;todo.deleted&#039;, async ({ id }) =&gt; {
+      await db.delete(&#039;todos&#039;, id);
+      this.todos = await db.getAll(&#039;todos&#039;);
+      this.render();
+    });
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;ul&gt;
+        ${this.todos.map(todo =&gt; `
+          &lt;li&gt;
+            &lt;span&gt;${todo.text}&lt;/span&gt;
+            &lt;button data-id=&quot;${todo.id}&quot;&gt;Delete&lt;/button&gt;
+          &lt;/li&gt;
+        `).join(&#039;&#039;)}
+      &lt;/ul&gt;
+    `;
+  }
+}</code></pre>
+<h3>Cache-First Strategy</h3>
+<p>Implement cache-first data loading:</p>
+<pre><code class="language-javascript">class DataManager {
+  constructor(storeName) {
+    this.storeName = storeName;
+    this.cache = new Map();
+  }
+
+  async get(id) {
+    // 1. Check memory cache
+    if (this.cache.has(id)) {
+      return this.cache.get(id);
+    }
+
+    // 2. Check IndexedDB
+    const cached = await db.get(this.storeName, id);
+    if (cached) {
+      this.cache.set(id, cached);
+      return cached;
+    }
+
+    // 3. Fetch from API
+    const data = await this.fetchFromAPI(id);
+
+    // 4. Store in cache and IndexedDB
+    this.cache.set(id, data);
+    await db.add(this.storeName, data);
+
+    return data;
+  }
+
+  async fetchFromAPI(id) {
+    const response = await fetch(`/api/${this.storeName}/${id}`);
+    return response.json();
+  }
+
+  async refresh(id) {
+    // Force refresh from API
+    const data = await this.fetchFromAPI(id);
+
+    // Update cache and IndexedDB
+    this.cache.set(id, data);
+    await db.update(this.storeName, data);
+
+    return data;
+  }
+
+  async getAll() {
+    // Load from IndexedDB first
+    const items = await db.getAll(this.storeName);
+
+    // Cache in memory
+    items.forEach(item =&gt; {
+      this.cache.set(item.id, item);
+    });
+
+    return items;
+  }
+}
+
+// Usage
+const userManager = new DataManager(&#039;users&#039;);
+
+// Always returns fast (from cache if available)
+const user = await userManager.get(123);
+
+// Force refresh
+const freshUser = await userManager.refresh(123);</code></pre>
+<h2>Persistence Strategies</h2>
+<h3>localStorage</h3>
+<p>Simple key-value storage:</p>
+<pre><code class="language-javascript">class PersistentState {
+  constructor(key) {
+    this.key = key;
+    this.state = this.load();
+  }
+
+  load() {
+    try {
+      const data = localStorage.getItem(this.key);
+      return data ? JSON.parse(data) : {};
+    } catch (error) {
+      console.error(&#039;Failed to load state:&#039;, error);
+      return {};
+    }
+  }
+
+  save() {
+    try {
+      localStorage.setItem(this.key, JSON.stringify(this.state));
+    } catch (error) {
+      console.error(&#039;Failed to save state:&#039;, error);
+    }
+  }
+
+  get(path) {
+    return this.getNestedValue(this.state, path);
+  }
+
+  set(path, value) {
+    this.setNestedValue(this.state, path, value);
+    this.save();
+  }
+
+  getNestedValue(obj, path) {
+    return path.split(&#039;.&#039;).reduce((current, key) =&gt; current?.[key], obj);
+  }
+
+  setNestedValue(obj, path, value) {
+    const keys = path.split(&#039;.&#039;);
+    const lastKey = keys.pop();
+    const target = keys.reduce((current, key) =&gt; {
+      if (!(key in current)) current[key] = {};
+      return current[key];
+    }, obj);
+    target[lastKey] = value;
+  }
+
+  clear() {
+    this.state = {};
+    localStorage.removeItem(this.key);
+  }
+}
+
+// Usage
+const settings = new PersistentState(&#039;app-settings&#039;);
+
+settings.set(&#039;theme&#039;, &#039;dark&#039;);
+settings.set(&#039;user.preferences.notifications&#039;, true);
+
+console.log(settings.get(&#039;theme&#039;));  // &#039;dark&#039;
+console.log(settings.get(&#039;user.preferences.notifications&#039;));  // true</code></pre>
+<h3>sessionStorage</h3>
+<p>For temporary session data:</p>
+<pre><code class="language-javascript">class SessionState {
+  constructor(key) {
+    this.key = key;
+  }
+
+  set(data) {
+    sessionStorage.setItem(this.key, JSON.stringify(data));
+  }
+
+  get() {
+    const data = sessionStorage.getItem(this.key);
+    return data ? JSON.parse(data) : null;
+  }
+
+  clear() {
+    sessionStorage.removeItem(this.key);
+  }
+}
+
+// Usage - data persists only for the session
+const sessionData = new SessionState(&#039;form-draft&#039;);
+
+// Save form draft
+sessionData.set({ email: &#039;user@example.com&#039;, message: &#039;Draft...&#039; });
+
+// Restore on page reload (same session)
+const draft = sessionData.get();</code></pre>
+<h3>Hybrid Strategy</h3>
+<p>Combine localStorage and IndexedDB:</p>
+<pre><code class="language-javascript">class HybridStorage {
+  constructor(namespace) {
+    this.namespace = namespace;
+  }
+
+  async set(key, value) {
+    const fullKey = `${this.namespace}:${key}`;
+
+    // Store small data in localStorage
+    if (this.isSmall(value)) {
+      localStorage.setItem(fullKey, JSON.stringify(value));
+    } else {
+      // Store large data in IndexedDB
+      await db.update(&#039;storage&#039;, { key: fullKey, value });
+    }
+  }
+
+  async get(key) {
+    const fullKey = `${this.namespace}:${key}`;
+
+    // Try localStorage first
+    const local = localStorage.getItem(fullKey);
+    if (local) {
+      return JSON.parse(local);
+    }
+
+    // Try IndexedDB
+    const result = await db.get(&#039;storage&#039;, fullKey);
+    return result?.value;
+  }
+
+  isSmall(value) {
+    const str = JSON.stringify(value);
+    return str.length &lt; 1024 * 10; // 10KB threshold
+  }
+
+  async clear() {
+    // Clear localStorage items
+    Object.keys(localStorage).forEach(key =&gt; {
+      if (key.startsWith(`${this.namespace}:`)) {
+        localStorage.removeItem(key);
+      }
+    });
+
+    // Clear IndexedDB items
+    const all = await db.getAll(&#039;storage&#039;);
+    for (const item of all) {
+      if (item.key.startsWith(`${this.namespace}:`)) {
+        await db.delete(&#039;storage&#039;, item.key);
+      }
+    }
+  }
+}</code></pre>
+<h2>Offline-First Applications</h2>
+<p>Build applications that work without connectivity:</p>
+<h3>Service Worker + State Management</h3>
+<pre><code class="language-javascript">// sw.js - Service Worker
+self.addEventListener(&#039;install&#039;, (event) =&gt; {
+  event.waitUntil(
+    caches.open(&#039;v1&#039;).then((cache) =&gt; {
+      return cache.addAll([
+        &#039;/&#039;,
+        &#039;/index.html&#039;,
+        &#039;/src/app.js&#039;,
+        &#039;/&#039;,
+        // Cache critical assets
+      ]);
+    })
+  );
+});
+
+self.addEventListener(&#039;fetch&#039;, (event) =&gt; {
+  event.respondWith(
+    caches.match(event.request).then((response) =&gt; {
+      // Return cached version or fetch
+      return response || fetch(event.request);
+    })
+  );
+});</code></pre>
+<h3>Sync Queue</h3>
+<p>Queue operations when offline:</p>
+<pre><code class="language-javascript">// lib/sync-queue.js
+class SyncQueue {
+  constructor() {
+    this.queue = this.loadQueue();
+    this.processing = false;
+
+    // Listen for online events
+    window.addEventListener(&#039;online&#039;, () =&gt; {
+      this.process();
+    });
+
+    // Start processing if online
+    if (navigator.onLine) {
+      this.process();
+    }
+  }
+
+  loadQueue() {
+    const data = localStorage.getItem(&#039;sync-queue&#039;);
+    return data ? JSON.parse(data) : [];
+  }
+
+  saveQueue() {
+    localStorage.setItem(&#039;sync-queue&#039;, JSON.stringify(this.queue));
+  }
+
+  add(operation) {
+    this.queue.push({
+      id: Date.now() + Math.random(),
+      operation,
+      timestamp: Date.now(),
+      attempts: 0
+    });
+
+    this.saveQueue();
+
+    if (navigator.onLine) {
+      this.process();
+    }
+  }
+
+  async process() {
+    if (this.processing || this.queue.length === 0) {
+      return;
+    }
+
+    this.processing = true;
+
+    while (this.queue.length &gt; 0 &amp;&amp; navigator.onLine) {
+      const item = this.queue[0];
+
+      try {
+        await this.executeOperation(item.operation);
+
+        // Success - remove from queue
+        this.queue.shift();
+        this.saveQueue();
+
+        pan.publish(&#039;sync.success&#039;, { operation: item.operation });
+      } catch (error) {
+        item.attempts++;
+
+        if (item.attempts &gt;= 3) {
+          // Max attempts - remove and report error
+          this.queue.shift();
+          this.saveQueue();
+
+          pan.publish(&#039;sync.failed&#039;, {
+            operation: item.operation,
+            error: error.message
+          });
+        } else {
+          // Retry later
+          break;
+        }
+      }
+    }
+
+    this.processing = false;
+  }
+
+  async executeOperation(operation) {
+    switch (operation.type) {
+      case &#039;CREATE&#039;:
+        return this.create(operation.data);
+      case &#039;UPDATE&#039;:
+        return this.update(operation.data);
+      case &#039;DELETE&#039;:
+        return this.delete(operation.id);
+      default:
+        throw new Error(`Unknown operation: ${operation.type}`);
+    }
+  }
+
+  async create(data) {
+    const response = await fetch(&#039;/api/items&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error(&#039;Create failed&#039;);
+    return response.json();
+  }
+
+  async update(data) {
+    const response = await fetch(`/api/items/${data.id}`, {
+      method: &#039;PUT&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error(&#039;Update failed&#039;);
+    return response.json();
+  }
+
+  async delete(id) {
+    const response = await fetch(`/api/items/${id}`, {
+      method: &#039;DELETE&#039;
+    });
+
+    if (!response.ok) throw new Error(&#039;Delete failed&#039;);
+  }
+
+  clear() {
+    this.queue = [];
+    this.saveQueue();
+  }
+
+  getStatus() {
+    return {
+      queued: this.queue.length,
+      online: navigator.onLine,
+      processing: this.processing
+    };
+  }
+}
+
+export const syncQueue = new SyncQueue();</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">import { syncQueue } from &#039;../lib/sync-queue.js&#039;;
+
+class TodoManager {
+  async addTodo(text) {
+    const todo = {
+      id: Date.now(),
+      text,
+      completed: false,
+      createdAt: new Date()
+    };
+
+    // Save locally immediately
+    await db.add(&#039;todos&#039;, todo);
+    pan.publish(&#039;todo.added&#039;, { todo });
+
+    // Queue for server sync
+    if (!navigator.onLine) {
+      syncQueue.add({
+        type: &#039;CREATE&#039;,
+        data: todo
+      });
+
+      pan.publish(&#039;notification.info&#039;, {
+        message: &#039;Saved locally. Will sync when online.&#039;
+      });
+    } else {
+      // Online - sync immediately
+      try {
+        await this.syncToServer(todo);
+      } catch (error) {
+        // Failed - add to queue
+        syncQueue.add({
+          type: &#039;CREATE&#039;,
+          data: todo
+        });
+      }
+    }
+  }
+
+  async syncToServer(todo) {
+    const response = await fetch(&#039;/api/todos&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify(todo)
+    });
+
+    if (!response.ok) {
+      throw new Error(&#039;Sync failed&#039;);
+    }
+
+    const result = await response.json();
+
+    // Update local copy with server ID
+    await db.update(&#039;todos&#039;, { ...todo, serverId: result.id });
+  }
+}</code></pre>
+<h2>Summary</h2>
+<p>This chapter covered state management at every level:</p>
+<ul><li><strong>Component-Local State</strong>: Instance properties, private fields, and state objects</li>
+<li><strong>Shared State</strong>: Global state, reactive proxies, and store patterns</li>
+<li><strong>pan-store</strong>: Built-in state management component</li>
+<li><strong>IndexedDB</strong>: Large dataset storage and offline capability</li>
+<li><strong>Persistence</strong>: localStorage, sessionStorage, and hybrid strategies</li>
+<li><strong>Offline-First</strong>: Service workers, sync queues, and conflict resolution</li>
+</ul>
+Choose the simplest solution that meets your needs, then scale up complexity as requirements grow.
+<hr>
+<h2>Best Practices</h2>
+<li><strong>Start with local state</strong></li>
+   - Only share state when necessary
+   - Keeps components independent
+   - Easier to test and debug
+<li><strong>Use IndexedDB for large data</strong></li>
+   - localStorage limited to ~5-10MB
+   - IndexedDB can store gigabytes
+   - Better performance for large datasets
+<li><strong>Implement cache-first strategies</strong></li>
+   - Load from cache immediately
+   - Update from server in background
+   - Show stale data rather than loading spinner
+<li><strong>Queue offline operations</strong></li>
+   - Don't lose user data
+   - Sync when connection restored
+   - Show sync status to user
+<li><strong>Test offline scenarios</strong></li>
+   - Use DevTools to simulate offline
+   - Test sync queue behavior
+   - Verify conflict resolution
+<li><strong>Monitor storage usage</strong></li>
+   - Check quota before storing
+   - Clean up old data
+   - Provide clear error messages when full
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/chapters/06-state-management.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

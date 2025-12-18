@@ -68,7 +68,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added `/cli` directory for CLI tooling
 - Added `/registry` directory for component registry
 - Added `/vscode-extension` directory for VS Code extension
-- Added `/docs/learning-larc` directory for learning materials
+- Added `/docs/books/learning-larc` directory for learning materials
 - Added `registry-schema.json` for component metadata validation
 
 #### Documentation Updates
