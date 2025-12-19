@@ -1,4 +1,4 @@
-# Foreword
+# Foreword {.unnumbered}
 
 *by Christopher Robison*
 

@@ -1,6 +1,6 @@
-# Learning LARC
+# Learning LARC {.unnumbered}
 
-## Building Modern Web Applications with the Page Area Network Architecture
+## Building Modern Web Applications with the Page Area Network Architecture {.unnumbered}
 
 ---
 
@@ -10,7 +10,7 @@
 
 ---
 
-## Praise for Learning LARC
+## Praise for Learning LARC {.unnumbered}
 
 *"LARC represents a return to web fundamentals while embracing modern capabilities. This book beautifully explains why that matters."*
 — **David B. - Software Engineer**
@@ -23,7 +23,7 @@
 
 ---
 
-## Copyright
+## Copyright {.unnumbered}
 
 Copyright © 2025 LARC Team. All rights reserved.
 
@@ -39,9 +39,9 @@ Use of the information and instructions contained in this work is at your own ri
 
 ---
 
-## Table of Contents
+## Table of Contents {.unnumbered}
 
-### Preface
+### Preface {.unnumbered}
 
 - Who This Book Is For
 - What You'll Learn
@@ -50,7 +50,7 @@ Use of the information and instructions contained in this work is at your own ri
 - How to Contact Us
 - Acknowledgments
 
-### Part I: Foundations
+### Part I: Foundations {.unnumbered}
 
 **Chapter 1: Philosophy and Background**
 - The Problem with Modern Web Development
@@ -76,7 +76,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Development Workflow
 - Common Patterns
 
-### Part II: Building Components
+### Part II: Building Components {.unnumbered}
 
 **Chapter 4: Creating Web Components**
 - Anatomy of a LARC Component
@@ -110,7 +110,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Dynamic Component Loading
 - Performance Optimization
 
-### Part III: Building Applications
+### Part III: Building Applications {.unnumbered}
 
 **Chapter 8: Routing and Navigation**
 - Client-Side Routing
@@ -144,7 +144,7 @@ Use of the information and instructions contained in this work is at your own ri
 - CORS Considerations
 - Security Best Practices
 
-### Part IV: Advanced Topics
+### Part IV: Advanced Topics {.unnumbered}
 
 **Chapter 12: Server Integration**
 - Backend Architecture
@@ -178,7 +178,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Monitoring and Analytics
 - Production Best Practices
 
-### Part V: Ecosystem
+### Part V: Ecosystem {.unnumbered}
 
 **Chapter 16: Component Library**
 - Using the Component Registry
@@ -201,7 +201,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Lessons Learned
 - Best Practices
 
-### Appendices
+### Appendices {.unnumbered}
 
 **Appendix A: Web Components API Reference**
 - Custom Elements
@@ -232,11 +232,11 @@ Use of the information and instructions contained in this work is at your own ri
 - Video Tutorials
 - Example Projects
 
-### Index
+### Index {.unnumbered}
 
 ---
 
-## About the Authors
+## About the Authors {.unnumbered}
 
 The LARC Team is a group of developers passionate about web standards, simplicity, and performance. We believe the web platform has evolved to the point where many abstractions are no longer necessary, and we created LARC to prove it.
 

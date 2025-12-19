@@ -298,8 +298,8 @@ create_default_css() {
 /* Learning LARC - Book Styles */
 
 :root {
-  --primary-color: #667eea;
-  --secondary-color: #764ba2;
+  --primary-color: #1e3a5f;
+  --secondary-color: #2563eb;
   --text-color: #2d3748;
   --bg-color: #ffffff;
   --code-bg: #f7fafc;

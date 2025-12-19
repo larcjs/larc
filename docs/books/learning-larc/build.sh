@@ -119,8 +119,8 @@ echo "🎨 Creating HTML styles..."
 cat > "$TEMP_DIR/styles.css" << 'EOF'
 /* Learning LARC Book Styles */
 :root {
-    --primary-color: #667eea;
-    --secondary-color: #764ba2;
+    --primary-color: #1e3a5f;
+    --secondary-color: #2563eb;
     --text-color: #2d3748;
     --bg-color: #ffffff;
     --code-bg: #f7fafc;
@@ -451,8 +451,8 @@ cat > "$OUTPUT_DIR/index.html" << 'EOF'
             color: #2d3748;
         }
         h1 {
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
+            color: #1e3a5f;
+            border-bottom: 3px solid #1e3a5f;
             padding-bottom: 0.5rem;
         }
         .download-grid {
@@ -469,17 +469,17 @@ cat > "$OUTPUT_DIR/index.html" << 'EOF'
             transition: all 0.3s;
         }
         .download-card:hover {
-            border-color: #667eea;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            border-color: #1e3a5f;
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.2);
             transform: translateY(-2px);
         }
         .download-card h3 {
-            color: #764ba2;
+            color: #2563eb;
             margin-top: 0;
         }
         .download-btn {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
             color: white;
             padding: 0.75rem 1.5rem;
             border-radius: 5px;

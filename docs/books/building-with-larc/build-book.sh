@@ -289,7 +289,7 @@ build_docx() {
         create_kindle_reference_docx
     fi
 
-    # Create a Lua filter for chapter page breaks and code block styling
+    # Create a Lua filter for chapter page breaks
     cat > "${BUILD_DIR}/figure-filter.lua" << 'LUAFILTER'
 -- Lua filter for DOCX formatting
 
@@ -303,68 +303,17 @@ function Header(el)
     end
     return el
 end
-
--- Handle figures - wrap standalone images in a figure with caption
-function Para(el)
-    if #el.content == 1 and el.content[1].t == "Image" then
-        local img = el.content[1]
-        local caption = pandoc.utils.stringify(img.caption)
-
-        if caption and caption ~= "" then
-            return pandoc.Div({
-                pandoc.Para({img}),
-                pandoc.Para({pandoc.Emph({pandoc.Str(caption)})})
-            }, {class = "figure"})
-        end
-    end
-    return el
-end
-
--- Style code blocks with grey background and border
-function CodeBlock(el)
-    -- Wrap code block with OpenXML shading
-    local code_text = el.text
-    local lines = {}
-    for line in code_text:gmatch("([^\n]*)\n?") do
-        if line ~= "" or #lines > 0 then
-            table.insert(lines, line)
-        end
-    end
-    -- Remove trailing empty line if exists
-    if #lines > 0 and lines[#lines] == "" then
-        table.remove(lines)
-    end
-
-    -- Create paragraphs for each line with shading
-    local blocks = {}
-
-    -- Add top border/spacing
-    table.insert(blocks, pandoc.RawBlock('openxml',
-        '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="120" w:after="0"/><w:pBdr><w:top w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
-        (lines[1] or '') .. '</w:t></w:r></w:p>'))
-
-    -- Add middle lines
-    for i = 2, #lines - 1 do
-        table.insert(blocks, pandoc.RawBlock('openxml',
-            '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="0" w:after="0"/><w:pBdr><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
-            lines[i] .. '</w:t></w:r></w:p>'))
-    end
-
-    -- Add bottom line with border
-    if #lines > 1 then
-        table.insert(blocks, pandoc.RawBlock('openxml',
-            '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="0" w:after="120"/><w:pBdr><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:bottom w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
-            lines[#lines] .. '</w:t></w:r></w:p>'))
-    end
-
-    return blocks
-end
 LUAFILTER
 
     # Build DOCX with Kindle-friendly settings
+    # Use glob patterns for reliable file expansion
     pandoc \
         "${BUILD_DIR}/metadata.yaml" \
-        $(cat "${BUILD_DIR}/book-order.txt" | sed "s|^|${BOOK_DIR}/|") \
+        "${BOOK_DIR}"/chapter-*.md \
+        "${BOOK_DIR}"/appendix-*.md \
+        "${BOOK_DIR}/index.md" \
+        "${BOOK_DIR}/colophon.md" \
+        "${BOOK_DIR}/back-cover.md" \
         --from markdown+smart+implicit_figures \
         --to docx \
         --toc \
@@ -474,8 +423,8 @@ create_default_css() {
 /* Building with LARC - Book Styles */
 
 :root {
-  --primary-color: #006699;
-  --secondary-color: #06b6d4;
+  --primary-color: #1e3a5f;
+  --secondary-color: #2563eb;
   --text-color: #1e293b;
   --bg-color: #ffffff;
   --code-bg: #f8fafc;
