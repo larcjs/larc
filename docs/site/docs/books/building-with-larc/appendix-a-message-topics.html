@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Message Topics Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Message Topics Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>appendix-a-message-topics</span>
+      </div>
+      <article class="docs-content">
+        <h1>Message Topics Reference</h1>
+<p>This appendix provides a comprehensive reference for LARC message topic conventions. Topics are the fundamental addressing mechanism in LARC applications—they determine how messages are routed, who receives them, and how components interact. Understanding topic patterns is essential for building scalable, maintainable LARC applications.</p>
+<h2>Topic Format and Structure</h2>
+<h3>Standard Format</h3>
+<p>LARC topics follow a hierarchical dotted notation:</p>
+<pre><code class="language-plaintext">resource.action.qualifier</code></pre>
+<strong>Components:</strong>
+<ul><li><strong>Resource:</strong> The domain entity or system (users, posts, nav, ui, auth)</li>
+<li><strong>Action:</strong> The operation or event type (list, item, get, save, updated)</li>
+<li><strong>Qualifier:</strong> Additional context (state, request, reply, event)</li>
+</ul>
+This three-segment format provides clarity while remaining flexible enough for various use cases. More segments can be added when needed for specificity.
+<h3>Topic Examples</h3>
+<p>| Topic | Resource | Action | Qualifier | Purpose |
+|-------|----------|--------|-----------|---------|
+| <code>users.list.state</code> | users | list | state | Current user list (retained) |
+| <code>users.item.get</code> | users | item | get | Fetch single user (request) |
+| <code>posts.item.updated</code> | posts | item | updated | Post was modified (event) |
+| <code>nav.goto</code> | nav | goto | — | Navigate to route (command) |
+| <code>ui.modal.opened</code> | ui | modal.opened | — | Modal opened (event) |
+| <code>auth.session.state</code> | auth | session | state | Current session (retained) |</p>
+<h3>Naming Rules</h3>
+<strong>Case and Separators:</strong>
+<ul><li>Use lowercase letters only</li>
+<li>Separate segments with dots (<code>.</code>)</li>
+<li>Use hyphens (<code>-</code>) within a segment if needed: <code>auth.two-factor.verify</code></li>
+</ul>
+<strong>Character Set:</strong>
+<ul><li>Alphanumeric characters: <code>a-z</code>, <code>0-9</code></li>
+<li>Dots for segment separation: <code>.</code></li>
+<li>Hyphens for compound words: <code>-</code></li>
+<li>No underscores, spaces, or special characters</li>
+</ul>
+<strong>Length:</strong>
+<ul><li>Keep topics concise but descriptive</li>
+<li>Typical range: 15-40 characters</li>
+<li>Avoid abbreviations that sacrifice clarity</li>
+</ul>
+<h2>Topic Patterns and Matching</h2>
+<h3>Exact Match</h3>
+<p>The simplest pattern matches a specific topic exactly:</p>
+<pre><code class="language-javascript">client.subscribe(&#039;users.item.updated&#039;, (msg) =&gt; {
+  console.log(&#039;User updated:&#039;, msg.data);
+});</code></pre>
+<p>Receives only messages published to <code>users.item.updated</code>.</p>
+<h3>Single-Segment Wildcard</h3>
+<p>The asterisk (<code>*</code>) matches exactly one segment:</p>
+<p>| Pattern | Matches | Does Not Match |
+|---------|---------|----------------|
+| <code>users.*</code> | <code>users.list</code>, <code>users.item</code> | <code>users.list.state</code>, <code>users.item.updated</code> |
+| <code>*.updated</code> | <code>users.updated</code>, <code>posts.updated</code> | <code>users.item.updated</code> |
+| <code>users.*.state</code> | <code>users.list.state</code>, <code>users.item.state</code> | <code>users.state</code>, <code>users.list.item.state</code> |</p>
+<pre><code class="language-javascript">// Subscribe to all user-related events
+client.subscribe(&#039;users.*&#039;, (msg) =&gt; {
+  console.log(&#039;User event:&#039;, msg.topic);
+});</code></pre>
+<h3>Global Wildcard</h3>
+<p>The special pattern <code>*</code> matches all topics:</p>
+<pre><code class="language-javascript">// Monitor all messages (use sparingly)
+client.subscribe(&#039;*&#039;, (msg) =&gt; {
+  console.log(&#039;[ALL]&#039;, msg.topic, msg.data);
+});</code></pre>
+<strong>Warning:</strong> Global wildcard subscriptions match every message in the system. Use them only for debugging, logging, or analytics. They can significantly impact performance in high-throughput applications.
+<h3>Pattern Matching Examples</h3>
+<pre><code class="language-javascript">// Match all list operations
+client.subscribe(&#039;*.list.*&#039;, (msg) =&gt; {
+  // Matches: users.list.state, posts.list.get, comments.list.get
+});
+
+// Match all state topics
+client.subscribe(&#039;*.*.state&#039;, (msg) =&gt; {
+  // Matches: users.list.state, app.theme.state, nav.route.state
+});
+
+// Match all operations on items
+client.subscribe(&#039;*.item.*&#039;, (msg) =&gt; {
+  // Matches: users.item.get, posts.item.save, users.item.updated
+});</code></pre>
+<h2>Reserved Topic Namespaces</h2>
+<p>Certain topic namespaces are reserved for LARC internal use. Applications must not publish to these topics directly.</p>
+<h3>pan:* Namespace (System Internal)</h3>
+<p>The <code>pan:*</code> namespace is reserved for PAN bus internals:</p>
+<p>| Topic | Purpose | Usage |
+|-------|---------|-------|
+| <code>pan:sys.ready</code> | Bus ready signal | Listen only |
+| <code>pan:sys.stats</code> | Bus statistics | Request only |
+| <code>pan:sys.error</code> | System errors | Listen only |
+| <code>pan:sys.clear-retained</code> | Clear retained messages | Request only |
+| <code>pan:publish</code> | Internal publish event | Internal only |
+| <code>pan:subscribe</code> | Internal subscribe event | Internal only |
+| <code>pan:unsubscribe</code> | Internal unsubscribe event | Internal only |
+| <code>pan:deliver</code> | Internal message delivery | Internal only |
+| <code>pan:hello</code> | Client registration | Internal only |
+| <code>pan:$reply:*</code> | Auto-generated reply topics | Internal only |</p>
+<strong>Never:</strong>
+<ul><li>Publish to <code>pan:*</code> topics directly</li>
+<li>Subscribe to internal topics like <code>pan:publish</code> or <code>pan:subscribe</code></li>
+<li>Manually create <code>pan:$reply:*</code> topics (these are auto-generated by <code>request()</code>)</li>
+</ul>
+<strong>Exception:</strong> You may subscribe to system notification topics like <code>pan:sys.ready</code> and <code>pan:sys.error</code>.
+<h3>sys:* Namespace (System Reserved)</h3>
+<p>The <code>sys:*</code> namespace is reserved for future system-level functionality:</p>
+<pre><code class="language-plaintext">sys:error               # Future: System-wide errors
+sys:perf                # Future: Performance monitoring
+sys:debug               # Future: Debug information
+sys:config              # Future: Configuration changes</code></pre>
+<p>Do not use <code>sys:*</code> topics in application code.</p>
+<h3>Application Namespaces</h3>
+<p>Your application should establish its own top-level namespaces:</p>
+<p>| Namespace | Purpose | Examples |
+|-----------|---------|----------|
+| <code>app.*</code> | Application-level concerns | <code>app.config.state</code>, <code>app.theme.state</code> |
+| <code>auth.*</code> | Authentication/authorization | <code>auth.login</code>, <code>auth.session.state</code> |
+| <code>session.*</code> | Session management | <code>session.started</code>, <code>session.expired</code> |
+| <code>nav.*</code> | Navigation | <code>nav.goto</code>, <code>nav.route.state</code> |
+| <code>ui.*</code> | UI components | <code>ui.modal.opened</code>, <code>ui.toast.show</code> |
+| <code>analytics.*</code> | Analytics tracking | <code>analytics.event</code>, <code>analytics.page-view</code> |</p>
+<h2>CRUD Topic Patterns</h2>
+<p>CRUD operations (Create, Read, Update, Delete) follow consistent topic patterns across all resources.</p>
+<h3>List Operations</h3>
+<p>#### List State (Retained)</p>
+<strong>Topic:</strong> <code>${resource}.list.state</code>
+<strong>Purpose:</strong> Retained snapshot of current list data. New subscribers receive the most recent list immediately.
+<strong>Message Format:</strong>
+<pre><code class="language-javascript">{
+  topic: &#039;users.list.state&#039;,
+  data: {
+    items: [/* array of items */],
+    total: 150,              // Total count (for pagination)
+    page: 1,                 // Current page
+    filter: {},              // Active filters
+    sort: &#039;name-asc&#039;         // Active sort
+  },
+  retain: true
+}</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Publish list state
+client.publish({
+  topic: &#039;users.list.state&#039;,
+  data: {
+    items: users,
+    total: users.length,
+    page: 1
+  },
+  retain: true
+});
+
+// Subscribe to list state
+client.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+  renderList(msg.data.items);
+}, { retained: true });</code></pre>
+<p>#### List Get (Request)</p>
+<strong>Topic:</strong> <code>${resource}.list.get</code>
+<strong>Purpose:</strong> Request to fetch list data with optional parameters.
+<strong>Request Format:</strong>
+<pre><code class="language-javascript">{
+  topic: &#039;users.list.get&#039;,
+  data: {
+    page: 1,
+    limit: 20,
+    filter: { active: true },
+    sort: &#039;name-asc&#039;
+  }
+}</code></pre>
+<strong>Response Format:</strong>
+<pre><code class="language-javascript">{
+  ok: true,
+  items: [/* array */],
+  total: 150,
+  page: 1
+}</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Request list
+const response = await client.request(&#039;users.list.get&#039;, {
+  page: 1,
+  limit: 20,
+  filter: { active: true }
+});
+
+if (response.data.ok) {
+  renderList(response.data.items);
+}</code></pre>
+<h3>Item Operations</h3>
+<p>#### Item Get (Request)</p>
+<strong>Topic:</strong> <code>${resource}.item.get</code>
+<strong>Purpose:</strong> Fetch a single item by ID.
+<strong>Request Format:</strong>
+<pre><code class="language-javascript">{
+  topic: &#039;users.item.get&#039;,
+  data: { id: 123 }
+}</code></pre>
+<strong>Response Format:</strong>
+<pre><code class="language-javascript">// Success
+{ ok: true, item: { id: 123, name: &#039;Alice&#039;, email: &#039;...&#039; } }
+
+// Not found
+{ ok: false, error: &#039;Not found&#039;, code: &#039;NOT_FOUND&#039; }</code></pre>
+<p>#### Item Save (Request)</p>
+<strong>Topic:</strong> <code>${resource}.item.save</code>
+<strong>Purpose:</strong> Create or update an item. If <code>id</code> is present, updates existing item. If <code>id</code> is omitted, creates new item.
+<strong>Request Format:</strong>
+<pre><code class="language-javascript">{
+  topic: &#039;users.item.save&#039;,
+  data: {
+    item: {
+      id: 123,              // Omit for create
+      name: &#039;Alice&#039;,
+      email: &#039;alice@example.com&#039;
+    }
+  }
+}</code></pre>
+<strong>Response Format:</strong>
+<pre><code class="language-javascript">// Success
+{ ok: true, item: { id: 123, name: &#039;Alice&#039;, email: &#039;...&#039; } }
+
+// Validation error
+{ ok: false, error: &#039;Invalid email&#039;, code: &#039;VALIDATION_ERROR&#039; }</code></pre>
+<p>#### Item Delete (Request)</p>
+<strong>Topic:</strong> <code>${resource}.item.delete</code>
+<strong>Purpose:</strong> Delete an item by ID.
+<strong>Request Format:</strong>
+<pre><code class="language-javascript">{
+  topic: &#039;users.item.delete&#039;,
+  data: { id: 123 }
+}</code></pre>
+<strong>Response Format:</strong>
+<pre><code class="language-javascript">// Success
+{ ok: true, id: 123 }
+
+// Not found
+{ ok: false, error: &#039;Not found&#039;, code: &#039;NOT_FOUND&#039; }</code></pre>
+<p>#### Item Select (Event)</p>
+<strong>Topic:</strong> <code>${resource}.item.select</code>
+<strong>Purpose:</strong> User selected/focused an item (no reply expected).
+<strong>Message Format:</strong>
+<pre><code class="language-javascript">{
+  topic: &#039;users.item.select&#039;,
+  data: { id: 123 }
+}</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Publish selection
+client.publish({
+  topic: &#039;users.item.select&#039;,
+  data: { id: userId }
+});
+
+// Handle selection
+client.subscribe(&#039;users.item.select&#039;, (msg) =&gt; {
+  highlightItem(msg.data.id);
+  loadDetails(msg.data.id);
+});</code></pre>
+<h3>Item Events</h3>
+<p>Item events notify about completed operations:</p>
+<p>| Topic | Trigger | Data |
+|-------|---------|------|
+| <code>${resource}.item.created</code> | Item created | <code>{ item: {...} }</code> |
+| <code>${resource}.item.updated</code> | Item updated | <code>{ item: {...} }</code> |
+| <code>${resource}.item.deleted</code> | Item deleted | <code>{ id: 123 }</code> |</p>
+<strong>Example:</strong>
+<pre><code class="language-javascript">// After save operation completes
+client.publish({
+  topic: &#039;users.item.updated&#039;,
+  data: { item: savedUser }
+});</code></pre>
+<h3>Per-Item State</h3>
+<p>For tracking state of individual items:</p>
+<strong>Topic:</strong> <code>${resource}.item.state.${id}</code>
+<strong>Purpose:</strong> Retained state for a specific item (e.g., online status, typing indicator).
+<strong>Example:</strong>
+<pre><code class="language-javascript">// Publish item state
+client.publish({
+  topic: `users.item.state.${userId}`,
+  data: {
+    id: userId,
+    online: true,
+    typing: false,
+    lastSeen: Date.now()
+  },
+  retain: true
+});
+
+// Subscribe to specific item
+client.subscribe(`users.item.state.${userId}`, (msg) =&gt; {
+  updatePresence(msg.data);
+}, { retained: true });
+
+// Subscribe to all item states
+client.subscribe(&#039;users.item.state.*&#039;, (msg) =&gt; {
+  updatePresence(msg.data);
+});</code></pre>
+<h2>State Management Topics</h2>
+<p>State topics use the <code>.state</code> qualifier and are always retained.</p>
+<h3>Global State</h3>
+<strong>Pattern:</strong> <code>${domain}.state</code>
+<strong>Examples:</strong>
+<pre><code class="language-javascript">&#039;app.config.state&#039;          # Application configuration
+&#039;app.theme.state&#039;           # Current theme
+&#039;app.language.state&#039;        # Current language
+&#039;ui.sidebar.state&#039;          # Sidebar open/closed
+&#039;ui.loading.state&#039;          # Loading indicator</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Publish state
+client.publish({
+  topic: &#039;app.theme.state&#039;,
+  data: { mode: &#039;dark&#039;, accent: &#039;#007bff&#039; },
+  retain: true
+});
+
+// Subscribe (receives current state immediately)
+client.subscribe(&#039;app.theme.state&#039;, (msg) =&gt; {
+  applyTheme(msg.data);
+}, { retained: true });</code></pre>
+<h3>Scoped State</h3>
+<strong>Pattern:</strong> <code>${domain}.${scope}.state</code>
+<strong>Examples:</strong>
+<pre><code class="language-javascript">&#039;users.list.state&#039;          # User list
+&#039;auth.session.state&#039;        # Current session
+&#039;nav.route.state&#039;           # Current route
+&#039;search.query.state&#039;        # Search query
+&#039;filters.active.state&#039;      # Active filters</code></pre>
+<h2>Events vs Commands</h2>
+<p>Distinguish between events (past tense) and commands (imperative).</p>
+<h3>Events</h3>
+<p>Events describe something that <strong>already happened</strong>. They use past tense.</p>
+<strong>Characteristics:</strong>
+<ul><li>Past tense verbs: <code>created</code>, <code>updated</code>, <code>deleted</code>, <code>opened</code>, <code>closed</code></li>
+<li>Fire-and-forget (no reply expected)</li>
+<li>Multiple subscribers allowed</li>
+<li>Informational</li>
+</ul>
+<strong>Examples:</strong>
+<p>| Topic | Description |
+|-------|-------------|
+| <code>users.item.created</code> | A user was created |
+| <code>users.item.updated</code> | A user was updated |
+| <code>ui.modal.opened</code> | A modal was opened |
+| <code>ui.modal.closed</code> | A modal was closed |
+| <code>session.started</code> | Session started |
+| <code>session.expired</code> | Session expired |
+| <code>auth.login.success</code> | Login succeeded |
+| <code>auth.login.failed</code> | Login failed |
+| <code>nav.navigated</code> | Navigation completed |</p>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Publish event
+client.publish({
+  topic: &#039;users.item.created&#039;,
+  data: { item: newUser }
+});
+
+// Multiple handlers can react
+client.subscribe(&#039;users.item.created&#039;, logAnalytics);
+client.subscribe(&#039;users.item.created&#039;, sendWelcomeEmail);
+client.subscribe(&#039;users.item.created&#039;, updateDashboard);</code></pre>
+<h3>Commands</h3>
+<p>Commands request something to <strong>happen</strong>. They use imperative/verb form.</p>
+<strong>Characteristics:</strong>
+<ul><li>Imperative verbs: <code>save</code>, <code>delete</code>, <code>open</code>, <code>close</code>, <code>goto</code></li>
+<li>May expect reply (request/reply pattern)</li>
+<li>Usually single handler</li>
+<li>May fail</li>
+</ul>
+<strong>Examples:</strong>
+<p>| Topic | Description |
+|-------|-------------|
+| <code>users.item.save</code> | Save a user |
+| <code>users.item.delete</code> | Delete a user |
+| <code>ui.modal.open</code> | Open a modal |
+| <code>ui.modal.close</code> | Close a modal |
+| <code>nav.goto</code> | Navigate to route |
+| <code>nav.back</code> | Go back in history |
+| <code>auth.login</code> | Perform login |
+| <code>auth.logout</code> | Perform logout |</p>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Fire-and-forget command
+client.publish({
+  topic: &#039;nav.goto&#039;,
+  data: { route: &#039;/users/123&#039; }
+});
+
+// Request command (expect reply)
+const response = await client.request(&#039;users.item.save&#039;, {
+  item: { name: &#039;Alice&#039; }
+});</code></pre>
+<h2>Domain-Specific Patterns</h2>
+<h3>Authentication</h3>
+<pre><code class="language-javascript">// Commands
+&#039;auth.login&#039;                # Login request
+&#039;auth.logout&#039;               # Logout request
+&#039;auth.refresh&#039;              # Refresh token
+&#039;auth.verify&#039;               # Verify credentials
+
+// Events
+&#039;auth.login.success&#039;        # Login succeeded
+&#039;auth.login.failed&#039;         # Login failed
+&#039;auth.logout&#039;               # User logged out
+&#039;auth.token.expired&#039;        # Token expired
+
+// State
+&#039;auth.session.state&#039;        # Current session (retained)
+&#039;auth.user.state&#039;           # Current user info (retained)</code></pre>
+<h3>Navigation</h3>
+<pre><code class="language-javascript">// Commands
+&#039;nav.goto&#039;                  # Navigate to route
+&#039;nav.back&#039;                  # Go back
+&#039;nav.forward&#039;               # Go forward
+&#039;nav.replace&#039;               # Replace current route
+
+// Events
+&#039;nav.navigated&#039;             # Navigation completed
+&#039;nav.error&#039;                 # Navigation error
+
+// State
+&#039;nav.route.state&#039;           # Current route (retained)
+&#039;nav.history.state&#039;         # History stack (retained)</code></pre>
+<h3>UI Components</h3>
+<pre><code class="language-javascript">// Modal
+&#039;ui.modal.open&#039;             # Command: open modal
+&#039;ui.modal.close&#039;            # Command: close modal
+&#039;ui.modal.opened&#039;           # Event: modal opened
+&#039;ui.modal.closed&#039;           # Event: modal closed
+&#039;ui.modal.state&#039;            # State: current modal (retained)
+
+// Sidebar
+&#039;ui.sidebar.toggle&#039;         # Command: toggle sidebar
+&#039;ui.sidebar.open&#039;           # Command: open sidebar
+&#039;ui.sidebar.close&#039;          # Command: close sidebar
+&#039;ui.sidebar.state&#039;          # State: open/closed (retained)
+
+// Toast
+&#039;ui.toast.show&#039;             # Command: show toast
+&#039;ui.toast.hide&#039;             # Command: hide toast
+
+// Loading
+&#039;ui.loading.start&#039;          # Command: start loading
+&#039;ui.loading.stop&#039;           # Command: stop loading
+&#039;ui.loading.state&#039;          # State: loading status (retained)</code></pre>
+<h3>Forms</h3>
+<pre><code class="language-javascript">// Validation
+&#039;form.validate&#039;             # Command: validate form
+&#039;form.validated&#039;            # Event: validation complete
+&#039;form.validation.state&#039;     # State: validation errors (retained)
+
+// Submission
+&#039;form.submit&#039;               # Command: submit form
+&#039;form.submitted&#039;            # Event: form submitted
+&#039;form.submit.success&#039;       # Event: submission succeeded
+&#039;form.submit.failed&#039;        # Event: submission failed
+
+// Field changes
+&#039;form.field.changed&#039;        # Event: field value changed
+&#039;form.field.focused&#039;        # Event: field focused
+&#039;form.field.blurred&#039;        # Event: field blurred</code></pre>
+<h3>Data Synchronization</h3>
+<pre><code class="language-javascript">// Sync commands
+&#039;sync.start&#039;                # Start sync
+&#039;sync.stop&#039;                 # Stop sync
+&#039;sync.refresh&#039;              # Force refresh
+
+// Sync events
+&#039;sync.started&#039;              # Sync started
+&#039;sync.completed&#039;            # Sync completed
+&#039;sync.failed&#039;               # Sync failed
+&#039;sync.conflict&#039;             # Sync conflict detected
+
+// Sync state
+&#039;sync.status.state&#039;         # Current sync status (retained)
+&#039;sync.last-update.state&#039;    # Last update time (retained)</code></pre>
+<h2>Best Practices</h2>
+<h3>Topic Naming</h3>
+<strong>DO:</strong>
+<ul><li>Use lowercase letters</li>
+<li>Use dots to separate segments</li>
+<li>Use descriptive names</li>
+<li>Be consistent across resources</li>
+<li>Use <code>.state</code> for retained topics</li>
+<li>Use past tense for events</li>
+<li>Use imperative for commands</li>
+</ul>
+<strong>DON'T:</strong>
+<ul><li>Use underscores or camelCase</li>
+<li>Use abbreviations that sacrifice clarity</li>
+<li>Mix naming conventions</li>
+<li>Use verbs for events (<code>users.update</code> [X] -> <code>users.updated</code> [check])</li>
+<li>Overuse wildcards (<code>*</code> matches everything)</li>
+</ul>
+<h3>Topic Catalog</h3>
+<p>For larger applications, maintain a centralized topic catalog:</p>
+<pre><code class="language-javascript">// topics.js
+export const TOPICS = {
+  USERS: {
+    LIST: {
+      STATE: &#039;users.list.state&#039;,
+      GET: &#039;users.list.get&#039;
+    },
+    ITEM: {
+      GET: &#039;users.item.get&#039;,
+      SAVE: &#039;users.item.save&#039;,
+      DELETE: &#039;users.item.delete&#039;,
+      SELECT: &#039;users.item.select&#039;,
+      UPDATED: &#039;users.item.updated&#039;,
+      DELETED: &#039;users.item.deleted&#039;,
+      STATE: (id) =&gt; `users.item.state.${id}`
+    }
+  },
+
+  NAV: {
+    GOTO: &#039;nav.goto&#039;,
+    BACK: &#039;nav.back&#039;,
+    ROUTE_STATE: &#039;nav.route.state&#039;
+  },
+
+  AUTH: {
+    LOGIN: &#039;auth.login&#039;,
+    LOGOUT: &#039;auth.logout&#039;,
+    SESSION_STATE: &#039;auth.session.state&#039;
+  }
+};
+
+// Usage
+client.publish({
+  topic: TOPICS.USERS.ITEM.UPDATED,
+  data: { item: user }
+});</code></pre>
+<h3>Performance Considerations</h3>
+<strong>Wildcard Usage:</strong>
+<ul><li>Avoid global wildcard (<code>*</code>) in production code</li>
+<li>Prefer specific patterns (<code>users.<em></code> over <code></em></code>)</li>
+<li>Each wildcard increases matching overhead</li>
+</ul>
+<strong>Topic Depth:</strong>
+<ul><li>Keep topics shallow (3-4 segments ideal)</li>
+<li>Deeper hierarchies increase matching cost</li>
+<li>Balance specificity with performance</li>
+</ul>
+<strong>State Retention:</strong>
+<ul><li>Use retention sparingly (only for actual state)</li>
+<li>Don't retain high-volume event streams</li>
+<li>Clear retained messages when no longer needed</li>
+</ul>
+<h2>Summary</h2>
+<strong>Key Principles:</strong>
+<li><strong>Standard Format:</strong> <code>resource.action.qualifier</code></li>
+<li><strong>State Suffix:</strong> Always use <code>.state</code> for retained topics</li>
+<li><strong>Events vs Commands:</strong> Past tense for events, imperative for commands</li>
+<li><strong>Consistency:</strong> Use same patterns across all resources</li>
+<li><strong>Reserved Namespaces:</strong> Never use <code>pan:<em></code> or <code>sys:</em></code></li>
+<li><strong>Wildcards:</strong> Use judiciously; prefer specific patterns</li>
+<li><strong>Documentation:</strong> Maintain topic catalog for large apps</li>
+<strong>Quick Reference:</strong>
+<p>| Pattern | Example | Use Case |
+|---------|---------|----------|
+| <code>${resource}.list.state</code> | <code>users.list.state</code> | List data (retained) |
+| <code>${resource}.list.get</code> | <code>users.list.get</code> | Request list |
+| <code>${resource}.item.get</code> | <code>users.item.get</code> | Request single item |
+| <code>${resource}.item.save</code> | <code>users.item.save</code> | Save item |
+| <code>${resource}.item.delete</code> | <code>users.item.delete</code> | Delete item |
+| <code>${resource}.item.updated</code> | <code>users.item.updated</code> | Item updated event |
+| <code>${domain}.state</code> | <code>app.theme.state</code> | Global state (retained) |
+| <code>${domain}.${action}</code> | <code>nav.goto</code> | Command |</p>
+<p>For complete API documentation, see the main API Reference.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/building-with-larc/appendix-a-message-topics.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

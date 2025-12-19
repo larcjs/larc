@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Project Plan · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Project Plan">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">roadmap</a> / <span>PLAN</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Project Plan</h1>
+<h2>Philosophy</h2>
+<strong>Development:</strong> Zero-build required - fast iteration with native ES modules
+<strong>Production:</strong> Build recommended - optimized delivery (bundling, minification, tree-shaking)
+<strong>TypeScript:</strong> Opt-in via separate type packages
+<strong>Framework Integration:</strong> Works alongside React, Vue, Angular, Svelte via adapters
+<h2>1. Type-Only Packages (Chosen Strategy)</h2>
+<h3>Package Structure</h3>
+<pre><code class="language-plaintext">@larcjs/core              # Pure JavaScript, zero dependencies
+@larcjs/core-types        # TypeScript definitions only
+
+@larcjs/ui        # Pure JavaScript
+@larcjs/ui-types  # TypeScript definitions only
+
+@larcjs/devtools          # Pure JavaScript
+@larcjs/devtools-types    # TypeScript definitions only</code></pre>
+<h3>Benefits</h3>
+<ul><li>Zero-build users never see types</li>
+<li>TypeScript users opt-in</li>
+<li>Types can evolve independently</li>
+<li>Keeps core packages lean</li>
+</ul>
+<h3>Implementation: @larcjs/core-types</h3>
+<strong>Directory Structure:</strong>
+<pre><code class="language-plaintext">core-types/
+├── package.json
+├── README.md
+├── index.d.ts
+├── components/
+│   ├── pan-bus.d.ts
+│   ├── pan-client.d.ts
+│   └── pan-autoload.d.ts
+└── types/
+    ├── message.d.ts
+    ├── subscription.d.ts
+    └── config.d.ts</code></pre>
+<strong>package.json:</strong>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;@larcjs/core-types&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;TypeScript definitions for @larcjs/core&quot;,
+  &quot;types&quot;: &quot;index.d.ts&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;files&quot;: [&quot;**/*.d.ts&quot;],
+  &quot;peerDependencies&quot;: {
+    &quot;@larcjs/core&quot;: &quot;^1.0.0&quot;
+  },
+  &quot;keywords&quot;: [&quot;typescript&quot;, &quot;types&quot;, &quot;larc&quot;, &quot;pan&quot;],
+  &quot;license&quot;: &quot;MIT&quot;
+}</code></pre>
+<strong>Key Type Definitions:</strong>
+<strong>types/message.d.ts:</strong>
+<pre><code class="language-typescript">export interface PanMessage&lt;T = any&gt; {
+  topic: string;
+  data: T;
+  timestamp: number;
+  id: string;
+  meta?: Record&lt;string, any&gt;;
+}
+
+export interface PublishOptions {
+  buffer?: boolean;
+  ttl?: number;
+  meta?: Record&lt;string, any&gt;;
+}</code></pre>
+<strong>components/pan-client.d.ts:</strong>
+<pre><code class="language-typescript">import type { PanMessage, PublishOptions } from &#039;../types/message.js&#039;;
+
+export type SubscriptionCallback&lt;T = any&gt; = (message: PanMessage&lt;T&gt;) =&gt; void;
+export type UnsubscribeFunction = () =&gt; void;
+
+export interface PanClientOptions {
+  document?: Document;
+  busTag?: string;
+  debug?: boolean;
+}
+
+export class PanClient {
+  constructor(document?: Document, busTag?: string);
+  constructor(options?: PanClientOptions);
+
+  publish&lt;T = any&gt;(topic: string, data: T, options?: PublishOptions): void;
+  subscribe&lt;T = any&gt;(topic: string, callback: SubscriptionCallback&lt;T&gt;): UnsubscribeFunction;
+  unsubscribe(topic: string, callback: SubscriptionCallback): void;
+  once&lt;T = any&gt;(topic: string, callback: SubscriptionCallback&lt;T&gt;): UnsubscribeFunction;
+  hasSubscribers(topic: string): boolean;
+  getTopics(): string[];
+}</code></pre>
+<h3>Usage</h3>
+<strong>TypeScript users:</strong>
+<pre><code class="language-bash">npm install @larcjs/core
+npm install -D @larcjs/core-types</code></pre>
+<pre><code class="language-typescript">import { PanClient } from &#039;@larcjs/core/pan-client.mjs&#039;;
+import type { PanMessage, PublishOptions } from &#039;@larcjs/core-types&#039;;
+
+const client = new PanClient();
+client.subscribe&lt;{ userId: number }&gt;(&#039;user.updated&#039;, (msg: PanMessage) =&gt; {
+  console.log(msg.data.userId);
+});</code></pre>
+<strong>JavaScript users:</strong>
+<pre><code class="language-bash">npm install @larcjs/core</code></pre>
+<pre><code class="language-javascript">import { PanClient } from &#039;@larcjs/core/pan-client.mjs&#039;;
+const client = new PanClient();</code></pre>
+<h2>2. Framework Adapters</h2>
+<p>LARC works as an infrastructure layer alongside existing frameworks.</p>
+<h3>React Adapter (@larcjs/react-adapter)</h3>
+<pre><code class="language-typescript">// usePanClient.ts
+import { useEffect, useRef } from &#039;react&#039;;
+import { PanClient } from &#039;@larcjs/core/pan-client.mjs&#039;;
+import type { PanMessage } from &#039;@larcjs/core-types&#039;;
+
+export function usePanClient() {
+  const clientRef = useRef&lt;PanClient | null&gt;(null);
+  if (!clientRef.current) {
+    clientRef.current = new PanClient();
+  }
+  return clientRef.current;
+}
+
+export function usePanSubscribe&lt;T = any&gt;(
+  topic: string,
+  callback: (message: PanMessage&lt;T&gt;) =&gt; void
+) {
+  const client = usePanClient();
+  useEffect(() =&gt; {
+    const unsubscribe = client.subscribe(topic, callback);
+    return unsubscribe;
+  }, [topic, callback, client]);
+}
+
+export function usePanPublish() {
+  const client = usePanClient();
+  return (topic: string, data: any) =&gt; client.publish(topic, data);
+}</code></pre>
+<h3>Vue Adapter (@larcjs/vue-adapter)</h3>
+<pre><code class="language-typescript">// composables.ts
+import { onMounted, onUnmounted } from &#039;vue&#039;;
+import { PanClient } from &#039;@larcjs/core/pan-client.mjs&#039;;
+import type { PanMessage } from &#039;@larcjs/core-types&#039;;
+
+let client: PanClient | null = null;
+
+export function usePanClient() {
+  if (!client) client = new PanClient();
+  return client;
+}
+
+export function usePanSubscribe&lt;T = any&gt;(
+  topic: string,
+  callback: (message: PanMessage&lt;T&gt;) =&gt; void
+) {
+  const client = usePanClient();
+  onMounted(() =&gt; client.subscribe(topic, callback));
+  onUnmounted(() =&gt; client.unsubscribe(topic, callback));
+}
+
+export function usePanPublish() {
+  const client = usePanClient();
+  return (topic: string, data: any) =&gt; client.publish(topic, data);
+}</code></pre>
+<h3>Angular Adapter (@larcjs/angular-adapter)</h3>
+<pre><code class="language-typescript">// pan.service.ts
+import { Injectable } from &#039;@angular/core&#039;;
+import { Observable } from &#039;rxjs&#039;;
+import { PanClient } from &#039;@larcjs/core/pan-client.mjs&#039;;
+import type { PanMessage } from &#039;@larcjs/core-types&#039;;
+
+@Injectable({ providedIn: &#039;root&#039; })
+export class PanService {
+  private client = new PanClient();
+
+  publish&lt;T&gt;(topic: string, data: T): void {
+    this.client.publish(topic, data);
+  }
+
+  subscribe&lt;T&gt;(topic: string): Observable&lt;PanMessage&lt;T&gt;&gt; {
+    return new Observable(subscriber =&gt; {
+      const unsubscribe = this.client.subscribe(topic, (msg) =&gt; {
+        subscriber.next(msg);
+      });
+      return unsubscribe;
+    });
+  }
+}</code></pre>
+<h3>Svelte Adapter (@larcjs/svelte-adapter)</h3>
+<pre><code class="language-typescript">// stores.ts
+import { writable } from &#039;svelte/store&#039;;
+import { PanClient } from &#039;@larcjs/core/pan-client.mjs&#039;;
+import type { PanMessage } from &#039;@larcjs/core-types&#039;;
+
+const client = new PanClient();
+
+export function panStore&lt;T&gt;(topic: string, initialValue: T) {
+  const { subscribe, set } = writable&lt;T&gt;(initialValue);
+
+  client.subscribe&lt;T&gt;(topic, (msg) =&gt; set(msg.data));
+
+  return {
+    subscribe,
+    publish: (data: T) =&gt; {
+      set(data);
+      client.publish(topic, data);
+    }
+  };
+}</code></pre>
+<h2>3. Production Build Options</h2>
+<h3>Option A: Vite (Recommended)</h3>
+<strong>vite.config.js:</strong>
+<pre><code class="language-javascript">import { defineConfig } from &#039;vite&#039;;
+
+export default defineConfig({
+  build: {
+    rollupOptions: { input: { main: &#039;index.html&#039; } },
+    minify: &#039;terser&#039;,
+    sourcemap: true,
+    chunkSizeWarningLimit: 500
+  },
+  server: { port: 8000 }
+});</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-bash">npm run dev      # Development (no build, instant start)
+npm run build    # Production (bundled, minified, optimized)</code></pre>
+<h3>Option B: Rollup (Lightweight)</h3>
+<pre><code class="language-javascript">import { terser } from &#039;rollup-plugin-terser&#039;;
+import resolve from &#039;@rollup/plugin-node-resolve&#039;;
+
+export default {
+  input: &#039;src/main.js&#039;,
+  output: { file: &#039;dist/bundle.js&#039;, format: &#039;es&#039;, sourcemap: true },
+  plugins: [resolve(), terser()]
+};</code></pre>
+<h3>Option C: esbuild (Fastest)</h3>
+<pre><code class="language-javascript">import * as esbuild from &#039;esbuild&#039;;
+
+await esbuild.build({
+  entryPoints: [&#039;src/main.js&#039;],
+  bundle: true,
+  minify: true,
+  sourcemap: true,
+  target: &#039;es2020&#039;,
+  outfile: &#039;dist/bundle.js&#039;,
+});</code></pre>
+<h3>Option D: No Build (HTTP/2 + CDN)</h3>
+<pre><code class="language-html">&lt;!-- Modern browsers + HTTP/2 = fast enough --&gt;
+&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core/pan-client.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<h2>4. Complete Package Ecosystem</h2>
+<pre><code class="language-plaintext">Core Packages (JavaScript only):
+├── @larcjs/core
+├── @larcjs/ui
+├── @larcjs/devtools
+
+Type Packages (Opt-in):
+├── @larcjs/core-types
+├── @larcjs/ui-types
+├── @larcjs/devtools-types
+
+Framework Adapters:
+├── @larcjs/react-adapter
+├── @larcjs/vue-adapter
+├── @larcjs/angular-adapter
+├── @larcjs/svelte-adapter
+
+Build Tools (Optional):
+├── @larcjs/vite-plugin
+├── @larcjs/rollup-plugin
+
+Developer Tools:
+├── @larcjs/cli (scaffolding)
+├── @larcjs/test-utils</code></pre>
+<h2>5. Updated Positioning</h2>
+<strong>Before:</strong>
+<blockquote>"LARC: Zero-build web component framework" (sounds niche, anti-tooling)</blockquote>
+<strong>After:</strong>
+<blockquote><strong>LARC: Browser-native component framework with optional builds</strong></blockquote>
+>
+<blockquote>- Zero-build development for fast iteration</blockquote>
+<blockquote>- Works alongside React, Vue, Angular, Svelte</blockquote>
+<blockquote>- Production builds supported (Vite, Rollup, esbuild)</blockquote>
+<blockquote>- TypeScript-ready with opt-in type packages</blockquote>
+<blockquote>- Deploy unbundled or bundled - your choice</blockquote>
+<h2>6. Key Value Propositions</h2>
+<li><strong>More practical:</strong> Works with existing stacks, not a replacement</li>
+<li><strong>More flexible:</strong> Opt-in everything (types, builds, frameworks)</li>
+<li><strong>More adoptable:</strong> Doesn't require rewriting apps</li>
+<li><strong>More credible:</strong> Production-ready with real optimization paths</li>
+<h2>Next Steps</h2>
+<li>Create @larcjs/core-types repository and publish to npm</li>
+<li>Build React adapter as proof of concept</li>
+<li>Write production deployment guide (docs/production.md)</li>
+<li>Update main README with new positioning</li>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/roadmap/PLAN.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

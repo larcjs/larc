@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building with LARC: A Reference Manual · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Building with LARC: A Reference Manual">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>Building with LARC: A Reference Manual</h1>
+<strong>A comprehensive reference guide for building modern web applications with LARC (Lightweight Async Reactive Components)</strong>
+<hr>
+<h2>About This Book</h2>
+<p>"Building with LARC: A Reference Manual" is the definitive technical reference for LARC developers. Unlike the narrative tutorial "Learning LARC," this book is organized for quick reference, comprehensive API documentation, and practical problem-solving.</p>
+<p>This book follows the O'Reilly programming book tradition—starting with philosophy and context, moving through practical implementation, and concluding with exhaustive API documentation and quick-reference appendices.</p>
+<strong>Target Audience</strong>: Experienced web developers who want a comprehensive reference for building production applications with LARC.
+<strong>Companion Book</strong>: <a href="../learning-larc/">Learning LARC</a> - A narrative, tutorial-style introduction to LARC concepts.
+<h2>📦 Building the Book</h2>
+<p>This book can be built in multiple formats:</p>
+<ul><li><strong><a href="QUICKSTART.md">QUICKSTART.md</a></strong> - Get started in 3 easy steps</li>
+<li><strong><a href="BUILD.md">BUILD.md</a></strong> - Complete build documentation</li>
+<li><strong>Build Script</strong>: <code>./build-book.sh</code> - Generates HTML, PDF, and EPUB</li>
+</ul>
+<pre><code class="language-bash"># Quick build (all formats)
+./build-book.sh
+
+# Or use Make/npm
+make
+npm run build</code></pre>
+<strong>Output Formats</strong>:
+<ul><li>📄 <strong>HTML</strong> - <code>output/html/building-with-larc.html</code></li>
+<li>📕 <strong>PDF</strong> - <code>output/pdf/building-with-larc.pdf</code></li>
+<li>📱 <strong>EPUB</strong> - <code>output/epub/building-with-larc.epub</code></li>
+</ul>
+<hr>
+<h2>Table of Contents</h2>
+<h3>Part I: Foundations</h3>
+<strong><a href="chapter-01-introduction.md">Chapter 1: Introduction</a></strong> (2,335 words)
+<ul><li>What is LARC?</li>
+<li>Who should use this book</li>
+<li>How to use this book</li>
+<li>Relationship to "Learning LARC"</li>
+<li>Prerequisites and assumptions</li>
+<li>Book conventions and notation</li>
+</ul>
+<strong><a href="chapter-02-philosophy.md">Chapter 2: The Philosophy of LARC</a></strong> (5,122 words)
+<ul><li>The state management crisis</li>
+<li>Message-passing architecture</li>
+<li>DOM-native communication principles</li>
+<li>Zero-dependency, zero-build philosophy</li>
+<li>Progressive enhancement and graceful degradation</li>
+<li>Comparison to other approaches (Redux, Vuex, MobX, Context API)</li>
+</ul>
+<strong><a href="chapter-03-story.md">Chapter 3: The LARC Story</a></strong> (3,400 words)
+<ul><li>Origins and motivation</li>
+<li>Design decisions and trade-offs</li>
+<li>Evolution of the PAN (Page Area Network) concept</li>
+<li>Real-world use cases and applications</li>
+<li>Community and ecosystem</li>
+</ul>
+<strong><a href="chapter-04-core-concepts.md">Chapter 4: Core Concepts</a></strong> (5,000+ words)
+<ul><li>Message bus architecture</li>
+<li>Pub/sub pattern in depth</li>
+<li>Topics and routing</li>
+<li>Message lifecycle</li>
+<li>Components and composition</li>
+<li>State management strategies</li>
+<li>Event envelopes and metadata</li>
+</ul>
+<strong><a href="chapter-05-getting-started.md">Chapter 5: Getting Started</a></strong> (4,100 words)
+<ul><li>Installation and setup</li>
+<li>Project structure recommendations</li>
+<li>Development environment</li>
+<li>Serving static files</li>
+<li>Browser requirements and compatibility</li>
+<li>DevTools and debugging setup</li>
+</ul>
+<hr>
+<h3>Part II: Building Applications</h3>
+<strong><a href="chapter-06-basic-message-flow.md">Chapter 6: Basic Message Flow</a></strong> (3,936 words)
+<ul><li>Publishing messages</li>
+<li>Subscribing to topics</li>
+<li>Wildcard patterns</li>
+<li>Message retention</li>
+<li>Unsubscribing and cleanup</li>
+</ul>
+<strong><a href="chapter-07-working-with-components.md">Chapter 7: Working with Components</a></strong> (4,203 words)
+<ul><li>Creating web components</li>
+<li>Component lifecycle</li>
+<li>Shadow DOM considerations</li>
+<li>Connecting components via PAN bus</li>
+<li>Component communication patterns</li>
+<li>Reusable component design</li>
+</ul>
+<strong><a href="chapter-08-state-management.md">Chapter 8: State Management</a></strong> (4,448 words)
+<ul><li>Local vs. shared state</li>
+<li>State persistence strategies</li>
+<li>IndexedDB integration</li>
+<li>OPFS (Origin Private File System)</li>
+<li>Synchronization patterns</li>
+<li>Conflict resolution</li>
+</ul>
+<strong><a href="chapter-09-routing-and-navigation.md">Chapter 9: Routing and Navigation</a></strong> (4,000 words)
+<ul><li>Client-side routing with pan-routes</li>
+<li>Route definitions and patterns</li>
+<li>Navigation guards</li>
+<li>Deep linking</li>
+<li>History management</li>
+<li>SEO considerations</li>
+</ul>
+<strong><a href="chapter-10-forms-and-user-input.md">Chapter 10: Forms and User Input</a></strong> (4,200 words)
+<ul><li>Form handling patterns</li>
+<li>Schema-driven forms</li>
+<li>Validation strategies</li>
+<li>File uploads</li>
+<li>Rich text editing</li>
+<li>Markdown integration</li>
+</ul>
+<strong><a href="chapter-11-data-fetching-and-apis.md">Chapter 11: Data Fetching and APIs</a></strong> (4,100 words)
+<ul><li>REST API integration</li>
+<li>GraphQL connectors</li>
+<li>WebSocket communication</li>
+<li>Server-Sent Events (SSE)</li>
+<li>Error handling and retries</li>
+<li>Caching strategies</li>
+</ul>
+<strong><a href="chapter-12-authentication-and-authorization.md">Chapter 12: Authentication and Authorization</a></strong> (3,900 words)
+<ul><li>JWT authentication patterns</li>
+<li>Session management</li>
+<li>Role-based access control</li>
+<li>Security best practices</li>
+<li>Protected routes</li>
+<li>Token refresh strategies</li>
+</ul>
+<strong><a href="chapter-13-realtime-features.md">Chapter 13: Real-time Features</a></strong> (3,800 words)
+<ul><li>WebSocket integration</li>
+<li>SSE for live updates</li>
+<li>BroadcastChannel for multi-tab sync</li>
+<li>Web Workers for background tasks</li>
+<li>Real-time collaboration patterns</li>
+</ul>
+<strong><a href="chapter-14-file-management.md">Chapter 14: File Management</a></strong> (3,700 words)
+<ul><li>OPFS file operations</li>
+<li>File browser components</li>
+<li>Upload and download</li>
+<li>File type filtering</li>
+<li>Directory navigation</li>
+<li>Storage quotas and limits</li>
+</ul>
+<strong><a href="chapter-15-theming-and-styling.md">Chapter 15: Theming and Styling</a></strong> (3,800 words)
+<ul><li>CSS custom properties</li>
+<li>Theme system architecture</li>
+<li>Light/dark mode</li>
+<li>Theme provider component</li>
+<li>Dynamic theme switching</li>
+<li>Responsive design patterns</li>
+</ul>
+<strong><a href="chapter-16-performance-optimization.md">Chapter 16: Performance Optimization</a></strong> (4,200 words)
+<ul><li>Message filtering and routing efficiency</li>
+<li>Component lazy loading</li>
+<li>Virtual scrolling for large lists</li>
+<li>Debouncing and throttling</li>
+<li>Memory management</li>
+<li>Bundle size optimization</li>
+</ul>
+<strong><a href="chapter-17-testing-strategies.md">Chapter 17: Testing Strategies</a></strong> (4,500 words)
+<ul><li>Unit testing components</li>
+<li>Integration testing message flows</li>
+<li>E2E testing with PAN apps</li>
+<li>Mocking the bus</li>
+<li>Testing async operations</li>
+<li>Test utilities and helpers</li>
+</ul>
+<strong><a href="chapter-18-error-handling-and-debugging.md">Chapter 18: Error Handling and Debugging</a></strong> (4,100 words)
+<ul><li>Error boundaries</li>
+<li>Message tracing</li>
+<li>DevTools integration</li>
+<li>Logging strategies</li>
+<li>Error reporting</li>
+<li>Common pitfalls and solutions</li>
+</ul>
+<strong><a href="chapter-19-advanced-patterns.md">Chapter 19: Advanced Patterns</a></strong> (4,000 words)
+<ul><li>Message forwarding and bridging</li>
+<li>Multi-bus architectures</li>
+<li>Backend integration strategies</li>
+<li>Micro-frontends with LARC</li>
+<li>Plugin systems</li>
+<li>Middleware patterns</li>
+</ul>
+<strong><a href="chapter-20-deployment-and-production.md">Chapter 20: Deployment and Production</a></strong> (4,200 words)
+<ul><li>Build considerations (or lack thereof)</li>
+<li>CDN deployment</li>
+<li>Caching strategies</li>
+<li>Performance monitoring</li>
+<li>Production debugging</li>
+<li>Versioning and upgrades</li>
+</ul>
+<hr>
+<h3>Part III: Component Reference</h3>
+<strong><a href="chapter-21-core-components.md">Chapter 21: Core Components</a></strong> (5,849 words)
+<ul><li><strong>pan-bus</strong>: Message bus with pub/sub architecture</li>
+<li><strong>pan-theme-provider</strong>: Theme management system</li>
+<li><strong>pan-theme-toggle</strong>: Theme switching UI control</li>
+<li><strong>pan-routes</strong>: Message routing and transformation</li>
+</ul>
+<strong><a href="chapter-22-data-components.md">Chapter 22: Data Components</a></strong> (5,100 words)
+<ul><li><strong>pan-store</strong>: Reactive state management</li>
+<li><strong>pan-idb</strong>: IndexedDB integration</li>
+</ul>
+<strong><a href="chapter-23-ui-components.md">Chapter 23: UI Components</a></strong> (4,138 words)
+<ul><li><strong>pan-files</strong>: File browser with OPFS</li>
+<li><strong>pan-markdown-editor</strong>: Rich markdown editor</li>
+<li><strong>pan-markdown-renderer</strong>: Markdown display</li>
+</ul>
+<strong><a href="chapter-24-integration-components.md">Chapter 24: Integration Components</a></strong> (5,977 words)
+<ul><li><strong>pan-data-connector</strong>: REST API integration</li>
+<li><strong>pan-graphql-connector</strong>: GraphQL client</li>
+<li><strong>pan-websocket</strong>: WebSocket communication</li>
+<li><strong>pan-sse</strong>: Server-Sent Events</li>
+</ul>
+<strong><a href="chapter-25-utility-components.md">Chapter 25: Utility Components</a></strong> (4,800 words)
+<ul><li><strong>pan-debug</strong>: Message tracing and debugging</li>
+<li><strong>pan-forwarder</strong>: HTTP message forwarding</li>
+</ul>
+<hr>
+<h3>Part IV: Appendices</h3>
+<strong><a href="appendix-a-message-topics.md">Appendix A: Message Topics Reference</a></strong> (2,945 words)
+<ul><li>Standard topic conventions</li>
+<li>Reserved topics</li>
+<li>Topic naming best practices</li>
+<li>Topic hierarchy patterns</li>
+</ul>
+<strong><a href="appendix-b-event-envelope.md">Appendix B: Event Envelope Specification</a></strong> (3,186 words)
+<ul><li>Envelope structure</li>
+<li>Standard fields</li>
+<li>Metadata</li>
+<li>Versioning</li>
+</ul>
+<strong><a href="appendix-c-configuration-options.md">Appendix C: Configuration Options</a></strong> (3,204 words)
+<ul><li>Bus configuration</li>
+<li>Component configuration</li>
+<li>Global settings</li>
+<li>Environment variables</li>
+</ul>
+<strong><a href="appendix-d-migration-guide.md">Appendix D: Migration Guide</a></strong> (2,800 words)
+<ul><li>Upgrading from older versions</li>
+<li>Breaking changes</li>
+<li>Deprecation notices</li>
+<li>Migration patterns</li>
+</ul>
+<strong><a href="appendix-e-recipes-and-patterns.md">Appendix E: Recipes and Patterns</a></strong> (3,800 words)
+<ul><li>Common use cases</li>
+<li>Code snippets</li>
+<li>Design patterns</li>
+<li>Anti-patterns to avoid</li>
+</ul>
+<strong><a href="appendix-f-glossary.md">Appendix F: Glossary</a></strong> (2,600 words)
+<ul><li>Technical terms</li>
+<li>LARC-specific terminology</li>
+<li>Web standards references</li>
+</ul>
+<strong><a href="appendix-g-resources.md">Appendix G: Resources</a></strong> (1,850 words)
+<ul><li>Official documentation</li>
+<li>Community links</li>
+<li>Example applications</li>
+<li>Related projects</li>
+<li>Further reading</li>
+</ul>
+<strong><a href="index.md">Index</a></strong>
+<ul><li>Comprehensive alphabetical index of all topics, APIs, components, and concepts</li>
+</ul>
+<hr>
+<h2>Book Statistics</h2>
+<ul><li><strong>Total Chapters</strong>: 25 chapters + 7 appendices + index</li>
+<li><strong>Total Word Count</strong>: ~115,000 words</li>
+<li><strong>Code Examples</strong>: 200+ complete, working examples</li>
+<li><strong>Components Documented</strong>: 13 core LARC components</li>
+<li><strong>Recipes</strong>: 10 practical, copy-paste ready patterns</li>
+</ul>
+<hr>
+<h2>How to Use This Book</h2>
+<h3>As a Learning Resource</h3>
+Read Part I (Chapters 1-5) to understand LARC's philosophy and core concepts. Then work through Part II (Chapters 6-20) following the practical examples.
+<h3>As a Reference</h3>
+Keep Part III (Chapters 21-25) bookmarked for quick API lookups. Use the Index to quickly find specific topics, patterns, or components.
+<h3>As a Problem-Solving Guide</h3>
+When you encounter a specific challenge, consult:
+<ul><li><strong>Chapter 18</strong> for debugging issues</li>
+<li><strong>Appendix E</strong> for common patterns and recipes</li>
+<li><strong>Part II</strong> chapters for implementation guidance</li>
+<li><strong>Part III</strong> for component-specific solutions</li>
+</ul>
+<h3>For Migration and Maintenance</h3>
+Use Appendix D when upgrading LARC versions, and refer to Chapter 20 for production deployment strategies.
+<hr>
+<h2>Companion Materials</h2>
+<ul><li><strong>Learning LARC</strong> - Narrative tutorial for beginners</li>
+<li><strong>LARC Examples</strong> - Working demo applications at <code>/examples</code></li>
+<li><strong>LARC Demo Apps</strong> - Production-quality sample apps at <code>/apps</code></li>
+<li><strong>Component Source Code</strong> - Reference implementation at <code>/core</code></li>
+<li><strong>API Documentation</strong> - Generated docs at <code>/docs/api</code></li>
+</ul>
+<hr>
+<h2>Document Conventions</h2>
+<p>Throughout this book:</p>
+<ul><li><strong>Code blocks</strong> show complete, runnable examples</li>
+<li><strong>Component names</strong> appear in monospace: <code>pan-bus</code></li>
+<li><strong>Message topics</strong> use dot notation: <code>user.login.success</code></li>
+<li><strong>Attributes</strong> are shown with values: <code>debug="true"</code></li>
+<li><strong>Methods</strong> include parentheses: <code>subscribe()</code></li>
+<li><strong>File paths</strong> are absolute from project root: <code>/src/app.js</code></li>
+</ul>
+<hr>
+<h2>About the Authors</h2>
+<p>This reference manual was created to complement the LARC framework and provide developers with comprehensive, accurate documentation for building production applications.</p>
+<p>For questions, contributions, or feedback, see Appendix G: Resources.</p>
+<hr>
+<h2>License</h2>
+<p>This documentation is provided as part of the LARC project and follows the same license as the framework.</p>
+<hr>
+<strong>Last Updated</strong>: December 2025
+<strong>LARC Version</strong>: 3.x
+<strong>Book Version</strong>: 1.0.0
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/building-with-larc/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

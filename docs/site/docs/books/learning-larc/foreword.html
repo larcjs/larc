@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Foreword · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Foreword">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <span>foreword</span>
+      </div>
+      <article class="docs-content">
+        <h1>Foreword</h1>
+<em>by Christopher Robison</em>
+<p>I didn't set out to build a framework. I set out to escape one — or at least escape the gravitational pull of the endless build pipeline.</p>
+<p>After decades of building things for the web, my machine had become a storage exhibit of Node versions, Python versions, shims, wrappers, and dependency folders with the mass of small moons. Not because any of it was bad. Build tools are fine. For big projects, they're downright amazing. But somewhere along the way, we normalized the idea that even the simplest experiment needed a pipeline, a bundler, a transpiler, and a twelve-step hydration ritual before it could say "Hello, World."</p>
+<p>That friction bothered me.</p>
+<p>I wanted the feeling I had back in the early days: the joy of dropping a <code><script></code> tag into an HTML file and instantly seeing something come alive. No ceremony. No yak shaving. Just a browser, a file, and an idea.</p>
+<p>Web Components felt close to that spirit — native modules, shadow DOM, real encapsulation — but they were oddly isolated. Each component was a self-contained island. Reusable, yes. Architecturally composable? Not really. Nothing tied them together except whatever glue code you wrote yourself. It felt like someone had shipped LEGO bricks without the ability to click them together.</p>
+<p>That's when I remembered the CAN bus in cars.</p>
+<p>The CAN bus is this beautifully simple ecosystem: dozens of systems — sensors, motors, controllers — all sharing a single communication line. Anybody can broadcast. Anybody can listen. Nobody needs to know who else exists. A message goes out, and the parts that care respond. It's loosely coupled machinery at its finest.</p>
+<p>I wanted that for the web.</p>
+<p>So I built the PAN bus — the Page Area Network — and started experimenting. Not with the intention of making A Real Framework™, but out of curiosity. How far could I push this idea? What could I build if every component on the page could talk over a shared bus, using nothing but browser-native APIs and one tiny script include?</p>
+<p>That little experiment got out of hand in the best way.</p>
+<p>I kept pushing it, partly out of stubbornness, partly out of sheer delight. I wanted to see if I could build real, full-blown applications with no build process at all — just a single script tag pointing to LARC and a page full of components chatting over the bus. And it turned out to be… fun. Refreshing. Capable. Liberating, even. A loose, elegant architecture emerged almost on its own.</p>
+<p>Along the way, I realized something important: I'm not anti-build-tool. They solve real problems, especially at scale. But they shouldn't be mandatory for everything. And they shouldn't overshadow the fact that the browser today is powerful enough to build serious applications with a simple HTML page, a few components, and a shared message bus.</p>
+<p>React, Angular, Vue — they solved problems that absolutely needed solving at the time. The web platform in 2015 was missing big pieces: templating, reactivity, routing, structured components, coherence. These frameworks carried the industry through that era. But the web has evolved since then. Many of those features now exist natively — standardized, built-in, fast, and universally available.</p>
+<p>LARC isn't here to replace those frameworks. It complements them. It fills in the 20% Web Components never standardized — the shared communication fabric. The glue that lets components coexist instead of siloing themselves off. It also makes bundle sizes smaller and architectures cleaner, whether you're going framework-free or integrating with your existing stack.</p>
+<p>If this book succeeds, you'll see what I saw: the thrill of rediscovering the browser as a first-class app platform. The joy of building big things out of small, decoupled pieces. And the surprising power of an architecture that starts with a simple HTML file and one script include.</p>
+<p>The web grew up. Now we get to build like it.</p>
+<p>— <em>Christopher Robison</em></p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/foreword.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

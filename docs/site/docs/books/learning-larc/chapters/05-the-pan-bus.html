@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The PAN Bus · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - The PAN Bus">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>05-the-pan-bus</span>
+      </div>
+      <article class="docs-content">
+        <h1>The PAN Bus</h1>
+<p>The Page Area Network (PAN) bus is LARC's event-driven communication backbone. It enables decoupled, scalable component architectures by providing a pub/sub messaging system that works across your entire application.</p>
+<p>In this chapter, you'll master the PAN bus: from basic publish/subscribe patterns to advanced message routing, error handling, and debugging techniques. By the end, you'll be able to build complex applications where components communicate seamlessly without tight coupling.</p>
+<h2>Understanding Pub/Sub Architecture</h2>
+<p>!<a href="../images/05-pan-bus-1.png"><strong>Figure 5.1:</strong> PAN Bus Pub/Sub Architecture</a></p>
+<strong><em>Figure 5.1:</strong> PAN Bus Pub/Sub Architecture</em>
+<p>Publish/Subscribe (pub/sub) is a messaging pattern where senders (publishers) don't directly target specific receivers (subscribers). Instead, messages are sent to topics, and any component interested in those topics receives them.</p>
+<h3>Traditional Communication</h3>
+<p>Without pub/sub, components need direct references:</p>
+<pre><code class="language-javascript">// ❌ Tight coupling
+class LoginButton {
+  handleLogin() {
+    const user = this.authenticate();
+
+    // Direct reference to other components
+    document.querySelector(&#039;user-menu&#039;).updateUser(user);
+    document.querySelector(&#039;sidebar&#039;).showUserPanel();
+    document.querySelector(&#039;notification&#039;).show(&#039;Welcome!&#039;);
+  }
+}</code></pre>
+<strong>Problems:</strong>
+<ul><li>LoginButton must know about all dependent components</li>
+<li>Adding new components requires modifying LoginButton</li>
+<li>Components can't work independently</li>
+<li>Testing requires mocking all dependencies</li>
+</ul>
+<h3>Pub/Sub Communication</h3>
+<p>With the PAN bus:</p>
+<pre><code class="language-javascript">// ✓ Loose coupling
+class LoginButton {
+  handleLogin() {
+    const user = this.authenticate();
+
+    // Publish event - don&#039;t care who listens
+    pan.publish(&#039;user.logged-in&#039;, { user });
+  }
+}
+
+// Separate components subscribe independently
+class UserMenu {
+  connectedCallback() {
+    pan.subscribe(&#039;user.logged-in&#039;, ({ user }) =&gt; {
+      this.updateUser(user);
+    });
+  }
+}
+
+class Sidebar {
+  connectedCallback() {
+    pan.subscribe(&#039;user.logged-in&#039;, () =&gt; {
+      this.showUserPanel();
+    });
+  }
+}
+
+class Notification {
+  connectedCallback() {
+    pan.subscribe(&#039;user.logged-in&#039;, () =&gt; {
+      this.show(&#039;Welcome!&#039;);
+    });
+  }
+}</code></pre>
+<strong>Benefits:</strong>
+<ul><li>LoginButton doesn't know about consumers</li>
+<li>Add new subscribers without changing publishers</li>
+<li>Components work independently</li>
+<li>Easy to test in isolation</li>
+</ul>
+<h3>The PAN Bus API</h3>
+<p>The PAN bus provides three core operations:</p>
+<pre><code class="language-javascript">import { pan } from &#039;@larcjs/core&#039;;
+
+// 1. Publish - send a message to a topic
+pan.publish(&#039;topic.name&#039;, { data: &#039;value&#039; });
+
+// 2. Subscribe - listen for messages on a topic
+const unsubscribe = pan.subscribe(&#039;topic.name&#039;, (data) =&gt; {
+  console.log(&#039;Received:&#039;, data);
+});
+
+// 3. Unsubscribe - stop listening
+unsubscribe();</code></pre>
+<p>That's the foundation. Everything else builds on these three operations.</p>
+<h2>Topics and Namespaces</h2>
+<p>!<a href="../images/05-pan-bus-3.png"><strong>Figure 5.3:</strong> Topic Namespace Structure</a></p>
+<strong><em>Figure 5.3:</strong> Topic Namespace Structure</em>
+<p>Topics are the routing keys for messages. Well-designed topics make your application's data flow clear and maintainable.</p>
+<h3>Topic Naming Conventions</h3>
+<p>Use dot notation to create hierarchies:</p>
+<pre><code class="language-plaintext">domain.entity.action</code></pre>
+<strong>Examples:</strong>
+<pre><code class="language-plaintext">user.profile.updated
+user.auth.login
+user.auth.logout
+user.settings.changed
+
+cart.item.added
+cart.item.removed
+cart.total.calculated
+cart.checkout.started
+cart.checkout.completed
+
+notification.info.show
+notification.warning.show
+notification.error.show
+
+app.theme.changed
+app.language.changed
+app.route.changed</code></pre>
+<h3>Namespace Structure</h3>
+<p>Organize topics by domain:</p>
+<strong>User Domain:</strong>
+<pre><code class="language-plaintext">user.auth.login
+user.auth.logout
+user.auth.refresh
+user.profile.fetch
+user.profile.update
+user.settings.fetch
+user.settings.update</code></pre>
+<strong>Shopping Cart Domain:</strong>
+<pre><code class="language-plaintext">cart.init
+cart.item.add
+cart.item.remove
+cart.item.update
+cart.clear
+cart.checkout</code></pre>
+<strong>Application Domain:</strong>
+<pre><code class="language-plaintext">app.ready
+app.error
+app.navigate
+app.theme.change
+app.modal.open
+app.modal.close</code></pre>
+<h3>Wildcards</h3>
+<p>!<a href="../images/05-pan-bus-4.png"><strong>Figure 5.4:</strong> Wildcard Subscription Matching</a></p>
+<strong><em>Figure 5.4:</strong> Wildcard Subscription Matching</em>
+<p>Subscribe to multiple topics using wildcards:</p>
+<pre><code class="language-javascript">// Subscribe to all user events
+pan.subscribe(&#039;user.*&#039;, (data) =&gt; {
+  console.log(&#039;User event:&#039;, data);
+});
+
+// Subscribe to all auth events across domains
+pan.subscribe(&#039;*.auth.*&#039;, (data) =&gt; {
+  console.log(&#039;Auth event:&#039;, data);
+});
+
+// Subscribe to ALL events (debugging)
+pan.subscribe(&#039;*&#039;, (topic, data) =&gt; {
+  console.log(`[${topic}]`, data);
+});</code></pre>
+<strong>Wildcard Patterns:</strong>
+<ul><li><code>user.*</code> - All user events (user.login, user.logout, etc.)</li>
+<li><code>*.created</code> - All create events (user.created, post.created, etc.)</li>
+<li><code>user.*.updated</code> - All user update events (user.profile.updated, user.settings.updated, etc.)</li>
+<li><code>*</code> - All events</li>
+</ul>
+<h3>Topic Best Practices</h3>
+<strong>1. Be Specific:</strong>
+<pre><code class="language-javascript">// ✓ Good - clear intent
+pan.publish(&#039;cart.item.added&#039;, { item, quantity });
+
+// ❌ Bad - vague
+pan.publish(&#039;cart.update&#039;, { type: &#039;add&#039;, item, quantity });</code></pre>
+<strong>2. Use Consistent Tense:</strong>
+<pre><code class="language-javascript">// ✓ Good - past tense for events that happened
+pan.publish(&#039;user.logged-in&#039;, { user });
+pan.publish(&#039;data.loaded&#039;, { data });
+
+// ❌ Bad - mixed tense
+pan.publish(&#039;user.login&#039;, { user });  // Is this a command or event?</code></pre>
+<strong>3. Include Context:</strong>
+<pre><code class="language-javascript">// ✓ Good - data includes context
+pan.publish(&#039;task.completed&#039;, {
+  taskId: 123,
+  userId: 456,
+  completedAt: new Date()
+});
+
+// ❌ Bad - missing context
+pan.publish(&#039;task.done&#039;, { id: 123 });</code></pre>
+<strong>4. Avoid Over-Nesting:</strong>
+<pre><code class="language-javascript">// ✓ Good - clear and concise
+pan.publish(&#039;user.profile.updated&#039;, { user });
+
+// ❌ Bad - too nested
+pan.publish(&#039;app.domain.user.entity.profile.action.updated&#039;, { user });</code></pre>
+<h2>Publishing Messages</h2>
+<p>!<a href="../images/05-pan-bus-2.png"><strong>Figure 5.2:</strong> Message Flow Sequence</a></p>
+<strong><em>Figure 5.2:</strong> Message Flow Sequence</em>
+<p>!<a href="../images/05-pan-bus-2.png"><strong>Figure 5.2:</strong> Message Flow Sequence</a>
+<strong><em>Figure 5.2:</strong> Message Flow Sequence</em></p>
+<p>Publishing is straightforward, but there are patterns and options to understand.</p>
+<h3>Basic Publishing</h3>
+<pre><code class="language-javascript">pan.publish(&#039;event.name&#039;, { any: &#039;data&#039; });</code></pre>
+<p>The data can be anything JSON-serializable:</p>
+<pre><code class="language-javascript">// Simple value
+pan.publish(&#039;counter.updated&#039;, 42);
+
+// Object
+pan.publish(&#039;user.logged-in&#039;, {
+  userId: 123,
+  username: &#039;john&#039;,
+  email: &#039;john@example.com&#039;
+});
+
+// Array
+pan.publish(&#039;items.loaded&#039;, [
+  { id: 1, name: &#039;Item 1&#039; },
+  { id: 2, name: &#039;Item 2&#039; }
+]);
+
+// Null/undefined
+pan.publish(&#039;data.cleared&#039;, null);</code></pre>
+<h3>Publishing from Components</h3>
+<p>Publish in response to user actions or state changes:</p>
+<pre><code class="language-javascript">class AddToCartButton extends HTMLElement {
+  connectedCallback() {
+    this.addEventListener(&#039;click&#039;, this.handleClick);
+  }
+
+  async handleClick() {
+    const productId = this.getAttribute(&#039;product-id&#039;);
+    const quantity = parseInt(this.getAttribute(&#039;quantity&#039;) || 1);
+
+    // Publish intent
+    pan.publish(&#039;cart.item.add-requested&#039;, { productId, quantity });
+
+    try {
+      // Perform action
+      await this.addToCart(productId, quantity);
+
+      // Publish success
+      pan.publish(&#039;cart.item.added&#039;, {
+        productId,
+        quantity,
+        timestamp: Date.now()
+      });
+    } catch (error) {
+      // Publish failure
+      pan.publish(&#039;cart.item.add-failed&#039;, {
+        productId,
+        quantity,
+        error: error.message
+      });
+    }
+  }
+
+  async addToCart(productId, quantity) {
+    const response = await fetch(&#039;/api/cart/items&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ productId, quantity })
+    });
+
+    if (!response.ok) {
+      throw new Error(&#039;Failed to add item to cart&#039;);
+    }
+
+    return response.json();
+  }
+}</code></pre>
+<h3>Event Metadata</h3>
+<p>Include metadata for debugging and auditing:</p>
+<pre><code class="language-javascript">function publishWithMetadata(topic, data) {
+  pan.publish(topic, {
+    ...data,
+    _meta: {
+      timestamp: Date.now(),
+      source: &#039;UserComponent&#039;,
+      userId: currentUser?.id,
+      sessionId: sessionId
+    }
+  });
+}
+
+// Usage
+publishWithMetadata(&#039;order.placed&#039;, {
+  orderId: 12345,
+  total: 99.99
+});</code></pre>
+<h3>Batch Publishing</h3>
+<p>Publish multiple events efficiently:</p>
+<pre><code class="language-javascript">function syncLocalChanges(changes) {
+  changes.forEach(change =&gt; {
+    switch (change.type) {
+      case &#039;add&#039;:
+        pan.publish(&#039;data.item.added&#039;, change.item);
+        break;
+      case &#039;update&#039;:
+        pan.publish(&#039;data.item.updated&#039;, change.item);
+        break;
+      case &#039;delete&#039;:
+        pan.publish(&#039;data.item.deleted&#039;, { id: change.id });
+        break;
+    }
+  });
+
+  // Publish batch complete
+  pan.publish(&#039;data.sync.completed&#039;, {
+    changesCount: changes.length,
+    timestamp: Date.now()
+  });
+}</code></pre>
+<h2>Subscribing to Events</h2>
+<p>Subscriptions are how components react to events they care about.</p>
+<h3>Basic Subscription</h3>
+<pre><code class="language-javascript">const unsubscribe = pan.subscribe(&#039;event.name&#039;, (data) =&gt; {
+  console.log(&#039;Received:&#039;, data);
+});
+
+// Later, when done
+unsubscribe();</code></pre>
+<h3>Component Lifecycle Integration</h3>
+<p>Subscribe in <code>connectedCallback</code>, unsubscribe in <code>disconnectedCallback</code>:</p>
+<pre><code class="language-javascript">class NotificationDisplay extends HTMLElement {
+  connectedCallback() {
+    // Subscribe to notification events
+    this.unsubscribeInfo = pan.subscribe(&#039;notification.info&#039;, this.showInfo);
+    this.unsubscribeWarning = pan.subscribe(&#039;notification.warning&#039;, this.showWarning);
+    this.unsubscribeError = pan.subscribe(&#039;notification.error&#039;, this.showError);
+  }
+
+  disconnectedCallback() {
+    // Clean up subscriptions
+    this.unsubscribeInfo();
+    this.unsubscribeWarning();
+    this.unsubscribeError();
+  }
+
+  showInfo = (data) =&gt; {
+    this.showNotification(&#039;info&#039;, data.message);
+  }
+
+  showWarning = (data) =&gt; {
+    this.showNotification(&#039;warning&#039;, data.message);
+  }
+
+  showError = (data) =&gt; {
+    this.showNotification(&#039;error&#039;, data.message);
+  }
+
+  showNotification(type, message) {
+    // Render notification UI
+  }
+}</code></pre>
+<h3>Multiple Subscriptions Helper</h3>
+<p>Manage multiple subscriptions easily:</p>
+<pre><code class="language-javascript">class SubscriptionManager {
+  constructor() {
+    this.subscriptions = [];
+  }
+
+  subscribe(topic, handler) {
+    const unsubscribe = pan.subscribe(topic, handler);
+    this.subscriptions.push(unsubscribe);
+    return unsubscribe;
+  }
+
+  unsubscribeAll() {
+    this.subscriptions.forEach(unsubscribe =&gt; unsubscribe());
+    this.subscriptions = [];
+  }
+}
+
+// Usage in component
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.subs = new SubscriptionManager();
+  }
+
+  connectedCallback() {
+    this.subs.subscribe(&#039;user.login&#039;, this.handleLogin);
+    this.subs.subscribe(&#039;user.logout&#039;, this.handleLogout);
+    this.subs.subscribe(&#039;app.theme.changed&#039;, this.handleThemeChange);
+  }
+
+  disconnectedCallback() {
+    this.subs.unsubscribeAll();
+  }
+
+  handleLogin = (data) =&gt; { /* ... */ }
+  handleLogout = (data) =&gt; { /* ... */ }
+  handleThemeChange = (data) =&gt; { /* ... */ }
+}</code></pre>
+<h3>Conditional Subscriptions</h3>
+<p>Subscribe only when conditions are met:</p>
+<pre><code class="language-javascript">class UserDashboard extends HTMLElement {
+  connectedCallback() {
+    // Subscribe to user-specific events only when user is logged in
+    this.unsubscribeAuth = pan.subscribe(&#039;auth.state.changed&#039;, ({ isAuthenticated, user }) =&gt; {
+      if (isAuthenticated) {
+        this.subscribeToUserEvents(user.id);
+      } else {
+        this.unsubscribeFromUserEvents();
+      }
+    });
+  }
+
+  subscribeToUserEvents(userId) {
+    this.unsubscribeUserActivity = pan.subscribe(&#039;user.activity&#039;, (data) =&gt; {
+      if (data.userId === userId) {
+        this.updateActivity(data);
+      }
+    });
+
+    this.unsubscribeUserNotifications = pan.subscribe(&#039;user.notifications&#039;, (data) =&gt; {
+      if (data.userId === userId) {
+        this.showNotification(data);
+      }
+    });
+  }
+
+  unsubscribeFromUserEvents() {
+    if (this.unsubscribeUserActivity) {
+      this.unsubscribeUserActivity();
+      this.unsubscribeUserActivity = null;
+    }
+
+    if (this.unsubscribeUserNotifications) {
+      this.unsubscribeUserNotifications();
+      this.unsubscribeUserNotifications = null;
+    }
+  }
+}</code></pre>
+<h3>Filtering Events</h3>
+<p>Filter events in the subscriber:</p>
+<pre><code class="language-javascript">pan.subscribe(&#039;task.updated&#039;, (task) =&gt; {
+  // Only handle tasks assigned to current user
+  if (task.assignedTo === currentUser.id) {
+    this.updateTaskDisplay(task);
+  }
+});
+
+pan.subscribe(&#039;notification.*&#039;, (notification) =&gt; {
+  // Only show high-priority notifications
+  if (notification.priority &gt;= 3) {
+    this.showNotification(notification);
+  }
+});</code></pre>
+<h2>Message Patterns</h2>
+<p>!<a href="../images/05-pan-bus-6.png"><strong>Figure 5.6:</strong> Event Pattern Comparison</a></p>
+<strong><em>Figure 5.6:</strong> Event Pattern Comparison</em>
+<p>The PAN bus supports several messaging patterns for different use cases.</p>
+<h3>1. Fire and Forget</h3>
+<p>Most common pattern. Publish and continue without waiting:</p>
+<pre><code class="language-javascript">// Publisher
+function saveSettings(settings) {
+  localStorage.setItem(&#039;settings&#039;, JSON.stringify(settings));
+  pan.publish(&#039;settings.saved&#039;, settings);
+}
+
+// Subscriber
+pan.subscribe(&#039;settings.saved&#039;, (settings) =&gt; {
+  console.log(&#039;Settings updated:&#039;, settings);
+  updateUI(settings);
+});</code></pre>
+<strong>Use when:</strong>
+<ul><li>Multiple components may react</li>
+<li>You don't need confirmation</li>
+<li>Action is non-critical</li>
+</ul>
+<h3>2. Request/Response</h3>
+<p>!<a href="../images/05-pan-bus-5.png"><strong>Figure 5.5:</strong> Request/Response Pattern</a></p>
+<strong><em>Figure 5.5:</strong> Request/Response Pattern</em>
+<p>Request data and wait for a response:</p>
+<pre><code class="language-javascript">// Responder
+pan.respond(&#039;auth.token.get&#039;, async () =&gt; {
+  return localStorage.getItem(&#039;authToken&#039;);
+});
+
+// Requester
+const token = await pan.request(&#039;auth.token.get&#039;);
+console.log(&#039;Token:&#039;, token);</code></pre>
+<strong>Implementation:</strong>
+<pre><code class="language-javascript">// In PAN library
+class PAN {
+  request(topic, data, timeout = 5000) {
+    return new Promise((resolve, reject) =&gt; {
+      const responseId = `${topic}:${Date.now()}:${Math.random()}`;
+
+      // Subscribe to response
+      const unsubscribe = this.subscribe(`${topic}:response:${responseId}`, (response) =&gt; {
+        unsubscribe();
+        clearTimeout(timer);
+        resolve(response);
+      });
+
+      // Set timeout
+      const timer = setTimeout(() =&gt; {
+        unsubscribe();
+        reject(new Error(`Request timeout: ${topic}`));
+      }, timeout);
+
+      // Publish request
+      this.publish(`${topic}:request`, {
+        ...data,
+        _responseId: responseId
+      });
+    });
+  }
+
+  respond(topic, handler) {
+    return this.subscribe(`${topic}:request`, async (data) =&gt; {
+      try {
+        const result = await handler(data);
+        this.publish(`${topic}:response:${data._responseId}`, result);
+      } catch (error) {
+        this.publish(`${topic}:response:${data._responseId}`, {
+          error: error.message
+        });
+      }
+    });
+  }
+}</code></pre>
+<strong>Use when:</strong>
+<ul><li>Need data from another component</li>
+<li>Waiting for response is acceptable</li>
+<li>Asynchronous operations</li>
+</ul>
+<h3>3. Command Pattern</h3>
+<p>Issue commands that components execute:</p>
+<pre><code class="language-javascript">// Command issuer
+pan.publish(&#039;modal.open&#039;, {
+  component: &#039;user-profile&#039;,
+  props: { userId: 123 }
+});
+
+// Command handler
+pan.subscribe(&#039;modal.open&#039;, ({ component, props }) =&gt; {
+  const modal = document.createElement(&#039;app-modal&#039;);
+  modal.component = component;
+  modal.props = props;
+  document.body.appendChild(modal);
+});</code></pre>
+<strong>Use when:</strong>
+<ul><li>Triggering actions in other components</li>
+<li>Implementing undo/redo</li>
+<li>Building command palette UIs</li>
+</ul>
+<h3>4. Event Sourcing</h3>
+<p>Store events for replay or auditing:</p>
+<pre><code class="language-javascript">const eventStore = [];
+
+// Store all events
+pan.subscribe(&#039;*&#039;, (topic, data) =&gt; {
+  eventStore.push({
+    topic,
+    data,
+    timestamp: Date.now()
+  });
+});
+
+// Replay events
+function replayEvents(fromTimestamp) {
+  eventStore
+    .filter(event =&gt; event.timestamp &gt;= fromTimestamp)
+    .forEach(event =&gt; {
+      pan.publish(event.topic, event.data);
+    });
+}
+
+// Get events for debugging
+function getEventHistory(topic) {
+  return eventStore.filter(event =&gt;
+    event.topic === topic || event.topic.startsWith(topic + &#039;.&#039;)
+  );
+}</code></pre>
+<strong>Use when:</strong>
+<ul><li>Debugging complex interactions</li>
+<li>Implementing undo/redo</li>
+<li>Auditing user actions</li>
+<li>Syncing state across sessions</li>
+</ul>
+<h3>5. Aggregation Pattern</h3>
+<p>Collect multiple events before acting:</p>
+<pre><code class="language-javascript">class DataAggregator extends HTMLElement {
+  constructor() {
+    super();
+    this.pendingUpdates = new Set();
+    this.debounceTimer = null;
+  }
+
+  connectedCallback() {
+    pan.subscribe(&#039;data.item.updated&#039;, ({ id }) =&gt; {
+      this.pendingUpdates.add(id);
+      this.scheduleRefresh();
+    });
+  }
+
+  scheduleRefresh() {
+    clearTimeout(this.debounceTimer);
+
+    this.debounceTimer = setTimeout(() =&gt; {
+      this.refreshItems(Array.from(this.pendingUpdates));
+      this.pendingUpdates.clear();
+    }, 500);
+  }
+
+  async refreshItems(ids) {
+    const items = await fetchItems(ids);
+    this.render(items);
+  }
+}</code></pre>
+<strong>Use when:</strong>
+<ul><li>Avoiding excessive updates</li>
+<li>Batching API requests</li>
+<li>Debouncing rapid events</li>
+</ul>
+<h3>6. Saga Pattern</h3>
+<p>Coordinate multi-step processes:</p>
+<pre><code class="language-javascript">class CheckoutSaga {
+  constructor() {
+    this.setupListeners();
+  }
+
+  setupListeners() {
+    pan.subscribe(&#039;checkout.started&#039;, this.handleCheckoutStart);
+    pan.subscribe(&#039;payment.completed&#039;, this.handlePaymentComplete);
+    pan.subscribe(&#039;order.created&#039;, this.handleOrderCreated);
+  }
+
+  handleCheckoutStart = async ({ cart }) =&gt; {
+    try {
+      // Step 1: Validate cart
+      pan.publish(&#039;checkout.validating&#039;, { cart });
+      await this.validateCart(cart);
+
+      // Step 2: Calculate totals
+      pan.publish(&#039;checkout.calculating&#039;, { cart });
+      const totals = await this.calculateTotals(cart);
+
+      // Step 3: Request payment
+      pan.publish(&#039;payment.requested&#039;, { totals });
+    } catch (error) {
+      pan.publish(&#039;checkout.failed&#039;, { error: error.message });
+    }
+  }
+
+  handlePaymentComplete = async ({ paymentId, totals }) =&gt; {
+    try {
+      // Step 4: Create order
+      pan.publish(&#039;order.creating&#039;, { paymentId });
+      const order = await this.createOrder(paymentId, totals);
+
+      pan.publish(&#039;order.created&#039;, { order });
+    } catch (error) {
+      // Compensating transaction: refund payment
+      pan.publish(&#039;payment.refund-requested&#039;, { paymentId });
+      pan.publish(&#039;checkout.failed&#039;, { error: error.message });
+    }
+  }
+
+  handleOrderCreated = async ({ order }) =&gt; {
+    // Step 5: Send confirmation
+    pan.publish(&#039;order.confirmation-sending&#039;, { order });
+    await this.sendConfirmation(order);
+
+    // Step 6: Complete checkout
+    pan.publish(&#039;checkout.completed&#039;, { order });
+  }
+}</code></pre>
+<strong>Use when:</strong>
+<ul><li>Complex multi-step workflows</li>
+<li>Need to handle failures and rollbacks</li>
+<li>Coordinating multiple services</li>
+</ul>
+<h2>Debugging PAN Communication</h2>
+<p>!<a href="../images/05-pan-bus-10.png"><strong>Figure 5.7:</strong> PAN Bus Internal Architecture</a></p>
+<strong><em>Figure 5.7:</strong> PAN Bus Internal Architecture</em>
+<p>Debugging event-driven systems requires different techniques than traditional debugging.</p>
+<h3>Logging All Events</h3>
+<pre><code class="language-javascript">// Enable debug mode
+pan.debug(true);
+
+// Or manually subscribe to all events
+pan.subscribe(&#039;*&#039;, (topic, data) =&gt; {
+  console.group(`[PAN] ${topic}`);
+  console.log(&#039;Data:&#039;, data);
+  console.log(&#039;Timestamp:&#039;, new Date().toISOString());
+  console.trace(&#039;Stack trace&#039;);
+  console.groupEnd();
+});</code></pre>
+<h3>Event Inspector</h3>
+<p>Build a visual event inspector:</p>
+<pre><code class="language-javascript">class PanInspector extends HTMLElement {
+  constructor() {
+    super();
+    this.events = [];
+    this.maxEvents = 100;
+  }
+
+  connectedCallback() {
+    this.render();
+
+    pan.subscribe(&#039;*&#039;, (topic, data) =&gt; {
+      this.logEvent(topic, data);
+    });
+  }
+
+  logEvent(topic, data) {
+    this.events.unshift({
+      topic,
+      data,
+      timestamp: Date.now()
+    });
+
+    if (this.events.length &gt; this.maxEvents) {
+      this.events.pop();
+    }
+
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;style&gt;
+        .pan-inspector {
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          width: 400px;
+          height: 300px;
+          background: white;
+          border: 1px solid #ccc;
+          overflow: auto;
+          font-family: monospace;
+          font-size: 12px;
+        }
+
+        .event {
+          padding: 8px;
+          border-bottom: 1px solid #eee;
+        }
+
+        .event:hover {
+          background: #f5f5f5;
+        }
+
+        .topic {
+          font-weight: bold;
+          color: #667eea;
+        }
+
+        .timestamp {
+          color: #999;
+          font-size: 10px;
+        }
+
+        .data {
+          margin-top: 4px;
+          color: #333;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;pan-inspector&quot;&gt;
+        &lt;h3&gt;PAN Event Inspector&lt;/h3&gt;
+        ${this.events.map(event =&gt; `
+          &lt;div class=&quot;event&quot;&gt;
+            &lt;div class=&quot;topic&quot;&gt;${event.topic}&lt;/div&gt;
+            &lt;div class=&quot;timestamp&quot;&gt;${new Date(event.timestamp).toLocaleTimeString()}&lt;/div&gt;
+            &lt;div class=&quot;data&quot;&gt;${JSON.stringify(event.data, null, 2)}&lt;/div&gt;
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;pan-inspector&#039;, PanInspector);</code></pre>
+<h3>Event Filtering</h3>
+<p>Filter events for specific topics:</p>
+<pre><code class="language-javascript">function filterEvents(pattern) {
+  const regex = new RegExp(pattern.replace(&#039;*&#039;, &#039;.*&#039;));
+
+  pan.subscribe(&#039;*&#039;, (topic, data) =&gt; {
+    if (regex.test(topic)) {
+      console.log(`[FILTERED] ${topic}:`, data);
+    }
+  });
+}
+
+// Usage
+filterEvents(&#039;user.*&#039;);     // Only user events
+filterEvents(&#039;*.error&#039;);    // All error events
+filterEvents(&#039;cart|order&#039;); // Cart or order events</code></pre>
+<h3>Performance Monitoring</h3>
+<p>Track event frequency and performance:</p>
+<pre><code class="language-javascript">class PanMonitor {
+  constructor() {
+    this.stats = new Map();
+
+    pan.subscribe(&#039;*&#039;, (topic) =&gt; {
+      const stat = this.stats.get(topic) || { count: 0, timestamps: [] };
+
+      stat.count++;
+      stat.timestamps.push(Date.now());
+
+      // Keep only last 100 timestamps
+      if (stat.timestamps.length &gt; 100) {
+        stat.timestamps.shift();
+      }
+
+      this.stats.set(topic, stat);
+    });
+  }
+
+  getStats(topic) {
+    const stat = this.stats.get(topic);
+    if (!stat) return null;
+
+    const timestamps = stat.timestamps;
+    const duration = timestamps[timestamps.length - 1] - timestamps[0];
+    const frequency = timestamps.length / (duration / 1000);
+
+    return {
+      topic,
+      count: stat.count,
+      frequency: frequency.toFixed(2) + &#039; events/sec&#039;,
+      lastEvent: new Date(timestamps[timestamps.length - 1])
+    };
+  }
+
+  getAllStats() {
+    const results = [];
+
+    this.stats.forEach((_, topic) =&gt; {
+      results.push(this.getStats(topic));
+    });
+
+    return results.sort((a, b) =&gt; b.count - a.count);
+  }
+
+  reset() {
+    this.stats.clear();
+  }
+}
+
+// Usage
+const monitor = new PanMonitor();
+
+// Later, check stats
+console.table(monitor.getAllStats());</code></pre>
+<h3>Event Replay</h3>
+<p>Capture and replay events for testing:</p>
+<pre><code class="language-javascript">class EventRecorder {
+  constructor() {
+    this.recording = false;
+    this.events = [];
+  }
+
+  start() {
+    this.recording = true;
+    this.events = [];
+
+    this.unsubscribe = pan.subscribe(&#039;*&#039;, (topic, data) =&gt; {
+      if (this.recording) {
+        this.events.push({ topic, data, timestamp: Date.now() });
+      }
+    });
+  }
+
+  stop() {
+    this.recording = false;
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+
+    return this.events;
+  }
+
+  replay(events, speed = 1) {
+    if (!events || events.length === 0) return;
+
+    const startTime = events[0].timestamp;
+
+    events.forEach((event, index) =&gt; {
+      const delay = (event.timestamp - startTime) / speed;
+
+      setTimeout(() =&gt; {
+        pan.publish(event.topic, event.data);
+      }, delay);
+    });
+  }
+
+  save(name) {
+    localStorage.setItem(`pan-recording-${name}`, JSON.stringify(this.events));
+  }
+
+  load(name) {
+    const data = localStorage.getItem(`pan-recording-${name}`);
+    return data ? JSON.parse(data) : null;
+  }
+}
+
+// Usage
+const recorder = new EventRecorder();
+
+// Start recording
+recorder.start();
+
+// ... perform actions ...
+
+// Stop and save
+const events = recorder.stop();
+recorder.save(&#039;my-test-scenario&#039;);
+
+// Later, replay
+const events = recorder.load(&#039;my-test-scenario&#039;);
+recorder.replay(events, 2); // 2x speed</code></pre>
+<h2>Summary</h2>
+<p>This chapter covered:</p>
+<ul><li><strong>Pub/Sub Architecture</strong>: Decoupled communication via topics</li>
+<li><strong>Topics and Namespaces</strong>: Organizing events with hierarchical naming</li>
+<li><strong>Publishing</strong>: Sending messages and event patterns</li>
+<li><strong>Subscribing</strong>: Receiving and filtering events</li>
+<li><strong>Message Patterns</strong>: Fire-and-forget, request/response, commands, sagas</li>
+<li><strong>Debugging</strong>: Logging, inspection, monitoring, and replay tools</li>
+</ul>
+The PAN bus is central to LARC applications. Mastering it enables you to build scalable, maintainable applications where components collaborate without tight coupling.
+<hr>
+<h2>Best Practices</h2>
+<li><strong>Use descriptive topic names</strong></li>
+   - <code>user.profile.updated</code> not <code>userUpdated</code>
+   - Past tense for events that happened
+   - Include context in message data
+<li><strong>Clean up subscriptions</strong></li>
+   - Always unsubscribe in <code>disconnectedCallback</code>
+   - Use subscription managers for multiple subscriptions
+   - Avoid memory leaks
+<li><strong>Avoid infinite loops</strong></li>
+   - Don't publish the same event you're subscribed to
+   - Use different topics for input and output
+   - Add loop detection in debug mode
+<li><strong>Keep handlers fast</strong></li>
+   - Don't block the event loop
+   - Use async/await for long operations
+   - Consider debouncing rapid events
+<li><strong>Include metadata</strong></li>
+   - Timestamp, source, user ID for debugging
+   - Request IDs for tracing
+   - Error details for failures
+<li><strong>Test event flows</strong></li>
+   - Use event recorders for integration tests
+   - Mock pan.publish/subscribe in unit tests
+   - Verify event contracts between components
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/chapters/05-the-pan-bus.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

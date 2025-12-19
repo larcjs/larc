@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advanced State Management in LARC · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Advanced State Management in LARC">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">reference</a> / <span>STATE-MANAGEMENT</span>
+      </div>
+      <article class="docs-content">
+        <h1>Advanced State Management in LARC</h1>
+<p>This document describes the enhanced state management capabilities added to LARC, providing persistent, cross-tab synchronized, offline-first state management while maintaining the zero-build, framework-agnostic philosophy.</p>
+<h2>🎯 Overview</h2>
+<p>LARC now includes a comprehensive suite of state management components that work together to provide:</p>
+<ul><li><strong>Cross-tab synchronization</strong> - State stays in sync across browser tabs</li>
+<li><strong>Offline-first support</strong> - Queue mutations when offline, sync when reconnected</li>
+<li><strong>Flexible persistence</strong> - Route state to memory, localStorage, sessionStorage, or IndexedDB</li>
+<li><strong>Computed state</strong> - Derived values with automatic dependency tracking</li>
+<li><strong>Runtime validation</strong> - JSON Schema validation without build tools</li>
+<li><strong>Time-travel debugging</strong> - Undo/redo with history management</li>
+<li><strong>Enhanced debugging</strong> - State tree visualization, metrics, and performance profiling</li>
+</ul>
+All components maintain LARC's core principles:
+<ul><li>✅ Zero build required - works directly in browsers</li>
+<li>✅ Framework agnostic - works with vanilla JS, React, Vue, etc.</li>
+<li>✅ Web Components based - declarative HTML configuration</li>
+<li>✅ Progressive enhancement - adopt features incrementally</li>
+</ul>
+<h2>📦 New Components</h2>
+<h3>1. <code>pan-state-sync</code> - Cross-Tab Synchronization</h3>
+<p>Synchronizes state across multiple browser tabs using BroadcastChannel API.</p>
+<strong>Features:</strong>
+<ul><li>Leader election to prevent sync loops</li>
+<li>Conflict resolution strategies (last-write-wins, merge, custom)</li>
+<li>Automatic state hydration when tabs become visible</li>
+<li>Tab heartbeat monitoring</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;pan-state-sync
+  channel=&quot;myapp-sync&quot;
+  topics=&quot;users.*,todos.*&quot;
+  strategy=&quot;last-write-wins&quot;
+  leader=&quot;auto&quot;
+  debug&gt;
+&lt;/pan-state-sync&gt;</code></pre>
+<strong>API:</strong>
+<pre><code class="language-javascript">const sync = document.querySelector(&#039;pan-state-sync&#039;);
+
+console.log(sync.isLeader);     // true/false
+console.log(sync.tabId);        // Unique tab ID
+await sync.requestFullSync();   // Force sync from leader
+sync.clearCache();              // Clear local cache</code></pre>
+<strong>Topics:</strong>
+<ul><li><code>{channel}.sync.message</code> - State broadcast to other tabs</li>
+<li><code>{channel}.sync.leader-elected</code> - New leader elected</li>
+<li><code>{channel}.sync.conflict</code> - Conflict detected</li>
+</ul>
+<hr>
+<h3>2. <code>pan-computed-state</code> - Derived State</h3>
+<p>Creates computed values that automatically update when dependencies change.</p>
+<strong>Features:</strong>
+<ul><li>Subscribe to multiple PAN topics</li>
+<li>Async computation support</li>
+<li>Debouncing for performance</li>
+<li>Memoization strategies (none, shallow, deep)</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;pan-computed-state
+  sources=&quot;cart.items,user.discount&quot;
+  output=&quot;cart.total&quot;
+  debounce=&quot;100&quot;
+  memo=&quot;shallow&quot;
+  retain&gt;
+  &lt;script&gt;
+    (items, discount) =&gt; {
+      const subtotal = items.reduce((sum, item) =&gt; sum + item.price, 0);
+      return subtotal - (discount || 0);
+    }
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;</code></pre>
+<strong>Async Example:</strong>
+<pre><code class="language-html">&lt;pan-computed-state
+  sources=&quot;user.location&quot;
+  output=&quot;weather.current&quot;
+  async
+  debounce=&quot;500&quot;&gt;
+  &lt;script&gt;
+    async (location) =&gt; {
+      const res = await fetch(`/api/weather?lat=${location.lat}&amp;lon=${location.lon}`);
+      return await res.json();
+    }
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;</code></pre>
+<strong>API:</strong>
+<pre><code class="language-javascript">const computed = document.querySelector(&#039;pan-computed-state&#039;);
+
+await computed.recompute();         // Force recomputation
+computed.clearMemo();               // Clear memoization cache
+console.log(computed.lastResult);   // Last computed value
+console.log(computed.getSourceData()); // Current source values</code></pre>
+<hr>
+<h3>3. <code>pan-offline-sync</code> - Offline-First Support</h3>
+<p>Queues mutations when offline and automatically syncs when reconnected.</p>
+<strong>Features:</strong>
+<ul><li>IndexedDB-based mutation queue</li>
+<li>Automatic retry with exponential backoff</li>
+<li>Conflict resolution (server-wins, client-wins, merge)</li>
+<li>Network status monitoring</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;pan-offline-sync
+  storage=&quot;offline-queue&quot;
+  retry-max=&quot;3&quot;
+  retry-delay=&quot;1000&quot;
+  topics=&quot;todos.*,notes.*&quot;
+  strategy=&quot;server-wins&quot;
+  endpoints=&#039;{&quot;todos.*&quot;: &quot;/api/todos&quot;, &quot;notes.*&quot;: &quot;/api/notes&quot;}&#039;
+  debug&gt;
+&lt;/pan-offline-sync&gt;</code></pre>
+<strong>API:</strong>
+<pre><code class="language-javascript">const offlineSync = document.querySelector(&#039;pan-offline-sync&#039;);
+
+console.log(offlineSync.online);         // true/false
+console.log(offlineSync.queueLength);    // Number of pending mutations
+console.log(offlineSync.queue);          // Array of queued items
+
+await offlineSync.syncNow();             // Force sync if online
+await offlineSync.clearQueue();          // Clear all pending
+const failed = await offlineSync.getFailedMutations(); // Get failures</code></pre>
+<strong>Topics:</strong>
+<ul><li><code>{storage}.queue.add</code> - Mutation queued</li>
+<li><code>{storage}.queue.sync</code> - Sync started</li>
+<li><code>{storage}.queue.success</code> - Mutation synced</li>
+<li><code>{storage}.queue.error</code> - Sync error</li>
+<li><code>{storage}.queue.conflict</code> - Conflict detected</li>
+<li><code>{storage}.network.online</code> - Network online</li>
+<li><code>{storage}.network.offline</code> - Network offline</li>
+</ul>
+<hr>
+<h3>4. <code>pan-persistence-strategy</code> - Declarative Persistence</h3>
+<p>Routes state to different storage backends based on topic patterns.</p>
+<strong>Features:</strong>
+<ul><li>Multiple storage backends (memory, localStorage, sessionStorage, IndexedDB)</li>
+<li>TTL (time-to-live) support for cache expiration</li>
+<li>Size limits per topic</li>
+<li>Automatic hydration on page load</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;pan-persistence-strategy auto-hydrate debug&gt;
+  &lt;!-- Session data in memory, expires in 30 min --&gt;
+  &lt;strategy topics=&quot;session.*&quot; storage=&quot;memory&quot; ttl=&quot;1800000&quot;&gt;&lt;/strategy&gt;
+
+  &lt;!-- User preferences in localStorage --&gt;
+  &lt;strategy topics=&quot;user.preferences.*&quot; storage=&quot;localStorage&quot;&gt;&lt;/strategy&gt;
+
+  &lt;!-- Form drafts in sessionStorage --&gt;
+  &lt;strategy topics=&quot;form.draft.*&quot; storage=&quot;sessionStorage&quot; ttl=&quot;3600000&quot;&gt;&lt;/strategy&gt;
+
+  &lt;!-- Large data in IndexedDB, max 5MB per item --&gt;
+  &lt;strategy topics=&quot;*.list.*&quot; storage=&quot;indexedDB&quot; database=&quot;app-data&quot; max-size=&quot;5242880&quot;&gt;&lt;/strategy&gt;
+&lt;/pan-persistence-strategy&gt;</code></pre>
+<strong>API:</strong>
+<pre><code class="language-javascript">const strategy = document.querySelector(&#039;pan-persistence-strategy&#039;);
+
+await strategy.hydrate();           // Force hydration
+await strategy.clearAll();          // Clear all persisted data
+console.log(strategy.getStrategies()); // View configured strategies</code></pre>
+<strong>Topics:</strong>
+<ul><li><code>persist.hydrated</code> - All state hydrated</li>
+<li><code>persist.saved</code> - State persisted</li>
+<li><code>persist.error</code> - Persistence error</li>
+</ul>
+<hr>
+<h3>5. <code>pan-schema-validator</code> - Runtime Validation</h3>
+<p>Validates PAN messages against JSON Schema without build tools.</p>
+<strong>Features:</strong>
+<ul><li>Subset of JSON Schema Draft-07</li>
+<li>Strict mode (reject invalid) or warning mode (log only)</li>
+<li>Built-in format validators (email, uri, date-time, uuid, ipv4, ipv6)</li>
+<li>Detailed error messages with paths</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;pan-schema-validator topic=&quot;users.item.*&quot; strict&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+  {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;id&quot;: { &quot;type&quot;: &quot;string&quot; },
+      &quot;email&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;email&quot; },
+      &quot;age&quot;: { &quot;type&quot;: &quot;number&quot;, &quot;minimum&quot;: 0, &quot;maximum&quot;: 150 },
+      &quot;role&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;enum&quot;: [&quot;admin&quot;, &quot;user&quot;, &quot;guest&quot;] }
+    },
+    &quot;required&quot;: [&quot;id&quot;, &quot;email&quot;]
+  }
+  &lt;/script&gt;
+&lt;/pan-schema-validator&gt;</code></pre>
+<strong>Supported JSON Schema Features:</strong>
+<ul><li>Types: string, number, integer, boolean, object, array, null</li>
+<li>String: minLength, maxLength, pattern, format</li>
+<li>Number: minimum, maximum, multipleOf</li>
+<li>Array: minItems, maxItems, uniqueItems, items</li>
+<li>Object: properties, required, additionalProperties</li>
+<li>enum, const</li>
+</ul>
+<strong>Topics:</strong>
+<ul><li><code>{topic}.valid</code> - Message passed validation</li>
+<li><code>{topic}.invalid</code> - Message failed validation</li>
+</ul>
+<hr>
+<h3>6. <code>pan-undo-redo</code> - Time-Travel Debugging</h3>
+<p>Provides undo/redo functionality with history management.</p>
+<strong>Features:</strong>
+<ul><li>Configurable history stack size</li>
+<li>Automatic change batching (100ms window)</li>
+<li>Auto-snapshot on interval</li>
+<li>Jump to specific timestamp</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;pan-undo-redo
+  topics=&quot;editor.*,canvas.*&quot;
+  max-history=&quot;50&quot;
+  channel=&quot;history&quot;
+  auto-snapshot
+  snapshot-interval=&quot;5000&quot;
+  debug&gt;
+&lt;/pan-undo-redo&gt;</code></pre>
+<strong>Control:</strong>
+<pre><code class="language-javascript">// Via PAN topics
+panClient.publish(&#039;history.undo&#039;, null);
+panClient.publish(&#039;history.redo&#039;, null);
+panClient.publish(&#039;history.clear&#039;, null);
+panClient.publish(&#039;history.snapshot&#039;, null);
+
+// Direct API
+const undoRedo = document.querySelector(&#039;pan-undo-redo&#039;);
+
+undoRedo.undo();                    // Undo last change
+undoRedo.redo();                    // Redo last undone change
+undoRedo.clear();                   // Clear history
+undoRedo.snapshot();                // Force snapshot
+
+console.log(undoRedo.canUndo);      // true/false
+console.log(undoRedo.canRedo);      // true/false
+console.log(undoRedo.historySize);  // Number of history entries
+
+const history = undoRedo.getHistory(); // Full history
+undoRedo.goToTimestamp(1234567890);    // Jump to specific point</code></pre>
+<strong>Topics:</strong>
+<ul><li><code>{channel}.state</code> - History state changes (canUndo, canRedo, sizes)</li>
+</ul>
+<hr>
+<h3>7. Enhanced <code>pan-inspector</code></h3>
+<p>The existing pan-inspector has been significantly enhanced with:</p>
+<strong>New Features:</strong>
+<ul><li><strong>State Tree View</strong> - Visualize all retained messages in a tree</li>
+<li><strong>Metrics Dashboard</strong> - Total messages, message rate, top topics</li>
+<li><strong>Advanced Filtering</strong> - Filter by topic patterns and message type</li>
+<li><strong>Message Type Filtering</strong> - Separate retained vs transient messages</li>
+<li><strong>Performance Tracking</strong> - Message handler duration, sizes</li>
+<li><strong>Export/Import</strong> - Save and restore state snapshots</li>
+<li><strong>Message Details Modal</strong> - Inspect full message data and metadata</li>
+</ul>
+<strong>Views:</strong>
+<li><strong>Messages</strong> - Real-time message log with filtering</li>
+<li><strong>State Tree</strong> - Hierarchical view of retained state</li>
+<li><strong>Metrics</strong> - Performance and usage statistics</li>
+<hr>
+<h3>8. Enhanced <code>pan-store</code></h3>
+<p>The local reactive store now includes composition helpers:</p>
+<strong>New Methods:</strong>
+<pre><code class="language-javascript">const store = createStore({ count: 0, name: &#039;Ada&#039; });
+
+// Select nested values
+console.log(store.select(&#039;user.profile.name&#039;));
+
+// Derive computed values
+store.derive(&#039;doubled&#039;, [&#039;count&#039;], (count) =&gt; count * 2);
+
+// Batch updates (single event)
+store.batch(({ set }) =&gt; {
+  set(&#039;count&#039;, 10);
+  set(&#039;name&#039;, &#039;Bob&#039;);
+});
+
+// Middleware
+const unsub = store.use(({ key, value, oldValue }) =&gt; {
+  console.log(`${key}: ${oldValue} → ${value}`);
+});
+
+// Reset to initial state
+store.reset();
+
+// Check key existence
+console.log(store.has(&#039;count&#039;)); // true
+
+// Delete key
+store.delete(&#039;count&#039;);
+
+// Get all keys (including derived)
+console.log(store.keys());</code></pre>
+<hr>
+<h2>🚀 Quick Start</h2>
+<h3>1. Basic Setup</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Load LARC --&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;../../core/pan.mjs&#039;;
+  &lt;/script&gt;
+
+  &lt;!-- PAN Bus --&gt;
+  &lt;pan-bus debug&gt;&lt;/pan-bus&gt;
+
+  &lt;!-- State Management Components --&gt;
+  &lt;pan-persistence-strategy auto-hydrate&gt;
+    &lt;strategy topics=&quot;*&quot; storage=&quot;localStorage&quot;&gt;&lt;/strategy&gt;
+  &lt;/pan-persistence-strategy&gt;
+
+  &lt;pan-state-sync channel=&quot;myapp&quot; topics=&quot;*&quot;&gt;&lt;/pan-state-sync&gt;
+
+  &lt;pan-inspector&gt;&lt;/pan-inspector&gt;
+
+  &lt;!-- Your app code --&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import { PanClient } from &#039;../../core/pan-client.mjs&#039;;
+    const panClient = new PanClient();
+
+    // Publish state
+    panClient.publish(&#039;user.name&#039;, &#039;Ada&#039;, { retain: true });
+
+    // Subscribe to changes
+    panClient.subscribe(&#039;user.name&#039;, ({ data }) =&gt; {
+      console.log(&#039;Name changed:&#039;, data);
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>2. Offline-First Todo App</h3>
+<p>See <code>examples/offline-todo-app.html</code> for a complete example demonstrating:
+<ul><li>Cross-tab sync</li>
+<li>Offline queueing</li>
+<li>Auto-persistence</li>
+<li>Undo/redo</li>
+<li>Schema validation</li>
+<li>Computed state</li>
+</ul>
+<h3>3. Common Patterns</h3></p>
+<strong>Shopping Cart:</strong>
+<pre><code class="language-html">&lt;pan-persistence-strategy auto-hydrate&gt;
+  &lt;strategy topics=&quot;cart.*&quot; storage=&quot;localStorage&quot;&gt;&lt;/strategy&gt;
+&lt;/pan-persistence-strategy&gt;
+
+&lt;pan-computed-state sources=&quot;cart.items&quot; output=&quot;cart.total&quot; retain&gt;
+  &lt;script&gt;
+    (items) =&gt; items.reduce((sum, item) =&gt; sum + item.price * item.quantity, 0)
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;
+
+&lt;pan-state-sync channel=&quot;cart&quot; topics=&quot;cart.*&quot;&gt;&lt;/pan-state-sync&gt;</code></pre>
+<strong>Form with Validation:</strong>
+<pre><code class="language-html">&lt;pan-schema-validator topic=&quot;forms.registration&quot; strict&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+  {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;email&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;email&quot; },
+      &quot;age&quot;: { &quot;type&quot;: &quot;integer&quot;, &quot;minimum&quot;: 13 }
+    },
+    &quot;required&quot;: [&quot;email&quot;]
+  }
+  &lt;/script&gt;
+&lt;/pan-schema-validator&gt;
+
+&lt;pan-persistence-strategy auto-hydrate&gt;
+  &lt;strategy topics=&quot;forms.draft.*&quot; storage=&quot;sessionStorage&quot; ttl=&quot;3600000&quot;&gt;&lt;/strategy&gt;
+&lt;/pan-persistence-strategy&gt;</code></pre>
+<hr>
+<h2>📖 Documentation</h2>
+<ul><li><strong><a href="./site/docs/state-management-patterns.md">State Management Patterns Guide</a></strong> - Comprehensive patterns and best practices</li>
+<li><strong><a href="./examples/offline-todo-app.html">Offline-First Example</a></strong> - Working demo app</li>
+<li><strong><a href="./site/docs/api-reference.md">API Reference</a></strong> - Detailed API docs</li>
+</ul>
+<hr>
+<h2>🎯 Best Practices</h2>
+<li><strong>Use retained messages for important state</strong> - Session data, user prefs, UI state</li>
+<li><strong>Debounce frequently changing values</strong> - Input fields, scroll positions</li>
+<li><strong>Validate at boundaries</strong> - User input, API responses</li>
+<li><strong>Choose appropriate storage</strong> - Memory for temporary, IndexedDB for large data</li>
+<li><strong>Monitor performance</strong> - Use pan-inspector metrics view</li>
+<li><strong>Test offline scenarios</strong> - Use Chrome DevTools network throttling</li>
+<li><strong>Handle conflicts gracefully</strong> - Choose appropriate resolution strategy</li>
+<li><strong>Clean up subscriptions</strong> - Unsubscribe in disconnectedCallback</li>
+<hr>
+<h2>🤝 Migration Guide</h2>
+<h3>From Redux</h3>
+<p>| Redux | LARC |
+|-------|------|
+| Store | PAN Bus + Retained Messages |
+| Actions | PAN Topics |
+| Reducers | Provider Components |
+| Selectors | pan-computed-state |
+| Middleware | store.use() |
+| DevTools | pan-inspector |</p>
+<h3>From Context API</h3>
+<p>| Context API | LARC |
+|-------------|------|
+| createContext() | PAN topic namespace |
+| Provider | Provider components |
+| useContext() | panClient.subscribe() |</p>
+<hr>
+<h2>🔮 Roadmap</h2>
+<p>Future enhancements under consideration:</p>
+<ul><li>[ ] State migration utilities for schema changes</li>
+<li>[ ] Conflict resolution UI components</li>
+<li>[ ] React DevTools integration</li>
+<li>[ ] Performance profiling with flame graphs</li>
+<li>[ ] State snapshots with compression</li>
+<li>[ ] SharedWorker for cross-tab coordination</li>
+<li>[ ] Service Worker integration for offline PWAs</li>
+</ul>
+<hr>
+<h2>🐛 Troubleshooting</h2>
+<strong>Cross-tab sync not working:</strong>
+<ul><li>Check BroadcastChannel browser support</li>
+<li>Verify same channel name across tabs</li>
+<li>Check browser console for errors</li>
+</ul>
+<strong>Offline sync not queuing:</strong>
+<ul><li>Verify IndexedDB is available</li>
+<li>Check topic patterns match mutations</li>
+<li>Look for validation errors</li>
+</ul>
+<strong>State not persisting:</strong>
+<ul><li>Check storage quotas (localStorage ~5-10MB, IndexedDB ~50MB+)</li>
+<li>Verify topic patterns in persistence strategy</li>
+<li>Check browser privacy settings</li>
+</ul>
+<strong>Undo/redo not working:</strong>
+<ul><li>Ensure topics match tracked patterns</li>
+<li>Check max-history limit</li>
+<li>Verify changes aren't from undo-redo itself (check meta.source)</li>
+</ul>
+<hr>
+<h2>📄 License</h2>
+<p>Same as LARC core (check main LICENSE file)</p>
+<hr>
+<h2>🙏 Credits</h2>
+<p>Built with love by the LARC community. Inspired by:
+<ul><li>Redux for predictable state</li>
+<li>MobX for reactivity</li>
+<li>IndexedDB for persistence</li>
+<li>MQTT for messaging patterns</li>
+</ul>
+<hr></p>
+<strong>Questions or feedback?</strong> Open an issue on GitHub!
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/reference/STATE-MANAGEMENT.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

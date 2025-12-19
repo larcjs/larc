@@ -222,8 +222,14 @@ function convertMarkdownFile(mdPath, relativePath) {
   const title = extractTitle(markdown) || basename(mdPath, '.md');
   const html = markdownToHtml(markdown);
 
+  // Strip leading 'docs/' prefix to avoid nested docs/docs/ structure
+  let outputRelativePath = relativePath;
+  if (outputRelativePath.startsWith('docs/')) {
+    outputRelativePath = outputRelativePath.slice(5);
+  }
+
   // Create output path in site/docs
-  const outputPath = join(docsDir, relativePath.replace('.md', '.html'));
+  const outputPath = join(docsDir, outputRelativePath.replace('.md', '.html'));
   const outputDir = dirname(outputPath);
 
   // Ensure output directory exists
@@ -232,13 +238,13 @@ function convertMarkdownFile(mdPath, relativePath) {
   }
 
   // Generate and write HTML
-  const fullHtml = createHtmlPage(title, html, relativePath);
+  const fullHtml = createHtmlPage(title, html, outputRelativePath);
   writeFileSync(outputPath, fullHtml, 'utf-8');
 
   return {
     title,
-    path: relativePath.replace('.md', '.html'),
-    category: dirname(relativePath) === '.' ? 'Root' : dirname(relativePath)
+    path: outputRelativePath.replace('.md', '.html'),
+    category: dirname(outputRelativePath) === '.' ? 'Root' : dirname(outputRelativePath)
   };
 }
 

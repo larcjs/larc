@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Quick Start Guide - Book Building · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Quick Start Guide - Book Building">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>QUICKSTART</span>
+      </div>
+      <article class="docs-content">
+        <h1>Quick Start Guide - Book Building</h1>
+<p>Get your book built in 3 easy steps!</p>
+<h2>1️⃣ Install Dependencies (One Time)</h2>
+<h3>macOS</h3>
+<pre><code class="language-bash"># Install Homebrew if you don&#039;t have it
+/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;
+
+# Install Pandoc and LaTeX
+brew install pandoc
+brew install --cask mactex-no-gui
+
+# Add LaTeX to your PATH
+echo &#039;export PATH=&quot;/Library/TeX/texbin:$PATH&quot;&#039; &gt;&gt; ~/.zshrc
+source ~/.zshrc</code></pre>
+<h3>Linux (Ubuntu/Debian)</h3>
+<pre><code class="language-bash">sudo apt-get update
+sudo apt-get install -y pandoc texlive-xetex texlive-latex-extra</code></pre>
+<h3>Windows (WSL or native)</h3>
+<pre><code class="language-bash"># Using Chocolatey
+choco install pandoc
+choco install miktex
+
+# Or download installers:
+# Pandoc: https://pandoc.org/installing.html
+# MiKTeX: https://miktex.org/download</code></pre>
+<h2>2️⃣ Build the Book</h2>
+<h3>Option A: Using the Shell Script (Recommended)</h3>
+<pre><code class="language-bash">cd /Users/cdr/Projects/larc-repos/docs/books/building-with-larc
+
+# Build everything (HTML, PDF, EPUB)
+./build-book.sh
+
+# Or build specific formats
+./build-book.sh html
+./build-book.sh pdf
+./build-book.sh epub</code></pre>
+<h3>Option B: Using Make</h3>
+<pre><code class="language-bash">cd /Users/cdr/Projects/larc-repos/docs/books/building-with-larc
+
+# Build everything
+make
+
+# Or specific formats
+make html
+make pdf
+make epub
+
+# Build and open
+make html view</code></pre>
+<h3>Option C: Using npm</h3>
+<pre><code class="language-bash">cd /Users/cdr/Projects/larc-repos/docs/books/building-with-larc
+
+# Build everything
+npm run build
+
+# Or specific formats
+npm run build:html
+npm run build:pdf
+npm run build:epub
+
+# Build and open
+npm run build:html &amp;&amp; npm run view:html</code></pre>
+<h2>3️⃣ View Your Book</h2>
+<p>The built files are in the <code>output/</code> directory:</p>
+<pre><code class="language-bash"># Open HTML in browser
+open output/html/building-with-larc.html
+
+# Open PDF
+open output/pdf/building-with-larc.pdf
+
+# Open EPUB (opens in your default e-reader)
+open output/epub/building-with-larc.epub</code></pre>
+<h2>That's It! 🎉</h2>
+<p>You now have your book in three formats:</p>
+<ul><li>📄 <strong>HTML</strong> - Web-friendly, syntax highlighted, with table of contents</li>
+<li>📕 <strong>PDF</strong> - Print-ready, professionally formatted</li>
+<li>📱 <strong>EPUB</strong> - E-reader compatible (Kindle, iBooks, etc.)</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>"Command not found: pandoc"</h3>
+<p>Install Pandoc:
+<pre><code class="language-bash">brew install pandoc</code></pre></p>
+<h3>"Command not found: pdflatex"</h3>
+<p>Install LaTeX:
+<pre><code class="language-bash">brew install --cask mactex-no-gui</code></pre></p>
+<p>Then add to PATH:
+<pre><code class="language-bash">export PATH=&quot;/Library/TeX/texbin:$PATH&quot;</code></pre></p>
+<h3>Build fails with LaTeX errors</h3>
+<p>Try installing Prince XML for better PDF generation:</p>
+<ul><li>Download from: https://www.princexml.com/</li>
+<li>The script will automatically use it if available</li>
+</ul>
+<h3>Permission denied</h3>
+<p>Make the script executable:
+<pre><code class="language-bash">chmod +x build-book.sh</code></pre></p>
+<h2>Next Steps</h2>
+<ul><li><strong>Customize styling</strong>: Edit <code>book-style.css</code> after first build</li>
+<li><strong>Add cover image</strong>: Place <code>cover.png</code> in the book directory</li>
+<li><strong>Read BUILD.md</strong>: For advanced options and customization</li>
+<li><strong>Check README.md</strong>: For complete book documentation</li>
+</ul>
+<h2>Build Times</h2>
+<p>Typical build times on a modern Mac:</p>
+<ul><li>HTML: ~2 seconds</li>
+<li>PDF: ~25 seconds (15 seconds with Prince XML)</li>
+<li>EPUB: ~4 seconds</li>
+<li><strong>All formats: ~30 seconds</strong></li>
+</ul>
+<h2>Getting Help</h2>
+<li>Check <code>BUILD.md</code> for detailed documentation</li>
+<li>Run <code>./build-book.sh --help</code> (coming soon)</li>
+<li>Check for error messages in script output</li>
+<li>Verify dependencies are installed correctly</li>
+<h2>Pro Tips</h2>
+<p>💡 <strong>Watch mode</strong>: Rebuild HTML automatically on changes (requires fswatch)
+<pre><code class="language-bash">npm run watch</code></pre></p>
+<p>💡 <strong>Quick rebuild</strong>: HTML builds are fast, perfect for iterating
+<pre><code class="language-bash">make html view</code></pre></p>
+<p>💡 <strong>Custom CSS</strong>: Modify <code>book-style.css</code> to change appearance
+<pre><code class="language-bash"># After first build, edit:
+nano book-style.css
+make html view</code></pre></p>
+<p>💡 <strong>Partial builds</strong>: Edit <code>build/book-order.txt</code> to build only specific chapters</p>
+<hr>
+<strong>Happy Publishing! 📚</strong>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/building-with-larc/QUICKSTART.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

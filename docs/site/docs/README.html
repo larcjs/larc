@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LARC · PAN Documentation</title>
-  <meta name="description" content="PAN (Page Area Network) Documentation - LARC">
+  <title>LARC Documentation · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Documentation">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,257 +40,80 @@
 
     <main class="docs-main">
       <div class="docs-breadcrumb">
-        <a href="../index.html">Home</a> / <span>README</span>
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <span>README</span>
       </div>
       <article class="docs-content">
-        <h1>LARC</h1>
-<strong>Lightweight Asynchronous Relay Core</strong> - A minimal, message-based framework for building reactive web applications with zero dependencies.
-<a href="https://img.shields.io/npm/v/@larcjs/core?label=%40larcjs%2Fcore&color=blue">![npm version</a>](https://www.npmjs.com/package/@larcjs/core)
-<a href="https://img.shields.io/npm/v/@larcjs/ui?label=%40larcjs%2Fcomponents&color=blue">![npm version</a>](https://www.npmjs.com/package/@larcjs/ui)
-<a href="https://img.shields.io/npm/dm/@larcjs/core?label=downloads">![npm downloads</a>](https://www.npmjs.com/package/@larcjs/core)
-<a href="https://github.com/larcjs/larc/actions/workflows/core-tests.yml/badge.svg">![CI Status</a>](https://github.com/larcjs/larc/actions)
-<a href="https://img.shields.io/badge/License-MIT-yellow.svg">![License: MIT</a>](https://opensource.org/licenses/MIT)
-<a href="https://img.shields.io/badge/PRs-welcome-brightgreen.svg">![PRs Welcome</a>](./CONTRIBUTING.md)
-<h2>📦 Using LARC in Your App</h2>
-<p>LARC provides a lightweight messaging bus and component library for building modern web applications. Perfect for microfront ends, event-driven architectures, and composable UIs.</p>
-<h3>Installation</h3>
-<pre><code class="language-bash"># Core messaging bus (required)
-npm install @larcjs/core
-
-# Optional: UI component library
-npm install @larcjs/ui
-
-# Or start with the lightweight version (9KB)
-npm install @larcjs/core-lite</code></pre>
-<h3>Quick Start</h3>
-<pre><code class="language-html">&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;title&gt;My LARC App&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;!-- Include the PAN bus --&gt;
-  &lt;pan-bus debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;
-
-  &lt;!-- Your content here --&gt;
-  &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
-
-  &lt;script type=&quot;module&quot;&gt;
-    import { PanClient } from &#039;@larcjs/core&#039;;
-
-    const client = new PanClient();
-
-    // Subscribe to messages
-    client.subscribe(&#039;user.login&#039;, (msg) =&gt; {
-      console.log(&#039;User logged in:&#039;, msg.data);
-    });
-
-    // Publish messages
-    client.publish({
-      topic: &#039;user.login&#039;,
-      data: { username: &#039;alice&#039;, timestamp: Date.now() }
-    });
-  &lt;/script&gt;
-&lt;/body&gt;
-&lt;/html&gt;</code></pre>
-<h3>Package Overview</h3>
-<strong>Core Packages:</strong>
-<ul><li><strong><code>@larcjs/core</code></strong> (v2.0.0) - Full-featured messaging bus with routing and debug tools</li>
-<li><strong><code>@larcjs/core-lite</code></strong> (v2.0.0) - Lightweight 9KB version (perfect for production) ⭐</li>
-<li><strong><code>@larcjs/ui</code></strong> (v2.0.0) - UI component library</li>
+        <h1>LARC Documentation</h1>
+<p>This directory contains all documentation for the LARC project.</p>
+<h2>Directory Structure</h2>
+<pre><code class="language-plaintext">docs/
+├── README.md              # This file
+├── CHANGELOG.md           # Project changelog
+│
+├── guides/                # User-facing how-to guides
+│   ├── QUICK-START.md     # Getting started guide
+│   ├── MIGRATION.md       # Migration guide
+│   ├── TROUBLESHOOTING.md # Common issues and solutions
+│   ├── PACKAGES.md        # Package documentation
+│   └── BUILD-PROCESS.md   # Build system guide
+│
+├── reference/             # API &amp; Technical reference
+│   ├── API-REFERENCE.md   # Complete API documentation
+│   ├── API-STABILITY.md   # API stability commitments
+│   ├── STATE-MANAGEMENT.md# State management patterns
+│   ├── PERFORMANCE-OPTIMIZATION.md
+│   └── BROWSER-COMPATIBILITY.md
+│
+├── specs/                 # Specifications
+│   └── SEMVER.md          # Semantic versioning policy
+│
+├── roadmap/               # Project planning
+│   ├── PLAN.md            # Current development plan
+│   ├── DEVELOPMENT-PLAN.md
+│   └── PRODUCTION_ROADMAP.md
+│
+├── books/                 # Long-form documentation
+│   ├── learning-larc/     # Tutorial-style book
+│   └── building-with-larc/# Comprehensive reference manual
+│
+├── processes/             # Internal development processes
+│   ├── LAUNCH_CHECKLIST.md
+│   ├── SUBMODULE-WORKFLOW.md
+│   └── ...
+│
+├── migration/             # Migration-related docs
+│
+├── site/                  # Documentation website source
+│
+└── archive/               # Historical status files
+    └── 2024/              # Archived 2024 session notes</code></pre>
+<h2>Books</h2>
+<h3>Learning LARC</h3>
+A narrative, tutorial-style introduction to LARC. Start here if you're new.
+<ul><li>Location: <code>books/learning-larc/</code></li>
+<li>Build: <code>cd books/learning-larc && ./build-book.sh</code></li>
 </ul>
-<strong>Add-ons:</strong>
-<ul><li><strong><code>@larcjs/core-routing</code></strong> (v2.0.0) - Dynamic message routing (8KB)</li>
-<li><strong><code>@larcjs/core-debug</code></strong> (v2.0.0) - Debug and tracing tools (3KB)</li>
+<h3>Building with LARC</h3>
+A comprehensive technical reference manual. Use this as a desk reference.
+<ul><li>Location: <code>books/building-with-larc/</code></li>
+<li>Build: <code>cd books/building-with-larc && ./build-book.sh</code></li>
 </ul>
-<strong>Framework Integrations:</strong>
-<ul><li><strong><code>@larcjs/react-adapter</code></strong> - React hooks for PAN bus</li>
-<li><strong><code>create-larc-app</code></strong> - CLI for scaffolding new projects</li>
+<h2>Quick Links</h2>
+<ul><li><strong>Getting Started</strong>: <a href="guides/QUICK-START.md">guides/QUICK-START.md</a></li>
+<li><strong>API Reference</strong>: <a href="reference/API-REFERENCE.md">reference/API-REFERENCE.md</a></li>
+<li><strong>Migration Guide</strong>: <a href="guides/MIGRATION.md">guides/MIGRATION.md</a></li>
+<li><strong>Troubleshooting</strong>: <a href="guides/TROUBLESHOOTING.md">guides/TROUBLESHOOTING.md</a></li>
 </ul>
-<strong>TypeScript Support:</strong>
-<ul><li><strong><code>@larcjs/core-types</code></strong> - Type definitions for @larcjs/core</li>
-<li><strong><code>@larcjs/ui-types</code></strong> - Type definitions for @larcjs/ui</li>
-</ul>
-<h3>Documentation</h3>
-<ul><li>📖 <a href="https://larcjs.com">Full Documentation</a></li>
-<li>🚀 <a href="./docs/guides/QUICK-START-GUIDE.md">Getting Started Guide</a></li>
-<li>📚 <a href="./docs/API-REFERENCE.md">API Reference</a></li>
-<li>💡 <a href="https://larcjs.github.io/larc/examples/">Examples</a></li>
-<li>❓ <a href="./docs/guides/HN_FAQ.md">FAQ</a></li>
-</ul>
-<hr>
-<h2>🛠️ Developing LARC Locally</h2>
-<p>This section is for contributors who want to work on LARC itself.</p>
-<h3>Prerequisites</h3>
-<ul><li>Node.js >= 18.0.0</li>
-<li>Git</li>
-</ul>
-<h3>Setup</h3>
-<pre><code class="language-bash"># Clone the repository
-git clone https://github.com/larcjs/larc.git
-cd larc
-
-# Install all dependencies (npm workspaces)
-npm install
-
-# Or use pnpm if you prefer
-pnpm install</code></pre>
-<h3>Repository Structure</h3>
-<pre><code class="language-plaintext">larc/
-├── packages/                   → Published packages (npm workspaces)
-│   ├── core/                   → @larcjs/core
-│   ├── components/             → @larcjs/ui
-│   ├── core-lite/              → @larcjs/core-lite (9KB)
-│   ├── core-routing/           → @larcjs/core-routing
-│   ├── core-debug/             → @larcjs/core-debug
-│   ├── core-types/             → TypeScript types
-│   ├── components-types/       → TypeScript types
-│   ├── apps/                   → Demo applications
-│   ├── examples/               → Code examples
-│   └── devtools/               → Chrome DevTools extension
-├── cli/                        → create-larc-app
-├── react-adapter/              → React integration
-├── registry/                   → Component registry
-├── vscode-extension/           → VS Code extension
-├── docs/                       → Documentation &amp; guides
-└── playground/                 → Interactive component explorer</code></pre>
-<h3>Development Workflows</h3>
-<p>#### Working on Core or Components</p>
-<p>The core runtime and component library are in the packages directory:</p>
-<pre><code class="language-bash"># Work on core
-cd packages/core
-npm install
-npm run build
-npm test
-
-# Work on components
-cd packages/ui
-npm install
-npm run build
-npm test</code></pre>
-<p>#### Working on Packages</p>
-<pre><code class="language-bash"># Work on core-lite
-cd packages/core-lite
-# Make changes...
-npm run build:minify
-
-# Work on types
-cd packages/core-types
-# Edit type definitions...</code></pre>
-<p>#### Using npm Workspaces</p>
-<p>Run commands across all workspaces:</p>
-<pre><code class="language-bash"># Build all packages
-npm run build
-
-# Test all packages
-npm run test
-
-# Run specific workspace
-npm run build --workspace @larcjs/core
-npm run test --workspace @larcjs/ui
-npm run dev --workspace @larcjs/site</code></pre>
-<p>#### Using pnpm (Alternative)</p>
-<p>If you prefer pnpm, all the original scripts are preserved:</p>
-<pre><code class="language-bash"># Build all packages
-pnpm run pnpm:build
-
-# Test all packages
-pnpm run pnpm:test
-
-# Dev mode (parallel)
-pnpm run pnpm:dev</code></pre>
-<h3>Publishing Packages</h3>
-<p>Packages are published to npm from the monorepo:</p>
-<pre><code class="language-bash"># Publish a specific package
-cd packages/core-lite
-npm publish
-
-# Publish core or components
-cd packages/core
-npm publish
-
-cd packages/ui
-npm publish</code></pre>
-<h3>Running Examples</h3>
-<pre><code class="language-bash"># Serve examples locally
-cd packages/examples
-python3 -m http.server 8888
-# Visit http://localhost:8888</code></pre>
-<h3>Building Documentation</h3>
-<pre><code class="language-bash"># Build and serve docs
-npm run dev --workspace @larcjs/site
-
-# Or manually
-cd site
-npm run build
-npm run serve</code></pre>
-<h3>Testing</h3>
-<pre><code class="language-bash"># Test everything
-npm test
-
-# Test specific packages
-npm run test:core
-npm run test:components
-
-# Test with coverage
-cd packages/core
-npm run test:coverage</code></pre>
-<h2>🤝 Contributing</h2>
-<p>We welcome contributions! Here's how to get started:</p>
-<li><strong>Fork</strong> the repository</li>
-<li><strong>Clone</strong> your fork: <code>git clone https://github.com/YOUR-USERNAME/larc.git</code></li>
-<li><strong>Install</strong> dependencies: <code>npm install</code></li>
-<li><strong>Create</strong> a feature branch: <code>git checkout -b feature/my-feature</code></li>
-<li><strong>Make</strong> your changes and add tests</li>
-<li><strong>Test</strong> your changes: <code>npm test</code></li>
-<li><strong>Commit</strong> with clear messages</li>
-<li><strong>Push</strong> to your fork</li>
-<li><strong>Submit</strong> a pull request</li>
-<p>See <a href="./CONTRIBUTING.md">CONTRIBUTING.md</a> for detailed guidelines.</p>
-<h2>📋 Available Scripts</h2>
-<p>| Script | Description |
-|--------|-------------|
-| <code>npm run build</code> | Build all workspace packages |
-| <code>npm run test</code> | Run tests across all packages |
-| <code>npm run dev</code> | Start development mode |
-| <code>npm run lint</code> | Lint all packages |
-| <code>npm run serve</code> | Serve examples on port 8000 |
-| <code>npm run build:core</code> | Build only @larcjs/core |
-| <code>npm run build:components</code> | Build only @larcjs/ui |
-| <code>npm run test:core</code> | Test only @larcjs/core |
-| <code>npm run dev:site</code> | Run documentation site |</p>
-<p>For pnpm users, all scripts are available with the <code>pnpm:</code> prefix:
-<ul><li><code>npm run pnpm:build</code>, <code>npm run pnpm:test</code>, etc.</li>
-</ul>
-<h2>📦 Published Packages</h2></p>
-<p>These packages are published to npm:</p>
-<p>| Package | Version | Description |
-|---------|---------|-------------|
-| <a href="https://npmjs.com/package/@larcjs/core">@larcjs/core</a> | 2.0.0 | Full-featured messaging bus |
-| <a href="https://npmjs.com/package/@larcjs/core-lite">@larcjs/core-lite</a> | 2.0.0 | Lightweight 9KB version ⭐ |
-| <a href="https://npmjs.com/package/@larcjs/ui">@larcjs/ui</a> | 2.0.0 | UI component library |
-| <a href="https://npmjs.com/package/@larcjs/core-routing">@larcjs/core-routing</a> | 2.0.0 | Message routing add-on |
-| <a href="https://npmjs.com/package/@larcjs/core-debug">@larcjs/core-debug</a> | 2.0.0 | Debug tools add-on |
-| <a href="https://npmjs.com/package/@larcjs/core-types">@larcjs/core-types</a> | 2.0.0 | TypeScript types |
-| <a href="https://npmjs.com/package/@larcjs/ui-types">@larcjs/ui-types</a> | 2.0.0 | TypeScript types |
-| <a href="https://npmjs.com/package/@larcjs/react-adapter">@larcjs/react-adapter</a> | 2.0.0 | React integration |
-| <a href="https://npmjs.com/package/create-larc-app">create-larc-app</a> | 2.0.0 | Project scaffolding CLI |</p>
-<h2>🔗 Links</h2>
-<ul><li><strong>Website</strong>: <a href="https://larcjs.com">larcjs.com</a></li>
-<li><strong>Documentation</strong>: <a href="https://larcjs.github.io/larc/docs/site/">larcjs.github.io/larc</a></li>
-<li><strong>Examples</strong>: <a href="https://larcjs.github.io/larc/examples/">larcjs.github.io/larc/examples</a></li>
-<li><strong>npm Organization</strong>: <a href="https://www.npmjs.com/org/larcjs">@larcjs</a></li>
-<li><strong>GitHub</strong>: <a href="https://github.com/larcjs">github.com/larcjs</a></li>
-<li><strong>Discord</strong>: <a href="https://discord.gg/zjUPsWTu">Join our Discord</a></li>
-</ul>
-<h2>📄 License</h2>
-<p>MIT © LARC Contributors</p>
-<hr>
-<strong>Note:</strong> This repository uses npm workspaces for monorepo management. All packages are published under the <code>@larcjs</code> npm organization.
-<strong>Demo</strong>: Check out the <a href="./docs/wiki-explorer.html">Wiki Explorer</a> - a live demo showcasing LARC's tree navigation and markdown rendering components.
+<h2>Contributing to Documentation</h2>
+<li>User-facing guides go in <code>guides/</code></li>
+<li>Technical reference goes in <code>reference/</code></li>
+<li>Specifications go in <code>specs/</code></li>
+<li>Planning documents go in <code>roadmap/</code></li>
+<li>Historical/status files go in <code>archive/YYYY/</code></li>
+<p>Please follow the existing naming conventions (UPPERCASE-WITH-DASHES.md).</p>
       </article>
       <footer class="docs-footer">
-        <a href="https://github.com/chrisrobison/pan/edit/main/README.md" target="_blank">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/README.md" target="_blank">
           Edit this page on GitHub
         </a>
       </footer>

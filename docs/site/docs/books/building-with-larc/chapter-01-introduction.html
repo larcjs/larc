@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Introduction · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Introduction">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>chapter-01-introduction</span>
+      </div>
+      <article class="docs-content">
+        <h1>Introduction</h1>
+<p>Welcome to <em>Building with LARC: A Reference Manual</em>, your comprehensive guide to the Lightweight Asynchronous Relay Core framework. If you're holding this book (or reading it on a screen, as modern humans do), you're about to dive into one of the most refreshingly simple yet surprisingly powerful approaches to building web applications. No, we're not overselling it. Well, maybe a little. But stick with us.</p>
+<h2>What Is LARC?</h2>
+<p>LARC (Lightweight Asynchronous Relay Core) is a zero-build, browser-native web component framework built around a message-passing architecture called PAN (Page Area Network). If that sentence made you think "Wait, another JavaScript framework?" — we get it. But LARC is different in ways that matter.</p>
+<p>Here's the elevator pitch: LARC gives you the power of modern component-based architecture without requiring build tools, dependency hell, or sacrificing your weekend to webpack configuration. It's built entirely on web standards (Custom Elements, Shadow DOM, ES Modules), uses a DOM-native pub/sub messaging system to coordinate components, and can be added to any project with a single <code><script></code> tag.</p>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;/src/pan.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;!-- That&#039;s it. You&#039;re done. Now use components: --&gt;
+&lt;pan-card title=&quot;Hello World&quot;&gt;
+  &lt;pan-button&gt;Click me&lt;/pan-button&gt;
+&lt;/pan-card&gt;</code></pre>
+<p>The secret sauce is the PAN bus — a lightweight messaging backbone inspired by the CAN (Controller Area Network) buses found in automobiles. Just as a car's sensors, motors, and computers communicate over a shared bus without knowing about each other's internals, LARC components coordinate through published messages and subscriptions. This solves the notorious "Web Component silo problem" where components can't easily communicate without tight coupling.</p>
+<p>Think of it this way: Web Components give you 80% of what you need to build modern applications. LARC provides the missing 20% — the coordination layer, auto-loading system, and state management infrastructure that makes Web Components genuinely practical for real-world applications.</p>
+<h3>The Philosophy in Action</h3>
+<p>LARC embraces a "zero-build development, optimized production" philosophy. During development, you write code and refresh your browser — no webpack watch, no hot-module replacement gymnastics, no waiting for recompilation. In production, you can still use your favorite build tools to optimize bundles, but you're not <em>required</em> to.</p>
+<p>This isn't about being anti-tooling or nostalgic for the "good old days." Modern build tools solve real problems at scale. LARC simply argues they shouldn't be mandatory for every project, especially during the exploratory and iterative phases of development. The browser has evolved significantly since 2015 — it's time we trusted it to do what it does well.</p>
+<h2>Who Should Use This Book</h2>
+<p>This book is written for <strong>experienced programmers</strong> who understand web development fundamentals and want a comprehensive reference for building applications with LARC. You should be comfortable with:</p>
+<ul><li><strong>JavaScript</strong> (ES6+): You know your promises from your async/await, understand modules, destructuring, and arrow functions. You don't need to be a TC39 committee member, but closures shouldn't make you nervous.</li>
+</ul>
+<ul><li><strong>HTML and CSS</strong>: You can write semantic markup and understand the box model. Shadow DOM will be explained, but the basics should be familiar territory.</li>
+</ul>
+<ul><li><strong>Web Components</strong>: Some exposure to Custom Elements and Shadow DOM is helpful but not required. We'll cover what you need, but won't re-teach the entire Web Components spec.</li>
+</ul>
+<ul><li><strong>Basic HTTP and REST principles</strong>: You know what GET and POST mean, understand APIs at a conceptual level, and have integrated with a backend before.</li>
+</ul>
+<ul><li><strong>Command-line basics</strong>: You can start a local development server (whether that's Python's <code>http.server</code>, Node's <code>http-server</code>, or something else) and navigate your file system.</li>
+</ul>
+<h3>Who This Book Is NOT For</h3>
+<p>If you're completely new to web development, start with <em>Learning LARC</em> (more on that shortly). This reference manual assumes you already know how to build web applications and want to learn LARC specifically. We won't explain what the DOM is or why JavaScript runs in browsers.</p>
+<p>Similarly, if you're looking for a gentle tutorial that holds your hand through your first "Hello World," the companion book <em>Learning LARC</em> is a better starting point. This manual is comprehensive, thorough, and occasionally exhausting in its detail — perfect for reference, less ideal for bedtime reading.</p>
+<h2>How to Use This Book</h2>
+<em>Building with LARC</em> is structured as a <strong>reference manual</strong>, not a tutorial. Think of it like the Perl Programming books or the classic O'Reilly references: comprehensive, authoritative, and designed for looking things up more than reading cover-to-cover (though you're welcome to try — we won't judge).
+<h3>Two Ways to Read</h3>
+<strong>As a Reference</strong>: Jump directly to the chapter covering your current problem. Building a file management system? Chapter 14 has you covered. Need to implement authentication? Chapter 12 is your friend. Each chapter is relatively self-contained, with cross-references when deeper context is needed.
+<strong>As a Deep Dive</strong>: Read Part I (Foundations) to understand LARC's philosophy and architecture, then work through Part II (Building Applications) in order to see how the pieces fit together. Part III (Component Reference) becomes your API documentation, and Part IV (Appendices) serves as quick-reference material.
+<h3>What's Inside</h3>
+<p>The book is organized into four parts:</p>
+<strong>Part I: Foundations</strong> (Chapters 1-5) covers the conceptual underpinnings: what LARC is, why it exists, how the PAN messaging architecture works, and how to set up your development environment. If you're new to LARC, read this first.
+<strong>Part II: Building Applications</strong> (Chapters 6-20) is where the rubber meets the road. These task-oriented chapters show you how to accomplish specific goals: managing state, handling routing, fetching data, implementing authentication, optimizing performance, and deploying to production. Each chapter follows a consistent structure: problem statement, concepts, step-by-step implementation, complete example, variations, troubleshooting, and best practices.
+<strong>Part III: Component Reference</strong> (Chapters 21-25) provides exhaustive documentation for every core LARC component. Think of it as your API reference — detailed attribute tables, method signatures, event specifications, and practical examples for components like <code>pan-bus</code>, <code>pan-store</code>, <code>pan-routes</code>, <code>pan-markdown-editor</code>, and dozens more.
+<strong>Part IV: Appendices</strong> (A-G) contains supporting material: message topic conventions, event envelope specifications, configuration options, migration guides, code recipes, a glossary, and resource links.
+<h3>Code Conventions</h3>
+<p>Throughout this book, you'll see code examples in various formats:</p>
+<strong>Inline code</strong> appears <code>like this</code> for short snippets, commands, file names, and HTML attributes.
+<strong>Block code</strong> appears in fenced sections with syntax highlighting:
+<pre><code class="language-javascript">// JavaScript examples look like this
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.textContent = &#039;Hello from LARC!&#039;;
+  }
+}</code></pre>
+<pre><code class="language-html">&lt;!-- HTML examples look like this --&gt;
+&lt;pan-card title=&quot;Example&quot;&gt;
+  &lt;p&gt;Component content goes here&lt;/p&gt;
+&lt;/pan-card&gt;</code></pre>
+<strong>File paths</strong> are shown in UNIX format (<code>/my-component.mjs</code>) but translate naturally to Windows (<code>\src\components\my-component.mjs</code>).
+<strong>Command-line examples</strong> begin with a prompt:
+<pre><code class="language-bash">$ python3 -m http.server 8000
+$ npm install @larcjs/core</code></pre>
+<p>The <code>$</code> indicates your shell prompt — don't type it.</p>
+<h3>Typographical Conventions</h3>
+<p>This book uses standard O'Reilly conventions:</p>
+<ul><li><strong>Bold</strong> indicates new terms, emphasis, or UI elements ("click the <strong>Save</strong> button")</li>
+<li><em>Italic</em> indicates filenames, URLs, example text, or emphasis</li>
+<li><code>Constant width</code> indicates code, commands, component names, attributes, and technical terms</li>
+</ul>
+We also use special elements to highlight important information:
+<blockquote><strong>NOTE</strong>: Additional context, clarifications, or interesting tangents that won't break your code if you skip them.</blockquote>
+<blockquote><strong>WARNING</strong>: Pay attention here — this is where developers commonly make mistakes or encounter surprising behavior.</blockquote>
+<blockquote><strong>TIP</strong>: Practical advice from the trenches, often learned the hard way.</blockquote>
+<h2>Relationship to "Learning LARC"</h2>
+<p>If <em>Building with LARC</em> is the comprehensive reference manual, <em>Learning LARC</em> is its approachable older sibling — the tutorial-focused book that teaches LARC from the ground up through hands-on examples and clear explanations.</p>
+<p>The two books complement each other:</p>
+<strong>Learning LARC</strong> (the tutorial book) is organized around <strong>learning progressions</strong>. It starts with "Hello World" and gradually builds to complex, real-world applications. Each chapter introduces new concepts in a carefully scaffolded way, with exercises, quizzes, and projects that reinforce understanding. If you're new to LARC or prefer learning by doing, start there.
+<strong>Building with LARC</strong> (this book) is organized around <strong>tasks and references</strong>. It assumes you already understand the basics and want to accomplish specific goals or look up specific component APIs. It's comprehensive where <em>Learning LARC</em> is curated, exhaustive where the tutorial is selective, and reference-oriented where the tutorial is narrative-driven.
+<p>Here's a practical guideline:</p>
+<ul><li><strong>New to LARC?</strong> Start with <em>Learning LARC</em>, then return to this book for reference and advanced topics.</li>
+</ul>
+<ul><li><strong>Experienced with LARC?</strong> This book is your primary resource. Keep it on your desk (or bookmarked in your browser).</li>
+</ul>
+<ul><li><strong>Learning a specific feature?</strong> Check <em>Learning LARC</em> for tutorial coverage, then consult this book's relevant chapters for comprehensive details.</li>
+</ul>
+<ul><li><strong>Debugging or optimizing?</strong> This book's troubleshooting sections, appendices, and detailed component references are what you need.</li>
+</ul>
+Think of it like the difference between <em>Learning Perl</em> and <em>Programming Perl</em> — one teaches you the language, the other documents it thoroughly. Both are valuable, just at different times.
+<h2>Prerequisites and Assumptions</h2>
+<p>To get the most from this book, you should have:</p>
+<h3>Required Knowledge</h3>
+<li><strong>JavaScript Fundamentals</strong>: You're comfortable with modern JavaScript (ES6+), including modules, async/await, destructuring, template literals, and arrow functions. You understand scope, closures, and prototypes at least conceptually.</li>
+<li><strong>Web Development Basics</strong>: You've built websites or web applications before. You understand client-server architecture, HTTP methods, and how browsers request resources.</li>
+<li><strong>HTML/CSS</strong>: You can write semantic HTML5 and know enough CSS to style components. You don't need to be a design wizard, but you should understand selectors, specificity, and layout basics.</li>
+<li><strong>Development Environment</strong>: You can set up a local development server and use a code editor. Experience with browser DevTools (Console, Network, Elements tabs) is highly recommended.</li>
+<h3>Helpful But Not Required</h3>
+<ul><li><strong>TypeScript</strong>: LARC supports TypeScript with official type definitions (<code>@larcjs/core-types</code>), but JavaScript examples are used throughout this book for clarity and accessibility.</li>
+</ul>
+<ul><li><strong>Build Tools</strong>: While LARC is designed for zero-build development, understanding webpack, Rollup, or Vite helps when you want optimized production builds.</li>
+</ul>
+<ul><li><strong>React/Vue/Angular</strong>: Experience with component-based frameworks provides useful context for understanding LARC's architecture, but isn't necessary.</li>
+</ul>
+<ul><li><strong>Web Components APIs</strong>: We'll explain what you need about Custom Elements, Shadow DOM, and HTML Templates, but prior exposure helps.</li>
+</ul>
+<h3>What You Don't Need</h3>
+<p>You <strong>don't</strong> need to know:</p>
+<ul><li>Advanced computer science algorithms or data structures</li>
+<li>Backend programming (though integration examples are provided)</li>
+<li>DevOps or deployment infrastructure (basics are covered in Chapter 20)</li>
+<li>Browser internals or JavaScript engine implementations</li>
+</ul>
+This book meets you where experienced web developers typically are — comfortable with the fundamentals and ready to learn a new tool.
+<h3>Software Requirements</h3>
+<p>Throughout this book, examples assume you have:</p>
+<ul><li>A <strong>modern web browser</strong>: Chrome 90+, Firefox 88+, Safari 14+, or Edge 90+. Most examples work across all modern browsers, but specific features may note browser requirements.</li>
+</ul>
+<ul><li>A <strong>local development server</strong>: Any static file server works. Examples use Python's built-in HTTP server, but Node's <code>http-server</code>, PHP's built-in server, or VS Code's Live Server extension are equally valid.</li>
+</ul>
+<ul><li>A <strong>code editor</strong>: VS Code is recommended (with the LARC extension for enhanced support), but any editor with JavaScript/HTML syntax highlighting works.</li>
+</ul>
+<ul><li><strong>Git</strong> (optional): Useful for cloning examples and exploring the LARC source code.</li>
+</ul>
+No build tools, no Node.js, no npm (unless you want to install LARC from npm) — just a browser and a way to serve static files. That's the point.
+<h2>Book Conventions and Notation</h2>
+<h3>Message Topics</h3>
+<p>LARC applications communicate through the PAN bus using hierarchical topic patterns. Throughout this book, topics follow conventions:</p>
+<pre><code class="language-plaintext">namespace.entity.action</code></pre>
+<p>For example:</p>
+<ul><li><code>user.auth.login</code> — User authentication login</li>
+<li><code>cart.items.add</code> — Add item to shopping cart</li>
+<li><code>theme.changed</code> — Theme change notification</li>
+</ul>
+Wildcards are common:
+<ul><li><code>user.*</code> — All user-related messages</li>
+<li><code>*.changed</code> — All change notifications</li>
+<li><code>#</code> — All messages (use sparingly)</li>
+</ul>
+<h3>Component Naming</h3>
+<p>LARC components follow Web Component naming conventions:</p>
+<ul><li>All lowercase with hyphens: <code>pan-button</code>, <code>pan-card</code>, <code>my-custom-component</code></li>
+<li>Must contain at least one hyphen (per Web Component spec)</li>
+<li>Core LARC components start with <code>pan-</code> prefix</li>
+<li>Your components can use any prefix or no prefix</li>
+</ul>
+<h3>Attribute Syntax</h3>
+<p>Component attributes are shown in HTML as:</p>
+<pre><code class="language-html">&lt;pan-card
+  title=&quot;Card Title&quot;
+  variant=&quot;elevated&quot;
+  theme=&quot;dark&quot;&gt;</code></pre>
+<p>Boolean attributes (true when present, false when absent):</p>
+<pre><code class="language-html">&lt;pan-button disabled&gt;Can&#039;t click me&lt;/pan-button&gt;
+&lt;pan-markdown-editor readonly&gt;&lt;/pan-markdown-editor&gt;</code></pre>
+<h3>API Signatures</h3>
+<p>JavaScript APIs are documented with type annotations for clarity:</p>
+<pre><code class="language-javascript">// Method signature
+publish(topic: string, payload: any, options?: object): void
+
+// Usage example
+bus.publish(&#039;user.login&#039;, { userId: 123 });</code></pre>
+<p>These aren't real TypeScript — just pseudocode for clarity. TypeScript users should reference the official <code>@larcjs/core-types</code> package for actual type definitions.</p>
+<h3>File Paths and Imports</h3>
+<p>Example projects use a consistent structure:</p>
+<pre><code class="language-plaintext">/src/
+  /components/     # Your custom components
+  /utils/          # Helper functions
+  /styles/         # Global styles
+/core/             # LARC core (@larcjs/core)
+/ui/               # LARC components (@larcjs/ui)
+index.html         # Entry point
+larc-config.mjs    # Path configuration</code></pre>
+<p>Imports use ES6 module syntax:</p>
+<pre><code class="language-javascript">import { PanBus } from &#039;/core/pan-bus.mjs&#039;;
+import MyComponent from &#039;/my-component.mjs&#039;;</code></pre>
+<p>Production applications typically use import maps or CDN URLs (covered in Chapter 20).</p>
+<h3>Example Applications</h3>
+<p>Each chapter includes complete, runnable examples. You can:</p>
+<li><strong>Type them manually</strong> — Best for learning and retention</li>
+<li><strong>Copy from the book</strong> — Faster, still educational</li>
+<li><strong>Clone from GitHub</strong> — All examples are available at <code>github.com/larcjs/examples</code></li>
+<p>Examples are self-contained where possible, with any dependencies clearly noted.</p>
+<h2>What's Next</h2>
+<p>Now that you understand what LARC is, who this book is for, and how to use it effectively, you're ready to dive deeper. Chapter 2 explores the philosophy behind LARC — why message-passing architecture, why zero-build, and how LARC compares to other approaches. Understanding the "why" makes the "how" much clearer.</p>
+<p>If you prefer learning by doing, feel free to skip ahead to Chapter 5 (Getting Started) and return to the philosophical foundations later. We won't tell anyone.</p>
+<p>If you're the type who needs to understand principles before touching code (guilty), Chapter 2 awaits.</p>
+<p>Either way, welcome to LARC. We think you're going to like it here.</p>
+<hr>
+<em>"The web grew up. Now we get to build like it."</em>
+— Christopher Robison, Foreword to <em>Learning LARC</em>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/building-with-larc/chapter-01-introduction.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

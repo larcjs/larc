@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Event Envelope Specification · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Event Envelope Specification">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>appendix-b-event-envelope</span>
+      </div>
+      <article class="docs-content">
+        <h1>Event Envelope Specification</h1>
+<p>This appendix provides the complete specification for LARC message envelopes—the data structures that wrap every message flowing through the PAN bus. Understanding the envelope format is critical for debugging, building tooling, and understanding how the system works at a fundamental level.</p>
+<h2>Overview</h2>
+<p>Every message in LARC is wrapped in an envelope that provides metadata, routing information, and payload data. The envelope follows a simple, predictable structure that balances flexibility with consistency.</p>
+<strong>Key Characteristics:</strong>
+<ul><li>Plain JavaScript objects (no classes or prototypes)</li>
+<li>JSON-serializable (can be logged, stored, transmitted)</li>
+<li>Immutable once published (bus may add fields, but won't modify existing)</li>
+<li>Extensible through headers and custom fields</li>
+</ul>
+<h2>Message Envelope Structure</h2>
+<h3>Complete Format</h3>
+<pre><code class="language-typescript">interface PanMessage {
+  // Required fields (must be provided by publisher)
+  topic: string;
+  data: any;
+
+  // Auto-generated fields (added by bus if not provided)
+  id?: string;
+  ts?: number;
+
+  // Optional feature fields
+  retain?: boolean;
+  replyTo?: string;
+  correlationId?: string;
+  headers?: Record&lt;string, string&gt;;
+
+  // Internal/system fields (typically not used by applications)
+  clientId?: string;
+}</code></pre>
+<h3>Minimal Message</h3>
+<p>The absolute minimum required to publish a message:</p>
+<pre><code class="language-javascript">{
+  topic: &#039;users.updated&#039;,
+  data: { id: 123, name: &#039;Alice&#039; }
+}</code></pre>
+<p>The bus will enhance this to:</p>
+<pre><code class="language-javascript">{
+  topic: &#039;users.updated&#039;,
+  data: { id: 123, name: &#039;Alice&#039; },
+  id: &#039;550e8400-e29b-41d4-a716-446655440000&#039;,
+  ts: 1699564800000
+}</code></pre>
+<h2>Field Specifications</h2>
+<h3>topic (required)</h3>
+<strong>Type:</strong> <code>string</code>
+<strong>Purpose:</strong> Identifies the message type and routing destination.
+<strong>Format:</strong> Dotted notation, typically <code>resource.action.qualifier</code>
+<strong>Constraints:</strong>
+<ul><li>Must be non-empty string</li>
+<li>Lowercase letters and dots recommended</li>
+<li>Max length: 256 characters (practical limit)</li>
+<li>Pattern: <code>/^[a-z0-9.-]+$/i</code></li>
+</ul>
+<strong>Examples:</strong>
+<pre><code class="language-javascript">&#039;users.list.state&#039;
+&#039;users.item.get&#039;
+&#039;nav.goto&#039;
+&#039;ui.modal.opened&#039;
+&#039;auth.session.state&#039;</code></pre>
+<strong>Validation:</strong>
+<pre><code class="language-javascript">// Valid topics
+&#039;users.updated&#039;             [v]
+&#039;nav.goto&#039;                  [v]
+&#039;users.item.state.123&#039;      [v]
+&#039;auth.two-factor.verify&#039;    [v]
+
+// Invalid topics
+&#039;&#039;                          [x] Empty string
+&#039;users updated&#039;             [x] Contains space
+&#039;users_updated&#039;             [x] Underscore (not recommended)
+null                        [x] Not a string</code></pre>
+<strong>Reserved Patterns:</strong>
+<ul><li><code>pan:*</code> - Reserved for PAN bus internals</li>
+<li><code>sys:*</code> - Reserved for system-level topics</li>
+</ul>
+<h3>data (required)</h3>
+<strong>Type:</strong> <code>any</code> (must be JSON-serializable)
+<strong>Purpose:</strong> Message payload—the actual information being communicated.
+<strong>Constraints:</strong>
+<ul><li>Must be JSON-serializable (no functions, circular refs, DOM nodes)</li>
+<li>Recommended max size: 512KB (configurable via <code>max-payload-size</code>)</li>
+<li>Can be any valid JSON type: object, array, string, number, boolean, null</li>
+</ul>
+<strong>Supported Types:</strong>
+<pre><code class="language-javascript">// Object
+{ id: 123, name: &#039;Alice&#039;, active: true }
+
+// Array
+[{ id: 1 }, { id: 2 }, { id: 3 }]
+
+// String
+&quot;Hello, world&quot;
+
+// Number
+42
+3.14159
+
+// Boolean
+true
+false
+
+// Null
+null</code></pre>
+<strong>Invalid Data:</strong>
+<pre><code class="language-javascript">// Functions
+data: () =&gt; console.log(&#039;hi&#039;)    [x]
+
+// undefined (use null instead)
+data: undefined                  [x]
+
+// Circular references
+const obj = {};
+obj.self = obj;
+data: obj                        [x]
+
+// DOM nodes
+data: document.body              [x]</code></pre>
+<strong>Best Practices:</strong>
+<pre><code class="language-javascript">// Good: structured data
+{
+  topic: &#039;users.item.updated&#039;,
+  data: {
+    id: 123,
+    name: &#039;Alice&#039;,
+    email: &#039;alice@example.com&#039;,
+    updatedAt: Date.now()
+  }
+}
+
+// Good: minimal data
+{
+  topic: &#039;users.item.select&#039;,
+  data: { id: 123 }
+}
+
+// Good: null for no data
+{
+  topic: &#039;ui.modal.close&#039;,
+  data: null
+}
+
+// Acceptable: primitive data
+{
+  topic: &#039;counter.value&#039;,
+  data: 42
+}
+
+// Bad: empty object when null is better
+{
+  topic: &#039;ui.modal.close&#039;,
+  data: {}  // Use null instead
+}</code></pre>
+<h3>id (optional, auto-generated)</h3>
+<strong>Type:</strong> <code>string</code> (UUID v4)
+<strong>Purpose:</strong> Unique identifier for message deduplication, tracking, and correlation.
+<strong>Auto-generation:</strong> If not provided, bus generates a UUID v4.
+<strong>Format:</strong> Standard UUID format: <code>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">&#039;550e8400-e29b-41d4-a716-446655440000&#039;
+&#039;7c9e6679-7425-40de-944b-e07fc1f90ae7&#039;</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Let bus generate (recommended)
+client.publish({
+  topic: &#039;users.updated&#039;,
+  data: { id: 123 }
+  // id will be auto-generated
+});
+
+// Provide custom ID (rare)
+client.publish({
+  topic: &#039;users.updated&#039;,
+  data: { id: 123 },
+  id: &#039;user-update-123-2024-11-01&#039;
+});</code></pre>
+<strong>Use Cases:</strong>
+<ul><li>Deduplication (detect duplicate messages)</li>
+<li>Message tracking in logs</li>
+<li>Correlation across systems</li>
+<li>Idempotency keys</li>
+</ul>
+<h3>ts (optional, auto-generated)</h3>
+<strong>Type:</strong> <code>number</code> (Unix timestamp in milliseconds)
+<strong>Purpose:</strong> Message creation timestamp for ordering and time-based filtering.
+<strong>Auto-generation:</strong> If not provided, bus adds <code>Date.now()</code>.
+<strong>Format:</strong> Milliseconds since Unix epoch (January 1, 1970 00:00:00 UTC)
+<strong>Example:</strong>
+<pre><code class="language-javascript">1699564800000  // 2023-11-10 00:00:00 UTC
+1699651200000  // 2023-11-11 00:00:00 UTC</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Let bus generate (recommended)
+client.publish({
+  topic: &#039;users.updated&#039;,
+  data: { id: 123 }
+  // ts will be auto-generated
+});
+
+// Provide custom timestamp (rare)
+client.publish({
+  topic: &#039;users.updated&#039;,
+  data: { id: 123 },
+  ts: Date.parse(&#039;2024-11-01T12:00:00Z&#039;)
+});</code></pre>
+<strong>Use Cases:</strong>
+<ul><li>Message ordering</li>
+<li>Time-based filtering</li>
+<li>Analytics and logging</li>
+<li>Determining message freshness</li>
+</ul>
+<strong>Working with Timestamps:</strong>
+<pre><code class="language-javascript">// Convert to Date object
+const date = new Date(msg.ts);
+
+// Format for display
+const formatted = new Date(msg.ts).toISOString();
+// &quot;2024-11-01T12:00:00.000Z&quot;
+
+// Check message age
+const ageMs = Date.now() - msg.ts;
+const ageSeconds = ageMs / 1000;</code></pre>
+<h3>retain (optional)</h3>
+<strong>Type:</strong> <code>boolean</code>
+<strong>Purpose:</strong> Indicates message should be retained by bus and replayed to new subscribers.
+<strong>Default:</strong> <code>false</code>
+<strong>Constraints:</strong>
+<ul><li>Only one message retained per topic (last value wins)</li>
+<li>Subject to LRU eviction if bus retention limit exceeded</li>
+<li>Bus default max retained: 1000 messages (configurable via <code>max-retained</code>)</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Publish retained state
+client.publish({
+  topic: &#039;app.theme.state&#039;,
+  data: { mode: &#039;dark&#039; },
+  retain: true
+});
+
+// Later subscriber receives immediately
+client.subscribe(&#039;app.theme.state&#039;, (msg) =&gt; {
+  applyTheme(msg.data);
+}, { retained: true });</code></pre>
+<strong>When to Use:</strong>
+<ul><li>Application state (theme, language, configuration)</li>
+<li>List data (current user list, current items)</li>
+<li>Session information (current user, authentication)</li>
+<li>Last known values (device status, connection state)</li>
+</ul>
+<strong>When NOT to Use:</strong>
+<ul><li>Events (one-time notifications)</li>
+<li>High-frequency updates (mouse movements, scroll events)</li>
+<li>Temporary notifications (toasts, alerts)</li>
+<li>Bulk data (large lists, file contents)</li>
+</ul>
+<h3>replyTo (optional)</h3>
+<strong>Type:</strong> <code>string</code> (topic name)
+<strong>Purpose:</strong> Specifies topic where reply should be sent (request/reply pattern).
+<strong>Auto-generation:</strong> Auto-generated by <code>client.request()</code> method.
+<strong>Format:</strong> Typically <code>pan:$reply:${clientId}:${correlationId}</code>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Manually set replyTo
+client.publish({
+  topic: &#039;users.item.get&#039;,
+  data: { id: 123 },
+  replyTo: &#039;users.item.get.reply.abc123&#039;,
+  correlationId: &#039;req-001&#039;
+});
+
+// Subscribe to reply
+client.subscribe(&#039;users.item.get.reply.abc123&#039;, (msg) =&gt; {
+  console.log(&#039;Response:&#039;, msg.data);
+});
+
+// Better: use client.request() (auto-generates replyTo)
+const response = await client.request(&#039;users.item.get&#039;, { id: 123 });</code></pre>
+<strong>Responder Pattern:</strong>
+<pre><code class="language-javascript">client.subscribe(&#039;users.item.get&#039;, async (msg) =&gt; {
+  // Check if reply expected
+  if (!msg.replyTo) return;
+
+  const user = await database.getUser(msg.data.id);
+
+  // Send reply to specified topic
+  client.publish({
+    topic: msg.replyTo,
+    data: user ? { ok: true, item: user } : { ok: false, error: &#039;Not found&#039; },
+    correlationId: msg.correlationId
+  });
+});</code></pre>
+<h3>correlationId (optional)</h3>
+<strong>Type:</strong> <code>string</code> (UUID or custom identifier)
+<strong>Purpose:</strong> Correlates replies with original requests in request/reply pattern.
+<strong>Auto-generation:</strong> Auto-generated by <code>client.request()</code> method.
+<strong>Format:</strong> Typically UUID, but can be any string identifier.
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Manual correlation (rare)
+const corrId = crypto.randomUUID();
+
+client.publish({
+  topic: &#039;users.item.get&#039;,
+  data: { id: 123 },
+  replyTo: &#039;users.reply&#039;,
+  correlationId: corrId
+});
+
+client.subscribe(&#039;users.reply&#039;, (msg) =&gt; {
+  if (msg.correlationId === corrId) {
+    console.log(&#039;Our reply:&#039;, msg.data);
+  }
+});
+
+// Better: use client.request() (auto-correlates)
+const response = await client.request(&#039;users.item.get&#039;, { id: 123 });</code></pre>
+<strong>Use Cases:</strong>
+<ul><li>Request/reply pattern</li>
+<li>Tracking conversation threads</li>
+<li>Matching async responses</li>
+<li>Distributed tracing</li>
+</ul>
+<h3>headers (optional)</h3>
+<strong>Type:</strong> <code>Record<string, string></code> (string key-value pairs)
+<strong>Purpose:</strong> Free-form metadata for custom application needs.
+<strong>Constraints:</strong>
+<ul><li>Keys and values must be strings</li>
+<li>No reserved header names (yet)</li>
+<li>Included in message size calculations</li>
+</ul>
+<strong>Common Use Cases:</strong>
+<ul><li>User context (userId, sessionId, tenantId)</li>
+<li>Distributed tracing (traceId, spanId, parentSpanId)</li>
+<li>Source tracking (source, version, environment)</li>
+<li>Custom metadata (priority, category, tags)</li>
+</ul>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// Add headers
+client.publish({
+  topic: &#039;analytics.event&#039;,
+  data: { action: &#039;click&#039;, target: &#039;button&#039; },
+  headers: {
+    userId: &#039;123&#039;,
+    sessionId: &#039;abc-def-ghi&#039;,
+    source: &#039;mobile-app&#039;,
+    version: &#039;2.1.0&#039;,
+    environment: &#039;production&#039;
+  }
+});
+
+// Access headers in subscriber
+client.subscribe(&#039;analytics.*&#039;, (msg) =&gt; {
+  const userId = msg.headers?.userId;
+  const source = msg.headers?.source;
+
+  logEvent(msg.topic, msg.data, { userId, source });
+});</code></pre>
+<strong>Distributed Tracing Example:</strong>
+<pre><code class="language-javascript">// Start trace
+const traceId = crypto.randomUUID();
+const spanId = crypto.randomUUID();
+
+client.publish({
+  topic: &#039;users.item.get&#039;,
+  data: { id: 123 },
+  headers: {
+    traceId,
+    spanId,
+    parentSpanId: null
+  }
+});
+
+// Continue trace in handler
+client.subscribe(&#039;users.item.get&#039;, async (msg) =&gt; {
+  const childSpanId = crypto.randomUUID();
+
+  // Process with trace context
+  await database.getUser(msg.data.id, {
+    traceId: msg.headers.traceId,
+    parentSpanId: msg.headers.spanId,
+    spanId: childSpanId
+  });
+});</code></pre>
+<h3>clientId (internal)</h3>
+<strong>Type:</strong> <code>string</code>
+<strong>Purpose:</strong> Internal identifier for client that published the message.
+<strong>Auto-generation:</strong> Generated by PanClient constructor.
+<strong>Format:</strong> <code>${elementTag}#${uuid}</code>
+<strong>Example:</strong> <code>pan-user-list#7c9e6679-7425-40de-944b</code>
+<strong>Usage:</strong> Primarily for internal bus operations. Applications typically don't need to use this field.
+<h2>Message Examples</h2>
+<h3>Simple Event</h3>
+<pre><code class="language-javascript">{
+  topic: &#039;users.item.updated&#039;,
+  data: {
+    id: 123,
+    name: &#039;Alice Cooper&#039;,
+    email: &#039;alice@example.com&#039;,
+    updatedAt: 1699564800000
+  },
+  id: &#039;550e8400-e29b-41d4-a716-446655440000&#039;,
+  ts: 1699564800000
+}</code></pre>
+<h3>Retained State</h3>
+<pre><code class="language-javascript">{
+  topic: &#039;users.list.state&#039;,
+  data: {
+    items: [
+      { id: 1, name: &#039;Alice&#039; },
+      { id: 2, name: &#039;Bob&#039; },
+      { id: 3, name: &#039;Charlie&#039; }
+    ],
+    total: 3,
+    page: 1
+  },
+  id: &#039;7c9e6679-7425-40de-944b-e07fc1f90ae7&#039;,
+  ts: 1699651200000,
+  retain: true
+}</code></pre>
+<h3>Request Message</h3>
+<pre><code class="language-javascript">{
+  topic: &#039;users.item.get&#039;,
+  data: { id: 123 },
+  id: &#039;a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d&#039;,
+  ts: 1699651200000,
+  replyTo: &#039;pan:$reply:user-list#abc123:req-001&#039;,
+  correlationId: &#039;req-001&#039;
+}</code></pre>
+<h3>Reply Message</h3>
+<pre><code class="language-javascript">{
+  topic: &#039;pan:$reply:user-list#abc123:req-001&#039;,
+  data: {
+    ok: true,
+    item: {
+      id: 123,
+      name: &#039;Alice&#039;,
+      email: &#039;alice@example.com&#039;
+    }
+  },
+  id: &#039;b2c3d4e5-f6a7-4b5c-9d0e-1f2a3b4c5d6e&#039;,
+  ts: 1699651205000,
+  correlationId: &#039;req-001&#039;
+}</code></pre>
+<h3>Message with Headers</h3>
+<pre><code class="language-javascript">{
+  topic: &#039;analytics.page-view&#039;,
+  data: {
+    page: &#039;/users/123&#039;,
+    duration: 5000,
+    referrer: &#039;/dashboard&#039;
+  },
+  id: &#039;c3d4e5f6-a7b8-4c5d-0e1f-2a3b4c5d6e7f&#039;,
+  ts: 1699651200000,
+  headers: {
+    userId: &#039;456&#039;,
+    sessionId: &#039;session-xyz&#039;,
+    device: &#039;mobile&#039;,
+    browser: &#039;Chrome&#039;,
+    version: &#039;119.0&#039;,
+    traceId: &#039;trace-abc-def&#039;
+  }
+}</code></pre>
+<h3>Error Response</h3>
+<pre><code class="language-javascript">{
+  topic: &#039;pan:$reply:user-form#xyz789:req-002&#039;,
+  data: {
+    ok: false,
+    error: &#039;User not found&#039;,
+    code: &#039;NOT_FOUND&#039;,
+    details: {
+      requestedId: 999,
+      timestamp: 1699651200000
+    }
+  },
+  id: &#039;d4e5f6a7-b8c9-4d5e-1f2a-3b4c5d6e7f8a&#039;,
+  ts: 1699651210000,
+  correlationId: &#039;req-002&#039;
+}</code></pre>
+<h2>Response Payload Conventions</h2>
+<p>While <code>data</code> can be any JSON value, LARC follows conventions for response payloads in request/reply patterns:</p>
+<h3>Success Response</h3>
+<pre><code class="language-javascript">{
+  ok: true,
+  item: { /* single item */ }
+}
+
+// or for lists
+{
+  ok: true,
+  items: [ /* array of items */ ],
+  total: 100
+}</code></pre>
+<h3>Error Response</h3>
+<pre><code class="language-javascript">{
+  ok: false,
+  error: &#039;Human-readable error message&#039;,
+  code: &#039;ERROR_CODE&#039;,           // Optional: machine-readable code
+  details: { /* context */ }     // Optional: additional context
+}</code></pre>
+<h3>Example Error Codes</h3>
+<pre><code class="language-javascript">&#039;NOT_FOUND&#039;           // Resource doesn&#039;t exist
+&#039;VALIDATION_ERROR&#039;    // Invalid input
+&#039;UNAUTHORIZED&#039;        // Not authenticated
+&#039;FORBIDDEN&#039;           // Not authorized
+&#039;CONFLICT&#039;            // Resource conflict (e.g., duplicate)
+&#039;RATE_LIMIT&#039;          // Too many requests
+&#039;SERVER_ERROR&#039;        // Internal error
+&#039;TIMEOUT&#039;             // Operation timed out</code></pre>
+<h2>Message Size Limits</h2>
+<p>The PAN bus enforces configurable size limits:</p>
+<h3>Default Limits</h3>
+<ul><li><strong>Max message size:</strong> 1MB (1,048,576 bytes)</li>
+<li><strong>Max payload size:</strong> 512KB (524,288 bytes)</li>
+</ul>
+<h3>Configuration</h3>
+<pre><code class="language-html">&lt;pan-bus
+  max-message-size=&quot;2097152&quot;
+  max-payload-size=&quot;1048576&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h3>Size Estimation</h3>
+<p>The bus estimates message size by JSON-stringifying and measuring:</p>
+<pre><code class="language-javascript">function estimateSize(msg) {
+  return new Blob([JSON.stringify(msg)]).size;
+}</code></pre>
+<h3>Handling Size Limits</h3>
+<pre><code class="language-javascript">// Large data: paginate requests
+const response = await client.request(&#039;users.list.get&#039;, {
+  page: 1,
+  limit: 50  // Smaller page size
+});
+
+// Large payloads: use chunking or external storage
+// Instead of:
+client.publish({
+  topic: &#039;file.uploaded&#039;,
+  data: { fileContents: hugeBase64String }  // Too large!
+});
+
+// Do:
+const fileId = await uploadToStorage(fileContents);
+client.publish({
+  topic: &#039;file.uploaded&#039;,
+  data: { fileId, url: `/files/${fileId}` }
+});</code></pre>
+<h2>Validation</h2>
+<p>The PAN bus validates messages before processing:</p>
+<h3>Topic Validation</h3>
+<pre><code class="language-javascript">// Must be non-empty string
+topic: &#039;&#039;                    [x]
+topic: null                  [x]
+topic: undefined             [x]
+
+// Must not be reserved
+topic: &#039;pan:publish&#039;         [x] (reserved)
+topic: &#039;pan:subscribe&#039;       [x] (reserved)
+
+// Valid
+topic: &#039;users.updated&#039;       [v]</code></pre>
+<h3>Data Validation</h3>
+<pre><code class="language-javascript">// Must be JSON-serializable
+data: () =&gt; {}               [x] (function)
+data: document.body          [x] (DOM node)
+data: undefined              [x] (use null)
+
+const obj = {};
+obj.self = obj;
+data: obj                    [x] (circular reference)
+
+// Valid
+data: null                   [v]
+data: { id: 123 }            [v]
+data: [1, 2, 3]              [v]
+data: &quot;string&quot;               [v]
+data: 42                     [v]</code></pre>
+<h3>Size Validation</h3>
+<p>Messages exceeding size limits are rejected with error:</p>
+<pre><code class="language-javascript">// Error emitted if message too large
+{
+  topic: &#039;pan:sys.error&#039;,
+  data: {
+    code: &#039;MESSAGE_INVALID&#039;,
+    message: &#039;Message size (2000000 bytes) exceeds limit (1048576 bytes)&#039;,
+    details: { topic: &#039;users.list.state&#039; }
+  }
+}</code></pre>
+<h2>Internal System Messages</h2>
+<p>Certain system messages are emitted by the bus:</p>
+<h3>pan:sys.ready</h3>
+<p>Emitted when bus initializes:</p>
+<pre><code class="language-javascript">{
+  topic: &#039;pan:sys.ready&#039;,
+  data: {
+    enhanced: true,
+    routing: false,
+    tracing: false,
+    config: { /* bus configuration */ }
+  }
+}</code></pre>
+<h3>pan:sys.error</h3>
+<p>Emitted for validation errors, rate limits, etc:</p>
+<pre><code class="language-javascript">{
+  topic: &#039;pan:sys.error&#039;,
+  data: {
+    code: &#039;RATE_LIMIT_EXCEEDED&#039;,
+    message: &#039;Too many messages&#039;,
+    details: { clientId: &#039;user-list#abc&#039; }
+  }
+}</code></pre>
+<h3>pan:sys.stats</h3>
+<p>Response to stats request:</p>
+<pre><code class="language-javascript">{
+  topic: &#039;pan:sys.stats&#039;,
+  data: {
+    published: 1234,
+    delivered: 5678,
+    dropped: 0,
+    retainedEvicted: 5,
+    subsCleanedUp: 2,
+    errors: 1,
+    subscriptions: 18,
+    clients: 5,
+    retained: 42,
+    config: { /* current config */ }
+  }
+}</code></pre>
+<h2>Summary</h2>
+<strong>Required Fields:</strong>
+<ul><li><code>topic</code> (string) - Message routing address</li>
+<li><code>data</code> (any) - JSON-serializable payload</li>
+</ul>
+<strong>Auto-Generated Fields:</strong>
+<ul><li><code>id</code> (string) - UUID for deduplication/tracking</li>
+<li><code>ts</code> (number) - Unix timestamp in milliseconds</li>
+</ul>
+<strong>Feature Fields:</strong>
+<ul><li><code>retain</code> (boolean) - Retain for late subscribers</li>
+<li><code>replyTo</code> (string) - Reply destination topic</li>
+<li><code>correlationId</code> (string) - Request/reply correlation</li>
+<li><code>headers</code> (object) - Custom metadata</li>
+</ul>
+<strong>Constraints:</strong>
+<ul><li>Topic: non-empty string, max 256 chars</li>
+<li>Data: JSON-serializable, max 512KB (configurable)</li>
+<li>Total message: max 1MB (configurable)</li>
+<li>Headers: string key-value pairs only</li>
+</ul>
+<strong>Best Practices:</strong>
+<ul><li>Let bus auto-generate <code>id</code> and <code>ts</code></li>
+<li>Use structured objects for <code>data</code></li>
+<li>Use <code>retain: true</code> only for actual state</li>
+<li>Follow response conventions (<code>ok</code>, <code>error</code>, <code>code</code>)</li>
+<li>Include relevant context in <code>headers</code> for tracing</li>
+<li>Keep messages small; paginate or reference external storage</li>
+</ul>
+For topic naming conventions, see Appendix A. For configuration options, see Appendix C.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/building-with-larc/appendix-b-event-envelope.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

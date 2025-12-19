@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🚀 LARC Config Quick Start · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - 🚀 LARC Config Quick Start">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <span>QUICK-START-CONFIG</span>
+      </div>
+      <article class="docs-content">
+        <h1>🚀 LARC Config Quick Start</h1>
+<h2><strong>5-Minute Setup</strong></h2>
+<h3><strong>1. Load the Config (Add to Your HTML)</strong></h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Step 1: Load config --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Step 2: Load autoloader --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+
+  &lt;!-- Step 3: Use components! --&gt;
+  &lt;pan-card&gt;Hello World&lt;/pan-card&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<strong>That's it!</strong> Components will auto-load using the configured paths.
+<hr>
+<h2><strong>Using Path Resolution in Scripts</strong></h2>
+<pre><code class="language-javascript">import { paths } from &#039;/larc-config.mjs&#039;;
+
+// Resolve any alias
+const path = paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;);
+
+// Import dynamically
+const { PanClient } = await import(path);
+
+// Or use the global helper
+const resolved = window.larcResolve(&#039;@larc/core&#039;, &#039;components/pan-bus.mjs&#039;);</code></pre>
+<hr>
+<h2><strong>Available Aliases</strong></h2>
+<p>| Alias | Development | Production |
+|-------|------------|------------|
+| <code>@larc/core</code> | <code>./core/src</code> | <code>https://unpkg.com/@larcjs/core@2.0.0/src</code> |
+| <code>@larc/components</code> | <code>./components/src</code> | <code>https://unpkg.com/@larcjs/ui@2.0.0/src</code> |
+| <code>@larc/examples</code> | <code>./examples</code> | <code>https://unpkg.com/@larcjs/examples@2.0.0</code> |
+| <code>@larc/site</code> | <code>./site</code> | <code>https://larcjs.github.io/site</code> |</p>
+<hr>
+<h2><strong>Common Patterns</strong></h2>
+<h3><strong>Pattern 1: Auto-Loading (Recommended)</strong></h3>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;/core/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;pan-data-table resource=&quot;users&quot;&gt;&lt;/pan-data-table&gt;</code></pre>
+<h3><strong>Pattern 2: Manual Import</strong></h3>
+<pre><code class="language-javascript">import { paths } from &#039;/larc-config.mjs&#039;;
+const { PanClient } = await import(paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-client.mjs&#039;));</code></pre>
+<h3><strong>Pattern 3: Global Helper</strong></h3>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;/larc-config.mjs&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+  const path = window.larcResolve(&#039;@larc/components&#039;, &#039;components/pan-card.mjs&#039;);
+  import(path).then(module =&gt; {
+    // Use module
+  });
+&lt;/script&gt;</code></pre>
+<hr>
+<h2><strong>Customize Config</strong></h2>
+<p>Edit <code>larc-config.mjs</code> to:
+<ul><li>Add your own components to <code>componentPaths</code></li>
+<li>Change CDN URLs in <code>aliases</code></li>
+<li>Add custom resolvers in <code>autoloadConfig</code></li>
+</ul>
+<hr></p>
+<h2><strong>Test Your Setup</strong></h2>
+<p>Open <code>/test-config.html</code> in your browser to verify everything works!</p>
+<hr>
+<h2><strong>Need Help?</strong></h2>
+<p>📚 Full docs: <a href="/README-CONFIG.md"><code>README-CONFIG.md</code></a></p>
+<p>🧪 Test page: <a href="/test-config.html"><code>/test-config.html</code></a></p>
+<p>❓ Issues? Check browser console for errors</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/QUICK-START-CONFIG.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>State Management Patterns · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - State Management Patterns">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>06-state-management</span>
+      </div>
+      <article class="docs-content">
+        <h1>State Management Patterns</h1>
+<h2>State Hierarchy</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;State Layers&quot;
+        subgraph &quot;Component Local&quot;
+            CL1[Component 1&lt;br/&gt;_count, _visible]
+            CL2[Component 2&lt;br/&gt;_expanded, _selected]
+        end
+
+        subgraph &quot;Shared State&quot;
+            SS[Application State&lt;br/&gt;user, theme, cart]
+        end
+
+        subgraph &quot;Persistent State&quot;
+            LS[localStorage&lt;br/&gt;Preferences, tokens]
+            IDB[IndexedDB&lt;br/&gt;Large datasets, cache]
+        end
+
+        subgraph &quot;Server State&quot;
+            API[REST API&lt;br/&gt;Database records]
+            RT[Real-time&lt;br/&gt;WebSocket updates]
+        end
+    end
+
+    CL1 -.reads from.-&gt; SS
+    CL2 -.reads from.-&gt; SS
+
+    SS &lt;-.persists to.-&gt; LS
+    SS &lt;-.persists to.-&gt; IDB
+
+    SS &lt;-.syncs with.-&gt; API
+    SS &lt;-.subscribes to.-&gt; RT
+
+    CL1 &lt;-.fetches.-&gt; API
+    CL2 &lt;-.fetches.-&gt; API
+
+    style SS fill:#764ba2,color:#fff
+    style LS fill:#48bb78,color:#fff
+    style IDB fill:#48bb78,color:#fff</code></pre>
+<h2>Component-Local State Flow</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Initial: constructor()
+    Initial --&gt; Rendered: connectedCallback()
+
+    Rendered --&gt; UserAction: User interaction
+    UserAction --&gt; UpdateState: this.property = value
+    UpdateState --&gt; Render: render()
+    Render --&gt; Rendered
+
+    Rendered --&gt; ExternalUpdate: Attribute changed
+    ExternalUpdate --&gt; UpdateState
+
+    Rendered --&gt; [*]: disconnectedCallback()
+
+    note right of UpdateState
+        • Update instance property
+        • No external storage
+        • Private to component
+    end note</code></pre>
+<h2>Reactive State with Proxy</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant Component as Component
+    participant Proxy as Reactive Proxy
+    participant Listeners as Listeners
+    participant UI as UI
+
+    Component-&gt;&gt;Proxy: state.count = 42
+    Proxy-&gt;&gt;Proxy: Intercept set
+    Proxy-&gt;&gt;Listeners: Notify all listeners
+    Listeners-&gt;&gt;Component: Trigger callback
+    Component-&gt;&gt;UI: Re-render</code></pre>
+<h2>Shared State Pattern</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Store&quot;
+        State[&quot;Application State: user, theme, cart&quot;]
+        Listeners[Listeners Set]
+    end
+
+    subgraph &quot;Components&quot;
+        C1[Component 1]
+        C2[Component 2]
+        C3[Component 3]
+    end
+
+    C1 -.subscribe.-&gt; Listeners
+    C2 -.subscribe.-&gt; Listeners
+    C3 -.subscribe.-&gt; Listeners
+
+    C1 --&gt;|setState| State
+    C2 --&gt;|setState| State
+
+    State -.notify.-&gt; Listeners
+    Listeners -.trigger.-&gt; C1 &amp; C2 &amp; C3
+
+    style State fill:#764ba2,color:#fff
+    style Listeners fill:#667eea,color:#fff</code></pre>
+<h2>IndexedDB Cache-First Strategy</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant Component
+    participant Memory as Memory Cache
+    participant IDB as IndexedDB
+    participant API as Backend API
+
+    Component-&gt;&gt;Memory: getData(id)
+    alt In Memory Cache
+        Memory--&gt;&gt;Component: Return cached data
+    else Not in Memory
+        Component-&gt;&gt;IDB: getData(id)
+        alt In IndexedDB
+            IDB--&gt;&gt;Component: Return cached data
+            Component-&gt;&gt;Memory: Cache in memory
+        else Not in IndexedDB
+            Component-&gt;&gt;API: fetch(&#039;/api/data/&#039; + id)
+            API--&gt;&gt;Component: Fresh data
+            Component-&gt;&gt;IDB: Store in IndexedDB
+            Component-&gt;&gt;Memory: Cache in memory
+        end
+    end
+
+    Note over Component,API: Background: Refresh from API
+    Component-&gt;&gt;API: fetch (background)
+    API--&gt;&gt;Component: Latest data
+    Component-&gt;&gt;IDB: Update IndexedDB
+    Component-&gt;&gt;Memory: Update memory cache</code></pre>
+<h2>Offline-First with Sync Queue</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;Client&quot;
+        UI[UI Component]
+        Local[Local State&lt;br/&gt;IndexedDB]
+        Queue[Sync Queue&lt;br/&gt;localStorage]
+    end
+
+    subgraph &quot;Network&quot;
+        Check{Online?}
+    end
+
+    subgraph &quot;Server&quot;
+        API[Backend API]
+    end
+
+    UI --&gt;|Create/Update/Delete| Local
+    Local -.success.-&gt; UI
+
+    Local --&gt; Check
+
+    Check --&gt;|Yes| API
+    Check --&gt;|No| Queue
+
+    Queue -.wait for online.-&gt; Check
+
+    API --&gt;|Success| Confirm[Confirm Sync]
+    API --&gt;|Error| Queue
+
+    Confirm -.update UI.-&gt; UI
+
+    style Local fill:#48bb78,color:#fff
+    style Queue fill:#f59e42,color:#fff
+    style API fill:#667eea,color:#fff</code></pre>
+<h2>State Synchronization Patterns</h2>
+<pre><code class="language-mermaid">graph LR
+    subgraph &quot;Optimistic Update&quot;
+        O1[User Action]
+        O2[Update UI Immediately]
+        O3[Send to Server]
+        O4{Success?}
+        O5[Keep Update]
+        O6[Rollback]
+
+        O1 --&gt; O2 --&gt; O3 --&gt; O4
+        O4 --&gt;|Yes| O5
+        O4 --&gt;|No| O6
+    end
+
+    subgraph &quot;Pessimistic Update&quot;
+        P1[User Action]
+        P2[Show Loading]
+        P3[Send to Server]
+        P4{Success?}
+        P5[Update UI]
+        P6[Show Error]
+
+        P1 --&gt; P2 --&gt; P3 --&gt; P4
+        P4 --&gt;|Yes| P5
+        P4 --&gt;|No| P6
+    end
+
+    style O2 fill:#48bb78,color:#fff
+    style O6 fill:#f56565,color:#fff
+    style P5 fill:#48bb78,color:#fff
+    style P6 fill:#f56565,color:#fff</code></pre>
+<h2>pan-store Component Architecture</h2>
+<pre><code class="language-mermaid">graph TB
+    subgraph &quot;pan-store&quot;
+        State[State Object]
+        Watchers[Path Watchers&lt;br/&gt;Map&amp;lt;path, handlers&amp;gt;]
+        Persist[Persistence Layer]
+        Computed[Computed Values]
+
+        State --&gt; Watchers
+        State --&gt; Persist
+        State --&gt; Computed
+    end
+
+    subgraph &quot;Components&quot;
+        C1[Component 1]
+        C2[Component 2]
+        C3[Component 3]
+    end
+
+    subgraph &quot;Storage&quot;
+        LS[localStorage]
+        IDB[IndexedDB]
+    end
+
+    C1 --&gt;|setState| State
+    C2 --&gt;|setState| State
+    C3 --&gt;|getState| State
+
+    Watchers -.notify.-&gt; C1 &amp; C2 &amp; C3
+
+    Persist &lt;-.sync.-&gt; LS &amp; IDB
+
+    style State fill:#764ba2,color:#fff
+    style Persist fill:#48bb78,color:#fff</code></pre>
+<h2>State Update Flow</h2>
+<pre><code class="language-mermaid">sequenceDiagram
+    participant Component
+    participant Store
+    participant Middleware
+    participant Persistence
+    participant PAN as PAN Bus
+    participant Subscribers
+
+    Component-&gt;&gt;Store: setState({user: newUser})
+
+    Store-&gt;&gt;Store: Merge state
+    Store-&gt;&gt;Middleware: Run middleware
+    Middleware-&gt;&gt;Middleware: Log state change
+    Middleware-&gt;&gt;Persistence: Save to localStorage
+
+    Store-&gt;&gt;PAN: publish(&#039;store.changed&#039;)
+    PAN-&gt;&gt;Subscribers: Notify all subscribers
+
+    Store-&gt;&gt;Store: Check watchers
+    Store-&gt;&gt;Subscribers: Notify path watchers
+
+    Subscribers-&gt;&gt;Subscribers: Re-render</code></pre>
+<h2>Conflict Resolution</h2>
+<pre><code class="language-mermaid">graph TB
+    Local[Local Update&lt;br/&gt;timestamp: T1]
+    Server[Server Update&lt;br/&gt;timestamp: T2]
+
+    Conflict{Conflict?}
+
+    Local --&gt; Conflict
+    Server --&gt; Conflict
+
+    Conflict --&gt;|T1 &gt; T2| UseLocal[Use Local&lt;br/&gt;Last Write Wins]
+    Conflict --&gt;|T2 &gt; T1| UseServer[Use Server&lt;br/&gt;Last Write Wins]
+    Conflict --&gt;|T1 = T2| Merge[Attempt Merge&lt;br/&gt;or Manual Resolution]
+
+    UseLocal --&gt; Sync[Sync to Server]
+    UseServer --&gt; Update[Update Local]
+    Merge --&gt; Manual[Show Conflict UI]
+
+    style Conflict fill:#f59e42,color:#fff
+    style Merge fill:#f56565,color:#fff
+    style Sync fill:#48bb78,color:#fff</code></pre>
+<h2>State Management Decision Tree</h2>
+<pre><code class="language-mermaid">graph TB
+    Start{Need State?}
+
+    Start --&gt;|Yes| Scope{Share across&lt;br/&gt;components?}
+
+    Scope --&gt;|No| Local[Component-Local State&lt;br/&gt;Instance properties]
+
+    Scope --&gt;|Yes| Persist{Need to&lt;br/&gt;persist?}
+
+    Persist --&gt;|No| Shared[Shared State&lt;br/&gt;Global object or store]
+
+    Persist --&gt;|Yes| Size{Large&lt;br/&gt;dataset?}
+
+    Size --&gt;|No| LS[localStorage&lt;br/&gt;Small data &lt;10MB]
+    Size --&gt;|Yes| IDB[IndexedDB&lt;br/&gt;Large data, offline]
+
+    IDB --&gt; Offline{Offline&lt;br/&gt;support?}
+    LS --&gt; Offline
+
+    Offline --&gt;|Yes| Queue[Sync Queue&lt;br/&gt;Background sync]
+    Offline --&gt;|No| Done[Done]
+
+    Queue --&gt; Done
+    Local --&gt; Done
+    Shared --&gt; Done
+
+    style Local fill:#667eea,color:#fff
+    style Shared fill:#764ba2,color:#fff
+    style IDB fill:#48bb78,color:#fff
+    style Queue fill:#f59e42,color:#fff</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/learning-larc/diagrams/06-state-management.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Repository Structure Decision Tree · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Repository Structure Decision Tree">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">processes</a> / <span>DECISION-TREE</span>
+      </div>
+      <article class="docs-content">
+        <h1>Repository Structure Decision Tree</h1>
+<h2>🤔 Quick Decision Guide</h2>
+<h3>Question 1: Should this be a separate repo?</h3>
+<pre><code class="language-plaintext">Is it published to npm as a standalone package?
+│
+├─ YES → Ask Question 2
+│
+└─ NO → Consolidate into monorepo</code></pre>
+<h3>Question 2: Can users want it without other packages?</h3>
+<pre><code class="language-plaintext">Can users reasonably want ONLY this package?
+│
+├─ YES → Keep as separate repo
+│   Example: @larcjs/core (just the bus, no components)
+│
+└─ NO → Consolidate into monorepo
+    Example: @larcjs/core-types (always used WITH core)</code></pre>
+<hr>
+<h2>📋 Applied to Your Repos</h2>
+<h3><code>core</code> - Keep Separate ✅</h3>
+<ul><li>✅ Published to npm: <code>@larcjs/core</code></li>
+<li>✅ Users want it standalone: "Just the messaging bus"</li>
+<li>✅ Independent value: 5KB, zero deps</li>
+<li><strong>Decision: Keep separate</strong></li>
+</ul>
+<h3><code>components</code> - Keep Separate ✅</h3>
+<ul><li>✅ Published to npm: <code>@larcjs/ui</code></li>
+<li>✅ Users want it standalone: "Components without learning bus internals"</li>
+<li>✅ Independent value: UI library</li>
+<li>✅ Optional dependency: Works with core, but separate choice</li>
+<li><strong>Decision: Keep separate</strong></li>
+</ul>
+<h3><code>core-types</code> - Consolidate 🔄</h3>
+<ul><li>✅ Published to npm: <code>@larcjs/core-types</code></li>
+<li>❌ Users want it standalone: No, only with <code>@larcjs/core</code></li>
+<li>❌ Independent value: Just types for core</li>
+<li><strong>Decision: Move to larc/packages/</strong></li>
+</ul>
+<h3><code>components-types</code> - Consolidate 🔄</h3>
+<ul><li>✅ Published to npm: <code>@larcjs/ui-types</code></li>
+<li>❌ Users want it standalone: No, only with <code>@larcjs/ui</code></li>
+<li>❌ Independent value: Just types for components</li>
+<li><strong>Decision: Move to larc/packages/</strong></li>
+</ul>
+<h3><code>devtools</code> - Consolidate 🔄</h3>
+<ul><li>⚠️ Published to Chrome Store: Maybe</li>
+<li>❌ Users want it standalone: Only for development</li>
+<li>❌ Independent value: Only useful with LARC</li>
+<li><strong>Decision: Move to larc/packages/</strong></li>
+</ul>
+<h3><code>examples</code> - Consolidate 🔄</h3>
+<ul><li>❌ Published to npm: No</li>
+<li>❌ Users want it standalone: No, examples of using core</li>
+<li>❌ Independent value: Educational assets</li>
+<li><strong>Decision: Move to larc/examples/</strong></li>
+</ul>
+<h3><code>apps</code> - Consolidate 🔄</h3>
+<ul><li>❌ Published to npm: No</li>
+<li>❌ Users want it standalone: No, demos of LARC</li>
+<li>❌ Independent value: Same as examples</li>
+<li><strong>Decision: Merge with examples → larc/examples/</strong></li>
+</ul>
+<h3><code>site</code> - Consolidate 🔄</h3>
+<ul><li>❌ Published to npm: No</li>
+<li>❌ Users want it standalone: No, docs for LARC</li>
+<li>❌ Independent value: Documentation asset</li>
+<li><strong>Decision: Move to larc/docs/</strong></li>
+</ul>
+<h3><code>larc</code> (meta repo) - Transform 🔄</h3>
+<ul><li>❌ Published to npm: No (workspace root)</li>
+<li>❌ Users want it standalone: No, development hub</li>
+<li>✅ Independent value: <strong>Becomes the monorepo</strong></li>
+<li><strong>Decision: Transform into monorepo workspace</strong></li>
+</ul>
+<h3><code>.github</code> - Consolidate 🔄</h3>
+<ul><li>❌ Published to npm: No</li>
+<li>❌ Users want it standalone: No, org-level config</li>
+<li>❌ Independent value: GitHub metadata</li>
+<li><strong>Decision: Move to larc/.github/</strong></li>
+</ul>
+<hr>
+<h2>🎯 Final Count</h2>
+<strong>Before:</strong> 10 repositories
+<strong>After:</strong> 3 repositories
+<pre><code class="language-plaintext">✅ github.com/larcjs/core       (Standalone product)
+✅ github.com/larcjs/components (Standalone product)
+✅ github.com/larcjs/larc       (Development monorepo)</code></pre>
+<hr>
+<h2>💭 Mental Model</h2>
+<h3>Think of it like this:</h3>
+<strong>Products (Separate Repos):</strong>
+<ul><li>"Things users install"</li>
+<li>Clear, focused purpose</li>
+<li>Can be used alone</li>
+</ul>
+<strong>Development Assets (Monorepo):</strong>
+<ul><li>"Things that support the products"</li>
+<li>Types, docs, examples, tools</li>
+<li>Only useful in context of products</li>
+</ul>
+<hr>
+<h2>🏗️ Architecture Analogy</h2>
+<p>Think of it like a building:</p>
+<pre><code class="language-plaintext">┌─────────────────────────────────────────┐
+│         LARC Ecosystem                  │
+├─────────────────────────────────────────┤
+│                                         │
+│  🏢 Core Product (Separate Building)   │
+│     @larcjs/core                        │
+│     - Standalone                        │
+│     - Minimal                           │
+│     - Foundation                        │
+│                                         │
+│  🏢 Components Product (Separate)      │
+│     @larcjs/ui                  │
+│     - Standalone                        │
+│     - Optional add-on                   │
+│     - Builds on core                    │
+│                                         │
+│  🏗️  Development Complex (One Campus)  │
+│     larc/ (monorepo)                    │
+│     ├── Types (blueprints)              │
+│     ├── Docs (manuals)                  │
+│     ├── Examples (showroom)             │
+│     └── Tools (workshop)                │
+│                                         │
+└─────────────────────────────────────────┘</code></pre>
+<strong>You wouldn't build a separate building for:</strong>
+<ul><li>The blueprint storage (types)</li>
+<li>The instruction manuals (docs)</li>
+<li>The showroom (examples)</li>
+<li>The tool shed (devtools)</li>
+</ul>
+<strong>They all belong on the same campus!</strong>
+<hr>
+<h2>✅ Your Reasoning Applied</h2>
+<blockquote>"I want to keep all the individual ui components separate from the core larc messaging bus code simply because I don't want to force my web components down peoples throats if all they're looking for is a well defined, page-level communications bus."</blockquote>
+<strong>This is architecturally correct!</strong>
+<pre><code class="language-plaintext">User A: &quot;I just want the message bus&quot;
+→ npm install @larcjs/core
+→ Gets: 5KB, pure messaging
+
+User B: &quot;I want the bus + components&quot;
+→ npm install @larcjs/core @larcjs/ui
+→ Gets: Bus + UI library
+
+User C: &quot;I already have React, just want the bus&quot;
+→ npm install @larcjs/core
+→ Uses bus with React components</code></pre>
+<strong>Perfect separation of concerns!</strong>
+<hr>
+<h2>🚫 What NOT to Do</h2>
+<h3>❌ Bad: Monolith Package</h3>
+<pre><code class="language-plaintext">@larcjs/everything
+├── core (forced on everyone)
+└── components (forced on everyone)</code></pre>
+<strong>Problem:</strong> Can't use bus without components
+<h3>❌ Bad: Too Granular</h3>
+<pre><code class="language-plaintext">@larcjs/core
+@larcjs/core-types
+@larcjs/core-tests
+@larcjs/core-examples
+@larcjs/core-docs
+... (20 repos)</code></pre>
+<strong>Problem:</strong> Management nightmare
+<h3>✅ Good: Balanced</h3>
+<pre><code class="language-plaintext">Repos:
+  @larcjs/core (product)
+  @larcjs/ui (product)
+  larc (development assets)
+
+User installs:
+  npm install @larcjs/core (minimal)
+  npm install @larcjs/ui (optional)</code></pre>
+<strong>Result:</strong> Clean, simple, flexible
+<hr>
+<h2>🎯 Bottom Line</h2>
+<strong>Your instinct is right:</strong> Keep core and components separate.
+<strong>The fix:</strong> Consolidate everything else into one development monorepo.
+<strong>Result:</strong>
+<ul><li>Users get clean choices</li>
+<li>Developers get simple workflow</li>
+<li>Maintainers get fewer headaches</li>
+</ul>
+<hr>
+<h2>🚀 Next Step</h2>
+<p>Run this to see it in action:</p>
+<pre><code class="language-bash">./test-monorepo.sh</code></pre>
+<p>Or read the full plan:
+<pre><code class="language-bash">cat RECOMMENDED-CONSOLIDATION.md</code></pre></p>
+<hr>
+<em>"Separate the products. Unify the process."</em>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/processes/DECISION-TREE.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

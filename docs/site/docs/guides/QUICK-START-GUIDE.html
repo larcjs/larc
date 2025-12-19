@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Quick Start Guide · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Quick Start Guide">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">guides</a> / <span>QUICK-START-GUIDE</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Quick Start Guide</h1>
+<blockquote>Choose your adventure: 9KB → 40KB depending on your needs</blockquote>
+<h2>🎯 Which Package Do I Need?</h2>
+<h3>Just Starting? → Use Core Lite (9KB)</h3>
+<pre><code class="language-bash">npm install @larcjs/core-lite</code></pre>
+<strong>You get:</strong>
+<ul><li>✅ Pub/sub messaging</li>
+<li>✅ Retained messages</li>
+<li>✅ Request/reply</li>
+<li>✅ Auto-loading components</li>
+<li>✅ 94% smaller than React</li>
+</ul>
+<hr>
+<h2>📦 Package Quick Reference</h2>
+<p>| Package | Size | Install | When to Use |
+|---------|------|---------|-------------|
+| <strong><a href="./packages/core-lite">@larcjs/core-lite</a></strong> | <strong>9KB</strong> | <code>npm i @larcjs/core-lite</code> | ⭐ <strong>Start here!</strong> Most apps |
+| <a href="./core">@larcjs/core</a> | 40KB | <code>npm i @larcjs/core</code> | Full-featured, rapid prototyping |
+| <a href="./packages/core-routing">@larcjs/core-routing</a> | +8KB | Add to lite | Need message routing |
+| <a href="./packages/core-debug">@larcjs/core-debug</a> | +3KB | Add to lite (dev) | Debugging & tracing |</p>
+<hr>
+<h2>⚡ Quick Install Examples</h2>
+<h3>Minimal Setup (9KB)</h3>
+<pre><code class="language-bash">npm install @larcjs/core-lite</code></pre>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core-lite@latest/src/pan.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+  document.addEventListener(&#039;pan:publish&#039;, { detail: { topic: &#039;hello&#039;, data: &#039;world&#039; } });
+&lt;/script&gt;</code></pre>
+<hr>
+<h3>With Routing (17KB)</h3>
+<pre><code class="language-bash">npm install @larcjs/core-lite @larcjs/core-routing</code></pre>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import &#039;@larcjs/core-lite&#039;;
+import &#039;@larcjs/core-routing&#039;;
+
+window.pan.routes.add({
+  match: { type: &#039;user.login&#039; },
+  actions: [{ type: &#039;EMIT&#039;, message: { type: &#039;analytics.track&#039; } }]
+});
+&lt;/script&gt;</code></pre>
+<hr>
+<h3>With Debug (12KB in dev, 9KB in prod)</h3>
+<pre><code class="language-bash">npm install @larcjs/core-lite
+npm install --save-dev @larcjs/core-debug</code></pre>
+<pre><code class="language-javascript">import &#039;@larcjs/core-lite&#039;;
+
+if (process.env.NODE_ENV === &#039;development&#039;) {
+  await import(&#039;@larcjs/core-debug&#039;);
+  window.pan.debug.enableTracing();
+}</code></pre>
+<hr>
+<h3>Full Featured (40KB)</h3>
+<pre><code class="language-bash">npm install @larcjs/core</code></pre>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot; debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@latest/src/pan.js&quot;&gt;&lt;/script&gt;</code></pre>
+<hr>
+<h2>🚀 Basic Usage</h2>
+<h3>Publishing Messages</h3>
+<pre><code class="language-javascript">// Simple publish
+bus.publish(&#039;user.login&#039;, { userId: 123 });
+
+// With retained message (like state)
+bus.publish(&#039;theme.current&#039;, { theme: &#039;dark&#039; }, { retain: true });</code></pre>
+<h3>Subscribing to Messages</h3>
+<pre><code class="language-javascript">// Subscribe to specific topic
+bus.subscribe(&#039;user.login&#039;, (msg) =&gt; {
+  console.log(&#039;User logged in:&#039;, msg.data);
+});
+
+// Subscribe with wildcard
+bus.subscribe(&#039;user.*&#039;, (msg) =&gt; {
+  console.log(&#039;Any user event:&#039;, msg);
+});
+
+// Unsubscribe
+const unsub = bus.subscribe(&#039;topic&#039;, handler);
+unsub(); // Clean up later</code></pre>
+<h3>Request/Reply Pattern</h3>
+<pre><code class="language-javascript">// Responder
+bus.subscribe(&#039;user.get&#039;, async (msg) =&gt; {
+  const user = await fetchUser(msg.data.id);
+  return { ok: true, user };
+});
+
+// Requester
+const response = await bus.request(&#039;user.get&#039;, { id: 123 });
+console.log(response.user);</code></pre>
+<hr>
+<h2>📊 Size Comparison Chart</h2>
+<pre><code class="language-plaintext">React (140KB)     ████████████████████████████████████████
+Vue (90KB)        █████████████████████████
+@larcjs/core (40) ████████████
+@larcjs/core-lite ███  (9KB) ← You are here! ⭐</code></pre>
+<hr>
+<h2>🔄 Migration Path</h2>
+<h3>Already using @larcjs/core?</h3>
+<p>Downgrade to save 31KB:</p>
+<pre><code class="language-bash">npm uninstall @larcjs/core
+npm install @larcjs/core-lite</code></pre>
+<p>No code changes needed! Same API.</p>
+<h3>Need a feature back?</h3>
+<p>Add it à la carte:</p>
+<pre><code class="language-bash">npm install @larcjs/core-routing  # +8KB
+npm install @larcjs/core-debug    # +3KB</code></pre>
+<hr>
+<h2>📚 Learn More</h2>
+<ul><li><strong><a href="./PACKAGES.md">Package Selection Guide</a></strong> - Detailed comparison</li>
+<li><strong><a href="./packages/core-lite/MIGRATION.md">Migration Guide</a></strong> - From full to lite</li>
+<li><strong><a href="https://larcjs.github.io/site/">Full Docs</a></strong> - Complete documentation</li>
+</ul>
+<hr>
+<h2>💡 Pro Tips</h2>
+<li><strong>Start small</strong> - Begin with core-lite, add features later</li>
+<li><strong>Dev vs Prod</strong> - Use debug in dev only</li>
+<li><strong>Measure first</strong> - Profile before adding routing</li>
+<li><strong>Stay modular</strong> - Don't pay for what you don't use</li>
+<hr>
+<h2>❓ FAQ</h2>
+<h3>Q: Will core-lite work with my existing code?</h3>
+<strong>A:</strong> Yes! Same API as full version. Drop-in replacement.
+<h3>Q: Can I upgrade from lite to full later?</h3>
+<strong>A:</strong> Yes, just <code>npm install @larcjs/core</code>. Zero code changes.
+<h3>Q: What if I need routing?</h3>
+<strong>A:</strong> Add <code>@larcjs/core-routing</code> (8KB) to core-lite (9KB) = 17KB total.
+<h3>Q: Is 9KB the minified or gzipped size?</h3>
+<strong>A:</strong> 9KB minified, ~3KB gzipped. Load time is based on gzipped.
+<hr>
+<strong>TL;DR:</strong> Use <code>@larcjs/core-lite</code> unless you know you need more. 9KB of pure messaging goodness. 🎉
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/guides/QUICK-START-GUIDE.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

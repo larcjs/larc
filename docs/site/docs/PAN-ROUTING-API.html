@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Runtime Routes - API Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Runtime Routes - API Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <span>PAN-ROUTING-API</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Runtime Routes - API Reference</h1>
+<h2>Overview</h2>
+<p>PAN Runtime Routes extends the PAN messaging bus with declarative, runtime-configurable routing rules. Routes define how messages should be matched, transformed, and acted upon as they flow through the system.</p>
+<strong>Key Features:</strong>
+<ul><li>✅ Runtime route configuration (add, update, remove)</li>
+<li>✅ Declarative matching with predicates</li>
+<li>✅ Message transformations</li>
+<li>✅ Multiple action types (EMIT, FORWARD, LOG, CALL)</li>
+<li>✅ Pluggable storage for persistence</li>
+<li>✅ Control messages for remote configuration</li>
+<li>✅ Debug tracing and introspection</li>
+<li>✅ Error isolation and handling</li>
+</ul>
+<h2>Quick Start</h2>
+<h3>Enable Routing</h3>
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<h3>Add a Simple Route</h3>
+<pre><code class="language-javascript">window.pan.routes.add({
+  name: &#039;Login -&gt; Dashboard&#039;,
+  enabled: true,
+  match: {
+    type: &#039;user.login.success&#039;
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: {
+        type: &#039;ui.show.dashboard&#039;
+      }
+    }
+  ]
+});</code></pre>
+<h3>Publish a Message</h3>
+<pre><code class="language-javascript">document.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+  detail: {
+    type: &#039;user.login.success&#039;,
+    payload: { username: &#039;alice&#039; }
+  }
+}));</code></pre>
+<p>The route will automatically emit <code>ui.show.dashboard</code> when a login succeeds.</p>
+<h2>Route Definition</h2>
+<h3>Route Structure</h3>
+<pre><code class="language-typescript">interface Route {
+  id: string;              // Auto-generated if not provided
+  name?: string;           // Human-readable name
+  enabled: boolean;        // Whether route is active
+  order?: number;          // Execution order (lower = earlier)
+  match: RouteMatch;       // Matching criteria
+  transform?: Transform;   // Optional transformation
+  actions: Action[];       // Actions to execute
+  meta?: {                 // Metadata
+    createdBy?: string;
+    createdAt?: number;
+    updatedAt?: number;
+    tags?: string[];
+  };
+}</code></pre>
+<h2>Matching</h2>
+<h3>Match Criteria</h3>
+<p>Routes match messages based on multiple criteria. All examples in the <a href="../examples/routing/">routing examples directory</a>.</p>
+<p>See complete documentation and interactive examples at <a href="./PAN-ROUTING-API.md">PAN-ROUTING-API.md</a>.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/PAN-ROUTING-API.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

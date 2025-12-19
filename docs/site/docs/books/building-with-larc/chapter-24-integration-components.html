@@ -1,0 +1,1760 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Integration Components · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Integration Components">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>chapter-24-integration-components</span>
+      </div>
+      <article class="docs-content">
+        <h1>Integration Components</h1>
+<em>In which we bridge the gap between LARC applications and the outside world—REST APIs, GraphQL servers, WebSocket streams, and Server-Sent Events—without losing our composure or our data</em>
+<p>Every modern web application is, at heart, an integration problem. You're not building a standalone fortress; you're building a trading post that speaks multiple languages, accepts multiple currencies, and somehow keeps track of what goes in and what goes out. Your frontend needs to talk to REST APIs, subscribe to real-time WebSocket feeds, execute GraphQL queries, and listen to Server-Sent Event streams—often simultaneously.</p>
+<p>LARC's integration components solve this problem by providing declarative, PAN-bus-connected adapters for external data sources. They transform HTTP requests, WebSocket events, and SSE streams into PAN messages, and PAN messages back into network requests. The result is a clean architectural boundary: your application components remain blissfully unaware of whether their data comes from REST, GraphQL, or a carrier pigeon.</p>
+<p>This chapter provides comprehensive API documentation for four integration components:</p>
+<ul><li><strong>pan-data-connector</strong>: REST API integration with full CRUD support</li>
+<li><strong>pan-graphql-connector</strong>: GraphQL query and mutation bridge</li>
+<li><strong>pan-websocket</strong>: Bidirectional WebSocket communication</li>
+<li><strong>pan-sse</strong>: Server-Sent Events streaming</li>
+</ul>
+Each section follows the same structure: overview, usage guidance, installation, attribute/method/event reference, complete examples, and troubleshooting. Think of this chapter as your field guide to connecting LARC applications to the wider internet ecosystem.
+<h2>pan-data-connector</h2>
+<h3>Overview</h3>
+<code>pan-data-connector</code> is a declarative REST API bridge that maps PAN bus topics to HTTP endpoints. It implements the standard CRUD pattern—list, get, create, update, delete—using fetch() and publishes responses as retained PAN messages. This allows components to request data via topics without knowing anything about HTTP methods, URL construction, or response handling.
+<p>The connector listens for request topics like <code>${resource}.list.get</code> and <code>${resource}.item.save</code>, performs the appropriate HTTP request, and publishes state updates to <code>${resource}.list.state</code> and <code>${resource}.item.state.${id}</code>. All state messages are retained, so late-subscribing components receive the most recent data immediately.</p>
+<h3>When to Use</h3>
+<strong>Use <code>pan-data-connector</code> when:</strong>
+<ul><li>Working with RESTful APIs that follow standard CRUD patterns</li>
+<li>You want declarative data fetching without writing fetch() calls in every component</li>
+<li>You need automatic state synchronization across multiple components</li>
+<li>You're building admin interfaces, CRUD applications, or data management tools</li>
+<li>Your API uses predictable URL patterns (e.g., <code>/api/users</code>, <code>/api/users/:id</code>)</li>
+</ul>
+<strong>Don't use <code>pan-data-connector</code> when:</strong>
+<ul><li>Your API doesn't follow REST conventions (use custom fetch() or build a specialized connector)</li>
+<li>You need fine-grained control over request timing and caching</li>
+<li>Your endpoints use non-standard HTTP methods or complex request patterns</li>
+<li>You're working with GraphQL (use <code>pan-graphql-connector</code> instead)</li>
+</ul>
+<h3>Installation and Setup</h3>
+<p>Include the component module and add it to your HTML:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-data-connector.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;!-- Simple configuration --&gt;
+  &lt;pan-data-connector
+    resource=&quot;users&quot;
+    base-url=&quot;https://api.example.com&quot;&gt;
+  &lt;/pan-data-connector&gt;
+
+  &lt;!-- Your application --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>For APIs requiring authentication headers:</p>
+<pre><code class="language-html">&lt;pan-data-connector
+  resource=&quot;users&quot;
+  base-url=&quot;https://api.example.com&quot;
+  credentials=&quot;include&quot;&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+    {
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;,
+        &quot;X-API-Version&quot;: &quot;2023-01&quot;
+      }
+    }
+  &lt;/script&gt;
+&lt;/pan-data-connector&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>resource</code> | String | <code>"items"</code> | Logical resource name. Used as the topic prefix (e.g., <code>users</code> creates topics like <code>users.list.get</code>). |
+| <code>base-url</code> | String | <code>""</code> | Base URL for API endpoints. Trailing slashes are automatically removed. |
+| <code>key</code> | String | <code>"id"</code> | The field name used as the unique identifier for items. |
+| <code>list-path</code> | String | <code>"/${resource}"</code> | URL path template for list operations. Override for non-standard endpoints. |
+| <code>item-path</code> | String | <code>"/${resource}/:id"</code> | URL path template for single-item operations. The <code>:id</code> placeholder is replaced with the actual ID. |
+| <code>update-method</code> | String | <code>"PUT"</code> | HTTP method for updates. Use <code>"PATCH"</code> for partial updates. |
+| <code>credentials</code> | String | <code>""</code> | Fetch credentials mode: <code>"include"</code>, <code>"same-origin"</code>, or <code>"omit"</code>. |</p>
+<strong>Example configurations:</strong>
+<pre><code class="language-html">&lt;!-- Non-standard paths --&gt;
+&lt;pan-data-connector
+  resource=&quot;products&quot;
+  base-url=&quot;https://shop.example.com&quot;
+  list-path=&quot;/v2/catalog/products&quot;
+  item-path=&quot;/v2/catalog/products/:id&quot;&gt;
+&lt;/pan-data-connector&gt;
+
+&lt;!-- UUID-based API --&gt;
+&lt;pan-data-connector
+  resource=&quot;orders&quot;
+  base-url=&quot;/api&quot;
+  key=&quot;uuid&quot;
+  update-method=&quot;PATCH&quot;&gt;
+&lt;/pan-data-connector&gt;
+
+&lt;!-- Complex authentication --&gt;
+&lt;pan-data-connector resource=&quot;documents&quot; base-url=&quot;/api/v1&quot;&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+    {
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer ${TOKEN}&quot;,
+        &quot;X-Tenant-ID&quot;: &quot;acme-corp&quot;,
+        &quot;Accept&quot;: &quot;application/vnd.api+json&quot;
+      }
+    }
+  &lt;/script&gt;
+&lt;/pan-data-connector&gt;</code></pre>
+<h3>Topics</h3>
+<p>The connector listens to and publishes messages on the following topics:</p>
+<p>#### Subscribed Topics (Requests)</p>
+<strong><code>${resource}.list.get</code></strong>
+<p>Fetches the list of items. Query parameters can be passed in the message data.</p>
+<p>Request payload:
+<pre><code class="language-javascript">{
+  // Optional: any query parameters
+  page: 1,
+  limit: 20,
+  filter: &#039;active&#039;
+}</code></pre></p>
+<strong><code>${resource}.item.get</code></strong>
+<p>Fetches a single item by ID.</p>
+<p>Request payload:
+<pre><code class="language-javascript">{
+  id: 123
+}
+// Or simply: 123</code></pre></p>
+<strong><code>${resource}.item.save</code></strong>
+<p>Creates a new item (if no ID) or updates an existing item.</p>
+<p>Request payload:
+<pre><code class="language-javascript">{
+  item: {
+    id: 123,  // Optional; omit for creation
+    name: &quot;New Product&quot;,
+    price: 29.99
+  }
+}
+// Or simply: { id: 123, name: &quot;...&quot;, price: 29.99 }</code></pre></p>
+<strong><code>${resource}.item.delete</code></strong>
+<p>Deletes an item by ID.</p>
+<p>Request payload:
+<pre><code class="language-javascript">{
+  id: 123
+}
+// Or simply: 123</code></pre></p>
+<p>#### Published Topics (Responses)</p>
+<strong><code>${resource}.list.state</code></strong> (retained)
+<p>Published after successful list fetch. Contains the current list of items.</p>
+<p>Payload:
+<pre><code class="language-javascript">{
+  items: [
+    { id: 1, name: &quot;Product A&quot;, price: 19.99 },
+    { id: 2, name: &quot;Product B&quot;, price: 29.99 }
+  ]
+}</code></pre></p>
+<strong><code>${resource}.item.state.${id}</code></strong> (retained)
+<p>Published after successful item fetch or save. Contains the current item state.</p>
+<p>Payload:
+<pre><code class="language-javascript">{
+  item: {
+    id: 123,
+    name: &quot;Product C&quot;,
+    price: 39.99,
+    updatedAt: &quot;2024-01-15T10:30:00Z&quot;
+  }
+}</code></pre></p>
+<p>For deletions, a non-retained deletion notification is published:
+<pre><code class="language-javascript">{
+  id: 123,
+  deleted: true
+}</code></pre></p>
+<p>#### Reply Topics</p>
+<p>If the request includes <code>replyTo</code> and <code>correlationId</code> fields, the connector publishes a response to the reply topic:</p>
+<p>Success response:
+<pre><code class="language-javascript">{
+  ok: true,
+  items: [...],  // For list operations
+  item: {...}    // For item operations
+}</code></pre></p>
+<p>Error response:
+<pre><code class="language-javascript">{
+  ok: false,
+  error: {
+    status: 404,
+    statusText: &quot;Not Found&quot;,
+    body: { message: &quot;Item not found&quot; }
+  }
+}</code></pre></p>
+<h3>Authentication Integration</h3>
+<code>pan-data-connector</code> automatically integrates with LARC's authentication system. It subscribes to <code>auth.internal.state</code> (retained) and automatically injects <code>Authorization: Bearer ${token}</code> headers when a token is available.
+<p>This means you can configure authentication once in <code>pan-auth-provider</code>, and all connectors automatically include credentials:</p>
+<pre><code class="language-html">&lt;pan-auth-provider
+  storage=&quot;local&quot;
+  token-key=&quot;app_token&quot;&gt;
+&lt;/pan-auth-provider&gt;
+
+&lt;!-- This connector will automatically use the auth token --&gt;
+&lt;pan-data-connector
+  resource=&quot;users&quot;
+  base-url=&quot;https://api.example.com&quot;&gt;
+&lt;/pan-data-connector&gt;</code></pre>
+<h3>Complete Examples</h3>
+<p>#### Basic CRUD Application</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-data-connector.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;pan-data-connector
+    resource=&quot;todos&quot;
+    base-url=&quot;/api&quot;&gt;
+  &lt;/pan-data-connector&gt;
+
+  &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    const bus = document.querySelector(&#039;pan-bus&#039;);
+
+    // Subscribe to list state
+    bus.subscribe(&#039;todos.list.state&#039;, (msg) =&gt; {
+      const todos = msg.data.items;
+      renderTodoList(todos);
+    });
+
+    // Fetch initial list
+    bus.publish(&#039;todos.list.get&#039;, {});
+
+    function renderTodoList(todos) {
+      const app = document.getElementById(&#039;app&#039;);
+      app.innerHTML = `
+        &lt;h1&gt;Todo List&lt;/h1&gt;
+        &lt;ul&gt;
+          ${todos.map(todo =&gt; `
+            &lt;li&gt;
+              ${todo.title}
+              &lt;button onclick=&quot;completeTodo(${todo.id})&quot;&gt;Done&lt;/button&gt;
+              &lt;button onclick=&quot;deleteTodo(${todo.id})&quot;&gt;Delete&lt;/button&gt;
+            &lt;/li&gt;
+          `).join(&#039;&#039;)}
+        &lt;/ul&gt;
+        &lt;form onsubmit=&quot;addTodo(event)&quot;&gt;
+          &lt;input type=&quot;text&quot; id=&quot;newTodo&quot; placeholder=&quot;New todo...&quot;&gt;
+          &lt;button type=&quot;submit&quot;&gt;Add&lt;/button&gt;
+        &lt;/form&gt;
+      `;
+    }
+
+    window.addTodo = (event) =&gt; {
+      event.preventDefault();
+      const input = document.getElementById(&#039;newTodo&#039;);
+      const title = input.value.trim();
+
+      if (!title) return;
+
+      bus.publish(&#039;todos.item.save&#039;, {
+        item: { title, completed: false }
+      });
+
+      input.value = &#039;&#039;;
+    };
+
+    window.completeTodo = (id) =&gt; {
+      // Fetch current state, update, and save
+      const unsub = bus.subscribe(`todos.item.state.${id}`, (msg) =&gt; {
+        const todo = msg.data.item;
+        bus.publish(&#039;todos.item.save&#039;, {
+          item: { ...todo, completed: true }
+        });
+        unsub();
+      }, { retained: true });
+
+      bus.publish(&#039;todos.item.get&#039;, { id });
+    };
+
+    window.deleteTodo = (id) =&gt; {
+      if (confirm(&#039;Delete this todo?&#039;)) {
+        bus.publish(&#039;todos.item.delete&#039;, { id });
+      }
+    };
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>#### Request-Response Pattern</p>
+<p>For operations that need explicit confirmation:</p>
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+
+async function saveUser(userData) {
+  return new Promise((resolve, reject) =&gt; {
+    const correlationId = `save-${Date.now()}`;
+    const replyTo = `app.reply.${correlationId}`;
+
+    // Subscribe to reply
+    const unsub = bus.subscribe(replyTo, (msg) =&gt; {
+      unsub();
+      if (msg.data.ok) {
+        resolve(msg.data.item);
+      } else {
+        reject(new Error(msg.data.error.body?.message || &#039;Save failed&#039;));
+      }
+    });
+
+    // Send request with reply routing
+    bus.publish(&#039;users.item.save&#039;, {
+      item: userData,
+      replyTo,
+      correlationId
+    });
+  });
+}
+
+// Usage
+try {
+  const savedUser = await saveUser({ name: &#039;Alice&#039;, email: &#039;alice@example.com&#039; });
+  console.log(&#039;User saved:&#039;, savedUser);
+} catch (error) {
+  console.error(&#039;Failed to save user:&#039;, error);
+}</code></pre>
+<p>#### Query Parameters and Filtering</p>
+<pre><code class="language-javascript">// Paginated list with filters
+bus.publish(&#039;products.list.get&#039;, {
+  page: 2,
+  limit: 20,
+  category: &#039;electronics&#039;,
+  minPrice: 100,
+  maxPrice: 1000,
+  sort: &#039;price:asc&#039;
+});
+
+// The connector converts this to:
+// GET /api/products?page=2&amp;limit=20&amp;category=electronics&amp;minPrice=100&amp;maxPrice=1000&amp;sort=price%3Aasc</code></pre>
+<h3>Related Components</h3>
+<ul><li><strong>pan-bus</strong>: Required for message routing</li>
+<li><strong>pan-auth-provider</strong>: Automatic authentication header injection</li>
+<li><strong>pan-store</strong>: Can be used to cache connector state in memory</li>
+<li><strong>pan-idb</strong>: Can persist connector state to IndexedDB for offline support</li>
+</ul>
+<h3>Common Issues and Solutions</h3>
+<p>#### Issue: CORS Errors</p>
+<strong>Symptom:</strong> Browser console shows "Access-Control-Allow-Origin" errors.
+<strong>Solution:</strong> Configure your server to include proper CORS headers, or use a proxy during development:
+<pre><code class="language-javascript">// Development proxy in Vite config
+export default {
+  server: {
+    proxy: {
+      &#039;/api&#039;: {
+        target: &#039;https://api.example.com&#039;,
+        changeOrigin: true,
+        rewrite: (path) =&gt; path.replace(/^\/api/, &#039;&#039;)
+      }
+    }
+  }
+}</code></pre>
+<p>#### Issue: Stale Data After Updates</p>
+<strong>Symptom:</strong> List doesn't reflect changes after creating/updating items.
+<strong>Solution:</strong> The connector automatically refreshes the list after save/delete operations. If you need manual refresh:
+<pre><code class="language-javascript">bus.publish(&#039;users.list.get&#039;, {});</code></pre>
+<p>#### Issue: 401 Unauthorized Errors</p>
+<strong>Symptom:</strong> Requests fail with 401 status after initial success.
+<strong>Solution:</strong> Ensure your auth token is being refreshed. The connector automatically picks up new tokens from <code>auth.internal.state</code>:
+<pre><code class="language-javascript">// When token is refreshed
+bus.publish(&#039;auth.internal.state&#039;, {
+  authenticated: true,
+  token: newToken,
+  user: { id: 123, name: &#039;Alice&#039; }
+}, { retain: true });</code></pre>
+<p>#### Issue: Slow Performance with Large Lists</p>
+<strong>Symptom:</strong> UI freezes when loading large datasets.
+<strong>Solution:</strong> Implement pagination and avoid loading all items at once:
+<pre><code class="language-javascript">// Load in pages
+const PAGE_SIZE = 50;
+let currentPage = 1;
+
+function loadNextPage() {
+  bus.publish(&#039;items.list.get&#039;, {
+    page: currentPage,
+    limit: PAGE_SIZE
+  });
+  currentPage++;
+}</code></pre>
+<hr>
+<h2>pan-graphql-connector</h2>
+<h3>Overview</h3>
+<code>pan-graphql-connector</code> bridges LARC's PAN bus to GraphQL APIs. It maps the same CRUD topic patterns as <code>pan-data-connector</code> but executes GraphQL queries and mutations instead of REST calls. You define your GraphQL operations as child <code><script></code> elements, and the connector handles execution, response parsing, and state publication.
+<p>This component is ideal for applications that interact with GraphQL APIs while maintaining architectural consistency with REST-based LARC applications.</p>
+<h3>When to Use</h3>
+<strong>Use <code>pan-graphql-connector</code> when:</strong>
+<ul><li>Your backend uses GraphQL instead of REST</li>
+<li>You want to leverage GraphQL's flexible query structure</li>
+<li>You need to fetch nested or related data in a single request</li>
+<li>Your API benefits from GraphQL's type system and introspection</li>
+<li>You're building against existing GraphQL services (GitHub, Shopify, etc.)</li>
+</ul>
+<strong>Don't use <code>pan-graphql-connector</code> when:</strong>
+<ul><li>Your backend uses REST (use <code>pan-data-connector</code>)</li>
+<li>You need real-time subscriptions (use <code>pan-websocket</code> with GraphQL subscription protocol)</li>
+<li>Your queries are so dynamic that templating won't work (write custom GraphQL clients)</li>
+</ul>
+<h3>Installation and Setup</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-graphql-connector.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;pan-graphql-connector
+    resource=&quot;users&quot;
+    endpoint=&quot;https://api.example.com/graphql&quot;
+    key=&quot;id&quot;&gt;
+
+    &lt;!-- List query --&gt;
+    &lt;script type=&quot;application/graphql&quot; data-op=&quot;list&quot;&gt;
+      query GetUsers($limit: Int, $offset: Int) {
+        users(limit: $limit, offset: $offset) {
+          id
+          name
+          email
+          createdAt
+        }
+      }
+    &lt;/script&gt;
+
+    &lt;!-- Single item query --&gt;
+    &lt;script type=&quot;application/graphql&quot; data-op=&quot;item&quot;&gt;
+      query GetUser($id: ID!) {
+        user(id: $id) {
+          id
+          name
+          email
+          createdAt
+          posts {
+            id
+            title
+          }
+        }
+      }
+    &lt;/script&gt;
+
+    &lt;!-- Save mutation --&gt;
+    &lt;script type=&quot;application/graphql&quot; data-op=&quot;save&quot;&gt;
+      mutation SaveUser($id: ID, $item: UserInput!) {
+        saveUser(id: $id, input: $item) {
+          id
+          name
+          email
+          createdAt
+        }
+      }
+    &lt;/script&gt;
+
+    &lt;!-- Delete mutation --&gt;
+    &lt;script type=&quot;application/graphql&quot; data-op=&quot;delete&quot;&gt;
+      mutation DeleteUser($id: ID!) {
+        deleteUser(id: $id)
+      }
+    &lt;/script&gt;
+
+    &lt;!-- Response path mapping --&gt;
+    &lt;script type=&quot;application/json&quot; data-paths&gt;
+      {
+        &quot;list&quot;: &quot;data.users&quot;,
+        &quot;item&quot;: &quot;data.user&quot;,
+        &quot;save&quot;: &quot;data.saveUser&quot;,
+        &quot;delete&quot;: &quot;data.deleteUser&quot;
+      }
+    &lt;/script&gt;
+  &lt;/pan-graphql-connector&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>resource</code> | String | <code>"items"</code> | Logical resource name for topic prefixes. |
+| <code>endpoint</code> | String | Required | GraphQL HTTP endpoint URL. |
+| <code>key</code> | String | <code>"id"</code> | Field name used as the unique identifier. |</p>
+<h3>GraphQL Operation Scripts</h3>
+<p>Define GraphQL operations as child <code><script type="application/graphql"></code> elements:</p>
+<strong><code>data-op="list"</code></strong>
+<p>Executed when <code>${resource}.list.get</code> is published. Variables from the message data are passed to the query.</p>
+<strong><code>data-op="item"</code></strong>
+<p>Executed when <code>${resource}.item.get</code> is published. Receives <code>{ id }</code> as a variable.</p>
+<strong><code>data-op="save"</code></strong>
+<p>Executed when <code>${resource}.item.save</code> is published. Receives <code>{ id, item }</code> as variables (id is null for creation).</p>
+<strong><code>data-op="delete"</code></strong>
+<p>Executed when <code>${resource}.item.delete</code> is published. Receives <code>{ id }</code> as a variable.</p>
+<h3>Response Path Mapping</h3>
+<p>The <code><script type="application/json" data-paths></code> element maps GraphQL response paths to data:</p>
+<pre><code class="language-json">{
+  &quot;list&quot;: &quot;data.users&quot;,        // Path to array in list response
+  &quot;item&quot;: &quot;data.user&quot;,          // Path to object in item response
+  &quot;save&quot;: &quot;data.saveUser&quot;,      // Path to object in save response
+  &quot;delete&quot;: &quot;data.deleteUser&quot;   // Path to boolean/success indicator in delete response
+}</code></pre>
+<p>Without path mapping, the connector attempts to extract data from the top-level <code>data</code> field.</p>
+<h3>Topics</h3>
+<p>The topic structure is identical to <code>pan-data-connector</code>:</p>
+<ul><li><strong>Listens:</strong> <code>${resource}.list.get</code>, <code>${resource}.item.get</code>, <code>${resource}.item.save</code>, <code>${resource}.item.delete</code></li>
+<li><strong>Publishes:</strong> <code>${resource}.list.state</code>, <code>${resource}.item.state.${id}</code></li>
+<li><strong>Reply support:</strong> Same as <code>pan-data-connector</code></li>
+</ul>
+<h3>Authentication Integration</h3>
+<p>Like <code>pan-data-connector</code>, this component subscribes to <code>auth.internal.state</code> and automatically injects <code>Authorization: Bearer ${token}</code> headers.</p>
+<h3>Complete Examples</h3>
+<p>#### GitHub API Integration</p>
+<pre><code class="language-html">&lt;pan-graphql-connector
+  resource=&quot;repos&quot;
+  endpoint=&quot;https://api.github.com/graphql&quot;
+  key=&quot;id&quot;&gt;
+
+  &lt;script type=&quot;application/graphql&quot; data-op=&quot;list&quot;&gt;
+    query GetRepositories($login: String!) {
+      user(login: $login) {
+        repositories(first: 20, orderBy: {field: UPDATED_AT, direction: DESC}) {
+          nodes {
+            id
+            name
+            description
+            url
+            stargazerCount
+            updatedAt
+          }
+        }
+      }
+    }
+  &lt;/script&gt;
+
+  &lt;script type=&quot;application/json&quot; data-paths&gt;
+    {
+      &quot;list&quot;: &quot;data.user.repositories.nodes&quot;
+    }
+  &lt;/script&gt;
+&lt;/pan-graphql-connector&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  const bus = document.querySelector(&#039;pan-bus&#039;);
+
+  // Fetch repositories for a user
+  bus.publish(&#039;repos.list.get&#039;, { login: &#039;torvalds&#039; });
+
+  bus.subscribe(&#039;repos.list.state&#039;, (msg) =&gt; {
+    console.log(&#039;Repositories:&#039;, msg.data.items);
+  });
+&lt;/script&gt;</code></pre>
+<p>#### Nested Data Fetching</p>
+<pre><code class="language-html">&lt;pan-graphql-connector
+  resource=&quot;posts&quot;
+  endpoint=&quot;/graphql&quot;
+  key=&quot;id&quot;&gt;
+
+  &lt;script type=&quot;application/graphql&quot; data-op=&quot;item&quot;&gt;
+    query GetPost($id: ID!) {
+      post(id: $id) {
+        id
+        title
+        content
+        author {
+          id
+          name
+          avatar
+        }
+        comments {
+          id
+          text
+          author {
+            name
+          }
+          createdAt
+        }
+        tags
+      }
+    }
+  &lt;/script&gt;
+
+  &lt;script type=&quot;application/json&quot; data-paths&gt;
+    { &quot;item&quot;: &quot;data.post&quot; }
+  &lt;/script&gt;
+&lt;/pan-graphql-connector&gt;</code></pre>
+<h3>Related Components</h3>
+<ul><li><strong>pan-bus</strong>: Required for message routing</li>
+<li><strong>pan-data-connector</strong>: REST equivalent</li>
+<li><strong>pan-auth-provider</strong>: Automatic token injection</li>
+<li><strong>pan-websocket</strong>: For GraphQL subscriptions over WebSocket</li>
+</ul>
+<h3>Common Issues and Solutions</h3>
+<p>#### Issue: GraphQL Errors Not Surfaced</p>
+<strong>Symptom:</strong> Requests fail silently without clear error messages.
+<strong>Solution:</strong> GraphQL returns errors in the <code>errors</code> array. The connector concatenates error messages. Check browser console for details:
+<pre><code class="language-javascript">bus.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+  if (msg.data.items.length === 0) {
+    console.warn(&#039;Empty result—check console for GraphQL errors&#039;);
+  }
+});</code></pre>
+<p>#### Issue: Response Path Incorrect</p>
+<strong>Symptom:</strong> Published state is empty even though GraphQL response contains data.
+<strong>Solution:</strong> Verify your path mapping matches the response structure. Use browser DevTools Network tab to inspect the actual GraphQL response:
+<pre><code class="language-json">// Response:
+{
+  &quot;data&quot;: {
+    &quot;viewer&quot;: {
+      &quot;repositories&quot;: [...]
+    }
+  }
+}
+
+// Correct path:
+{
+  &quot;list&quot;: &quot;data.viewer.repositories&quot;
+}</code></pre>
+<p>#### Issue: Variables Not Passed Correctly</p>
+<strong>Symptom:</strong> GraphQL complains about missing required variables.
+<strong>Solution:</strong> Ensure the query variable names match what you're passing in the PAN message:
+<pre><code class="language-javascript">// Query expects $limit
+query GetItems($limit: Int) { ... }
+
+// Pass correct variable name
+bus.publish(&#039;items.list.get&#039;, { limit: 50 });</code></pre>
+<hr>
+<h2>pan-websocket</h2>
+<h3>Overview</h3>
+<code>pan-websocket</code> creates a bidirectional bridge between LARC's PAN bus and WebSocket servers. It forwards PAN messages to the WebSocket connection and publishes incoming WebSocket messages to the PAN bus. The component handles connection lifecycle, automatic reconnection with exponential backoff, heartbeat pings, and topic-based message filtering.
+<p>This enables real-time, full-duplex communication patterns: chat applications, live collaboration, gaming, IoT dashboards, and any scenario where both client and server need to push messages at will.</p>
+<h3>When to Use</h3>
+<strong>Use <code>pan-websocket</code> when:</strong>
+<ul><li>You need bidirectional real-time communication</li>
+<li>Both client and server need to initiate messages</li>
+<li>You're building chat, collaboration, or multiplayer features</li>
+<li>You need lower latency than HTTP polling or SSE</li>
+<li>Your server supports WebSocket protocol</li>
+</ul>
+<strong>Don't use <code>pan-websocket</code> when:</strong>
+<ul><li>You only need server-to-client updates (use <code>pan-sse</code> for simplicity)</li>
+<li>Your infrastructure doesn't support WebSocket (some proxies block them)</li>
+<li>You're working with simple request-response patterns (use <code>pan-data-connector</code>)</li>
+<li>You need guaranteed message delivery and ordering (WebSocket doesn't guarantee these; consider adding application-level acknowledgment)</li>
+</ul>
+<h3>Installation and Setup</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-websocket.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;pan-websocket
+    url=&quot;wss://api.example.com/ws&quot;
+    outbound-topics=&quot;chat.* user.typing&quot;
+    inbound-topics=&quot;chat.* user.* system.*&quot;
+    auto-reconnect=&quot;true&quot;
+    reconnect-delay=&quot;1000,15000&quot;
+    heartbeat=&quot;30&quot;
+    heartbeat-topic=&quot;sys.ping&quot;&gt;
+  &lt;/pan-websocket&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>url</code> | String | Required | WebSocket server URL (must start with <code>ws://</code> or <code>wss://</code>). |
+| <code>protocols</code> | String | <code>""</code> | Comma-separated list of WebSocket subprotocols. |
+| <code>outbound-topics</code> | String | <code>""</code> | Space-separated topic patterns to forward from PAN bus to WebSocket. Empty means no topics are forwarded. |
+| <code>inbound-topics</code> | String | <code>"<em>"</code> | Space-separated topic patterns to publish from WebSocket to PAN bus. Default <code>"</em>"</code> publishes all. |
+| <code>auto-reconnect</code> | Boolean | <code>true</code> | Enable automatic reconnection on disconnect. |
+| <code>reconnect-delay</code> | String | <code>"1000,15000"</code> | Min and max reconnection delay in milliseconds (exponential backoff). |
+| <code>heartbeat</code> | Number | <code>30</code> | Seconds between heartbeat ping messages. Set to 0 to disable. |
+| <code>heartbeat-topic</code> | String | <code>"sys.ping"</code> | Topic used for heartbeat messages. |</p>
+<strong>Example configurations:</strong>
+<pre><code class="language-html">&lt;!-- Chat application --&gt;
+&lt;pan-websocket
+  url=&quot;wss://chat.example.com&quot;
+  outbound-topics=&quot;chat.send user.typing&quot;
+  inbound-topics=&quot;chat.* presence.*&quot;&gt;
+&lt;/pan-websocket&gt;
+
+&lt;!-- IoT dashboard --&gt;
+&lt;pan-websocket
+  url=&quot;wss://iot.example.com/devices&quot;
+  outbound-topics=&quot;device.command.*&quot;
+  inbound-topics=&quot;sensor.* device.status.*&quot;
+  heartbeat=&quot;10&quot;&gt;
+&lt;/pan-websocket&gt;
+
+&lt;!-- Authentication with token --&gt;
+&lt;pan-websocket
+  url=&quot;wss://api.example.com/ws?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...&quot;
+  outbound-topics=&quot;*&quot;
+  inbound-topics=&quot;*&quot;&gt;
+&lt;/pan-websocket&gt;</code></pre>
+<h3>Topics</h3>
+<p>The connector publishes system lifecycle events:</p>
+<strong><code>ws.connected</code></strong>
+<p>Published when WebSocket connection is established.</p>
+<p>Payload:
+<pre><code class="language-javascript">{
+  url: &quot;wss://api.example.com/ws&quot;,
+  timestamp: 1704444000000
+}</code></pre></p>
+<strong><code>ws.disconnected</code></strong>
+<p>Published when connection closes.</p>
+<p>Payload:
+<pre><code class="language-javascript">{
+  code: 1000,           // WebSocket close code
+  reason: &quot;Normal closure&quot;,
+  wasClean: true,       // Whether close was clean
+  timestamp: 1704444100000
+}</code></pre></p>
+<strong><code>ws.error</code></strong>
+<p>Published when connection error occurs.</p>
+<p>Payload:
+<pre><code class="language-javascript">{
+  error: &quot;Connection refused&quot;,
+  timestamp: 1704444050000
+}</code></pre></p>
+<strong><code>ws.message</code></strong>
+<p>Published for every incoming WebSocket message (before topic-specific publishing).</p>
+<p>Payload:
+<pre><code class="language-javascript">{
+  message: { topic: &quot;chat.message&quot;, data: {...} },
+  timestamp: 1704444075000
+}</code></pre></p>
+<p>Or for non-JSON messages:
+<pre><code class="language-javascript">{
+  raw: &quot;plain text message&quot;,
+  timestamp: 1704444075000
+}</code></pre></p>
+<h3>Methods</h3>
+<p>Access the element to call methods programmatically:</p>
+<pre><code class="language-javascript">const ws = document.querySelector(&#039;pan-websocket&#039;);</code></pre>
+<strong><code>send(data)</code></strong>
+<p>Sends data directly through the WebSocket connection.</p>
+<p>Parameters:</p>
+<ul><li><code>data</code> (String | Object): Data to send. Objects are JSON-stringified automatically.</li>
+</ul>
+<pre><code class="language-javascript">ws.send({ topic: &#039;custom.event&#039;, data: { foo: &#039;bar&#039; } });
+ws.send(&#039;plain text message&#039;);</code></pre>
+<strong><code>close()</code></strong>
+<p>Closes the WebSocket connection and disables auto-reconnect.</p>
+<pre><code class="language-javascript">ws.close();</code></pre>
+<strong><code>reconnect()</code></strong>
+<p>Manually triggers reconnection (closes current connection and establishes new one).</p>
+<pre><code class="language-javascript">ws.reconnect();</code></pre>
+<h3>Message Format</h3>
+<p>Messages sent over WebSocket should follow this JSON structure:</p>
+<pre><code class="language-javascript">{
+  topic: &quot;event.name&quot;,
+  data: { /* payload */ },
+  ts: 1704444000000,   // Optional timestamp
+  id: &quot;msg-123&quot;        // Optional message ID
+}</code></pre>
+<p>The connector:</p>
+<li>Checks if <code>message.topic</code> matches any <code>inbound-topics</code> patterns</li>
+<li>Publishes to PAN bus as: <code>{ topic: message.topic, data: message.data, retain: message.retain }</code></li>
+<p>Outbound messages are forwarded in the same format.</p>
+<h3>Complete Examples</h3>
+<p>#### Real-time Chat Application</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-websocket.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;pan-websocket
+    url=&quot;wss://chat.example.com/room/general&quot;
+    outbound-topics=&quot;chat.send user.typing&quot;
+    inbound-topics=&quot;chat.* user.* presence.*&quot;&gt;
+  &lt;/pan-websocket&gt;
+
+  &lt;div id=&quot;chat&quot;&gt;
+    &lt;div id=&quot;messages&quot;&gt;&lt;/div&gt;
+    &lt;div id=&quot;typing&quot;&gt;&lt;/div&gt;
+    &lt;form id=&quot;chatForm&quot;&gt;
+      &lt;input type=&quot;text&quot; id=&quot;messageInput&quot; placeholder=&quot;Type a message...&quot;&gt;
+      &lt;button type=&quot;submit&quot;&gt;Send&lt;/button&gt;
+    &lt;/form&gt;
+  &lt;/div&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    const bus = document.querySelector(&#039;pan-bus&#039;);
+    const messagesDiv = document.getElementById(&#039;messages&#039;);
+    const typingDiv = document.getElementById(&#039;typing&#039;);
+    const form = document.getElementById(&#039;chatForm&#039;);
+    const input = document.getElementById(&#039;messageInput&#039;);
+
+    // Subscribe to incoming messages
+    bus.subscribe(&#039;chat.message&#039;, (msg) =&gt; {
+      const { user, text, timestamp } = msg.data;
+      appendMessage(user, text, timestamp);
+    });
+
+    // Subscribe to typing indicators
+    bus.subscribe(&#039;user.typing&#039;, (msg) =&gt; {
+      const { user, isTyping } = msg.data;
+      updateTypingIndicator(user, isTyping);
+    });
+
+    // Subscribe to connection status
+    bus.subscribe(&#039;ws.connected&#039;, () =&gt; {
+      console.log(&#039;Chat connected&#039;);
+    });
+
+    bus.subscribe(&#039;ws.disconnected&#039;, () =&gt; {
+      console.warn(&#039;Chat disconnected&#039;);
+    });
+
+    // Send message on form submit
+    form.addEventListener(&#039;submit&#039;, (e) =&gt; {
+      e.preventDefault();
+      const text = input.value.trim();
+
+      if (!text) return;
+
+      bus.publish(&#039;chat.send&#039;, {
+        text,
+        user: getCurrentUser(),
+        timestamp: Date.now()
+      });
+
+      input.value = &#039;&#039;;
+    });
+
+    // Send typing indicator
+    let typingTimeout;
+    input.addEventListener(&#039;input&#039;, () =&gt; {
+      bus.publish(&#039;user.typing&#039;, {
+        user: getCurrentUser(),
+        isTyping: true
+      });
+
+      clearTimeout(typingTimeout);
+      typingTimeout = setTimeout(() =&gt; {
+        bus.publish(&#039;user.typing&#039;, {
+          user: getCurrentUser(),
+          isTyping: false
+        });
+      }, 2000);
+    });
+
+    function appendMessage(user, text, timestamp) {
+      const time = new Date(timestamp).toLocaleTimeString();
+      messagesDiv.innerHTML += `
+        &lt;div class=&quot;message&quot;&gt;
+          &lt;strong&gt;${user}&lt;/strong&gt;
+          &lt;span class=&quot;time&quot;&gt;${time}&lt;/span&gt;
+          &lt;p&gt;${text}&lt;/p&gt;
+        &lt;/div&gt;
+      `;
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function updateTypingIndicator(user, isTyping) {
+      if (isTyping) {
+        typingDiv.textContent = `${user} is typing...`;
+      } else {
+        typingDiv.textContent = &#039;&#039;;
+      }
+    }
+
+    function getCurrentUser() {
+      return localStorage.getItem(&#039;username&#039;) || &#039;Anonymous&#039;;
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>#### IoT Sensor Dashboard</p>
+<pre><code class="language-html">&lt;pan-websocket
+  url=&quot;wss://iot.example.com/stream&quot;
+  outbound-topics=&quot;device.control.*&quot;
+  inbound-topics=&quot;sensor.* device.status.*&quot;
+  heartbeat=&quot;10&quot;&gt;
+&lt;/pan-websocket&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  const bus = document.querySelector(&#039;pan-bus&#039;);
+
+  // Subscribe to all sensor updates
+  bus.subscribe(&#039;sensor.*&#039;, (msg) =&gt; {
+    const { deviceId, sensorType, value, unit } = msg.data;
+    updateSensorDisplay(deviceId, sensorType, value, unit);
+  });
+
+  // Subscribe to device status
+  bus.subscribe(&#039;device.status.*&#039;, (msg) =&gt; {
+    const { deviceId, online, battery } = msg.data;
+    updateDeviceStatus(deviceId, online, battery);
+  });
+
+  // Control device
+  function controlDevice(deviceId, action) {
+    bus.publish(`device.control.${deviceId}`, {
+      action,
+      timestamp: Date.now()
+    });
+  }
+
+  // Example: Turn on device
+  controlDevice(&#039;device-001&#039;, &#039;power:on&#039;);
+&lt;/script&gt;</code></pre>
+<h3>Related Components</h3>
+<ul><li><strong>pan-bus</strong>: Required for message routing</li>
+<li><strong>pan-sse</strong>: For unidirectional server-to-client streaming</li>
+<li><strong>pan-data-connector</strong>: For request-response HTTP patterns</li>
+<li><strong>pan-graphql-connector</strong>: For GraphQL over WebSocket subscriptions</li>
+</ul>
+<h3>Common Issues and Solutions</h3>
+<p>#### Issue: Connection Keeps Dropping</p>
+<strong>Symptom:</strong> <code>ws.disconnected</code> events happen frequently.
+<strong>Solution:</strong>
+<li>Check server-side WebSocket timeout configuration</li>
+<li>Reduce <code>heartbeat</code> interval to keep connection alive</li>
+<li>Verify firewall/proxy doesn't block WebSocket</li>
+<pre><code class="language-html">&lt;pan-websocket
+  url=&quot;wss://api.example.com/ws&quot;
+  heartbeat=&quot;15&quot;
+  reconnect-delay=&quot;500,5000&quot;&gt;
+&lt;/pan-websocket&gt;</code></pre>
+<p>#### Issue: Messages Not Being Forwarded</p>
+<strong>Symptom:</strong> Messages published to PAN don't appear on WebSocket.
+<strong>Solution:</strong> Ensure topics match <code>outbound-topics</code> patterns:
+<pre><code class="language-html">&lt;!-- Only forwards topics starting with &quot;app.&quot; --&gt;
+&lt;pan-websocket
+  url=&quot;wss://api.example.com/ws&quot;
+  outbound-topics=&quot;app.*&quot;&gt;
+&lt;/pan-websocket&gt;</code></pre>
+<pre><code class="language-javascript">// This WILL be forwarded
+bus.publish(&#039;app.user.update&#039;, { id: 123 });
+
+// This will NOT be forwarded
+bus.publish(&#039;other.event&#039;, { data: &#039;ignored&#039; });</code></pre>
+<p>#### Issue: Reconnection Storms</p>
+<strong>Symptom:</strong> Many reconnection attempts happen too quickly, overwhelming server.
+<strong>Solution:</strong> Increase minimum reconnection delay and maximum backoff:
+<pre><code class="language-html">&lt;pan-websocket
+  url=&quot;wss://api.example.com/ws&quot;
+  reconnect-delay=&quot;5000,60000&quot;&gt;
+&lt;/pan-websocket&gt;</code></pre>
+<p>This uses exponential backoff from 5 seconds to 60 seconds maximum.</p>
+<hr>
+<h2>pan-sse</h2>
+<h3>Overview</h3>
+<code>pan-sse</code> bridges Server-Sent Events (SSE) streams to LARC's PAN bus. It opens an EventSource connection, listens for server events, and publishes them as PAN messages. Unlike WebSocket, SSE is unidirectional (server to client) but simpler to implement, works over standard HTTP, and automatically reconnects on failure.
+<p>SSE is ideal for live feeds, notification streams, real-time dashboards, and any scenario where the server pushes updates but the client only sends occasional HTTP requests.</p>
+<h3>When to Use</h3>
+<strong>Use <code>pan-sse</code> when:</strong>
+<ul><li>You only need server-to-client real-time updates</li>
+<li>Your infrastructure doesn't support WebSocket</li>
+<li>You want automatic reconnection built into the browser</li>
+<li>Your server can stream <code>text/event-stream</code> responses</li>
+<li>You're building live feeds, notifications, or monitoring dashboards</li>
+</ul>
+<strong>Don't use <code>pan-sse</code> when:</strong>
+<ul><li>You need bidirectional communication (use <code>pan-websocket</code>)</li>
+<li>You need to send frequent client-to-server messages (SSE doesn't support that)</li>
+<li>Your server doesn't support persistent HTTP connections</li>
+<li>You need binary data streaming (SSE is text-only)</li>
+</ul>
+<h3>Installation and Setup</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-sse.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;pan-sse
+    src=&quot;/api/events&quot;
+    topics=&quot;user.* system.notification&quot;
+    with-credentials=&quot;true&quot;
+    persist-last-event=&quot;app-events&quot;
+    backoff=&quot;1000,10000&quot;&gt;
+  &lt;/pan-sse&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>src</code> | String | Required | SSE endpoint URL. Must return <code>Content-Type: text/event-stream</code>. |
+| <code>topics</code> | String | <code>""</code> | Space-separated list of topics to subscribe to. Appended as <code>?topics=topic1,topic2</code>. |
+| <code>with-credentials</code> | Boolean | <code>true</code> | Include credentials (cookies) with EventSource request. |
+| <code>persist-last-event</code> | String | <code>""</code> | localStorage key to persist last event ID. On reconnect, sends <code>?lastEventId=...</code> to resume stream. |
+| <code>backoff</code> | String | <code>"1000,15000"</code> | Min and max reconnection delay in milliseconds. Uses jittered exponential backoff. |</p>
+<strong>Example configurations:</strong>
+<pre><code class="language-html">&lt;!-- Live notification feed --&gt;
+&lt;pan-sse
+  src=&quot;https://api.example.com/notifications&quot;
+  topics=&quot;notification.new&quot;
+  persist-last-event=&quot;notifications&quot;&gt;
+&lt;/pan-sse&gt;
+
+&lt;!-- Stock price updates --&gt;
+&lt;pan-sse
+  src=&quot;/api/stocks/stream&quot;
+  topics=&quot;stock.price stock.trade&quot;
+  with-credentials=&quot;false&quot;&gt;
+&lt;/pan-sse&gt;
+
+&lt;!-- Server monitoring --&gt;
+&lt;pan-sse
+  src=&quot;https://monitor.example.com/events&quot;
+  topics=&quot;server.* alert.*&quot;
+  persist-last-event=&quot;monitoring&quot;
+  backoff=&quot;2000,30000&quot;&gt;
+&lt;/pan-sse&gt;</code></pre>
+<h3>Server-Side SSE Format</h3>
+<p>Your server should send events in this format:</p>
+<pre><code class="language-plaintext">Content-Type: text/event-stream
+Cache-Control: no-cache
+Connection: keep-alive
+
+id: 123
+event: notification.new
+data: {&quot;userId&quot;:456,&quot;message&quot;:&quot;You have a new message&quot;}
+
+id: 124
+event: user.login
+data: {&quot;userId&quot;:789,&quot;timestamp&quot;:1704444000000}
+
+id: 125
+data: {&quot;topic&quot;:&quot;system.status&quot;,&quot;status&quot;:&quot;ok&quot;}</code></pre>
+<ul><li><strong><code>id:</code></strong> Optional event ID for resumption (used with <code>persist-last-event</code>)</li>
+<li><strong><code>event:</code></strong> Optional event type (becomes PAN topic if provided)</li>
+<li><strong><code>data:</code></strong> Event payload (JSON parsed automatically)</li>
+</ul>
+If no <code>event:</code> field is provided, the connector looks for <code>topic</code> in the JSON data.
+<h3>Topics</h3>
+<p>The connector doesn't publish system lifecycle events by default. It simply forwards server events to PAN bus topics.</p>
+<p>Events are published as:
+<pre><code class="language-javascript">{
+  topic: eventType || data.topic,
+  data: data.data || data.payload || data,
+  retain: data.retain || false
+}</code></pre></p>
+<h3>Complete Examples</h3>
+<p>#### Live Notification Feed</p>
+<p>Server (Node.js Express):
+<pre><code class="language-javascript">app.get(&#039;/api/notifications&#039;, (req, res) =&gt; {
+  res.setHeader(&#039;Content-Type&#039;, &#039;text/event-stream&#039;);
+  res.setHeader(&#039;Cache-Control&#039;, &#039;no-cache&#039;);
+  res.setHeader(&#039;Connection&#039;, &#039;keep-alive&#039;);
+
+  // Send initial event
+  res.write(`id: ${Date.now()}\n`);
+  res.write(`event: notification.init\n`);
+  res.write(`data: {&quot;status&quot;:&quot;connected&quot;}\n\n`);
+
+  // Subscribe to notification system
+  const unsubscribe = notificationService.subscribe((notification) =&gt; {
+    res.write(`id: ${notification.id}\n`);
+    res.write(`event: notification.new\n`);
+    res.write(`data: ${JSON.stringify(notification)}\n\n`);
+  });
+
+  // Cleanup on disconnect
+  req.on(&#039;close&#039;, () =&gt; {
+    unsubscribe();
+    res.end();
+  });
+});</code></pre></p>
+<p>Client:
+<pre><code class="language-html">&lt;pan-sse
+  src=&quot;/api/notifications&quot;
+  persist-last-event=&quot;notifications&quot;&gt;
+&lt;/pan-sse&gt;
+
+&lt;div id=&quot;notifications&quot;&gt;&lt;/div&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  const bus = document.querySelector(&#039;pan-bus&#039;);
+  const container = document.getElementById(&#039;notifications&#039;);
+
+  bus.subscribe(&#039;notification.new&#039;, (msg) =&gt; {
+    const { userId, message, timestamp } = msg.data;
+
+    const div = document.createElement(&#039;div&#039;);
+    div.className = &#039;notification&#039;;
+    div.innerHTML = `
+      &lt;span class=&quot;time&quot;&gt;${new Date(timestamp).toLocaleTimeString()}&lt;/span&gt;
+      &lt;p&gt;${message}&lt;/p&gt;
+    `;
+
+    container.prepend(div);
+
+    // Auto-remove after 10 seconds
+    setTimeout(() =&gt; div.remove(), 10000);
+  });
+&lt;/script&gt;</code></pre></p>
+<p>#### Real-time Analytics Dashboard</p>
+<p>Server:
+<pre><code class="language-javascript">app.get(&#039;/api/analytics/stream&#039;, (req, res) =&gt; {
+  res.setHeader(&#039;Content-Type&#039;, &#039;text/event-stream&#039;);
+  res.setHeader(&#039;Cache-Control&#039;, &#039;no-cache&#039;);
+  res.setHeader(&#039;Connection&#039;, &#039;keep-alive&#039;);
+
+  // Send metrics every 5 seconds
+  const interval = setInterval(() =&gt; {
+    const metrics = {
+      activeUsers: getActiveUserCount(),
+      requestsPerSecond: getRequestRate(),
+      errorRate: getErrorRate(),
+      timestamp: Date.now()
+    };
+
+    res.write(`event: analytics.metrics\n`);
+    res.write(`data: ${JSON.stringify(metrics)}\n\n`);
+  }, 5000);
+
+  req.on(&#039;close&#039;, () =&gt; {
+    clearInterval(interval);
+    res.end();
+  });
+});</code></pre></p>
+<p>Client:
+<pre><code class="language-html">&lt;pan-sse src=&quot;/api/analytics/stream&quot;&gt;&lt;/pan-sse&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  const bus = document.querySelector(&#039;pan-bus&#039;);
+
+  bus.subscribe(&#039;analytics.metrics&#039;, (msg) =&gt; {
+    const { activeUsers, requestsPerSecond, errorRate } = msg.data;
+
+    updateChart(&#039;users&#039;, activeUsers);
+    updateChart(&#039;requests&#039;, requestsPerSecond);
+    updateChart(&#039;errors&#039;, errorRate);
+  });
+&lt;/script&gt;</code></pre></p>
+<p>#### Multi-Topic Subscription</p>
+<pre><code class="language-html">&lt;pan-sse
+  src=&quot;/api/events&quot;
+  topics=&quot;user.login user.logout order.created order.shipped&quot;
+  persist-last-event=&quot;app-events&quot;&gt;
+&lt;/pan-sse&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+  const bus = document.querySelector(&#039;pan-bus&#039;);
+
+  // Subscribe to user events
+  bus.subscribe(&#039;user.*&#039;, (msg) =&gt; {
+    console.log(&#039;User event:&#039;, msg.topic, msg.data);
+  });
+
+  // Subscribe to order events
+  bus.subscribe(&#039;order.*&#039;, (msg) =&gt; {
+    console.log(&#039;Order event:&#039;, msg.topic, msg.data);
+  });
+&lt;/script&gt;</code></pre>
+<p>The <code>topics</code> attribute sends <code>?topics=user.login,user.logout,order.created,order.shipped</code> to the server, allowing it to filter events before streaming.</p>
+<h3>Related Components</h3>
+<ul><li><strong>pan-bus</strong>: Required for message routing</li>
+<li><strong>pan-websocket</strong>: For bidirectional communication</li>
+<li><strong>pan-data-connector</strong>: For request-response patterns</li>
+<li><strong>pan-store</strong>: Can cache streamed data in memory</li>
+</ul>
+<h3>Common Issues and Solutions</h3>
+<p>#### Issue: EventSource Connection Fails Silently</p>
+<strong>Symptom:</strong> No events received, no error messages.
+<strong>Solution:</strong> Check server CORS headers and Content-Type:
+<pre><code class="language-javascript">// Server must include:
+res.setHeader(&#039;Content-Type&#039;, &#039;text/event-stream&#039;);
+res.setHeader(&#039;Cache-Control&#039;, &#039;no-cache&#039;);
+res.setHeader(&#039;Connection&#039;, &#039;keep-alive&#039;);
+res.setHeader(&#039;Access-Control-Allow-Origin&#039;, &#039;https://your-client.com&#039;);
+res.setHeader(&#039;Access-Control-Allow-Credentials&#039;, &#039;true&#039;);</code></pre>
+<p>#### Issue: Lost Events After Reconnect</p>
+<strong>Symptom:</strong> Gaps in data stream after network interruption.
+<strong>Solution:</strong> Use <code>persist-last-event</code> and implement server-side event replay:
+<pre><code class="language-html">&lt;pan-sse
+  src=&quot;/api/events&quot;
+  persist-last-event=&quot;events&quot;&gt;
+&lt;/pan-sse&gt;</code></pre>
+<p>Server checks <code>?lastEventId</code> query parameter:
+<pre><code class="language-javascript">app.get(&#039;/api/events&#039;, (req, res) =&gt; {
+  const lastEventId = req.query.lastEventId;
+
+  if (lastEventId) {
+    // Replay missed events since lastEventId
+    const missedEvents = getEventsSince(lastEventId);
+    missedEvents.forEach(event =&gt; {
+      res.write(`id: ${event.id}\n`);
+      res.write(`data: ${JSON.stringify(event)}\n\n`);
+    });
+  }
+
+  // Continue with live stream
+  // ...
+});</code></pre></p>
+<p>#### Issue: Memory Leak from Long-Running Streams</p>
+<strong>Symptom:</strong> Browser memory usage grows over time.
+<strong>Solution:</strong> The component automatically handles cleanup on disconnect. Ensure you're not accumulating DOM nodes in your subscription handlers:
+<pre><code class="language-javascript">bus.subscribe(&#039;analytics.metrics&#039;, (msg) =&gt; {
+  // BAD: Keeps appending without limit
+  container.innerHTML += `&lt;div&gt;${msg.data.value}&lt;/div&gt;`;
+
+  // GOOD: Limit number of displayed items
+  const div = document.createElement(&#039;div&#039;);
+  div.textContent = msg.data.value;
+  container.prepend(div);
+
+  // Keep only last 100 items
+  while (container.children.length &gt; 100) {
+    container.lastChild.remove();
+  }
+});</code></pre>
+<hr>
+<h2>Architectural Patterns</h2>
+<h3>Combining Multiple Connectors</h3>
+<p>Real-world applications often use multiple integration patterns simultaneously. Here's how to orchestrate them effectively:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-auth-provider.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-data-connector.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-websocket.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/ui/pan-sse.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+
+  &lt;!-- Authentication --&gt;
+  &lt;pan-auth-provider
+    storage=&quot;local&quot;
+    token-key=&quot;app_token&quot;&gt;
+  &lt;/pan-auth-provider&gt;
+
+  &lt;!-- REST API for CRUD operations --&gt;
+  &lt;pan-data-connector
+    resource=&quot;documents&quot;
+    base-url=&quot;https://api.example.com&quot;&gt;
+  &lt;/pan-data-connector&gt;
+
+  &lt;!-- WebSocket for real-time collaboration --&gt;
+  &lt;pan-websocket
+    url=&quot;wss://collab.example.com/ws&quot;
+    outbound-topics=&quot;document.edit.*&quot;
+    inbound-topics=&quot;document.edit.* user.cursor.*&quot;&gt;
+  &lt;/pan-websocket&gt;
+
+  &lt;!-- SSE for notifications --&gt;
+  &lt;pan-sse
+    src=&quot;https://api.example.com/notifications&quot;
+    topics=&quot;notification.*&quot;
+    persist-last-event=&quot;notifications&quot;&gt;
+  &lt;/pan-sse&gt;
+
+  &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    const bus = document.querySelector(&#039;pan-bus&#039;);
+
+    // Load initial document list via REST
+    bus.publish(&#039;documents.list.get&#039;, { limit: 50 });
+
+    // Subscribe to document state
+    bus.subscribe(&#039;documents.list.state&#039;, (msg) =&gt; {
+      renderDocumentList(msg.data.items);
+    });
+
+    // When user opens a document, subscribe to real-time edits
+    function openDocument(id) {
+      bus.publish(&#039;documents.item.get&#039;, { id });
+
+      bus.subscribe(`document.edit.${id}`, (msg) =&gt; {
+        applyRemoteEdit(msg.data);
+      });
+
+      bus.subscribe(`user.cursor.${id}`, (msg) =&gt; {
+        updateCursorPosition(msg.data.userId, msg.data.position);
+      });
+    }
+
+    // When user edits locally, broadcast via WebSocket
+    function handleLocalEdit(documentId, edit) {
+      bus.publish(`document.edit.${documentId}`, {
+        userId: getCurrentUserId(),
+        edit,
+        timestamp: Date.now()
+      });
+    }
+
+    // Subscribe to notifications via SSE
+    bus.subscribe(&#039;notification.*&#039;, (msg) =&gt; {
+      showNotification(msg.data);
+    });
+
+    // Save changes via REST when user stops editing
+    async function saveDocument(documentId, content) {
+      return new Promise((resolve, reject) =&gt; {
+        const correlationId = `save-${Date.now()}`;
+        const replyTo = `app.reply.${correlationId}`;
+
+        const unsub = bus.subscribe(replyTo, (msg) =&gt; {
+          unsub();
+          msg.data.ok ? resolve(msg.data.item) : reject(msg.data.error);
+        });
+
+        bus.publish(&#039;documents.item.save&#039;, {
+          item: { id: documentId, content },
+          replyTo,
+          correlationId
+        });
+      });
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>This architecture uses:</p>
+<ul><li><strong>REST</strong> for durable state (document CRUD)</li>
+<li><strong>WebSocket</strong> for ephemeral real-time updates (cursor positions, live edits)</li>
+<li><strong>SSE</strong> for server-initiated notifications (comments, mentions)</li>
+</ul>
+Each protocol handles what it does best, unified through PAN topics.
+<h3>Optimistic Updates with Rollback</h3>
+<p>When combining REST APIs with real-time updates, implement optimistic updates for better perceived performance:</p>
+<pre><code class="language-javascript">class DocumentEditor {
+  constructor() {
+    this.bus = document.querySelector(&#039;pan-bus&#039;);
+    this.pendingUpdates = new Map();
+  }
+
+  async updateDocument(id, changes) {
+    const updateId = `update-${Date.now()}-${Math.random()}`;
+
+    // Apply changes optimistically
+    this.applyChangesLocally(id, changes);
+
+    // Track pending update
+    this.pendingUpdates.set(updateId, { id, changes });
+
+    try {
+      // Send to server
+      await this.saveToServer(id, changes);
+
+      // Success: remove from pending
+      this.pendingUpdates.delete(updateId);
+    } catch (error) {
+      // Failure: rollback
+      console.error(&#039;Update failed, rolling back:&#039;, error);
+      this.rollbackChanges(id, changes);
+      this.pendingUpdates.delete(updateId);
+
+      throw error;
+    }
+  }
+
+  applyChangesLocally(id, changes) {
+    // Update local state immediately
+    const event = new CustomEvent(&#039;document-updated&#039;, {
+      detail: { id, changes }
+    });
+    window.dispatchEvent(event);
+  }
+
+  rollbackChanges(id, changes) {
+    // Revert local state
+    const event = new CustomEvent(&#039;document-rollback&#039;, {
+      detail: { id, changes }
+    });
+    window.dispatchEvent(event);
+  }
+
+  saveToServer(id, changes) {
+    return new Promise((resolve, reject) =&gt; {
+      const correlationId = `save-${Date.now()}`;
+      const replyTo = `app.reply.${correlationId}`;
+
+      const timeout = setTimeout(() =&gt; {
+        unsub();
+        reject(new Error(&#039;Save timeout&#039;));
+      }, 10000);
+
+      const unsub = this.bus.subscribe(replyTo, (msg) =&gt; {
+        clearTimeout(timeout);
+        unsub();
+
+        if (msg.data.ok) {
+          resolve(msg.data.item);
+        } else {
+          reject(new Error(msg.data.error?.body?.message || &#039;Save failed&#039;));
+        }
+      });
+
+      this.bus.publish(&#039;documents.item.save&#039;, {
+        item: { id, ...changes },
+        replyTo,
+        correlationId
+      });
+    });
+  }
+}</code></pre>
+<h3>Conflict Resolution</h3>
+<p>When multiple users edit the same document simultaneously, conflicts arise. Here's a simple last-write-wins strategy with vector clocks:</p>
+<pre><code class="language-javascript">class ConflictResolver {
+  constructor(bus) {
+    this.bus = bus;
+    this.vectorClock = new Map();
+  }
+
+  handleRemoteEdit(documentId, edit) {
+    const localVersion = this.vectorClock.get(documentId) || 0;
+    const remoteVersion = edit.version || 0;
+
+    if (remoteVersion &gt; localVersion) {
+      // Remote is newer: apply
+      this.applyEdit(documentId, edit);
+      this.vectorClock.set(documentId, remoteVersion);
+    } else if (remoteVersion &lt; localVersion) {
+      // Local is newer: ignore
+      console.log(&#039;Ignoring stale remote edit&#039;);
+    } else {
+      // Same version: conflict
+      this.resolveConflict(documentId, edit);
+    }
+  }
+
+  resolveConflict(documentId, remoteEdit) {
+    // Strategy 1: Last-write-wins by timestamp
+    const localTimestamp = this.getLocalTimestamp(documentId);
+    if (remoteEdit.timestamp &gt; localTimestamp) {
+      this.applyEdit(documentId, remoteEdit);
+    }
+
+    // Strategy 2: Operational Transform (more complex)
+    // Strategy 3: CRDT (Conflict-free Replicated Data Types)
+    // Strategy 4: User-initiated merge
+  }
+
+  applyEdit(documentId, edit) {
+    // Apply the edit to local state
+    this.bus.publish(`document.local-update.${documentId}`, {
+      edit,
+      source: &#039;remote&#039;
+    });
+  }
+
+  getLocalTimestamp(documentId) {
+    // Retrieve from local state
+    return Date.now();
+  }
+}</code></pre>
+<h3>Offline Support</h3>
+<p>Combine connectors with service workers and IndexedDB for offline-first applications:</p>
+<pre><code class="language-javascript">// Service worker for offline caching
+self.addEventListener(&#039;install&#039;, (event) =&gt; {
+  event.waitUntil(
+    caches.open(&#039;app-v1&#039;).then((cache) =&gt; {
+      return cache.addAll([
+        &#039;/&#039;,
+        &#039;/ui/pan-bus.mjs&#039;,
+        &#039;/ui/pan-data-connector.mjs&#039;,
+        &#039;/app.js&#039;,
+        &#039;/styles.css&#039;
+      ]);
+    })
+  );
+});
+
+self.addEventListener(&#039;fetch&#039;, (event) =&gt; {
+  event.respondWith(
+    caches.match(event.request).then((response) =&gt; {
+      return response || fetch(event.request);
+    })
+  );
+});
+
+// Application code with offline queue
+class OfflineQueue {
+  constructor(bus) {
+    this.bus = bus;
+    this.queue = [];
+    this.loadQueue();
+
+    // Monitor connection status
+    window.addEventListener(&#039;online&#039;, () =&gt; this.processQueue());
+    window.addEventListener(&#039;offline&#039;, () =&gt; console.log(&#039;Offline mode&#039;));
+
+    // Intercept save operations when offline
+    this.bus.subscribe(&#039;documents.item.save&#039;, (msg) =&gt; {
+      if (!navigator.onLine) {
+        this.queueOperation(&#039;save&#039;, msg.data);
+        // Publish immediate optimistic success
+        if (msg.replyTo) {
+          this.bus.publish(msg.replyTo, {
+            correlationId: msg.correlationId,
+            data: { ok: true, item: msg.data.item, queued: true }
+          });
+        }
+      }
+    });
+  }
+
+  queueOperation(type, data) {
+    this.queue.push({ type, data, timestamp: Date.now() });
+    this.saveQueue();
+  }
+
+  async processQueue() {
+    console.log(`Processing ${this.queue.length} queued operations...`);
+
+    while (this.queue.length &gt; 0 &amp;&amp; navigator.onLine) {
+      const operation = this.queue[0];
+
+      try {
+        await this.executeOperation(operation);
+        this.queue.shift();
+        this.saveQueue();
+      } catch (error) {
+        console.error(&#039;Failed to process queued operation:&#039;, error);
+        break;
+      }
+    }
+  }
+
+  async executeOperation(operation) {
+    switch (operation.type) {
+      case &#039;save&#039;:
+        this.bus.publish(&#039;documents.item.save&#039;, operation.data);
+        break;
+      case &#039;delete&#039;:
+        this.bus.publish(&#039;documents.item.delete&#039;, operation.data);
+        break;
+    }
+  }
+
+  saveQueue() {
+    localStorage.setItem(&#039;offline-queue&#039;, JSON.stringify(this.queue));
+  }
+
+  loadQueue() {
+    try {
+      const data = localStorage.getItem(&#039;offline-queue&#039;);
+      this.queue = data ? JSON.parse(data) : [];
+    } catch {
+      this.queue = [];
+    }
+  }
+}</code></pre>
+<h3>Rate Limiting and Backpressure</h3>
+<p>When dealing with high-frequency WebSocket or SSE streams, implement rate limiting to prevent UI overload:</p>
+<pre><code class="language-javascript">class RateLimitedSubscriber {
+  constructor(bus, topic, handler, options = {}) {
+    this.bus = bus;
+    this.handler = handler;
+    this.buffer = [];
+    this.lastFlush = Date.now();
+    this.flushInterval = options.interval || 100; // ms
+    this.maxBatch = options.maxBatch || 50;
+
+    this.unsub = bus.subscribe(topic, (msg) =&gt; {
+      this.buffer.push(msg);
+
+      // Flush if buffer is full
+      if (this.buffer.length &gt;= this.maxBatch) {
+        this.flush();
+      }
+    });
+
+    // Periodic flush
+    this.timer = setInterval(() =&gt; this.flush(), this.flushInterval);
+  }
+
+  flush() {
+    if (this.buffer.length === 0) return;
+
+    const batch = this.buffer.splice(0, this.maxBatch);
+    this.handler(batch);
+    this.lastFlush = Date.now();
+  }
+
+  destroy() {
+    clearInterval(this.timer);
+    this.unsub();
+    this.flush(); // Flush remaining
+  }
+}
+
+// Usage
+const subscriber = new RateLimitedSubscriber(
+  bus,
+  &#039;sensor.temperature&#039;,
+  (messages) =&gt; {
+    console.log(`Received ${messages.length} temperature readings`);
+    updateChart(messages);
+  },
+  { interval: 200, maxBatch: 100 }
+);</code></pre>
+<h3>Security Considerations</h3>
+<p>#### Content Security Policy</p>
+<p>When using WebSocket and SSE, configure CSP headers:</p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;
+  default-src &#039;self&#039;;
+  connect-src &#039;self&#039; wss://api.example.com https://api.example.com;
+  script-src &#039;self&#039; &#039;unsafe-inline&#039;;
+&quot;&gt;</code></pre>
+<p>#### Token Expiration Handling</p>
+<p>Automatically refresh auth tokens before they expire:</p>
+<pre><code class="language-javascript">class TokenRefreshManager {
+  constructor(bus) {
+    this.bus = bus;
+    this.refreshTimer = null;
+
+    // Subscribe to auth state
+    bus.subscribe(&#039;auth.internal.state&#039;, (msg) =&gt; {
+      if (msg.data.authenticated) {
+        this.scheduleRefresh(msg.data.expiresAt);
+      }
+    }, { retained: true });
+  }
+
+  scheduleRefresh(expiresAt) {
+    clearTimeout(this.refreshTimer);
+
+    const now = Date.now();
+    const expiresIn = expiresAt - now;
+    const refreshIn = Math.max(0, expiresIn - 60000); // Refresh 1 min before expiry
+
+    this.refreshTimer = setTimeout(() =&gt; {
+      this.refreshToken();
+    }, refreshIn);
+  }
+
+  async refreshToken() {
+    try {
+      const response = await fetch(&#039;/api/auth/refresh&#039;, {
+        method: &#039;POST&#039;,
+        credentials: &#039;include&#039;
+      });
+
+      const { token, expiresAt } = await response.json();
+
+      // Update auth state
+      this.bus.publish(&#039;auth.internal.state&#039;, {
+        authenticated: true,
+        token,
+        expiresAt
+      }, { retain: true });
+
+    } catch (error) {
+      console.error(&#039;Token refresh failed:&#039;, error);
+      // Redirect to login
+      window.location.href = &#039;/login&#039;;
+    }
+  }
+}</code></pre>
+<p>#### Input Validation</p>
+<p>Always validate data from external sources:</p>
+<pre><code class="language-javascript">function validateMessage(msg) {
+  // Validate structure
+  if (!msg || typeof msg !== &#039;object&#039;) {
+    throw new Error(&#039;Invalid message structure&#039;);
+  }
+
+  if (typeof msg.topic !== &#039;string&#039; || msg.topic.length === 0) {
+    throw new Error(&#039;Missing or invalid topic&#039;);
+  }
+
+  // Validate data size
+  const size = JSON.stringify(msg.data).length;
+  if (size &gt; 1048576) { // 1MB limit
+    throw new Error(&#039;Message payload too large&#039;);
+  }
+
+  // Sanitize HTML if rendering user content
+  if (msg.data.html) {
+    msg.data.html = sanitizeHtml(msg.data.html);
+  }
+
+  return msg;
+}
+
+// Use in subscription handlers
+bus.subscribe(&#039;chat.message&#039;, (msg) =&gt; {
+  try {
+    const validated = validateMessage(msg);
+    displayChatMessage(validated.data);
+  } catch (error) {
+    console.error(&#039;Invalid message received:&#039;, error);
+  }
+});</code></pre>
+<hr>
+<h2>Summary</h2>
+<p>LARC's integration components transform network protocols into PAN messages, maintaining architectural consistency across diverse data sources:</p>
+<ul><li><strong>pan-data-connector</strong> handles REST APIs with standard CRUD patterns</li>
+<li><strong>pan-graphql-connector</strong> executes GraphQL queries and mutations</li>
+<li><strong>pan-websocket</strong> enables bidirectional real-time communication</li>
+<li><strong>pan-sse</strong> streams server-sent events for unidirectional updates</li>
+</ul>
+All four components:
+<ul><li>Operate declaratively via HTML attributes</li>
+<li>Publish retained state messages for late subscribers</li>
+<li>Support request-response patterns with <code>replyTo</code></li>
+<li>Integrate with LARC's authentication system</li>
+<li>Handle connection lifecycle and error recovery</li>
+</ul>
+By combining these components strategically, you can build sophisticated applications that handle REST CRUD, real-time collaboration, server notifications, and offline support—all through a unified message bus architecture. The network complexity stays at the boundary, while your application logic remains focused on business concerns.
+<p>Choose the right connector for each data source, implement appropriate patterns for conflict resolution and offline support, and let LARC's integration layer handle the protocol details. Your components simply publish and subscribe to topics, blissfully unaware of whether their data travels over HTTP, WebSocket, or SSE.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/building-with-larc/chapter-24-integration-components.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,650 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configuration Options · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Configuration Options">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>appendix-c-configuration-options</span>
+      </div>
+      <article class="docs-content">
+        <h1>Configuration Options</h1>
+<p>This appendix provides a comprehensive reference for all configuration options available in LARC, from PAN bus settings to component configuration, global defaults, and environment variables. These settings control performance characteristics, security policies, feature flags, and operational behavior.</p>
+<h2>PAN Bus Configuration</h2>
+<p>The <code><pan-bus></code> element accepts configuration through HTML attributes. These settings control the bus's behavior, resource limits, and enabled features.</p>
+<h3>Attribute Reference</h3>
+<p>#### max-retained</p>
+<strong>Type:</strong> Integer
+<strong>Default:</strong> <code>1000</code>
+<strong>Range:</strong> <code>1</code> to <code>100000</code>
+<strong>Purpose:</strong> Maximum number of retained messages stored by the bus.
+<p>When this limit is exceeded, the bus evicts the least recently accessed retained message (LRU eviction).</p>
+<pre><code class="language-html">&lt;pan-bus max-retained=&quot;5000&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Use Cases:</strong>
+<ul><li>Small apps with minimal state: <code>100-500</code></li>
+<li>Medium apps: <code>1000-2000</code> (default: <code>1000</code>)</li>
+<li>Large apps with extensive state: <code>5000-10000</code></li>
+</ul>
+<strong>Performance Impact:</strong>
+<ul><li>Higher values: More memory usage, slower eviction checks</li>
+<li>Lower values: Less memory, faster eviction, more message loss</li>
+</ul>
+<strong>Monitoring:</strong>
+<pre><code class="language-javascript">const stats = await client.request(&#039;pan:sys.stats&#039;, {});
+console.log(&#039;Retained:&#039;, stats.data.retained);
+console.log(&#039;Evicted:&#039;, stats.data.retainedEvicted);</code></pre>
+<p>#### max-message-size</p>
+<strong>Type:</strong> Integer
+<strong>Default:</strong> <code>1048576</code> (1MB)
+<strong>Range:</strong> <code>1024</code> to <code>10485760</code> (1KB to 10MB)
+<strong>Purpose:</strong> Maximum total size of a message envelope in bytes.
+<p>Includes all fields: topic, data, headers, id, ts, etc.</p>
+<pre><code class="language-html">&lt;pan-bus max-message-size=&quot;2097152&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Recommendations:</strong>
+<ul><li>Default <code>1048576</code> (1MB) suitable for most apps</li>
+<li>Increase for apps with large payloads (analytics, file metadata)</li>
+<li>Decrease for memory-constrained environments (IoT, embedded)</li>
+</ul>
+<strong>Enforcement:</strong>
+<pre><code class="language-javascript">// Message rejected if too large
+{
+  topic: &#039;pan:sys.error&#039;,
+  data: {
+    code: &#039;MESSAGE_INVALID&#039;,
+    message: &#039;Message size (2000000 bytes) exceeds limit (1048576 bytes)&#039;
+  }
+}</code></pre>
+<p>#### max-payload-size</p>
+<strong>Type:</strong> Integer
+<strong>Default:</strong> <code>524288</code> (512KB)
+<strong>Range:</strong> <code>1024</code> to <code>5242880</code> (1KB to 5MB)
+<strong>Purpose:</strong> Maximum size of message <code>data</code> field in bytes.
+<p>Separate limit for payload to prevent large data objects from consuming resources.</p>
+<pre><code class="language-html">&lt;pan-bus max-payload-size=&quot;1048576&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Relationship to max-message-size:</strong>
+<pre><code class="language-plaintext">max-payload-size &lt;= max-message-size</code></pre>
+<strong>Best Practice:</strong>
+Set <code>max-payload-size</code> to 50-70% of <code>max-message-size</code> to leave room for headers and metadata.
+<p>#### cleanup-interval</p>
+<strong>Type:</strong> Integer
+<strong>Default:</strong> <code>30000</code> (30 seconds)
+<strong>Range:</strong> <code>1000</code> to <code>300000</code> (1s to 5min)
+<strong>Purpose:</strong> Interval in milliseconds between automatic cleanup cycles.
+<p>The bus periodically removes dead subscriptions (components removed from DOM) and stale rate limit data.</p>
+<pre><code class="language-html">&lt;pan-bus cleanup-interval=&quot;60000&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Tuning:</strong>
+<ul><li>Frequent cleanup (10-20s): Lower memory, higher CPU</li>
+<li>Infrequent cleanup (60-120s): Higher memory, lower CPU</li>
+<li>Default (30s): Balanced</li>
+</ul>
+<strong>Monitoring:</strong>
+<pre><code class="language-javascript">const stats = await client.request(&#039;pan:sys.stats&#039;, {});
+console.log(&#039;Cleaned up:&#039;, stats.data.subsCleanedUp);</code></pre>
+<p>#### rate-limit</p>
+<strong>Type:</strong> Integer
+<strong>Default:</strong> <code>1000</code>
+<strong>Range:</strong> <code>1</code> to <code>100000</code>
+<strong>Purpose:</strong> Maximum messages per client per rate limit window.
+<p>Prevents a single client from overwhelming the bus.</p>
+<pre><code class="language-html">&lt;pan-bus rate-limit=&quot;5000&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Calculation:</strong>
+<pre><code class="language-plaintext">messages_per_second = rate-limit / (rate-limit-window / 1000)
+
+Default: 1000 / (1000 / 1000) = 1000 messages/second</code></pre>
+<strong>Rate Limit Exceeded:</strong>
+<pre><code class="language-javascript">// Message rejected
+{
+  topic: &#039;pan:sys.error&#039;,
+  data: {
+    code: &#039;RATE_LIMIT_EXCEEDED&#039;,
+    message: &#039;Too many messages&#039;,
+    details: { clientId: &#039;user-list#abc123&#039; }
+  }
+}</code></pre>
+<strong>Recommendations:</strong>
+<ul><li>Development: <code>1000-5000</code> (relaxed)</li>
+<li>Production: <code>1000-2000</code> (default)</li>
+<li>High-throughput apps: <code>5000-10000</code></li>
+</ul>
+#### rate-limit-window
+<strong>Type:</strong> Integer
+<strong>Default:</strong> <code>1000</code> (1 second)
+<strong>Range:</strong> <code>100</code> to <code>60000</code> (100ms to 1min)
+<strong>Purpose:</strong> Time window in milliseconds for rate limiting.
+<p>Works together with <code>rate-limit</code> to determine messages per time window.</p>
+<pre><code class="language-html">&lt;pan-bus rate-limit=&quot;2000&quot; rate-limit-window=&quot;2000&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<p>This allows 2000 messages per 2 seconds = 1000 messages/second.</p>
+<p>#### allow-global-wildcard</p>
+<strong>Type:</strong> Boolean
+<strong>Default:</strong> <code>true</code>
+<strong>Purpose:</strong> Allow or disallow global wildcard (<code>*</code>) subscriptions.
+<p>Global wildcard subscriptions match every message in the system. Disabling can improve security and performance.</p>
+<pre><code class="language-html">&lt;pan-bus allow-global-wildcard=&quot;false&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>When Disabled:</strong>
+<pre><code class="language-javascript">// Subscription rejected
+client.subscribe(&#039;*&#039;, handler);
+// Error: Global wildcard (*) subscriptions are disabled for security</code></pre>
+<strong>Recommendations:</strong>
+<ul><li>Development: <code>true</code> (useful for debugging)</li>
+<li>Production: <code>false</code> (security/performance)</li>
+</ul>
+#### debug
+<strong>Type:</strong> Boolean
+<strong>Default:</strong> <code>false</code>
+<strong>Purpose:</strong> Enable detailed console logging of bus operations.
+<pre><code class="language-html">&lt;pan-bus debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Output Examples:</strong>
+<pre><code class="language-plaintext">[PAN Bus] PAN Bus Enhanced ready { maxRetained: 1000, ... }
+[PAN Bus] Client registered { id: &#039;user-list#abc&#039;, caps: [&#039;client&#039;] }
+[PAN Bus] Subscription added { pattern: &#039;users.*&#039;, clientId: &#039;user-list#abc&#039; }
+[PAN Bus] Published { topic: &#039;users.updated&#039;, delivered: 3, routes: 0 }
+[PAN Bus] Cleaned up 2 dead subscriptions</code></pre>
+<strong>Performance Impact:</strong> Minimal (logging is cheap), but avoid in production.
+<p>#### enable-routing</p>
+<strong>Type:</strong> Boolean
+<strong>Default:</strong> <code>false</code>
+<strong>Purpose:</strong> Enable the advanced routing system for message transformation and filtering.
+<pre><code class="language-html">&lt;pan-bus enable-routing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Features Enabled:</strong>
+<ul><li>Declarative routing rules</li>
+<li>Message transformation</li>
+<li>Message filtering</li>
+<li>Topic aliasing</li>
+<li>Conditional routing</li>
+</ul>
+<strong>Access Routing API:</strong>
+<pre><code class="language-javascript">// Routes available at window.pan.routes
+window.pan.routes.add({
+  name: &#039;user-events-to-analytics&#039;,
+  match: &#039;users.item.*&#039;,
+  transform: (msg) =&gt; ({
+    topic: &#039;analytics.event&#039;,
+    data: { entity: &#039;user&#039;, action: msg.topic, ...msg.data }
+  })
+});</code></pre>
+<strong>Performance Impact:</strong> Slight overhead per message for route matching.
+<p>#### enable-tracing</p>
+<strong>Type:</strong> Boolean
+<strong>Default:</strong> <code>false</code>
+<strong>Purpose:</strong> Enable message tracing for debugging and monitoring.
+<pre><code class="language-html">&lt;pan-bus enable-tracing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Features Enabled:</strong>
+<ul><li>Message flow visualization</li>
+<li>Delivery tracking</li>
+<li>Route matching logs</li>
+<li>Performance metrics</li>
+</ul>
+<strong>Access Tracing API:</strong>
+<pre><code class="language-javascript">// Debug manager available at window.pan.debug
+const traces = window.pan.debug.getTraces();
+console.log(&#039;Recent traces:&#039;, traces);</code></pre>
+<h3>Complete Configuration Example</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;My LARC App&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus
+    max-retained=&quot;2000&quot;
+    max-message-size=&quot;2097152&quot;
+    max-payload-size=&quot;1048576&quot;
+    cleanup-interval=&quot;60000&quot;
+    rate-limit=&quot;5000&quot;
+    rate-limit-window=&quot;1000&quot;
+    allow-global-wildcard=&quot;false&quot;
+    debug=&quot;false&quot;
+    enable-routing=&quot;false&quot;
+    enable-tracing=&quot;false&quot;&gt;
+  &lt;/pan-bus&gt;
+
+  &lt;my-app&gt;&lt;/my-app&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h2>PanClient Configuration</h2>
+<p>The <code>PanClient</code> class accepts configuration through constructor parameters and method options.</p>
+<h3>Constructor Options</h3>
+<pre><code class="language-javascript">new PanClient(host?, busSelector?)</code></pre>
+<p>#### host</p>
+<strong>Type:</strong> <code>HTMLElement | Document</code>
+<strong>Default:</strong> <code>document</code>
+<strong>Purpose:</strong> Element to dispatch/receive events from.
+<pre><code class="language-javascript">// Default: document-level client
+const client = new PanClient();
+
+// Component-scoped client
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.client = new PanClient(this);
+  }
+}</code></pre>
+<strong>Use Cases:</strong>
+<ul><li>Document-level (<code>document</code>): Most common, global communication</li>
+<li>Component-scoped (element): Isolated communication within subtree</li>
+</ul>
+#### busSelector
+<strong>Type:</strong> <code>string</code>
+<strong>Default:</strong> <code>'pan-bus'</code>
+<strong>Purpose:</strong> CSS selector for bus element.
+<pre><code class="language-javascript">// Default selector
+const client = new PanClient(document, &#039;pan-bus&#039;);
+
+// Custom selector
+const client = new PanClient(document, &#039;#my-custom-bus&#039;);</code></pre>
+<p>Rarely needed unless using multiple buses or custom naming.</p>
+<h3>Subscription Options</h3>
+<pre><code class="language-javascript">client.subscribe(topics, handler, options?)</code></pre>
+<p>#### retained</p>
+<strong>Type:</strong> <code>boolean</code>
+<strong>Default:</strong> <code>false</code>
+<strong>Purpose:</strong> Receive retained messages immediately upon subscription.
+<pre><code class="language-javascript">// Get current state immediately
+client.subscribe(&#039;app.theme.state&#039;, (msg) =&gt; {
+  applyTheme(msg.data);
+}, { retained: true });</code></pre>
+<strong>Behavior:</strong>
+<ul><li><code>true</code>: Receives retained message immediately (if exists), then future messages</li>
+<li><code>false</code>: Only receives messages published after subscription</li>
+</ul>
+#### signal
+<strong>Type:</strong> <code>AbortSignal</code>
+<strong>Default:</strong> <code>undefined</code>
+<strong>Purpose:</strong> Automatically unsubscribe when signal is aborted.
+<pre><code class="language-javascript">const controller = new AbortController();
+
+client.subscribe(&#039;users.*&#039;, handler, {
+  signal: controller.signal
+});
+
+// Later: unsubscribe all at once
+controller.abort();</code></pre>
+<strong>Use Case:</strong> Clean up multiple subscriptions with single abort.
+<h3>Request Options</h3>
+<pre><code class="language-javascript">client.request(topic, data, options?)</code></pre>
+<p>#### timeoutMs</p>
+<strong>Type:</strong> <code>number</code>
+<strong>Default:</strong> <code>5000</code> (5 seconds)
+<strong>Range:</strong> <code>100</code> to <code>300000</code> (100ms to 5min)
+<strong>Purpose:</strong> Maximum time to wait for reply before timeout error.
+<pre><code class="language-javascript">// Default timeout
+const response = await client.request(&#039;users.item.get&#039;, { id: 123 });
+
+// Custom timeout
+const response = await client.request(&#039;slow.operation&#039;, { ... }, {
+  timeoutMs: 30000  // 30 seconds
+});</code></pre>
+<strong>Timeout Error:</strong>
+<pre><code class="language-javascript">try {
+  await client.request(&#039;users.item.get&#039;, { id: 123 }, { timeoutMs: 1000 });
+} catch (err) {
+  console.error(err.message);  // &quot;PAN request timeout&quot;
+}</code></pre>
+<strong>Recommendations:</strong>
+<ul><li>Fast queries: <code>1000-2000ms</code></li>
+<li>Standard requests: <code>5000ms</code> (default)</li>
+<li>Slow operations: <code>10000-30000ms</code></li>
+<li>Long-running tasks: Consider async pattern instead</li>
+</ul>
+<h2>Component Configuration</h2>
+<p>LARC components can be configured through attributes, properties, and data attributes.</p>
+<h3>Standard Attributes</h3>
+<p>Most LARC components follow these conventions:</p>
+<p>#### data-* Attributes</p>
+<p>Use for configuration and initial values:</p>
+<pre><code class="language-html">&lt;pan-user-list
+  data-page-size=&quot;50&quot;
+  data-sort=&quot;name-asc&quot;
+  data-filter=&quot;active&quot;&gt;
+&lt;/pan-user-list&gt;</code></pre>
+<p>#### Boolean Attributes</p>
+<p>Use presence/absence for boolean flags:</p>
+<pre><code class="language-html">&lt;!-- Feature enabled --&gt;
+&lt;pan-data-grid sortable filterable paginated&gt;&lt;/pan-data-grid&gt;
+
+&lt;!-- Feature disabled --&gt;
+&lt;pan-data-grid&gt;&lt;/pan-data-grid&gt;</code></pre>
+<p>#### Value Attributes</p>
+<p>Use for string/number values:</p>
+<pre><code class="language-html">&lt;pan-modal
+  size=&quot;large&quot;
+  position=&quot;center&quot;
+  backdrop=&quot;true&quot;&gt;
+&lt;/pan-modal&gt;</code></pre>
+<h3>Component-Specific Configuration</h3>
+<p>Configuration varies by component. Refer to component documentation for specifics.</p>
+<strong>Example: pan-storage</strong>
+<pre><code class="language-html">&lt;pan-storage
+  key=&quot;my-app-state&quot;
+  storage=&quot;localStorage&quot;
+  sync=&quot;true&quot;
+  debounce=&quot;1000&quot;&gt;
+&lt;/pan-storage&gt;</code></pre>
+<strong>Example: pan-routes</strong>
+<pre><code class="language-html">&lt;pan-routes
+  base-path=&quot;/app&quot;
+  hash-routing=&quot;false&quot;
+  scroll-restoration=&quot;true&quot;&gt;
+&lt;/pan-routes&gt;</code></pre>
+<h2>Global Configuration</h2>
+<p>Global configuration affects all LARC components and clients.</p>
+<h3>Window Configuration</h3>
+<p>Configure LARC globally before bus initialization:</p>
+<pre><code class="language-html">&lt;script&gt;
+window.LARC_CONFIG = {
+  bus: {
+    maxRetained: 2000,
+    debug: false
+  },
+  defaults: {
+    requestTimeout: 10000,
+    retainedSubscription: true
+  }
+};
+&lt;/script&gt;
+
+&lt;pan-bus&gt;&lt;/pan-bus&gt;</code></pre>
+<strong>Note:</strong> This is a proposed pattern. Current implementation uses attributes only.
+<h3>Feature Flags</h3>
+<p>Control experimental or optional features:</p>
+<pre><code class="language-javascript">window.LARC_FEATURES = {
+  routing: false,
+  tracing: false,
+  devtools: true
+};</code></pre>
+<h2>Environment Variables</h2>
+<p>For build-time configuration, use environment variables:</p>
+<h3>NODE_ENV</h3>
+<strong>Values:</strong> <code>development</code> | <code>production</code> | <code>test</code>
+<strong>Purpose:</strong> Affects default behavior and optimizations.
+<pre><code class="language-bash">NODE_ENV=production npm run build</code></pre>
+<strong>Impact:</strong>
+<ul><li><code>development</code>: Debug logging, dev warnings, relaxed limits</li>
+<li><code>production</code>: Optimized, no debug output, strict limits</li>
+<li><code>test</code>: Test-specific behavior, mocked services</li>
+</ul>
+<h3>LARC_DEBUG</h3>
+<strong>Values:</strong> <code>true</code> | <code>false</code>
+<strong>Purpose:</strong> Override debug mode regardless of NODE_ENV.
+<pre><code class="language-bash">LARC_DEBUG=true npm start</code></pre>
+<h3>LARC_MAX_RETAINED</h3>
+<strong>Values:</strong> Integer
+<strong>Purpose:</strong> Override default max retained messages.
+<pre><code class="language-bash">LARC_MAX_RETAINED=5000 npm start</code></pre>
+<h3>LARC_RATE_LIMIT</h3>
+<strong>Values:</strong> Integer
+<strong>Purpose:</strong> Override default rate limit.
+<pre><code class="language-bash">LARC_RATE_LIMIT=10000 npm start</code></pre>
+<h2>Configuration Profiles</h2>
+<p>Recommended configuration profiles for different scenarios:</p>
+<h3>Development Profile</h3>
+<strong>Focus:</strong> Developer experience, debugging, relaxed limits
+<pre><code class="language-html">&lt;pan-bus
+  max-retained=&quot;500&quot;
+  max-message-size=&quot;1048576&quot;
+  max-payload-size=&quot;524288&quot;
+  cleanup-interval=&quot;30000&quot;
+  rate-limit=&quot;10000&quot;
+  allow-global-wildcard=&quot;true&quot;
+  debug=&quot;true&quot;
+  enable-routing=&quot;false&quot;
+  enable-tracing=&quot;true&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h3>Production Profile</h3>
+<strong>Focus:</strong> Performance, security, resource limits
+<pre><code class="language-html">&lt;pan-bus
+  max-retained=&quot;2000&quot;
+  max-message-size=&quot;1048576&quot;
+  max-payload-size=&quot;524288&quot;
+  cleanup-interval=&quot;60000&quot;
+  rate-limit=&quot;2000&quot;
+  allow-global-wildcard=&quot;false&quot;
+  debug=&quot;false&quot;
+  enable-routing=&quot;false&quot;
+  enable-tracing=&quot;false&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h3>High-Throughput Profile</h3>
+<strong>Focus:</strong> Maximum message volume, relaxed limits
+<pre><code class="language-html">&lt;pan-bus
+  max-retained=&quot;5000&quot;
+  max-message-size=&quot;2097152&quot;
+  max-payload-size=&quot;1048576&quot;
+  cleanup-interval=&quot;120000&quot;
+  rate-limit=&quot;10000&quot;
+  rate-limit-window=&quot;1000&quot;
+  allow-global-wildcard=&quot;false&quot;
+  debug=&quot;false&quot;
+  enable-routing=&quot;true&quot;
+  enable-tracing=&quot;false&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h3>Memory-Constrained Profile</h3>
+<strong>Focus:</strong> Minimal memory footprint
+<pre><code class="language-html">&lt;pan-bus
+  max-retained=&quot;100&quot;
+  max-message-size=&quot;262144&quot;
+  max-payload-size=&quot;131072&quot;
+  cleanup-interval=&quot;15000&quot;
+  rate-limit=&quot;500&quot;
+  allow-global-wildcard=&quot;false&quot;
+  debug=&quot;false&quot;
+  enable-routing=&quot;false&quot;
+  enable-tracing=&quot;false&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h3>Testing Profile</h3>
+<strong>Focus:</strong> Predictable behavior, fast cleanup
+<pre><code class="language-html">&lt;pan-bus
+  max-retained=&quot;50&quot;
+  max-message-size=&quot;1048576&quot;
+  max-payload-size=&quot;524288&quot;
+  cleanup-interval=&quot;5000&quot;
+  rate-limit=&quot;1000&quot;
+  allow-global-wildcard=&quot;true&quot;
+  debug=&quot;true&quot;
+  enable-routing=&quot;false&quot;
+  enable-tracing=&quot;true&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h2>Runtime Configuration</h2>
+<p>Some settings can be changed at runtime through the bus API.</p>
+<h3>Get Current Configuration</h3>
+<pre><code class="language-javascript">const stats = await client.request(&#039;pan:sys.stats&#039;, {});
+console.log(&#039;Config:&#039;, stats.data.config);</code></pre>
+<h3>Clear Retained Messages</h3>
+<pre><code class="language-javascript">// Clear all retained messages
+client.publish({
+  topic: &#039;pan:sys.clear-retained&#039;,
+  data: {}
+});
+
+// Clear matching pattern
+client.publish({
+  topic: &#039;pan:sys.clear-retained&#039;,
+  data: { pattern: &#039;users.*&#039; }
+});</code></pre>
+<h3>Get Statistics</h3>
+<pre><code class="language-javascript">const stats = await client.request(&#039;pan:sys.stats&#039;, {});
+
+console.log({
+  published: stats.data.published,
+  delivered: stats.data.delivered,
+  dropped: stats.data.dropped,
+  retained: stats.data.retained,
+  retainedEvicted: stats.data.retainedEvicted,
+  subsCleanedUp: stats.data.subsCleanedUp,
+  errors: stats.data.errors,
+  subscriptions: stats.data.subscriptions,
+  clients: stats.data.clients
+});</code></pre>
+<h2>Configuration Best Practices</h2>
+<h3>Start Conservative</h3>
+<p>Begin with default settings:</p>
+<pre><code class="language-html">&lt;pan-bus&gt;&lt;/pan-bus&gt;</code></pre>
+<p>Monitor with stats, adjust only when needed.</p>
+<h3>Monitor and Tune</h3>
+<pre><code class="language-javascript">// Periodic monitoring
+setInterval(async () =&gt; {
+  const stats = await client.request(&#039;pan:sys.stats&#039;, {});
+
+  console.log(&#039;Bus Health:&#039;, {
+    retained: `${stats.data.retained} / ${stats.data.config.maxRetained}`,
+    dropped: stats.data.dropped,
+    errors: stats.data.errors
+  });
+
+  // Alert if approaching limits
+  if (stats.data.retained &gt; stats.data.config.maxRetained * 0.8) {
+    console.warn(&#039;Retained messages approaching limit&#039;);
+  }
+}, 60000);</code></pre>
+<h3>Environment-Specific Configuration</h3>
+<p>Use different profiles per environment:</p>
+<pre><code class="language-javascript">// config.js
+export function getBusConfig() {
+  if (process.env.NODE_ENV === &#039;production&#039;) {
+    return {
+      maxRetained: 2000,
+      debug: false,
+      rateLimit: 2000
+    };
+  }
+
+  return {
+    maxRetained: 500,
+    debug: true,
+    rateLimit: 10000
+  };
+}</code></pre>
+<pre><code class="language-html">&lt;script type=&quot;module&quot;&gt;
+import { getBusConfig } from &#039;./config.js&#039;;
+
+const config = getBusConfig();
+
+document.querySelector(&#039;pan-bus&#039;).setAttribute(&#039;max-retained&#039;, config.maxRetained);
+document.querySelector(&#039;pan-bus&#039;).setAttribute(&#039;debug&#039;, config.debug);
+document.querySelector(&#039;pan-bus&#039;).setAttribute(&#039;rate-limit&#039;, config.rateLimit);
+&lt;/script&gt;</code></pre>
+<h3>Document Your Configuration</h3>
+<pre><code class="language-html">&lt;!--
+  PAN Bus Configuration
+
+  Environment: Production
+  Profile: High-availability
+
+  max-retained: 2000
+    - Expected state topics: ~500
+    - Headroom: 4x expected
+
+  rate-limit: 2000
+    - Expected peak load: 1000 msg/s
+    - Headroom: 2x peak
+
+  Last tuned: 2024-11-01
+  Next review: 2024-12-01
+--&gt;
+&lt;pan-bus
+  max-retained=&quot;2000&quot;
+  rate-limit=&quot;2000&quot;
+  debug=&quot;false&quot;&gt;
+&lt;/pan-bus&gt;</code></pre>
+<h2>Configuration Checklist</h2>
+<strong>Pre-Launch:</strong>
+<ul><li>[ ] <code>debug="false"</code> in production</li>
+<li>[ ] <code>allow-global-wildcard="false"</code> for security</li>
+<li>[ ] <code>max-retained</code> appropriate for app state volume</li>
+<li>[ ] <code>rate-limit</code> appropriate for expected load</li>
+<li>[ ] Monitoring enabled for bus statistics</li>
+<li>[ ] Configuration documented in code comments</li>
+</ul>
+<strong>Performance Tuning:</strong>
+<ul><li>[ ] Monitor <code>retained</code> approaching <code>maxRetained</code></li>
+<li>[ ] Monitor <code>dropped</code> messages (rate limiting)</li>
+<li>[ ] Monitor <code>errors</code> (validation, size limits)</li>
+<li>[ ] Monitor <code>subsCleanedUp</code> (memory leaks?)</li>
+<li>[ ] Adjust limits based on observed usage</li>
+</ul>
+<strong>Security:</strong>
+<ul><li>[ ] Global wildcard disabled in production</li>
+<li>[ ] Rate limits prevent DoS</li>
+<li>[ ] Message size limits prevent memory exhaustion</li>
+<li>[ ] Debug mode disabled in production</li>
+</ul>
+<h2>Summary</h2>
+<strong>PAN Bus Core Settings:</strong>
+<ul><li><code>max-retained</code> - Retained message limit (default: 1000)</li>
+<li><code>max-message-size</code> - Total message size limit (default: 1MB)</li>
+<li><code>max-payload-size</code> - Payload size limit (default: 512KB)</li>
+<li><code>cleanup-interval</code> - Cleanup cycle interval (default: 30s)</li>
+<li><code>rate-limit</code> - Messages per window (default: 1000)</li>
+<li><code>allow-global-wildcard</code> - Allow <code>*</code> subscriptions (default: true)</li>
+<li><code>debug</code> - Enable debug logging (default: false)</li>
+</ul>
+<strong>PAN Bus Features:</strong>
+<ul><li><code>enable-routing</code> - Enable routing system (default: false)</li>
+<li><code>enable-tracing</code> - Enable message tracing (default: false)</li>
+</ul>
+<strong>PanClient Settings:</strong>
+<ul><li><code>host</code> - Event dispatch element (default: document)</li>
+<li><code>busSelector</code> - Bus element selector (default: 'pan-bus')</li>
+<li><code>retained</code> - Receive retained messages (default: false)</li>
+<li><code>timeoutMs</code> - Request timeout (default: 5000ms)</li>
+</ul>
+<strong>Recommended Profiles:</strong>
+<ul><li>Development: Debug enabled, relaxed limits</li>
+<li>Production: Debug disabled, strict limits</li>
+<li>High-throughput: Increased limits, routing enabled</li>
+<li>Memory-constrained: Minimal retained, frequent cleanup</li>
+<li>Testing: Fast cleanup, debug enabled</li>
+</ul>
+<strong>Monitoring:</strong>
+<ul><li>Use <code>pan:sys.stats</code> to monitor bus health</li>
+<li>Alert on approaching limits</li>
+<li>Tune based on observed behavior</li>
+<li>Document configuration decisions</li>
+</ul>
+For message envelope structure, see Appendix B. For topic conventions, see Appendix A.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/docs/books/building-with-larc/appendix-c-configuration-options.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
