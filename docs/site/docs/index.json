@@ -27,6 +27,11 @@
   ],
   "Root": [
     {
+      "title": "Changelog",
+      "path": "CHANGELOG.html",
+      "category": "Root"
+    },
+    {
       "title": "CodePen Setup for LARC Demo",
       "path": "CODEPEN-SETUP.html",
       "category": "Root"
@@ -43,6 +48,11 @@
     },
     {
       "title": "LARC",
+      "path": "README.html",
+      "category": "Root"
+    },
+    {
+      "title": "LARC Documentation",
       "path": "README.html",
       "category": "Root"
     },
@@ -110,660 +120,648 @@
       "category": "core/examples/routing"
     }
   ],
-  "docs": [
-    {
-      "title": "Changelog",
-      "path": "docs/CHANGELOG.html",
-      "category": "docs"
-    },
-    {
-      "title": "LARC Documentation",
-      "path": "docs/README.html",
-      "category": "docs"
-    }
-  ],
-  "docs/archive/2024": [
+  "archive/2024": [
     {
       "title": "📚 LARC Wiki Explorer",
-      "path": "docs/archive/2024/WIKI-EXPLORER-README.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/WIKI-EXPLORER-README.html",
+      "category": "archive/2024"
     },
     {
       "title": "Diagrams Complete! 🎉",
-      "path": "docs/archive/2024/learning-larc-DIAGRAMS-COMPLETE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/learning-larc-DIAGRAMS-COMPLETE.html",
+      "category": "archive/2024"
     },
     {
       "title": "Documentation Update - November 25, 2024",
-      "path": "docs/archive/2024/DOCUMENTATION-UPDATE-2024-11-25.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/DOCUMENTATION-UPDATE-2024-11-25.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Development Session Summary",
-      "path": "docs/archive/2024/SESSION-SUMMARY.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/SESSION-SUMMARY.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Ecosystem - Implementation Complete ✅",
-      "path": "docs/archive/2024/IMPLEMENTATION_COMPLETE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/IMPLEMENTATION_COMPLETE.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC HTML Files Audit Report",
-      "path": "docs/archive/2024/HTML-AUDIT-REPORT.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/HTML-AUDIT-REPORT.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Playground - Build Complete Report 🎉",
-      "path": "docs/archive/2024/BUILD-COMPLETE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/BUILD-COMPLETE.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Playground - COMPLETE! ✅",
-      "path": "docs/archive/2024/PLAYGROUND-COMPLETE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/PLAYGROUND-COMPLETE.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Playground - Implementation Plan",
-      "path": "docs/archive/2024/PLAYGROUND-IMPLEMENTATION.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/PLAYGROUND-IMPLEMENTATION.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Playground - Ready for Testing! 🚀",
-      "path": "docs/archive/2024/READY-FOR-TESTING.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/READY-FOR-TESTING.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Playground - Status",
-      "path": "docs/archive/2024/PLAYGROUND-STATUS.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/PLAYGROUND-STATUS.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Positioning Update - Complete",
-      "path": "docs/archive/2024/POSITIONING-UPDATE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/POSITIONING-UPDATE.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Production Readiness - Status Update",
-      "path": "docs/archive/2024/PRODUCTION_STATUS_UPDATE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/PRODUCTION_STATUS_UPDATE.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Production Readiness Progress Report",
-      "path": "docs/archive/2024/PRODUCTION-READINESS-PROGRESS.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/PRODUCTION-READINESS-PROGRESS.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Production Readiness Status",
-      "path": "docs/archive/2024/PRODUCTION-READINESS-STATUS.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/PRODUCTION-READINESS-STATUS.html",
+      "category": "archive/2024"
     },
     {
       "title": "LARC Project - Current Status",
-      "path": "docs/archive/2024/CURRENT-STATUS.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/CURRENT-STATUS.html",
+      "category": "archive/2024"
     },
     {
       "title": "Learning LARC - Writing Progress",
-      "path": "docs/archive/2024/learning-larc-PROGRESS.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/learning-larc-PROGRESS.html",
+      "category": "archive/2024"
     },
     {
       "title": "Phase 1: Foundation - COMPLETE! ✅",
-      "path": "docs/archive/2024/PHASE-1-COMPLETE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/PHASE-1-COMPLETE.html",
+      "category": "archive/2024"
     },
     {
       "title": "Session Complete - Playground Build",
-      "path": "docs/archive/2024/SESSION-COMPLETE.html",
-      "category": "docs/archive/2024"
+      "path": "archive/2024/SESSION-COMPLETE.html",
+      "category": "archive/2024"
     }
   ],
-  "docs/books/building-with-larc": [
+  "books/building-with-larc": [
     {
       "title": "Advanced Patterns",
-      "path": "docs/books/building-with-larc/chapter-19-advanced-patterns.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-19-advanced-patterns.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Authentication and Authorization",
-      "path": "docs/books/building-with-larc/chapter-12-authentication-and-authorization.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-12-authentication-and-authorization.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Basic Message Flow",
-      "path": "docs/books/building-with-larc/chapter-06-basic-message-flow.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-06-basic-message-flow.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Book Build System - Complete Summary",
-      "path": "docs/books/building-with-larc/BUILD-SYSTEM-SUMMARY.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/BUILD-SYSTEM-SUMMARY.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Building the Book",
-      "path": "docs/books/building-with-larc/BUILD.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/BUILD.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Building with LARC: A Reference Manual",
-      "path": "docs/books/building-with-larc/README.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/README.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Colophon",
-      "path": "docs/books/building-with-larc/colophon.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/colophon.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Configuration Options",
-      "path": "docs/books/building-with-larc/appendix-c-configuration-options.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/appendix-c-configuration-options.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Core Components Reference",
-      "path": "docs/books/building-with-larc/chapter-21-core-components.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-21-core-components.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Core Concepts",
-      "path": "docs/books/building-with-larc/chapter-04-core-concepts.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-04-core-concepts.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Data Components",
-      "path": "docs/books/building-with-larc/chapter-22-data-components.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-22-data-components.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Data Fetching and APIs",
-      "path": "docs/books/building-with-larc/chapter-11-data-fetching-and-apis.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-11-data-fetching-and-apis.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Deployment and Production",
-      "path": "docs/books/building-with-larc/chapter-20-deployment-and-production.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-20-deployment-and-production.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Error Handling and Debugging",
-      "path": "docs/books/building-with-larc/chapter-18-error-handling-and-debugging.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-18-error-handling-and-debugging.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Event Envelope Specification",
-      "path": "docs/books/building-with-larc/appendix-b-event-envelope.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/appendix-b-event-envelope.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "File Management",
-      "path": "docs/books/building-with-larc/chapter-14-file-management.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-14-file-management.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Forms and User Input",
-      "path": "docs/books/building-with-larc/chapter-10-forms-and-user-input.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-10-forms-and-user-input.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Getting Started",
-      "path": "docs/books/building-with-larc/chapter-05-getting-started.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-05-getting-started.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Glossary",
-      "path": "docs/books/building-with-larc/appendix-f-glossary.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/appendix-f-glossary.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Index",
-      "path": "docs/books/building-with-larc/index.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/index.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Integration Components",
-      "path": "docs/books/building-with-larc/chapter-24-integration-components.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-24-integration-components.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Introduction",
-      "path": "docs/books/building-with-larc/chapter-01-introduction.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-01-introduction.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Learning LARC",
-      "path": "docs/books/building-with-larc/back-cover.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/back-cover.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Message Topics Reference",
-      "path": "docs/books/building-with-larc/appendix-a-message-topics.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/appendix-a-message-topics.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Migration Guide",
-      "path": "docs/books/building-with-larc/appendix-d-migration-guide.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/appendix-d-migration-guide.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Performance Optimization",
-      "path": "docs/books/building-with-larc/chapter-16-performance-optimization.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-16-performance-optimization.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Quick Start Guide - Book Building",
-      "path": "docs/books/building-with-larc/QUICKSTART.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/QUICKSTART.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Real-time Features",
-      "path": "docs/books/building-with-larc/chapter-13-realtime-features.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-13-realtime-features.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Recipes and Patterns",
-      "path": "docs/books/building-with-larc/appendix-e-recipes-and-patterns.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/appendix-e-recipes-and-patterns.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Resources",
-      "path": "docs/books/building-with-larc/appendix-g-resources.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/appendix-g-resources.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Routing and Navigation",
-      "path": "docs/books/building-with-larc/chapter-09-routing-and-navigation.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-09-routing-and-navigation.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "State Management",
-      "path": "docs/books/building-with-larc/chapter-08-state-management.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-08-state-management.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Testing Strategies",
-      "path": "docs/books/building-with-larc/chapter-17-testing-strategies.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-17-testing-strategies.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "The LARC Story",
-      "path": "docs/books/building-with-larc/chapter-03-story.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-03-story.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "The Philosophy of LARC",
-      "path": "docs/books/building-with-larc/chapter-02-philosophy.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-02-philosophy.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Theming and Styling",
-      "path": "docs/books/building-with-larc/chapter-15-theming-and-styling.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-15-theming-and-styling.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "UI Components",
-      "path": "docs/books/building-with-larc/chapter-23-ui-components.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-23-ui-components.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Utility Components",
-      "path": "docs/books/building-with-larc/chapter-25-utility-components.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-25-utility-components.html",
+      "category": "books/building-with-larc"
     },
     {
       "title": "Working with Components",
-      "path": "docs/books/building-with-larc/chapter-07-working-with-components.html",
-      "category": "docs/books/building-with-larc"
+      "path": "books/building-with-larc/chapter-07-working-with-components.html",
+      "category": "books/building-with-larc"
     }
   ],
-  "docs/books": [
+  "books": [
     {
       "title": "Building with LARC: A Reference Manual",
-      "path": "docs/books/building-with-larc-outline.html",
-      "category": "docs/books"
+      "path": "books/building-with-larc-outline.html",
+      "category": "books"
     },
     {
       "title": "Building with LARC: A Reference Manual - Completion Summary",
-      "path": "docs/books/building-with-larc-summary.html",
-      "category": "docs/books"
+      "path": "books/building-with-larc-summary.html",
+      "category": "books"
     }
   ],
-  "docs/books/learning-larc": [
+  "books/learning-larc": [
     {
       "title": "author-bio",
-      "path": "docs/books/learning-larc/author-bio.html",
-      "category": "docs/books/learning-larc"
+      "path": "books/learning-larc/author-bio.html",
+      "category": "books/learning-larc"
     },
     {
       "title": "back-cover",
-      "path": "docs/books/learning-larc/back-cover.html",
-      "category": "docs/books/learning-larc"
+      "path": "books/learning-larc/back-cover.html",
+      "category": "books/learning-larc"
     },
     {
       "title": "Colophon",
-      "path": "docs/books/learning-larc/colophon.html",
-      "category": "docs/books/learning-larc"
+      "path": "books/learning-larc/colophon.html",
+      "category": "books/learning-larc"
     },
     {
-      "title": "Foreword",
-      "path": "docs/books/learning-larc/foreword.html",
-      "category": "docs/books/learning-larc"
-    },
-    {
-      "title": "Learning LARC",
-      "path": "docs/books/learning-larc/00-front-matter.html",
-      "category": "docs/books/learning-larc"
+      "title": "Foreword {.unnumbered}",
+      "path": "books/learning-larc/foreword.html",
+      "category": "books/learning-larc"
     },
     {
       "title": "Learning LARC",
-      "path": "docs/books/learning-larc/README.html",
-      "category": "docs/books/learning-larc"
+      "path": "books/learning-larc/README.html",
+      "category": "books/learning-larc"
     },
     {
       "title": "Learning LARC - Build System",
-      "path": "docs/books/learning-larc/BUILD-SYSTEM.html",
-      "category": "docs/books/learning-larc"
+      "path": "books/learning-larc/BUILD-SYSTEM.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Learning LARC {.unnumbered}",
+      "path": "books/learning-larc/00-front-matter.html",
+      "category": "books/learning-larc"
     },
     {
       "title": "Quick Start Guide - Building \"Learning LARC\"",
-      "path": "docs/books/learning-larc/QUICKSTART.html",
-      "category": "docs/books/learning-larc"
+      "path": "books/learning-larc/QUICKSTART.html",
+      "category": "books/learning-larc"
     }
   ],
-  "docs/books/learning-larc/chapters": [
+  "books/learning-larc/chapters": [
     {
       "title": "Advanced Component Patterns",
-      "path": "docs/books/learning-larc/chapters/07-advanced-component-patterns.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/07-advanced-component-patterns.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Business Logic Patterns",
-      "path": "docs/books/learning-larc/chapters/08-business-logic-patterns.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/08-business-logic-patterns.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Core Concepts",
-      "path": "docs/books/learning-larc/chapters/02-core-concepts.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/02-core-concepts.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Creating Web Components",
-      "path": "docs/books/learning-larc/chapters/04-creating-web-components.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/04-creating-web-components.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Forms and Validation",
-      "path": "docs/books/learning-larc/chapters/10-forms-and-validation.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/10-forms-and-validation.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Getting Started",
-      "path": "docs/books/learning-larc/chapters/03-getting-started.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/03-getting-started.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Philosophy and Background",
-      "path": "docs/books/learning-larc/chapters/01-philosophy-and-background.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Routing and Navigation",
-      "path": "docs/books/learning-larc/chapters/09-routing-and-navigation.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/09-routing-and-navigation.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "State Management",
-      "path": "docs/books/learning-larc/chapters/06-state-management.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/06-state-management.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "Summary Outlines",
-      "path": "docs/books/learning-larc/chapters/11-19-summary.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/11-19-summary.html",
+      "category": "books/learning-larc/chapters"
     },
     {
       "title": "The PAN Bus",
-      "path": "docs/books/learning-larc/chapters/05-the-pan-bus.html",
-      "category": "docs/books/learning-larc/chapters"
+      "path": "books/learning-larc/chapters/05-the-pan-bus.html",
+      "category": "books/learning-larc/chapters"
     }
   ],
-  "docs/books/learning-larc/diagrams": [
+  "books/learning-larc/diagrams": [
     {
       "title": "Client-Side Routing",
-      "path": "docs/books/learning-larc/diagrams/08-routing.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/08-routing.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "Complete Application Architecture",
-      "path": "docs/books/learning-larc/diagrams/14-app-architecture.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/14-app-architecture.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "Complete Diagram Index",
-      "path": "docs/books/learning-larc/diagrams/DIAGRAM-INDEX.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/DIAGRAM-INDEX.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "LARC Architecture Overview",
-      "path": "docs/books/learning-larc/diagrams/01-architecture-overview.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/01-architecture-overview.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "Learning LARC - Diagrams",
-      "path": "docs/books/learning-larc/diagrams/README.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/README.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "PAN Bus Communication Patterns",
-      "path": "docs/books/learning-larc/diagrams/05-pan-bus.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/05-pan-bus.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "State Management Patterns",
-      "path": "docs/books/learning-larc/diagrams/06-state-management.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/06-state-management.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "Traditional Frameworks vs LARC",
-      "path": "docs/books/learning-larc/diagrams/12-traditional-vs-larc.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/12-traditional-vs-larc.html",
+      "category": "books/learning-larc/diagrams"
     },
     {
       "title": "Web Component Structure",
-      "path": "docs/books/learning-larc/diagrams/02-component-structure.html",
-      "category": "docs/books/learning-larc/diagrams"
+      "path": "books/learning-larc/diagrams/02-component-structure.html",
+      "category": "books/learning-larc/diagrams"
     }
   ],
-  "docs/guides": [
+  "guides": [
     {
       "title": "🚀 LARC Config Quick Start",
-      "path": "docs/guides/QUICK-START-CONFIG.html",
-      "category": "docs/guides"
+      "path": "guides/QUICK-START-CONFIG.html",
+      "category": "guides"
     },
     {
       "title": "Bundle Size Optimization - Complete",
-      "path": "docs/guides/BUNDLE-SIZE-OPTIMIZATION.html",
-      "category": "docs/guides"
+      "path": "guides/BUNDLE-SIZE-OPTIMIZATION.html",
+      "category": "guides"
     },
     {
       "title": "Bundle Size Reduction - COMPLETE ✅",
-      "path": "docs/guides/BUNDLE-REDUCTION-COMPLETE.html",
-      "category": "docs/guides"
+      "path": "guides/BUNDLE-REDUCTION-COMPLETE.html",
+      "category": "guides"
     },
     {
       "title": "Hacker News Launch - FAQ Answers",
-      "path": "docs/guides/HN_FAQ.html",
-      "category": "docs/guides"
+      "path": "guides/HN_FAQ.html",
+      "category": "guides"
     },
     {
       "title": "Hacker News Post - LARC Launch",
-      "path": "docs/guides/HN_POST_DRAFT.html",
-      "category": "docs/guides"
+      "path": "guides/HN_POST_DRAFT.html",
+      "category": "guides"
     },
     {
       "title": "LARC Build Process - Minified Production Files",
-      "path": "docs/guides/BUILD-PROCESS.html",
-      "category": "docs/guides"
+      "path": "guides/BUILD-PROCESS.html",
+      "category": "guides"
     },
     {
       "title": "LARC Configuration System",
-      "path": "docs/guides/README-CONFIG.html",
-      "category": "docs/guides"
+      "path": "guides/README-CONFIG.html",
+      "category": "guides"
     },
     {
       "title": "LARC Migration Guide",
-      "path": "docs/guides/MIGRATION.html",
-      "category": "docs/guides"
+      "path": "guides/MIGRATION.html",
+      "category": "guides"
     },
     {
       "title": "LARC Monorepo Quick Start",
-      "path": "docs/guides/QUICK-START.html",
-      "category": "docs/guides"
+      "path": "guides/QUICK-START.html",
+      "category": "guides"
     },
     {
       "title": "LARC Package Guide",
-      "path": "docs/guides/PACKAGES.html",
-      "category": "docs/guides"
+      "path": "guides/PACKAGES.html",
+      "category": "guides"
     },
     {
       "title": "LARC Quick Start Guide",
-      "path": "docs/guides/QUICK-START-GUIDE.html",
-      "category": "docs/guides"
+      "path": "guides/QUICK-START-GUIDE.html",
+      "category": "guides"
     },
     {
       "title": "LARC Troubleshooting Guide",
-      "path": "docs/guides/TROUBLESHOOTING.html",
-      "category": "docs/guides"
+      "path": "guides/TROUBLESHOOTING.html",
+      "category": "guides"
     }
   ],
-  "docs/migration": [
+  "migration": [
     {
       "title": "Archive Old Repositories - Instructions",
-      "path": "docs/migration/ARCHIVE-REPOSITORIES.html",
-      "category": "docs/migration"
+      "path": "migration/ARCHIVE-REPOSITORIES.html",
+      "category": "migration"
     },
     {
       "title": "DevTools Extraction - Complete ✅",
-      "path": "docs/migration/DEVTOOLS-EXTRACTION.html",
-      "category": "docs/migration"
+      "path": "migration/DEVTOOLS-EXTRACTION.html",
+      "category": "migration"
     },
     {
       "title": "LARC Repository Migration - Complete ✅",
-      "path": "docs/migration/MIGRATION-COMPLETE.html",
-      "category": "docs/migration"
+      "path": "migration/MIGRATION-COMPLETE.html",
+      "category": "migration"
     },
     {
       "title": "Migration Plan: From Git Submodules to Monorepo",
-      "path": "docs/migration/MONOREPO-MIGRATION-PLAN.html",
-      "category": "docs/migration"
+      "path": "migration/MONOREPO-MIGRATION-PLAN.html",
+      "category": "migration"
     },
     {
       "title": "Monorepo vs Submodules: Developer Experience Comparison",
-      "path": "docs/migration/MONOREPO-VS-SUBMODULES.html",
-      "category": "docs/migration"
+      "path": "migration/MONOREPO-VS-SUBMODULES.html",
+      "category": "migration"
     }
   ],
-  "docs/processes": [
+  "processes": [
     {
       "title": "Git Submodule Helper Scripts",
-      "path": "docs/processes/SCRIPTS-README.html",
-      "category": "docs/processes"
+      "path": "processes/SCRIPTS-README.html",
+      "category": "processes"
     },
     {
       "title": "Git Submodules Workflow Guide",
-      "path": "docs/processes/SUBMODULE-WORKFLOW.html",
-      "category": "docs/processes"
+      "path": "processes/SUBMODULE-WORKFLOW.html",
+      "category": "processes"
     },
     {
       "title": "Hacker News Launch Checklist",
-      "path": "docs/processes/LAUNCH_CHECKLIST.html",
-      "category": "docs/processes"
+      "path": "processes/LAUNCH_CHECKLIST.html",
+      "category": "processes"
     },
     {
       "title": "LARC Hacker News Launch - Readiness Report",
-      "path": "docs/processes/LAUNCH_READINESS.html",
-      "category": "docs/processes"
+      "path": "processes/LAUNCH_READINESS.html",
+      "category": "processes"
     },
     {
       "title": "Recommended Repository Consolidation for LARC",
-      "path": "docs/processes/RECOMMENDED-CONSOLIDATION.html",
-      "category": "docs/processes"
+      "path": "processes/RECOMMENDED-CONSOLIDATION.html",
+      "category": "processes"
     },
     {
       "title": "Repository Structure Decision Tree",
-      "path": "docs/processes/DECISION-TREE.html",
-      "category": "docs/processes"
+      "path": "processes/DECISION-TREE.html",
+      "category": "processes"
     }
   ],
-  "docs/reference": [
+  "reference": [
     {
       "title": "Advanced State Management in LARC",
-      "path": "docs/reference/STATE-MANAGEMENT.html",
-      "category": "docs/reference"
+      "path": "reference/STATE-MANAGEMENT.html",
+      "category": "reference"
     },
     {
       "title": "Browser Compatibility Guide",
-      "path": "docs/reference/BROWSER-COMPATIBILITY.html",
-      "category": "docs/reference"
+      "path": "reference/BROWSER-COMPATIBILITY.html",
+      "category": "reference"
     },
     {
       "title": "Browser Compatibility Implementation Summary",
-      "path": "docs/reference/COMPATIBILITY-IMPLEMENTATION.html",
-      "category": "docs/reference"
+      "path": "reference/COMPATIBILITY-IMPLEMENTATION.html",
+      "category": "reference"
     },
     {
       "title": "LARC API Reference",
-      "path": "docs/reference/API-REFERENCE.html",
-      "category": "docs/reference"
+      "path": "reference/API-REFERENCE.html",
+      "category": "reference"
     },
     {
       "title": "LARC Core API Stability Guarantee",
-      "path": "docs/reference/API-STABILITY.html",
-      "category": "docs/reference"
+      "path": "reference/API-STABILITY.html",
+      "category": "reference"
     },
     {
       "title": "LARC Development Philosophy",
-      "path": "docs/reference/DEVELOPMENT_PHILOSOPHY.html",
-      "category": "docs/reference"
+      "path": "reference/DEVELOPMENT_PHILOSOPHY.html",
+      "category": "reference"
     },
     {
       "title": "LARC Performance Optimization Guide",
-      "path": "docs/reference/PERFORMANCE-OPTIMIZATION.html",
-      "category": "docs/reference"
+      "path": "reference/PERFORMANCE-OPTIMIZATION.html",
+      "category": "reference"
     },
     {
       "title": "PAN Runtime Routes - API Reference",
-      "path": "docs/reference/PAN-ROUTING-API.html",
-      "category": "docs/reference"
+      "path": "reference/PAN-ROUTING-API.html",
+      "category": "reference"
     }
   ],
-  "docs/roadmap": [
+  "roadmap": [
     {
       "title": "Component Registry Plan",
-      "path": "docs/roadmap/COMPONENT-REGISTRY-PLAN.html",
-      "category": "docs/roadmap"
+      "path": "roadmap/COMPONENT-REGISTRY-PLAN.html",
+      "category": "roadmap"
     },
     {
       "title": "LARC Development Plan",
-      "path": "docs/roadmap/DEVELOPMENT-PLAN.html",
-      "category": "docs/roadmap"
+      "path": "roadmap/DEVELOPMENT-PLAN.html",
+      "category": "roadmap"
     },
     {
       "title": "LARC Production Readiness Roadmap",
-      "path": "docs/roadmap/PRODUCTION_ROADMAP.html",
-      "category": "docs/roadmap"
+      "path": "roadmap/PRODUCTION_ROADMAP.html",
+      "category": "roadmap"
     },
     {
       "title": "LARC Project Plan",
-      "path": "docs/roadmap/PLAN.html",
-      "category": "docs/roadmap"
+      "path": "roadmap/PLAN.html",
+      "category": "roadmap"
     }
   ],
-  "docs/specs": [
+  "specs": [
     {
       "title": "Semantic Versioning Commitment",
-      "path": "docs/specs/SEMVER.html",
-      "category": "docs/specs"
+      "path": "specs/SEMVER.html",
+      "category": "specs"
     }
   ],
   "packages/apps": [
