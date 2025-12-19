@@ -53,6 +53,7 @@ Use of the information and instructions contained in this work is at your own ri
 ### Part I: Foundations {.unnumbered}
 
 **Chapter 1: Philosophy and Background**
+
 - The Problem with Modern Web Development
 - A Return to Fundamentals
 - The LARC Philosophy
@@ -61,6 +62,7 @@ Use of the information and instructions contained in this work is at your own ri
 - What You'll Build
 
 **Chapter 2: Core Concepts**
+
 - Web Components Refresher
 - The Page Area Network (PAN)
 - Event-Driven Architecture
@@ -69,6 +71,7 @@ Use of the information and instructions contained in this work is at your own ri
 - The Component Lifecycle
 
 **Chapter 3: Getting Started**
+
 - Setting Up Your Development Environment
 - Your First LARC Application
 - Project Structure
@@ -79,6 +82,7 @@ Use of the information and instructions contained in this work is at your own ri
 ### Part II: Building Components {.unnumbered}
 
 **Chapter 4: Creating Web Components**
+
 - Anatomy of a LARC Component
 - Shadow DOM Deep Dive
 - Attributes and Properties
@@ -87,6 +91,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Testing Components
 
 **Chapter 5: The PAN Bus**
+
 - Understanding Pub/Sub Architecture
 - Topics and Namespaces
 - Publishing Messages
@@ -95,6 +100,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Debugging PAN Communication
 
 **Chapter 6: State Management**
+
 - Component-Local State
 - Shared State Patterns
 - The pan-store Component
@@ -103,6 +109,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Offline-First Applications
 
 **Chapter 7: Advanced Component Patterns**
+
 - Compound Components
 - Higher-Order Components
 - Component Composition
@@ -113,6 +120,7 @@ Use of the information and instructions contained in this work is at your own ri
 ### Part III: Building Applications {.unnumbered}
 
 **Chapter 8: Routing and Navigation**
+
 - Client-Side Routing
 - The pan-router Component
 - Route Parameters
@@ -121,6 +129,7 @@ Use of the information and instructions contained in this work is at your own ri
 - History Management
 
 **Chapter 9: Forms and Validation**
+
 - Form Components
 - Two-Way Data Binding
 - Validation Strategies
@@ -129,6 +138,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Form Submission
 
 **Chapter 10: Data Fetching and APIs**
+
 - The pan-fetch Component
 - REST API Integration
 - GraphQL Support
@@ -137,6 +147,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Error Handling and Retry Logic
 
 **Chapter 11: Authentication and Security**
+
 - Authentication Patterns
 - The pan-auth Component
 - JWT Token Management
@@ -147,6 +158,7 @@ Use of the information and instructions contained in this work is at your own ri
 ### Part IV: Advanced Topics {.unnumbered}
 
 **Chapter 12: Server Integration**
+
 - Backend Architecture
 - Node.js Integration
 - PHP Connector
@@ -155,6 +167,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Real-Time Communication
 
 **Chapter 13: Testing**
+
 - Unit Testing Components
 - Integration Testing
 - End-to-End Testing
@@ -163,6 +176,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Continuous Integration
 
 **Chapter 14: Performance and Optimization**
+
 - Loading Strategies
 - Code Splitting
 - Lazy Loading Components
@@ -171,6 +185,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Performance Monitoring
 
 **Chapter 15: Deployment**
+
 - Static Hosting
 - CDN Configuration
 - Environment Variables
@@ -181,6 +196,7 @@ Use of the information and instructions contained in this work is at your own ri
 ### Part V: Ecosystem {.unnumbered}
 
 **Chapter 16: Component Library**
+
 - Using the Component Registry
 - Contributing Components
 - Creating a Component Library
@@ -188,6 +204,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Versioning and Releases
 
 **Chapter 17: Tooling**
+
 - Development Tools
 - CLI Tools
 - VS Code Integration
@@ -195,6 +212,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Debugging Techniques
 
 **Chapter 18: Real-World Applications**
+
 - Case Study: E-Commerce Platform
 - Case Study: Dashboard Application
 - Case Study: Blog/CMS
@@ -204,29 +222,34 @@ Use of the information and instructions contained in this work is at your own ri
 ### Appendices {.unnumbered}
 
 **Appendix A: Web Components API Reference**
+
 - Custom Elements
 - Shadow DOM
 - HTML Templates
 - ES Modules
 
 **Appendix B: PAN Bus API Reference**
+
 - Core Methods
 - Message Formats
 - Topic Patterns
 - Configuration Options
 
 **Appendix C: Component API Reference**
+
 - Built-in Components
 - Component Properties
 - Events and Methods
 
 **Appendix D: Migration Guides**
+
 - From React
 - From Vue
 - From Angular
 - From jQuery
 
 **Appendix E: Resources**
+
 - Official Documentation
 - Community Resources
 - Video Tutorials
