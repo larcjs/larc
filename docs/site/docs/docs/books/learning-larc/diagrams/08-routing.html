@@ -54,7 +54,7 @@
 
     subgraph &quot;pan-router&quot;
         Router[Router Component]
-        Routes[Route Registry&lt;br/&gt;{path, component, guard}]
+        Routes[&quot;Route Registry: path, component, guard&quot;]
         Matcher[Pattern Matcher]
         Outlet[Router Outlet&lt;br/&gt;&amp;lt;div&amp;gt;]
     end
@@ -82,14 +82,14 @@
 <h2>Navigation Flow</h2>
 <pre><code class="language-mermaid">sequenceDiagram
     participant User
-    participant Link as &amp;lt;a href=&quot;/users/123&quot;&amp;gt;
+    participant AnchorEl as Anchor Link
     participant Router as pan-router
     participant Guard as Route Guard
     participant Page as user-page
     participant Browser
 
-    User-&gt;&gt;Link: Click
-    Link-&gt;&gt;Router: preventDefault()&lt;br/&gt;navigate(&#039;/users/123&#039;)
+    User-&gt;&gt;AnchorEl: Click
+    AnchorEl-&gt;&gt;Router: preventDefault, navigate /users/123
 
     Router-&gt;&gt;Router: Match route pattern
     Router-&gt;&gt;Guard: Check guard(&#039;auth&#039;)
@@ -112,7 +112,7 @@
 <pre><code class="language-mermaid">graph TB
     Start[URL: /users/123/posts/456]
 
-    Start --&gt; Parse[Parse URL&lt;br/&gt;[&#039;users&#039;, &#039;123&#039;, &#039;posts&#039;, &#039;456&#039;]]
+    Start --&gt; Parse[&quot;Parse URL: users, 123, posts, 456&quot;]
 
     Parse --&gt; Routes{Check Routes}
 
@@ -122,7 +122,7 @@
     Routes --&gt; R4[&quot;*&quot;]
 
     R1 --&gt; Match1{Match?}
-    Match1 --&gt;|Yes| Extract1[Extract params&lt;br/&gt;{id: &#039;123&#039;, postId: &#039;456&#039;}]
+    Match1 --&gt;|Yes| Extract1[&quot;Extract params: id=123, postId=456&quot;]
     Match1 --&gt;|No| R2
 
     R2 --&gt; Match2{Match?}
@@ -266,14 +266,14 @@
 <h2>Programmatic Navigation</h2>
 <pre><code class="language-mermaid">graph TB
     subgraph &quot;Navigation Methods&quot;
-        M1[&quot;pan.publish(&#039;router.navigate&#039;, {path})&quot;]
-        M2[&quot;pan.publish(&#039;router.back&#039;)&quot;]
-        M3[&quot;pan.publish(&#039;router.forward&#039;)&quot;]
-        M4[&quot;pan.publish(&#039;router.replace&#039;, {path})&quot;]
+        M1[&quot;pan.publish router.navigate, path&quot;]
+        M2[&quot;pan.publish router.back&quot;]
+        M3[&quot;pan.publish router.forward&quot;]
+        M4[&quot;pan.publish router.replace, path&quot;]
     end
 
-    subgraph &quot;Router&quot;
-        Router[Router Component]
+    subgraph &quot;Router Component&quot;
+        RouterComp[Router]
         History[History API]
     end
 
@@ -284,36 +284,36 @@
         R4[Replace Current Entry]
     end
 
-    M1 --&gt; Router --&gt; R1
-    M2 --&gt; Router --&gt; R2
-    M3 --&gt; Router --&gt; R3
-    M4 --&gt; Router --&gt; R4
+    M1 --&gt; RouterComp --&gt; R1
+    M2 --&gt; RouterComp --&gt; R2
+    M3 --&gt; RouterComp --&gt; R3
+    M4 --&gt; RouterComp --&gt; R4
 
-    Router &lt;--&gt; History
+    RouterComp &lt;--&gt; History
 
-    style Router fill:#764ba2,color:#fff</code></pre>
+    style RouterComp fill:#764ba2,color:#fff</code></pre>
 <h2>Link Interception</h2>
 <pre><code class="language-mermaid">sequenceDiagram
     participant User
-    participant Link as &amp;lt;a href=&quot;/page&quot;&amp;gt;
+    participant AnchorEl as Anchor Element
     participant Document
     participant Router
     participant Browser
 
-    User-&gt;&gt;Link: Click
+    User-&gt;&gt;AnchorEl: Click
 
-    Link-&gt;&gt;Document: click event bubbles
+    AnchorEl-&gt;&gt;Document: click event bubbles
 
     Document-&gt;&gt;Router: Event listener catches
 
     Router-&gt;&gt;Router: Check if internal link
 
-    alt Internal Link (/page)
-        Router-&gt;&gt;Link: preventDefault()
+    alt Internal Link /page
+        Router-&gt;&gt;AnchorEl: preventDefault
         Router-&gt;&gt;Router: Handle navigation
-        Router-&gt;&gt;Browser: pushState(&#039;/page&#039;)
+        Router-&gt;&gt;Browser: pushState /page
         Router-&gt;&gt;Router: Render component
-    else External Link (https://external.com)
+    else External Link https://external.com
         Router-&gt;&gt;Browser: Allow default behavior
         Browser-&gt;&gt;Browser: Full page navigation
     end</code></pre>

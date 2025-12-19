@@ -49,24 +49,24 @@
     subgraph &quot;Web Component: &amp;lt;user-card&amp;gt;&quot;
         Class[UserCard Class&lt;br/&gt;extends HTMLElement]
 
-        subgraph &quot;Instance Properties&quot;
+        subgraph InstanceProps[&quot;Instance Properties&quot;]
             State[_user&lt;br/&gt;_loading&lt;br/&gt;_error]
         end
 
-        subgraph &quot;Lifecycle Methods&quot;
+        subgraph LifecycleMethods[&quot;Lifecycle Methods&quot;]
             Construct[constructor]
             Connect[connectedCallback]
             Disconnect[disconnectedCallback]
             AttrChange[attributeChangedCallback]
         end
 
-        subgraph &quot;Public API&quot;
+        subgraph PublicAPI[&quot;Public API&quot;]
             Props[Properties&lt;br/&gt;getters/setters]
             Methods[Public Methods&lt;br/&gt;loadUser, refresh]
             Events[Custom Events&lt;br/&gt;user-selected]
         end
 
-        subgraph &quot;Shadow DOM&quot;
+        subgraph ShadowDOM[&quot;Shadow DOM&quot;]
             SRoot[Shadow Root]
             Style[&amp;lt;style&amp;gt;]
             Template[HTML Template]
@@ -74,14 +74,14 @@
         end
 
         Class --&gt; State
-        Class --&gt; Lifecycle Methods
-        Class --&gt; Public API
-        Class --&gt; Shadow DOM
+        Class --&gt; LifecycleMethods
+        Class --&gt; PublicAPI
+        Class --&gt; ShadowDOM
     end
 
     style Class fill:#667eea,color:#fff
-    style Shadow DOM fill:#764ba2,color:#fff
-    style Public API fill:#48bb78,color:#fff</code></pre>
+    style ShadowDOM fill:#764ba2,color:#fff
+    style PublicAPI fill:#48bb78,color:#fff</code></pre>
 <h2>Component Lifecycle Flow</h2>
 <pre><code class="language-mermaid">stateDiagram-v2
     [*] --&gt; Created: new UserCard()

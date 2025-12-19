@@ -46,24 +46,24 @@
         <h1>Complete Application Architecture</h1>
 <h2>E-Commerce Application Example</h2>
 <pre><code class="language-mermaid">graph TB
-    subgraph &quot;Frontend - LARC Application&quot;
-        subgraph &quot;Pages&quot;
+    subgraph Frontend[&quot;Frontend - LARC Application&quot;]
+        subgraph PagesSub[&quot;Pages&quot;]
             Home[home-page]
-            Products[products-page]
+            ProductsPage[products-page]
             Product[product-detail-page]
-            Cart[cart-page]
+            CartPage[cart-page]
             Checkout[checkout-page]
             Profile[user-profile-page]
         end
 
-        subgraph &quot;Layout Components&quot;
+        subgraph LayoutComp[&quot;Layout Components&quot;]
             Header[app-header]
             Nav[main-nav]
             Footer[app-footer]
             Sidebar[user-sidebar]
         end
 
-        subgraph &quot;Feature Components&quot;
+        subgraph FeatureComp[&quot;Feature Components&quot;]
             ProductCard[product-card]
             CartWidget[cart-widget]
             SearchBox[search-box]
@@ -71,70 +71,70 @@
             UserMenu[user-menu]
         end
 
-        subgraph &quot;UI Components&quot;
+        subgraph UIComp[&quot;UI Components&quot;]
             Button[pan-button]
             Modal[pan-modal]
             Toast[toast-notification]
             Spinner[loading-spinner]
         end
 
-        subgraph &quot;Communication Layer&quot;
+        subgraph CommLayer[&quot;Communication Layer&quot;]
             PAN[PAN Bus]
         end
 
-        subgraph &quot;State Management&quot;
+        subgraph StateMgmt[&quot;State Management&quot;]
             AuthStore[Authentication State]
-            CartStore[Shopping Cart State]
+            CartStoreSub[Shopping Cart State]
             UserPrefs[User Preferences]
         end
 
-        subgraph &quot;Data Layer&quot;
+        subgraph DataLayer[&quot;Data Layer&quot;]
             API[API Client]
-            Cache[Cache Layer&lt;br/&gt;IndexedDB]
+            Cache[&quot;Cache Layer IndexedDB&quot;]
             SyncQueue[Offline Sync Queue]
         end
     end
 
-    subgraph &quot;Backend Services&quot;
-        subgraph &quot;API Server&quot;
-            REST[REST API&lt;br/&gt;Node.js/Express]
-            Auth[Auth Service&lt;br/&gt;JWT]
-            Products[Product Service]
+    subgraph BackendSvc[&quot;Backend Services&quot;]
+        subgraph APISrv[&quot;API Server&quot;]
+            REST[&quot;REST API Node.js/Express&quot;]
+            Auth[&quot;Auth Service JWT&quot;]
+            ProductsSvc[Product Service]
             Orders[Order Service]
             Payments[Payment Service]
         end
 
-        subgraph &quot;Database&quot;
+        subgraph Database[&quot;Database&quot;]
             DB[(PostgreSQL)]
         end
 
-        subgraph &quot;External Services&quot;
+        subgraph ExtSvc[&quot;External Services&quot;]
             Stripe[Stripe API]
             Email[Email Service]
             Analytics[Analytics]
         end
     end
 
-    Pages --&gt; Layout Components
-    Pages --&gt; Feature Components
-    Feature Components --&gt; UI Components
+    PagesSub --&gt; LayoutComp
+    PagesSub --&gt; FeatureComp
+    FeatureComp --&gt; UIComp
 
-    Pages &lt;--&gt; PAN
-    Layout Components &lt;--&gt; PAN
-    Feature Components &lt;--&gt; PAN
+    PagesSub &lt;--&gt; PAN
+    LayoutComp &lt;--&gt; PAN
+    FeatureComp &lt;--&gt; PAN
 
-    PAN &lt;--&gt; State Management
-    State Management &lt;--&gt; Data Layer
+    PAN &lt;--&gt; StateMgmt
+    StateMgmt &lt;--&gt; DataLayer
 
-    Data Layer &lt;-.HTTP.-&gt; REST
-    Data Layer &lt;-.Cache.-&gt; Cache
+    DataLayer &lt;-.HTTP.-&gt; REST
+    DataLayer &lt;-.Cache.-&gt; Cache
 
-    REST --&gt; Auth &amp; Products &amp; Orders &amp; Payments
-    Auth &amp; Products &amp; Orders &amp; Payments &lt;--&gt; DB
+    REST --&gt; Auth &amp; ProductsSvc &amp; Orders &amp; Payments
+    Auth &amp; ProductsSvc &amp; Orders &amp; Payments &lt;--&gt; DB
 
     Payments &lt;-.API.-&gt; Stripe
     Orders &lt;-.API.-&gt; Email
-    Pages &lt;-.Events.-&gt; Analytics
+    PagesSub &lt;-.Events.-&gt; Analytics
 
     style PAN fill:#764ba2,color:#fff
     style REST fill:#667eea,color:#fff
@@ -223,11 +223,11 @@
     Form --&gt; API[POST /api/auth/login]
     API --&gt; Validate{Valid&lt;br/&gt;credentials?}
 
-    Validate --&gt;|Yes| Success[Return {token, user}]
+    Validate --&gt;|Yes| Success[&quot;Return token, user&quot;]
     Validate --&gt;|No| Error[Return error]
 
     Success --&gt; Store[Store token in localStorage]
-    Store --&gt; Publish[PAN: publish(&#039;auth.login&#039;)]
+    Store --&gt; Publish[&quot;PAN: publish auth.login&quot;]
     Publish --&gt; NavToDash[Navigate to /dashboard]
     NavToDash --&gt; Router
 

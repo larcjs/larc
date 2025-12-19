@@ -472,58 +472,58 @@
   ],
   "docs/books/learning-larc/chapters": [
     {
-      "title": "Chapter 1: Philosophy and Background",
-      "path": "docs/books/learning-larc/chapters/01-philosophy-and-background.html",
-      "category": "docs/books/learning-larc/chapters"
-    },
-    {
-      "title": "Chapter 2: Core Concepts",
-      "path": "docs/books/learning-larc/chapters/02-core-concepts.html",
-      "category": "docs/books/learning-larc/chapters"
-    },
-    {
-      "title": "Chapter 3: Getting Started",
-      "path": "docs/books/learning-larc/chapters/03-getting-started.html",
-      "category": "docs/books/learning-larc/chapters"
-    },
-    {
-      "title": "Chapter 4: Creating Web Components",
-      "path": "docs/books/learning-larc/chapters/04-creating-web-components.html",
-      "category": "docs/books/learning-larc/chapters"
-    },
-    {
-      "title": "Chapter 5: The PAN Bus",
-      "path": "docs/books/learning-larc/chapters/05-the-pan-bus.html",
-      "category": "docs/books/learning-larc/chapters"
-    },
-    {
-      "title": "Chapter 6: State Management",
-      "path": "docs/books/learning-larc/chapters/06-state-management.html",
-      "category": "docs/books/learning-larc/chapters"
-    },
-    {
-      "title": "Chapter 7: Advanced Component Patterns",
+      "title": "Advanced Component Patterns",
       "path": "docs/books/learning-larc/chapters/07-advanced-component-patterns.html",
       "category": "docs/books/learning-larc/chapters"
     },
     {
-      "title": "Chapter 8: Business Logic Patterns",
+      "title": "Business Logic Patterns",
       "path": "docs/books/learning-larc/chapters/08-business-logic-patterns.html",
       "category": "docs/books/learning-larc/chapters"
     },
     {
-      "title": "Chapter 8: Routing and Navigation",
-      "path": "docs/books/learning-larc/chapters/09-routing-and-navigation.html",
+      "title": "Core Concepts",
+      "path": "docs/books/learning-larc/chapters/02-core-concepts.html",
       "category": "docs/books/learning-larc/chapters"
     },
     {
-      "title": "Chapter 9: Forms and Validation",
+      "title": "Creating Web Components",
+      "path": "docs/books/learning-larc/chapters/04-creating-web-components.html",
+      "category": "docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Forms and Validation",
       "path": "docs/books/learning-larc/chapters/10-forms-and-validation.html",
       "category": "docs/books/learning-larc/chapters"
     },
     {
-      "title": "Chapters 11-19: Summary Outlines",
+      "title": "Getting Started",
+      "path": "docs/books/learning-larc/chapters/03-getting-started.html",
+      "category": "docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Philosophy and Background",
+      "path": "docs/books/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": "docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "docs/books/learning-larc/chapters/09-routing-and-navigation.html",
+      "category": "docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": "docs/books/learning-larc/chapters/06-state-management.html",
+      "category": "docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Summary Outlines",
       "path": "docs/books/learning-larc/chapters/11-19-summary.html",
+      "category": "docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "The PAN Bus",
+      "path": "docs/books/learning-larc/chapters/05-the-pan-bus.html",
       "category": "docs/books/learning-larc/chapters"
     }
   ],
