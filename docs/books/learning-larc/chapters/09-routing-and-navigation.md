@@ -1,4 +1,4 @@
-# Chapter 8: Routing and Navigation
+# Routing and Navigation
 
 Client-side routing enables single-page applications (SPAs) to feel like multi-page websites without full page reloads. LARC provides routing through web standards and the PAN bus, keeping things simple and framework-free.
 

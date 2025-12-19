@@ -95,3 +95,16 @@ if (document.readyState === 'loading') {
   // DOM already loaded (module scripts are deferred)
   setupPlayground();
 }
+
+// Show code panel by default after components are loaded
+requestAnimationFrame(() => {
+  const bottomPanel = document.getElementById('bottom-panel');
+  const codePanel = document.getElementById('code-panel');
+  const toggleCodeBtn = document.getElementById('toggle-code');
+
+  if (bottomPanel && codePanel && toggleCodeBtn) {
+    bottomPanel.removeAttribute('hidden');
+    codePanel.removeAttribute('hidden');
+    toggleCodeBtn.textContent = 'Hide Code';
+  }
+});

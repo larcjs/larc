@@ -1,4 +1,4 @@
-# Chapter 3: Getting Started
+# Getting Started
 
 Theory is important, but there's no substitute for hands-on experience. In this chapter, you'll set up your development environment and build your first LARC application. By the end, you'll have a working project and understand the basic development workflow.
 

@@ -1,14 +1,15 @@
 /**
- * Code Exporter / Markup Editor
+ * Code Exporter / Live Markup Editor
  *
  * Generate, view, and edit HTML code from canvas with live sync
+ * Uses contenteditable for inline editing with automatic rerendering
  */
 
 class PgExporter extends HTMLElement {
   constructor() {
     super();
-    this.isEditMode = false;
     this.updateTimeout = null;
+    this.isUpdatingFromCanvas = false;
   }
 
   connectedCallback() {
@@ -17,15 +18,13 @@ class PgExporter extends HTMLElement {
         <div class="exporter-header">
           <h3>HTML Markup</h3>
           <div class="exporter-actions">
-            <button class="btn-edit" title="Toggle edit mode">✏️ Edit</button>
-            <button class="btn-apply" style="display:none" title="Apply changes">✓ Apply</button>
+            <span class="edit-hint">Click code to edit • Changes auto-apply</span>
             <button class="btn-copy" title="Copy to clipboard">📋 Copy</button>
             <button class="btn-download" title="Download as HTML">⬇️ Download</button>
           </div>
         </div>
         <div class="exporter-content">
-          <pre class="code-display"><code id="code-output"></code></pre>
-          <textarea class="code-editor" id="code-input" spellcheck="false" style="display:none"></textarea>
+          <pre class="code-display"><code id="code-output" contenteditable="true" spellcheck="false"></code></pre>
         </div>
         <div class="exporter-status"></div>
       </div>
@@ -36,27 +35,17 @@ class PgExporter extends HTMLElement {
   }
 
   setupListeners() {
-    // Update code when canvas changes (only if not in edit mode)
+    // Update code when canvas changes (only if not from our own edit)
     document.addEventListener('component-selected', () => {
-      if (!this.isEditMode) {
+      if (!this.isUpdatingFromCanvas) {
         setTimeout(() => this.updateCode(), 100);
       }
     });
 
     document.addEventListener('canvas-changed', () => {
-      if (!this.isEditMode) {
+      if (!this.isUpdatingFromCanvas) {
         this.updateCode();
       }
-    });
-
-    // Edit button - toggle edit mode
-    this.querySelector('.btn-edit').addEventListener('click', () => {
-      this.toggleEditMode();
-    });
-
-    // Apply button - apply code changes to canvas
-    this.querySelector('.btn-apply').addEventListener('click', () => {
-      this.applyCodeChanges();
     });
 
     // Copy button
@@ -69,86 +58,95 @@ class PgExporter extends HTMLElement {
       this.downloadCode();
     });
 
-    // Live validation in edit mode (optional)
-    this.querySelector('#code-input').addEventListener('input', () => {
+    // Live editing with debounced apply
+    const codeOutput = this.querySelector('#code-output');
+
+    codeOutput.addEventListener('input', () => {
       clearTimeout(this.updateTimeout);
       this.updateTimeout = setTimeout(() => {
-        this.validateCode();
-      }, 500);
+        this.applyCodeChanges();
+      }, 800); // Debounce for smoother editing
+    });
+
+    // Prevent default paste and insert plain text
+    codeOutput.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const text = e.clipboardData.getData('text/plain');
+      document.execCommand('insertText', false, text);
+    });
+
+    // Keyboard shortcuts
+    codeOutput.addEventListener('keydown', (e) => {
+      // Cmd/Ctrl+Enter to force apply
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+        e.preventDefault();
+        clearTimeout(this.updateTimeout);
+        this.applyCodeChanges();
+      }
+
+      // Tab key inserts spaces
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        document.execCommand('insertText', false, '  ');
+      }
+    });
+
+    // Focus styling
+    codeOutput.addEventListener('focus', () => {
+      this.querySelector('.code-display').classList.add('editing');
+    });
+
+    codeOutput.addEventListener('blur', () => {
+      this.querySelector('.code-display').classList.remove('editing');
+      // Apply changes on blur
+      clearTimeout(this.updateTimeout);
+      this.applyCodeChanges();
     });
   }
 
-  toggleEditMode() {
-    this.isEditMode = !this.isEditMode;
-    const display = this.querySelector('.code-display');
-    const editor = this.querySelector('.code-editor');
-    const btnEdit = this.querySelector('.btn-edit');
-    const btnApply = this.querySelector('.btn-apply');
-
-    if (this.isEditMode) {
-      // Switch to edit mode
-      const currentCode = this.getComponentsOnlyHTML();
-      editor.value = currentCode;
-      display.style.display = 'none';
-      editor.style.display = 'block';
-      btnEdit.textContent = '👁️ View';
-      btnEdit.title = 'View mode';
-      btnApply.style.display = 'inline-block';
-      editor.focus();
-      this.showStatus('Edit mode: Make changes and click Apply', 'info');
-    } else {
-      // Switch to view mode
-      display.style.display = 'block';
-      editor.style.display = 'none';
-      btnEdit.textContent = '✏️ Edit';
-      btnEdit.title = 'Edit mode';
-      btnApply.style.display = 'none';
-      this.updateCode();
-      this.showStatus('View mode', 'info');
-    }
-  }
-
-  validateCode() {
-    const editor = this.querySelector('#code-input');
-    const code = editor.value.trim();
-
-    try {
-      // Basic validation - check if it's valid HTML structure
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(code, 'text/html');
-      const parserErrors = doc.querySelector('parsererror');
-
-      if (parserErrors) {
-        this.showStatus('⚠️ Syntax error detected', 'warning');
-      } else {
-        this.showStatus('✓ Valid HTML', 'success');
-      }
-    } catch (err) {
-      this.showStatus('⚠️ Syntax error: ' + err.message, 'error');
-    }
-  }
-
   applyCodeChanges() {
-    const editor = this.querySelector('#code-input');
-    const code = editor.value.trim();
+    const codeOutput = this.querySelector('#code-output');
+    // Get the plain text content (strip any HTML formatting)
+    const code = this.getPlainTextFromElement(codeOutput).trim();
 
-    if (!code) {
-      this.showStatus('❌ Code cannot be empty', 'error');
+    if (!code || code === '<!-- No components yet -->') {
       return;
     }
 
     try {
-      // Parse the HTML
+      // Extract just the component markup (between body tags or the whole thing)
+      let componentCode = code;
+
+      // If it's a full HTML document, extract just the body content
+      if (code.includes('<body>') || code.includes('<!DOCTYPE')) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(code, 'text/html');
+        const body = doc.body;
+
+        // Filter out pan-bus, scripts, etc.
+        const elements = Array.from(body.children).filter(el => {
+          const tag = el.tagName.toLowerCase();
+          return tag !== 'pan-bus' &&
+                 tag !== 'script' &&
+                 tag !== 'style' &&
+                 tag !== 'link';
+        });
+
+        componentCode = elements.map(el => el.outerHTML).join('\n');
+      }
+
+      // Parse the component code
       const parser = new DOMParser();
-      const doc = parser.parseFromString(code, 'text/html');
+      const doc = parser.parseFromString(`<div>${componentCode}</div>`, 'text/html');
+      const wrapper = doc.body.firstChild;
       const parserErrors = doc.querySelector('parsererror');
 
       if (parserErrors) {
-        this.showStatus('❌ Invalid HTML: Cannot parse', 'error');
+        this.showStatus('⚠️ Syntax error - fix and try again', 'warning');
         return;
       }
 
-      // Get canvas and clear it
+      // Get canvas and apply changes
       const canvas = document.querySelector('pg-canvas');
       if (!canvas) {
         this.showStatus('❌ Canvas not found', 'error');
@@ -161,17 +159,22 @@ class PgExporter extends HTMLElement {
         return;
       }
 
-      // Clear existing components using safe method
+      // Mark that we're updating to prevent feedback loop
+      this.isUpdatingFromCanvas = true;
+
+      // Clear existing components
       while (previewArea.firstChild) {
         previewArea.removeChild(previewArea.firstChild);
       }
       canvas.components = [];
 
-      // Extract body content (ignore <!DOCTYPE>, <html>, <head>, <pan-bus>, <script>)
-      const bodyContent = doc.body;
-      const elements = Array.from(bodyContent.children).filter(el => {
+      // Clear badges
+      const badgeContainer = canvas.querySelector('#non-ui-badges');
+      if (badgeContainer) badgeContainer.innerHTML = '';
+
+      // Extract elements
+      const elements = Array.from(wrapper.children).filter(el => {
         const tag = el.tagName.toLowerCase();
-        // Only allow known safe component tags (pan-* and similar)
         return tag !== 'pan-bus' &&
                tag !== 'script' &&
                tag !== 'style' &&
@@ -181,22 +184,42 @@ class PgExporter extends HTMLElement {
                tag !== 'embed';
       });
 
-      // Load component registry for metadata
-      this.loadComponentsFromHTML(elements, canvas, previewArea);
+      // Load components
+      this.loadComponentsFromHTML(elements, canvas, previewArea).then(() => {
+        this.showStatus('✓ Applied', 'success');
+        setTimeout(() => {
+          this.isUpdatingFromCanvas = false;
+        }, 100);
+      });
 
-      this.showStatus('✓ Changes applied successfully', 'success');
-      this.isEditMode = false;
-      this.toggleEditMode(); // Switch back to view mode
     } catch (err) {
       console.error('Error applying changes:', err);
-      this.showStatus('❌ Error: ' + err.message, 'error');
+      this.showStatus('⚠️ ' + err.message, 'error');
+      this.isUpdatingFromCanvas = false;
     }
+  }
+
+  getPlainTextFromElement(element) {
+    // Get text content, preserving line breaks
+    const html = element.innerHTML;
+    // Convert <br> to newlines
+    let text = html.replace(/<br\s*\/?>/gi, '\n');
+    // Convert div closings to newlines (contenteditable often uses divs)
+    text = text.replace(/<\/div><div>/gi, '\n');
+    // Strip remaining HTML tags
+    text = text.replace(/<[^>]+>/g, '');
+    // Decode HTML entities
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
   }
 
   async loadComponentsFromHTML(elements, canvas, previewArea) {
     // Load registry for component metadata
     const registryResponse = await fetch('./component-registry.json');
     const registry = await registryResponse.json();
+
+    const nonUICategories = ['state', 'routing', 'data', 'devtools', 'advanced', 'auth'];
 
     for (const element of elements) {
       const tagName = element.tagName.toLowerCase();
@@ -222,6 +245,13 @@ class PgExporter extends HTMLElement {
         newElement.dataset.componentId = crypto.randomUUID();
         newElement.dataset.componentMeta = JSON.stringify(componentMeta);
 
+        // Check if non-UI component
+        const isNonUIComponent = nonUICategories.includes(componentMeta.category);
+        if (isNonUIComponent) {
+          canvas.addNonUIBadge(newElement, componentMeta);
+          newElement.style.display = 'none';
+        }
+
         // Click to select
         newElement.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -234,7 +264,16 @@ class PgExporter extends HTMLElement {
       previewArea.appendChild(newElement);
     }
 
-    // Notify canvas changed
+    // Show empty state if no components
+    if (elements.length === 0) {
+      previewArea.innerHTML = `
+        <div class="empty-state">
+          Click a component from the sidebar to add it here
+        </div>
+      `;
+    }
+
+    // Notify canvas changed (without triggering our own update)
     canvas.dispatchEvent(new CustomEvent('canvas-changed', {
       bubbles: true
     }));
@@ -245,13 +284,13 @@ class PgExporter extends HTMLElement {
     status.textContent = message;
     status.className = 'exporter-status ' + type;
 
-    // Auto-hide after 3 seconds
+    // Auto-hide after 2 seconds
     setTimeout(() => {
       if (status.textContent === message) {
         status.textContent = '';
         status.className = 'exporter-status';
       }
-    }, 3000);
+    }, 2000);
   }
 
   updateCode() {
@@ -261,15 +300,17 @@ class PgExporter extends HTMLElement {
     const previewArea = canvas.querySelector('#preview-area');
     const components = Array.from(previewArea.querySelectorAll('.pg-component'));
 
+    const codeOutput = this.querySelector('#code-output');
+
     if (components.length === 0) {
-      this.querySelector('#code-output').innerHTML = '<span class="comment">&lt;!-- No components yet --&gt;</span>';
+      codeOutput.innerHTML = '<span class="comment">&lt;!-- No components yet --&gt;</span>';
       return;
     }
 
-    // Generate clean HTML
-    const html = this.generateHTML(components);
+    // Generate clean HTML (just components, no full document)
+    const html = this.getComponentsOnlyHTML(components);
     const highlighted = this.highlightHTML(html);
-    this.querySelector('#code-output').innerHTML = highlighted;
+    codeOutput.innerHTML = highlighted;
   }
 
   highlightHTML(code) {
@@ -291,13 +332,12 @@ class PgExporter extends HTMLElement {
       '<span class="doctype">$1</span>'
     );
 
-    // Highlight tags and attributes together to avoid conflicts
+    // Highlight tags and attributes
     code = code.replace(
       /(&lt;\/?)([\w-]+)((?:\s+[\w-]+(?:="[^"]*")?)*)\s*(\/?&gt;)/g,
       (match, openBracket, tagName, attrs, closeBracket) => {
         let result = openBracket + '<span class="tag">' + tagName + '</span>';
 
-        // Highlight attributes if present
         if (attrs) {
           result += attrs.replace(
             /([\w-]+)(=)(")(.*?)(")/g,
@@ -313,19 +353,9 @@ class PgExporter extends HTMLElement {
     return code;
   }
 
-  getComponentsOnlyHTML() {
-    // Get just the component markup (no full HTML structure)
-    const canvas = document.querySelector('pg-canvas');
-    if (!canvas) return '';
-
-    const previewArea = canvas.querySelector('#preview-area');
-    const components = Array.from(previewArea.querySelectorAll('.pg-component'));
-
-    if (components.length === 0) {
-      return '<!-- No components yet -->';
-    }
-
+  getComponentsOnlyHTML(components) {
     const lines = [];
+
     components.forEach(comp => {
       const tag = comp.tagName.toLowerCase();
       const attributes = Array.from(comp.attributes)
@@ -335,7 +365,7 @@ class PgExporter extends HTMLElement {
         .map(attr => `${attr.name}="${attr.value}"`)
         .join(' ');
 
-      // Get inner content, but strip out playground-specific elements
+      // Get inner content, stripping playground-specific elements
       const clone = comp.cloneNode(true);
       const label = clone.querySelector('.pg-component-label');
       if (label) label.remove();
@@ -347,7 +377,6 @@ class PgExporter extends HTMLElement {
 
       if (content) {
         lines.push(`<${tag}${attributes ? ' ' + attributes : ''}>`);
-        // Indent inner content
         const contentLines = content.split('\n');
         contentLines.forEach(line => {
           if (line.trim()) {
@@ -358,13 +387,13 @@ class PgExporter extends HTMLElement {
       } else {
         lines.push(`<${tag}${attributes ? ' ' + attributes : ''}></${tag}>`);
       }
-      lines.push(''); // Empty line between components
+      lines.push('');
     });
 
     return lines.join('\n').trim();
   }
 
-  generateHTML(components) {
+  generateFullHTML(components) {
     const lines = [
       '<!DOCTYPE html>',
       '<html lang="en">',
@@ -388,7 +417,6 @@ class PgExporter extends HTMLElement {
         .map(attr => `${attr.name}="${attr.value}"`)
         .join(' ');
 
-      // Get inner content, but strip out playground-specific elements
       const clone = comp.cloneNode(true);
       const label = clone.querySelector('.pg-component-label');
       if (label) label.remove();
@@ -400,7 +428,6 @@ class PgExporter extends HTMLElement {
 
       if (content) {
         lines.push(`  <${tag}${attributes ? ' ' + attributes : ''}>`);
-        // Indent inner content
         content.split('\n').forEach(line => {
           if (line.trim()) {
             lines.push(`    ${line}`);
@@ -417,7 +444,6 @@ class PgExporter extends HTMLElement {
   }
 
   getPlainCode() {
-    // Get the raw HTML code without syntax highlighting
     const canvas = document.querySelector('pg-canvas');
     if (!canvas) return '';
 
@@ -428,13 +454,12 @@ class PgExporter extends HTMLElement {
       return '<!-- No components yet -->';
     }
 
-    return this.generateHTML(components);
+    return this.generateFullHTML(components);
   }
 
   copyCode() {
     const code = this.getPlainCode();
     navigator.clipboard.writeText(code).then(() => {
-      // Show feedback
       const btn = this.querySelector('.btn-copy');
       const originalText = btn.textContent;
       btn.textContent = '✓ Copied!';

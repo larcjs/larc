@@ -12,7 +12,7 @@ graph TB
 
     subgraph "pan-router"
         Router[Router Component]
-        Routes[Route Registry<br/>{path, component, guard}]
+        Routes["Route Registry: path, component, guard"]
         Matcher[Pattern Matcher]
         Outlet[Router Outlet<br/>&lt;div&gt;]
     end
@@ -44,14 +44,14 @@ graph TB
 ```mermaid
 sequenceDiagram
     participant User
-    participant Link as &lt;a href="/users/123"&gt;
+    participant AnchorEl as Anchor Link
     participant Router as pan-router
     participant Guard as Route Guard
     participant Page as user-page
     participant Browser
 
-    User->>Link: Click
-    Link->>Router: preventDefault()<br/>navigate('/users/123')
+    User->>AnchorEl: Click
+    AnchorEl->>Router: preventDefault, navigate /users/123
 
     Router->>Router: Match route pattern
     Router->>Guard: Check guard('auth')
@@ -78,7 +78,7 @@ sequenceDiagram
 graph TB
     Start[URL: /users/123/posts/456]
 
-    Start --> Parse[Parse URL<br/>['users', '123', 'posts', '456']]
+    Start --> Parse["Parse URL: users, 123, posts, 456"]
 
     Parse --> Routes{Check Routes}
 
@@ -88,7 +88,7 @@ graph TB
     Routes --> R4["*"]
 
     R1 --> Match1{Match?}
-    Match1 -->|Yes| Extract1[Extract params<br/>{id: '123', postId: '456'}]
+    Match1 -->|Yes| Extract1["Extract params: id=123, postId=456"]
     Match1 -->|No| R2
 
     R2 --> Match2{Match?}
@@ -256,14 +256,14 @@ stateDiagram-v2
 ```mermaid
 graph TB
     subgraph "Navigation Methods"
-        M1["pan.publish('router.navigate', {path})"]
-        M2["pan.publish('router.back')"]
-        M3["pan.publish('router.forward')"]
-        M4["pan.publish('router.replace', {path})"]
+        M1["pan.publish router.navigate, path"]
+        M2["pan.publish router.back"]
+        M3["pan.publish router.forward"]
+        M4["pan.publish router.replace, path"]
     end
 
-    subgraph "Router"
-        Router[Router Component]
+    subgraph "Router Component"
+        RouterComp[Router]
         History[History API]
     end
 
@@ -274,14 +274,14 @@ graph TB
         R4[Replace Current Entry]
     end
 
-    M1 --> Router --> R1
-    M2 --> Router --> R2
-    M3 --> Router --> R3
-    M4 --> Router --> R4
+    M1 --> RouterComp --> R1
+    M2 --> RouterComp --> R2
+    M3 --> RouterComp --> R3
+    M4 --> RouterComp --> R4
 
-    Router <--> History
+    RouterComp <--> History
 
-    style Router fill:#764ba2,color:#fff
+    style RouterComp fill:#764ba2,color:#fff
 ```
 
 ## Link Interception
@@ -289,25 +289,25 @@ graph TB
 ```mermaid
 sequenceDiagram
     participant User
-    participant Link as &lt;a href="/page"&gt;
+    participant AnchorEl as Anchor Element
     participant Document
     participant Router
     participant Browser
 
-    User->>Link: Click
+    User->>AnchorEl: Click
 
-    Link->>Document: click event bubbles
+    AnchorEl->>Document: click event bubbles
 
     Document->>Router: Event listener catches
 
     Router->>Router: Check if internal link
 
-    alt Internal Link (/page)
-        Router->>Link: preventDefault()
+    alt Internal Link /page
+        Router->>AnchorEl: preventDefault
         Router->>Router: Handle navigation
-        Router->>Browser: pushState('/page')
+        Router->>Browser: pushState /page
         Router->>Router: Render component
-    else External Link (https://external.com)
+    else External Link https://external.com
         Router->>Browser: Allow default behavior
         Browser->>Browser: Full page navigation
     end

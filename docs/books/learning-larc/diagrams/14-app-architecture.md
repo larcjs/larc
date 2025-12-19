@@ -4,24 +4,24 @@
 
 ```mermaid
 graph TB
-    subgraph "Frontend - LARC Application"
-        subgraph "Pages"
+    subgraph Frontend["Frontend - LARC Application"]
+        subgraph PagesSub["Pages"]
             Home[home-page]
-            Products[products-page]
+            ProductsPage[products-page]
             Product[product-detail-page]
-            Cart[cart-page]
+            CartPage[cart-page]
             Checkout[checkout-page]
             Profile[user-profile-page]
         end
 
-        subgraph "Layout Components"
+        subgraph LayoutComp["Layout Components"]
             Header[app-header]
             Nav[main-nav]
             Footer[app-footer]
             Sidebar[user-sidebar]
         end
 
-        subgraph "Feature Components"
+        subgraph FeatureComp["Feature Components"]
             ProductCard[product-card]
             CartWidget[cart-widget]
             SearchBox[search-box]
@@ -29,70 +29,70 @@ graph TB
             UserMenu[user-menu]
         end
 
-        subgraph "UI Components"
+        subgraph UIComp["UI Components"]
             Button[pan-button]
             Modal[pan-modal]
             Toast[toast-notification]
             Spinner[loading-spinner]
         end
 
-        subgraph "Communication Layer"
+        subgraph CommLayer["Communication Layer"]
             PAN[PAN Bus]
         end
 
-        subgraph "State Management"
+        subgraph StateMgmt["State Management"]
             AuthStore[Authentication State]
-            CartStore[Shopping Cart State]
+            CartStoreSub[Shopping Cart State]
             UserPrefs[User Preferences]
         end
 
-        subgraph "Data Layer"
+        subgraph DataLayer["Data Layer"]
             API[API Client]
-            Cache[Cache Layer<br/>IndexedDB]
+            Cache["Cache Layer IndexedDB"]
             SyncQueue[Offline Sync Queue]
         end
     end
 
-    subgraph "Backend Services"
-        subgraph "API Server"
-            REST[REST API<br/>Node.js/Express]
-            Auth[Auth Service<br/>JWT]
-            Products[Product Service]
+    subgraph BackendSvc["Backend Services"]
+        subgraph APISrv["API Server"]
+            REST["REST API Node.js/Express"]
+            Auth["Auth Service JWT"]
+            ProductsSvc[Product Service]
             Orders[Order Service]
             Payments[Payment Service]
         end
 
-        subgraph "Database"
+        subgraph Database["Database"]
             DB[(PostgreSQL)]
         end
 
-        subgraph "External Services"
+        subgraph ExtSvc["External Services"]
             Stripe[Stripe API]
             Email[Email Service]
             Analytics[Analytics]
         end
     end
 
-    Pages --> Layout Components
-    Pages --> Feature Components
-    Feature Components --> UI Components
+    PagesSub --> LayoutComp
+    PagesSub --> FeatureComp
+    FeatureComp --> UIComp
 
-    Pages <--> PAN
-    Layout Components <--> PAN
-    Feature Components <--> PAN
+    PagesSub <--> PAN
+    LayoutComp <--> PAN
+    FeatureComp <--> PAN
 
-    PAN <--> State Management
-    State Management <--> Data Layer
+    PAN <--> StateMgmt
+    StateMgmt <--> DataLayer
 
-    Data Layer <-.HTTP.-> REST
-    Data Layer <-.Cache.-> Cache
+    DataLayer <-.HTTP.-> REST
+    DataLayer <-.Cache.-> Cache
 
-    REST --> Auth & Products & Orders & Payments
-    Auth & Products & Orders & Payments <--> DB
+    REST --> Auth & ProductsSvc & Orders & Payments
+    Auth & ProductsSvc & Orders & Payments <--> DB
 
     Payments <-.API.-> Stripe
     Orders <-.API.-> Email
-    Pages <-.Events.-> Analytics
+    PagesSub <-.Events.-> Analytics
 
     style PAN fill:#764ba2,color:#fff
     style REST fill:#667eea,color:#fff
@@ -193,11 +193,11 @@ graph TB
     Form --> API[POST /api/auth/login]
     API --> Validate{Valid<br/>credentials?}
 
-    Validate -->|Yes| Success[Return {token, user}]
+    Validate -->|Yes| Success["Return token, user"]
     Validate -->|No| Error[Return error]
 
     Success --> Store[Store token in localStorage]
-    Store --> Publish[PAN: publish('auth.login')]
+    Store --> Publish["PAN: publish auth.login"]
     Publish --> NavToDash[Navigate to /dashboard]
     NavToDash --> Router
 

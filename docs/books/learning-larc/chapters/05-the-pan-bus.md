@@ -1,4 +1,4 @@
-# Chapter 5: The PAN Bus
+# The PAN Bus
 
 The Page Area Network (PAN) bus is LARC's event-driven communication backbone. It enables decoupled, scalable component architectures by providing a pub/sub messaging system that works across your entire application.
 

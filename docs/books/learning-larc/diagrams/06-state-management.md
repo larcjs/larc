@@ -87,7 +87,7 @@ sequenceDiagram
 ```mermaid
 graph TB
     subgraph "Store"
-        State[Application State<br/>{user, theme, cart}]
+        State["Application State: user, theme, cart"]
         Listeners[Listeners Set]
     end
 

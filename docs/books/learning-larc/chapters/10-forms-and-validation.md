@@ -1,4 +1,4 @@
-# Chapter 9: Forms and Validation
+# Forms and Validation
 
 Forms are the primary way users input data into web applications. LARC provides patterns for building accessible, validated forms using web standards and the PAN bus.
 

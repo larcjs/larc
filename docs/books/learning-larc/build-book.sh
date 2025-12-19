@@ -30,7 +30,7 @@ NC='\033[0m' # No Color
 # Directories
 BOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BUILD_DIR="${BOOK_DIR}/build"
-OUTPUT_DIR="${BUILD_DIR}/output"
+OUTPUT_DIR="${BOOK_DIR}/output"
 IMAGES_DIR="${BUILD_DIR}/images"
 TEMP_DIR="${BUILD_DIR}/temp"
 
@@ -80,10 +80,13 @@ check_dependencies() {
 setup_directories() {
     echo -e "${BLUE}Setting up build directories...${NC}"
     mkdir -p "${BUILD_DIR}"
-    mkdir -p "${OUTPUT_DIR}"
+    mkdir -p "${OUTPUT_DIR}/html"
+    mkdir -p "${OUTPUT_DIR}/pdf"
+    mkdir -p "${OUTPUT_DIR}/epub"
+    mkdir -p "${OUTPUT_DIR}/docx"
     mkdir -p "${IMAGES_DIR}"
     mkdir -p "${TEMP_DIR}"
-    mkdir -p "${OUTPUT_DIR}/images"
+    mkdir -p "${OUTPUT_DIR}/html/images"
     echo -e "${GREEN}✓ Directories ready${NC}"
 }
 
@@ -132,10 +135,13 @@ convert_diagrams() {
         if [ -f "${BOOK_DIR}/$diagram_file" ]; then
             local base_name=$(basename "$diagram_file" .md)
             echo -e "  Converting ${base_name}..."
-            if mmdc -i "${BOOK_DIR}/$diagram_file" -o "${IMAGES_DIR}/${base_name}.png" -w 1200 -b transparent 2>/dev/null; then
-                ((converted++))
+            # mmdc may return non-zero even on success with multiple diagrams, so ignore exit code
+            mmdc -i "${BOOK_DIR}/$diagram_file" -o "${IMAGES_DIR}/${base_name}.png" -w 1200 -b transparent 2>&1 || true
+            # Check if any files were actually created
+            if ls "${IMAGES_DIR}/${base_name}"*.png 1>/dev/null 2>&1; then
+                converted=$((converted + 1))
             else
-                echo -e "${YELLOW}  ⚠️  Skipped ${base_name} (may contain multiple diagrams)${NC}"
+                echo -e "${YELLOW}  ⚠️  No output for ${base_name}${NC}"
             fi
         fi
     done
@@ -205,10 +211,67 @@ create_combined_markdown() {
         cat "${BOOK_DIR}/back-cover.md" >> "$COMBINED_MD"
     fi
 
-    # Copy images
+    # Copy images to output
     if [ -d "${IMAGES_DIR}" ]; then
-        cp -r "${IMAGES_DIR}"/* "${OUTPUT_DIR}/images/" 2>/dev/null || true
+        cp -r "${IMAGES_DIR}"/* "${OUTPUT_DIR}/html/images/" 2>/dev/null || true
     fi
+
+    # Fix image paths in combined markdown
+    # The chapters reference ../images/ but we need to point to the actual build/images/ location
+    echo -e "${BLUE}Fixing image paths...${NC}"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS sed requires empty string for -i
+        sed -i '' "s|\.\./images/|${IMAGES_DIR}/|g" "$COMBINED_MD"
+    else
+        # Linux sed
+        sed -i "s|\.\./images/|${IMAGES_DIR}/|g" "$COMBINED_MD"
+    fi
+
+    # Clean up duplicate images and caption lines
+    echo -e "${BLUE}Cleaning up image formatting...${NC}"
+
+    # Create a Python script to clean up the markdown
+    cat > "${TEMP_DIR}/clean_images.py" << 'PYSCRIPT'
+import re
+import sys
+
+with open(sys.argv[1], 'r') as f:
+    content = f.read()
+
+# Remove standalone italic caption lines that duplicate image alt text
+# Pattern: ***Figure X.X:** Description* (with or without leading asterisks)
+content = re.sub(r'\n\*{2,3}Figure [0-9]+\.[0-9]+:\*?\*? [^\n]+\*\n', '\n', content)
+content = re.sub(r'\n\*\*\*Figure [0-9]+\.[0-9]+:\*\* [^\n]+\*\n', '\n', content)
+
+# Remove duplicate consecutive images (same image appearing twice in a row)
+lines = content.split('\n')
+cleaned_lines = []
+prev_image = None
+for line in lines:
+    # Check if this is an image line
+    img_match = re.match(r'!\[.*?\]\((.*?)\)', line)
+    if img_match:
+        current_image = img_match.group(1)
+        if current_image != prev_image:
+            cleaned_lines.append(line)
+            prev_image = current_image
+        # Skip duplicate
+    else:
+        cleaned_lines.append(line)
+        if line.strip():  # Reset prev_image for non-empty, non-image lines
+            prev_image = None
+
+content = '\n'.join(cleaned_lines)
+
+# Remove multiple consecutive blank lines (more than 2)
+content = re.sub(r'\n{4,}', '\n\n\n', content)
+
+with open(sys.argv[1], 'w') as f:
+    f.write(content)
+PYSCRIPT
+
+    python3 "${TEMP_DIR}/clean_images.py" "$COMBINED_MD"
+    rm "${TEMP_DIR}/clean_images.py"
 
     echo -e "${GREEN}✓ Chapters combined${NC}"
 }
@@ -407,18 +470,18 @@ build_html() {
         --toc-depth=3 \
         --number-sections \
         --css="book-style.css" \
-        --syntax-highlighting=tango \
+        --highlight-style=tango \
         --metadata title="${BOOK_TITLE}" \
         --resource-path="${BOOK_DIR}:${BUILD_DIR}" \
-        --output="${OUTPUT_DIR}/learning-larc.html"
+        --output="${OUTPUT_DIR}/html/learning-larc.html"
 
     # Copy CSS to output
-    cp "${TEMP_DIR}/book-style.css" "${OUTPUT_DIR}/"
+    cp "${TEMP_DIR}/book-style.css" "${OUTPUT_DIR}/html/"
 
     # Fix image paths if needed
-    sed -i '' 's|src="../images/|src="images/|g' "${OUTPUT_DIR}/learning-larc.html" 2>/dev/null || true
+    sed -i '' 's|src="../images/|src="images/|g' "${OUTPUT_DIR}/html/learning-larc.html" 2>/dev/null || true
 
-    echo -e "${GREEN}✓ HTML version complete: ${OUTPUT_DIR}/learning-larc.html${NC}"
+    echo -e "${GREEN}✓ HTML version complete: ${OUTPUT_DIR}/html/learning-larc.html${NC}"
 }
 
 # Generate PDF version
@@ -478,7 +541,7 @@ COVEREOF
             --toc-depth=3 \
             --number-sections \
             --css="${TEMP_DIR}/book-style.css" \
-            --syntax-highlighting=tango \
+            --highlight-style=tango \
             --output="${TEMP_DIR}/temp.html"
 
         # Convert HTML to PDF with Prince (include cover if it exists)
@@ -486,13 +549,13 @@ COVEREOF
             prince \
                 "${COVER_FILE}" \
                 "${TEMP_DIR}/temp.html" \
-                -o "${OUTPUT_DIR}/learning-larc.pdf" \
+                -o "${OUTPUT_DIR}/pdf/learning-larc.pdf" \
                 --pdf-title="${BOOK_TITLE}" \
                 --pdf-author="${AUTHOR}"
         else
             prince \
                 "${TEMP_DIR}/temp.html" \
-                -o "${OUTPUT_DIR}/learning-larc.pdf" \
+                -o "${OUTPUT_DIR}/pdf/learning-larc.pdf" \
                 --pdf-title="${BOOK_TITLE}" \
                 --pdf-author="${AUTHOR}"
         fi
@@ -512,7 +575,7 @@ COVEREOF
             --toc \
             --toc-depth=3 \
             --number-sections \
-            --syntax-highlighting=tango \
+            --highlight-style=tango \
             --variable documentclass=book \
             --variable papersize=letter \
             --variable fontsize=11pt \
@@ -521,10 +584,10 @@ COVEREOF
             --variable urlcolor=blue \
             --variable toccolor=black \
             --resource-path="${BOOK_DIR}:${BUILD_DIR}" \
-            --output="${OUTPUT_DIR}/learning-larc.pdf"
+            --output="${OUTPUT_DIR}/pdf/learning-larc.pdf"
     fi
 
-    echo -e "${GREEN}✓ PDF version complete: ${OUTPUT_DIR}/learning-larc.pdf${NC}"
+    echo -e "${GREEN}✓ PDF version complete: ${OUTPUT_DIR}/pdf/learning-larc.pdf${NC}"
 }
 
 # Generate EPUB version
@@ -554,19 +617,165 @@ build_epub() {
         --toc \
         --toc-depth=3 \
         --number-sections \
-        --syntax-highlighting=tango \
+        --highlight-style=tango \
         --epub-metadata="${BUILD_DIR}/epub-metadata.xml" \
         ${COVER_ARG} \
         --resource-path="${BOOK_DIR}:${BUILD_DIR}" \
-        --output="${OUTPUT_DIR}/learning-larc.epub"
+        --output="${OUTPUT_DIR}/epub/learning-larc.epub"
 
-    echo -e "${GREEN}✓ EPUB version complete: ${OUTPUT_DIR}/learning-larc.epub${NC}"
+    echo -e "${GREEN}✓ EPUB version complete: ${OUTPUT_DIR}/epub/learning-larc.epub${NC}"
+}
+
+# Generate DOCX version (for Kindle Create)
+build_docx() {
+    echo -e "${BLUE}Building DOCX version for Kindle Create...${NC}"
+
+    # Create reference docx for styling if it doesn't exist
+    if [ ! -f "${BUILD_DIR}/kindle-reference.docx" ]; then
+        create_kindle_reference_docx
+    fi
+
+    # Create a Lua filter for chapter page breaks and code block styling
+    cat > "${TEMP_DIR}/figure-filter.lua" << 'LUAFILTER'
+-- Lua filter for DOCX formatting
+
+-- Add page break before level 1 headings (chapters)
+function Header(el)
+    if el.level == 1 then
+        return {
+            pandoc.RawBlock('openxml', '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'),
+            el
+        }
+    end
+    return el
+end
+
+-- Handle figures - wrap standalone images in a figure with caption
+function Para(el)
+    if #el.content == 1 and el.content[1].t == "Image" then
+        local img = el.content[1]
+        local caption = pandoc.utils.stringify(img.caption)
+
+        if caption and caption ~= "" then
+            return pandoc.Div({
+                pandoc.Para({img}),
+                pandoc.Para({pandoc.Emph({pandoc.Str(caption)})})
+            }, {class = "figure"})
+        end
+    end
+    return el
+end
+
+-- Style code blocks with grey background and border
+function CodeBlock(el)
+    -- Wrap code block with OpenXML shading
+    local code_text = el.text
+    local lines = {}
+    for line in code_text:gmatch("([^\n]*)\n?") do
+        if line ~= "" or #lines > 0 then
+            table.insert(lines, line)
+        end
+    end
+    -- Remove trailing empty line if exists
+    if #lines > 0 and lines[#lines] == "" then
+        table.remove(lines)
+    end
+
+    -- Create paragraphs for each line with shading
+    local blocks = {}
+
+    -- Add top border/spacing
+    table.insert(blocks, pandoc.RawBlock('openxml',
+        '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="120" w:after="0"/><w:pBdr><w:top w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
+        (lines[1] or '') .. '</w:t></w:r></w:p>'))
+
+    -- Add middle lines
+    for i = 2, #lines - 1 do
+        table.insert(blocks, pandoc.RawBlock('openxml',
+            '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="0" w:after="0"/><w:pBdr><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
+            lines[i] .. '</w:t></w:r></w:p>'))
+    end
+
+    -- Add bottom line with border
+    if #lines > 1 then
+        table.insert(blocks, pandoc.RawBlock('openxml',
+            '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="0" w:after="120"/><w:pBdr><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:bottom w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
+            lines[#lines] .. '</w:t></w:r></w:p>'))
+    end
+
+    return blocks
+end
+LUAFILTER
+
+    # Build DOCX with Kindle-friendly settings
+    # Note: We don't use --toc here because 00-front-matter.md contains
+    # a beautifully formatted manual Table of Contents
+    pandoc \
+        "${BUILD_DIR}/metadata.yaml" \
+        "${TEMP_DIR}/learning-larc-complete.md" \
+        --from markdown+smart+implicit_figures \
+        --to docx \
+        --number-sections \
+        --lua-filter="${TEMP_DIR}/figure-filter.lua" \
+        --reference-doc="${BUILD_DIR}/kindle-reference.docx" \
+        --metadata title="${BOOK_TITLE}" \
+        --metadata author="${AUTHOR}" \
+        --resource-path="${BOOK_DIR}:${BUILD_DIR}:${IMAGES_DIR}" \
+        --output="${OUTPUT_DIR}/docx/learning-larc.docx"
+
+    rm "${TEMP_DIR}/figure-filter.lua"
+
+    echo -e "${GREEN}✓ DOCX version complete: ${OUTPUT_DIR}/docx/learning-larc.docx${NC}"
+    echo -e "${YELLOW}  Import this file into Kindle Create to publish on Amazon KDP${NC}"
+}
+
+# Create reference DOCX template for Kindle-friendly formatting
+create_kindle_reference_docx() {
+    echo -e "${BLUE}Creating Kindle-optimized DOCX reference template...${NC}"
+
+    # Create a minimal markdown file to generate reference docx
+    cat > "${TEMP_DIR}/temp-reference.md" <<'REFEOF'
+---
+title: Reference
+---
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+Normal paragraph text.
+
+**Bold text** and *italic text*.
+
+> Blockquote
+
+```
+Code block
+```
+
+`inline code`
+REFEOF
+
+    # Generate base reference docx
+    pandoc \
+        "${TEMP_DIR}/temp-reference.md" \
+        --from markdown \
+        --to docx \
+        --output="${BUILD_DIR}/kindle-reference.docx"
+
+    # Clean up temp file
+    rm "${TEMP_DIR}/temp-reference.md"
+
+    echo -e "${GREEN}✓ Reference template created${NC}"
 }
 
 # Clean build artifacts
 clean_build() {
     echo -e "${BLUE}Cleaning build artifacts...${NC}"
     rm -rf "${BUILD_DIR}"
+    rm -rf "${OUTPUT_DIR}"
     echo -e "${GREEN}✓ Build artifacts cleaned${NC}"
 }
 
@@ -582,6 +791,7 @@ build_all() {
     build_html
     build_pdf
     build_epub
+    build_docx
 
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -589,17 +799,19 @@ build_all() {
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
     echo "Output files:"
-    echo -e "  ${BLUE}HTML:${NC} ${OUTPUT_DIR}/learning-larc.html"
-    echo -e "  ${BLUE}PDF:${NC}  ${OUTPUT_DIR}/learning-larc.pdf"
-    echo -e "  ${BLUE}EPUB:${NC} ${OUTPUT_DIR}/learning-larc.epub"
+    echo -e "  ${BLUE}HTML:${NC} ${OUTPUT_DIR}/html/learning-larc.html"
+    echo -e "  ${BLUE}PDF:${NC}  ${OUTPUT_DIR}/pdf/learning-larc.pdf"
+    echo -e "  ${BLUE}EPUB:${NC} ${OUTPUT_DIR}/epub/learning-larc.epub"
+    echo -e "  ${BLUE}DOCX:${NC} ${OUTPUT_DIR}/docx/learning-larc.docx (for Kindle Create)"
     echo ""
-    echo "View HTML: open ${OUTPUT_DIR}/learning-larc.html"
-    echo "View PDF:  open ${OUTPUT_DIR}/learning-larc.pdf"
+    echo "View HTML: open ${OUTPUT_DIR}/html/learning-larc.html"
+    echo "View PDF:  open ${OUTPUT_DIR}/pdf/learning-larc.pdf"
+    echo "View DOCX: open ${OUTPUT_DIR}/docx/learning-larc.docx"
     echo ""
 
     # Show file sizes
     echo "File sizes:"
-    du -h "${OUTPUT_DIR}"/*.html "${OUTPUT_DIR}"/*.pdf "${OUTPUT_DIR}"/*.epub 2>/dev/null || true
+    du -h "${OUTPUT_DIR}"/html/*.html "${OUTPUT_DIR}"/pdf/*.pdf "${OUTPUT_DIR}"/epub/*.epub "${OUTPUT_DIR}"/docx/*.docx 2>/dev/null || true
     echo ""
 }
 
@@ -642,6 +854,14 @@ main() {
             create_combined_markdown
             build_epub
             ;;
+        docx|kindle)
+            check_dependencies
+            setup_directories
+            create_metadata
+            convert_diagrams
+            create_combined_markdown
+            build_docx
+            ;;
         clean)
             clean_build
             ;;
@@ -651,11 +871,13 @@ main() {
             echo "Usage: $0 [format]"
             echo ""
             echo "Available formats:"
-            echo "  all   - Build HTML, PDF, and EPUB (default)"
-            echo "  html  - Build HTML only"
-            echo "  pdf   - Build PDF only"
-            echo "  epub  - Build EPUB only"
-            echo "  clean - Remove build artifacts"
+            echo "  all    - Build HTML, PDF, EPUB, and DOCX (default)"
+            echo "  html   - Build HTML only"
+            echo "  pdf    - Build PDF only"
+            echo "  epub   - Build EPUB only"
+            echo "  docx   - Build DOCX only (for Kindle Create)"
+            echo "  kindle - Alias for docx"
+            echo "  clean  - Remove build artifacts"
             exit 1
             ;;
     esac

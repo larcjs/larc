@@ -1,4 +1,4 @@
-# Chapter 6: State Management
+# State Management
 
 ![**Figure 6.1:** State Management Hierarchy](../images/06-state-management-3.png)
 

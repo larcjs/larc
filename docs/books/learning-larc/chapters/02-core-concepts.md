@@ -1,4 +1,4 @@
-# Chapter 2: Core Concepts
+# Core Concepts
 
 Now that you understand LARC's philosophy, let's explore the technical foundation that makes it work. This chapter introduces the core concepts you'll use throughout the book: Web Components, the PAN bus, event-driven architecture, and the component lifecycle.
 

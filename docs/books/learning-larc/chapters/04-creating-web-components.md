@@ -1,4 +1,4 @@
-# Chapter 4: Creating Web Components
+# Creating Web Components
 
 Now that you've built your first LARC application, it's time to master the art of creating robust, reusable Web Components. This chapter covers everything from basic component anatomy to advanced patterns like composition, slots, and performance optimization.
 

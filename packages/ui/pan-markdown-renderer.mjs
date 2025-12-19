@@ -416,7 +416,7 @@ export class PanMarkdownRenderer extends HTMLElement {
       if (line.match(/^\|.+\|$/)) {
         // Check if next line is separator
         const nextLine = lines[i + 1]?.trim() || '';
-        const isSeparator = nextLine.match(/^\|[\s:-]+\|$/);
+        const isSeparator = nextLine.match(/^\|[-:\s|]+\|$/);
 
         if (!inTable && isSeparator) {
           // Start of table - this is header row

@@ -1,4 +1,4 @@
-# Chapter 8: Business Logic Patterns
+# Business Logic Patterns
 
 In the previous chapters, we've learned how to build components, communicate via the PAN bus, and manage state. But when building real-world applications, you'll inevitably need to inject your own custom business logic: validation rules, pricing calculations, access control, analytics tracking, and countless other domain-specific concerns.
 

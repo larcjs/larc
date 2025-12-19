@@ -1,4 +1,4 @@
-# Chapters 11-19: Summary Outlines
+# Summary Outlines
 
 ## Chapter 11: Data Fetching and APIs
 

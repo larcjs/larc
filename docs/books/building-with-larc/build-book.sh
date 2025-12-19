@@ -277,6 +277,153 @@ COVEREOF
     echo -e "${GREEN}✓ PDF version complete: ${OUTPUT_DIR}/pdf/building-with-larc.pdf${NC}"
 }
 
+# Generate DOCX version (for Kindle Create)
+build_docx() {
+    echo -e "${BLUE}Building DOCX version for Kindle Create...${NC}"
+
+    # Create output directory
+    mkdir -p "${OUTPUT_DIR}/docx"
+
+    # Create a reference docx for styling if it doesn't exist
+    if [ ! -f "${BUILD_DIR}/kindle-reference.docx" ]; then
+        create_kindle_reference_docx
+    fi
+
+    # Create a Lua filter for chapter page breaks and code block styling
+    cat > "${BUILD_DIR}/figure-filter.lua" << 'LUAFILTER'
+-- Lua filter for DOCX formatting
+
+-- Add page break before level 1 headings (chapters)
+function Header(el)
+    if el.level == 1 then
+        return {
+            pandoc.RawBlock('openxml', '<w:p><w:r><w:br w:type="page"/></w:r></w:p>'),
+            el
+        }
+    end
+    return el
+end
+
+-- Handle figures - wrap standalone images in a figure with caption
+function Para(el)
+    if #el.content == 1 and el.content[1].t == "Image" then
+        local img = el.content[1]
+        local caption = pandoc.utils.stringify(img.caption)
+
+        if caption and caption ~= "" then
+            return pandoc.Div({
+                pandoc.Para({img}),
+                pandoc.Para({pandoc.Emph({pandoc.Str(caption)})})
+            }, {class = "figure"})
+        end
+    end
+    return el
+end
+
+-- Style code blocks with grey background and border
+function CodeBlock(el)
+    -- Wrap code block with OpenXML shading
+    local code_text = el.text
+    local lines = {}
+    for line in code_text:gmatch("([^\n]*)\n?") do
+        if line ~= "" or #lines > 0 then
+            table.insert(lines, line)
+        end
+    end
+    -- Remove trailing empty line if exists
+    if #lines > 0 and lines[#lines] == "" then
+        table.remove(lines)
+    end
+
+    -- Create paragraphs for each line with shading
+    local blocks = {}
+
+    -- Add top border/spacing
+    table.insert(blocks, pandoc.RawBlock('openxml',
+        '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="120" w:after="0"/><w:pBdr><w:top w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
+        (lines[1] or '') .. '</w:t></w:r></w:p>'))
+
+    -- Add middle lines
+    for i = 2, #lines - 1 do
+        table.insert(blocks, pandoc.RawBlock('openxml',
+            '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="0" w:after="0"/><w:pBdr><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
+            lines[i] .. '</w:t></w:r></w:p>'))
+    end
+
+    -- Add bottom line with border
+    if #lines > 1 then
+        table.insert(blocks, pandoc.RawBlock('openxml',
+            '<w:p><w:pPr><w:shd w:val="clear" w:color="auto" w:fill="F5F5F5"/><w:spacing w:before="0" w:after="120"/><w:pBdr><w:left w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:right w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/><w:bottom w:val="single" w:sz="4" w:space="4" w:color="CCCCCC"/></w:pBdr></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Courier New" w:hAnsi="Courier New"/><w:sz w:val="20"/></w:rPr><w:t xml:space="preserve">' ..
+            lines[#lines] .. '</w:t></w:r></w:p>'))
+    end
+
+    return blocks
+end
+LUAFILTER
+
+    # Build DOCX with Kindle-friendly settings
+    pandoc \
+        "${BUILD_DIR}/metadata.yaml" \
+        $(cat "${BUILD_DIR}/book-order.txt" | sed "s|^|${BOOK_DIR}/|") \
+        --from markdown+smart+implicit_figures \
+        --to docx \
+        --toc \
+        --toc-depth=2 \
+        --number-sections \
+        --lua-filter="${BUILD_DIR}/figure-filter.lua" \
+        --reference-doc="${BUILD_DIR}/kindle-reference.docx" \
+        --metadata title="${BOOK_TITLE}" \
+        --metadata author="${AUTHOR}" \
+        --output="${OUTPUT_DIR}/docx/building-with-larc.docx"
+
+    rm "${BUILD_DIR}/figure-filter.lua"
+
+    echo -e "${GREEN}✓ DOCX version complete: ${OUTPUT_DIR}/docx/building-with-larc.docx${NC}"
+    echo -e "${YELLOW}  Import this file into Kindle Create to publish on Amazon KDP${NC}"
+}
+
+# Create reference DOCX template for Kindle-friendly formatting
+create_kindle_reference_docx() {
+    echo -e "${BLUE}Creating Kindle-optimized DOCX reference template...${NC}"
+
+    # Create a minimal markdown file to generate reference docx
+    cat > "${BUILD_DIR}/temp-reference.md" <<'REFEOF'
+---
+title: Reference
+---
+
+# Heading 1
+
+## Heading 2
+
+### Heading 3
+
+Normal paragraph text.
+
+**Bold text** and *italic text*.
+
+> Blockquote
+
+```
+Code block
+```
+
+`inline code`
+REFEOF
+
+    # Generate base reference docx
+    pandoc \
+        "${BUILD_DIR}/temp-reference.md" \
+        --from markdown \
+        --to docx \
+        --output="${BUILD_DIR}/kindle-reference.docx"
+
+    # Clean up temp file
+    rm "${BUILD_DIR}/temp-reference.md"
+
+    echo -e "${GREEN}✓ Reference template created${NC}"
+}
+
 # Generate EPUB version
 build_epub() {
     echo -e "${BLUE}Building EPUB version...${NC}"
@@ -571,6 +718,7 @@ build_all() {
     build_html
     build_pdf
     build_epub
+    build_docx
 
     echo ""
     echo -e "${GREEN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -581,9 +729,11 @@ build_all() {
     echo -e "  ${BLUE}HTML:${NC} ${OUTPUT_DIR}/html/building-with-larc.html"
     echo -e "  ${BLUE}PDF:${NC}  ${OUTPUT_DIR}/pdf/building-with-larc.pdf"
     echo -e "  ${BLUE}EPUB:${NC} ${OUTPUT_DIR}/epub/building-with-larc.epub"
+    echo -e "  ${BLUE}DOCX:${NC} ${OUTPUT_DIR}/docx/building-with-larc.docx (for Kindle Create)"
     echo ""
     echo "View HTML: open ${OUTPUT_DIR}/html/building-with-larc.html"
     echo "View PDF:  open ${OUTPUT_DIR}/pdf/building-with-larc.pdf"
+    echo "View DOCX: open ${OUTPUT_DIR}/docx/building-with-larc.docx"
     echo ""
 }
 
@@ -623,6 +773,13 @@ main() {
             create_book_order
             build_epub
             ;;
+        docx|kindle)
+            check_dependencies
+            setup_directories
+            create_metadata
+            create_book_order
+            build_docx
+            ;;
         clean)
             clean_build
             ;;
@@ -632,11 +789,13 @@ main() {
             echo "Usage: $0 [format]"
             echo ""
             echo "Available formats:"
-            echo "  all   - Build HTML, PDF, and EPUB (default)"
-            echo "  html  - Build HTML only"
-            echo "  pdf   - Build PDF only"
-            echo "  epub  - Build EPUB only"
-            echo "  clean - Remove build artifacts"
+            echo "  all    - Build HTML, PDF, EPUB, and DOCX (default)"
+            echo "  html   - Build HTML only"
+            echo "  pdf    - Build PDF only"
+            echo "  epub   - Build EPUB only"
+            echo "  docx   - Build DOCX only (for Kindle Create)"
+            echo "  kindle - Alias for docx"
+            echo "  clean  - Remove build artifacts"
             exit 1
             ;;
     esac

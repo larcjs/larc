@@ -1,4 +1,4 @@
-# Chapter 1: Philosophy and Background
+# Philosophy and Background
 
 ## The Problem with Modern Web Development
 

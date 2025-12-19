@@ -2,10 +2,10 @@
 #
 # Simple targets for building the book in various formats
 
-.PHONY: all html pdf epub clean help install view
+.PHONY: all html pdf epub docx kindle clean help install view
 
 # Default target
-all: html pdf epub
+all: html pdf epub docx
 
 # Build HTML version
 html:
@@ -18,6 +18,13 @@ pdf:
 # Build EPUB version
 epub:
 	@./build-book.sh epub
+
+# Build DOCX version (for Kindle Create)
+docx:
+	@./build-book.sh docx
+
+# Alias for docx (Kindle Create format)
+kindle: docx
 
 # Clean build artifacts
 clean:
@@ -38,13 +45,16 @@ install:
 view: view-html
 
 view-html:
-	@open build/output/learning-larc.html 2>/dev/null || echo "HTML file not found. Run 'make html' first."
+	@open output/html/learning-larc.html 2>/dev/null || echo "HTML file not found. Run 'make html' first."
 
 view-pdf:
-	@open build/output/learning-larc.pdf 2>/dev/null || echo "PDF file not found. Run 'make pdf' first."
+	@open output/pdf/learning-larc.pdf 2>/dev/null || echo "PDF file not found. Run 'make pdf' first."
 
 view-epub:
-	@open build/output/learning-larc.epub 2>/dev/null || echo "EPUB file not found. Run 'make epub' first."
+	@open output/epub/learning-larc.epub 2>/dev/null || echo "EPUB file not found. Run 'make epub' first."
+
+view-docx:
+	@open output/docx/learning-larc.docx 2>/dev/null || echo "DOCX file not found. Run 'make docx' first."
 
 # Help message
 help:
@@ -54,16 +64,19 @@ help:
 	@echo "  make [target]"
 	@echo ""
 	@echo "Targets:"
-	@echo "  all        Build all formats (HTML, PDF, EPUB)"
+	@echo "  all        Build all formats (HTML, PDF, EPUB, DOCX)"
 	@echo "  html       Build HTML version only"
 	@echo "  pdf        Build PDF version only"
 	@echo "  epub       Build EPUB version only"
+	@echo "  docx       Build DOCX version (for Kindle Create)"
+	@echo "  kindle     Alias for docx"
 	@echo "  clean      Remove build artifacts"
 	@echo "  install    Install required dependencies (macOS)"
 	@echo "  view       Open generated HTML file"
 	@echo "  view-html  Open generated HTML file"
 	@echo "  view-pdf   Open generated PDF file"
 	@echo "  view-epub  Open generated EPUB file"
+	@echo "  view-docx  Open generated DOCX file"
 	@echo "  help       Show this help message"
 	@echo ""
 	@echo "Examples:"

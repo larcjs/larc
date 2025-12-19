@@ -1,4 +1,4 @@
-# Chapter 7: Advanced Component Patterns
+# Advanced Component Patterns
 
 As your LARC applications grow, you'll encounter scenarios that require sophisticated component architectures. This chapter explores advanced patterns that enable code reuse, flexible composition, and optimal performance.
 

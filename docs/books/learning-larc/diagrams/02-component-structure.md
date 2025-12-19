@@ -7,24 +7,24 @@ graph TB
     subgraph "Web Component: &lt;user-card&gt;"
         Class[UserCard Class<br/>extends HTMLElement]
 
-        subgraph "Instance Properties"
+        subgraph InstanceProps["Instance Properties"]
             State[_user<br/>_loading<br/>_error]
         end
 
-        subgraph "Lifecycle Methods"
+        subgraph LifecycleMethods["Lifecycle Methods"]
             Construct[constructor]
             Connect[connectedCallback]
             Disconnect[disconnectedCallback]
             AttrChange[attributeChangedCallback]
         end
 
-        subgraph "Public API"
+        subgraph PublicAPI["Public API"]
             Props[Properties<br/>getters/setters]
             Methods[Public Methods<br/>loadUser, refresh]
             Events[Custom Events<br/>user-selected]
         end
 
-        subgraph "Shadow DOM"
+        subgraph ShadowDOM["Shadow DOM"]
             SRoot[Shadow Root]
             Style[&lt;style&gt;]
             Template[HTML Template]
@@ -32,14 +32,14 @@ graph TB
         end
 
         Class --> State
-        Class --> Lifecycle Methods
-        Class --> Public API
-        Class --> Shadow DOM
+        Class --> LifecycleMethods
+        Class --> PublicAPI
+        Class --> ShadowDOM
     end
 
     style Class fill:#667eea,color:#fff
-    style Shadow DOM fill:#764ba2,color:#fff
-    style Public API fill:#48bb78,color:#fff
+    style ShadowDOM fill:#764ba2,color:#fff
+    style PublicAPI fill:#48bb78,color:#fff
 ```
 
 ## Component Lifecycle Flow

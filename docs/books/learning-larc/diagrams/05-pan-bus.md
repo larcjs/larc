@@ -228,8 +228,8 @@ graph TB
         Router[Topic Router]
 
         subgraph "Subscription Registry"
-            Exact[Exact Matches<br/>Map&lt;topic, Set&lt;handler&gt;&gt;]
-            Wildcard[Wildcard Patterns<br/>Array&lt;{pattern, handlers}&gt;]
+            Exact["Exact Matches<br/>Map‹topic, Set‹handler››"]
+            Wildcard["Wildcard Patterns<br/>Array of patterns and handlers"]
         end
 
         subgraph "Message Queue"
