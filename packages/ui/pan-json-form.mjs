@@ -657,11 +657,11 @@ export class PanJsonForm extends HTMLElement {
           display: block;
           margin-bottom: 0.5rem;
           font-weight: 500;
-          color: #333;
+          color: var(--color-text, #333);
         }
 
         .required {
-          color: #e74c3c;
+          color: var(--color-danger, #e74c3c);
         }
 
         input[type="text"],
@@ -675,17 +675,19 @@ export class PanJsonForm extends HTMLElement {
         select {
           width: 100%;
           padding: 0.5rem;
-          border: 1px solid #ddd;
+          border: 1px solid var(--color-border, #ddd);
           border-radius: 4px;
           font-size: 14px;
           font-family: inherit;
+          background: var(--color-surface, white);
+          color: var(--color-text, inherit);
         }
 
         input:focus,
         textarea:focus,
         select:focus {
           outline: none;
-          border-color: #3498db;
+          border-color: var(--color-primary, #3498db);
           box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
         }
 
@@ -712,7 +714,7 @@ export class PanJsonForm extends HTMLElement {
         .help-text {
           margin-top: 0.25rem;
           font-size: 12px;
-          color: #666;
+          color: var(--color-text-muted, #666);
         }
 
         .error-container {
@@ -721,7 +723,7 @@ export class PanJsonForm extends HTMLElement {
         }
 
         .error-message {
-          color: #e74c3c;
+          color: var(--color-danger, #e74c3c);
           font-size: 12px;
           margin-top: 0.25rem;
         }
@@ -734,35 +736,43 @@ export class PanJsonForm extends HTMLElement {
 
         button {
           padding: 0.6rem 1.5rem;
-          border: none;
+          border: 1px solid var(--color-border, #ddd);
           border-radius: 4px;
           font-size: 14px;
           cursor: pointer;
           transition: all 0.2s;
+          background: var(--color-surface, white);
+          color: var(--color-text, inherit);
+        }
+
+        button:hover {
+          background: var(--color-surface-alt, #f5f5f5);
         }
 
         .btn-submit {
-          background: #3498db;
+          background: var(--color-primary, #3498db);
           color: white;
+          border-color: var(--color-primary, #3498db);
         }
 
         .btn-submit:hover {
-          background: #2980b9;
+          background: var(--color-primary-dark, #2980b9);
         }
 
         .btn-reset {
-          background: #95a5a6;
+          background: var(--color-secondary, #95a5a6);
           color: white;
+          border-color: var(--color-secondary, #95a5a6);
         }
 
         .btn-reset:hover {
-          background: #7f8c8d;
+          background: var(--color-secondary-light, #7f8c8d);
         }
 
         .no-schema {
           padding: 2rem;
           text-align: center;
-          color: #999;
+          color: var(--color-text-muted, #999);
         }
       </style>
 

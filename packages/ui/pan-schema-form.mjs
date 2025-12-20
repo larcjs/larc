@@ -142,16 +142,19 @@ export class PanSchemaForm extends HTMLElement {
 
     this.shadowRoot.innerHTML = h`
       <style>
-        :host{display:block; border:1px solid #ddd; border-radius:8px; padding:12px; font:13px/1.4 system-ui, sans-serif}
+        :host{display:block; border:1px solid var(--color-border, #ddd); border-radius:8px; padding:12px; font:13px/1.4 system-ui, sans-serif; background: var(--color-surface, white); color: var(--color-text, inherit)}
         form{ display:grid; gap:10px }
         .row{ display:grid; gap:6px }
         .row.chk{ grid-template-columns: auto 1fr; align-items:center }
         .lab{ font-weight:600 }
-        input,select,textarea,button{ padding:8px 10px; font:inherit }
-        input,select,textarea{ border:1px solid #e2e2e2; border-radius:8px }
+        input,select,textarea{ padding:8px 10px; font:inherit; border:1px solid var(--color-border, #e2e2e2); border-radius:8px; background: var(--color-surface, white); color: var(--color-text, inherit) }
+        button{ padding:8px 10px; font:inherit; border:1px solid var(--color-border, #ddd); border-radius:8px; background: var(--color-surface, white); color: var(--color-text, inherit); cursor:pointer }
+        button:hover{ background: var(--color-surface-alt, #f5f5f5) }
+        button[type="submit"]{ background: var(--color-primary, #006699); color: white; border-color: var(--color-primary, #006699) }
+        button[type="submit"]:hover{ background: var(--color-primary-dark, #004d73) }
         .actions{ display:flex; gap:8px; align-items:center }
-        .hint{ color:#888 }
-        .err{ color:#c33 }
+        .hint{ color: var(--color-text-muted, #888) }
+        .err{ color: var(--color-danger, #c33) }
       </style>
       <form id="f">
         ${rows}

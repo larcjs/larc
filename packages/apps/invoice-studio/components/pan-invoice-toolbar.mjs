@@ -65,7 +65,7 @@ class PanInvoiceToolbar extends HTMLElement {
 
       <style>
         .invoice-toolbar {
-          background: white;
+          background: var(--color-surface, white);
           padding: 1rem;
           border-radius: 8px;
           box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -85,15 +85,15 @@ class PanInvoiceToolbar extends HTMLElement {
           content: '';
           width: 1px;
           height: 24px;
-          background: #e0e0e0;
+          background: var(--color-border, #e0e0e0);
           margin-left: 0.5rem;
         }
 
         .btn {
           padding: 0.5rem 1rem;
-          border: 1px solid #ddd;
-          background: white;
-          color: #333;
+          border: 1px solid var(--color-border, #ddd);
+          background: var(--color-surface, white);
+          color: var(--color-text, #333);
           border-radius: 6px;
           font-size: 0.875rem;
           cursor: pointer;
@@ -103,8 +103,8 @@ class PanInvoiceToolbar extends HTMLElement {
         }
 
         .btn:hover {
-          background: #f5f5f5;
-          border-color: #ccc;
+          background: var(--color-surface-alt, #f5f5f5);
+          border-color: var(--color-border-strong, #ccc);
           transform: translateY(-1px);
         }
 

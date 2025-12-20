@@ -184,38 +184,38 @@ class PanInspector extends HTMLElement {
     const h = String.raw;
     this.shadowRoot.innerHTML = h`
       <style>
-        :host{display:block; font:12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; height: 100%; display: flex; flex-direction: column;}
-        header{display:flex; gap:8px; align-items:center; padding: 8px; background: #f8f8f8; border-bottom: 1px solid #ddd;}
+        :host{display:block; font:12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; height: 100%; display: flex; flex-direction: column; color: var(--color-text, #1e293b);}
+        header{display:flex; gap:8px; align-items:center; padding: 8px; background: var(--color-surface-alt, #f8f8f8); border-bottom: 1px solid var(--color-border, #ddd);}
         .tabs {display: flex; gap: 4px; margin-right: auto;}
-        .tab-btn {padding: 6px 12px; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent;}
-        .tab-btn.active {border-bottom-color: #007bff; font-weight: 600;}
-        input[type=text], select{padding:4px 6px; border: 1px solid #ddd; border-radius: 3px;}
+        .tab-btn {padding: 6px 12px; border: none; background: transparent; cursor: pointer; border-bottom: 2px solid transparent; color: var(--color-text, inherit);}
+        .tab-btn.active {border-bottom-color: var(--color-primary, #007bff); font-weight: 600;}
+        input[type=text], select{padding:4px 6px; border: 1px solid var(--color-border, #ddd); border-radius: 3px; background: var(--color-surface, white); color: var(--color-text, inherit);}
         input[type=text] {min-width: 200px;}
-        button{padding:4px 8px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 3px;}
-        button:hover {background: #f0f0f0;}
-        .content {flex: 1; overflow: auto; padding: 8px;}
+        button{padding:4px 8px; border: 1px solid var(--color-border, #ddd); background: var(--color-surface, white); color: var(--color-text, inherit); cursor: pointer; border-radius: 3px;}
+        button:hover {background: var(--color-surface-alt, #f0f0f0);}
+        .content {flex: 1; overflow: auto; padding: 8px; background: var(--color-bg, white);}
         table{width:100%; border-collapse: collapse;}
-        th,td{ padding:6px 8px; border-bottom:1px solid #eee; text-align:left; font-size: 11px; }
-        th{ position:sticky; top:0; background:#f8f8f8; font-weight: 600; z-index: 1; }
-        .muted{ color:#888 }
-        .retained { background: #fffbf0; }
+        th,td{ padding:6px 8px; border-bottom:1px solid var(--color-border, #eee); text-align:left; font-size: 11px; }
+        th{ position:sticky; top:0; background: var(--color-surface-alt, #f8f8f8); font-weight: 600; z-index: 1; }
+        .muted{ color: var(--color-text-muted, #888) }
+        .retained { background: var(--color-warning-light, #fffbf0); }
         .action-btn {padding: 2px 6px; font-size: 10px; margin-left: 4px;}
         .state-tree {font-family: ui-monospace, monospace;}
         .tree-node {padding: 4px 0;}
-        .tree-topic {font-weight: 600; color: #0066cc; cursor: pointer;}
+        .tree-topic {font-weight: 600; color: var(--color-primary, #0066cc); cursor: pointer;}
         .tree-topic:hover {text-decoration: underline;}
-        .tree-data {margin-left: 20px; color: #666;}
+        .tree-data {margin-left: 20px; color: var(--color-text-muted, #666);}
         .tree-toggle {cursor: pointer; user-select: none; display: inline-block; width: 12px;}
         tr.expanded .tree-data {display: table-row;}
         tr:not(.expanded) .tree-data {display: none;}
         .metrics-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;}
-        .metric-card {background: white; border: 1px solid #ddd; border-radius: 4px; padding: 12px;}
-        .metric-value {font-size: 24px; font-weight: 600; color: #007bff;}
-        .metric-label {font-size: 11px; color: #666; text-transform: uppercase; margin-top: 4px;}
+        .metric-card {background: var(--color-surface, white); border: 1px solid var(--color-border, #ddd); border-radius: 4px; padding: 12px;}
+        .metric-value {font-size: 24px; font-weight: 600; color: var(--color-primary, #007bff);}
+        .metric-label {font-size: 11px; color: var(--color-text-muted, #666); text-transform: uppercase; margin-top: 4px;}
         .metric-list {margin-top: 8px; max-height: 200px; overflow: auto;}
-        .metric-list-item {display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #f0f0f0;}
+        .metric-list-item {display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--color-border, #f0f0f0);}
         #detailsModal {position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-                       background: white; border: 1px solid #ddd; border-radius: 4px;
+                       background: var(--color-surface, white); border: 1px solid var(--color-border, #ddd); border-radius: 4px;
                        padding: 16px; max-width: 600px; max-height: 80vh; overflow: auto;
                        box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000; display: none;}
         #detailsModal.show {display: block;}
@@ -224,7 +224,7 @@ class PanInspector extends HTMLElement {
         #detailsOverlay.show {display: block;}
         .details-header {display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;}
         .details-title {font-weight: 600; font-size: 14px;}
-        pre {background: #f5f5f5; padding: 8px; border-radius: 3px; overflow: auto; max-height: 400px;}
+        pre {background: var(--color-code-bg, #f5f5f5); color: var(--color-code-text, inherit); padding: 8px; border-radius: 3px; overflow: auto; max-height: 400px;}
       </style>
       <header>
         <div class="tabs">

@@ -1,22 +1,126 @@
-import{PanClient as o}from"../../../core/pan-client.mjs";class r extends HTMLElement{static get observedAttributes(){return["resource","fields","key","live"]}constructor(){super(),this.attachShadow({mode:"open"}),this.pc=new o(this),this.value={},this._offSel=null,this._offLive=null,this._selectedId=null,this._liveTopic=null}connectedCallback(){this.render(),this.#e()}disconnectedCallback(){this._unsubAll()}attributeChangedCallback(){this.render(),this.#e()}get resource(){return(this.getAttribute("resource")||"items").trim()}get fields(){const t=(this.getAttribute("fields")||"").trim();return t?t.split(/\s*,\s*/):[]}get key(){return(this.getAttribute("key")||"id").trim()}get live(){const t=(this.getAttribute("live")||"true").toLowerCase();return t!=="false"&&t!=="0"}#e(){this._unsubAll(),this._offSel=this.pc.subscribe(`${this.resource}.item.select`,async t=>{const e=t?.data?.id;if(e){this._selectedId=e,this.#s();try{const{data:i}=await this.pc.request(`${this.resource}.item.get`,{id:e});this.#t(i?.item||{})}catch{}}}),this.#i()}#i(){const t=this.shadowRoot.getElementById("f");t&&(t.onsubmit=i=>{i.preventDefault(),this.#r()});const e=this.shadowRoot.getElementById("del");e&&(e.onclick=i=>{i.preventDefault(),this.#l()})}_unsubAll(){try{this._offSel&&this._offSel()}catch{}this._offSel=null;try{this._offLive&&this._offLive()}catch{}this._offLive=null,this._liveTopic=null}#s(){if(!this.live)return;const t=this._selectedId||this.value?.[this.key]||this.value?.id;if(!t)return;const e=`${this.resource}.item.state.${t}`;if(!(this._liveTopic===e&&this._offLive)){try{this._offLive&&this._offLive()}catch{}this._offLive=null,this._liveTopic=e,this._offLive=this.pc.subscribe(e,i=>{const s=i?.data||{};if(s.deleted){const l=this.value?.[this.key]||this.value?.id;String(l)===String(t)&&this.#t({});return}if(s.item&&typeof s.item=="object"){this.#t(s.item);return}if(s.patch&&typeof s.patch=="object"){this.#t(Object.assign({},this.value||{},s.patch));return}s&&typeof s=="object"&&this.#t(Object.assign({},this.value||{},s))},{retained:!0})}}async#r(){const t=this.#o();try{const{data:e}=await this.pc.request(`${this.resource}.item.save`,{item:t}),i=e?.item||t;this.#t(i),this._selectedId=i?.[this.key]||i?.id||this._selectedId,this.#s()}catch{}}async#l(){const t=this.value?.id||this.value?.[this.key];if(t)try{await this.pc.request(`${this.resource}.item.delete`,{id:t}),this.#t({})}catch{}}#o(){const t=Object.assign({},this.value);for(const e of this.fields){const i=this.shadowRoot.querySelector(`[name="${e}"]`);if(!i)continue;const s=i.value;t[e]=s}return t}#t(t){this.value=t||{},this.render(),this.#i()}render(){const t=String.raw,e=this.value||{};this.shadowRoot.innerHTML=t`
+// <pan-form> — Basic CRUD form for a named resource.
+// Listens for `${resource}.item.select`, requests `${resource}.item.get`,
+// and submits via `${resource}.item.save` / deletes via `${resource}.item.delete`.
+
+import { PanClient } from '../core/pan-client.mjs';
+
+export class PanForm extends HTMLElement {
+  static get observedAttributes(){ return ['resource','fields','key','live']; }
+  constructor(){ super(); this.attachShadow({mode:'open'}); this.pc = new PanClient(this); this.value = {}; this._offSel=null; this._offLive=null; this._selectedId=null; this._liveTopic=null; }
+  connectedCallback(){ this.render(); this.#wire(); }
+  disconnectedCallback(){ this._unsubAll(); }
+  attributeChangedCallback(){ this.render(); this.#wire(); }
+
+  get resource(){ return (this.getAttribute('resource')||'items').trim(); }
+  get fields(){ const f=(this.getAttribute('fields')||'').trim(); return f? f.split(/\s*,\s*/): []; }
+  get key(){ return (this.getAttribute('key')||'id').trim(); }
+  get live(){ const v=(this.getAttribute('live')||'true').toLowerCase(); return v!== 'false' && v!== '0'; }
+
+  #wire(){
+    this._unsubAll();
+    // Listen for selection events
+    this._offSel = this.pc.subscribe(`${this.resource}.item.select`, async (m)=>{
+      const id = m?.data?.id; if (!id) return;
+      this._selectedId = id;
+      this.#subscribeLive();
+      try { const { data } = await this.pc.request(`${this.resource}.item.get`, { id }); this.#setValue(data?.item || {}); }
+      catch { /* ignore */ }
+    });
+    this.#attachHandlers();
+  }
+
+  #attachHandlers(){
+    const form = this.shadowRoot.getElementById('f');
+    if (form) form.onsubmit = (e)=>{ e.preventDefault(); this.#save(); };
+    const del = this.shadowRoot.getElementById('del');
+    if (del) del.onclick = (e)=>{ e.preventDefault(); this.#delete(); };
+  }
+
+  _unsubAll(){ try { this._offSel && this._offSel(); } catch {} this._offSel=null; try { this._offLive && this._offLive(); } catch {} this._offLive=null; this._liveTopic=null; }
+
+  #subscribeLive(){
+    if (!this.live) return;
+    const id = this._selectedId || this.value?.[this.key] || this.value?.id; if (!id) return;
+    const topic = `${this.resource}.item.state.${id}`;
+    if (this._liveTopic === topic && this._offLive) return; // already subscribed for this id
+    try { this._offLive && this._offLive(); } catch {} this._offLive = null; this._liveTopic = topic;
+    this._offLive = this.pc.subscribe(topic, (m)=>{
+      const d = m?.data || {};
+      if (d.deleted) {
+        // If this item was deleted elsewhere, clear the form
+        const cur = this.value?.[this.key] || this.value?.id; if (String(cur) === String(id)) this.#setValue({});
+        return;
+      }
+      if (d.item && typeof d.item === 'object') { this.#setValue(d.item); return; }
+      if (d.patch && typeof d.patch === 'object') { this.#setValue(Object.assign({}, this.value||{}, d.patch)); return; }
+      // Fallback: accept top-level fields as patch
+      if (d && typeof d === 'object') { this.#setValue(Object.assign({}, this.value||{}, d)); }
+    }, { retained:true });
+  }
+
+  async #save(){
+    const item = this.#collect();
+    try {
+      const { data } = await this.pc.request(`${this.resource}.item.save`, { item });
+      const saved = data?.item || item; this.#setValue(saved);
+      this._selectedId = saved?.[this.key] || saved?.id || this._selectedId; this.#subscribeLive();
+    } catch {}
+  }
+
+  async #delete(){
+    const id = this.value?.id || this.value?.[this.key];
+    if (!id) return;
+    try {
+      await this.pc.request(`${this.resource}.item.delete`, { id });
+      this.#setValue({});
+    } catch {}
+  }
+
+  #collect(){
+    const out = Object.assign({}, this.value);
+    for (const name of this.fields){
+      const input = this.shadowRoot.querySelector(`[name="${name}"]`);
+      if (!input) continue;
+      const v = input.value;
+      out[name] = v;
+    }
+    return out;
+  }
+
+  #setValue(v){ this.value = v || {}; this.render(); this.#attachHandlers(); }
+
+  render(){
+    const h = String.raw; const v = this.value || {};
+    this.shadowRoot.innerHTML = h`
       <style>
-        :host{display:block; border:1px solid #ddd; border-radius:8px; padding:12px; font:13px/1.4 system-ui, sans-serif}
+        :host{display:block; border:1px solid var(--color-border, #ddd); border-radius:8px; padding:12px; font:13px/1.4 system-ui, sans-serif; background: var(--color-surface, white); color: var(--color-text, inherit)}
         form{ display:grid; gap:8px }
         label{ display:grid; gap:4px }
-        input,button{ padding:8px 10px }
+        input{ padding:8px 10px; border:1px solid var(--color-border, #ddd); border-radius:4px; background: var(--color-surface, white); color: var(--color-text, inherit) }
+        button{ padding:8px 10px; border:1px solid var(--color-border, #ddd); border-radius:4px; background: var(--color-surface, white); color: var(--color-text, inherit); cursor:pointer }
+        button:hover{ background: var(--color-surface-alt, #f5f5f5) }
+        button[type="submit"]{ background: var(--color-primary, #006699); color: white; border-color: var(--color-primary, #006699) }
+        button[type="submit"]:hover{ background: var(--color-primary-dark, #004d73) }
         .row{ display:flex; gap:8px; align-items:center }
         .spacer{ flex:1 }
       </style>
       <form id="f">
-        ${this.fields.map(i=>`
+        ${this.fields.map(name=>`
           <label>
-            <span>${i}</span>
-            <input name="${i}" value="${this.#n(e[i]??"")}" />
-          </label>`).join("")}
+            <span>${name}</span>
+            <input name="${name}" value="${this.#escape(v[name] ?? '')}" />
+          </label>`).join('')}
         <div class="row">
           <button id="save" type="submit">Save</button>
           <span class="spacer"></span>
           <button id="del" type="button">Delete</button>
         </div>
       </form>
-    `}#n(t){return String(t).replace(/[&<>"']/g,e=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[e])}}customElements.define("pan-form",r);var h=r;export{r as PanForm,h as default};
+    `;
+  }
+
+  #escape(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+}
+
+customElements.define('pan-form', PanForm);
+export default PanForm;

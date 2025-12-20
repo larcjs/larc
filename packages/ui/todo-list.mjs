@@ -23,17 +23,17 @@ class TodoList extends HTMLElement {
     const h = String.raw;
     this.shadowRoot.innerHTML = h`
       <style>
-        :host{display:block;font:15px/1.5 var(--font, "Lexend", sans-serif);}
+        :host{display:block;font:15px/1.5 var(--font, "Lexend", sans-serif);color:var(--color-text,inherit);}
         form{display:flex;gap:0.65rem;margin-bottom:0.9rem;}
-        input{flex:1;padding:0.65rem 0.75rem;border-radius:0.8rem;border:1px solid rgba(15,23,42,0.12);}
-        button{padding:0.65rem 1rem;border-radius:0.8rem;border:none;background:var(--color-accent,#2563eb);color:white;font-weight:600;cursor:pointer;}
-        button:hover{background:#1d4ed8;}
+        input{flex:1;padding:0.65rem 0.75rem;border-radius:0.8rem;border:1px solid var(--color-border,rgba(15,23,42,0.12));background:var(--color-surface,white);color:var(--color-text,inherit);}
+        button{padding:0.65rem 1rem;border-radius:0.8rem;border:none;background:var(--color-primary,#2563eb);color:white;font-weight:600;cursor:pointer;}
+        button:hover{background:var(--color-primary-dark,#1d4ed8);}
         ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.4rem;}
-        li{display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0.75rem;border:1px solid rgba(15,23,42,0.1);border-radius:0.9rem;background:rgba(255,255,255,0.9);}
-        li.done .t{text-decoration:line-through;color:var(--color-muted,#5f6b84);}
-        .muted{color:var(--color-muted,#5f6b84);}
+        li{display:flex;align-items:center;gap:0.75rem;padding:0.55rem 0.75rem;border:1px solid var(--color-border,rgba(15,23,42,0.1));border-radius:0.9rem;background:var(--color-surface,white);}
+        li.done .t{text-decoration:line-through;color:var(--color-text-muted,#5f6b84);}
+        .muted{color:var(--color-text-muted,#5f6b84);}
         .spacer{flex:1;}
-        .del{border:none;background:transparent;color:#ef4444;font-size:1.1rem;cursor:pointer;}
+        .del{border:none;background:transparent;color:var(--color-danger,#ef4444);font-size:1.1rem;cursor:pointer;}
       </style>
       <form id="f">
         <input id="title" placeholder="Add a task…" />

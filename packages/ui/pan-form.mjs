@@ -93,10 +93,14 @@ export class PanForm extends HTMLElement {
     const h = String.raw; const v = this.value || {};
     this.shadowRoot.innerHTML = h`
       <style>
-        :host{display:block; border:1px solid #ddd; border-radius:8px; padding:12px; font:13px/1.4 system-ui, sans-serif}
+        :host{display:block; border:1px solid var(--color-border, #ddd); border-radius:8px; padding:12px; font:13px/1.4 system-ui, sans-serif; background: var(--color-surface, white); color: var(--color-text, inherit)}
         form{ display:grid; gap:8px }
         label{ display:grid; gap:4px }
-        input,button{ padding:8px 10px }
+        input{ padding:8px 10px; border:1px solid var(--color-border, #ddd); border-radius:4px; background: var(--color-surface, white); color: var(--color-text, inherit) }
+        button{ padding:8px 10px; border:1px solid var(--color-border, #ddd); border-radius:4px; background: var(--color-surface, white); color: var(--color-text, inherit); cursor:pointer }
+        button:hover{ background: var(--color-surface-alt, #f5f5f5) }
+        button[type="submit"]{ background: var(--color-primary, #006699); color: white; border-color: var(--color-primary, #006699) }
+        button[type="submit"]:hover{ background: var(--color-primary-dark, #004d73) }
         .row{ display:flex; gap:8px; align-items:center }
         .spacer{ flex:1 }
       </style>
