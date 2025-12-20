@@ -331,7 +331,7 @@ pandoc "$COMBINED_MD" \
     --css="styles.css" \
     --highlight-style=tango \
     --metadata title="Learning LARC" \
-    --metadata author="LARC Community" \
+    --metadata author="Christopher Robison" \
     --resource-path=".:$BUILD_DIR" \
     -o "$OUTPUT_DIR/learning-larc.html"
 
@@ -360,7 +360,7 @@ pandoc "$COMBINED_MD" \
     --variable documentclass=book \
     --variable papersize=letter \
     --metadata title="Learning LARC" \
-    --metadata author="LARC Community" \
+    --metadata author="Christopher Robison" \
     --metadata date="$(date +%Y)" \
     -o "$OUTPUT_DIR/learning-larc.pdf" 2>/dev/null || {
         echo "⚠️  PDF generation requires LaTeX. Trying alternative method..."
@@ -373,7 +373,7 @@ pandoc "$COMBINED_MD" \
             --css="$TEMP_DIR/styles.css" \
             --highlight-style=tango \
             --metadata title="Learning LARC" \
-            --metadata author="LARC Community" \
+            --metadata author="Christopher Robison" \
             -o "$TEMP_DIR/learning-larc-for-pdf.html"
 
         if command -v wkhtmltopdf &> /dev/null; then
@@ -409,7 +409,7 @@ pandoc "$COMBINED_MD" \
     --toc-depth=3 \
     --highlight-style=tango \
     --metadata title="Learning LARC" \
-    --metadata author="LARC Community" \
+    --metadata author="Christopher Robison" \
     --metadata lang=en \
     --resource-path=".:$BUILD_DIR" \
     --epub-cover-image=cover.png \
@@ -422,7 +422,7 @@ pandoc "$COMBINED_MD" \
             --toc-depth=3 \
             --highlight-style=tango \
             --metadata title="Learning LARC" \
-            --metadata author="LARC Community" \
+            --metadata author="Christopher Robison" \
             --metadata lang=en \
             --resource-path=".:$BUILD_DIR" \
             -o "$OUTPUT_DIR/learning-larc.epub"
