@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Summary Outlines · PAN Documentation</title>
-  <meta name="description" content="PAN (Page Area Network) Documentation - Summary Outlines">
+  <title>Chapter 11: Data Fetching and APIs · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Chapter 11: Data Fetching and APIs">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -43,242 +43,1541 @@
         <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>11-19-summary</span>
       </div>
       <article class="docs-content">
-        <h1>Summary Outlines</h1>
-<h2>Chapter 11: Data Fetching and APIs</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>REST API Integration</strong>: Using fetch() with proper error handling</li>
-<li><strong>GraphQL Support</strong>: Query/mutation patterns with LARC</li>
-<li><strong>WebSocket Communication</strong>: Real-time bi-directional communication</li>
-<li><strong>Server-Sent Events</strong>: One-way server push for live updates</li>
-<li><strong>Caching Strategies</strong>: Cache-first, network-first, stale-while-revalidate</li>
-<li><strong>Retry Logic</strong>: Exponential backoff and circuit breakers</li>
-</ul>
-<h3>Code Example - API Client:</h3>
-<pre><code class="language-javascript">class ApiClient {
+        <h1>Chapter 11: Data Fetching and APIs</h1>
+<p>Every meaningful web application needs to communicate with servers. Whether you're loading user profiles, submitting forms, or streaming real-time updates, data fetching is the bridge between your frontend and the outside world. LARC embraces the browser's native fetch API while providing patterns that make common tasks simple and complex scenarios manageable.</p>
+<h2>The Fetch API: Your Foundation</h2>
+<p>The Fetch API is built into every modern browser, and it's genuinely excellent. Unlike the XMLHttpRequest it replaced, fetch returns Promises, works naturally with async/await, and provides a clean interface for HTTP operations.</p>
+<p>Here's the simplest possible fetch:</p>
+<pre><code class="language-javascript">const response = await fetch(&#039;/api/users&#039;);
+const users = await response.json();</code></pre>
+<p>Two lines. No libraries. No configuration. This is the foundation everything else builds upon.</p>
+<p>But real applications need more: error handling, loading states, retries, caching. Let's build these capabilities systematically.</p>
+<h2>Building an API Client</h2>
+<p>Rather than scattering fetch calls throughout your application, centralize them in an API client. This gives you one place to handle authentication, errors, and common patterns:</p>
+<pre><code class="language-javascript">// api-client.js
+class ApiClient {
+  constructor(baseUrl = &#039;/api&#039;) {
+    this.baseUrl = baseUrl;
+  }
+
   async fetch(endpoint, options = {}) {
-    const response = await fetch(`/api${endpoint}`, {
-      ...options,
+    const url = `${this.baseUrl}${endpoint}`;
+
+    const config = {
       headers: {
         &#039;Content-Type&#039;: &#039;application/json&#039;,
         ...options.headers
-      }
-    });
+      },
+      ...options
+    };
 
-    if (!response.ok) throw new Error(`API Error: ${response.status}`);
-    return response.json();
+    // Add auth token if available
+    const token = localStorage.getItem(&#039;authToken&#039;);
+    if (token) {
+      config.headers[&#039;Authorization&#039;] = `Bearer ${token}`;
+    }
+
+    try {
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        const error = await response.json().catch(() =&gt; ({}));
+        throw new ApiError(response.status, error.message || &#039;Request failed&#039;);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      throw new ApiError(0, &#039;Network error&#039;);
+    }
   }
 
-  async get(endpoint) {
+  get(endpoint) {
     return this.fetch(endpoint);
   }
 
-  async post(endpoint, data) {
+  post(endpoint, data) {
     return this.fetch(endpoint, {
       method: &#039;POST&#039;,
       body: JSON.stringify(data)
     });
   }
+
+  put(endpoint, data) {
+    return this.fetch(endpoint, {
+      method: &#039;PUT&#039;,
+      body: JSON.stringify(data)
+    });
+  }
+
+  delete(endpoint) {
+    return this.fetch(endpoint, { method: &#039;DELETE&#039; });
+  }
+}
+
+class ApiError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
+export const api = new ApiClient();</code></pre>
+<p>Now every component in your application can import this client and make requests with consistent error handling and authentication.</p>
+<h2>Integrating with the PAN Bus</h2>
+<p>Here's where LARC shines. Instead of each component managing its own loading states and error handling, broadcast API events on the PAN bus:</p>
+<pre><code class="language-javascript">// api-client.js (enhanced)
+import { pan } from &#039;@aspect/pan-client&#039;;
+
+class ApiClient {
+  async fetch(endpoint, options = {}) {
+    const requestId = crypto.randomUUID();
+
+    // Announce request start
+    pan.publish(&#039;api.request.start&#039;, { requestId, endpoint });
+
+    try {
+      const response = await fetch(/* ... */);
+      const data = await response.json();
+
+      // Announce success
+      pan.publish(&#039;api.request.success&#039;, { requestId, endpoint, data });
+      return data;
+
+    } catch (error) {
+      // Announce failure
+      pan.publish(&#039;api.request.error&#039;, { requestId, endpoint, error });
+      throw error;
+    }
+  }
 }</code></pre>
-<h2>Chapter 12: Authentication and Security</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>JWT Token Management</strong>: Storing, refreshing, and validating tokens</li>
-<li><strong>The pan-auth Component</strong>: Centralized authentication state</li>
-<li><strong>Protected Routes</strong>: Route guards for authenticated pages</li>
-<li><strong>CORS Handling</strong>: Cross-origin resource sharing configuration</li>
-<li><strong>XSS Prevention</strong>: Sanitizing user input</li>
-<li><strong>CSRF Protection</strong>: Token-based request validation</li>
-</ul>
-<h3>Code Example - Auth Service:</h3>
-<pre><code class="language-javascript">class AuthService {
-  async login(credentials) {
-    const response = await fetch(&#039;/api/auth/login&#039;, {
-      method: &#039;POST&#039;,
-      body: JSON.stringify(credentials)
+<p>Now any component can listen for API events. A loading indicator component might subscribe to <code>api.request.start</code> and <code>api.request.success</code>. An error toast might listen only for <code>api.request.error</code>. Components become loosely coupled—they don't need to know about each other, just the messages they care about.</p>
+<h2>Caching Strategies</h2>
+<p>Network requests are slow and expensive. Smart caching makes your application feel instant while reducing server load.</p>
+<h3>Cache-First Strategy</h3>
+<p>For data that changes infrequently, serve from cache immediately and update in the background:</p>
+<pre><code class="language-javascript">class CachedApiClient extends ApiClient {
+  constructor() {
+    super();
+    this.cache = new Map();
+  }
+
+  async getCached(endpoint, maxAge = 60000) {
+    const cached = this.cache.get(endpoint);
+
+    if (cached &amp;&amp; Date.now() - cached.timestamp &lt; maxAge) {
+      // Return cached data immediately
+      return cached.data;
+    }
+
+    // Fetch fresh data
+    const data = await this.get(endpoint);
+    this.cache.set(endpoint, { data, timestamp: Date.now() });
+    return data;
+  }
+
+  async getStaleWhileRevalidate(endpoint, maxAge = 60000) {
+    const cached = this.cache.get(endpoint);
+
+    // Return stale data immediately if available
+    if (cached) {
+      // Revalidate in background
+      this.get(endpoint).then(data =&gt; {
+        this.cache.set(endpoint, { data, timestamp: Date.now() });
+        pan.publish(`cache.updated.${endpoint}`, { data });
+      });
+
+      return cached.data;
+    }
+
+    // No cache, must wait for network
+    const data = await this.get(endpoint);
+    this.cache.set(endpoint, { data, timestamp: Date.now() });
+    return data;
+  }
+}</code></pre>
+<h3>Network-First Strategy</h3>
+<p>For data that must be current, try the network first and fall back to cache:</p>
+<pre><code class="language-javascript">async getNetworkFirst(endpoint, maxAge = 300000) {
+  try {
+    const data = await this.get(endpoint);
+    this.cache.set(endpoint, { data, timestamp: Date.now() });
+    return data;
+  } catch (error) {
+    const cached = this.cache.get(endpoint);
+    if (cached &amp;&amp; Date.now() - cached.timestamp &lt; maxAge) {
+      console.warn(&#039;Using cached data due to network error&#039;);
+      return cached.data;
+    }
+    throw error;
+  }
+}</code></pre>
+<h2>WebSocket Communication</h2>
+<p>When you need real-time bidirectional communication, WebSockets provide a persistent connection between browser and server:</p>
+<pre><code class="language-javascript">// websocket-client.js
+class WebSocketClient {
+  constructor(url) {
+    this.url = url;
+    this.socket = null;
+    this.reconnectAttempts = 0;
+    this.maxReconnectAttempts = 5;
+  }
+
+  connect() {
+    this.socket = new WebSocket(this.url);
+
+    this.socket.onopen = () =&gt; {
+      this.reconnectAttempts = 0;
+      pan.publish(&#039;ws.connected&#039;);
+    };
+
+    this.socket.onmessage = (event) =&gt; {
+      const message = JSON.parse(event.data);
+      // Broadcast message on PAN bus
+      pan.publish(`ws.message.${message.type}`, message.payload);
+    };
+
+    this.socket.onclose = () =&gt; {
+      pan.publish(&#039;ws.disconnected&#039;);
+      this.attemptReconnect();
+    };
+
+    this.socket.onerror = (error) =&gt; {
+      pan.publish(&#039;ws.error&#039;, { error });
+    };
+  }
+
+  send(type, payload) {
+    if (this.socket?.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify({ type, payload }));
+    }
+  }
+
+  attemptReconnect() {
+    if (this.reconnectAttempts &lt; this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+      setTimeout(() =&gt; this.connect(), delay);
+    }
+  }
+}</code></pre>
+<p>The beauty of this approach: your components don't know or care that data comes from a WebSocket. They just subscribe to PAN bus topics like <code>ws.message.user-joined</code> or <code>ws.message.chat-message</code>.</p>
+<h2>Server-Sent Events</h2>
+<p>When you only need server-to-client updates (no bidirectional communication), Server-Sent Events (SSE) are simpler and more reliable than WebSockets:</p>
+<pre><code class="language-javascript">// sse-client.js
+class SSEClient {
+  constructor(url) {
+    this.url = url;
+    this.eventSource = null;
+  }
+
+  connect() {
+    this.eventSource = new EventSource(this.url);
+
+    this.eventSource.onmessage = (event) =&gt; {
+      const data = JSON.parse(event.data);
+      pan.publish(&#039;sse.message&#039;, data);
+    };
+
+    this.eventSource.addEventListener(&#039;notification&#039;, (event) =&gt; {
+      const data = JSON.parse(event.data);
+      pan.publish(&#039;sse.notification&#039;, data);
     });
 
-    const { token, user } = await response.json();
+    this.eventSource.onerror = () =&gt; {
+      pan.publish(&#039;sse.error&#039;);
+      // EventSource automatically reconnects
+    };
+  }
 
-    localStorage.setItem(&#039;authToken&#039;, token);
-    pan.publish(&#039;auth.login&#039;, { user });
+  disconnect() {
+    this.eventSource?.close();
+  }
+}</code></pre>
+<p>SSE reconnects automatically, handles authentication through cookies, and works through proxies that might block WebSockets. For many real-time use cases, it's the better choice.</p>
+<h2>Retry Logic with Exponential Backoff</h2>
+<p>Network requests fail. Good applications handle failure gracefully:</p>
+<pre><code class="language-javascript">async function fetchWithRetry(url, options = {}, maxRetries = 3) {
+  let lastError;
 
-    return { token, user };
+  for (let attempt = 0; attempt &lt; maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+
+      // Don&#039;t retry client errors (4xx)
+      if (response.status &gt;= 400 &amp;&amp; response.status &lt; 500) {
+        throw new Error(`Client error: ${response.status}`);
+      }
+
+      throw new Error(`Server error: ${response.status}`);
+    } catch (error) {
+      lastError = error;
+
+      if (attempt &lt; maxRetries - 1) {
+        // Exponential backoff: 1s, 2s, 4s...
+        const delay = Math.pow(2, attempt) * 1000;
+        await new Promise(resolve =&gt; setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}</code></pre>
+<h2>Putting It All Together</h2>
+<p>Here's a component that fetches user data with loading states, caching, and error handling—all integrated with the PAN bus:</p>
+<pre><code class="language-javascript">class UserList extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.users = [];
+    this.loading = true;
+    this.error = null;
+  }
+
+  async connectedCallback() {
+    // Subscribe to cache updates
+    pan.subscribe(&#039;cache.updated./api/users&#039;, ({ data }) =&gt; {
+      this.users = data;
+      this.render();
+    });
+
+    try {
+      this.users = await api.getStaleWhileRevalidate(&#039;/users&#039;);
+      this.loading = false;
+    } catch (error) {
+      this.error = error.message;
+      this.loading = false;
+    }
+
+    this.render();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host { display: block; }
+        .loading { color: #666; }
+        .error { color: red; }
+        .user { padding: 8px; border-bottom: 1px solid #eee; }
+      &lt;/style&gt;
+
+      ${this.loading ? &#039;&lt;p class=&quot;loading&quot;&gt;Loading users...&lt;/p&gt;&#039; : &#039;&#039;}
+      ${this.error ? `&lt;p class=&quot;error&quot;&gt;Error: ${this.error}&lt;/p&gt;` : &#039;&#039;}
+
+      &lt;div class=&quot;users&quot;&gt;
+        ${this.users.map(user =&gt; `
+          &lt;div class=&quot;user&quot;&gt;${user.name} - ${user.email}&lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;user-list&#039;, UserList);</code></pre>
+<hr>
+<h1>Chapter 12: Authentication and Security</h1>
+<p>Authentication is the bouncer at your application's door. Get it wrong, and either legitimate users can't get in, or everyone can. Security isn't a feature you add later—it's a mindset that shapes every decision from the start.</p>
+<h2>Understanding Authentication vs Authorization</h2>
+<p>These terms often get conflated, but they're distinct:</p>
+<strong>Authentication</strong> answers: "Who are you?" It's verifying identity—matching a username and password, validating a token, confirming you are who you claim to be.
+<strong>Authorization</strong> answers: "What can you do?" Once we know who you are, authorization determines your permissions—can you view this page, edit this record, delete this user?
+<p>LARC applications typically handle authentication with JWT tokens and authorization with role-based or permission-based access control.</p>
+<h2>JWT Token Management</h2>
+<p>JSON Web Tokens (JWTs) are the standard for stateless authentication. A JWT contains encoded claims about the user, signed by the server:</p>
+<pre><code class="language-javascript">// auth-service.js
+class AuthService {
+  constructor() {
+    this.tokenKey = &#039;auth_token&#039;;
+    this.refreshKey = &#039;refresh_token&#039;;
+  }
+
+  async login(email, password) {
+    const response = await fetch(&#039;/api/auth/login&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || &#039;Login failed&#039;);
+    }
+
+    const { accessToken, refreshToken, user } = await response.json();
+
+    this.setTokens(accessToken, refreshToken);
+    pan.publish(&#039;auth.login&#039;, { user }, { retained: true });
+
+    return user;
+  }
+
+  setTokens(accessToken, refreshToken) {
+    localStorage.setItem(this.tokenKey, accessToken);
+    if (refreshToken) {
+      localStorage.setItem(this.refreshKey, refreshToken);
+    }
+  }
+
+  getToken() {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  isAuthenticated() {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const payload = this.decodeToken(token);
+      return payload.exp * 1000 &gt; Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  decodeToken(token) {
+    const base64Url = token.split(&#039;.&#039;)[1];
+    const base64 = base64Url.replace(/-/g, &#039;+&#039;).replace(/_/g, &#039;/&#039;);
+    return JSON.parse(atob(base64));
   }
 
   async refresh() {
-    const token = localStorage.getItem(&#039;authToken&#039;);
+    const refreshToken = localStorage.getItem(this.refreshKey);
+    if (!refreshToken) throw new Error(&#039;No refresh token&#039;);
+
     const response = await fetch(&#039;/api/auth/refresh&#039;, {
-      headers: { &#039;Authorization&#039;: `Bearer ${token}` }
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ refreshToken })
     });
 
-    const { token: newToken } = await response.json();
-    localStorage.setItem(&#039;authToken&#039;, newToken);
+    if (!response.ok) {
+      this.logout();
+      throw new Error(&#039;Token refresh failed&#039;);
+    }
+
+    const { accessToken } = await response.json();
+    localStorage.setItem(this.tokenKey, accessToken);
+    return accessToken;
   }
 
   logout() {
-    localStorage.removeItem(&#039;authToken&#039;);
-    pan.publish(&#039;auth.logout&#039;);
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshKey);
+    pan.publish(&#039;auth.logout&#039;, {}, { retained: true });
+  }
+
+  getCurrentUser() {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return this.decodeToken(token);
+    } catch {
+      return null;
+    }
+  }
+}
+
+export const auth = new AuthService();</code></pre>
+<h2>Automatic Token Refresh</h2>
+<p>Tokens expire. Good applications refresh them transparently:</p>
+<pre><code class="language-javascript">// api-client.js with token refresh
+class AuthenticatedApiClient {
+  async fetch(endpoint, options = {}) {
+    // First attempt
+    try {
+      return await this.doFetch(endpoint, options);
+    } catch (error) {
+      // If 401, try refreshing token
+      if (error.status === 401) {
+        try {
+          await auth.refresh();
+          // Retry with new token
+          return await this.doFetch(endpoint, options);
+        } catch (refreshError) {
+          // Refresh failed, user must log in again
+          auth.logout();
+          throw error;
+        }
+      }
+      throw error;
+    }
+  }
+
+  async doFetch(endpoint, options) {
+    const token = auth.getToken();
+    const headers = {
+      &#039;Content-Type&#039;: &#039;application/json&#039;,
+      ...options.headers
+    };
+
+    if (token) {
+      headers[&#039;Authorization&#039;] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`/api${endpoint}`, { ...options, headers });
+
+    if (!response.ok) {
+      throw { status: response.status, message: await response.text() };
+    }
+
+    return response.json();
   }
 }</code></pre>
-<h2>Chapter 13: Server Integration</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>Node.js/Express Backend</strong>: RESTful API design for LARC</li>
-<li><strong>PHP Integration</strong>: Connecting LARC to PHP backends</li>
-<li><strong>Python/Django</strong>: Django REST framework integration</li>
-<li><strong>Database Patterns</strong>: ORM usage and raw SQL</li>
-<li><strong>Real-Time</strong>: WebSocket servers with Socket.io</li>
-<li><strong>File Serving</strong>: Static assets and CDN integration</li>
-</ul>
-<h3>Node.js Example:</h3>
+<h2>Protected Routes</h2>
+<p>Some pages should only be accessible to authenticated users. Here's a route guard pattern:</p>
+<pre><code class="language-javascript">// route-guard.js
+class RouteGuard extends HTMLElement {
+  connectedCallback() {
+    this.checkAuth();
+    pan.subscribe(&#039;auth.logout&#039;, () =&gt; this.checkAuth());
+  }
+
+  checkAuth() {
+    if (!auth.isAuthenticated()) {
+      // Store intended destination
+      sessionStorage.setItem(&#039;returnUrl&#039;, window.location.pathname);
+      // Redirect to login
+      pan.publish(&#039;router.navigate&#039;, { path: &#039;/login&#039; });
+    }
+  }
+}
+
+customElements.define(&#039;route-guard&#039;, RouteGuard);</code></pre>
+<p>Use it to wrap protected content:</p>
+<pre><code class="language-html">&lt;route-guard&gt;
+  &lt;dashboard-page&gt;&lt;/dashboard-page&gt;
+&lt;/route-guard&gt;</code></pre>
+<h2>Role-Based Access Control</h2>
+<p>Different users have different permissions. A simple RBAC implementation:</p>
+<pre><code class="language-javascript">// rbac.js
+class RBAC {
+  constructor() {
+    this.permissions = {
+      admin: [&#039;read&#039;, &#039;write&#039;, &#039;delete&#039;, &#039;manage-users&#039;],
+      editor: [&#039;read&#039;, &#039;write&#039;],
+      viewer: [&#039;read&#039;]
+    };
+  }
+
+  can(user, action) {
+    if (!user?.role) return false;
+    const allowed = this.permissions[user.role] || [];
+    return allowed.includes(action);
+  }
+}
+
+export const rbac = new RBAC();</code></pre>
+<p>Use it in components:</p>
+<pre><code class="language-javascript">class AdminPanel extends HTMLElement {
+  connectedCallback() {
+    const user = auth.getCurrentUser();
+
+    if (!rbac.can(user, &#039;manage-users&#039;)) {
+      this.innerHTML = &#039;&lt;p&gt;Access denied&lt;/p&gt;&#039;;
+      return;
+    }
+
+    this.render();
+  }
+}</code></pre>
+<h2>Security Best Practices</h2>
+<h3>Sanitize User Input</h3>
+<p>Never trust user input. Always sanitize before rendering:</p>
+<pre><code class="language-javascript">function escapeHtml(text) {
+  const div = document.createElement(&#039;div&#039;);
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Safe rendering
+this.innerHTML = `&lt;p&gt;${escapeHtml(userInput)}&lt;/p&gt;`;</code></pre>
+<h3>Use HTTPS</h3>
+<p>Always serve your application over HTTPS. This protects tokens in transit and enables secure cookies.</p>
+<h3>Secure Token Storage</h3>
+<p>LocalStorage is convenient but accessible to JavaScript. For high-security applications, consider httpOnly cookies:</p>
+<pre><code class="language-javascript">// Server sets cookie
+res.cookie(&#039;token&#039;, jwt, {
+  httpOnly: true,
+  secure: true,
+  sameSite: &#039;strict&#039;
+});</code></pre>
+<h3>Content Security Policy</h3>
+<p>Set CSP headers to prevent XSS attacks:</p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;Content-Security-Policy&quot;
+      content=&quot;default-src &#039;self&#039;; script-src &#039;self&#039;&quot;&gt;</code></pre>
+<hr>
+<h1>Chapter 13: Server Integration</h1>
+<p>LARC is frontend-agnostic about backends. Whether you're using Node.js, Python, PHP, or any other server technology, the patterns remain the same: your components communicate via HTTP and WebSockets, and the PAN bus coordinates the frontend.</p>
+<h2>Node.js with Express</h2>
+<p>Express is the most popular Node.js framework, and it pairs naturally with LARC:</p>
 <pre><code class="language-javascript">// server.js
 const express = require(&#039;express&#039;);
+const cors = require(&#039;cors&#039;);
+const jwt = require(&#039;jsonwebtoken&#039;);
+
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.static(&#039;public&#039;));
 
-app.get(&#039;/api/users&#039;, async (req, res) =&gt; {
+// Authentication middleware
+function authenticate(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith(&#039;Bearer &#039;)) {
+    return res.status(401).json({ error: &#039;No token provided&#039; });
+  }
+
+  const token = authHeader.slice(7);
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch {
+    res.status(401).json({ error: &#039;Invalid token&#039; });
+  }
+}
+
+// Public routes
+app.post(&#039;/api/auth/login&#039;, async (req, res) =&gt; {
+  const { email, password } = req.body;
+
+  const user = await db.users.findByEmail(email);
+  if (!user || !await bcrypt.compare(password, user.password)) {
+    return res.status(401).json({ error: &#039;Invalid credentials&#039; });
+  }
+
+  const accessToken = jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: &#039;15m&#039; }
+  );
+
+  res.json({ accessToken, user: { id: user.id, email: user.email } });
+});
+
+// Protected routes
+app.get(&#039;/api/users&#039;, authenticate, async (req, res) =&gt; {
   const users = await db.users.findAll();
   res.json(users);
 });
 
-app.post(&#039;/api/users&#039;, async (req, res) =&gt; {
+app.post(&#039;/api/users&#039;, authenticate, async (req, res) =&gt; {
   const user = await db.users.create(req.body);
-  res.json(user);
+  res.status(201).json(user);
 });
 
-app.listen(3000);</code></pre>
-<h2>Chapter 14: Testing</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>Unit Testing</strong>: Testing components in isolation with Web Test Runner</li>
-<li><strong>Integration Testing</strong>: Testing component interactions</li>
-<li><strong>E2E Testing</strong>: Playwright/Puppeteer for full user flows</li>
-<li><strong>Visual Regression</strong>: Percy or BackstopJS for UI testing</li>
-<li><strong>Mocking</strong>: Fetch mocks and PAN bus mocks</li>
-<li><strong>CI/CD</strong>: GitHub Actions test automation</li>
-</ul>
-<h3>Test Example:</h3>
-<pre><code class="language-javascript">import { expect, fixture, html } from &#039;@open-wc/testing&#039;;
-import &#039;../user-card.js&#039;;
+app.listen(3000, () =&gt; console.log(&#039;Server running on port 3000&#039;));</code></pre>
+<h2>Python with Flask</h2>
+<p>Flask provides a lightweight Python backend:</p>
+<pre><code class="language-python"># app.py
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from functools import wraps
+import jwt
+
+app = Flask(__name__, static_folder=&#039;public&#039;)
+CORS(app)
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth_header = request.headers.get(&#039;Authorization&#039;)
+        if not auth_header or not auth_header.startswith(&#039;Bearer &#039;):
+            return jsonify({&#039;error&#039;: &#039;No token provided&#039;}), 401
+
+        token = auth_header[7:]
+        try:
+            data = jwt.decode(token, app.config[&#039;SECRET_KEY&#039;], algorithms=[&#039;HS256&#039;])
+            request.user = data
+        except:
+            return jsonify({&#039;error&#039;: &#039;Invalid token&#039;}), 401
+
+        return f(*args, **kwargs)
+    return decorated
+
+@app.route(&#039;/api/users&#039;)
+@token_required
+def get_users():
+    users = User.query.all()
+    return jsonify([u.to_dict() for u in users])
+
+@app.route(&#039;/api/users&#039;, methods=[&#039;POST&#039;])
+@token_required
+def create_user():
+    data = request.get_json()
+    user = User(**data)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(user.to_dict()), 201
+
+if __name__ == &#039;__main__&#039;:
+    app.run(debug=True)</code></pre>
+<h2>PHP Integration</h2>
+<p>PHP remains popular for web backends:</p>
+<pre><code class="language-php">&lt;?php
+// api.php
+header(&#039;Content-Type: application/json&#039;);
+header(&#039;Access-Control-Allow-Origin: *&#039;);
+header(&#039;Access-Control-Allow-Headers: Content-Type, Authorization&#039;);
+
+require_once &#039;vendor/autoload.php&#039;;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+function authenticate() {
+    $headers = getallheaders();
+    $auth = $headers[&#039;Authorization&#039;] ?? &#039;&#039;;
+
+    if (!preg_match(&#039;/Bearer\s+(.*)$/i&#039;, $auth, $matches)) {
+        http_response_code(401);
+        echo json_encode([&#039;error&#039; =&gt; &#039;No token provided&#039;]);
+        exit;
+    }
+
+    try {
+        return JWT::decode($matches[1], new Key($_ENV[&#039;JWT_SECRET&#039;], &#039;HS256&#039;));
+    } catch (Exception $e) {
+        http_response_code(401);
+        echo json_encode([&#039;error&#039; =&gt; &#039;Invalid token&#039;]);
+        exit;
+    }
+}
+
+$method = $_SERVER[&#039;REQUEST_METHOD&#039;];
+$path = parse_url($_SERVER[&#039;REQUEST_URI&#039;], PHP_URL_PATH);
+
+if ($path === &#039;/api/users&#039; &amp;&amp; $method === &#039;GET&#039;) {
+    $user = authenticate();
+    $users = $pdo-&gt;query(&#039;SELECT id, name, email FROM users&#039;)-&gt;fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($users);
+}</code></pre>
+<h2>Real-Time with WebSockets</h2>
+<p>For real-time features, add WebSocket support. Here's Node.js with the <code>ws</code> library:</p>
+<pre><code class="language-javascript">// websocket-server.js
+const WebSocket = require(&#039;ws&#039;);
+const jwt = require(&#039;jsonwebtoken&#039;);
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+const clients = new Map();
+
+wss.on(&#039;connection&#039;, (ws, req) =&gt; {
+  // Authenticate connection
+  const url = new URL(req.url, &#039;http://localhost&#039;);
+  const token = url.searchParams.get(&#039;token&#039;);
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    clients.set(ws, user);
+  } catch {
+    ws.close(4001, &#039;Unauthorized&#039;);
+    return;
+  }
+
+  ws.on(&#039;message&#039;, (data) =&gt; {
+    const message = JSON.parse(data);
+    handleMessage(ws, message);
+  });
+
+  ws.on(&#039;close&#039;, () =&gt; {
+    clients.delete(ws);
+  });
+});
+
+function handleMessage(sender, message) {
+  switch (message.type) {
+    case &#039;broadcast&#039;:
+      // Send to all connected clients
+      wss.clients.forEach(client =&gt; {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(message));
+        }
+      });
+      break;
+
+    case &#039;direct&#039;:
+      // Send to specific user
+      clients.forEach((user, client) =&gt; {
+        if (user.id === message.targetUserId &amp;&amp; client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(message));
+        }
+      });
+      break;
+  }
+}</code></pre>
+<h2>Database Patterns</h2>
+<p>Most backends need a database. Here's a clean repository pattern:</p>
+<pre><code class="language-javascript">// user-repository.js
+class UserRepository {
+  constructor(db) {
+    this.db = db;
+  }
+
+  async findAll() {
+    return this.db.query(&#039;SELECT id, name, email FROM users&#039;);
+  }
+
+  async findById(id) {
+    const [user] = await this.db.query(
+      &#039;SELECT id, name, email FROM users WHERE id = ?&#039;,
+      [id]
+    );
+    return user;
+  }
+
+  async create(data) {
+    const result = await this.db.query(
+      &#039;INSERT INTO users (name, email, password) VALUES (?, ?, ?)&#039;,
+      [data.name, data.email, data.hashedPassword]
+    );
+    return this.findById(result.insertId);
+  }
+
+  async update(id, data) {
+    await this.db.query(
+      &#039;UPDATE users SET name = ?, email = ? WHERE id = ?&#039;,
+      [data.name, data.email, id]
+    );
+    return this.findById(id);
+  }
+
+  async delete(id) {
+    await this.db.query(&#039;DELETE FROM users WHERE id = ?&#039;, [id]);
+  }
+}</code></pre>
+<hr>
+<h1>Chapter 14: Testing</h1>
+<p>Testing isn't optional. It's how you know your code works, how you prevent regressions, and how you confidently refactor. LARC applications benefit from the same testing strategies as any JavaScript application, with some patterns specific to Web Components.</p>
+<h2>Unit Testing Components</h2>
+<p>The <code>@open-wc/testing</code> library provides excellent utilities for testing Web Components:</p>
+<pre><code class="language-javascript">// user-card.test.js
+import { expect, fixture, html } from &#039;@open-wc/testing&#039;;
+import &#039;../components/user-card.js&#039;;
 
 describe(&#039;UserCard&#039;, () =&gt; {
-  it(&#039;renders user data&#039;, async () =&gt; {
+  it(&#039;renders user name and email&#039;, async () =&gt; {
     const el = await fixture(html`
-      &lt;user-card .user=${{ name: &#039;John&#039;, email: &#039;john@example.com&#039; }}&gt;
-      &lt;/user-card&gt;
+      &lt;user-card&gt;&lt;/user-card&gt;
     `);
 
-    expect(el.shadowRoot.querySelector(&#039;h2&#039;).textContent).to.equal(&#039;John&#039;);
-    expect(el.shadowRoot.querySelector(&#039;.email&#039;).textContent).to.equal(&#039;john@example.com&#039;);
+    el.user = { name: &#039;Alice&#039;, email: &#039;alice@example.com&#039; };
+    await el.updateComplete;
+
+    const name = el.shadowRoot.querySelector(&#039;.name&#039;);
+    const email = el.shadowRoot.querySelector(&#039;.email&#039;);
+
+    expect(name.textContent).to.equal(&#039;Alice&#039;);
+    expect(email.textContent).to.equal(&#039;alice@example.com&#039;);
   });
 
-  it(&#039;dispatches follow event on button click&#039;, async () =&gt; {
+  it(&#039;dispatches follow event when button clicked&#039;, async () =&gt; {
     const el = await fixture(html`&lt;user-card&gt;&lt;/user-card&gt;`);
+    el.user = { id: 1, name: &#039;Alice&#039; };
 
-    let eventData = null;
+    let eventDetail = null;
     el.addEventListener(&#039;follow&#039;, (e) =&gt; {
-      eventData = e.detail;
+      eventDetail = e.detail;
     });
 
-    el.shadowRoot.querySelector(&#039;button&#039;).click();
+    el.shadowRoot.querySelector(&#039;.follow-btn&#039;).click();
 
-    expect(eventData).to.exist;
+    expect(eventDetail).to.deep.equal({ userId: 1 });
+  });
+
+  it(&#039;shows loading state initially&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;user-card loading&gt;&lt;/user-card&gt;`);
+
+    const spinner = el.shadowRoot.querySelector(&#039;.spinner&#039;);
+    expect(spinner).to.exist;
   });
 });</code></pre>
-<h2>Chapter 15: Performance and Optimization</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>Code Splitting</strong>: Dynamic imports for lazy loading</li>
-<li><strong>Tree Shaking</strong>: Removing unused code</li>
-<li><strong>Lazy Loading</strong>: Intersection Observer patterns</li>
-<li><strong>Image Optimization</strong>: WebP, lazy loading, responsive images</li>
-<li><strong>Caching</strong>: Service Worker caching strategies</li>
-<li><strong>Performance Monitoring</strong>: Web Vitals and metrics</li>
-</ul>
-<h3>Performance Patterns:</h3>
-<pre><code class="language-javascript">// Lazy load on interaction
-button.addEventListener(&#039;click&#039;, async () =&gt; {
-  const { HeavyComponent } = await import(&#039;./heavy-component.js&#039;);
+<h2>Testing PAN Bus Integration</h2>
+<p>Mock the PAN bus to test component communication:</p>
+<pre><code class="language-javascript">// pan-mock.js
+class MockPanBus {
+  constructor() {
+    this.messages = [];
+    this.subscriptions = new Map();
+  }
+
+  publish(topic, data) {
+    this.messages.push({ topic, data });
+    const handlers = this.subscriptions.get(topic) || [];
+    handlers.forEach(handler =&gt; handler(data));
+  }
+
+  subscribe(topic, handler) {
+    if (!this.subscriptions.has(topic)) {
+      this.subscriptions.set(topic, []);
+    }
+    this.subscriptions.get(topic).push(handler);
+    return () =&gt; this.unsubscribe(topic, handler);
+  }
+
+  unsubscribe(topic, handler) {
+    const handlers = this.subscriptions.get(topic) || [];
+    const index = handlers.indexOf(handler);
+    if (index &gt; -1) handlers.splice(index, 1);
+  }
+
+  clear() {
+    this.messages = [];
+    this.subscriptions.clear();
+  }
+}
+
+export const mockPan = new MockPanBus();</code></pre>
+<p>Use it in tests:</p>
+<pre><code class="language-javascript">import { mockPan } from &#039;./pan-mock.js&#039;;
+
+describe(&#039;NotificationList&#039;, () =&gt; {
+  beforeEach(() =&gt; mockPan.clear());
+
+  it(&#039;displays notifications from PAN bus&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;notification-list&gt;&lt;/notification-list&gt;`);
+
+    mockPan.publish(&#039;notification.new&#039;, {
+      id: 1,
+      message: &#039;Hello world&#039;
+    });
+
+    await el.updateComplete;
+
+    const notifications = el.shadowRoot.querySelectorAll(&#039;.notification&#039;);
+    expect(notifications.length).to.equal(1);
+    expect(notifications[0].textContent).to.include(&#039;Hello world&#039;);
+  });
+});</code></pre>
+<h2>Integration Testing</h2>
+<p>Test components working together:</p>
+<pre><code class="language-javascript">describe(&#039;Shopping Cart Integration&#039;, () =&gt; {
+  it(&#039;updates cart when product added&#039;, async () =&gt; {
+    const cart = await fixture(html`&lt;shopping-cart&gt;&lt;/shopping-cart&gt;`);
+    const product = await fixture(html`
+      &lt;product-card .product=${{ id: 1, name: &#039;Widget&#039;, price: 10 }}&gt;
+      &lt;/product-card&gt;
+    `);
+
+    // Simulate add to cart
+    product.shadowRoot.querySelector(&#039;.add-btn&#039;).click();
+
+    await cart.updateComplete;
+
+    expect(cart.items.length).to.equal(1);
+    expect(cart.total).to.equal(10);
+  });
+});</code></pre>
+<h2>End-to-End Testing with Playwright</h2>
+<p>For full user flow testing, Playwright provides excellent browser automation:</p>
+<pre><code class="language-javascript">// e2e/login.spec.js
+import { test, expect } from &#039;@playwright/test&#039;;
+
+test.describe(&#039;Login Flow&#039;, () =&gt; {
+  test(&#039;successful login redirects to dashboard&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;/login&#039;);
+
+    await page.fill(&#039;input[name=&quot;email&quot;]&#039;, &#039;user@example.com&#039;);
+    await page.fill(&#039;input[name=&quot;password&quot;]&#039;, &#039;password123&#039;);
+    await page.click(&#039;button[type=&quot;submit&quot;]&#039;);
+
+    await expect(page).toHaveURL(&#039;/dashboard&#039;);
+    await expect(page.locator(&#039;h1&#039;)).toHaveText(&#039;Dashboard&#039;);
+  });
+
+  test(&#039;invalid credentials show error&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;/login&#039;);
+
+    await page.fill(&#039;input[name=&quot;email&quot;]&#039;, &#039;wrong@example.com&#039;);
+    await page.fill(&#039;input[name=&quot;password&quot;]&#039;, &#039;wrongpassword&#039;);
+    await page.click(&#039;button[type=&quot;submit&quot;]&#039;);
+
+    await expect(page.locator(&#039;.error&#039;)).toHaveText(&#039;Invalid credentials&#039;);
+    await expect(page).toHaveURL(&#039;/login&#039;);
+  });
+});</code></pre>
+<h2>Mocking Fetch Requests</h2>
+<p>Control network responses in tests:</p>
+<pre><code class="language-javascript">// fetch-mock.js
+class FetchMock {
+  constructor() {
+    this.mocks = new Map();
+    this.originalFetch = window.fetch;
+  }
+
+  mock(url, response, options = {}) {
+    this.mocks.set(url, { response, options });
+  }
+
+  enable() {
+    window.fetch = async (url, config) =&gt; {
+      const mock = this.mocks.get(url);
+      if (mock) {
+        if (mock.options.delay) {
+          await new Promise(r =&gt; setTimeout(r, mock.options.delay));
+        }
+        return new Response(JSON.stringify(mock.response), {
+          status: mock.options.status || 200,
+          headers: { &#039;Content-Type&#039;: &#039;application/json&#039; }
+        });
+      }
+      return this.originalFetch(url, config);
+    };
+  }
+
+  disable() {
+    window.fetch = this.originalFetch;
+    this.mocks.clear();
+  }
+}
+
+export const fetchMock = new FetchMock();</code></pre>
+<hr>
+<h1>Chapter 15: Performance and Optimization</h1>
+<p>Performance is a feature. Slow applications frustrate users and hurt business metrics. LARC's no-build philosophy gives you a head start—no framework overhead, no transpilation artifacts—but there's more you can do.</p>
+<h2>Lazy Loading Components</h2>
+<p>Don't load everything upfront. Load components when needed:</p>
+<pre><code class="language-javascript">// Lazy load on route change
+pan.subscribe(&#039;router.navigate&#039;, async ({ path }) =&gt; {
+  if (path === &#039;/admin&#039;) {
+    await import(&#039;./components/admin-panel.js&#039;);
+  }
+});
+
+// Lazy load on user interaction
+document.querySelector(&#039;.show-chart&#039;).addEventListener(&#039;click&#039;, async () =&gt; {
+  const { ChartComponent } = await import(&#039;./components/chart.js&#039;);
   // Use component
 }, { once: true });
 
-// Intersection Observer for images
-const observer = new IntersectionObserver((entries) =&gt; {
-  entries.forEach(entry =&gt; {
+// Lazy load when visible
+const observer = new IntersectionObserver(async (entries) =&gt; {
+  for (const entry of entries) {
     if (entry.isIntersecting) {
-      entry.target.src = entry.target.dataset.src;
+      const component = entry.target.dataset.component;
+      await import(`./components/${component}.js`);
       observer.unobserve(entry.target);
+    }
+  }
+});
+
+document.querySelectorAll(&#039;[data-lazy]&#039;).forEach(el =&gt; observer.observe(el));</code></pre>
+<h2>Image Optimization</h2>
+<p>Images are often the largest assets. Optimize them:</p>
+<pre><code class="language-javascript">class LazyImage extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;img
+        loading=&quot;lazy&quot;
+        src=&quot;${this.getAttribute(&#039;placeholder&#039;) || &#039;placeholder.svg&#039;}&quot;
+        data-src=&quot;${this.getAttribute(&#039;src&#039;)}&quot;
+        alt=&quot;${this.getAttribute(&#039;alt&#039;) || &#039;&#039;}&quot;
+      &gt;
+    `;
+
+    const img = this.querySelector(&#039;img&#039;);
+
+    const observer = new IntersectionObserver((entries) =&gt; {
+      entries.forEach(entry =&gt; {
+        if (entry.isIntersecting) {
+          img.src = img.dataset.src;
+          observer.unobserve(img);
+        }
+      });
+    });
+
+    observer.observe(img);
+  }
+}
+
+customElements.define(&#039;lazy-image&#039;, LazyImage);</code></pre>
+<p>Use responsive images with srcset:</p>
+<pre><code class="language-html">&lt;img
+  srcset=&quot;image-400.jpg 400w,
+          image-800.jpg 800w,
+          image-1200.jpg 1200w&quot;
+  sizes=&quot;(max-width: 400px) 400px,
+         (max-width: 800px) 800px,
+         1200px&quot;
+  src=&quot;image-800.jpg&quot;
+  alt=&quot;Responsive image&quot;
+  loading=&quot;lazy&quot;
+&gt;</code></pre>
+<h2>Service Worker Caching</h2>
+<p>Service workers enable offline functionality and faster loads:</p>
+<pre><code class="language-javascript">// sw.js
+const CACHE_NAME = &#039;app-v1&#039;;
+const ASSETS = [
+  &#039;/&#039;,
+  &#039;/index.html&#039;,
+  &#039;/styles.css&#039;,
+  &#039;/app.js&#039;,
+  &#039;/components/header.js&#039;,
+  &#039;/components/footer.js&#039;
+];
+
+self.addEventListener(&#039;install&#039;, (event) =&gt; {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache =&gt; cache.addAll(ASSETS))
+  );
+});
+
+self.addEventListener(&#039;fetch&#039;, (event) =&gt; {
+  event.respondWith(
+    caches.match(event.request).then(cached =&gt; {
+      // Cache first, network fallback
+      if (cached) return cached;
+
+      return fetch(event.request).then(response =&gt; {
+        // Cache successful responses
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache =&gt; {
+            cache.put(event.request, clone);
+          });
+        }
+        return response;
+      });
+    })
+  );
+});</code></pre>
+<p>Register it in your app:</p>
+<pre><code class="language-javascript">if (&#039;serviceWorker&#039; in navigator) {
+  navigator.serviceWorker.register(&#039;/sw.js&#039;);
+}</code></pre>
+<h2>Measuring Performance</h2>
+<p>You can't optimize what you don't measure. Use the Performance API:</p>
+<pre><code class="language-javascript">// Measure component render time
+performance.mark(&#039;render-start&#039;);
+this.render();
+performance.mark(&#039;render-end&#039;);
+performance.measure(&#039;render&#039;, &#039;render-start&#039;, &#039;render-end&#039;);
+
+const measure = performance.getEntriesByName(&#039;render&#039;)[0];
+console.log(`Render took ${measure.duration}ms`);</code></pre>
+<p>Track Web Vitals:</p>
+<pre><code class="language-javascript">import { getCLS, getFID, getLCP } from &#039;web-vitals&#039;;
+
+getCLS(console.log);  // Cumulative Layout Shift
+getFID(console.log);  // First Input Delay
+getLCP(console.log);  // Largest Contentful Paint</code></pre>
+<h2>Virtual Lists for Large Data</h2>
+<p>Rendering thousands of items kills performance. Virtualize:</p>
+<pre><code class="language-javascript">class VirtualList extends HTMLElement {
+  constructor() {
+    super();
+    this.items = [];
+    this.itemHeight = 40;
+    this.visibleCount = 20;
+    this.scrollTop = 0;
+  }
+
+  set data(items) {
+    this.items = items;
+    this.render();
+  }
+
+  connectedCallback() {
+    this.style.cssText = `
+      display: block;
+      height: 400px;
+      overflow-y: auto;
+    `;
+
+    this.addEventListener(&#039;scroll&#039;, () =&gt; {
+      this.scrollTop = this.scrollTop;
+      this.render();
+    });
+
+    this.render();
+  }
+
+  render() {
+    const startIndex = Math.floor(this.scrollTop / this.itemHeight);
+    const visibleItems = this.items.slice(startIndex, startIndex + this.visibleCount);
+
+    this.innerHTML = `
+      &lt;div style=&quot;height: ${this.items.length * this.itemHeight}px; position: relative;&quot;&gt;
+        ${visibleItems.map((item, i) =&gt; `
+          &lt;div style=&quot;
+            position: absolute;
+            top: ${(startIndex + i) * this.itemHeight}px;
+            height: ${this.itemHeight}px;
+            width: 100%;
+          &quot;&gt;
+            ${item.name}
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;virtual-list&#039;, VirtualList);</code></pre>
+<hr>
+<h1>Chapter 16: Deployment</h1>
+<p>Deploying LARC applications is refreshingly simple. No build artifacts to manage, no complex CI/CD pipelines required. Just static files that any web server can handle.</p>
+<h2>Static Hosting Options</h2>
+<p>LARC apps are static files. Host them anywhere:</p>
+<h3>GitHub Pages</h3>
+<p>Free hosting for public repositories:</p>
+<pre><code class="language-yaml"># .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public</code></pre>
+<h3>Netlify</h3>
+<p>Drag and drop deployment or connect to Git:</p>
+<pre><code class="language-toml"># netlify.toml
+[build]
+  publish = &quot;public&quot;
+
+[[redirects]]
+  from = &quot;/*&quot;
+  to = &quot;/index.html&quot;
+  status = 200</code></pre>
+<h3>Vercel</h3>
+<p>Zero-config deployment:</p>
+<pre><code class="language-json">{
+  &quot;rewrites&quot;: [
+    { &quot;source&quot;: &quot;/(.*)&quot;, &quot;destination&quot;: &quot;/index.html&quot; }
+  ]
+}</code></pre>
+<h2>CDN Configuration</h2>
+<p>Serve assets from a CDN for faster global delivery:</p>
+<pre><code class="language-html">&lt;!-- Use CDN for LARC core --&gt;
+&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@aspect/pan-client&quot;: &quot;https://cdn.jsdelivr.net/npm/@aspect/pan-client@latest/pan-client.mjs&quot;
+  }
+}
+&lt;/script&gt;</code></pre>
+<p>Set proper cache headers:</p>
+<pre><code class="language-plaintext"># .htaccess for Apache
+&lt;IfModule mod_expires.c&gt;
+  ExpiresActive On
+
+  # HTML - no cache (or short cache)
+  ExpiresByType text/html &quot;access plus 0 seconds&quot;
+
+  # CSS and JS - long cache (use versioned filenames)
+  ExpiresByType text/css &quot;access plus 1 year&quot;
+  ExpiresByType application/javascript &quot;access plus 1 year&quot;
+
+  # Images - long cache
+  ExpiresByType image/png &quot;access plus 1 year&quot;
+  ExpiresByType image/jpeg &quot;access plus 1 year&quot;
+  ExpiresByType image/svg+xml &quot;access plus 1 year&quot;
+&lt;/IfModule&gt;</code></pre>
+<h2>Environment Variables</h2>
+<p>Manage configuration across environments:</p>
+<pre><code class="language-javascript">// config.js
+const configs = {
+  development: {
+    apiUrl: &#039;http://localhost:3000/api&#039;,
+    debug: true
+  },
+  production: {
+    apiUrl: &#039;https://api.example.com&#039;,
+    debug: false
+  }
+};
+
+const env = window.location.hostname === &#039;localhost&#039; ? &#039;development&#039; : &#039;production&#039;;
+export const config = configs[env];</code></pre>
+<p>Or use a build-time approach:</p>
+<pre><code class="language-html">&lt;!-- Injected by server/build --&gt;
+&lt;script&gt;
+  window.CONFIG = {
+    apiUrl: &#039;%%API_URL%%&#039;,
+    version: &#039;%%VERSION%%&#039;
+  };
+&lt;/script&gt;</code></pre>
+<h2>Pre-Deployment Checklist</h2>
+<p>Before deploying to production:</p>
+<ul><li>[ ] Test in all target browsers</li>
+<li>[ ] Verify all API endpoints use HTTPS</li>
+<li>[ ] Check for console errors</li>
+<li>[ ] Validate accessibility (keyboard navigation, screen readers)</li>
+<li>[ ] Test on slow network (Chrome DevTools throttling)</li>
+<li>[ ] Verify error handling works</li>
+<li>[ ] Check mobile responsiveness</li>
+<li>[ ] Set up error monitoring (Sentry, LogRocket)</li>
+<li>[ ] Configure analytics</li>
+<li>[ ] Enable HTTPS</li>
+<li>[ ] Set security headers</li>
+</ul>
+<h2>Monitoring</h2>
+<p>Track errors in production:</p>
+<pre><code class="language-javascript">// error-tracking.js
+window.addEventListener(&#039;error&#039;, (event) =&gt; {
+  fetch(&#039;/api/errors&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      stack: event.error?.stack,
+      userAgent: navigator.userAgent,
+      url: window.location.href
+    })
+  });
+});
+
+window.addEventListener(&#039;unhandledrejection&#039;, (event) =&gt; {
+  fetch(&#039;/api/errors&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({
+      message: event.reason?.message || &#039;Unhandled promise rejection&#039;,
+      stack: event.reason?.stack,
+      userAgent: navigator.userAgent,
+      url: window.location.href
+    })
+  });
+});</code></pre>
+<hr>
+<h1>Chapter 17: Component Library</h1>
+<p>As your application grows, you'll accumulate reusable components. A well-organized component library accelerates development and ensures consistency.</p>
+<h2>Organizing Components</h2>
+<p>Structure your library logically:</p>
+<pre><code class="language-plaintext">components/
+├── core/
+│   ├── pan-button.js
+│   ├── pan-input.js
+│   └── pan-card.js
+├── layout/
+│   ├── pan-header.js
+│   ├── pan-sidebar.js
+│   └── pan-grid.js
+├── data/
+│   ├── pan-table.js
+│   ├── pan-list.js
+│   └── pan-pagination.js
+└── index.js</code></pre>
+<p>Export from a single entry point:</p>
+<pre><code class="language-javascript">// components/index.js
+export * from &#039;./core/pan-button.js&#039;;
+export * from &#039;./core/pan-input.js&#039;;
+export * from &#039;./core/pan-card.js&#039;;
+export * from &#039;./layout/pan-header.js&#039;;
+// ...</code></pre>
+<h2>Documentation</h2>
+<p>Document every component:</p>
+<pre><code class="language-javascript">/**
+ * A customizable button component.
+ *
+ * @element pan-button
+ *
+ * @attr {string} variant - Button style: &quot;primary&quot;, &quot;secondary&quot;, &quot;danger&quot;
+ * @attr {boolean} disabled - Disables the button
+ * @attr {string} size - Button size: &quot;small&quot;, &quot;medium&quot;, &quot;large&quot;
+ *
+ * @fires click - Fired when button is clicked
+ *
+ * @slot - Button content
+ *
+ * @example
+ * &lt;pan-button variant=&quot;primary&quot;&gt;Click me&lt;/pan-button&gt;
+ *
+ * @example
+ * &lt;pan-button variant=&quot;danger&quot; disabled&gt;Delete&lt;/pan-button&gt;
+ */
+class PanButton extends HTMLElement {
+  // ...
+}</code></pre>
+<p>Generate documentation automatically with tools like <code>web-component-analyzer</code>:</p>
+<pre><code class="language-bash">npx web-component-analyzer analyze components/**/*.js --outFile docs.json</code></pre>
+<h2>Design Tokens</h2>
+<p>Use CSS custom properties for theming:</p>
+<pre><code class="language-css">/* tokens.css */
+:root {
+  /* Colors */
+  --color-primary: #0066cc;
+  --color-secondary: #6c757d;
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, &#039;Segoe UI&#039;, Roboto, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+
+  /* Borders */
+  --border-radius: 4px;
+  --border-width: 1px;
+  --border-color: #dee2e6;
+}</code></pre>
+<p>Components use these tokens:</p>
+<pre><code class="language-javascript">class PanButton extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: inline-block;
+        }
+
+        button {
+          font-family: var(--font-family);
+          font-size: var(--font-size-md);
+          padding: var(--space-sm) var(--space-md);
+          border-radius: var(--border-radius);
+          border: var(--border-width) solid transparent;
+          cursor: pointer;
+        }
+
+        :host([variant=&quot;primary&quot;]) button {
+          background: var(--color-primary);
+          color: white;
+        }
+
+        :host([variant=&quot;secondary&quot;]) button {
+          background: var(--color-secondary);
+          color: white;
+        }
+
+        :host([disabled]) button {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      &lt;/style&gt;
+      &lt;button&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/button&gt;
+    `;
+  }
+}</code></pre>
+<h2>Versioning and Publishing</h2>
+<p>Use semantic versioning. Publish to npm or a private registry:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;@myorg/components&quot;,
+  &quot;version&quot;: &quot;1.2.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;exports&quot;: {
+    &quot;.&quot;: &quot;./index.js&quot;,
+    &quot;./button&quot;: &quot;./core/pan-button.js&quot;,
+    &quot;./card&quot;: &quot;./core/pan-card.js&quot;
+  }
+}</code></pre>
+<pre><code class="language-bash">npm publish --access public</code></pre>
+<hr>
+<h1>Chapter 18: Tooling</h1>
+<p>While LARC doesn't require a build step, the right tools make development faster and more enjoyable.</p>
+<h2>Development Server</h2>
+<p>A simple development server with live reload:</p>
+<pre><code class="language-javascript">// dev-server.js
+const http = require(&#039;http&#039;);
+const fs = require(&#039;fs&#039;);
+const path = require(&#039;path&#039;);
+const WebSocket = require(&#039;ws&#039;);
+
+const PORT = 3000;
+const PUBLIC_DIR = &#039;./public&#039;;
+
+// HTTP Server
+const server = http.createServer((req, res) =&gt; {
+  let filePath = path.join(PUBLIC_DIR, req.url === &#039;/&#039; ? &#039;index.html&#039; : req.url);
+
+  const ext = path.extname(filePath);
+  const contentTypes = {
+    &#039;.html&#039;: &#039;text/html&#039;,
+    &#039;.js&#039;: &#039;application/javascript&#039;,
+    &#039;.mjs&#039;: &#039;application/javascript&#039;,
+    &#039;.css&#039;: &#039;text/css&#039;,
+    &#039;.json&#039;: &#039;application/json&#039;
+  };
+
+  fs.readFile(filePath, (err, content) =&gt; {
+    if (err) {
+      res.writeHead(404);
+      res.end(&#039;Not found&#039;);
+      return;
+    }
+
+    res.writeHead(200, { &#039;Content-Type&#039;: contentTypes[ext] || &#039;text/plain&#039; });
+    res.end(content);
+  });
+});
+
+// WebSocket for live reload
+const wss = new WebSocket.Server({ server });
+
+fs.watch(PUBLIC_DIR, { recursive: true }, () =&gt; {
+  wss.clients.forEach(client =&gt; {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(&#039;reload&#039;);
     }
   });
 });
 
-document.querySelectorAll(&#039;img[data-src]&#039;).forEach(img =&gt; {
-  observer.observe(img);
-});</code></pre>
-<h2>Chapter 16: Deployment</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>Static Hosting</strong>: Netlify, Vercel, GitHub Pages</li>
-<li><strong>CDN Configuration</strong>: CloudFlare, AWS CloudFront</li>
-<li><strong>Environment Variables</strong>: Managing config across environments</li>
-<li><strong>Build Scripts</strong>: Optional production optimization</li>
-<li><strong>CI/CD Pipelines</strong>: Automated deployment workflows</li>
-<li><strong>Monitoring</strong>: Error tracking and analytics</li>
-</ul>
-<h3>Deployment Checklist:</h3>
-<ul><li>[ ] Minify JavaScript (optional but recommended)</li>
-<li>[ ] Optimize images</li>
-<li>[ ] Set up CDN for assets</li>
-<li>[ ] Configure caching headers</li>
-<li>[ ] Enable HTTPS</li>
-<li>[ ] Set up error monitoring (Sentry)</li>
-<li>[ ] Configure analytics (Plausible, Fathom)</li>
-<li>[ ] Test in all target browsers</li>
-<li>[ ] Set up automated deployments</li>
-</ul>
-<h2>Chapter 17: Component Library</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>Using the Registry</strong>: Finding and installing components</li>
-<li><strong>Contributing Components</strong>: Publishing to the registry</li>
-<li><strong>Component Quality</strong>: Tests, types, documentation</li>
-<li><strong>Versioning</strong>: Semantic versioning and changelogs</li>
-<li><strong>Documentation</strong>: API docs and usage examples</li>
-<li><strong>Design Systems</strong>: Building consistent component libraries</li>
-</ul>
-<h3>Registry Integration:</h3>
-<pre><code class="language-bash"># Install component from registry
-larc add @larcjs/ui
-
-# Publish component to registry
-larc publish ./components/my-component.js</code></pre>
-<h2>Chapter 18: Tooling</h2>
-<h3>Key Topics:</h3>
-<ul><li><strong>LARC CLI</strong>: create-larc-app, dev server, generators</li>
-<li><strong>VS Code Extension</strong>: Snippets, IntelliSense, commands</li>
-<li><strong>Browser DevTools</strong>: Debugging Web Components and Shadow DOM</li>
-<li><strong>Hot Module Reload</strong>: Live updates without full refresh</li>
-<li><strong>Linting</strong>: ESLint configuration for LARC</li>
-<li><strong>Formatting</strong>: Prettier setup</li>
-</ul>
-<h3>VS Code Snippets:</h3>
-<pre><code class="language-json">{
+server.listen(PORT, () =&gt; console.log(`Dev server at http://localhost:${PORT}`));</code></pre>
+<p>Add live reload to your HTML:</p>
+<pre><code class="language-html">&lt;script&gt;
+  const ws = new WebSocket(&#039;ws://localhost:3000&#039;);
+  ws.onmessage = () =&gt; location.reload();
+&lt;/script&gt;</code></pre>
+<h2>VS Code Configuration</h2>
+<p>Enhance your editor experience:</p>
+<pre><code class="language-json">// .vscode/settings.json
+{
+  &quot;editor.formatOnSave&quot;: true,
+  &quot;editor.defaultFormatter&quot;: &quot;esbenp.prettier-vscode&quot;,
+  &quot;emmet.includeLanguages&quot;: {
+    &quot;javascript&quot;: &quot;html&quot;
+  },
+  &quot;files.associations&quot;: {
+    &quot;*.mjs&quot;: &quot;javascript&quot;
+  }
+}</code></pre>
+<p>Useful snippets:</p>
+<pre><code class="language-json">// .vscode/snippets/larc.code-snippets
+{
   &quot;LARC Component&quot;: {
-    &quot;prefix&quot;: &quot;larc-component&quot;,
+    &quot;prefix&quot;: &quot;larc&quot;,
     &quot;body&quot;: [
       &quot;class ${1:ComponentName} extends HTMLElement {&quot;,
       &quot;  constructor() {&quot;,
       &quot;    super();&quot;,
       &quot;    this.attachShadow({ mode: &#039;open&#039; });&quot;,
       &quot;  }&quot;,
-      &quot;  &quot;,
+      &quot;&quot;,
       &quot;  connectedCallback() {&quot;,
       &quot;    this.render();&quot;,
       &quot;  }&quot;,
-      &quot;  &quot;,
+      &quot;&quot;,
       &quot;  render() {&quot;,
-      &quot;    this.shadowRoot.innerHTML = \\`&quot;,
+      &quot;    this.shadowRoot.innerHTML = `&quot;,
       &quot;      &lt;style&gt;&quot;,
       &quot;        :host { display: block; }&quot;,
       &quot;      &lt;/style&gt;&quot;,
-      &quot;      $2&quot;,
-      &quot;    \\`;&quot;,
+      &quot;      &lt;div&gt;$2&lt;/div&gt;&quot;,
+      &quot;    `;&quot;,
       &quot;  }&quot;,
       &quot;}&quot;,
       &quot;&quot;,
@@ -286,197 +1585,299 @@ larc publish ./components/my-component.js</code></pre>
     ]
   }
 }</code></pre>
-<h2>Chapter 19: Real-World Applications</h2>
-<h3>Case Study 1: E-Commerce Platform</h3>
-<strong>Features:</strong>
-<ul><li>Product catalog with search and filters</li>
-<li>Shopping cart with persistence</li>
-<li>Checkout flow with payment integration</li>
-<li>User authentication and profiles</li>
-<li>Order history and tracking</li>
+<h2>ESLint Configuration</h2>
+<p>Lint your code for consistency:</p>
+<pre><code class="language-javascript">// eslint.config.js
+export default [
+  {
+    files: [&#039;**/*.js&#039;, &#039;**/*.mjs&#039;],
+    rules: {
+      &#039;no-unused-vars&#039;: &#039;warn&#039;,
+      &#039;no-console&#039;: [&#039;warn&#039;, { allow: [&#039;warn&#039;, &#039;error&#039;] }],
+      &#039;prefer-const&#039;: &#039;error&#039;,
+      &#039;no-var&#039;: &#039;error&#039;
+    }
+  }
+];</code></pre>
+<h2>Browser DevTools</h2>
+<p>Chrome DevTools has excellent Web Component support:</p>
+<ul><li><strong>Elements panel</strong>: Inspect shadow DOM by clicking the <code>#shadow-root</code> toggle</li>
+<li><strong>Console</strong>: Access element's shadow root with <code>$0.shadowRoot</code></li>
+<li><strong>Network panel</strong>: Monitor fetch requests and WebSocket connections</li>
+<li><strong>Performance panel</strong>: Profile render performance</li>
+<li><strong>Application panel</strong>: Inspect localStorage, sessionStorage, IndexedDB</li>
 </ul>
-<strong>Architecture:</strong>
-<ul><li>Components: product-card, cart-widget, checkout-form</li>
-<li>State: IndexedDB for cart, localStorage for preferences</li>
-<li>API: REST backend with Stripe integration</li>
-<li>Routing: /products, /cart, /checkout, /orders</li>
-</ul>
-<h3>Case Study 2: Dashboard Application</h3>
-<strong>Features:</strong>
-<ul><li>Real-time data visualization</li>
-<li>User permissions and roles</li>
-<li>Data export functionality</li>
-<li>Responsive layout</li>
-<li>Dark mode support</li>
-</ul>
-<strong>Architecture:</strong>
-<ul><li>Components: chart-widget, data-table, filter-bar</li>
-<li>State: Reactive store with WebSocket updates</li>
-<li>API: GraphQL for flexible queries</li>
-<li>Real-time: WebSocket for live updates</li>
-</ul>
-<h3>Case Study 3: Blog/CMS</h3>
-<strong>Features:</strong>
-<ul><li>Markdown editor</li>
-<li>Draft auto-save</li>
-<li>Media library</li>
-<li>SEO optimization</li>
-<li>Static site generation</li>
-</ul>
-<strong>Architecture:</strong>
-<ul><li>Components: markdown-editor, media-upload, post-list</li>
-<li>State: IndexedDB for drafts</li>
-<li>API: Headless CMS (Contentful/Strapi)</li>
-<li>Build: Optional SSG for production</li>
-</ul>
-<h3>Lessons Learned:</h3>
-<li>Start simple, add complexity as needed</li>
-<li>Use the PAN bus for cross-component communication</li>
-<li>Implement offline-first for better UX</li>
-<li>Test early and often</li>
-<li>Profile before optimizing</li>
-<li>Document your components</li>
-<li>Use TypeScript for larger projects</li>
-<li>Implement error boundaries</li>
-<li>Monitor performance in production</li>
-<li>Build progressively</li>
+<h2>Debugging PAN Bus</h2>
+<p>Add a debug utility:</p>
+<pre><code class="language-javascript">// pan-debug.js
+pan.subscribe(&#039;*&#039;, (data, topic) =&gt; {
+  console.log(`[PAN] ${topic}`, data);
+});</code></pre>
+<p>Or use the LARC DevTools extension for a visual message inspector.</p>
 <hr>
-<h1>Appendices</h1>
-<h2>Appendix A: Web Components API Reference</h2>
-<h3>Custom Elements</h3>
-<ul><li><code>customElements.define(name, constructor, options)</code></li>
-<li><code>customElements.get(name)</code></li>
-<li><code>customElements.whenDefined(name)</code></li>
-<li><code>customElements.upgrade(root)</code></li>
-</ul>
-<h3>Lifecycle Callbacks</h3>
-<ul><li><code>constructor()</code></li>
-<li><code>connectedCallback()</code></li>
-<li><code>disconnectedCallback()</code></li>
-<li><code>attributeChangedCallback(name, oldValue, newValue)</code></li>
-<li><code>adoptedCallback()</code></li>
-</ul>
-<h3>Shadow DOM</h3>
-<ul><li><code>element.attachShadow({ mode: 'open'|'closed' })</code></li>
-<li><code>element.shadowRoot</code></li>
-<li><code>slot.assignedNodes()</code></li>
-<li><code>slot.assignedElements()</code></li>
-</ul>
-<h2>Appendix B: PAN Bus API Reference</h2>
-<h3>Core Methods</h3>
-<pre><code class="language-javascript">// Publish
-pan.publish(topic, data)
+<h1>Chapter 19: Real-World Applications</h1>
+<p>Theory only takes you so far. Let's examine how LARC principles apply to real applications.</p>
+<h2>Case Study: E-Commerce Platform</h2>
+<p>An online store built with LARC demonstrates the architecture at scale.</p>
+<h3>Architecture Overview</h3>
+<pre><code class="language-plaintext">store/
+├── index.html
+├── components/
+│   ├── product-card.js
+│   ├── product-grid.js
+│   ├── shopping-cart.js
+│   ├── cart-item.js
+│   ├── checkout-form.js
+│   └── order-confirmation.js
+├── services/
+│   ├── cart-service.js
+│   ├── product-service.js
+│   └── order-service.js
+└── styles/
+    └── main.css</code></pre>
+<h3>Product Catalog</h3>
+<p>The product grid loads data and renders cards:</p>
+<pre><code class="language-javascript">// product-grid.js
+class ProductGrid extends HTMLElement {
+  async connectedCallback() {
+    this.innerHTML = &#039;&lt;p&gt;Loading products...&lt;/p&gt;&#039;;
 
-// Subscribe
-const unsubscribe = pan.subscribe(topic, handler)
-
-// Request/Response
-const result = await pan.request(topic, data, timeout)
-pan.respond(topic, handler)
-
-// Unsubscribe
-unsubscribe()</code></pre>
-<h3>Topic Patterns</h3>
-<ul><li><code>user.login</code> - Specific event</li>
-<li><code>user.*</code> - All user events</li>
-<li><code>*.error</code> - All error events</li>
-<li><code>*</code> - All events (debugging)</li>
-</ul>
-<h2>Appendix C: Component API Reference</h2>
-<h3>Built-in Components</h3>
-<strong>pan-store</strong>
-<ul><li>Attributes: <code>persist</code>, <code>namespace</code></li>
-<li>Methods: <code>getState()</code>, <code>setState(updates)</code>, <code>subscribe(path, handler)</code></li>
-<li>Events: <code>state-changed</code></li>
-</ul>
-<strong>pan-router</strong>
-<ul><li>Child: <code><pan-route path="" component="" guard=""></code></li>
-<li>Events: <code>router.navigated</code>, <code>router.not-found</code></li>
-<li>PAN Topics: <code>router.navigate</code>, <code>router.back</code>, <code>router.forward</code></li>
-</ul>
-<strong>pan-fetch</strong>
-<ul><li>Attributes: <code>url</code>, <code>method</code>, <code>auto</code></li>
-<li>Properties: <code>data</code>, <code>loading</code>, <code>error</code></li>
-<li>Events: <code>data-loaded</code>, <code>fetch-error</code></li>
-</ul>
-<strong>pan-auth</strong>
-<ul><li>Methods: <code>login(credentials)</code>, <code>logout()</code>, <code>refresh()</code></li>
-<li>Properties: <code>user</code>, <code>authenticated</code></li>
-<li>Events: <code>auth-changed</code></li>
-</ul>
-<h2>Appendix D: Migration Guides</h2>
-<h3>From React</h3>
-<strong>Concepts:</strong>
-<ul><li>JSX → Template literals</li>
-<li>Props → Attributes/properties</li>
-<li>State → Instance properties</li>
-<li>Context → PAN bus or Context API pattern</li>
-<li>Hooks → Lifecycle callbacks</li>
-<li>Redux → pan-store or custom store</li>
-</ul>
-<strong>Example:</strong>
-<pre><code class="language-javascript">// React
-function UserCard({ user }) {
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    &lt;div onClick={() =&gt; setExpanded(!expanded)}&gt;
-      &lt;h2&gt;{user.name}&lt;/h2&gt;
-      {expanded &amp;&amp; &lt;p&gt;{user.bio}&lt;/p&gt;}
-    &lt;/div&gt;
-  );
-}
-
-// LARC
-class UserCard extends HTMLElement {
-  constructor() {
-    super();
-    this.expanded = false;
+    try {
+      const products = await productService.getAll();
+      this.render(products);
+    } catch (error) {
+      this.innerHTML = `&lt;p class=&quot;error&quot;&gt;Failed to load products&lt;/p&gt;`;
+    }
   }
 
-  set user(value) {
-    this._user = value;
-    this.render();
-  }
-
-  connectedCallback() {
-    this.addEventListener(&#039;click&#039;, () =&gt; {
-      this.expanded = !this.expanded;
-      this.render();
-    });
-    this.render();
-  }
-
-  render() {
+  render(products) {
     this.innerHTML = `
-      &lt;div&gt;
-        &lt;h2&gt;${this._user.name}&lt;/h2&gt;
-        ${this.expanded ? `&lt;p&gt;${this._user.bio}&lt;/p&gt;` : &#039;&#039;}
+      &lt;div class=&quot;grid&quot;&gt;
+        ${products.map(p =&gt; `
+          &lt;product-card
+            product-id=&quot;${p.id}&quot;
+            name=&quot;${p.name}&quot;
+            price=&quot;${p.price}&quot;
+            image=&quot;${p.image}&quot;&gt;
+          &lt;/product-card&gt;
+        `).join(&#039;&#039;)}
       &lt;/div&gt;
     `;
   }
 }</code></pre>
-<h3>From Vue</h3>
-<strong>Concepts:</strong>
-<ul><li>Templates → Template literals</li>
-<li>v-model → Two-way binding patterns</li>
-<li>Computed → Getters</li>
-<li>Watch → Observe patterns</li>
-<li>Vuex → pan-store</li>
-</ul>
-<h3>From Angular</h3>
-<strong>Concepts:</strong>
-<ul><li>Decorators → Static properties</li>
-<li>Dependency Injection → Constructor patterns</li>
-<li>Services → Modules</li>
-<li>RxJS → PAN bus observables</li>
-<li>NgRx → pan-store</li>
-</ul>
+<h3>Shopping Cart</h3>
+<p>The cart subscribes to add-to-cart events and persists state:</p>
+<pre><code class="language-javascript">// shopping-cart.js
+class ShoppingCart extends HTMLElement {
+  constructor() {
+    super();
+    this.items = JSON.parse(localStorage.getItem(&#039;cart&#039;)) || [];
+  }
+
+  connectedCallback() {
+    pan.subscribe(&#039;cart.add&#039;, ({ product }) =&gt; {
+      this.addItem(product);
+    });
+
+    pan.subscribe(&#039;cart.remove&#039;, ({ productId }) =&gt; {
+      this.removeItem(productId);
+    });
+
+    this.render();
+  }
+
+  addItem(product) {
+    const existing = this.items.find(i =&gt; i.id === product.id);
+    if (existing) {
+      existing.quantity++;
+    } else {
+      this.items.push({ ...product, quantity: 1 });
+    }
+    this.save();
+    this.render();
+  }
+
+  removeItem(productId) {
+    this.items = this.items.filter(i =&gt; i.id !== productId);
+    this.save();
+    this.render();
+  }
+
+  save() {
+    localStorage.setItem(&#039;cart&#039;, JSON.stringify(this.items));
+    pan.publish(&#039;cart.updated&#039;, { items: this.items, total: this.total });
+  }
+
+  get total() {
+    return this.items.reduce((sum, i) =&gt; sum + i.price * i.quantity, 0);
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;h2&gt;Cart (${this.items.length} items)&lt;/h2&gt;
+      ${this.items.map(item =&gt; `
+        &lt;cart-item
+          product-id=&quot;${item.id}&quot;
+          name=&quot;${item.name}&quot;
+          price=&quot;${item.price}&quot;
+          quantity=&quot;${item.quantity}&quot;&gt;
+        &lt;/cart-item&gt;
+      `).join(&#039;&#039;)}
+      &lt;p class=&quot;total&quot;&gt;Total: $${this.total.toFixed(2)}&lt;/p&gt;
+      &lt;button class=&quot;checkout-btn&quot;&gt;Checkout&lt;/button&gt;
+    `;
+  }
+}</code></pre>
+<h2>Case Study: Dashboard Application</h2>
+<p>A data dashboard shows real-time metrics with role-based access.</p>
+<h3>Real-Time Updates</h3>
+<p>WebSocket messages update charts automatically:</p>
+<pre><code class="language-javascript">// metrics-chart.js
+class MetricsChart extends HTMLElement {
+  connectedCallback() {
+    this.data = [];
+
+    pan.subscribe(&#039;ws.message.metrics&#039;, ({ value, timestamp }) =&gt; {
+      this.data.push({ value, timestamp });
+      if (this.data.length &gt; 100) this.data.shift();
+      this.render();
+    });
+
+    this.render();
+  }
+
+  render() {
+    // Render chart using canvas or SVG
+    const canvas = this.querySelector(&#039;canvas&#039;) || document.createElement(&#039;canvas&#039;);
+    if (!this.contains(canvas)) this.appendChild(canvas);
+
+    const ctx = canvas.getContext(&#039;2d&#039;);
+    // ... draw chart
+  }
+}</code></pre>
+<h3>Role-Based Views</h3>
+<p>Different users see different widgets:</p>
+<pre><code class="language-javascript">// dashboard-page.js
+class DashboardPage extends HTMLElement {
+  connectedCallback() {
+    const user = auth.getCurrentUser();
+
+    this.innerHTML = `
+      &lt;h1&gt;Dashboard&lt;/h1&gt;
+
+      &lt;div class=&quot;widgets&quot;&gt;
+        &lt;metrics-chart&gt;&lt;/metrics-chart&gt;
+        &lt;recent-activity&gt;&lt;/recent-activity&gt;
+
+        ${rbac.can(user, &#039;view-analytics&#039;) ? `
+          &lt;analytics-panel&gt;&lt;/analytics-panel&gt;
+        ` : &#039;&#039;}
+
+        ${rbac.can(user, &#039;manage-users&#039;) ? `
+          &lt;user-management&gt;&lt;/user-management&gt;
+        ` : &#039;&#039;}
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h2>Lessons Learned</h2>
+<p>Building real applications with LARC teaches valuable lessons:</p>
+<li><strong>Start simple</strong>: Begin with basic components and add complexity as needed.</li>
+<li><strong>Use the PAN bus liberally</strong>: It's cheap and powerful. When in doubt, publish an event.</li>
+<li><strong>Embrace the platform</strong>: Native APIs are well-optimized. Use fetch, not axios. Use template literals, not a template library.</li>
+<li><strong>Think in components</strong>: Small, focused components are easier to test, reuse, and understand.</li>
+<li><strong>Test early</strong>: Writing tests as you build prevents painful debugging later.</li>
+<li><strong>Profile before optimizing</strong>: Measure performance before assuming where bottlenecks are.</li>
+<li><strong>Document as you go</strong>: Future you will thank present you.</li>
+<li><strong>Progressive enhancement</strong>: Build core functionality first, then enhance for modern browsers.</li>
+<hr>
+<h1>Appendices</h1>
+<h2>Appendix A: Web Components API Reference</h2>
+<h3>Custom Elements</h3>
+<strong>Defining elements:</strong>
+<pre><code class="language-javascript">customElements.define(&#039;my-element&#039;, MyElement);
+customElements.define(&#039;my-element&#039;, MyElement, { extends: &#039;button&#039; });</code></pre>
+<strong>Retrieving definitions:</strong>
+<pre><code class="language-javascript">customElements.get(&#039;my-element&#039;);  // Returns constructor or undefined
+await customElements.whenDefined(&#039;my-element&#039;);  // Resolves when defined
+customElements.upgrade(element);  // Upgrade an element</code></pre>
+<h3>Lifecycle Callbacks</h3>
+<p>| Callback | When Called |
+|----------|-------------|
+| <code>constructor()</code> | Element created |
+| <code>connectedCallback()</code> | Element added to DOM |
+| <code>disconnectedCallback()</code> | Element removed from DOM |
+| <code>attributeChangedCallback(name, oldVal, newVal)</code> | Observed attribute changed |
+| <code>adoptedCallback()</code> | Element moved to new document |</p>
+<h3>Shadow DOM</h3>
+<pre><code class="language-javascript">// Attach shadow root
+const shadow = element.attachShadow({ mode: &#039;open&#039; });
+
+// Access shadow root
+element.shadowRoot  // null if mode is &#039;closed&#039;
+
+// Slots
+const slot = shadow.querySelector(&#039;slot&#039;);
+slot.assignedNodes();  // All assigned nodes
+slot.assignedElements();  // Only element nodes</code></pre>
+<h2>Appendix B: PAN Bus API Reference</h2>
+<h3>Publishing</h3>
+<pre><code class="language-javascript">// Simple publish
+pan.publish(&#039;topic&#039;, data);
+
+// With options
+pan.publish(&#039;topic&#039;, data, { retained: true });</code></pre>
+<h3>Subscribing</h3>
+<pre><code class="language-javascript">// Subscribe
+const unsubscribe = pan.subscribe(&#039;topic&#039;, (data) =&gt; {
+  console.log(data);
+});
+
+// Wildcard subscribe
+pan.subscribe(&#039;user.*&#039;, (data, topic) =&gt; {
+  console.log(topic, data);
+});
+
+// Unsubscribe
+unsubscribe();</code></pre>
+<h3>Request/Response</h3>
+<pre><code class="language-javascript">// Request with timeout
+const result = await pan.request(&#039;service.getData&#039;, { id: 1 }, 5000);
+
+// Respond to requests
+pan.respond(&#039;service.getData&#039;, async ({ id }) =&gt; {
+  return await fetchData(id);
+});</code></pre>
+<h2>Appendix C: Component Quick Reference</h2>
+<p>| Component | Purpose | Key Attributes |
+|-----------|---------|----------------|
+| <code>pan-router</code> | Client-side routing | <code>base</code> |
+| <code>pan-route</code> | Route definition | <code>path</code>, <code>component</code> |
+| <code>pan-store</code> | State management | <code>persist</code>, <code>namespace</code> |
+| <code>pan-fetch</code> | Data fetching | <code>url</code>, <code>method</code>, <code>auto</code> |</p>
+<h2>Appendix D: Migration Cheat Sheet</h2>
+<h3>React → LARC</h3>
+<p>| React | LARC |
+|-------|------|
+| JSX | Template literals |
+| <code>props</code> | Attributes/properties |
+| <code>useState</code> | Instance properties |
+| <code>useEffect</code> | <code>connectedCallback</code> |
+| Context | PAN bus |
+| Redux | <code>pan-store</code> |</p>
+<h3>Vue → LARC</h3>
+<p>| Vue | LARC |
+|-----|------|
+| Templates | Template literals |
+| <code>v-if</code> | Ternary in template |
+| <code>v-for</code> | <code>array.map()</code> |
+| <code>computed</code> | Getters |
+| Vuex | <code>pan-store</code> |</p>
 <h2>Appendix E: Resources</h2>
-<h3>Official Documentation</h3>
-<ul><li>LARC Docs: https://larcjs.com/docs</li>
-<li>Component Registry: https://components.larcjs.com</li>
+<h3>Official</h3>
+<ul><li>Documentation: https://larcjs.com/docs</li>
 <li>GitHub: https://github.com/larcjs/larc</li>
+<li>Examples: https://github.com/larcjs/larc/tree/main/packages/examples</li>
 </ul>
 <h3>Web Standards</h3>
 <ul><li>MDN Web Components: https://developer.mozilla.org/en-US/docs/Web/Web_Components</li>
@@ -484,23 +1885,8 @@ class UserCard extends HTMLElement {
 <li>Shadow DOM Spec: https://dom.spec.whatwg.org/#shadow-trees</li>
 </ul>
 <h3>Community</h3>
-<ul><li>Discord: https://discord.gg/zjUPsWTu</li>
+<ul><li>Discord: https://discord.gg/larc</li>
 <li>Forum: https://forum.larcjs.com</li>
-<li>Twitter: @larcjs</li>
-</ul>
-<h3>Learning Resources</h3>
-<ul><li>Web Components Tutorial: https://webcomponents.org</li>
-<li>ES Modules Guide: https://javascript.info/modules</li>
-<li>IndexedDB Tutorial: https://javascript.info/indexeddb</li>
-</ul>
-<h3>Tools</h3>
-<ul><li>LARC CLI: https://www.npmjs.com/package/create-larc-app</li>
-<li>VS Code Extension: Search "LARC" in marketplace</li>
-<li>Component Analyzer: https://github.com/larcjs/larc/tree/main/packages/devtools</li>
-</ul>
-<h3>Example Projects</h3>
-<ul><li>Official Examples: https://github.com/larcjs/larc/tree/main/packages/examples</li>
-<li>Demo Apps: https://github.com/larcjs/larc/tree/main/packages/apps</li>
 </ul>
       </article>
       <footer class="docs-footer">

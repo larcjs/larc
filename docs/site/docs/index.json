@@ -480,6 +480,11 @@
       "category": "books/learning-larc/chapters"
     },
     {
+      "title": "Chapter 11: Data Fetching and APIs",
+      "path": "books/learning-larc/chapters/11-19-summary.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
       "title": "Core Concepts",
       "path": "books/learning-larc/chapters/02-core-concepts.html",
       "category": "books/learning-larc/chapters"
@@ -512,11 +517,6 @@
     {
       "title": "State Management",
       "path": "books/learning-larc/chapters/06-state-management.html",
-      "category": "books/learning-larc/chapters"
-    },
-    {
-      "title": "Summary Outlines",
-      "path": "books/learning-larc/chapters/11-19-summary.html",
       "category": "books/learning-larc/chapters"
     },
     {
