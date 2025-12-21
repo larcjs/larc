@@ -185,7 +185,15 @@ create_combined_markdown() {
         "chapters/08-business-logic-patterns.md"
         "chapters/09-routing-and-navigation.md"
         "chapters/10-forms-and-validation.md"
-        "chapters/11-19-summary.md"
+        "chapters/11-data-fetching-and-apis.md"
+        "chapters/12-authentication-and-security.md"
+        "chapters/13-server-integration.md"
+        "chapters/14-testing.md"
+        "chapters/15-performance-and-optimization.md"
+        "chapters/16-deployment.md"
+        "chapters/17-component-library.md"
+        "chapters/18-tooling.md"
+        "chapters/19-real-world-applications.md"
     )
 
     for chapter in "${chapters[@]}"; do

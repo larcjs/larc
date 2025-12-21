@@ -3,251 +3,275 @@
 ## Pub/Sub Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#764ba2','tertiaryColor':'#48bb78'}}}%%
 graph TB
-    subgraph "Publishers"
-        P1[Login Button]
-        P2[Cart Component]
-        P3[API Service]
+    subgraph Publishers["📤 Publishers"]
+        P1["🔘 Login Button<br/>fa:fa-sign-in-alt"]
+        P2["🛒 Cart Component<br/>fa:fa-shopping-cart"]
+        P3["🔌 API Service<br/>fa:fa-server"]
     end
 
-    subgraph "PAN Bus"
-        PAN[Topic Router]
+    subgraph PAN["🚌 PAN Bus"]
+        Router["📡 Topic Router<br/>fa:fa-broadcast-tower"]
 
-        subgraph "Topics"
-            T1[user.login]
-            T2[cart.item.added]
-            T3[data.loaded]
+        subgraph Topics["📋 Topics"]
+            T1["🔑 user.login<br/>fa:fa-key"]
+            T2["➕ cart.item.added<br/>fa:fa-plus"]
+            T3["📦 data.loaded<br/>fa:fa-box"]
         end
     end
 
-    subgraph "Subscribers"
-        S1[User Menu]
-        S2[Sidebar]
-        S3[Notification]
-        S4[Analytics]
+    subgraph Subscribers["📥 Subscribers"]
+        S1["👤 User Menu<br/>fa:fa-user-circle"]
+        S2["📁 Sidebar<br/>fa:fa-bars"]
+        S3["🔔 Notification<br/>fa:fa-bell"]
+        S4["📊 Analytics<br/>fa:fa-chart-line"]
     end
 
-    P1 -->|publish| T1
-    P2 -->|publish| T2
-    P3 -->|publish| T3
+    P1 -->|📢 publish| T1
+    P2 -->|📢 publish| T2
+    P3 -->|📢 publish| T3
 
-    T1 --> PAN
-    T2 --> PAN
-    T3 --> PAN
+    T1 --> Router
+    T2 --> Router
+    T3 --> Router
 
-    PAN -->|notify| S1
-    PAN -->|notify| S2
-    PAN -->|notify| S3
-    PAN -->|notify| S4
+    Router -->|📬 notify| S1
+    Router -->|📬 notify| S2
+    Router -->|📬 notify| S3
+    Router -->|📬 notify| S4
 
-    style PAN fill:#764ba2,color:#fff
-    style P1 fill:#667eea,color:#fff
-    style P2 fill:#667eea,color:#fff
-    style P3 fill:#667eea,color:#fff
+    classDef publisher fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef pan fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef subscriber fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef topic fill:#4299e1,stroke:#3182ce,stroke-width:2px,color:#fff
+
+    class P1,P2,P3 publisher
+    class Router pan
+    class S1,S2,S3,S4 subscriber
+    class T1,T2,T3 topic
 ```
 
 ## Message Flow Sequence
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'actorBkg':'#667eea','actorBorder':'#5568d3','actorTextColor':'#fff','signalColor':'#764ba2','signalTextColor':'#2d3748'}}}%%
 sequenceDiagram
-    participant LoginBtn as Login Button
-    participant PAN as PAN Bus
-    participant UserMenu as User Menu
-    participant Sidebar as Sidebar
-    participant Analytics as Analytics
-    participant API as Backend
+    participant LoginBtn as 🔘 Login Button<br/>fa:fa-sign-in-alt
+    participant PAN as 🚌 PAN Bus<br/>fa:fa-broadcast-tower
+    participant UserMenu as 👤 User Menu<br/>fa:fa-user-circle
+    participant Sidebar as 📁 Sidebar<br/>fa:fa-bars
+    participant Analytics as 📊 Analytics<br/>fa:fa-chart-line
+    participant API as 🔌 Backend<br/>fa:fa-server
 
-    Note over LoginBtn,Analytics: User clicks login button
+    Note over LoginBtn,Analytics: 🖱️ User clicks login button
 
-    LoginBtn->>PAN: publish('user.login.started')
-    PAN->>UserMenu: notify
-    PAN->>Sidebar: notify
-    UserMenu->>UserMenu: Show loading state
+    LoginBtn->>+PAN: 📢 publish('user.login.started')
+    PAN-->>UserMenu: 📬 notify
+    PAN-->>Sidebar: 📬 notify
+    Note over UserMenu: ⏳ Show loading state
+    UserMenu->>UserMenu: 🎨 Update UI
 
-    LoginBtn->>API: POST /api/login
-    API-->>LoginBtn: {token, user}
+    LoginBtn->>+API: 🌐 POST /api/login
+    API-->>-LoginBtn: ✅ {token, user}
 
-    LoginBtn->>PAN: publish('user.login.success', {user})
+    LoginBtn->>PAN: 📢 publish('user.login.success', {user})
 
-    PAN->>UserMenu: notify
-    PAN->>Sidebar: notify
-    PAN->>Analytics: notify
+    PAN-->>UserMenu: 📬 notify
+    PAN-->>Sidebar: 📬 notify
+    PAN-->>-Analytics: 📬 notify
 
-    UserMenu->>UserMenu: Update with user data
-    Sidebar->>Sidebar: Show user panel
-    Analytics->>API: Track event
+    Note over UserMenu,Sidebar: 🎨 Update with user data
+    UserMenu->>UserMenu: 👤 Update with user data
+    Sidebar->>Sidebar: 📱 Show user panel
+    Analytics->>API: 📊 Track event
 ```
 
 ## Topic Namespace Structure
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#48bb78','tertiaryColor':'#4299e1'}}}%%
 graph TB
-    Root[*<br/>All Events]
+    Root["🌟 *<br/>fa:fa-star<br/>All Events"]
 
-    Root --> User[user.*]
-    Root --> Cart[cart.*]
-    Root --> App[app.*]
+    Root --> User["👤 user.*<br/>fa:fa-user"]
+    Root --> Cart["🛒 cart.*<br/>fa:fa-shopping-cart"]
+    Root --> App["📱 app.*<br/>fa:fa-mobile-alt"]
 
-    User --> UserAuth[user.auth.*]
-    User --> UserProfile[user.profile.*]
+    User --> UserAuth["🔐 user.auth.*<br/>fa:fa-lock"]
+    User --> UserProfile["📋 user.profile.*<br/>fa:fa-id-card"]
 
-    UserAuth --> Login[user.auth.login]
-    UserAuth --> Logout[user.auth.logout]
-    UserAuth --> Refresh[user.auth.refresh]
+    UserAuth --> Login["🔑 user.auth.login<br/>fa:fa-sign-in-alt"]
+    UserAuth --> Logout["🚪 user.auth.logout<br/>fa:fa-sign-out-alt"]
+    UserAuth --> Refresh["🔄 user.auth.refresh<br/>fa:fa-sync"]
 
-    UserProfile --> ProfileUpdate[user.profile.update]
-    UserProfile --> ProfileFetch[user.profile.fetch]
+    UserProfile --> ProfileUpdate["✏️ user.profile.update<br/>fa:fa-edit"]
+    UserProfile --> ProfileFetch["📥 user.profile.fetch<br/>fa:fa-download"]
 
-    Cart --> CartItem[cart.item.*]
-    Cart --> CartCheckout[cart.checkout]
+    Cart --> CartItem["📦 cart.item.*<br/>fa:fa-box"]
+    Cart --> CartCheckout["💳 cart.checkout<br/>fa:fa-credit-card"]
 
-    CartItem --> ItemAdd[cart.item.add]
-    CartItem --> ItemRemove[cart.item.remove]
-    CartItem --> ItemUpdate[cart.item.update]
+    CartItem --> ItemAdd["➕ cart.item.add<br/>fa:fa-plus-circle"]
+    CartItem --> ItemRemove["➖ cart.item.remove<br/>fa:fa-minus-circle"]
+    CartItem --> ItemUpdate["🔄 cart.item.update<br/>fa:fa-sync-alt"]
 
-    App --> AppTheme[app.theme.change]
-    App --> AppRoute[app.route.change]
-    App --> AppError[app.error]
+    App --> AppTheme["🎨 app.theme.change<br/>fa:fa-palette"]
+    App --> AppRoute["🧭 app.route.change<br/>fa:fa-route"]
+    App --> AppError["⚠️ app.error<br/>fa:fa-exclamation-triangle"]
 
-    style Root fill:#764ba2,color:#fff
-    style User fill:#667eea,color:#fff
-    style Cart fill:#667eea,color:#fff
-    style App fill:#667eea,color:#fff
+    classDef root fill:#764ba2,stroke:#6a3f99,stroke-width:4px,color:#fff,font-weight:bold
+    classDef namespace fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef event fill:#48bb78,stroke:#38a169,stroke-width:2px,color:#fff
+
+    class Root root
+    class User,Cart,App,UserAuth,UserProfile,CartItem namespace
+    class Login,Logout,Refresh,ProfileUpdate,ProfileFetch,ItemAdd,ItemRemove,ItemUpdate,AppTheme,AppRoute,AppError,CartCheckout event
 ```
 
 ## Wildcard Subscription Matching
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#48bb78','tertiaryColor':'#f56565'}}}%%
 graph LR
-    subgraph "Published Events"
-        E1[user.login]
-        E2[user.logout]
-        E3[user.profile.update]
-        E4[cart.item.add]
+    subgraph Events["📡 Published Events"]
+        E1["🔑 user.login<br/>fa:fa-sign-in-alt"]
+        E2["🚪 user.logout<br/>fa:fa-sign-out-alt"]
+        E3["✏️ user.profile.update<br/>fa:fa-edit"]
+        E4["➕ cart.item.add<br/>fa:fa-plus-circle"]
     end
 
-    subgraph "Subscriptions"
-        S1["subscribe('user.login')"]
-        S2["subscribe('user.*')"]
-        S3["subscribe('*.update')"]
-        S4["subscribe('*')"]
+    subgraph Subs["📥 Subscriptions"]
+        S1["🎯 subscribe('user.login')<br/>fa:fa-bullseye"]
+        S2["👤 subscribe('user.*')<br/>fa:fa-user"]
+        S3["🔄 subscribe('*.update')<br/>fa:fa-sync-alt"]
+        S4["🌟 subscribe('*')<br/>fa:fa-star"]
     end
 
-    E1 -.matches.-> S1
-    E1 -.matches.-> S2
-    E1 -.matches.-> S4
+    E1 -.✅ matches.-> S1
+    E1 -.✅ matches.-> S2
+    E1 -.✅ matches.-> S4
 
-    E2 -.matches.-> S2
-    E2 -.matches.-> S4
+    E2 -.✅ matches.-> S2
+    E2 -.✅ matches.-> S4
 
-    E3 -.matches.-> S2
-    E3 -.matches.-> S3
-    E3 -.matches.-> S4
+    E3 -.✅ matches.-> S2
+    E3 -.✅ matches.-> S3
+    E3 -.✅ matches.-> S4
 
-    E4 -.matches.-> S4
+    E4 -.✅ matches.-> S4
 
-    style E1 fill:#667eea,color:#fff
-    style E2 fill:#667eea,color:#fff
-    style E3 fill:#667eea,color:#fff
-    style E4 fill:#667eea,color:#fff
-    style S4 fill:#f56565,color:#fff
+    classDef event fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef specific fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef catchall fill:#f56565,stroke:#e53e3e,stroke-width:3px,color:#fff,font-weight:bold
+
+    class E1,E2,E3,E4 event
+    class S1,S2,S3 specific
+    class S4 catchall
 ```
 
 ## Request/Response Pattern
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'actorBkg':'#667eea','actorBorder':'#5568d3','actorTextColor':'#fff','signalColor':'#764ba2'}}}%%
 sequenceDiagram
-    participant Requester as Component A
-    participant PAN as PAN Bus
-    participant Responder as Auth Service
+    participant Requester as ⚙️ Component A<br/>fa:fa-cube
+    participant PAN as 🚌 PAN Bus<br/>fa:fa-broadcast-tower
+    participant Responder as 🔐 Auth Service<br/>fa:fa-shield-alt
 
-    Note over Responder: Registers responder
-    Responder->>PAN: respond('auth.token.get', handler)
+    Note over Responder: 📝 Registers responder
+    Responder->>PAN: 🎯 respond('auth.token.get', handler)
 
-    Note over Requester: Needs auth token
-    Requester->>PAN: request('auth.token.get')
+    Note over Requester: 🔑 Needs auth token
+    Requester->>+PAN: ❓ request('auth.token.get')
 
-    PAN->>PAN: Generate response ID
-    PAN->>Responder: Trigger handler
+    PAN->>PAN: 🆔 Generate response ID
+    PAN->>+Responder: ▶️ Trigger handler
 
-    Responder->>Responder: Get token from storage
-    Responder->>PAN: publish response
+    Note over Responder: 💾 Get token from storage
+    Responder->>Responder: 🔍 Get token from storage
+    Responder->>-PAN: 📤 publish response
 
-    PAN->>Requester: Return token
+    PAN->>-Requester: ✅ Return token
 
-    Note over Requester: Uses token for API call
-    Requester->>API: GET /api/data<br/>Authorization: Bearer {token}
+    Note over Requester: 🌐 Uses token for API call
+    Requester->>API: 🔌 GET /api/data<br/>Authorization: Bearer {token}
 ```
 
 ## Event Patterns Comparison
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#764ba2','tertiaryColor':'#48bb78'}}}%%
 graph TB
-    subgraph "Fire and Forget"
-        FF1[Publisher]
-        FF2[PAN Bus]
-        FF3[Subscribers]
+    subgraph FF["📢 Fire and Forget"]
+        FF1["📤 Publisher<br/>fa:fa-paper-plane"]
+        FF2["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
+        FF3["📥 Subscribers<br/>fa:fa-inbox"]
 
-        FF1 -->|publish| FF2
-        FF2 -->|notify all| FF3
-        FF1 -.-x|no wait| FF3
+        FF1 -->|📢 publish| FF2
+        FF2 -->|📬 notify all| FF3
+        FF1 -.-x|⚡ no wait| FF3
     end
 
-    subgraph "Request/Response"
-        RR1[Requester]
-        RR2[PAN Bus]
-        RR3[Responder]
+    subgraph RR["❓ Request/Response"]
+        RR1["❓ Requester<br/>fa:fa-question"]
+        RR2["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
+        RR3["💬 Responder<br/>fa:fa-comment-dots"]
 
-        RR1 -->|request| RR2
-        RR2 -->|invoke| RR3
-        RR3 -->|respond| RR2
-        RR2 -->|return| RR1
+        RR1 -->|❓ request| RR2
+        RR2 -->|▶️ invoke| RR3
+        RR3 -->|✅ respond| RR2
+        RR2 -->|📦 return| RR1
     end
 
-    subgraph "Command"
-        C1[Commander]
-        C2[PAN Bus]
-        C3[Handler]
+    subgraph CMD["⚙️ Command"]
+        C1["👨‍💼 Commander<br/>fa:fa-user-tie"]
+        C2["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
+        C3["⚙️ Handler<br/>fa:fa-cog"]
 
-        C1 -->|command| C2
-        C2 -->|execute| C3
-        C3 -->|acknowledge| C2
-        C2 -.optional.-> C1
+        C1 -->|📋 command| C2
+        C2 -->|▶️ execute| C3
+        C3 -->|✅ acknowledge| C2
+        C2 -.💬 optional.-> C1
     end
 
-    style FF2 fill:#667eea,color:#fff
-    style RR2 fill:#764ba2,color:#fff
-    style C2 fill:#48bb78,color:#fff
+    classDef bus1 fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef bus2 fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef bus3 fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+
+    class FF2 bus1
+    class RR2 bus2
+    class C2 bus3
 ```
 
 ## PAN Bus Internal Architecture
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#764ba2','secondaryColor':'#667eea','tertiaryColor':'#48bb78'}}}%%
 graph TB
-    subgraph "PAN Bus Core"
-        Router[Topic Router]
+    subgraph Core["⚙️ PAN Bus Core"]
+        Router["📡 Topic Router<br/>fa:fa-broadcast-tower"]
 
-        subgraph "Subscription Registry"
-            Exact["Exact Matches<br/>Map‹topic, Set‹handler››"]
-            Wildcard["Wildcard Patterns<br/>Array of patterns and handlers"]
+        subgraph Registry["📚 Subscription Registry"]
+            Exact["🎯 Exact Matches<br/>fa:fa-bullseye<br/>Map‹topic, Set‹handler››"]
+            Wildcard["🌟 Wildcard Patterns<br/>fa:fa-star<br/>Array of patterns and handlers"]
         end
 
-        subgraph "Message Queue"
-            Queue[Event Queue]
-            Batch[Batch Processor]
+        subgraph Queue["📮 Message Queue"]
+            EventQueue["📥 Event Queue<br/>fa:fa-inbox"]
+            Batch["📦 Batch Processor<br/>fa:fa-boxes"]
         end
 
         Router --> Exact
         Router --> Wildcard
-        Router --> Queue
-        Queue --> Batch
+        Router --> EventQueue
+        EventQueue --> Batch
     end
 
-    subgraph "API Methods"
-        Publish[publish]
-        Subscribe[subscribe]
-        Request[request]
-        Respond[respond]
+    subgraph API["🔧 API Methods"]
+        Publish["📢 publish<br/>fa:fa-bullhorn"]
+        Subscribe["📥 subscribe<br/>fa:fa-rss"]
+        Request["❓ request<br/>fa:fa-question-circle"]
+        Respond["💬 respond<br/>fa:fa-comment"]
     end
 
     Publish --> Router
@@ -255,111 +279,132 @@ graph TB
     Request --> Router
     Respond --> Router
 
-    style Router fill:#764ba2,color:#fff
-    style Queue fill:#667eea,color:#fff
+    classDef router fill:#764ba2,stroke:#6a3f99,stroke-width:4px,color:#fff,font-weight:bold
+    classDef registry fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef queue fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef api fill:#4299e1,stroke:#3182ce,stroke-width:2px,color:#fff
+
+    class Router router
+    class Exact,Wildcard registry
+    class EventQueue,Batch queue
+    class Publish,Subscribe,Request,Respond api
 ```
 
 ## Debugging with Event Inspector
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#ed8936','tertiaryColor':'#48bb78'}}}%%
 graph TB
-    subgraph "Application"
-        C1[Component 1]
-        C2[Component 2]
-        C3[Component 3]
+    subgraph Application["📱 Application"]
+        C1["⚙️ Component 1<br/>fa:fa-cube"]
+        C2["⚙️ Component 2<br/>fa:fa-cube"]
+        C3["⚙️ Component 3<br/>fa:fa-cube"]
     end
 
-    subgraph "PAN Bus"
-        PAN[Message Router]
+    subgraph PAN["🚌 PAN Bus"]
+        Router["📡 Message Router<br/>fa:fa-broadcast-tower"]
     end
 
-    subgraph "Inspector"
-        Monitor["subscribe('*')"]
-        Log[Event Log]
-        Filter[Filter Panel]
-        Viz[Visualization]
+    subgraph Inspector["🔍 Inspector"]
+        Monitor["👀 subscribe('*')<br/>fa:fa-eye"]
+        Log["📋 Event Log<br/>fa:fa-list"]
+        Filter["🔎 Filter Panel<br/>fa:fa-filter"]
+        Viz["📊 Visualization<br/>fa:fa-chart-bar"]
     end
 
-    C1 -->|publish| PAN
-    C2 -->|publish| PAN
-    C3 -->|publish| PAN
+    C1 -->|📢 publish| Router
+    C2 -->|📢 publish| Router
+    C3 -->|📢 publish| Router
 
-    PAN -->|notify| C1
-    PAN -->|notify| C2
-    PAN -->|notify| C3
+    Router -->|📬 notify| C1
+    Router -->|📬 notify| C2
+    Router -->|📬 notify| C3
 
-    PAN -.all events.-> Monitor
+    Router -.🔍 all events.-> Monitor
     Monitor --> Log
     Log --> Filter
     Log --> Viz
 
-    style PAN fill:#764ba2,color:#fff
-    style Monitor fill:#f59e42,color:#fff
-    style Viz fill:#48bb78,color:#fff
+    classDef component fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef pan fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef inspector fill:#ed8936,stroke:#dd6b20,stroke-width:3px,color:#fff,font-weight:bold
+    classDef viz fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+
+    class C1,C2,C3 component
+    class Router pan
+    class Monitor,Log,Filter inspector
+    class Viz viz
 ```
 
 ## Event Lifecycle
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','primaryTextColor':'#fff','primaryBorderColor':'#5568d3'}}}%%
 stateDiagram-v2
-    [*] --> Published: publish(topic, data)
-    Published --> Routing: Route to subscribers
-    Routing --> MatchExact: Check exact matches
-    Routing --> MatchWildcard: Check wildcards
+    [*] --> Published: 📢 publish(topic, data)
+    Published --> Routing: 🧭 Route to subscribers
+    Routing --> MatchExact: 🎯 Check exact matches
+    Routing --> MatchWildcard: 🌟 Check wildcards
 
-    MatchExact --> Notify: Found subscribers
-    MatchWildcard --> Notify: Found subscribers
+    MatchExact --> Notify: ✅ Found subscribers
+    MatchWildcard --> Notify: ✅ Found subscribers
 
-    MatchExact --> Complete: No matches
-    MatchWildcard --> Complete: No matches
+    MatchExact --> Complete: ❌ No matches
+    MatchWildcard --> Complete: ❌ No matches
 
-    Notify --> HandleAsync: Async handlers
-    Notify --> HandleSync: Sync handlers
+    Notify --> HandleAsync: ⚡ Async handlers
+    Notify --> HandleSync: 🔄 Sync handlers
 
-    HandleAsync --> Complete
-    HandleSync --> Complete
+    HandleAsync --> Complete: ✅
+    HandleSync --> Complete: ✅
 
     Complete --> [*]
 
     note right of Routing
-        • Look up topic in registry
-        • Match wildcards
-        • Collect all handlers
+        📋 Look up topic in registry
+        🌟 Match wildcards
+        📥 Collect all handlers
     end note
 
     note right of Notify
-        • Call each handler
-        • Pass message data
-        • Handle errors
+        📞 Call each handler
+        📦 Pass message data
+        ⚠️ Handle errors
     end note
 ```
 
 ## Error Handling in PAN Bus
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#f56565','tertiaryColor':'#48bb78'}}}%%
 graph TB
-    Publisher[Publisher]
-    PAN[PAN Bus]
+    Publisher["📤 Publisher<br/>fa:fa-paper-plane"]
+    PAN["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
 
-    Publisher -->|publish| PAN
+    Publisher -->|📢 publish| PAN
 
-    PAN --> S1[Subscriber 1]
-    PAN --> S2[Subscriber 2]
-    PAN --> S3[Subscriber 3]
+    PAN --> S1["📥 Subscriber 1<br/>fa:fa-inbox"]
+    PAN --> S2["📥 Subscriber 2<br/>fa:fa-inbox"]
+    PAN --> S3["📥 Subscriber 3<br/>fa:fa-inbox"]
 
-    S1 -->|success| End1[✓]
-    S2 -->|throws error| Error[Error Handler]
-    S3 -->|success| End3[✓]
+    S1 -->|✅ success| End1["✅<br/>fa:fa-check-circle"]
+    S2 -->|💥 throws error| Error["⚠️ Error Handler<br/>fa:fa-exclamation-triangle"]
+    S3 -->|✅ success| End3["✅<br/>fa:fa-check-circle"]
 
-    Error -->|log error| Console[Console]
-    Error -->|publish| ErrorTopic[app.error]
+    Error -->|📝 log error| Console["🖥️ Console<br/>fa:fa-terminal"]
+    Error -->|📢 publish| ErrorTopic["❌ app.error<br/>fa:fa-times-circle"]
 
-    ErrorTopic --> ErrorHandler[Error Component]
+    ErrorTopic --> ErrorHandler["⚠️ Error Component<br/>fa:fa-bug"]
 
-    Error -.doesn't stop.-> S3
+    Error -.🔄 doesn't stop.-> S3
 
-    style Error fill:#f56565,color:#fff
-    style PAN fill:#764ba2,color:#fff
-    style End1 fill:#48bb78,color:#fff
-    style End3 fill:#48bb78,color:#fff
+    classDef success fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef error fill:#f56565,stroke:#e53e3e,stroke-width:3px,color:#fff,font-weight:bold
+    classDef pan fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef neutral fill:#667eea,stroke:#5568d3,stroke-width:2px,color:#fff
+
+    class End1,End3 success
+    class Error,ErrorTopic,ErrorHandler error
+    class PAN pan
+    class Publisher,S1,S2,S3 neutral
 ```
