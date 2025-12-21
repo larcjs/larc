@@ -281,6 +281,16 @@ PYSCRIPT
     python3 "${TEMP_DIR}/clean_images.py" "$COMBINED_MD"
     rm "${TEMP_DIR}/clean_images.py"
 
+    # Convert LaTeX \pagebreak to HTML for Prince XML
+    echo -e "${BLUE}Converting page breaks for HTML/PDF...${NC}"
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS sed - convert \pagebreak to HTML div
+        sed -i '' 's/\\pagebreak/<div class="pagebreak"><\/div>/g' "$COMBINED_MD"
+    else
+        # Linux sed
+        sed -i 's/\\pagebreak/<div class="pagebreak"><\/div>/g' "$COMBINED_MD"
+    fi
+
     echo -e "${GREEN}✓ Chapters combined${NC}"
 }
 
@@ -439,6 +449,12 @@ img {
   padding-left: 0;
 }
 
+/* Page break support for Prince XML and print */
+.pagebreak {
+  page-break-after: always;
+  break-after: page;
+}
+
 @media print {
   body {
     max-width: 100%;
@@ -455,6 +471,18 @@ img {
 
   h1, h2, h3, h4, h5, h6 {
     page-break-after: avoid;
+  }
+
+  .pagebreak {
+    page-break-after: always;
+    break-after: page;
+  }
+}
+
+/* Prince XML specific rules */
+@prince-pdf {
+  .pagebreak {
+    page-break-after: always;
   }
 }
 EOF
