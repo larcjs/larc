@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tooling · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Tooling">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>18-tooling</span>
+      </div>
+      <article class="docs-content">
+        <h1>Tooling</h1>
+<p>While LARC doesn't require a build step, the right tools make development faster and more enjoyable.</p>
+<h2>Development Server</h2>
+<p>A simple development server with live reload:</p>
+<pre><code class="language-javascript">// dev-server.js
+const http = require(&#039;http&#039;);
+const fs = require(&#039;fs&#039;);
+const path = require(&#039;path&#039;);
+const WebSocket = require(&#039;ws&#039;);
+
+const PORT = 3000;
+const PUBLIC_DIR = &#039;./public&#039;;
+
+// HTTP Server
+const server = http.createServer((req, res) =&gt; {
+  let filePath = path.join(PUBLIC_DIR, req.url === &#039;/&#039; ? &#039;index.html&#039; : req.url);
+
+  const ext = path.extname(filePath);
+  const contentTypes = {
+    &#039;.html&#039;: &#039;text/html&#039;,
+    &#039;.js&#039;: &#039;application/javascript&#039;,
+    &#039;.mjs&#039;: &#039;application/javascript&#039;,
+    &#039;.css&#039;: &#039;text/css&#039;,
+    &#039;.json&#039;: &#039;application/json&#039;
+  };
+
+  fs.readFile(filePath, (err, content) =&gt; {
+    if (err) {
+      res.writeHead(404);
+      res.end(&#039;Not found&#039;);
+      return;
+    }
+
+    res.writeHead(200, { &#039;Content-Type&#039;: contentTypes[ext] || &#039;text/plain&#039; });
+    res.end(content);
+  });
+});
+
+// WebSocket for live reload
+const wss = new WebSocket.Server({ server });
+
+fs.watch(PUBLIC_DIR, { recursive: true }, () =&gt; {
+  wss.clients.forEach(client =&gt; {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(&#039;reload&#039;);
+    }
+  });
+});
+
+server.listen(PORT, () =&gt; console.log(`Dev server at http://localhost:${PORT}`));</code></pre>
+<p>Add live reload to your HTML:</p>
+<pre><code class="language-html">&lt;script&gt;
+  const ws = new WebSocket(&#039;ws://localhost:3000&#039;);
+  ws.onmessage = () =&gt; location.reload();
+&lt;/script&gt;</code></pre>
+<h2>VS Code Configuration</h2>
+<p>Enhance your editor experience:</p>
+<pre><code class="language-json">// .vscode/settings.json
+{
+  &quot;editor.formatOnSave&quot;: true,
+  &quot;editor.defaultFormatter&quot;: &quot;esbenp.prettier-vscode&quot;,
+  &quot;emmet.includeLanguages&quot;: {
+    &quot;javascript&quot;: &quot;html&quot;
+  },
+  &quot;files.associations&quot;: {
+    &quot;*.mjs&quot;: &quot;javascript&quot;
+  }
+}</code></pre>
+<p>Useful snippets:</p>
+<pre><code class="language-json">// .vscode/snippets/larc.code-snippets
+{
+  &quot;LARC Component&quot;: {
+    &quot;prefix&quot;: &quot;larc&quot;,
+    &quot;body&quot;: [
+      &quot;class ${1:ComponentName} extends HTMLElement {&quot;,
+      &quot;  constructor() {&quot;,
+      &quot;    super();&quot;,
+      &quot;    this.attachShadow({ mode: &#039;open&#039; });&quot;,
+      &quot;  }&quot;,
+      &quot;&quot;,
+      &quot;  connectedCallback() {&quot;,
+      &quot;    this.render();&quot;,
+      &quot;  }&quot;,
+      &quot;&quot;,
+      &quot;  render() {&quot;,
+      &quot;    this.shadowRoot.innerHTML = `&quot;,
+      &quot;      &lt;style&gt;&quot;,
+      &quot;        :host { display: block; }&quot;,
+      &quot;      &lt;/style&gt;&quot;,
+      &quot;      &lt;div&gt;$2&lt;/div&gt;&quot;,
+      &quot;    `;&quot;,
+      &quot;  }&quot;,
+      &quot;}&quot;,
+      &quot;&quot;,
+      &quot;customElements.define(&#039;${3:component-name}&#039;, ${1:ComponentName});&quot;
+    ]
+  }
+}</code></pre>
+<h2>ESLint Configuration</h2>
+<p>Lint your code for consistency:</p>
+<pre><code class="language-javascript">// eslint.config.js
+export default [
+  {
+    files: [&#039;**/*.js&#039;, &#039;**/*.mjs&#039;],
+    rules: {
+      &#039;no-unused-vars&#039;: &#039;warn&#039;,
+      &#039;no-console&#039;: [&#039;warn&#039;, { allow: [&#039;warn&#039;, &#039;error&#039;] }],
+      &#039;prefer-const&#039;: &#039;error&#039;,
+      &#039;no-var&#039;: &#039;error&#039;
+    }
+  }
+];</code></pre>
+<h2>Browser DevTools</h2>
+<p>Chrome DevTools has excellent Web Component support:</p>
+<ul><li><strong>Elements panel</strong>: Inspect shadow DOM by clicking the <code>#shadow-root</code> toggle</li>
+<li><strong>Console</strong>: Access element's shadow root with <code>$0.shadowRoot</code></li>
+<li><strong>Network panel</strong>: Monitor fetch requests and WebSocket connections</li>
+<li><strong>Performance panel</strong>: Profile render performance</li>
+<li><strong>Application panel</strong>: Inspect localStorage, sessionStorage, IndexedDB</li>
+</ul>
+<h2>Debugging PAN Bus</h2>
+<p>Add a debug utility:</p>
+<pre><code class="language-javascript">// pan-debug.js
+pan.subscribe(&#039;*&#039;, (data, topic) =&gt; {
+  console.log(`[PAN] ${topic}`, data);
+});</code></pre>
+<p>Or use the LARC DevTools extension for a visual message inspector.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/18-tooling.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

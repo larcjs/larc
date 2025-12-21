@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Testing">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>14-testing</span>
+      </div>
+      <article class="docs-content">
+        <h1>Testing</h1>
+<p>Testing isn't optional. It's how you know your code works, how you prevent regressions, and how you confidently refactor. LARC applications benefit from the same testing strategies as any JavaScript application, with some patterns specific to Web Components.</p>
+<h2>Unit Testing Components</h2>
+<p>The <code>@open-wc/testing</code> library provides excellent utilities for testing Web Components:</p>
+<pre><code class="language-javascript">// user-card.test.js
+import { expect, fixture, html } from &#039;@open-wc/testing&#039;;
+import &#039;../components/user-card.js&#039;;
+
+describe(&#039;UserCard&#039;, () =&gt; {
+  it(&#039;renders user name and email&#039;, async () =&gt; {
+    const el = await fixture(html`
+      &lt;user-card&gt;&lt;/user-card&gt;
+    `);
+
+    el.user = { name: &#039;Alice&#039;, email: &#039;alice@example.com&#039; };
+    await el.updateComplete;
+
+    const name = el.shadowRoot.querySelector(&#039;.name&#039;);
+    const email = el.shadowRoot.querySelector(&#039;.email&#039;);
+
+    expect(name.textContent).to.equal(&#039;Alice&#039;);
+    expect(email.textContent).to.equal(&#039;alice@example.com&#039;);
+  });
+
+  it(&#039;dispatches follow event when button clicked&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;user-card&gt;&lt;/user-card&gt;`);
+    el.user = { id: 1, name: &#039;Alice&#039; };
+
+    let eventDetail = null;
+    el.addEventListener(&#039;follow&#039;, (e) =&gt; {
+      eventDetail = e.detail;
+    });
+
+    el.shadowRoot.querySelector(&#039;.follow-btn&#039;).click();
+
+    expect(eventDetail).to.deep.equal({ userId: 1 });
+  });
+
+  it(&#039;shows loading state initially&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;user-card loading&gt;&lt;/user-card&gt;`);
+
+    const spinner = el.shadowRoot.querySelector(&#039;.spinner&#039;);
+    expect(spinner).to.exist;
+  });
+});</code></pre>
+<h2>Testing PAN Bus Integration</h2>
+<p>Mock the PAN bus to test component communication:</p>
+<pre><code class="language-javascript">// pan-mock.js
+class MockPanBus {
+  constructor() {
+    this.messages = [];
+    this.subscriptions = new Map();
+  }
+
+  publish(topic, data) {
+    this.messages.push({ topic, data });
+    const handlers = this.subscriptions.get(topic) || [];
+    handlers.forEach(handler =&gt; handler(data));
+  }
+
+  subscribe(topic, handler) {
+    if (!this.subscriptions.has(topic)) {
+      this.subscriptions.set(topic, []);
+    }
+    this.subscriptions.get(topic).push(handler);
+    return () =&gt; this.unsubscribe(topic, handler);
+  }
+
+  unsubscribe(topic, handler) {
+    const handlers = this.subscriptions.get(topic) || [];
+    const index = handlers.indexOf(handler);
+    if (index &gt; -1) handlers.splice(index, 1);
+  }
+
+  clear() {
+    this.messages = [];
+    this.subscriptions.clear();
+  }
+}
+
+export const mockPan = new MockPanBus();</code></pre>
+<p>Use it in tests:</p>
+<pre><code class="language-javascript">import { mockPan } from &#039;./pan-mock.js&#039;;
+
+describe(&#039;NotificationList&#039;, () =&gt; {
+  beforeEach(() =&gt; mockPan.clear());
+
+  it(&#039;displays notifications from PAN bus&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;notification-list&gt;&lt;/notification-list&gt;`);
+
+    mockPan.publish(&#039;notification.new&#039;, {
+      id: 1,
+      message: &#039;Hello world&#039;
+    });
+
+    await el.updateComplete;
+
+    const notifications = el.shadowRoot.querySelectorAll(&#039;.notification&#039;);
+    expect(notifications.length).to.equal(1);
+    expect(notifications[0].textContent).to.include(&#039;Hello world&#039;);
+  });
+});</code></pre>
+<h2>Integration Testing</h2>
+<p>Test components working together:</p>
+<pre><code class="language-javascript">describe(&#039;Shopping Cart Integration&#039;, () =&gt; {
+  it(&#039;updates cart when product added&#039;, async () =&gt; {
+    const cart = await fixture(html`&lt;shopping-cart&gt;&lt;/shopping-cart&gt;`);
+    const product = await fixture(html`
+      &lt;product-card .product=${{ id: 1, name: &#039;Widget&#039;, price: 10 }}&gt;
+      &lt;/product-card&gt;
+    `);
+
+    // Simulate add to cart
+    product.shadowRoot.querySelector(&#039;.add-btn&#039;).click();
+
+    await cart.updateComplete;
+
+    expect(cart.items.length).to.equal(1);
+    expect(cart.total).to.equal(10);
+  });
+});</code></pre>
+<h2>End-to-End Testing with Playwright</h2>
+<p>For full user flow testing, Playwright provides excellent browser automation:</p>
+<pre><code class="language-javascript">// e2e/login.spec.js
+import { test, expect } from &#039;@playwright/test&#039;;
+
+test.describe(&#039;Login Flow&#039;, () =&gt; {
+  test(&#039;successful login redirects to dashboard&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;/login&#039;);
+
+    await page.fill(&#039;input[name=&quot;email&quot;]&#039;, &#039;user@example.com&#039;);
+    await page.fill(&#039;input[name=&quot;password&quot;]&#039;, &#039;password123&#039;);
+    await page.click(&#039;button[type=&quot;submit&quot;]&#039;);
+
+    await expect(page).toHaveURL(&#039;/dashboard&#039;);
+    await expect(page.locator(&#039;h1&#039;)).toHaveText(&#039;Dashboard&#039;);
+  });
+
+  test(&#039;invalid credentials show error&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;/login&#039;);
+
+    await page.fill(&#039;input[name=&quot;email&quot;]&#039;, &#039;wrong@example.com&#039;);
+    await page.fill(&#039;input[name=&quot;password&quot;]&#039;, &#039;wrongpassword&#039;);
+    await page.click(&#039;button[type=&quot;submit&quot;]&#039;);
+
+    await expect(page.locator(&#039;.error&#039;)).toHaveText(&#039;Invalid credentials&#039;);
+    await expect(page).toHaveURL(&#039;/login&#039;);
+  });
+});</code></pre>
+<h2>Mocking Fetch Requests</h2>
+<p>Control network responses in tests:</p>
+<pre><code class="language-javascript">// fetch-mock.js
+class FetchMock {
+  constructor() {
+    this.mocks = new Map();
+    this.originalFetch = window.fetch;
+  }
+
+  mock(url, response, options = {}) {
+    this.mocks.set(url, { response, options });
+  }
+
+  enable() {
+    window.fetch = async (url, config) =&gt; {
+      const mock = this.mocks.get(url);
+      if (mock) {
+        if (mock.options.delay) {
+          await new Promise(r =&gt; setTimeout(r, mock.options.delay));
+        }
+        return new Response(JSON.stringify(mock.response), {
+          status: mock.options.status || 200,
+          headers: { &#039;Content-Type&#039;: &#039;application/json&#039; }
+        });
+      }
+      return this.originalFetch(url, config);
+    };
+  }
+
+  disable() {
+    window.fetch = this.originalFetch;
+    this.mocks.clear();
+  }
+}
+
+export const fetchMock = new FetchMock();</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/14-testing.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

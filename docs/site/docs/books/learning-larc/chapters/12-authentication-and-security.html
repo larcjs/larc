@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authentication and Security · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Authentication and Security">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>12-authentication-and-security</span>
+      </div>
+      <article class="docs-content">
+        <h1>Authentication and Security</h1>
+<p>Authentication is the bouncer at your application's door. Get it wrong, and either legitimate users can't get in, or everyone can. Security isn't a feature you add later—it's a mindset that shapes every decision from the start.</p>
+<h2>Understanding Authentication vs Authorization</h2>
+<p>These terms often get conflated, but they're distinct:</p>
+<strong>Authentication</strong> answers: "Who are you?" It's verifying identity—matching a username and password, validating a token, confirming you are who you claim to be.
+<strong>Authorization</strong> answers: "What can you do?" Once we know who you are, authorization determines your permissions—can you view this page, edit this record, delete this user?
+<p>LARC applications typically handle authentication with JWT tokens and authorization with role-based or permission-based access control.</p>
+<h2>JWT Token Management</h2>
+<p>JSON Web Tokens (JWTs) are the standard for stateless authentication. A JWT contains encoded claims about the user, signed by the server:</p>
+<pre><code class="language-javascript">// auth-service.js
+class AuthService {
+  constructor() {
+    this.tokenKey = &#039;auth_token&#039;;
+    this.refreshKey = &#039;refresh_token&#039;;
+  }
+
+  async login(email, password) {
+    const response = await fetch(&#039;/api/auth/login&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || &#039;Login failed&#039;);
+    }
+
+    const { accessToken, refreshToken, user } = await response.json();
+
+    this.setTokens(accessToken, refreshToken);
+    pan.publish(&#039;auth.login&#039;, { user }, { retained: true });
+
+    return user;
+  }
+
+  setTokens(accessToken, refreshToken) {
+    localStorage.setItem(this.tokenKey, accessToken);
+    if (refreshToken) {
+      localStorage.setItem(this.refreshKey, refreshToken);
+    }
+  }
+
+  getToken() {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+  isAuthenticated() {
+    const token = this.getToken();
+    if (!token) return false;
+
+    try {
+      const payload = this.decodeToken(token);
+      return payload.exp * 1000 &gt; Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  decodeToken(token) {
+    const base64Url = token.split(&#039;.&#039;)[1];
+    const base64 = base64Url.replace(/-/g, &#039;+&#039;).replace(/_/g, &#039;/&#039;);
+    return JSON.parse(atob(base64));
+  }
+
+  async refresh() {
+    const refreshToken = localStorage.getItem(this.refreshKey);
+    if (!refreshToken) throw new Error(&#039;No refresh token&#039;);
+
+    const response = await fetch(&#039;/api/auth/refresh&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ refreshToken })
+    });
+
+    if (!response.ok) {
+      this.logout();
+      throw new Error(&#039;Token refresh failed&#039;);
+    }
+
+    const { accessToken } = await response.json();
+    localStorage.setItem(this.tokenKey, accessToken);
+    return accessToken;
+  }
+
+  logout() {
+    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshKey);
+    pan.publish(&#039;auth.logout&#039;, {}, { retained: true });
+  }
+
+  getCurrentUser() {
+    const token = this.getToken();
+    if (!token) return null;
+
+    try {
+      return this.decodeToken(token);
+    } catch {
+      return null;
+    }
+  }
+}
+
+export const auth = new AuthService();</code></pre>
+<h2>Automatic Token Refresh</h2>
+<p>Tokens expire. Good applications refresh them transparently:</p>
+<pre><code class="language-javascript">// api-client.js with token refresh
+class AuthenticatedApiClient {
+  async fetch(endpoint, options = {}) {
+    // First attempt
+    try {
+      return await this.doFetch(endpoint, options);
+    } catch (error) {
+      // If 401, try refreshing token
+      if (error.status === 401) {
+        try {
+          await auth.refresh();
+          // Retry with new token
+          return await this.doFetch(endpoint, options);
+        } catch (refreshError) {
+          // Refresh failed, user must log in again
+          auth.logout();
+          throw error;
+        }
+      }
+      throw error;
+    }
+  }
+
+  async doFetch(endpoint, options) {
+    const token = auth.getToken();
+    const headers = {
+      &#039;Content-Type&#039;: &#039;application/json&#039;,
+      ...options.headers
+    };
+
+    if (token) {
+      headers[&#039;Authorization&#039;] = `Bearer ${token}`;
+    }
+
+    const response = await fetch(`/api${endpoint}`, { ...options, headers });
+
+    if (!response.ok) {
+      throw { status: response.status, message: await response.text() };
+    }
+
+    return response.json();
+  }
+}</code></pre>
+<h2>Protected Routes</h2>
+<p>Some pages should only be accessible to authenticated users. Here's a route guard pattern:</p>
+<pre><code class="language-javascript">// route-guard.js
+class RouteGuard extends HTMLElement {
+  connectedCallback() {
+    this.checkAuth();
+    pan.subscribe(&#039;auth.logout&#039;, () =&gt; this.checkAuth());
+  }
+
+  checkAuth() {
+    if (!auth.isAuthenticated()) {
+      // Store intended destination
+      sessionStorage.setItem(&#039;returnUrl&#039;, window.location.pathname);
+      // Redirect to login
+      pan.publish(&#039;router.navigate&#039;, { path: &#039;/login&#039; });
+    }
+  }
+}
+
+customElements.define(&#039;route-guard&#039;, RouteGuard);</code></pre>
+<p>Use it to wrap protected content:</p>
+<pre><code class="language-html">&lt;route-guard&gt;
+  &lt;dashboard-page&gt;&lt;/dashboard-page&gt;
+&lt;/route-guard&gt;</code></pre>
+<h2>Role-Based Access Control</h2>
+<p>Different users have different permissions. A simple RBAC implementation:</p>
+<pre><code class="language-javascript">// rbac.js
+class RBAC {
+  constructor() {
+    this.permissions = {
+      admin: [&#039;read&#039;, &#039;write&#039;, &#039;delete&#039;, &#039;manage-users&#039;],
+      editor: [&#039;read&#039;, &#039;write&#039;],
+      viewer: [&#039;read&#039;]
+    };
+  }
+
+  can(user, action) {
+    if (!user?.role) return false;
+    const allowed = this.permissions[user.role] || [];
+    return allowed.includes(action);
+  }
+}
+
+export const rbac = new RBAC();</code></pre>
+<p>Use it in components:</p>
+<pre><code class="language-javascript">class AdminPanel extends HTMLElement {
+  connectedCallback() {
+    const user = auth.getCurrentUser();
+
+    if (!rbac.can(user, &#039;manage-users&#039;)) {
+      this.innerHTML = &#039;&lt;p&gt;Access denied&lt;/p&gt;&#039;;
+      return;
+    }
+
+    this.render();
+  }
+}</code></pre>
+<h2>Security Best Practices</h2>
+<h3>Sanitize User Input</h3>
+<p>Never trust user input. Always sanitize before rendering:</p>
+<pre><code class="language-javascript">function escapeHtml(text) {
+  const div = document.createElement(&#039;div&#039;);
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// Safe rendering
+this.innerHTML = `&lt;p&gt;${escapeHtml(userInput)}&lt;/p&gt;`;</code></pre>
+<h3>Use HTTPS</h3>
+<p>Always serve your application over HTTPS. This protects tokens in transit and enables secure cookies.</p>
+<h3>Secure Token Storage</h3>
+<p>LocalStorage is convenient but accessible to JavaScript. For high-security applications, consider httpOnly cookies:</p>
+<pre><code class="language-javascript">// Server sets cookie
+res.cookie(&#039;token&#039;, jwt, {
+  httpOnly: true,
+  secure: true,
+  sameSite: &#039;strict&#039;
+});</code></pre>
+<h3>Content Security Policy</h3>
+<p>Set CSP headers to prevent XSS attacks:</p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;Content-Security-Policy&quot;
+      content=&quot;default-src &#039;self&#039;; script-src &#039;self&#039;&quot;&gt;</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/12-authentication-and-security.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

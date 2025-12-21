@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deployment · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Deployment">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>16-deployment</span>
+      </div>
+      <article class="docs-content">
+        <h1>Deployment</h1>
+<p>Deploying LARC applications is refreshingly simple. No build artifacts to manage, no complex CI/CD pipelines required. Just static files that any web server can handle.</p>
+<h2>Static Hosting Options</h2>
+<p>LARC apps are static files. Host them anywhere:</p>
+<h3>GitHub Pages</h3>
+<p>Free hosting for public repositories:</p>
+<pre><code class="language-yaml"># .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public</code></pre>
+<h3>Netlify</h3>
+<p>Drag and drop deployment or connect to Git:</p>
+<pre><code class="language-toml"># netlify.toml
+[build]
+  publish = &quot;public&quot;
+
+[[redirects]]
+  from = &quot;/*&quot;
+  to = &quot;/index.html&quot;
+  status = 200</code></pre>
+<h3>Vercel</h3>
+<p>Zero-config deployment:</p>
+<pre><code class="language-json">{
+  &quot;rewrites&quot;: [
+    { &quot;source&quot;: &quot;/(.*)&quot;, &quot;destination&quot;: &quot;/index.html&quot; }
+  ]
+}</code></pre>
+<h2>CDN Configuration</h2>
+<p>Serve assets from a CDN for faster global delivery:</p>
+<pre><code class="language-html">&lt;!-- Use CDN for LARC core --&gt;
+&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@aspect/pan-client&quot;: &quot;https://cdn.jsdelivr.net/npm/@aspect/pan-client@latest/pan-client.mjs&quot;
+  }
+}
+&lt;/script&gt;</code></pre>
+<p>Set proper cache headers:</p>
+<pre><code class="language-plaintext"># .htaccess for Apache
+&lt;IfModule mod_expires.c&gt;
+  ExpiresActive On
+
+  # HTML - no cache (or short cache)
+  ExpiresByType text/html &quot;access plus 0 seconds&quot;
+
+  # CSS and JS - long cache (use versioned filenames)
+  ExpiresByType text/css &quot;access plus 1 year&quot;
+  ExpiresByType application/javascript &quot;access plus 1 year&quot;
+
+  # Images - long cache
+  ExpiresByType image/png &quot;access plus 1 year&quot;
+  ExpiresByType image/jpeg &quot;access plus 1 year&quot;
+  ExpiresByType image/svg+xml &quot;access plus 1 year&quot;
+&lt;/IfModule&gt;</code></pre>
+<h2>Environment Variables</h2>
+<p>Manage configuration across environments:</p>
+<pre><code class="language-javascript">// config.js
+const configs = {
+  development: {
+    apiUrl: &#039;http://localhost:3000/api&#039;,
+    debug: true
+  },
+  production: {
+    apiUrl: &#039;https://api.example.com&#039;,
+    debug: false
+  }
+};
+
+const env = window.location.hostname === &#039;localhost&#039; ? &#039;development&#039; : &#039;production&#039;;
+export const config = configs[env];</code></pre>
+<p>Or use a build-time approach:</p>
+<pre><code class="language-html">&lt;!-- Injected by server/build --&gt;
+&lt;script&gt;
+  window.CONFIG = {
+    apiUrl: &#039;%%API_URL%%&#039;,
+    version: &#039;%%VERSION%%&#039;
+  };
+&lt;/script&gt;</code></pre>
+<h2>Pre-Deployment Checklist</h2>
+<p>Before deploying to production:</p>
+<ul><li>[ ] Test in all target browsers</li>
+<li>[ ] Verify all API endpoints use HTTPS</li>
+<li>[ ] Check for console errors</li>
+<li>[ ] Validate accessibility (keyboard navigation, screen readers)</li>
+<li>[ ] Test on slow network (Chrome DevTools throttling)</li>
+<li>[ ] Verify error handling works</li>
+<li>[ ] Check mobile responsiveness</li>
+<li>[ ] Set up error monitoring (Sentry, LogRocket)</li>
+<li>[ ] Configure analytics</li>
+<li>[ ] Enable HTTPS</li>
+<li>[ ] Set security headers</li>
+</ul>
+<h2>Monitoring</h2>
+<p>Track errors in production:</p>
+<pre><code class="language-javascript">// error-tracking.js
+window.addEventListener(&#039;error&#039;, (event) =&gt; {
+  fetch(&#039;/api/errors&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      stack: event.error?.stack,
+      userAgent: navigator.userAgent,
+      url: window.location.href
+    })
+  });
+});
+
+window.addEventListener(&#039;unhandledrejection&#039;, (event) =&gt; {
+  fetch(&#039;/api/errors&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({
+      message: event.reason?.message || &#039;Unhandled promise rejection&#039;,
+      stack: event.reason?.stack,
+      userAgent: navigator.userAgent,
+      url: window.location.href
+    })
+  });
+});</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/16-deployment.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

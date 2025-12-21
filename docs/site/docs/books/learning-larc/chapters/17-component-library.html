@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Component Library · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Component Library">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>17-component-library</span>
+      </div>
+      <article class="docs-content">
+        <h1>Component Library</h1>
+<p>As your application grows, you'll accumulate reusable components. A well-organized component library accelerates development and ensures consistency.</p>
+<h2>Organizing Components</h2>
+<p>Structure your library logically:</p>
+<pre><code class="language-plaintext">components/
+├── core/
+│   ├── pan-button.js
+│   ├── pan-input.js
+│   └── pan-card.js
+├── layout/
+│   ├── pan-header.js
+│   ├── pan-sidebar.js
+│   └── pan-grid.js
+├── data/
+│   ├── pan-table.js
+│   ├── pan-list.js
+│   └── pan-pagination.js
+└── index.js</code></pre>
+<p>Export from a single entry point:</p>
+<pre><code class="language-javascript">// components/index.js
+export * from &#039;./core/pan-button.js&#039;;
+export * from &#039;./core/pan-input.js&#039;;
+export * from &#039;./core/pan-card.js&#039;;
+export * from &#039;./layout/pan-header.js&#039;;
+// ...</code></pre>
+<h2>Documentation</h2>
+<p>Document every component:</p>
+<pre><code class="language-javascript">/**
+ * A customizable button component.
+ *
+ * @element pan-button
+ *
+ * @attr {string} variant - Button style: &quot;primary&quot;, &quot;secondary&quot;, &quot;danger&quot;
+ * @attr {boolean} disabled - Disables the button
+ * @attr {string} size - Button size: &quot;small&quot;, &quot;medium&quot;, &quot;large&quot;
+ *
+ * @fires click - Fired when button is clicked
+ *
+ * @slot - Button content
+ *
+ * @example
+ * &lt;pan-button variant=&quot;primary&quot;&gt;Click me&lt;/pan-button&gt;
+ *
+ * @example
+ * &lt;pan-button variant=&quot;danger&quot; disabled&gt;Delete&lt;/pan-button&gt;
+ */
+class PanButton extends HTMLElement {
+  // ...
+}</code></pre>
+<p>Generate documentation automatically with tools like <code>web-component-analyzer</code>:</p>
+<pre><code class="language-bash">npx web-component-analyzer analyze components/**/*.js --outFile docs.json</code></pre>
+<h2>Design Tokens</h2>
+<p>Use CSS custom properties for theming:</p>
+<pre><code class="language-css">/* tokens.css */
+:root {
+  /* Colors */
+  --color-primary: #0066cc;
+  --color-secondary: #6c757d;
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, &#039;Segoe UI&#039;, Roboto, sans-serif;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
+
+  /* Borders */
+  --border-radius: 4px;
+  --border-width: 1px;
+  --border-color: #dee2e6;
+}</code></pre>
+<p>Components use these tokens:</p>
+<pre><code class="language-javascript">class PanButton extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: inline-block;
+        }
+
+        button {
+          font-family: var(--font-family);
+          font-size: var(--font-size-md);
+          padding: var(--space-sm) var(--space-md);
+          border-radius: var(--border-radius);
+          border: var(--border-width) solid transparent;
+          cursor: pointer;
+        }
+
+        :host([variant=&quot;primary&quot;]) button {
+          background: var(--color-primary);
+          color: white;
+        }
+
+        :host([variant=&quot;secondary&quot;]) button {
+          background: var(--color-secondary);
+          color: white;
+        }
+
+        :host([disabled]) button {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      &lt;/style&gt;
+      &lt;button&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/button&gt;
+    `;
+  }
+}</code></pre>
+<h2>Versioning and Publishing</h2>
+<p>Use semantic versioning. Publish to npm or a private registry:</p>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;@myorg/components&quot;,
+  &quot;version&quot;: &quot;1.2.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;exports&quot;: {
+    &quot;.&quot;: &quot;./index.js&quot;,
+    &quot;./button&quot;: &quot;./core/pan-button.js&quot;,
+    &quot;./card&quot;: &quot;./core/pan-card.js&quot;
+  }
+}</code></pre>
+<pre><code class="language-bash">npm publish --access public</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/17-component-library.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

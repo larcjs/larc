@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Performance and Optimization · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Performance and Optimization">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>15-performance-and-optimization</span>
+      </div>
+      <article class="docs-content">
+        <h1>Performance and Optimization</h1>
+<p>Performance is a feature. Slow applications frustrate users and hurt business metrics. LARC's no-build philosophy gives you a head start—no framework overhead, no transpilation artifacts—but there's more you can do.</p>
+<h2>Lazy Loading Components</h2>
+<p>Don't load everything upfront. Load components when needed:</p>
+<pre><code class="language-javascript">// Lazy load on route change
+pan.subscribe(&#039;router.navigate&#039;, async ({ path }) =&gt; {
+  if (path === &#039;/admin&#039;) {
+    await import(&#039;./components/admin-panel.js&#039;);
+  }
+});
+
+// Lazy load on user interaction
+document.querySelector(&#039;.show-chart&#039;).addEventListener(&#039;click&#039;, async () =&gt; {
+  const { ChartComponent } = await import(&#039;./components/chart.js&#039;);
+  // Use component
+}, { once: true });
+
+// Lazy load when visible
+const observer = new IntersectionObserver(async (entries) =&gt; {
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      const component = entry.target.dataset.component;
+      await import(`./components/${component}.js`);
+      observer.unobserve(entry.target);
+    }
+  }
+});
+
+document.querySelectorAll(&#039;[data-lazy]&#039;).forEach(el =&gt; observer.observe(el));</code></pre>
+<h2>Image Optimization</h2>
+<p>Images are often the largest assets. Optimize them:</p>
+<pre><code class="language-javascript">class LazyImage extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;img
+        loading=&quot;lazy&quot;
+        src=&quot;${this.getAttribute(&#039;placeholder&#039;) || &#039;placeholder.svg&#039;}&quot;
+        data-src=&quot;${this.getAttribute(&#039;src&#039;)}&quot;
+        alt=&quot;${this.getAttribute(&#039;alt&#039;) || &#039;&#039;}&quot;
+      &gt;
+    `;
+
+    const img = this.querySelector(&#039;img&#039;);
+
+    const observer = new IntersectionObserver((entries) =&gt; {
+      entries.forEach(entry =&gt; {
+        if (entry.isIntersecting) {
+          img.src = img.dataset.src;
+          observer.unobserve(img);
+        }
+      });
+    });
+
+    observer.observe(img);
+  }
+}
+
+customElements.define(&#039;lazy-image&#039;, LazyImage);</code></pre>
+<p>Use responsive images with srcset:</p>
+<pre><code class="language-html">&lt;img
+  srcset=&quot;image-400.jpg 400w,
+          image-800.jpg 800w,
+          image-1200.jpg 1200w&quot;
+  sizes=&quot;(max-width: 400px) 400px,
+         (max-width: 800px) 800px,
+         1200px&quot;
+  src=&quot;image-800.jpg&quot;
+  alt=&quot;Responsive image&quot;
+  loading=&quot;lazy&quot;
+&gt;</code></pre>
+<h2>Service Worker Caching</h2>
+<p>Service workers enable offline functionality and faster loads:</p>
+<pre><code class="language-javascript">// sw.js
+const CACHE_NAME = &#039;app-v1&#039;;
+const ASSETS = [
+  &#039;/&#039;,
+  &#039;/index.html&#039;,
+  &#039;/styles.css&#039;,
+  &#039;/app.js&#039;,
+  &#039;/components/header.js&#039;,
+  &#039;/components/footer.js&#039;
+];
+
+self.addEventListener(&#039;install&#039;, (event) =&gt; {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache =&gt; cache.addAll(ASSETS))
+  );
+});
+
+self.addEventListener(&#039;fetch&#039;, (event) =&gt; {
+  event.respondWith(
+    caches.match(event.request).then(cached =&gt; {
+      // Cache first, network fallback
+      if (cached) return cached;
+
+      return fetch(event.request).then(response =&gt; {
+        // Cache successful responses
+        if (response.ok) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then(cache =&gt; {
+            cache.put(event.request, clone);
+          });
+        }
+        return response;
+      });
+    })
+  );
+});</code></pre>
+<p>Register it in your app:</p>
+<pre><code class="language-javascript">if (&#039;serviceWorker&#039; in navigator) {
+  navigator.serviceWorker.register(&#039;/sw.js&#039;);
+}</code></pre>
+<h2>Measuring Performance</h2>
+<p>You can't optimize what you don't measure. Use the Performance API:</p>
+<pre><code class="language-javascript">// Measure component render time
+performance.mark(&#039;render-start&#039;);
+this.render();
+performance.mark(&#039;render-end&#039;);
+performance.measure(&#039;render&#039;, &#039;render-start&#039;, &#039;render-end&#039;);
+
+const measure = performance.getEntriesByName(&#039;render&#039;)[0];
+console.log(`Render took ${measure.duration}ms`);</code></pre>
+<p>Track Web Vitals:</p>
+<pre><code class="language-javascript">import { getCLS, getFID, getLCP } from &#039;web-vitals&#039;;
+
+getCLS(console.log);  // Cumulative Layout Shift
+getFID(console.log);  // First Input Delay
+getLCP(console.log);  // Largest Contentful Paint</code></pre>
+<h2>Virtual Lists for Large Data</h2>
+<p>Rendering thousands of items kills performance. Virtualize:</p>
+<pre><code class="language-javascript">class VirtualList extends HTMLElement {
+  constructor() {
+    super();
+    this.items = [];
+    this.itemHeight = 40;
+    this.visibleCount = 20;
+    this.scrollTop = 0;
+  }
+
+  set data(items) {
+    this.items = items;
+    this.render();
+  }
+
+  connectedCallback() {
+    this.style.cssText = `
+      display: block;
+      height: 400px;
+      overflow-y: auto;
+    `;
+
+    this.addEventListener(&#039;scroll&#039;, () =&gt; {
+      this.scrollTop = this.scrollTop;
+      this.render();
+    });
+
+    this.render();
+  }
+
+  render() {
+    const startIndex = Math.floor(this.scrollTop / this.itemHeight);
+    const visibleItems = this.items.slice(startIndex, startIndex + this.visibleCount);
+
+    this.innerHTML = `
+      &lt;div style=&quot;height: ${this.items.length * this.itemHeight}px; position: relative;&quot;&gt;
+        ${visibleItems.map((item, i) =&gt; `
+          &lt;div style=&quot;
+            position: absolute;
+            top: ${(startIndex + i) * this.itemHeight}px;
+            height: ${this.itemHeight}px;
+            width: 100%;
+          &quot;&gt;
+            ${item.name}
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;virtual-list&#039;, VirtualList);</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/15-performance-and-optimization.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Server Integration · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Server Integration">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>13-server-integration</span>
+      </div>
+      <article class="docs-content">
+        <h1>Server Integration</h1>
+<p>LARC is frontend-agnostic about backends. Whether you're using Node.js, Python, PHP, or any other server technology, the patterns remain the same: your components communicate via HTTP and WebSockets, and the PAN bus coordinates the frontend.</p>
+<h2>Node.js with Express</h2>
+<p>Express is the most popular Node.js framework, and it pairs naturally with LARC:</p>
+<pre><code class="language-javascript">// server.js
+const express = require(&#039;express&#039;);
+const cors = require(&#039;cors&#039;);
+const jwt = require(&#039;jsonwebtoken&#039;);
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+app.use(express.static(&#039;public&#039;));
+
+// Authentication middleware
+function authenticate(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith(&#039;Bearer &#039;)) {
+    return res.status(401).json({ error: &#039;No token provided&#039; });
+  }
+
+  const token = authHeader.slice(7);
+  try {
+    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch {
+    res.status(401).json({ error: &#039;Invalid token&#039; });
+  }
+}
+
+// Public routes
+app.post(&#039;/api/auth/login&#039;, async (req, res) =&gt; {
+  const { email, password } = req.body;
+
+  const user = await db.users.findByEmail(email);
+  if (!user || !await bcrypt.compare(password, user.password)) {
+    return res.status(401).json({ error: &#039;Invalid credentials&#039; });
+  }
+
+  const accessToken = jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: &#039;15m&#039; }
+  );
+
+  res.json({ accessToken, user: { id: user.id, email: user.email } });
+});
+
+// Protected routes
+app.get(&#039;/api/users&#039;, authenticate, async (req, res) =&gt; {
+  const users = await db.users.findAll();
+  res.json(users);
+});
+
+app.post(&#039;/api/users&#039;, authenticate, async (req, res) =&gt; {
+  const user = await db.users.create(req.body);
+  res.status(201).json(user);
+});
+
+app.listen(3000, () =&gt; console.log(&#039;Server running on port 3000&#039;));</code></pre>
+<h2>Python with Flask</h2>
+<p>Flask provides a lightweight Python backend:</p>
+<pre><code class="language-python"># app.py
+from flask import Flask, jsonify, request
+from flask_cors import CORS
+from functools import wraps
+import jwt
+
+app = Flask(__name__, static_folder=&#039;public&#039;)
+CORS(app)
+
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth_header = request.headers.get(&#039;Authorization&#039;)
+        if not auth_header or not auth_header.startswith(&#039;Bearer &#039;):
+            return jsonify({&#039;error&#039;: &#039;No token provided&#039;}), 401
+
+        token = auth_header[7:]
+        try:
+            data = jwt.decode(token, app.config[&#039;SECRET_KEY&#039;], algorithms=[&#039;HS256&#039;])
+            request.user = data
+        except:
+            return jsonify({&#039;error&#039;: &#039;Invalid token&#039;}), 401
+
+        return f(*args, **kwargs)
+    return decorated
+
+@app.route(&#039;/api/users&#039;)
+@token_required
+def get_users():
+    users = User.query.all()
+    return jsonify([u.to_dict() for u in users])
+
+@app.route(&#039;/api/users&#039;, methods=[&#039;POST&#039;])
+@token_required
+def create_user():
+    data = request.get_json()
+    user = User(**data)
+    db.session.add(user)
+    db.session.commit()
+    return jsonify(user.to_dict()), 201
+
+if __name__ == &#039;__main__&#039;:
+    app.run(debug=True)</code></pre>
+<h2>PHP Integration</h2>
+<p>PHP remains popular for web backends:</p>
+<pre><code class="language-php">&lt;?php
+// api.php
+header(&#039;Content-Type: application/json&#039;);
+header(&#039;Access-Control-Allow-Origin: *&#039;);
+header(&#039;Access-Control-Allow-Headers: Content-Type, Authorization&#039;);
+
+require_once &#039;vendor/autoload.php&#039;;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+function authenticate() {
+    $headers = getallheaders();
+    $auth = $headers[&#039;Authorization&#039;] ?? &#039;&#039;;
+
+    if (!preg_match(&#039;/Bearer\s+(.*)$/i&#039;, $auth, $matches)) {
+        http_response_code(401);
+        echo json_encode([&#039;error&#039; =&gt; &#039;No token provided&#039;]);
+        exit;
+    }
+
+    try {
+        return JWT::decode($matches[1], new Key($_ENV[&#039;JWT_SECRET&#039;], &#039;HS256&#039;));
+    } catch (Exception $e) {
+        http_response_code(401);
+        echo json_encode([&#039;error&#039; =&gt; &#039;Invalid token&#039;]);
+        exit;
+    }
+}
+
+$method = $_SERVER[&#039;REQUEST_METHOD&#039;];
+$path = parse_url($_SERVER[&#039;REQUEST_URI&#039;], PHP_URL_PATH);
+
+if ($path === &#039;/api/users&#039; &amp;&amp; $method === &#039;GET&#039;) {
+    $user = authenticate();
+    $users = $pdo-&gt;query(&#039;SELECT id, name, email FROM users&#039;)-&gt;fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($users);
+}</code></pre>
+<h2>Real-Time with WebSockets</h2>
+<p>For real-time features, add WebSocket support. Here's Node.js with the <code>ws</code> library:</p>
+<pre><code class="language-javascript">// websocket-server.js
+const WebSocket = require(&#039;ws&#039;);
+const jwt = require(&#039;jsonwebtoken&#039;);
+
+const wss = new WebSocket.Server({ port: 8080 });
+
+const clients = new Map();
+
+wss.on(&#039;connection&#039;, (ws, req) =&gt; {
+  // Authenticate connection
+  const url = new URL(req.url, &#039;http://localhost&#039;);
+  const token = url.searchParams.get(&#039;token&#039;);
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    clients.set(ws, user);
+  } catch {
+    ws.close(4001, &#039;Unauthorized&#039;);
+    return;
+  }
+
+  ws.on(&#039;message&#039;, (data) =&gt; {
+    const message = JSON.parse(data);
+    handleMessage(ws, message);
+  });
+
+  ws.on(&#039;close&#039;, () =&gt; {
+    clients.delete(ws);
+  });
+});
+
+function handleMessage(sender, message) {
+  switch (message.type) {
+    case &#039;broadcast&#039;:
+      // Send to all connected clients
+      wss.clients.forEach(client =&gt; {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(message));
+        }
+      });
+      break;
+
+    case &#039;direct&#039;:
+      // Send to specific user
+      clients.forEach((user, client) =&gt; {
+        if (user.id === message.targetUserId &amp;&amp; client.readyState === WebSocket.OPEN) {
+          client.send(JSON.stringify(message));
+        }
+      });
+      break;
+  }
+}</code></pre>
+<h2>Database Patterns</h2>
+<p>Most backends need a database. Here's a clean repository pattern:</p>
+<pre><code class="language-javascript">// user-repository.js
+class UserRepository {
+  constructor(db) {
+    this.db = db;
+  }
+
+  async findAll() {
+    return this.db.query(&#039;SELECT id, name, email FROM users&#039;);
+  }
+
+  async findById(id) {
+    const [user] = await this.db.query(
+      &#039;SELECT id, name, email FROM users WHERE id = ?&#039;,
+      [id]
+    );
+    return user;
+  }
+
+  async create(data) {
+    const result = await this.db.query(
+      &#039;INSERT INTO users (name, email, password) VALUES (?, ?, ?)&#039;,
+      [data.name, data.email, data.hashedPassword]
+    );
+    return this.findById(result.insertId);
+  }
+
+  async update(id, data) {
+    await this.db.query(
+      &#039;UPDATE users SET name = ?, email = ? WHERE id = ?&#039;,
+      [data.name, data.email, id]
+    );
+    return this.findById(id);
+  }
+
+  async delete(id) {
+    await this.db.query(&#039;DELETE FROM users WHERE id = ?&#039;, [id]);
+  }
+}</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/13-server-integration.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

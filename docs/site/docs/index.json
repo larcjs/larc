@@ -475,13 +475,18 @@
       "category": "books/learning-larc/chapters"
     },
     {
+      "title": "Authentication and Security",
+      "path": "books/learning-larc/chapters/12-authentication-and-security.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
       "title": "Business Logic Patterns",
       "path": "books/learning-larc/chapters/08-business-logic-patterns.html",
       "category": "books/learning-larc/chapters"
     },
     {
-      "title": "Chapter 11: Data Fetching and APIs",
-      "path": "books/learning-larc/chapters/11-19-summary.html",
+      "title": "Component Library",
+      "path": "books/learning-larc/chapters/17-component-library.html",
       "category": "books/learning-larc/chapters"
     },
     {
@@ -495,6 +500,16 @@
       "category": "books/learning-larc/chapters"
     },
     {
+      "title": "Data Fetching and APIs",
+      "path": "books/learning-larc/chapters/11-data-fetching-and-apis.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Deployment",
+      "path": "books/learning-larc/chapters/16-deployment.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
       "title": "Forms and Validation",
       "path": "books/learning-larc/chapters/10-forms-and-validation.html",
       "category": "books/learning-larc/chapters"
@@ -505,8 +520,18 @@
       "category": "books/learning-larc/chapters"
     },
     {
+      "title": "Performance and Optimization",
+      "path": "books/learning-larc/chapters/15-performance-and-optimization.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
       "title": "Philosophy and Background",
       "path": "books/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Real-World Applications",
+      "path": "books/learning-larc/chapters/19-real-world-applications.html",
       "category": "books/learning-larc/chapters"
     },
     {
@@ -515,13 +540,28 @@
       "category": "books/learning-larc/chapters"
     },
     {
+      "title": "Server Integration",
+      "path": "books/learning-larc/chapters/13-server-integration.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
       "title": "State Management",
       "path": "books/learning-larc/chapters/06-state-management.html",
       "category": "books/learning-larc/chapters"
     },
     {
+      "title": "Testing",
+      "path": "books/learning-larc/chapters/14-testing.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
       "title": "The PAN Bus",
       "path": "books/learning-larc/chapters/05-the-pan-bus.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Tooling",
+      "path": "books/learning-larc/chapters/18-tooling.html",
       "category": "books/learning-larc/chapters"
     }
   ],

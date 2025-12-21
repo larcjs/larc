@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Fetching and APIs · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Data Fetching and APIs">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">chapters</a> / <span>11-data-fetching-and-apis</span>
+      </div>
+      <article class="docs-content">
+        <h1>Data Fetching and APIs</h1>
+<p>Every meaningful web application needs to communicate with servers. Whether you're loading user profiles, submitting forms, or streaming real-time updates, data fetching is the bridge between your frontend and the outside world. LARC embraces the browser's native fetch API while providing patterns that make common tasks simple and complex scenarios manageable.</p>
+<h2>The Fetch API: Your Foundation</h2>
+<p>The Fetch API is built into every modern browser, and it's genuinely excellent. Unlike the XMLHttpRequest it replaced, fetch returns Promises, works naturally with async/await, and provides a clean interface for HTTP operations.</p>
+<p>Here's the simplest possible fetch:</p>
+<pre><code class="language-javascript">const response = await fetch(&#039;/api/users&#039;);
+const users = await response.json();</code></pre>
+<p>Two lines. No libraries. No configuration. This is the foundation everything else builds upon.</p>
+<p>But real applications need more: error handling, loading states, retries, caching. Let's build these capabilities systematically.</p>
+<h2>Building an API Client</h2>
+<p>Rather than scattering fetch calls throughout your application, centralize them in an API client. This gives you one place to handle authentication, errors, and common patterns:</p>
+<pre><code class="language-javascript">// api-client.js
+class ApiClient {
+  constructor(baseUrl = &#039;/api&#039;) {
+    this.baseUrl = baseUrl;
+  }
+
+  async fetch(endpoint, options = {}) {
+    const url = `${this.baseUrl}${endpoint}`;
+
+    const config = {
+      headers: {
+        &#039;Content-Type&#039;: &#039;application/json&#039;,
+        ...options.headers
+      },
+      ...options
+    };
+
+    // Add auth token if available
+    const token = localStorage.getItem(&#039;authToken&#039;);
+    if (token) {
+      config.headers[&#039;Authorization&#039;] = `Bearer ${token}`;
+    }
+
+    try {
+      const response = await fetch(url, config);
+
+      if (!response.ok) {
+        const error = await response.json().catch(() =&gt; ({}));
+        throw new ApiError(response.status, error.message || &#039;Request failed&#039;);
+      }
+
+      return response.json();
+    } catch (error) {
+      if (error instanceof ApiError) throw error;
+      throw new ApiError(0, &#039;Network error&#039;);
+    }
+  }
+
+  get(endpoint) {
+    return this.fetch(endpoint);
+  }
+
+  post(endpoint, data) {
+    return this.fetch(endpoint, {
+      method: &#039;POST&#039;,
+      body: JSON.stringify(data)
+    });
+  }
+
+  put(endpoint, data) {
+    return this.fetch(endpoint, {
+      method: &#039;PUT&#039;,
+      body: JSON.stringify(data)
+    });
+  }
+
+  delete(endpoint) {
+    return this.fetch(endpoint, { method: &#039;DELETE&#039; });
+  }
+}
+
+class ApiError extends Error {
+  constructor(status, message) {
+    super(message);
+    this.status = status;
+  }
+}
+
+export const api = new ApiClient();</code></pre>
+<p>Now every component in your application can import this client and make requests with consistent error handling and authentication.</p>
+<h2>Integrating with the PAN Bus</h2>
+<p>Here's where LARC shines. Instead of each component managing its own loading states and error handling, broadcast API events on the PAN bus:</p>
+<pre><code class="language-javascript">// api-client.js (enhanced)
+import { pan } from &#039;@aspect/pan-client&#039;;
+
+class ApiClient {
+  async fetch(endpoint, options = {}) {
+    const requestId = crypto.randomUUID();
+
+    // Announce request start
+    pan.publish(&#039;api.request.start&#039;, { requestId, endpoint });
+
+    try {
+      const response = await fetch(/* ... */);
+      const data = await response.json();
+
+      // Announce success
+      pan.publish(&#039;api.request.success&#039;, { requestId, endpoint, data });
+      return data;
+
+    } catch (error) {
+      // Announce failure
+      pan.publish(&#039;api.request.error&#039;, { requestId, endpoint, error });
+      throw error;
+    }
+  }
+}</code></pre>
+<p>Now any component can listen for API events. A loading indicator component might subscribe to <code>api.request.start</code> and <code>api.request.success</code>. An error toast might listen only for <code>api.request.error</code>. Components become loosely coupled—they don't need to know about each other, just the messages they care about.</p>
+<h2>Caching Strategies</h2>
+<p>Network requests are slow and expensive. Smart caching makes your application feel instant while reducing server load.</p>
+<h3>Cache-First Strategy</h3>
+<p>For data that changes infrequently, serve from cache immediately and update in the background:</p>
+<pre><code class="language-javascript">class CachedApiClient extends ApiClient {
+  constructor() {
+    super();
+    this.cache = new Map();
+  }
+
+  async getCached(endpoint, maxAge = 60000) {
+    const cached = this.cache.get(endpoint);
+
+    if (cached &amp;&amp; Date.now() - cached.timestamp &lt; maxAge) {
+      // Return cached data immediately
+      return cached.data;
+    }
+
+    // Fetch fresh data
+    const data = await this.get(endpoint);
+    this.cache.set(endpoint, { data, timestamp: Date.now() });
+    return data;
+  }
+
+  async getStaleWhileRevalidate(endpoint, maxAge = 60000) {
+    const cached = this.cache.get(endpoint);
+
+    // Return stale data immediately if available
+    if (cached) {
+      // Revalidate in background
+      this.get(endpoint).then(data =&gt; {
+        this.cache.set(endpoint, { data, timestamp: Date.now() });
+        pan.publish(`cache.updated.${endpoint}`, { data });
+      });
+
+      return cached.data;
+    }
+
+    // No cache, must wait for network
+    const data = await this.get(endpoint);
+    this.cache.set(endpoint, { data, timestamp: Date.now() });
+    return data;
+  }
+}</code></pre>
+<h3>Network-First Strategy</h3>
+<p>For data that must be current, try the network first and fall back to cache:</p>
+<pre><code class="language-javascript">async getNetworkFirst(endpoint, maxAge = 300000) {
+  try {
+    const data = await this.get(endpoint);
+    this.cache.set(endpoint, { data, timestamp: Date.now() });
+    return data;
+  } catch (error) {
+    const cached = this.cache.get(endpoint);
+    if (cached &amp;&amp; Date.now() - cached.timestamp &lt; maxAge) {
+      console.warn(&#039;Using cached data due to network error&#039;);
+      return cached.data;
+    }
+    throw error;
+  }
+}</code></pre>
+<h2>WebSocket Communication</h2>
+<p>When you need real-time bidirectional communication, WebSockets provide a persistent connection between browser and server:</p>
+<pre><code class="language-javascript">// websocket-client.js
+class WebSocketClient {
+  constructor(url) {
+    this.url = url;
+    this.socket = null;
+    this.reconnectAttempts = 0;
+    this.maxReconnectAttempts = 5;
+  }
+
+  connect() {
+    this.socket = new WebSocket(this.url);
+
+    this.socket.onopen = () =&gt; {
+      this.reconnectAttempts = 0;
+      pan.publish(&#039;ws.connected&#039;);
+    };
+
+    this.socket.onmessage = (event) =&gt; {
+      const message = JSON.parse(event.data);
+      // Broadcast message on PAN bus
+      pan.publish(`ws.message.${message.type}`, message.payload);
+    };
+
+    this.socket.onclose = () =&gt; {
+      pan.publish(&#039;ws.disconnected&#039;);
+      this.attemptReconnect();
+    };
+
+    this.socket.onerror = (error) =&gt; {
+      pan.publish(&#039;ws.error&#039;, { error });
+    };
+  }
+
+  send(type, payload) {
+    if (this.socket?.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify({ type, payload }));
+    }
+  }
+
+  attemptReconnect() {
+    if (this.reconnectAttempts &lt; this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      const delay = Math.min(1000 * Math.pow(2, this.reconnectAttempts), 30000);
+      setTimeout(() =&gt; this.connect(), delay);
+    }
+  }
+}</code></pre>
+<p>The beauty of this approach: your components don't know or care that data comes from a WebSocket. They just subscribe to PAN bus topics like <code>ws.message.user-joined</code> or <code>ws.message.chat-message</code>.</p>
+<h2>Server-Sent Events</h2>
+<p>When you only need server-to-client updates (no bidirectional communication), Server-Sent Events (SSE) are simpler and more reliable than WebSockets:</p>
+<pre><code class="language-javascript">// sse-client.js
+class SSEClient {
+  constructor(url) {
+    this.url = url;
+    this.eventSource = null;
+  }
+
+  connect() {
+    this.eventSource = new EventSource(this.url);
+
+    this.eventSource.onmessage = (event) =&gt; {
+      const data = JSON.parse(event.data);
+      pan.publish(&#039;sse.message&#039;, data);
+    };
+
+    this.eventSource.addEventListener(&#039;notification&#039;, (event) =&gt; {
+      const data = JSON.parse(event.data);
+      pan.publish(&#039;sse.notification&#039;, data);
+    });
+
+    this.eventSource.onerror = () =&gt; {
+      pan.publish(&#039;sse.error&#039;);
+      // EventSource automatically reconnects
+    };
+  }
+
+  disconnect() {
+    this.eventSource?.close();
+  }
+}</code></pre>
+<p>SSE reconnects automatically, handles authentication through cookies, and works through proxies that might block WebSockets. For many real-time use cases, it's the better choice.</p>
+<h2>Retry Logic with Exponential Backoff</h2>
+<p>Network requests fail. Good applications handle failure gracefully:</p>
+<pre><code class="language-javascript">async function fetchWithRetry(url, options = {}, maxRetries = 3) {
+  let lastError;
+
+  for (let attempt = 0; attempt &lt; maxRetries; attempt++) {
+    try {
+      const response = await fetch(url, options);
+      if (response.ok) return response;
+
+      // Don&#039;t retry client errors (4xx)
+      if (response.status &gt;= 400 &amp;&amp; response.status &lt; 500) {
+        throw new Error(`Client error: ${response.status}`);
+      }
+
+      throw new Error(`Server error: ${response.status}`);
+    } catch (error) {
+      lastError = error;
+
+      if (attempt &lt; maxRetries - 1) {
+        // Exponential backoff: 1s, 2s, 4s...
+        const delay = Math.pow(2, attempt) * 1000;
+        await new Promise(resolve =&gt; setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}</code></pre>
+<h2>Putting It All Together</h2>
+<p>Here's a component that fetches user data with loading states, caching, and error handling—all integrated with the PAN bus:</p>
+<pre><code class="language-javascript">class UserList extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.users = [];
+    this.loading = true;
+    this.error = null;
+  }
+
+  async connectedCallback() {
+    // Subscribe to cache updates
+    pan.subscribe(&#039;cache.updated./api/users&#039;, ({ data }) =&gt; {
+      this.users = data;
+      this.render();
+    });
+
+    try {
+      this.users = await api.getStaleWhileRevalidate(&#039;/users&#039;);
+      this.loading = false;
+    } catch (error) {
+      this.error = error.message;
+      this.loading = false;
+    }
+
+    this.render();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host { display: block; }
+        .loading { color: #666; }
+        .error { color: red; }
+        .user { padding: 8px; border-bottom: 1px solid #eee; }
+      &lt;/style&gt;
+
+      ${this.loading ? &#039;&lt;p class=&quot;loading&quot;&gt;Loading users...&lt;/p&gt;&#039; : &#039;&#039;}
+      ${this.error ? `&lt;p class=&quot;error&quot;&gt;Error: ${this.error}&lt;/p&gt;` : &#039;&#039;}
+
+      &lt;div class=&quot;users&quot;&gt;
+        ${this.users.map(user =&gt; `
+          &lt;div class=&quot;user&quot;&gt;${user.name} - ${user.email}&lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;user-list&#039;, UserList);</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/11-data-fetching-and-apis.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
