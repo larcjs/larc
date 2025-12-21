@@ -8,6 +8,8 @@
 
 *First Edition, 2025*
 
+\pagebreak
+
 ---
 
 ## Praise for Learning LARC {.unnumbered}
@@ -20,6 +22,8 @@
 
 *"The PAN bus architecture is elegant and powerful. This book makes it accessible to everyone."*
 — **Mary S. - Designer / Artist**
+
+\pagebreak
 
 ---
 
@@ -36,6 +40,8 @@ The LARC logo and name are trademarks of the LARC Project.
 While the publisher and authors have used good faith efforts to ensure that the information and instructions contained in this work are accurate, the publisher and authors disclaim all responsibility for errors or omissions, including without limitation responsibility for damages resulting from the use of or reliance on this work.
 
 Use of the information and instructions contained in this work is at your own risk. If any code samples or other technology this work contains or describes is subject to open source licenses or the intellectual property rights of others, it is your responsibility to ensure that your use thereof complies with such licenses and/or rights.
+
+\pagebreak
 
 ---
 
@@ -256,6 +262,8 @@ Use of the information and instructions contained in this work is at your own ri
 - Example Projects
 
 ### Index {.unnumbered}
+
+\pagebreak
 
 ---
 

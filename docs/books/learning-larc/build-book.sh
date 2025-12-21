@@ -502,8 +502,6 @@ build_html() {
         --from markdown+smart \
         --to html5 \
         --standalone \
-        --toc \
-        --toc-depth=3 \
         --number-sections \
         --css="book-style.css" \
         --highlight-style=tango \
@@ -573,8 +571,6 @@ COVEREOF
             --from markdown+smart \
             --to html5 \
             --standalone \
-            --toc \
-            --toc-depth=3 \
             --number-sections \
             --css="${TEMP_DIR}/book-style.css" \
             --highlight-style=tango \
@@ -608,8 +604,6 @@ COVEREOF
             --from markdown+smart \
             --to pdf \
             --pdf-engine=xelatex \
-            --toc \
-            --toc-depth=3 \
             --number-sections \
             --highlight-style=tango \
             --variable documentclass=book \
@@ -650,8 +644,6 @@ build_epub() {
         "${TEMP_DIR}/learning-larc-complete.md" \
         --from markdown+smart \
         --to epub3 \
-        --toc \
-        --toc-depth=3 \
         --number-sections \
         --highlight-style=tango \
         --epub-metadata="${BUILD_DIR}/epub-metadata.xml" \
@@ -744,7 +736,6 @@ end
 LUAFILTER
 
     # Build DOCX with Kindle-friendly settings
-    # Note: We don't use --toc here because 00-front-matter.md contains
     # a beautifully formatted manual Table of Contents
     pandoc \
         "${BUILD_DIR}/metadata.yaml" \
