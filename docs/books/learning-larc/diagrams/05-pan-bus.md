@@ -6,26 +6,26 @@
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#764ba2','tertiaryColor':'#48bb78'}}}%%
 graph TB
     subgraph Publishers["📤 Publishers"]
-        P1["🔘 Login Button<br/>fa:fa-sign-in-alt"]
-        P2["🛒 Cart Component<br/>fa:fa-shopping-cart"]
-        P3["🔌 API Service<br/>fa:fa-server"]
+        P1["🔘 Login Button"]
+        P2["🛒 Cart Component"]
+        P3["🔌 API Service"]
     end
 
     subgraph PAN["🚌 PAN Bus"]
-        Router["📡 Topic Router<br/>fa:fa-broadcast-tower"]
+        Router["📡 Topic Router"]
 
         subgraph Topics["📋 Topics"]
-            T1["🔑 user.login<br/>fa:fa-key"]
-            T2["➕ cart.item.added<br/>fa:fa-plus"]
-            T3["📦 data.loaded<br/>fa:fa-box"]
+            T1["🔑 user.login"]
+            T2["➕ cart.item.added"]
+            T3["📦 data.loaded"]
         end
     end
 
     subgraph Subscribers["📥 Subscribers"]
-        S1["👤 User Menu<br/>fa:fa-user-circle"]
-        S2["📁 Sidebar<br/>fa:fa-bars"]
-        S3["🔔 Notification<br/>fa:fa-bell"]
-        S4["📊 Analytics<br/>fa:fa-chart-line"]
+        S1["👤 User Menu"]
+        S2["📁 Sidebar"]
+        S3["🔔 Notification"]
+        S4["📊 Analytics"]
     end
 
     P1 -->|📢 publish| T1
@@ -57,12 +57,12 @@ graph TB
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': { 'actorBkg':'#667eea','actorBorder':'#5568d3','actorTextColor':'#fff','signalColor':'#764ba2','signalTextColor':'#2d3748'}}}%%
 sequenceDiagram
-    participant LoginBtn as 🔘 Login Button<br/>fa:fa-sign-in-alt
-    participant PAN as 🚌 PAN Bus<br/>fa:fa-broadcast-tower
-    participant UserMenu as 👤 User Menu<br/>fa:fa-user-circle
-    participant Sidebar as 📁 Sidebar<br/>fa:fa-bars
-    participant Analytics as 📊 Analytics<br/>fa:fa-chart-line
-    participant API as 🔌 Backend<br/>fa:fa-server
+    participant LoginBtn as 🔘 Login Button
+    participant PAN as 🚌 PAN Bus
+    participant UserMenu as 👤 User Menu
+    participant Sidebar as 📁 Sidebar
+    participant Analytics as 📊 Analytics
+    participant API as 🔌 Backend
 
     Note over LoginBtn,Analytics: 🖱️ User clicks login button
 
@@ -92,32 +92,32 @@ sequenceDiagram
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#48bb78','tertiaryColor':'#4299e1'}}}%%
 graph TB
-    Root["🌟 *<br/>fa:fa-star<br/>All Events"]
+    Root["🌟 *<br/>All Events"]
 
-    Root --> User["👤 user.*<br/>fa:fa-user"]
-    Root --> Cart["🛒 cart.*<br/>fa:fa-shopping-cart"]
-    Root --> App["📱 app.*<br/>fa:fa-mobile-alt"]
+    Root --> User["👤 user.*"]
+    Root --> Cart["🛒 cart.*"]
+    Root --> App["📱 app.*"]
 
-    User --> UserAuth["🔐 user.auth.*<br/>fa:fa-lock"]
-    User --> UserProfile["📋 user.profile.*<br/>fa:fa-id-card"]
+    User --> UserAuth["🔐 user.auth.*"]
+    User --> UserProfile["📋 user.profile.*"]
 
-    UserAuth --> Login["🔑 user.auth.login<br/>fa:fa-sign-in-alt"]
-    UserAuth --> Logout["🚪 user.auth.logout<br/>fa:fa-sign-out-alt"]
-    UserAuth --> Refresh["🔄 user.auth.refresh<br/>fa:fa-sync"]
+    UserAuth --> Login["🔑 user.auth.login"]
+    UserAuth --> Logout["🚪 user.auth.logout"]
+    UserAuth --> Refresh["🔄 user.auth.refresh"]
 
-    UserProfile --> ProfileUpdate["✏️ user.profile.update<br/>fa:fa-edit"]
-    UserProfile --> ProfileFetch["📥 user.profile.fetch<br/>fa:fa-download"]
+    UserProfile --> ProfileUpdate["✏️ user.profile.update"]
+    UserProfile --> ProfileFetch["📥 user.profile.fetch"]
 
-    Cart --> CartItem["📦 cart.item.*<br/>fa:fa-box"]
-    Cart --> CartCheckout["💳 cart.checkout<br/>fa:fa-credit-card"]
+    Cart --> CartItem["📦 cart.item.*"]
+    Cart --> CartCheckout["💳 cart.checkout"]
 
-    CartItem --> ItemAdd["➕ cart.item.add<br/>fa:fa-plus-circle"]
-    CartItem --> ItemRemove["➖ cart.item.remove<br/>fa:fa-minus-circle"]
-    CartItem --> ItemUpdate["🔄 cart.item.update<br/>fa:fa-sync-alt"]
+    CartItem --> ItemAdd["➕ cart.item.add"]
+    CartItem --> ItemRemove["➖ cart.item.remove"]
+    CartItem --> ItemUpdate["🔄 cart.item.update"]
 
-    App --> AppTheme["🎨 app.theme.change<br/>fa:fa-palette"]
-    App --> AppRoute["🧭 app.route.change<br/>fa:fa-route"]
-    App --> AppError["⚠️ app.error<br/>fa:fa-exclamation-triangle"]
+    App --> AppTheme["🎨 app.theme.change"]
+    App --> AppRoute["🧭 app.route.change"]
+    App --> AppError["⚠️ app.error"]
 
     classDef root fill:#764ba2,stroke:#6a3f99,stroke-width:4px,color:#fff,font-weight:bold
     classDef namespace fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
@@ -134,17 +134,17 @@ graph TB
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#48bb78','tertiaryColor':'#f56565'}}}%%
 graph LR
     subgraph Events["📡 Published Events"]
-        E1["🔑 user.login<br/>fa:fa-sign-in-alt"]
-        E2["🚪 user.logout<br/>fa:fa-sign-out-alt"]
-        E3["✏️ user.profile.update<br/>fa:fa-edit"]
-        E4["➕ cart.item.add<br/>fa:fa-plus-circle"]
+        E1["🔑 user.login"]
+        E2["🚪 user.logout"]
+        E3["✏️ user.profile.update"]
+        E4["➕ cart.item.add"]
     end
 
     subgraph Subs["📥 Subscriptions"]
-        S1["🎯 subscribe('user.login')<br/>fa:fa-bullseye"]
-        S2["👤 subscribe('user.*')<br/>fa:fa-user"]
-        S3["🔄 subscribe('*.update')<br/>fa:fa-sync-alt"]
-        S4["🌟 subscribe('*')<br/>fa:fa-star"]
+        S1["🎯 subscribe('user.login')"]
+        S2["👤 subscribe('user.*')"]
+        S3["🔄 subscribe('*.update')"]
+        S4["🌟 subscribe('*')"]
     end
 
     E1 -.✅ matches.-> S1
@@ -174,9 +174,9 @@ graph LR
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': { 'actorBkg':'#667eea','actorBorder':'#5568d3','actorTextColor':'#fff','signalColor':'#764ba2'}}}%%
 sequenceDiagram
-    participant Requester as ⚙️ Component A<br/>fa:fa-cube
-    participant PAN as 🚌 PAN Bus<br/>fa:fa-broadcast-tower
-    participant Responder as 🔐 Auth Service<br/>fa:fa-shield-alt
+    participant Requester as ⚙️ Component A
+    participant PAN as 🚌 PAN Bus
+    participant Responder as 🔐 Auth Service
 
     Note over Responder: 📝 Registers responder
     Responder->>PAN: 🎯 respond('auth.token.get', handler)
@@ -203,9 +203,9 @@ sequenceDiagram
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#764ba2','tertiaryColor':'#48bb78'}}}%%
 graph TB
     subgraph FF["📢 Fire and Forget"]
-        FF1["📤 Publisher<br/>fa:fa-paper-plane"]
-        FF2["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
-        FF3["📥 Subscribers<br/>fa:fa-inbox"]
+        FF1["📤 Publisher"]
+        FF2["🚌 PAN Bus"]
+        FF3["📥 Subscribers"]
 
         FF1 -->|📢 publish| FF2
         FF2 -->|📬 notify all| FF3
@@ -213,9 +213,9 @@ graph TB
     end
 
     subgraph RR["❓ Request/Response"]
-        RR1["❓ Requester<br/>fa:fa-question"]
-        RR2["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
-        RR3["💬 Responder<br/>fa:fa-comment-dots"]
+        RR1["❓ Requester"]
+        RR2["🚌 PAN Bus"]
+        RR3["💬 Responder"]
 
         RR1 -->|❓ request| RR2
         RR2 -->|▶️ invoke| RR3
@@ -224,9 +224,9 @@ graph TB
     end
 
     subgraph CMD["⚙️ Command"]
-        C1["👨‍💼 Commander<br/>fa:fa-user-tie"]
-        C2["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
-        C3["⚙️ Handler<br/>fa:fa-cog"]
+        C1["👨‍💼 Commander"]
+        C2["🚌 PAN Bus"]
+        C3["⚙️ Handler"]
 
         C1 -->|📋 command| C2
         C2 -->|▶️ execute| C3
@@ -249,16 +249,16 @@ graph TB
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#764ba2','secondaryColor':'#667eea','tertiaryColor':'#48bb78'}}}%%
 graph TB
     subgraph Core["⚙️ PAN Bus Core"]
-        Router["📡 Topic Router<br/>fa:fa-broadcast-tower"]
+        Router["📡 Topic Router"]
 
         subgraph Registry["📚 Subscription Registry"]
-            Exact["🎯 Exact Matches<br/>fa:fa-bullseye<br/>Map‹topic, Set‹handler››"]
-            Wildcard["🌟 Wildcard Patterns<br/>fa:fa-star<br/>Array of patterns and handlers"]
+            Exact["🎯 Exact Matches<br/>Map‹topic, Set‹handler››"]
+            Wildcard["🌟 Wildcard Patterns<br/>Array of patterns and handlers"]
         end
 
         subgraph Queue["📮 Message Queue"]
-            EventQueue["📥 Event Queue<br/>fa:fa-inbox"]
-            Batch["📦 Batch Processor<br/>fa:fa-boxes"]
+            EventQueue["📥 Event Queue"]
+            Batch["📦 Batch Processor"]
         end
 
         Router --> Exact
@@ -268,10 +268,10 @@ graph TB
     end
 
     subgraph API["🔧 API Methods"]
-        Publish["📢 publish<br/>fa:fa-bullhorn"]
-        Subscribe["📥 subscribe<br/>fa:fa-rss"]
-        Request["❓ request<br/>fa:fa-question-circle"]
-        Respond["💬 respond<br/>fa:fa-comment"]
+        Publish["📢 publish"]
+        Subscribe["📥 subscribe"]
+        Request["❓ request"]
+        Respond["💬 respond"]
     end
 
     Publish --> Router
@@ -296,20 +296,20 @@ graph TB
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#ed8936','tertiaryColor':'#48bb78'}}}%%
 graph TB
     subgraph Application["📱 Application"]
-        C1["⚙️ Component 1<br/>fa:fa-cube"]
-        C2["⚙️ Component 2<br/>fa:fa-cube"]
-        C3["⚙️ Component 3<br/>fa:fa-cube"]
+        C1["⚙️ Component 1"]
+        C2["⚙️ Component 2"]
+        C3["⚙️ Component 3"]
     end
 
     subgraph PAN["🚌 PAN Bus"]
-        Router["📡 Message Router<br/>fa:fa-broadcast-tower"]
+        Router["📡 Message Router"]
     end
 
     subgraph Inspector["🔍 Inspector"]
-        Monitor["👀 subscribe('*')<br/>fa:fa-eye"]
-        Log["📋 Event Log<br/>fa:fa-list"]
-        Filter["🔎 Filter Panel<br/>fa:fa-filter"]
-        Viz["📊 Visualization<br/>fa:fa-chart-bar"]
+        Monitor["👀 subscribe('*')"]
+        Log["📋 Event Log"]
+        Filter["🔎 Filter Panel"]
+        Viz["📊 Visualization"]
     end
 
     C1 -->|📢 publish| Router
@@ -378,23 +378,23 @@ stateDiagram-v2
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#f56565','tertiaryColor':'#48bb78'}}}%%
 graph TB
-    Publisher["📤 Publisher<br/>fa:fa-paper-plane"]
-    PAN["🚌 PAN Bus<br/>fa:fa-broadcast-tower"]
+    Publisher["📤 Publisher"]
+    PAN["🚌 PAN Bus"]
 
     Publisher -->|📢 publish| PAN
 
-    PAN --> S1["📥 Subscriber 1<br/>fa:fa-inbox"]
-    PAN --> S2["📥 Subscriber 2<br/>fa:fa-inbox"]
-    PAN --> S3["📥 Subscriber 3<br/>fa:fa-inbox"]
+    PAN --> S1["📥 Subscriber 1"]
+    PAN --> S2["📥 Subscriber 2"]
+    PAN --> S3["📥 Subscriber 3"]
 
-    S1 -->|✅ success| End1["✅<br/>fa:fa-check-circle"]
-    S2 -->|💥 throws error| Error["⚠️ Error Handler<br/>fa:fa-exclamation-triangle"]
-    S3 -->|✅ success| End3["✅<br/>fa:fa-check-circle"]
+    S1 -->|✅ success| End1["✅"]
+    S2 -->|💥 throws error| Error["⚠️ Error Handler"]
+    S3 -->|✅ success| End3["✅"]
 
-    Error -->|📝 log error| Console["🖥️ Console<br/>fa:fa-terminal"]
-    Error -->|📢 publish| ErrorTopic["❌ app.error<br/>fa:fa-times-circle"]
+    Error -->|📝 log error| Console["🖥️ Console"]
+    Error -->|📢 publish| ErrorTopic["❌ app.error"]
 
-    ErrorTopic --> ErrorHandler["⚠️ Error Component<br/>fa:fa-bug"]
+    ErrorTopic --> ErrorHandler["⚠️ Error Component"]
 
     Error -.🔄 doesn't stop.-> S3
 

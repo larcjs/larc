@@ -7,44 +7,44 @@
 graph TB
     subgraph Browser["🌐 Browser"]
         subgraph App["📦 LARC Application"]
-            HTML["📄 HTML Document<br/>fa:fa-file-code"]
-            IM["🗺️ Import Map<br/>fa:fa-map"]
+            HTML["📄 HTML Document"]
+            IM["🗺️ Import Map"]
 
             subgraph Components["🧩 Components Layer"]
-                C1["⚙️ Component 1<br/>fa:fa-cube"]
-                C2["⚙️ Component 2<br/>fa:fa-cube"]
-                C3["⚙️ Component 3<br/>fa:fa-cube"]
-                C4["⚙️ Component N...<br/>fa:fa-cubes"]
+                C1["⚙️ Component 1"]
+                C2["⚙️ Component 2"]
+                C3["⚙️ Component 3"]
+                C4["⚙️ Component N..."]
             end
 
             subgraph Comm["💬 Communication Layer"]
-                PAN["🚌 PAN Bus<br/>fa:fa-broadcast-tower<br/>Pub/Sub System"]
+                PAN["🚌 PAN Bus<br/>Pub/Sub System"]
             end
 
             subgraph State["💾 State Layer"]
-                LS["📝 Local State<br/>fa:fa-sticky-note"]
-                SS["🔗 Shared State<br/>fa:fa-share-nodes"]
-                PS["💿 Persistent State<br/>fa:fa-database<br/>localStorage/IndexedDB"]
+                LS["📝 Local State"]
+                SS["🔗 Shared State"]
+                PS["💿 Persistent State<br/>localStorage/IndexedDB"]
             end
 
             subgraph Router["🧭 Router Layer"]
-                R["🗺️ pan-router<br/>fa:fa-route"]
+                R["🗺️ pan-router"]
             end
         end
 
         subgraph APIs["🔧 Browser APIs"]
-            CE["🏷️ Custom Elements<br/>fa:fa-tags"]
-            SD["👁️ Shadow DOM<br/>fa:fa-eye-slash"]
-            ESM["📦 ES Modules<br/>fa:fa-box"]
-            F["🌐 Fetch API<br/>fa:fa-download"]
-            WS["🔌 WebSocket<br/>fa:fa-plug"]
+            CE["🏷️ Custom Elements"]
+            SD["👁️ Shadow DOM"]
+            ESM["📦 ES Modules"]
+            F["🌐 Fetch API"]
+            WS["🔌 WebSocket"]
         end
     end
 
     subgraph External["☁️ External Services"]
-        CDN["🌍 CDN<br/>fa:fa-cloud<br/>jsDelivr/unpkg"]
-        API["🔌 REST API<br/>fa:fa-server"]
-        WSS["🔌 WebSocket Server<br/>fa:fa-network-wired"]
+        CDN["🌍 CDN<br/>jsDelivr/unpkg"]
+        API["🔌 REST API"]
+        WSS["🔌 WebSocket Server"]
     end
 
     HTML --> IM
@@ -78,12 +78,12 @@ graph TB
 ```mermaid
 %%{init: {'theme':'base', 'themeVariables': { 'actorBkg':'#667eea','actorBorder':'#5568d3','actorTextColor':'#fff','signalColor':'#764ba2','signalTextColor':'#2d3748','labelBoxBkgColor':'#f7fafc','labelBoxBorderColor':'#cbd5e0'}}}%%
 sequenceDiagram
-    participant U as 👤 User<br/>fa:fa-user
-    participant C1 as ⚙️ Component 1<br/>fa:fa-cube
-    participant PAN as 🚌 PAN Bus<br/>fa:fa-broadcast-tower
-    participant C2 as ⚙️ Component 2<br/>fa:fa-cube
-    participant C3 as ⚙️ Component 3<br/>fa:fa-cube
-    participant API as 🔌 Backend API<br/>fa:fa-server
+    participant U as 👤 User
+    participant C1 as ⚙️ Component 1
+    participant PAN as 🚌 PAN Bus
+    participant C2 as ⚙️ Component 2
+    participant C3 as ⚙️ Component 3
+    participant API as 🔌 Backend API
 
     U->>+C1: 🖱️ Click Button
     Note over C1: Handle user event
@@ -115,18 +115,18 @@ sequenceDiagram
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','primaryTextColor':'#fff','secondaryColor':'#f56565','tertiaryColor':'#48bb78'}}}%%
 graph LR
     subgraph Traditional["⚙️ Traditional Framework"]
-        S1["📝 Source Code<br/>fa:fa-file-code"]
-        T1["🔄 Transpile<br/>fa:fa-exchange-alt<br/>Babel"]
-        B1["📦 Bundle<br/>fa:fa-box<br/>Webpack"]
-        M1["🗜️ Minify<br/>fa:fa-compress"]
-        O1["📤 Output<br/>fa:fa-upload"]
+        S1["📝 Source Code"]
+        T1["🔄 Transpile<br/>Babel"]
+        B1["📦 Bundle<br/>Webpack"]
+        M1["🗜️ Minify"]
+        O1["📤 Output"]
 
         S1 --> T1 --> B1 --> M1 --> O1
     end
 
     subgraph LARC["⚡ LARC"]
-        S2["📝 Source Code<br/>fa:fa-file-code"]
-        BR["🌐 Browser<br/>fa:fa-globe"]
+        S2["📝 Source Code"]
+        BR["🌐 Browser"]
 
         S2 -.⚡ directly loads.-> BR
     end
@@ -148,23 +148,23 @@ graph LR
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#48bb78','tertiaryColor':'#4299e1'}}}%%
 graph TB
     subgraph HTML["📄 index.html"]
-        IM["🗺️ Import Map<br/>fa:fa-map<br/>&lt;script type='importmap'&gt;<br/>{<br/>  '@larcjs/core': 'https://cdn...',<br/>  'app/': '/src/'<br/>}"]
-        SM["📜 Module Script<br/>fa:fa-scroll<br/>&lt;script type='module'&gt;<br/>import '@larcjs/core'<br/>import 'app/components/...'"]
+        IM["🗺️ Import Map<br/>&lt;script type='importmap'&gt;<br/>{<br/>  '@larcjs/core': 'https://cdn...',<br/>  'app/': '/src/'<br/>}"]
+        SM["📜 Module Script<br/>&lt;script type='module'&gt;<br/>import '@larcjs/core'<br/>import 'app/components/...'"]
     end
 
     subgraph Resolution["🔍 Resolution"]
-        IM --> R1["🔎 Resolve @larcjs/core<br/>fa:fa-search"]
-        IM --> R2["🔎 Resolve app/<br/>fa:fa-search"]
+        IM --> R1["🔎 Resolve @larcjs/core"]
+        IM --> R2["🔎 Resolve app/"]
 
-        R1 --> CDN["🌍 Load from CDN<br/>fa:fa-cloud"]
-        R2 --> Local["💾 Load from /src/<br/>fa:fa-folder"]
+        R1 --> CDN["🌍 Load from CDN"]
+        R2 --> Local["💾 Load from /src/"]
     end
 
     subgraph Browser["🌐 Browser"]
-        CDN --> Cache1["⚡ Browser Cache<br/>fa:fa-bolt"]
-        Local --> Cache2["⚡ Browser Cache<br/>fa:fa-bolt"]
+        CDN --> Cache1["⚡ Browser Cache"]
+        Local --> Cache2["⚡ Browser Cache"]
 
-        Cache1 --> Exec["▶️ Execute Modules<br/>fa:fa-play"]
+        Cache1 --> Exec["▶️ Execute Modules"]
         Cache2 --> Exec
     end
 
@@ -183,18 +183,18 @@ graph TB
 %%{init: {'theme':'base', 'themeVariables': { 'primaryColor':'#667eea','secondaryColor':'#48bb78','tertiaryColor':'#764ba2'}}}%%
 graph TB
     subgraph Dev["👨‍💻 Development"]
-        Developer["👤 Developer<br/>fa:fa-user-tie"]
-        Code["📝 Source Code<br/>fa:fa-code"]
-        Git["🗂️ Git Repository<br/>fa:fa-git-alt"]
+        Developer["👤 Developer"]
+        Code["📝 Source Code"]
+        Git["🗂️ Git Repository"]
 
         Developer -->|✍️ writes| Code
         Code -->|📤 commits| Git
     end
 
     subgraph CICD["🔄 CI/CD Pipeline"]
-        GH["⚙️ GitHub Actions<br/>fa:fa-cog"]
-        Test["🧪 Run Tests<br/>fa:fa-flask"]
-        Build["🏗️ Optional Build<br/>fa:fa-hammer<br/>Minify"]
+        GH["⚙️ GitHub Actions"]
+        Test["🧪 Run Tests"]
+        Build["🏗️ Optional Build<br/>Minify"]
 
         Git -->|⚡ triggers| GH
         GH --> Test
@@ -202,15 +202,15 @@ graph TB
     end
 
     subgraph Prod["☁️ Production"]
-        CDN["🌍 CDN<br/>fa:fa-cloud<br/>CloudFlare/AWS"]
-        Static["📦 Static Host<br/>fa:fa-server<br/>Netlify/Vercel"]
+        CDN["🌍 CDN<br/>CloudFlare/AWS"]
+        Static["📦 Static Host<br/>Netlify/Vercel"]
 
         Build -->|🚀 deploy assets| CDN
         Build -->|🚀 deploy app| Static
     end
 
     subgraph Users["👥 Users"]
-        Browser["🌐 Browser<br/>fa:fa-globe"]
+        Browser["🌐 Browser"]
 
         Static -->|📄 HTML| Browser
         CDN -->|📦 JS/CSS/Assets| Browser
