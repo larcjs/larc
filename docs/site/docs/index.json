@@ -428,6 +428,11 @@
   ],
   "books/learning-larc": [
     {
+      "title": "00-front-matter",
+      "path": "books/learning-larc/00-front-matter.html",
+      "category": "books/learning-larc"
+    },
+    {
       "title": "author-bio",
       "path": "books/learning-larc/author-bio.html",
       "category": "books/learning-larc"
@@ -455,11 +460,6 @@
     {
       "title": "Learning LARC - Build System",
       "path": "books/learning-larc/BUILD-SYSTEM.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Learning LARC {.unnumbered}",
-      "path": "books/learning-larc/00-front-matter.html",
       "category": "books/learning-larc"
     },
     {
