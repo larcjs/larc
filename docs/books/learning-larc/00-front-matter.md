@@ -1,7 +1,3 @@
-## Building Modern Web Applications with the Page Area Network Architecture {.unnumbered}
-
----
-
 **By Christopher Robison**
 
 *First Edition, 2025*
