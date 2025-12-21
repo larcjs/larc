@@ -1,5 +1,3 @@
-# Learning LARC {.unnumbered}
-
 ## Building Modern Web Applications with the Page Area Network Architecture {.unnumbered}
 
 ---
