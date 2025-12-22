@@ -46,7 +46,7 @@
         <h1>Traditional Frameworks vs LARC</h1>
 <h2>Development Workflow Comparison</h2>
 <pre><code class="language-mermaid">graph TB
-    subgraph &quot;Traditional Framework (React/Vue/Angular)&quot;
+    subgraph Traditional[&quot;Traditional Framework (React/Vue/Angular)&quot;]
         T1[Write JSX/Vue Templates]
         T2[Configure webpack/Vite]
         T3[Install dependencies&lt;br/&gt;~300MB node_modules]
@@ -60,7 +60,9 @@
         T7 --&gt; T8 --&gt; T4
     end
 
-    subgraph &quot;LARC&quot;
+    Divider[&quot; &quot;]
+
+    subgraph LARC[&quot;LARC&quot;]
         L1[Write Web Components]
         L2[Add Import Map]
         L3[Open in Browser&lt;br/&gt;Instant]
@@ -71,9 +73,13 @@
         L3 --&gt; L4 --&gt; L5 --&gt; L3
     end
 
+    Traditional --&gt; Divider
+    Divider --&gt; LARC
+
     style T6 fill:#f56565,color:#fff
     style L3 fill:#48bb78,color:#fff
-    style L5 fill:#48bb78,color:#fff</code></pre>
+    style L5 fill:#48bb78,color:#fff
+    style Divider fill:none,stroke:none</code></pre>
 <h2>Architecture Complexity</h2>
 <pre><code class="language-mermaid">graph TB
     subgraph &quot;Traditional Stack&quot;
