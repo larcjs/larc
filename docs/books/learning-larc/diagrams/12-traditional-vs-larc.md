@@ -4,7 +4,7 @@
 
 ```mermaid
 graph TB
-    subgraph "Traditional Framework (React/Vue/Angular)"
+    subgraph Traditional["Traditional Framework (React/Vue/Angular)"]
         T1[Write JSX/Vue Templates]
         T2[Configure webpack/Vite]
         T3[Install dependencies<br/>~300MB node_modules]
@@ -18,7 +18,9 @@ graph TB
         T7 --> T8 --> T4
     end
 
-    subgraph "LARC"
+    Divider[" "]
+
+    subgraph LARC["LARC"]
         L1[Write Web Components]
         L2[Add Import Map]
         L3[Open in Browser<br/>Instant]
@@ -29,9 +31,13 @@ graph TB
         L3 --> L4 --> L5 --> L3
     end
 
+    Traditional --> Divider
+    Divider --> LARC
+
     style T6 fill:#f56565,color:#fff
     style L3 fill:#48bb78,color:#fff
     style L5 fill:#48bb78,color:#fff
+    style Divider fill:none,stroke:none
 ```
 
 ## Architecture Complexity
