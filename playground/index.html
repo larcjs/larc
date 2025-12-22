@@ -8,7 +8,7 @@
   <script type="module">
     // Load pan-bus if not already registered
     if (!customElements.get('pan-bus')) {
-      await import('../core/pan-bus.mjs').catch(err => {
+      await import('../packages/core/pan-bus.mjs').catch(err => {
         // Ignore double-registration errors
         if (!err.message?.includes('already been used')) {
           console.error('Failed to load pan-bus:', err);
