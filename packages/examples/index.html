@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Examples</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: white;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --border-color: #e2e8f0;
+      --accent-color: #06b6d4;
+      --accent-dark: #0891b2;
+      --accent-green: #10b981;
+      --accent-purple: #8b5cf6;
+      --accent-orange: #f59e0b;
+      --accent-pink: #ec4899;
+      --accent-indigo: #6366f1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --bg-tertiary: #334155;
+        --text-primary: #e2e8f0;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+      }
+    }
+
+    [data-theme="dark"] {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #e2e8f0;
+      --text-secondary: #94a3b8;
+      --border-color: #334155;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      color: white;
+      padding: 1.5rem 2rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .header-links {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .header-links a {
+      color: white;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      background: rgba(255, 255, 255, 0.1);
+      transition: background 0.2s;
+      font-size: 0.875rem;
+    }
+
+    .header-links a:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      padding: 3rem 2rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero h2 {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--text-primary);
+    }
+
+    .hero p {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .sections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+
+    .section-card {
+      background: var(--bg-secondary);
+      border: 2px solid var(--border-color);
+      border-radius: 1rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-card.tutorials {
+      border-color: var(--accent-color);
+    }
+
+    .section-card.apps {
+      border-color: var(--accent-green);
+    }
+
+    .section-card.hybrid {
+      border-color: var(--accent-purple);
+    }
+
+    .section-card.gallery {
+      border-color: var(--accent-orange);
+    }
+
+    .section-card.playground {
+      border-color: var(--accent-pink);
+    }
+
+    .section-card.books {
+      border-color: var(--accent-indigo);
+    }
+
+    .section-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .section-description {
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .section-stats {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: var(--bg-tertiary);
+      border-radius: 0.5rem;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .section-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--accent-color);
+      color: white;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .section-card.tutorials .section-link {
+      background: var(--accent-color);
+    }
+
+    .section-card.apps .section-link {
+      background: var(--accent-green);
+    }
+
+    .section-card.hybrid .section-link {
+      background: var(--accent-purple);
+    }
+
+    .section-card.gallery .section-link {
+      background: var(--accent-orange);
+    }
+
+    .section-card.playground .section-link {
+      background: var(--accent-pink);
+    }
+
+    .section-card.books .section-link {
+      background: var(--accent-indigo);
+    }
+
+    .section-link:hover {
+      filter: brightness(1.1);
+      transform: translateX(4px);
+    }
+
+    .quick-links {
+      background: var(--bg-secondary);
+      border-radius: 1rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .quick-links h3 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .quick-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: all 0.2s;
+    }
+
+    .quick-link:hover {
+      border-color: var(--accent-color);
+      background: var(--bg-primary);
+    }
+
+    .quick-link-icon {
+      font-size: 1.25rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    footer a {
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .sections-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>LARC Examples</h1>
+    <div class="header-links">
+      <a href="https://github.com/larcjs/larc">GitHub</a>
+      <a href="https://larcjs.com/docs">Docs</a>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">🌙</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h2>Learn LARC by Example</h2>
+    <p>Comprehensive examples, tutorials, and full-featured demo applications demonstrating the LARC/PAN messaging system.</p>
+  </section>
+
+  <main class="container">
+    <div class="sections-grid">
+      <div class="section-card tutorials">
+        <div class="section-icon">📚</div>
+        <h3 class="section-title">Tutorials</h3>
+        <p class="section-description">
+          Progressive examples from basic concepts to advanced patterns. Start with Hello World and work your way up to WebSockets, JWT auth, and more.
+        </p>
+        <div class="section-stats">
+          <div class="stat">
+            <div class="stat-value">20+</div>
+            <div class="stat-label">Examples</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Skill Levels</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Interactive</div>
+            <div class="stat-label">Viewer</div>
+          </div>
+        </div>
+        <a href="tutorials/" class="section-link">Browse Tutorials →</a>
+      </div>
+
+      <div class="section-card apps">
+        <div class="section-icon">🚀</div>
+        <h3 class="section-title">Demo Apps</h3>
+        <p class="section-description">
+          Full-featured applications showcasing real-world usage. Invoice Studio, Blog Editor, Contact Manager, and more.
+        </p>
+        <div class="section-stats">
+          <div class="stat">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Apps</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Production</div>
+            <div class="stat-label">Quality</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Full Source</div>
+            <div class="stat-label">Included</div>
+          </div>
+        </div>
+        <a href="/apps/" class="section-link">Explore Apps →</a>
+      </div>
+
+      <div class="section-card hybrid">
+        <div class="section-icon">🔀</div>
+        <h3 class="section-title">Hybrid Dashboard</h3>
+        <p class="section-description">
+          See React + Vue + LARC working together seamlessly. Demonstrates 60% bundle size reduction while mixing frameworks.
+        </p>
+        <div class="section-stats">
+          <div class="stat">
+            <div class="stat-value">60%</div>
+            <div class="stat-label">Smaller Bundle</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">3</div>
+            <div class="stat-label">Frameworks</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">PAN</div>
+            <div class="stat-label">Coordination</div>
+          </div>
+        </div>
+        <a href="hybrid-dashboard/" class="section-link">View Demo →</a>
+      </div>
+
+      <div class="section-card gallery">
+        <div class="section-icon">🎨</div>
+        <h3 class="section-title">Examples Gallery</h3>
+        <p class="section-description">
+          Curated collection of examples with descriptions and tags. Browse by category, difficulty level, or topic.
+        </p>
+        <div class="section-stats">
+          <div class="stat">
+            <div class="stat-value">Curated</div>
+            <div class="stat-label">Selection</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Tagged</div>
+            <div class="stat-label">By Topic</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Docs</div>
+            <div class="stat-label">Integrated</div>
+          </div>
+        </div>
+        <a href="/site/examples.html" class="section-link">View Gallery →</a>
+      </div>
+
+      <div class="section-card playground">
+        <div class="section-icon">🎮</div>
+        <h3 class="section-title">Component Playground</h3>
+        <p class="section-description">
+          Interactive playground to experiment with LARC UI components. Test configurations, see live previews, and copy code.
+        </p>
+        <div class="section-stats">
+          <div class="stat">
+            <div class="stat-value">40+</div>
+            <div class="stat-label">Components</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Live</div>
+            <div class="stat-label">Preview</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">Copy</div>
+            <div class="stat-label">Code</div>
+          </div>
+        </div>
+        <a href="/larc/playground/" class="section-link">Open Playground →</a>
+      </div>
+
+      <div class="section-card books">
+        <div class="section-icon">📖</div>
+        <h3 class="section-title">Books</h3>
+        <p class="section-description">
+          Two comprehensive books: "Learning LARC" for beginners and "Building with LARC" for in-depth application development.
+        </p>
+        <div class="section-stats">
+          <div class="stat">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Books</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">25</div>
+            <div class="stat-label">Chapters</div>
+          </div>
+          <div class="stat">
+            <div class="stat-value">EPUB</div>
+            <div class="stat-label">Available</div>
+          </div>
+        </div>
+        <a href="/site/books.html" class="section-link">Read Books →</a>
+      </div>
+    </div>
+
+    <div class="quick-links">
+      <h3>Quick Start Examples</h3>
+      <div class="links-grid">
+        <a href="tutorials/00-intro.html" class="quick-link">
+          <span class="quick-link-icon">👋</span>
+          <span>Introduction</span>
+        </a>
+        <a href="tutorials/01-hello.html" class="quick-link">
+          <span class="quick-link-icon">🌍</span>
+          <span>Hello World</span>
+        </a>
+        <a href="tutorials/02-todos-and-inspector.html" class="quick-link">
+          <span class="quick-link-icon">✅</span>
+          <span>Todos + Inspector</span>
+        </a>
+        <a href="tutorials/06-crud.html" class="quick-link">
+          <span class="quick-link-icon">💾</span>
+          <span>CRUD Operations</span>
+        </a>
+        <a href="tutorials/07-rest-connector.html" class="quick-link">
+          <span class="quick-link-icon">🔌</span>
+          <span>REST Connector</span>
+        </a>
+        <a href="tutorials/15-router.html" class="quick-link">
+          <span class="quick-link-icon">🧭</span>
+          <span>Client Routing</span>
+        </a>
+        <a href="tutorials/16-websocket.html" class="quick-link">
+          <span class="quick-link-icon">🔗</span>
+          <span>WebSockets</span>
+        </a>
+        <a href="tutorials/18-jwt-auth.html" class="quick-link">
+          <span class="quick-link-icon">🔐</span>
+          <span>JWT Auth</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      LARC Examples &bull;
+      <a href="https://github.com/larcjs/larc">GitHub</a> &bull;
+      <a href="https://larcjs.com">Documentation</a> &bull;
+      MIT License
+    </p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      const themeToggle = document.getElementById('themeToggle');
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggle.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    }
+
+    // Initialize theme
+    (function initTheme() {
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+      const themeToggle = document.getElementById('themeToggle');
+
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.textContent = '☀️';
+      }
+    })();
+  </script>
+</body>
+</html>

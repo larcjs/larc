@@ -429,7 +429,7 @@ export class BlogPreview extends HTMLElement {
 
       if (line.match(/^\|.+\|$/)) {
         const nextLine = lines[i + 1]?.trim() || '';
-        const isSeparator = nextLine.match(/^\|[\s:-]+\|$/);
+        const isSeparator = nextLine.match(/^\|[\s:|\-]+\|$/);
 
         if (!inTable && isSeparator) {
           inTable = true;

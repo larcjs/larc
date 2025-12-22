@@ -8,20 +8,9 @@ This isn't a toy example or a contrived demo. We'll build something real: a task
 
 ## Prerequisites
 
-Before you begin, make sure you have:
+This chapter assumes you have the prerequisites covered in Chapter 1. The short version: a modern browser, a text editor, and a way to serve static files. That's it — no Node.js, no npm, no build tools required.
 
-**Required:**
-- A modern web browser (Chrome 90+, Firefox 88+, Safari 14+, or Edge 90+)
-- A text editor (VS Code, Sublime Text, Vim—your choice)
-- A way to serve static files (Python, PHP, Node, or any HTTP server)
-
-**Helpful but Optional:**
-
-- Git (for cloning examples)
-- Browser DevTools familiarity (Console, Network, Elements tabs)
-- Basic command-line comfort
-
-That's it. No Node.js, no npm, no build tools. If you have a browser and can start a local server, you're ready.
+> **TIP**: If you need to set up a local server quickly, `python3 -m http.server 8000` works on most systems with Python installed.
 
 ## Installation Options
 
