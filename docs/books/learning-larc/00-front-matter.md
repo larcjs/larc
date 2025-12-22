@@ -1,7 +1,3 @@
-**By Christopher Robison**
-
-*First Edition, 2025*
-
 \pagebreak
 
 ---
