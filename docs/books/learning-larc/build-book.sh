@@ -449,6 +449,34 @@ img {
   padding-left: 0;
 }
 
+/* Side-by-side images */
+.side-by-side {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.side-by-side img {
+  max-width: 48%;
+  height: auto;
+  object-fit: contain;
+}
+
+.side-by-side figure {
+  width: 48%;
+  margin: 0;
+  text-align: center;
+}
+
+.side-by-side figcaption {
+  font-style: italic;
+  margin-top: 0.5rem;
+  font-size: 0.9em;
+}
+
 /* Page break support for Prince XML and print */
 .pagebreak {
   page-break-after: always;

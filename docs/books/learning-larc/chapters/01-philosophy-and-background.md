@@ -49,16 +49,10 @@ The irony? While we were busy building these elaborate toolchains, the web platf
 
 ### The Platform Has Caught Up
 
-<div style="display: flex; justify-content: space-between; align-items: flex-start; margin: 1rem 0;">
-  <div style="width: 48%; text-align: center;">
-    <img src="../images/01-architecture-overview-3.png" alt="LARC No-Build Architecture" style="width: 100%; max-width: 100%;" />
-    <p style="font-style: italic; margin-top: 0.5rem;"><strong>Figure 1.2:</strong> LARC No-Build Architecture</p>
-  </div>
-  <div style="width: 48%; text-align: center;">
-    <img src="../images/12-traditional-vs-larc-3.png" alt="Bundle Size Comparison" style="width: 100%; max-width: 100%;" />
-    <p style="font-style: italic; margin-top: 0.5rem;"><strong>Figure 1.3:</strong> Bundle Size Comparison</p>
-  </div>
-</div>
+::: {.side-by-side}
+![**Figure 1.2:** LARC No-Build Architecture](../images/01-architecture-overview-3.png){width=48%}
+![**Figure 1.3:** Bundle Size Comparison](../images/12-traditional-vs-larc-3.png){width=48%}
+:::
 
 
 Today's web platform is remarkably capable. Modern browsers support:
