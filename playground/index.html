@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LARC Playground</title>
   <link rel="stylesheet" href="./styles/playground.css">
+  
+  <!-- Configure autoloader paths -->
   <script type="module">
-    // Load pan-bus if not already registered
-    if (!customElements.get('pan-bus')) {
-      await import('../packages/core/pan-bus.mjs').catch(err => {
-        // Ignore double-registration errors
-        if (!err.message?.includes('already been used')) {
-          console.error('Failed to load pan-bus:', err);
-        }
-      });
-    }
-    // Then load playground
-    await import('./playground.mjs');
+    window.panAutoload = {
+      paths: ['../packages/core/', '../packages/ui/']
+    };
   </script>
+  
+  <!-- Load PAN autoloader -->
+  <script type="module" src="../packages/core/pan.mjs"></script>
+  
+  <!-- Load playground app -->
+  <script type="module" src="./playground.mjs"></script>
 </head>
 <body>
   <div class="playground">
