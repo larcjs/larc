@@ -497,6 +497,20 @@ View all components with live examples:
 - **[@larcjs/devtools](https://github.com/larcjs/devtools)** — Chrome DevTools extension
 - **[@larcjs/examples](https://github.com/larcjs/examples)** — Demo applications including hybrid examples
 
+## Testing
+
+Playwright exercises common components end-to-end using the real PAN bus:
+
+```bash
+# Run all component specs headlessly
+npm run test --workspace @larcjs/ui
+
+# Watch mode with the Playwright UI
+npm run test:ui --workspace @larcjs/ui
+```
+
+The tests load HTML fixtures from `tests/fixtures/` so you can iterate on components without any bundling step.
+
 ## Contributing
 
 Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md).

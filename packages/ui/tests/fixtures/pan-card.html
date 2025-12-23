@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LARC UI Test – pan-card</title>
+    <script type="module" src="../../pan-card.mjs"></script>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 2rem;
+        background: #f8fafc;
+      }
+      pan-card {
+        width: 320px;
+      }
+    </style>
+  </head>
+  <body>
+    <pan-card header="Test Header" footer="Footer copy" variant="primary" elevation="2">
+      <p>This is body content rendered via the default slot.</p>
+      <button slot="actions">Action</button>
+    </pan-card>
+  </body>
+</html>

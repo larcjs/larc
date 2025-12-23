@@ -187,7 +187,11 @@
     "build": "echo \"No bundling needed - components are already modular\"",
     "build:minify": "node scripts/build-minified.js",
     "build:all": "npm run build:minify",
-    "test": "echo \"Tests coming soon\" && exit 0"
+    "test": "npx playwright test",
+    "test:ui": "npx playwright test --ui",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:report": "npx playwright show-report"
   },
   "keywords": [
     "web-components",
