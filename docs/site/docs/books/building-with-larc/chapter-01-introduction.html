@@ -85,35 +85,6 @@
 <strong>Part II: Building Applications</strong> (Chapters 6-20) is where the rubber meets the road. These task-oriented chapters show you how to accomplish specific goals: managing state, handling routing, fetching data, implementing authentication, optimizing performance, and deploying to production. Each chapter follows a consistent structure: problem statement, concepts, step-by-step implementation, complete example, variations, troubleshooting, and best practices.
 <strong>Part III: Component Reference</strong> (Chapters 21-25) provides exhaustive documentation for every core LARC component. Think of it as your API reference — detailed attribute tables, method signatures, event specifications, and practical examples for components like <code>pan-bus</code>, <code>pan-store</code>, <code>pan-routes</code>, <code>pan-markdown-editor</code>, and dozens more.
 <strong>Part IV: Appendices</strong> (A-G) contains supporting material: message topic conventions, event envelope specifications, configuration options, migration guides, code recipes, a glossary, and resource links.
-<h3>Code Conventions</h3>
-<p>Throughout this book, you'll see code examples in various formats:</p>
-<strong>Inline code</strong> appears <code>like this</code> for short snippets, commands, file names, and HTML attributes.
-<strong>Block code</strong> appears in fenced sections with syntax highlighting:
-<pre><code class="language-javascript">// JavaScript examples look like this
-class MyComponent extends HTMLElement {
-  connectedCallback() {
-    this.textContent = &#039;Hello from LARC!&#039;;
-  }
-}</code></pre>
-<pre><code class="language-html">&lt;!-- HTML examples look like this --&gt;
-&lt;pan-card title=&quot;Example&quot;&gt;
-  &lt;p&gt;Component content goes here&lt;/p&gt;
-&lt;/pan-card&gt;</code></pre>
-<strong>File paths</strong> are shown in UNIX format (<code>/my-component.mjs</code>) but translate naturally to Windows (<code>\src\components\my-component.mjs</code>).
-<strong>Command-line examples</strong> begin with a prompt:
-<pre><code class="language-bash">$ python3 -m http.server 8000
-$ npm install @larcjs/core</code></pre>
-<p>The <code>$</code> indicates your shell prompt — don't type it.</p>
-<h3>Typographical Conventions</h3>
-<p>This book uses standard O'Reilly conventions:</p>
-<ul><li><strong>Bold</strong> indicates new terms, emphasis, or UI elements ("click the <strong>Save</strong> button")</li>
-<li><em>Italic</em> indicates filenames, URLs, example text, or emphasis</li>
-<li><code>Constant width</code> indicates code, commands, component names, attributes, and technical terms</li>
-</ul>
-We also use special elements to highlight important information:
-<blockquote><strong>NOTE</strong>: Additional context, clarifications, or interesting tangents that won't break your code if you skip them.</blockquote>
-<blockquote><strong>WARNING</strong>: Pay attention here — this is where developers commonly make mistakes or encounter surprising behavior.</blockquote>
-<blockquote><strong>TIP</strong>: Practical advice from the trenches, often learned the hard way.</blockquote>
 <h2>Relationship to "Learning LARC"</h2>
 <p>If <em>Building with LARC</em> is the comprehensive reference manual, <em>Learning LARC</em> is its approachable older sibling — the tutorial-focused book that teaches LARC from the ground up through hands-on examples and clear explanations.</p>
 <p>The two books complement each other:</p>
@@ -165,6 +136,35 @@ This book meets you where experienced web developers typically are — comfortab
 </ul>
 No build tools, no Node.js, no npm (unless you want to install LARC from npm) — just a browser and a way to serve static files. That's the point.
 <h2>Book Conventions and Notation</h2>
+<p>This section consolidates all the conventions used throughout this book for easy reference.</p>
+<h3>Typographical Conventions</h3>
+<p>This book uses standard O'Reilly conventions:</p>
+<ul><li><strong>Bold</strong> indicates new terms, emphasis, or UI elements ("click the <strong>Save</strong> button")</li>
+<li><em>Italic</em> indicates filenames, URLs, example text, or emphasis</li>
+<li><code>Constant width</code> indicates code, commands, component names, attributes, and technical terms</li>
+</ul>
+We also use special callout blocks to highlight important information:
+<blockquote><strong>NOTE</strong>: Additional context, clarifications, or interesting tangents that won't break your code if you skip them.</blockquote>
+<blockquote><strong>WARNING</strong>: Pay attention here — this is where developers commonly make mistakes or encounter surprising behavior.</blockquote>
+<blockquote><strong>TIP</strong>: Practical advice from the trenches, often learned the hard way.</blockquote>
+<h3>Code Examples</h3>
+<p>Throughout this book, you'll see code examples in various formats:</p>
+<strong>Inline code</strong> appears <code>like this</code> for short snippets, commands, file names, and HTML attributes.
+<strong>Block code</strong> appears in fenced sections with syntax highlighting:
+<pre><code class="language-javascript">// JavaScript examples look like this
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.textContent = &#039;Hello from LARC!&#039;;
+  }
+}</code></pre>
+<pre><code class="language-html">&lt;!-- HTML examples look like this --&gt;
+&lt;pan-card title=&quot;Example&quot;&gt;
+  &lt;p&gt;Component content goes here&lt;/p&gt;
+&lt;/pan-card&gt;</code></pre>
+<strong>Command-line examples</strong> begin with a prompt:
+<pre><code class="language-bash">$ python3 -m http.server 8000
+$ npm install @larcjs/core</code></pre>
+<p>The <code>$</code> indicates your shell prompt — don't type it.</p>
 <h3>Message Topics</h3>
 <p>LARC applications communicate through the PAN bus using hierarchical topic patterns. Throughout this book, topics follow conventions:</p>
 <pre><code class="language-plaintext">namespace.entity.action</code></pre>
@@ -203,6 +203,7 @@ publish(topic: string, payload: any, options?: object): void
 bus.publish(&#039;user.login&#039;, { userId: 123 });</code></pre>
 <p>These aren't real TypeScript — just pseudocode for clarity. TypeScript users should reference the official <code>@larcjs/core-types</code> package for actual type definitions.</p>
 <h3>File Paths and Imports</h3>
+<p>File paths are shown in UNIX format (<code>/src/components/my-component.mjs</code>) but translate naturally to Windows (<code>\src\components\my-component.mjs</code>).</p>
 <p>Example projects use a consistent structure:</p>
 <pre><code class="language-plaintext">/src/
   /components/     # Your custom components

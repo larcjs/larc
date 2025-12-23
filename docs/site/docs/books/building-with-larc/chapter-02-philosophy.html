@@ -212,34 +212,14 @@ No transpiler.
 No dev server.   
 No JSX.   
 No toolchain waiting room.</p>
-<h3>What LARC Discovered</h3>
-<p>Through the PAN experiment and building real applications without framework dependencies, several insights emerged:</p>
-<li><strong> Modern browsers are incredibly capable</strong></li>
-<p>You don't need JSX—template literals work great:</p>
-<pre><code class="language-javascript">render() {
-  this.innerHTML = `
-    &lt;div class=&quot;card&quot;&gt;
-      &lt;h2&gt;${this.title}&lt;/h2&gt;
-      &lt;p&gt;${this.description}&lt;/p&gt;
-    &lt;/div&gt;
-  `;
-}</code></pre>
-<p>You don't need a virtual DOM—the real DOM is fast enough for most use cases.</p>
-<p>You don't need Babel—browsers support modern JavaScript features natively.</p>
-<li><strong> Message-passing eliminates coupling</strong></li>
-<p>Components that communicate through messages instead of direct imports can truly be reused anywhere. They don't know about each other. They don't depend on each other. They just publish and subscribe to topics.</p>
-<li><strong> Build-free development is liberating</strong></li>
-<p>Edit a file. Refresh the browser. See the change instantly. No waiting. No watching. No hot module replacement complexity. Just immediate feedback.</p>
-<p>This dramatically lowers the barrier to entry—new developers can start contributing immediately.</p>
-<li><strong> Standards are more stable than frameworks</strong></li>
-<p>Web platform APIs evolve slowly and maintain backward compatibility. Code written with Custom Elements five years ago still works today. The same can't always be said for framework-specific code.</p>
 <h3>The Philosophy That Emerged</h3>
-<p>LARC's philosophy crystallized from these experiments:</p>
-<strong>Use the platform.</strong> The web has matured. The standards are good. Build on them directly instead of abstracting them away.
-<strong>Optimize for understanding.</strong> Code that uses standard APIs is easier to understand than code that uses framework-specific abstractions. New developers already know HTML, CSS, and JavaScript—they don't need to learn a framework's mental model first.
-<strong>Make builds optional.</strong> Use builds for optimization in production if you need them, but don't require them for development. Let developers work directly with the code they write.
-<strong>Enable true portability.</strong> Components that depend only on web standards and a lightweight message bus can work in any project, with any stack, indefinitely.
-<p>This isn't about being anti-framework. React, Vue, Svelte, and others are excellent tools that solve real problems. But for many projects, the web platform itself—combined with a simple communication mechanism—is sufficient. And when it is, why take on the complexity?</p>
+<p>These experiments crystallized LARC's core philosophy:</p>
+<ul><li><strong>Use the platform.</strong> The web has matured. Build on standards directly instead of abstracting them away.</li>
+<li><strong>Message-passing over shared state.</strong> Components that communicate through messages can truly be reused anywhere.</li>
+<li><strong>Make builds optional.</strong> Use builds for production optimization, not as a development requirement.</li>
+<li><strong>Enable true portability.</strong> Components that depend only on web standards and a lightweight message bus work in any project.</li>
+</ul>
+This isn't anti-framework ideology—React, Vue, and Svelte solve real problems. But for many projects, the web platform itself is sufficient. When it is, why take on unnecessary complexity?
 <h2>Message-Passing Architecture: Learning from Distributed Systems</h2>
 <h3>The Inspiration: Actor Model and Message Queues</h3>
 <p>LARC's solution comes from distributed systems theory. When building systems with multiple independent processes, you don't use shared state—you use message passing. Each process maintains its own state and communicates with other processes by sending messages.</p>
@@ -474,103 +454,8 @@ By building on web standards, LARC remains simple, debuggable, and future-proof.
 customElements.define(&#039;pan-card&#039;, PanCard);</code></pre>
 <p>No framework required. Just standard Web Components that happen to communicate via the PAN bus.</p>
 <h2>Zero-Dependency, Zero-Build Philosophy</h2>
-<h3>The Build Tool Problem</h3>
-<p>Modern web development has become synonymous with build tools. Want to create a simple website? First, install Node.js, npm, webpack, Babel, and a dozen plugins. Wait for installation. Configure everything. Then finally write code.</p>
-<p>This creates several problems:</p>
-<li><strong>Barrier to entry</strong></li>
-<p>Beginners must learn the toolchain before they can learn web development:</p>
-<ul><li>What's webpack? What's Babel? What are these 1000 dependencies?</li>
-<li>Why did the build fail? What's a source map?</li>
-<li>How do I debug code that's been transpiled?</li>
-</ul>
-<li><strong>Maintenance burden</strong></li>
-<p>Build configurations break:</p>
-<ul><li>Dependency updates introduce breaking changes</li>
-<li>Security vulnerabilities require constant updates</li>
-<li>Build times increase as projects grow</li>
-<li>Different team members have different tool versions</li>
-</ul>
-<li><strong>Slower iteration</strong></li>
-<p>Build steps add friction to development:</p>
-<ul><li>Edit code -> wait for rebuild -> refresh browser</li>
-<li>Build errors interrupt flow</li>
-<li>Debugging transpiled code is harder</li>
-<li>Hot module replacement adds complexity</li>
-</ul>
-<li><strong> Framework lock-in</strong></li>
-<p>Each framework has its own tooling:</p>
-<ul><li>React uses Create React App (or Vite, or Next.js...)</li>
-<li>Vue uses Vue CLI (or Vite...)</li>
-<li>Angular uses Angular CLI</li>
-<li>Svelte uses SvelteKit</li>
-</ul>
-Switching frameworks means learning new tools.
-<h3>LARC's Solution: Direct Browser Execution</h3>
-<p>LARC eliminates build requirements for development by using only features that browsers understand natively:</p>
-<li><strong> ES Modules</strong></li>
-<pre><code class="language-javascript">// Native imports work directly in browsers
-import { PanClient } from &#039;./pan-client.mjs&#039;;
-import &#039;./components/pan-card.mjs&#039;;</code></pre>
-<p>No bundler required. The browser loads modules directly.</p>
-<li><strong> Standard JavaScript</strong></li>
-<pre><code class="language-javascript">// Write modern JavaScript that runs directly
-class PanCard extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: &#039;open&#039; });
-  }
-
-  async connectedCallback() {
-    const data = await fetch(&#039;/api/data&#039;);
-    this.render(await data.json());
-  }
-}</code></pre>
-<p>No transpilation. Modern browsers support classes, async/await, destructuring, template literals, and other ES2015+ features.</p>
-<li><strong> CSS Custom Properties</strong></li>
-<pre><code class="language-css">/* Native CSS variables for theming */
-.card {
-  background: var(--card-background, white);
-  color: var(--card-color, black);
-  border-radius: var(--card-radius, 8px);
-}</code></pre>
-<p>No CSS-in-JS runtime. No styled-components overhead.</p>
-<li><strong> Web Components</strong></li>
-<pre><code class="language-javascript">// Native component system
-customElements.define(&#039;pan-card&#039;, PanCard);</code></pre>
-<p>No framework runtime. No virtual DOM. Just browser primitives.</p>
-<h3>The Development Experience</h3>
-<p>Here's the entire setup for a LARC project:</p>
-<pre><code class="language-bash"># 1. Create an HTML file
-cat &gt; index.html &lt;&lt; &#039;EOF&#039;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;title&gt;My App&lt;/title&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;script type=&quot;module&quot; src=&quot;/src/pan.mjs&quot;&gt;&lt;/script&gt;
-  &lt;pan-bus&gt;&lt;/pan-bus&gt;
-  &lt;pan-card title=&quot;Hello&quot;&gt;
-    &lt;p&gt;World&lt;/p&gt;
-  &lt;/pan-card&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-EOF
-
-# 2. Start a static server
-python3 -m http.server 8000
-
-# 3. Open browser
-# http://localhost:8000
-
-# That&#039;s it. No npm install. No webpack config. No build step.</code></pre>
-<p>Edit a file. Refresh the browser. See the change instantly.</p>
-<p>This isn't just simpler—it's <strong>faster</strong>. No build step means:</p>
-<ul><li>Instant feedback on changes</li>
-<li>Debugging actual source code</li>
-<li>No build cache to corrupt</li>
-<li>No toolchain version conflicts</li>
-</ul>
+<p>We've already seen the problems with build tool complexity. LARC's solution is straightforward: use only features that browsers understand natively—ES Modules, standard JavaScript (ES2015+), CSS Custom Properties, and Web Components.</p>
+<p>The result is the simple development workflow shown earlier: edit a file, refresh the browser, see changes instantly. No bundler, no transpiler, no waiting.</p>
 <h3>But What About Production?</h3>
 <p>The zero-build philosophy applies to <strong>development</strong>, not necessarily production. For production, you can (and often should) use build tools:</p>
 <pre><code class="language-bash"># Production build with Vite (optional)
@@ -584,41 +469,6 @@ vite build
 <li>Large applications? Add a build for optimization.</li>
 </ul>
 The build is an optimization, not a requirement.
-<h3>Comparison: LARC vs. Traditional Tools</h3>
-<p>Let's compare the development experience:</p>
-<strong>React with Create React App:</strong>
-<pre><code class="language-bash">$ npx create-react-app my-app
-# Wait 5-10 minutes
-# Install 1,400+ dependencies
-# Project size: 350MB
-
-$ cd my-app
-$ npm start
-# Wait for build
-# Edit file
-# Wait for rebuild
-# See changes (2-5 seconds later)</code></pre>
-<strong>LARC:</strong>
-<pre><code class="language-bash">$ mkdir my-app
-$ cd my-app
-$ cat &gt; index.html &lt;&lt; &#039;EOF&#039;
-&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-  &lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;&gt;&lt;/script&gt;
-&lt;/head&gt;
-&lt;body&gt;
-  &lt;pan-bus&gt;&lt;/pan-bus&gt;
-  &lt;pan-card&gt;Hello World&lt;/pan-card&gt;
-&lt;/body&gt;
-&lt;/html&gt;
-EOF
-
-$ python3 -m http.server
-# Edit file
-# Refresh browser
-# See changes (instantly)</code></pre>
-<p>One approach requires 350MB and 1,400 dependencies. The other requires an HTML file and a browser.</p>
 <h2>Progressive Enhancement and Graceful Degradation</h2>
 <h3>Layering Functionality</h3>
 <p>LARC embraces the web's fundamental principle: <strong>progressive enhancement</strong>. Start with a basic HTML structure that works, then enhance it with JavaScript.</p>
@@ -836,253 +686,8 @@ panClient.subscribe(&#039;items.*&#039;, ({ topic, data }) =&gt; {
 <li>Mix of frameworks</li>
 <li>Simple message-driven logic</li>
 </ul>
-<h3>LARC vs. Vuex</h3>
-<strong>Vuex:</strong>
-<pre><code class="language-javascript">// Vuex uses a centralized store with mutations and actions
-
-// Define store
-const store = new Vuex.Store({
-  state: {
-    items: []
-  },
-  mutations: {
-    ADD_ITEM(state, item) {
-      state.items.push(item);
-    },
-    REMOVE_ITEM(state, id) {
-      state.items = state.items.filter(item =&gt; item.id !== id);
-    }
-  },
-  actions: {
-    addItem({ commit }, item) {
-      commit(&#039;ADD_ITEM&#039;, item);
-    },
-    async fetchItems({ commit }) {
-      const items = await api.getItems();
-      commit(&#039;SET_ITEMS&#039;, items);
-    }
-  },
-  getters: {
-    itemCount: state =&gt; state.items.length
-  }
-});
-
-// Use in components
-export default {
-  computed: {
-    items() {
-      return this.$store.state.items;
-    },
-    itemCount() {
-      return this.$store.getters.itemCount;
-    }
-  },
-  methods: {
-    addItem(item) {
-      this.$store.dispatch(&#039;addItem&#039;, item);
-    }
-  }
-};</code></pre>
-<strong>LARC:</strong>
-<pre><code class="language-javascript">// LARC doesn&#039;t require store setup or mutations
-
-class ItemList extends HTMLElement {
-  constructor() {
-    super();
-    this.items = [];
-  }
-
-  connectedCallback() {
-    // Subscribe to item messages
-    panClient.subscribe(&#039;items.add&#039;, ({ data }) =&gt; {
-      this.items.push(data);
-      this.render();
-    });
-
-    panClient.subscribe(&#039;items.remove&#039;, ({ data: id }) =&gt; {
-      this.items = this.items.filter(item =&gt; item.id !== id);
-      this.render();
-    });
-
-    // Request current items
-    panClient.publish(&#039;items.fetch&#039;);
-  }
-
-  addItem(item) {
-    panClient.publish(&#039;items.add&#039;, item, { retain: true });
-  }
-}</code></pre>
-<strong>Key Differences:</strong>
-<p>| <strong>Vuex</strong>                  | <strong>LARC</strong>                          |
-|---------------------------|-----------------------------------|
-| Mutations, actions, getters | Messages, topics, subscriptions |
-| Vue-specific              | Framework-agnostic                |
-| Centralized state         | Distributed state                 |</p>
-<h3>LARC vs. MobX</h3>
-<strong>MobX:</strong>
-<pre><code class="language-javascript">// MobX uses observables and reactions
-
-import { observable, action, computed, makeObservable } from &#039;mobx&#039;;
-import { observer } from &#039;mobx-react&#039;;
-
-class ItemStore {
-  items = [];
-
-  constructor() {
-    makeObservable(this, {
-      items: observable,
-      addItem: action,
-      removeItem: action,
-      itemCount: computed
-    });
-  }
-
-  addItem(item) {
-    this.items.push(item);
-  }
-
-  removeItem(id) {
-    this.items = this.items.filter(item =&gt; item.id !== id);
-  }
-
-  get itemCount() {
-    return this.items.length;
-  }
-}
-
-const itemStore = new ItemStore();
-
-// Observer component
-const ItemList = observer(() =&gt; {
-  return (
-    &lt;div&gt;
-      &lt;p&gt;Count: {itemStore.itemCount}&lt;/p&gt;
-      {itemStore.items.map(item =&gt; (
-        &lt;Item key={item.id} item={item} /&gt;
-      ))}
-    &lt;/div&gt;
-  );
-});</code></pre>
-<strong>LARC:</strong>
-<pre><code class="language-javascript">// LARC uses explicit message passing
-
-class ItemList extends HTMLElement {
-  constructor() {
-    super();
-    this.items = [];
-  }
-
-  connectedCallback() {
-    panClient.subscribe(&#039;items.add&#039;, ({ data }) =&gt; {
-      this.items.push(data);
-      this.render();
-    });
-
-    panClient.subscribe(&#039;items.remove&#039;, ({ data: id }) =&gt; {
-      this.items = this.items.filter(item =&gt; item.id !== id);
-      this.render();
-    });
-
-    this.render();
-  }
-
-  render() {
-    this.innerHTML = `
-      &lt;div&gt;
-        &lt;p&gt;Count: ${this.items.length}&lt;/p&gt;
-        ${this.items.map(item =&gt; `&lt;item-element data-item=&#039;${JSON.stringify(item)}&#039;&gt;&lt;/item-element&gt;`).join(&#039;&#039;)}
-      &lt;/div&gt;
-    `;
-  }
-}</code></pre>
-<strong>Key Differences:</strong>
-<p>| <strong>MobX</strong>                  | <strong>LARC</strong>                  |
-|---------------------------|---------------------------|
-| Automatic reactivity through proxies  | Explicit message subscriptions |
-| Implicit dependencies     | Explicit topic subscriptions |
-| Framework integration required | Framework-agnostic |</p>
-<strong>When MobX is better:</strong>
-<ul><li>Need automatic reactivity</li>
-<li>Complex computed values</li>
-<li>Fine-grained updates</li>
-</ul>
-<strong>When LARC is better:</strong>
-<ul><li>Want explicit data flow</li>
-<li>Need component isolation</li>
-<li>Cross-framework compatibility</li>
-</ul>
-<h3>LARC vs. Context API (React)</h3>
-<strong>React Context:</strong>
-<pre><code class="language-javascript">// Context requires provider setup and consumer components
-
-const ThemeContext = React.createContext(&#039;light&#039;);
-const UserContext = React.createContext(null);
-
-function App() {
-  const [theme, setTheme] = useState(&#039;light&#039;);
-  const [user, setUser] = useState(null);
-
-  return (
-    &lt;ThemeContext.Provider value={{ theme, setTheme }}&gt;
-      &lt;UserContext.Provider value={{ user, setUser }}&gt;
-        &lt;Header /&gt;
-        &lt;Main /&gt;
-        &lt;Footer /&gt;
-      &lt;/UserContext.Provider&gt;
-    &lt;/ThemeContext.Provider&gt;
-  );
-}
-
-function Header() {
-  const { theme, setTheme } = useContext(ThemeContext);
-  const { user } = useContext(UserContext);
-
-  return (
-    &lt;header className={theme}&gt;
-      &lt;h1&gt;Hello, {user?.name}&lt;/h1&gt;
-      &lt;button onClick={() =&gt; setTheme(theme === &#039;light&#039; ? &#039;dark&#039; : &#039;light&#039;)}&gt;
-        Toggle Theme
-      &lt;/button&gt;
-    &lt;/header&gt;
-  );
-}</code></pre>
-<strong>LARC:</strong>
-<pre><code class="language-html">&lt;!-- No provider nesting required --&gt;
-&lt;script type=&quot;module&quot; src=&quot;/src/pan.mjs&quot;&gt;&lt;/script&gt;
-&lt;pan-bus&gt;&lt;/pan-bus&gt;
-
-&lt;pan-header&gt;&lt;/pan-header&gt;
-&lt;pan-main&gt;&lt;/pan-main&gt;
-&lt;pan-footer&gt;&lt;/pan-footer&gt;
-
-&lt;script type=&quot;module&quot;&gt;
-  // Components subscribe to topics
-  class PanHeader extends HTMLElement {
-    connectedCallback() {
-      panClient.subscribe(&#039;theme.change&#039;, ({ data }) =&gt; {
-        this.className = data;
-      });
-
-      panClient.subscribe(&#039;user.login&#039;, ({ data }) =&gt; {
-        this.querySelector(&#039;h1&#039;).textContent = `Hello, ${data.name}`;
-      });
-
-      this.querySelector(&#039;button&#039;).addEventListener(&#039;click&#039;, () =&gt; {
-        const current = this.className || &#039;light&#039;;
-        const next = current === &#039;light&#039; ? &#039;dark&#039; : &#039;light&#039;;
-        panClient.publish(&#039;theme.change&#039;, next, { retain: true });
-      });
-    }
-  }
-
-  customElements.define(&#039;pan-header&#039;, PanHeader);
-&lt;/script&gt;</code></pre>
-<strong>Key Differences:</strong>
-<p>| <strong>Context</strong>               | <strong>LARC</strong>              |
-|---------------------------|-----------------------|
-| Provider hierarchy, hook dependencies | Flat message bus |
-| React-specific            | Framework-agnostic |
-| Requires wrapping components | Just subscribe to topics |</p>
+<h3>Other State Management Approaches</h3>
+<p>The same pattern applies to other state management solutions. Vuex (Vue), MobX, and React Context all share similar characteristics: centralized state, framework-specific APIs, and various degrees of boilerplate. LARC's message-passing approach offers a framework-agnostic alternative with explicit data flow.</p>
 <h3>Summary: Architectural Trade-offs</h3>
 <p>| Feature | Redux | Vuex | MobX | Context | LARC |
 |---------|-------|------|------|---------|------|
@@ -1110,90 +715,9 @@ function Header() {
 <li>No built-in middleware system (yet)</li>
 <li>No official browser DevTools extension (yet)</li>
 </ul>
-<h2>The Problems LARC Solves</h2>
-<p>Let's look at concrete examples of problems LARC addresses:</p>
-<h3>Problem 1: Reusing Components Across Projects</h3>
-<strong>Traditional approach:</strong>
-<p>You build a beautiful data table component in React. Later, you want to use it in a Vue project. You have to:</p>
-<li>Rewrite it in Vue</li>
-<li>Maintain two codebases</li>
-<li>Keep features in sync</li>
-<li>Test both versions</li>
-<p>Or you try to use a React component in Vue:</p>
-<pre><code class="language-javascript">// Awkward wrapper component
-import ReactDataTable from &#039;react-data-table&#039;;
-import { createApp } from &#039;vue-react-wrapper&#039;;
-
-export default {
-  mounted() {
-    createApp(ReactDataTable, this.$el, this.props);
-  }
-};</code></pre>
-<p>It works, but it's clunky. You're shipping both React and Vue runtimes.</p>
-<strong>LARC approach:</strong>
-<pre><code class="language-html">&lt;!-- Works in any framework --&gt;
-&lt;pan-data-table
-  data-topic=&quot;users.list&quot;
-  columns=&#039;[&quot;name&quot;, &quot;email&quot;, &quot;role&quot;]&#039;
-  sortable
-  filterable&gt;
-&lt;/pan-data-table&gt;</code></pre>
-<p>The component is framework-agnostic. Use it in React, Vue, Angular, or vanilla JS. No wrapper needed. No duplicate runtimes.</p>
-<h3>Problem 2: Coordinating Independent Features</h3>
-<strong>Traditional approach:</strong>
-<p>You're building a dashboard. When the user logs in, you need to:</p>
-<li>Update the header with username</li>
-<li>Load user preferences</li>
-<li>Fetch notifications</li>
-<li>Start real-time updates</li>
-<li>Track analytics event</li>
-<p>In Redux, you'd dispatch an action and handle it in multiple reducers:</p>
-<pre><code class="language-javascript">// Login action triggers cascade of reducers
-dispatch(loginSuccess(user));
-
-// Multiple reducers react to LOGIN_SUCCESS
-function headerReducer(state, action) {
-  if (action.type === LOGIN_SUCCESS) {
-    return { ...state, user: action.payload };
-  }
-}
-
-function preferencesReducer(state, action) {
-  if (action.type === LOGIN_SUCCESS) {
-    // Fetch preferences
-  }
-}
-
-function notificationsReducer(state, action) {
-  if (action.type === LOGIN_SUCCESS) {
-    // Start polling
-  }
-}
-
-// This couples all these features to the login action</code></pre>
-<strong>LARC approach:</strong>
-<pre><code class="language-javascript">// Login component publishes one message
-panClient.publish(&#039;user.login&#039;, userData, { retain: true });
-
-// Each feature subscribes independently
-panClient.subscribe(&#039;user.login&#039;, ({ data }) =&gt; {
-  updateHeader(data);
-});
-
-panClient.subscribe(&#039;user.login&#039;, async ({ data }) =&gt; {
-  const prefs = await fetchPreferences(data.id);
-  panClient.publish(&#039;user.preferences&#039;, prefs, { retain: true });
-});
-
-panClient.subscribe(&#039;user.login&#039;, ({ data }) =&gt; {
-  startNotificationPolling(data.id);
-});
-
-panClient.subscribe(&#039;user.login&#039;, ({ data }) =&gt; {
-  analytics.track(&#039;login&#039;, { userId: data.id });
-});</code></pre>
-<p>No coupling. Features can be added or removed independently. Each feature handles its own logic.</p>
-<h3>Problem 3: Testing Components in Isolation</h3>
+<h2>Additional Practical Benefits</h2>
+<p>Beyond the architectural advantages, LARC offers practical benefits for everyday development:</p>
+<h3>Simplified Component Testing</h3>
 <strong>Traditional approach:</strong>
 <p>Testing a Redux-connected component requires:</p>
 <pre><code class="language-javascript">import { Provider } from &#039;react-redux&#039;;
@@ -1237,30 +761,7 @@ test(&#039;renders item list&#039;, () =&gt; {
   // Test assertions on DOM...
 });</code></pre>
 <p>Simpler. Mock the message bus, not the entire application state.</p>
-<h3>Problem 4: Debugging Complex State Changes</h3>
-<strong>Traditional approach:</strong>
-<p>Debugging a Redux app with multiple reducers and middleware:</p>
-<pre><code class="language-javascript">// Something changed, but where?
-// - Check Redux DevTools
-// - Find the action
-// - Trace through reducers
-// - Check middleware
-// - Examine normalized state
-// - Follow selector chains</code></pre>
-<strong>LARC approach:</strong>
-<pre><code class="language-javascript">// Subscribe to all messages during development
-if (import.meta.env.DEV) {
-  panClient.subscribe(&#039;*&#039;, ({ topic, data, meta }) =&gt; {
-    console.log(`[${meta.timestamp}] ${topic}`, data);
-  });
-}
-
-// Result: Clear log of every message
-// [1234567890] user.login { id: 123, name: &#039;Alice&#039; }
-// [1234567891] user.preferences { theme: &#039;dark&#039; }
-// [1234567892] cart.item.add { id: 456, name: &#039;Product&#039; }</code></pre>
-<p>Every state change is an explicit message. No hidden transformations. No mysterious updates. Just a log of events.</p>
-<h3>Problem 5: Multi-Tab Synchronization</h3>
+<h3>Multi-Tab Synchronization</h3>
 <strong>Traditional approach:</strong>
 <p>Synchronizing state across browser tabs is painful:</p>
 <pre><code class="language-javascript">// Tab 1: Update state
