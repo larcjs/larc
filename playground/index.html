@@ -9,12 +9,13 @@
   <!-- Configure autoloader paths -->
   <script type="module">
     window.panAutoload = {
-      paths: ['../packages/core/', '../packages/ui/']
+      // Using root-relative paths for reliability
+      paths: ['/larc/packages/core/', '/larc/packages/ui/']
     };
   </script>
-  
+
   <!-- Load PAN autoloader -->
-  <script type="module" src="../packages/core/pan.mjs"></script>
+  <script type="module" src="/larc/packages/core/pan.mjs"></script>
   
   <!-- Load playground app -->
   <script type="module" src="./playground.mjs"></script>
