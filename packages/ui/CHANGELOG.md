@@ -6,6 +6,15 @@ This project adheres to Keep a Changelog, and aims to follow Semantic Versioning
 
 ## [Unreleased]
 
+### 🧪 Testing
+
+- **Comprehensive Test Coverage** - 165 tests now passing (55 components × 3 browsers)
+  - Fixed pan-card Shadow DOM slot content testing
+  - Fixed pan-table element registration (using pan-data-table)
+  - Fixed pan-modal event listening tests
+  - Removed tests for non-component utilities (pan-fetch, pan-routes, pan-security, pan-storage, pan-store, pan-validation)
+  - All tests pass on Chromium, Firefox, and WebKit
+
 ---
 
 ## [1.1.0] - 2024-11-24

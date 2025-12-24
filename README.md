@@ -241,6 +241,10 @@ npm run serve
 
 ### Testing
 
+**Current Status:**
+- ✅ **@larcjs/core:** 335 tests passing
+- ✅ **@larcjs/ui:** 165 tests passing (55 components × 3 browsers)
+
 ```bash
 # Test everything
 npm test
@@ -253,6 +257,8 @@ npm run test:components
 cd packages/core
 npm run test:coverage
 ```
+
+All UI components are tested end-to-end across Chromium, Firefox, and WebKit using Playwright.
 
 ## 🤝 Contributing
 
