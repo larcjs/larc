@@ -12,8 +12,11 @@ test.describe('pan-card component', () => {
     });
     expect(headerText).toBe('Test Header');
 
+    // Wait for slot content to be assigned and check body content
     const bodyText = await page.locator('pan-card').evaluate((el) => {
-      return el.shadowRoot.querySelector('.card-body')?.textContent?.trim();
+      const slot = el.shadowRoot.querySelector('.card-body slot');
+      const assignedNodes = slot?.assignedNodes() || [];
+      return assignedNodes.map(n => n.textContent).join('').trim();
     });
     expect(bodyText).toContain('This is body content');
 

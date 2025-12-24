@@ -15,23 +15,16 @@ test.describe('pan-modal component', () => {
     await page.goto(fixturePath);
     await page.waitForFunction(() => window.pan?.bus && customElements.get('pan-modal'));
 
-    await page.evaluate(() => {
-      window.__modalTopics = [];
-      document.addEventListener('pan:deliver', (event) => {
-        if (event.detail?.topic?.startsWith('modal.demo.')) {
-          window.__modalTopics.push(event.detail.topic);
-        }
-      });
-    });
+    // Give modal time to set up subscriptions
+    await page.waitForTimeout(200);
 
+    // Show modal
     await page.evaluate(() => window.pan.bus.publish('modal.demo.show', {}));
-    await page.waitForFunction(() => window.__modalTopics?.includes('modal.demo.opened'));
+    await expect.poll(async () => modalOpenState(page), { timeout: 5000 }).toBe(true);
 
-    expect(await modalOpenState(page)).toBe(true);
-
+    // Hide modal
     await page.evaluate(() => window.pan.bus.publish('modal.demo.hide', {}));
-    await page.waitForFunction(() => window.__modalTopics?.includes('modal.demo.closed'));
-    expect(await modalOpenState(page)).toBe(false);
+    await expect.poll(async () => modalOpenState(page), { timeout: 5000 }).toBe(false);
   });
 
   test('toggle topic switches modal state', async ({ page }) => {

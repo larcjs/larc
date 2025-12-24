@@ -6,11 +6,11 @@ test.describe('pan-table component', () => {
   test('registers and renders without errors', async ({ page }) => {
     await page.goto(fixturePath);
 
-    // Wait for custom element to be defined
-    await page.waitForFunction(() => customElements.get('pan-table'));
+    // Wait for custom element to be defined (pan-data-table is the actual registered element)
+    await page.waitForFunction(() => customElements.get('pan-data-table'));
 
     // Check that element exists in DOM
-    const element = await page.locator('pan-table');
+    const element = await page.locator('pan-data-table');
     await expect(element).toBeAttached();
 
     // Check for JavaScript errors

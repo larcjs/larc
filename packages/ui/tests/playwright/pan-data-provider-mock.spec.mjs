@@ -6,11 +6,11 @@ test.describe('pan-data-provider-mock component', () => {
   test('registers and renders without errors', async ({ page }) => {
     await page.goto(fixturePath);
 
-    // Wait for custom element to be defined
-    await page.waitForFunction(() => customElements.get('pan-data-provider-mock'));
+    // Wait for custom element to be defined (registers as 'pan-data-provider')
+    await page.waitForFunction(() => customElements.get('pan-data-provider'));
 
     // Check that element exists in DOM
-    const element = await page.locator('pan-data-provider-mock');
+    const element = await page.locator('pan-data-provider');
     await expect(element).toBeAttached();
 
     // Check for JavaScript errors
