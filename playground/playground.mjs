@@ -17,7 +17,17 @@ import { getAllExamples, getExample } from './examples.mjs';
 // Pan-bus is loaded via the <pan-bus> element in index.html
 
 // Setup header button functionality
-function setupPlayground() {
+async function setupPlayground() {
+  console.log('[playground] Starting setup...');
+
+  // Wait for custom elements to be defined
+  console.log('[playground] Waiting for pg-canvas to be defined...');
+  await customElements.whenDefined('pg-canvas');
+  console.log('[playground] pg-canvas is defined');
+
+  await customElements.whenDefined('pg-palette');
+  console.log('[playground] pg-palette is defined');
+
   const bottomPanel = document.getElementById('bottom-panel');
   const codePanel = document.getElementById('code-panel');
   const busPanel = document.getElementById('bus-panel');
@@ -27,7 +37,7 @@ function setupPlayground() {
   const canvas = document.querySelector('pg-canvas');
 
   if (!exampleSelect || !canvas) {
-    console.log('Waiting for DOM elements...');
+    console.error('Could not find required DOM elements');
     return;
   }
 
