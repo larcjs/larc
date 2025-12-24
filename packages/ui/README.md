@@ -1,6 +1,7 @@
 # LARC Components
 
 [![Version](https://img.shields.io/npm/v/@larcjs/ui.svg)](https://www.npmjs.com/package/@larcjs/ui)
+[![UI Tests](https://github.com/larcjs/larc/actions/workflows/ui-tests.yml/badge.svg)](https://github.com/larcjs/larc/actions/workflows/ui-tests.yml)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![Security](https://img.shields.io/badge/security-audited-brightgreen.svg)](docs/COMPONENT_SECURITY_AUDIT.md)
 

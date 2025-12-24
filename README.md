@@ -5,7 +5,8 @@
 [![npm version](https://img.shields.io/npm/v/@larcjs/core?label=%40larcjs%2Fcore&color=blue)](https://www.npmjs.com/package/@larcjs/core)
 [![npm version](https://img.shields.io/npm/v/@larcjs/ui?label=%40larcjs%2Fcomponents&color=blue)](https://www.npmjs.com/package/@larcjs/ui)
 [![npm downloads](https://img.shields.io/npm/dm/@larcjs/core?label=downloads)](https://www.npmjs.com/package/@larcjs/core)
-[![CI Status](https://github.com/larcjs/larc/actions/workflows/core-tests.yml/badge.svg)](https://github.com/larcjs/larc/actions)
+[![Core Tests](https://github.com/larcjs/larc/actions/workflows/core-tests.yml/badge.svg)](https://github.com/larcjs/larc/actions/workflows/core-tests.yml)
+[![UI Tests](https://github.com/larcjs/larc/actions/workflows/ui-tests.yml/badge.svg)](https://github.com/larcjs/larc/actions/workflows/ui-tests.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](./CONTRIBUTING.md)
 
