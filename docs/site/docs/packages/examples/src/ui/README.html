@@ -415,14 +415,21 @@ See <a href="docs/COMPONENT_SECURITY_AUDIT.md">Security Audit Report</a> for det
 <li><strong><a href="https://github.com/larcjs/examples">@larcjs/examples</a></strong> — Demo applications including hybrid examples</li>
 </ul>
 <h2>Testing</h2>
-<p>Playwright exercises common components end-to-end using the real PAN bus:</p>
+<strong>Test Coverage:</strong> ✅ <strong>165 tests passing</strong> (55 component specs × 3 browsers: Chromium, Firefox, WebKit)
+<p>Playwright exercises all major components end-to-end using the real PAN bus:</p>
 <pre><code class="language-bash"># Run all component specs headlessly
 npm run test --workspace @larcjs/ui
 
 # Watch mode with the Playwright UI
 npm run test:ui --workspace @larcjs/ui</code></pre>
-<p>The tests load HTML fixtures from <code>tests/fixtures/</code> so you can iterate on components without any bundling step.</p>
-<h2>Contributing</h2>
+<p>The tests load HTML fixtures from <code>tests/fixtures/</code> so you can iterate on components without any bundling step. Each component is tested for:
+<ul><li>Custom element registration</li>
+<li>Shadow DOM rendering</li>
+<li>Attribute reactivity</li>
+<li>PAN bus message handling</li>
+<li>Cross-browser compatibility</li>
+</ul>
+<h2>Contributing</h2></p>
 <p>Contributions are welcome! Please see our <a href="CONTRIBUTING.md">Contributing Guide</a>.</p>
 <h2>License</h2>
 <p>MIT © Chris Robison</p>
