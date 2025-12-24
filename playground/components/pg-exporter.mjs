@@ -137,8 +137,8 @@ class PgExporter extends HTMLElement {
 
       // Parse the component code
       const parser = new DOMParser();
-      const doc = parser.parseFromString(`<div>${componentCode}</div>`, 'text/html');
-      const wrapper = doc.body.firstChild;
+      const doc = parser.parseFromString(`<div>${componentCode}</div>`, 'text/xml');
+      const wrapper = doc.documentElement;
       const parserErrors = doc.querySelector('parsererror');
 
       if (parserErrors) {
