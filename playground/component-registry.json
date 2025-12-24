@@ -7,7 +7,7 @@
       "displayName": "Drag Drop List",
       "description": "Drag Drop List component",
       "category": "ui",
-      "path": "../components/drag-drop-list.mjs",
+      "path": "../packages/ui/drag-drop-list.mjs",
       "icon": "📝",
       "tags": [
         "ui",
@@ -62,7 +62,7 @@
       "displayName": "Editable Cell",
       "description": "Editable Cell component",
       "category": "forms",
-      "path": "../components/editable-cell.mjs",
+      "path": "../packages/ui/editable-cell.mjs",
       "icon": "📦",
       "tags": [
         "forms",
@@ -136,7 +136,7 @@
       "displayName": "File Upload",
       "description": "File Upload component",
       "category": "forms",
-      "path": "../components/file-upload.mjs",
+      "path": "../packages/ui/file-upload.mjs",
       "icon": "📤",
       "tags": [
         "forms",
@@ -204,7 +204,7 @@
       "displayName": "Auth",
       "description": "Pan Auth component",
       "category": "auth",
-      "path": "../ui/pan-auth.mjs",
+      "path": "../packages/ui/pan-auth.mjs",
       "icon": "🔑",
       "tags": [
         "auth",
@@ -278,7 +278,7 @@
       "displayName": "Bus",
       "description": "PAN Bus - Central message bus for Page Area Network communication",
       "category": "advanced",
-      "path": "../ui/pan-bus-legacy.mjs",
+      "path": "../packages/ui/pan-bus-legacy.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -302,7 +302,7 @@
       "displayName": "Bus Enhanced",
       "description": "PAN Bus (Enhanced) - Central message bus with memory management and security",
       "category": "advanced",
-      "path": "../ui/pan-bus-enhanced.mjs",
+      "path": "../packages/ui/pan-bus-enhanced.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -376,7 +376,7 @@
       "displayName": "Card",
       "description": "Pan Card component",
       "category": "ui",
-      "path": "../ui/pan-card.mjs",
+      "path": "../packages/ui/pan-card.mjs",
       "icon": "🃏",
       "tags": [
         "ui",
@@ -436,7 +436,7 @@
       "displayName": "Chart",
       "description": "Pan Chart component",
       "category": "ui",
-      "path": "../ui/pan-chart.mjs",
+      "path": "../packages/ui/pan-chart.mjs",
       "icon": "📈",
       "tags": [
         "ui",
@@ -513,7 +513,7 @@
       "displayName": "Computed State",
       "description": "Pan Computed State component",
       "category": "advanced",
-      "path": "../ui/pan-computed-state.mjs",
+      "path": "../packages/ui/pan-computed-state.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -538,7 +538,7 @@
       "displayName": "Data Connector",
       "description": "REST data connector for PAN CRUD operations. Listens to {resource}.list.get, {resource}.item.get, {resource}.item.save, {resource}.item.delete and publishes {resource}.list.state",
       "category": "data",
-      "path": "../ui/pan-data-connector.mjs",
+      "path": "../packages/ui/pan-data-connector.mjs",
       "icon": "📦",
       "tags": [
         "data",
@@ -615,7 +615,7 @@
       "displayName": "Data Provider",
       "description": "Pan Data Provider component",
       "category": "data",
-      "path": "../ui/pan-data-provider-mock.mjs",
+      "path": "../packages/ui/pan-data-provider-mock.mjs",
       "icon": "📦",
       "tags": [
         "data",
@@ -639,7 +639,7 @@
       "displayName": "Data Provider",
       "description": "Pan Data Provider component",
       "category": "data",
-      "path": "../ui/pan-data-provider.mjs",
+      "path": "../packages/ui/pan-data-provider.mjs",
       "icon": "📦",
       "tags": [
         "data",
@@ -663,7 +663,7 @@
       "displayName": "Data Table",
       "description": "Pan Data Table component",
       "category": "ui",
-      "path": "../ui/pan-data-table.mjs",
+      "path": "../packages/ui/pan-data-table.mjs",
       "icon": "📋",
       "tags": [
         "ui",
@@ -719,7 +719,7 @@
       "displayName": "Date Picker",
       "description": "Pan Date Picker component",
       "category": "forms",
-      "path": "../ui/pan-date-picker.mjs",
+      "path": "../packages/ui/pan-date-picker.mjs",
       "icon": "📅",
       "tags": [
         "forms",
@@ -786,7 +786,7 @@
       "displayName": "Dropdown",
       "description": "Pan Dropdown component",
       "category": "forms",
-      "path": "../ui/pan-dropdown.mjs",
+      "path": "../packages/ui/pan-dropdown.mjs",
       "icon": "⬇️",
       "tags": [
         "forms",
@@ -839,7 +839,7 @@
       "displayName": "Fetch",
       "description": "Pan Fetch component",
       "category": "data",
-      "path": "../ui/pan-fetch.mjs",
+      "path": "../packages/ui/pan-fetch.mjs",
       "icon": "🌐",
       "tags": [
         "data",
@@ -863,7 +863,7 @@
       "displayName": "Files",
       "description": "Pan Files component",
       "category": "content",
-      "path": "../ui/pan-files.mjs",
+      "path": "../packages/ui/pan-files.mjs",
       "icon": "📦",
       "tags": [
         "content",
@@ -887,7 +887,7 @@
       "displayName": "Form",
       "description": "Pan Form component",
       "category": "forms",
-      "path": "../ui/pan-form.mjs",
+      "path": "../packages/ui/pan-form.mjs",
       "icon": "📝",
       "tags": [
         "forms",
@@ -943,7 +943,7 @@
       "displayName": "Forwarder",
       "description": "Pan Forwarder component",
       "category": "devtools",
-      "path": "../ui/pan-forwarder.mjs",
+      "path": "../packages/ui/pan-forwarder.mjs",
       "icon": "📦",
       "tags": [
         "devtools",
@@ -1010,7 +1010,7 @@
       "displayName": "Graphql Connector",
       "description": "Pan Graphql Connector component",
       "category": "data",
-      "path": "../ui/pan-graphql-connector.mjs",
+      "path": "../packages/ui/pan-graphql-connector.mjs",
       "icon": "📦",
       "tags": [
         "data",
@@ -1056,7 +1056,7 @@
       "displayName": "Idb",
       "description": "Pan Idb component",
       "category": "state",
-      "path": "../ui/pan-idb.mjs",
+      "path": "../packages/ui/pan-idb.mjs",
       "icon": "🗄️",
       "tags": [
         "state",
@@ -1123,7 +1123,7 @@
       "displayName": "Inspector",
       "description": "Pan Inspector component",
       "category": "devtools",
-      "path": "../ui/pan-inspector.mjs",
+      "path": "../packages/ui/pan-inspector.mjs",
       "icon": "🔍",
       "tags": [
         "devtools",
@@ -1147,7 +1147,7 @@
       "displayName": "Invoice Store",
       "description": "Pan Invoice Store component",
       "category": "advanced",
-      "path": "../ui/pan-invoice-store.mjs",
+      "path": "../packages/ui/pan-invoice-store.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -1171,7 +1171,7 @@
       "displayName": "Json Form",
       "description": "Pan Json Form component",
       "category": "advanced",
-      "path": "../ui/pan-json-form.mjs",
+      "path": "../packages/ui/pan-json-form.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -1247,7 +1247,7 @@
       "displayName": "Jwt",
       "description": "PAN JWT Component - JSON Web Token authentication handler",
       "category": "auth",
-      "path": "../ui/pan-jwt.mjs",
+      "path": "../packages/ui/pan-jwt.mjs",
       "icon": "🔐",
       "tags": [
         "auth",
@@ -1271,7 +1271,7 @@
       "displayName": "Link",
       "description": "Pan Link component",
       "category": "routing",
-      "path": "../ui/pan-link.mjs",
+      "path": "../packages/ui/pan-link.mjs",
       "icon": "🔗",
       "tags": [
         "routing",
@@ -1324,7 +1324,7 @@
       "displayName": "Markdown Editor",
       "description": "Pan Markdown Editor component",
       "category": "content",
-      "path": "../ui/pan-markdown-editor.mjs",
+      "path": "../packages/ui/pan-markdown-editor.mjs",
       "icon": "✏️",
       "tags": [
         "content",
@@ -1348,7 +1348,7 @@
       "displayName": "Markdown Renderer",
       "description": "Pan Markdown Renderer component",
       "category": "content",
-      "path": "../ui/pan-markdown-renderer.mjs",
+      "path": "../packages/ui/pan-markdown-renderer.mjs",
       "icon": "📄",
       "tags": [
         "content",
@@ -1372,7 +1372,7 @@
       "displayName": "Modal",
       "description": "Pan Modal component",
       "category": "ui",
-      "path": "../ui/pan-modal.mjs",
+      "path": "../packages/ui/pan-modal.mjs",
       "icon": "📦",
       "tags": [
         "ui",
@@ -1432,7 +1432,7 @@
       "displayName": "Offline Sync",
       "description": "Pan Offline Sync component",
       "category": "advanced",
-      "path": "../ui/pan-offline-sync.mjs",
+      "path": "../packages/ui/pan-offline-sync.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -1457,7 +1457,7 @@
       "displayName": "Pagination",
       "description": "Pan Pagination component",
       "category": "ui",
-      "path": "../ui/pan-pagination.mjs",
+      "path": "../packages/ui/pan-pagination.mjs",
       "icon": "⏭️",
       "tags": [
         "ui",
@@ -1531,7 +1531,7 @@
       "displayName": "Persistence Strategy",
       "description": "Pan Persistence Strategy component",
       "category": "advanced",
-      "path": "../ui/pan-persistence-strategy.mjs",
+      "path": "../packages/ui/pan-persistence-strategy.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -1556,7 +1556,7 @@
       "displayName": "Php Connector",
       "description": "Pan Php Connector component",
       "category": "data",
-      "path": "../ui/pan-php-connector.mjs",
+      "path": "../packages/ui/pan-php-connector.mjs",
       "icon": "📦",
       "tags": [
         "data",
@@ -1616,7 +1616,7 @@
       "displayName": "Query",
       "description": "Pan Query component",
       "category": "data",
-      "path": "../ui/pan-query.mjs",
+      "path": "../packages/ui/pan-query.mjs",
       "icon": "📦",
       "tags": [
         "data",
@@ -1676,7 +1676,7 @@
       "displayName": "Router",
       "description": "Pan Router component",
       "category": "routing",
-      "path": "../ui/pan-router.mjs",
+      "path": "../packages/ui/pan-router.mjs",
       "icon": "🧭",
       "tags": [
         "routing",
@@ -1722,7 +1722,7 @@
       "displayName": "Schema",
       "description": "Pan Schema component",
       "category": "advanced",
-      "path": "../ui/pan-schema.mjs",
+      "path": "../packages/ui/pan-schema.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -1761,7 +1761,7 @@
       "displayName": "Schema Form",
       "description": "Pan Schema Form component",
       "category": "forms",
-      "path": "../ui/pan-schema-form.mjs",
+      "path": "../packages/ui/pan-schema-form.mjs",
       "icon": "📦",
       "tags": [
         "forms",
@@ -1807,7 +1807,7 @@
       "displayName": "Schema Validator",
       "description": "Pan Schema Validator component",
       "category": "advanced",
-      "path": "../ui/pan-schema-validator.mjs",
+      "path": "../packages/ui/pan-schema-validator.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -1832,7 +1832,7 @@
       "displayName": "Search Bar",
       "description": "Pan Search Bar component",
       "category": "forms",
-      "path": "../ui/pan-search-bar.mjs",
+      "path": "../packages/ui/pan-search-bar.mjs",
       "icon": "🔍",
       "tags": [
         "forms",
@@ -1892,7 +1892,7 @@
       "displayName": "Security",
       "description": "PAN Security Utilities",
       "category": "auth",
-      "path": "../ui/pan-security.mjs",
+      "path": "../packages/ui/pan-security.mjs",
       "icon": "📦",
       "tags": [
         "auth",
@@ -1916,7 +1916,7 @@
       "displayName": "Sse",
       "description": "Pan Sse component",
       "category": "data",
-      "path": "../ui/pan-sse.mjs",
+      "path": "../packages/ui/pan-sse.mjs",
       "icon": "📡",
       "tags": [
         "data",
@@ -1976,7 +1976,7 @@
       "displayName": "State Sync",
       "description": "Pan State Sync component",
       "category": "advanced",
-      "path": "../ui/pan-state-sync.mjs",
+      "path": "../packages/ui/pan-state-sync.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -2001,7 +2001,7 @@
       "displayName": "Store",
       "description": "Pan Store component",
       "category": "state",
-      "path": "../ui/pan-store.mjs",
+      "path": "../packages/ui/pan-store.mjs",
       "icon": "💾",
       "tags": [
         "state",
@@ -2025,7 +2025,7 @@
       "displayName": "Store Pan",
       "description": "Pan Store Pan component",
       "category": "state",
-      "path": "../ui/pan-store-pan.mjs",
+      "path": "../packages/ui/pan-store-pan.mjs",
       "icon": "📦",
       "tags": [
         "state",
@@ -2049,7 +2049,7 @@
       "displayName": "Table",
       "description": "Pan Table component",
       "category": "ui",
-      "path": "../ui/pan-table.mjs",
+      "path": "../packages/ui/pan-table.mjs",
       "icon": "📊",
       "tags": [
         "ui",
@@ -2073,7 +2073,7 @@
       "displayName": "Tabs",
       "description": "Pan Tabs component",
       "category": "ui",
-      "path": "../ui/pan-tabs.mjs",
+      "path": "../packages/ui/pan-tabs.mjs",
       "icon": "📑",
       "tags": [
         "ui",
@@ -2121,7 +2121,7 @@
       "displayName": "Theme Provider",
       "description": "Pan Theme Provider component",
       "category": "theme",
-      "path": "../ui/pan-theme-provider.mjs",
+      "path": "../packages/ui/pan-theme-provider.mjs",
       "icon": "🎨",
       "tags": [
         "theme",
@@ -2145,7 +2145,7 @@
       "displayName": "Theme Toggle",
       "description": "Pan Theme Toggle component",
       "category": "theme",
-      "path": "../ui/pan-theme-toggle.mjs",
+      "path": "../packages/ui/pan-theme-toggle.mjs",
       "icon": "🌓",
       "tags": [
         "theme",
@@ -2169,7 +2169,7 @@
       "displayName": "Tree",
       "description": "Pan Tree component",
       "category": "advanced",
-      "path": "../ui/pan-tree.mjs",
+      "path": "../packages/ui/pan-tree.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -2257,7 +2257,7 @@
       "displayName": "Undo Redo",
       "description": "Pan Undo Redo component",
       "category": "advanced",
-      "path": "../ui/pan-undo-redo.mjs",
+      "path": "../packages/ui/pan-undo-redo.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -2282,7 +2282,7 @@
       "displayName": "Validation",
       "description": "PAN Validation Utilities",
       "category": "forms",
-      "path": "../ui/pan-validation.mjs",
+      "path": "../packages/ui/pan-validation.mjs",
       "icon": "📦",
       "tags": [
         "forms",
@@ -2306,7 +2306,7 @@
       "displayName": "Websocket",
       "description": "Pan Websocket component",
       "category": "data",
-      "path": "../ui/pan-websocket.mjs",
+      "path": "../packages/ui/pan-websocket.mjs",
       "icon": "🔌",
       "tags": [
         "data",
@@ -2387,7 +2387,7 @@
       "displayName": "Worker",
       "description": "Pan Worker component",
       "category": "advanced",
-      "path": "../ui/pan-worker.mjs",
+      "path": "../packages/ui/pan-worker.mjs",
       "icon": "⚙️",
       "tags": [
         "advanced",
@@ -2433,7 +2433,7 @@
       "displayName": "Todo List",
       "description": "Todo List component",
       "category": "advanced",
-      "path": "../components/todo-list.mjs",
+      "path": "../packages/ui/todo-list.mjs",
       "icon": "✅",
       "tags": [
         "advanced",
@@ -2457,7 +2457,7 @@
       "displayName": "Todo Provider",
       "description": "Todo Provider component",
       "category": "advanced",
-      "path": "../components/todo-provider.mjs",
+      "path": "../packages/ui/todo-provider.mjs",
       "icon": "📦",
       "tags": [
         "advanced",
@@ -2481,7 +2481,7 @@
       "displayName": "User Avatar",
       "description": "User Avatar component",
       "category": "ui",
-      "path": "../components/user-avatar.mjs",
+      "path": "../packages/ui/user-avatar.mjs",
       "icon": "👤",
       "tags": [
         "ui",
@@ -2548,7 +2548,7 @@
       "displayName": "X Counter",
       "description": "X Counter component",
       "category": "advanced",
-      "path": "../components/x-counter.mjs",
+      "path": "../packages/ui/x-counter.mjs",
       "icon": "🔢",
       "tags": [
         "advanced",
