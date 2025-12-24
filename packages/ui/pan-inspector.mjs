@@ -22,6 +22,13 @@ class PanInspector extends HTMLElement {
     };
   }
 
+  // Escape HTML special characters to prevent XSS
+  escapeHTML(text) {
+    if (!text || typeof text !== 'string') return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
   connectedCallback() {
     this.render();
 
@@ -304,7 +311,7 @@ class PanInspector extends HTMLElement {
           ${visible.slice(-500).map((r, i) => `
             <tr class="${r.retained ? 'retained' : ''}">
               <td class="muted">${new Date(r.ts).toLocaleTimeString()}</td>
-              <td>${r.topic}</td>
+              <td>${this.escapeHTML(r.topic)}</td>
               <td class="muted">${r.retained ? 'Retained' : 'Transient'}</td>
               <td class="muted">${this._formatBytes(r.size)}</td>
               <td class="muted">${r.duration ? r.duration.toFixed(2) + 'ms' : '-'}</td>
@@ -437,7 +444,7 @@ class PanInspector extends HTMLElement {
 
     detailsContent.innerHTML = `
       <div style="margin-bottom: 12px;">
-        <strong>Topic:</strong> ${rec.topic}
+        <strong>Topic:</strong> ${this.escapeHTML(rec.topic)}
       </div>
       <div style="margin-bottom: 12px;">
         <strong>Timestamp:</strong> ${new Date(rec.ts).toLocaleString()}

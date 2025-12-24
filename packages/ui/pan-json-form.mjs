@@ -192,6 +192,13 @@ export class PanJsonForm extends HTMLElement {
     this._offs = [];
   }
 
+  // Escape HTML special characters to prevent XSS
+  escapeHTML(text) {
+    if (!text || typeof text !== 'string') return '';
+    const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+    return text.replace(/[&<>"']/g, m => map[m]);
+  }
+
   connectedCallback() {
     this.loadSchema();
     this.setupTopics();
@@ -402,7 +409,7 @@ export class PanJsonForm extends HTMLElement {
       const errorContainer = this.shadowRoot.querySelector(`#error-${fieldName}`);
       if (errorContainer) {
         errorContainer.innerHTML = this.validationErrors[fieldName]
-          .map(err => `<div class="error-message">${err}</div>`)
+          .map(err => `<div class="error-message">${this.escapeHTML(err)}</div>`)
           .join('');
         errorContainer.style.display = 'block';
       }

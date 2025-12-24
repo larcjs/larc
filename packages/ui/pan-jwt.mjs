@@ -338,8 +338,10 @@ class PanJWT extends HTMLElement {
         return null;
       }
 
+      // Perform base64url to base64 conversion in a single pass to avoid incomplete sanitization
       const payload = parts[1];
-      const decoded = atob(payload.replace(/-/g, '+').replace(/_/g, '/'));
+      const base64 = payload.replace(/[-_]/g, (char) => (char === '-' ? '+' : '/'));
+      const decoded = atob(base64);
       return JSON.parse(decoded);
     } catch (err) {
       console.error('Failed to parse token:', err);
