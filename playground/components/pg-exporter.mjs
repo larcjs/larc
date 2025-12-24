@@ -4,6 +4,7 @@
  * Generate, view, and edit HTML code from canvas with live sync
  * Uses contenteditable for inline editing with automatic rerendering
  */
+import DOMPurify from 'dompurify';
 
 class PgExporter extends HTMLElement {
   constructor() {
@@ -135,9 +136,15 @@ class PgExporter extends HTMLElement {
         componentCode = elements.map(el => el.outerHTML).join('\n');
       }
 
+      // Sanitize the component code before parsing to prevent XSS
+      const safeComponentCode = DOMPurify.sanitize(componentCode, {
+        ALLOWED_TAGS: false, // use DOMPurify defaults
+        ALLOWED_ATTR: false  // and its default attribute allowlist
+      });
+
       // Parse the component code
       const parser = new DOMParser();
-      const doc = parser.parseFromString(`<div>${componentCode}</div>`, 'text/xml');
+      const doc = parser.parseFromString(`<div>${safeComponentCode}</div>`, 'text/xml');
       const wrapper = doc.documentElement;
       const parserErrors = doc.querySelector('parsererror');
 
