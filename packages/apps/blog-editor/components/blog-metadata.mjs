@@ -243,7 +243,7 @@ export class BlogMetadata extends HTMLElement {
               class="field-input field-textarea"
               id="excerpt-input"
               placeholder="Brief description of your post..."
-            >${this._excerpt}</textarea>
+            >${this._escapeHtml(this._excerpt)}</textarea>
           </div>
 
           <div class="two-columns">
