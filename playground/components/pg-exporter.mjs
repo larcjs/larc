@@ -207,18 +207,13 @@ class PgExporter extends HTMLElement {
   }
 
   getPlainTextFromElement(element) {
-    // Get text content, preserving line breaks
-    const html = element.innerHTML;
-    // Convert <br> to newlines
-    let text = html.replace(/<br\s*\/?>/gi, '\n');
-    // Convert div closings to newlines (contenteditable often uses divs)
-    text = text.replace(/<\/div><div>/gi, '\n');
-    // Strip remaining HTML tags
-    text = text.replace(/<[^>]+>/g, '');
-    // Decode HTML entities
-    const textarea = document.createElement('textarea');
-    textarea.innerHTML = text;
-    return textarea.value;
+    // Use DOM parsing to reliably extract plain text from the HTML content.
+    // This avoids regex-based stripping of tags, which can be incomplete
+    // for multi-character patterns and malformed markup.
+    const temp = document.createElement('div');
+    temp.innerHTML = element.innerHTML;
+    // innerText preserves visual line breaks from <br> and block elements.
+    return temp.innerText;
   }
 
   async loadComponentsFromHTML(elements, canvas, previewArea) {
