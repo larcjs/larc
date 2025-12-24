@@ -79,5 +79,8 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.8"
-  }
+  },
+  "dependencies": {
+    "dompurify": "^3.3.1"
+}
 }
