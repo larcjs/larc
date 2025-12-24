@@ -246,6 +246,7 @@ class PgCanvas extends HTMLElement {
   async ensureComponentLoaded(componentMeta) {
     // Check if component is already defined
     if (customElements.get(componentMeta.name)) {
+      console.log(`[pg-canvas] Component ${componentMeta.name} already defined`);
       return;
     }
 
@@ -255,15 +256,24 @@ class PgCanvas extends HTMLElement {
       // We're in playground/components/, so add one more ../
       // Sanitize path to prevent directory traversal - replace all occurrences
       let componentPath = componentMeta.path;
+      console.log(`[pg-canvas] Original path from registry: ${componentPath}`);
+
       // Remove all ../ sequences to prevent path traversal
       while (componentPath.includes('../')) {
         componentPath = componentPath.split('../').join('');
       }
+      console.log(`[pg-canvas] After stripping ../: ${componentPath}`);
+
       // Reconstruct safe relative path
       componentPath = '../../' + componentPath;
+      console.log(`[pg-canvas] Final import path: ${componentPath}`);
+      console.log(`[pg-canvas] Resolved from: ${new URL(componentPath, import.meta.url).href}`);
+
       await import(componentPath);
+      console.log(`[pg-canvas] Successfully loaded ${componentMeta.name}`);
     } catch (err) {
-      console.warn(`Failed to load component ${componentMeta.name}:`, err);
+      console.error(`[pg-canvas] Failed to load component ${componentMeta.name}:`, err);
+      console.error(`[pg-canvas] Path was: ${componentPath}`);
     }
   }
 
