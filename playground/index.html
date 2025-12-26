@@ -10,7 +10,8 @@
   <script type="module">
     window.panAutoload = {
       // Using root-relative paths for reliability
-      paths: ['/larc/packages/core/', '/larc/packages/ui/', '/larc/playground/components/']
+      // Playground components first for faster resolution
+      paths: ['/larc/playground/components/', '/larc/packages/ui/', '/larc/packages/core/']
     };
   </script>
 

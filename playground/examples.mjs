@@ -26,20 +26,35 @@ export const examples = [
       {
         name: 'pan-router',
         attributes: {
-          'base-path': '/'
-        }
+          'base': '/playground'
+        },
+        innerHTML: `
+          <div slot="home">
+            <h2>🏠 Home Page</h2>
+            <p>Welcome to the home page. Use the navigation links to explore different sections.</p>
+          </div>
+          <div slot="about">
+            <h2>ℹ️ About Page</h2>
+            <p>This is the about page. Learn more about our application here.</p>
+          </div>
+          <div slot="contact">
+            <h2>📧 Contact Page</h2>
+            <p>Get in touch with us through this contact page.</p>
+          </div>
+        `
       },
       {
-        name: 'pan-link',
+        name: 'pan-card',
         attributes: {
-          'to': '/home'
-        }
-      },
-      {
-        name: 'pan-link',
-        attributes: {
-          'to': '/about'
-        }
+          'header': 'Navigation Demo'
+        },
+        innerHTML: `
+          <nav style="display: flex; gap: 1rem; padding: 1rem;">
+            <pan-link to="/playground/home" style="padding: 0.5rem 1rem; background: #2563eb; color: white; text-decoration: none; border-radius: 4px;">Home</pan-link>
+            <pan-link to="/playground/about" style="padding: 0.5rem 1rem; background: #7c3aed; color: white; text-decoration: none; border-radius: 4px;">About</pan-link>
+            <pan-link to="/playground/contact" style="padding: 0.5rem 1rem; background: #059669; color: white; text-decoration: none; border-radius: 4px;">Contact</pan-link>
+          </nav>
+        `
       }
     ]
   },
@@ -211,9 +226,45 @@ export const examples = [
       {
         name: 'pan-tabs',
         attributes: {
-          'tabs': '["Home", "Profile", "Settings"]',
-          'active': '0'
-        }
+          'tabs': JSON.stringify([
+            { label: 'Overview', id: 'overview', icon: '📊' },
+            { label: 'Profile', id: 'profile', icon: '👤' },
+            { label: 'Settings', id: 'settings', icon: '⚙️' }
+          ]),
+          'active': 'overview',
+          'topic': 'tabs'
+        },
+        innerHTML: `
+          <div slot="tab-overview" data-label="Overview">
+            <h3>📊 Overview</h3>
+            <p>Welcome to the overview tab. Here you can see a summary of your dashboard.</p>
+            <ul>
+              <li>Total Users: 1,234</li>
+              <li>Active Sessions: 567</li>
+              <li>Revenue: $12,345</li>
+            </ul>
+          </div>
+          <div slot="tab-profile" data-label="Profile">
+            <h3>👤 User Profile</h3>
+            <p>Manage your user profile information here.</p>
+            <p><strong>Name:</strong> John Doe</p>
+            <p><strong>Email:</strong> john@example.com</p>
+            <p><strong>Role:</strong> Administrator</p>
+          </div>
+          <div slot="tab-settings" data-label="Settings">
+            <h3>⚙️ Settings</h3>
+            <p>Configure your application settings.</p>
+            <label style="display: block; margin: 0.5rem 0;">
+              <input type="checkbox" checked> Enable notifications
+            </label>
+            <label style="display: block; margin: 0.5rem 0;">
+              <input type="checkbox"> Dark mode
+            </label>
+            <label style="display: block; margin: 0.5rem 0;">
+              <input type="checkbox" checked> Auto-save
+            </label>
+          </div>
+        `
       }
     ]
   },
@@ -226,15 +277,32 @@ export const examples = [
         name: 'pan-auth',
         attributes: {
           'storage': 'localStorage',
-          'token-key': 'auth_token',
-          'login-endpoint': '/api/login'
+          'token-key': 'demo_auth_token',
+          'login-endpoint': '/api/auth/login'
         }
       },
       {
-        name: 'pan-jwt',
+        name: 'pan-card',
         attributes: {
-          'verify': 'true'
-        }
+          'header': '🔐 Authentication Demo'
+        },
+        innerHTML: `
+          <div style="padding: 1rem;">
+            <p>This example demonstrates JWT-based authentication with the PAN bus.</p>
+            <div style="margin: 1rem 0; padding: 1rem; background: #f3f4f6; border-radius: 4px;">
+              <h4>Login Form</h4>
+              <form id="auth-form" style="display: flex; flex-direction: column; gap: 0.5rem;">
+                <input type="email" placeholder="Email" value="demo@example.com" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px;">
+                <input type="password" placeholder="Password" value="password123" style="padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 4px;">
+                <button type="submit" style="padding: 0.5rem 1rem; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer;">Sign In</button>
+              </form>
+            </div>
+            <div id="auth-status" style="margin-top: 1rem; padding: 0.5rem; border-radius: 4px;">
+              <p>Status: Not authenticated</p>
+              <p style="font-size: 0.875rem; color: #6b7280;">Note: This is a demo with localStorage-based auth. In production, connect to a real API endpoint.</p>
+            </div>
+          </div>
+        `
       }
     ]
   },
@@ -365,17 +433,65 @@ export const examples = [
     description: 'Dynamic form from JSON schema',
     components: [
       {
-        name: 'pan-schema',
+        name: 'pan-json-form',
         attributes: {
-          'schema-id': 'user-schema'
+          'resource': 'user-registration',
+          'schema': JSON.stringify({
+            fields: [
+              {
+                name: 'fullName',
+                type: 'text',
+                label: 'Full Name',
+                required: true,
+                placeholder: 'John Doe'
+              },
+              {
+                name: 'email',
+                type: 'email',
+                label: 'Email Address',
+                required: true,
+                placeholder: 'john@example.com'
+              },
+              {
+                name: 'age',
+                type: 'number',
+                label: 'Age',
+                required: false,
+                placeholder: '25'
+              },
+              {
+                name: 'bio',
+                type: 'textarea',
+                label: 'Biography',
+                required: false,
+                rows: 4,
+                placeholder: 'Tell us about yourself...'
+              },
+              {
+                name: 'newsletter',
+                type: 'checkbox',
+                label: 'Subscribe to newsletter',
+                required: false
+              }
+            ]
+          }),
+          'layout': 'vertical',
+          'auto-validate': 'true',
+          'show-reset': 'true'
         }
       },
       {
-        name: 'pan-schema-form',
+        name: 'pan-card',
         attributes: {
-          'schema-id': 'user-schema',
-          'topic': 'form.submitted'
-        }
+          'header': 'Form Output',
+          'variant': 'outlined'
+        },
+        innerHTML: `
+          <div style="padding: 1rem;">
+            <p style="color: #6b7280; font-size: 0.875rem;">Submit the form to see the output here via the PAN bus.</p>
+            <pre id="form-output" style="margin-top: 0.5rem; padding: 0.5rem; background: #f9fafb; border-radius: 4px; font-size: 0.875rem; overflow-x: auto;">Waiting for form submission...</pre>
+          </div>
+        `
       }
     ]
   },

@@ -85,8 +85,13 @@ class PgCanvas extends HTMLElement {
     element.dataset.componentId = crypto.randomUUID();
     element.dataset.componentMeta = JSON.stringify(componentMeta);
 
-    // Click to select
+    // Click to select (first click selects, second click passes through)
     element.addEventListener('click', (e) => {
+      // If already selected, allow click to pass through to component
+      if (this.selectedComponent === element) {
+        return;
+      }
+      // Otherwise, intercept to select
       e.stopPropagation();
       this.selectComponent(element);
     });
@@ -368,13 +373,23 @@ class PgCanvas extends HTMLElement {
         element.setAttribute(key, value);
       });
 
+      // Apply innerHTML if provided in example
+      if (exampleComp.innerHTML) {
+        element.innerHTML = exampleComp.innerHTML;
+      }
+
       // Make it selectable
       element.classList.add('pg-component');
       element.dataset.componentId = crypto.randomUUID();
       element.dataset.componentMeta = JSON.stringify(componentMeta);
 
-      // Click to select
+      // Click to select (first click selects, second click passes through)
       element.addEventListener('click', (e) => {
+        // If already selected, allow click to pass through to component
+        if (this.selectedComponent === element) {
+          return;
+        }
+        // Otherwise, intercept to select
         e.stopPropagation();
         this.selectComponent(element);
       });
@@ -388,8 +403,8 @@ class PgCanvas extends HTMLElement {
         this.addNonUIBadge(element, componentMeta);
         // Still append to DOM (needed for component to function) but hide it
         element.style.display = 'none';
-      } else {
-        // Add demo content for UI components
+      } else if (!exampleComp.innerHTML) {
+        // Add demo content for UI components only if innerHTML not provided
         this.addDemoContent(element, componentMeta);
       }
 

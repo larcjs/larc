@@ -4,7 +4,6 @@
  * Generate, view, and edit HTML code from canvas with live sync
  * Uses contenteditable for inline editing with automatic rerendering
  */
-import DOMPurify from 'dompurify';
 
 class PgExporter extends HTMLElement {
   constructor() {
@@ -137,10 +136,7 @@ class PgExporter extends HTMLElement {
       }
 
       // Sanitize the component code before parsing to prevent XSS
-      const safeComponentCode = DOMPurify.sanitize(componentCode, {
-        ALLOWED_TAGS: false, // use DOMPurify defaults
-        ALLOWED_ATTR: false  // and its default attribute allowlist
-      });
+      const safeComponentCode = this.sanitizeHTML(componentCode);
 
       // Parse the component code
       const parser = new DOMParser();
@@ -204,6 +200,60 @@ class PgExporter extends HTMLElement {
       this.showStatus('⚠️ ' + err.message, 'error');
       this.isUpdatingFromCanvas = false;
     }
+  }
+
+  /**
+   * Simple native HTML sanitizer - removes dangerous elements and attributes
+   * No external dependencies required
+   */
+  sanitizeHTML(html) {
+    const temp = document.createElement('template');
+    temp.innerHTML = html;
+
+    const dangerousElements = ['script', 'iframe', 'object', 'embed', 'link', 'style', 'base', 'meta'];
+    const dangerousAttrs = ['onerror', 'onload', 'onclick', 'onmouseover', 'onmouseout',
+                           'onmousemove', 'onmousedown', 'onmouseup', 'onfocus', 'onblur',
+                           'onchange', 'onsubmit', 'onkeypress', 'onkeydown', 'onkeyup',
+                           'formaction', 'action'];
+
+    // Remove dangerous elements
+    dangerousElements.forEach(tag => {
+      const elements = temp.content.querySelectorAll(tag);
+      elements.forEach(el => el.remove());
+    });
+
+    // Remove dangerous attributes from all elements
+    const allElements = temp.content.querySelectorAll('*');
+    allElements.forEach(el => {
+      dangerousAttrs.forEach(attr => {
+        if (el.hasAttribute(attr)) {
+          el.removeAttribute(attr);
+        }
+      });
+
+      // Also remove any attribute that starts with "on"
+      Array.from(el.attributes).forEach(attr => {
+        if (attr.name.toLowerCase().startsWith('on')) {
+          el.removeAttribute(attr.name);
+        }
+      });
+
+      // Sanitize href and src to prevent javascript: protocol
+      if (el.hasAttribute('href')) {
+        const href = el.getAttribute('href');
+        if (href.toLowerCase().trim().startsWith('javascript:')) {
+          el.removeAttribute('href');
+        }
+      }
+      if (el.hasAttribute('src')) {
+        const src = el.getAttribute('src');
+        if (src.toLowerCase().trim().startsWith('javascript:')) {
+          el.removeAttribute('src');
+        }
+      }
+    });
+
+    return temp.innerHTML;
   }
 
   getPlainTextFromElement(element) {
