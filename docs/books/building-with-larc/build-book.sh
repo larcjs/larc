@@ -104,31 +104,27 @@ create_book_order() {
 
     # Create ordered list of files
     cat > "${BUILD_DIR}/book-order.txt" <<EOF
-chapter-01-introduction.md
-chapter-02-philosophy.md
-chapter-03-story.md
-chapter-04-core-concepts.md
-chapter-05-getting-started.md
-chapter-06-basic-message-flow.md
-chapter-07-working-with-components.md
-chapter-08-state-management.md
-chapter-09-routing-and-navigation.md
-chapter-10-forms-and-user-input.md
-chapter-11-data-fetching-and-apis.md
-chapter-12-authentication-and-authorization.md
-chapter-13-realtime-features.md
-chapter-14-file-management.md
-chapter-15-theming-and-styling.md
-chapter-16-performance-optimization.md
-chapter-17-testing-strategies.md
-chapter-18-error-handling-and-debugging.md
-chapter-19-advanced-patterns.md
-chapter-20-deployment-and-production.md
-chapter-21-core-components.md
-chapter-22-data-components.md
-chapter-23-ui-components.md
-chapter-24-integration-components.md
-chapter-25-utility-components.md
+chapters/01-introduction.md
+chapters/02-core-concepts.md
+chapters/03-getting-started.md
+chapters/04-state-management.md
+chapters/05-routing-and-navigation.md
+chapters/06-forms-and-user-input.md
+chapters/07-data-fetching-and-apis.md
+chapters/08-authentication-and-authorization.md
+chapters/09-realtime-features.md
+chapters/10-file-management.md
+chapters/11-theming-and-styling.md
+chapters/12-performance-optimization.md
+chapters/13-testing-strategies.md
+chapters/14-error-handling-and-debugging.md
+chapters/15-advanced-patterns.md
+chapters/16-deployment-and-production.md
+chapters/17-core-components.md
+chapters/18-data-components.md
+chapters/19-ui-components.md
+chapters/20-integration-components.md
+chapters/21-utility-components.md
 appendix-a-message-topics.md
 appendix-b-event-envelope.md
 appendix-c-configuration-options.md
@@ -309,7 +305,7 @@ LUAFILTER
     # Use glob patterns for reliable file expansion
     pandoc \
         "${BUILD_DIR}/metadata.yaml" \
-        "${BOOK_DIR}"/chapter-*.md \
+        "${BOOK_DIR}"/chapters/*.md \
         "${BOOK_DIR}"/appendix-*.md \
         "${BOOK_DIR}/index.md" \
         "${BOOK_DIR}/colophon.md" \
