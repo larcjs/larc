@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Error Handling and Debugging · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Error Handling and Debugging">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>14-error-handling-and-debugging</span>
+      </div>
+      <article class="docs-content">
+        <h1>Error Handling and Debugging</h1>
+<p>Quick reference for error handling and debugging in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 14.</p>
+<h2>Overview</h2>
+<p>Handle errors gracefully through component-level error boundaries, centralized error monitoring, and message tracing. LARC's isolated component architecture naturally contains errors, preventing cascading failures.</p>
+<strong>Key Concepts</strong>:
+<ul><li>Error boundaries contain failures within components</li>
+<li>Global error handlers monitor application health</li>
+<li>Message tracing tracks pub/sub flows</li>
+<li>Structured logging provides debugging context</li>
+<li>DevTools integration for professional debugging</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">class ResilientComponent extends HTMLElement {
+  connectedCallback() {
+    this.unsubscribe = bus.subscribe(&#039;data.fetch&#039;, async (msg) =&gt; {
+      try {
+        const data = await this.fetchData(msg.data.id);
+        bus.publish(&#039;data.loaded&#039;, { data });
+      } catch (error) {
+        bus.publish(&#039;app.error&#039;, {
+          component: &#039;ResilientComponent&#039;,
+          error: error.message,
+          context: { id: msg.data.id }
+        });
+        this.showError(error);
+      }
+    });
+  }
+
+  showError(error) {
+    this.innerHTML = `
+      &lt;div class=&quot;error&quot;&gt;
+        Error: ${error.message}
+        &lt;button onclick=&quot;location.reload()&quot;&gt;Retry&lt;/button&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h2>Error Handling Patterns</h2>
+<p>| Pattern | Description | Use Case |
+|---------|-------------|----------|
+| Try-catch blocks | Catch synchronous errors | Immediate operations |
+| Promise <code>.catch()</code> | Handle async errors | Fetch, timeouts |
+| Error boundaries | Contain component failures | Prevent cascading failures |
+| Global error handler | Catch unhandled errors | Last line of defense |
+| Error messages | Publish via PAN bus | Centralized monitoring |</p>
+<h3>Component Error Boundary</h3>
+<pre><code class="language-javascript">class ErrorBoundary extends HTMLElement {
+  constructor() {
+    super();
+    this.error = null;
+  }
+
+  connectedCallback() {
+    this.renderContent();
+    
+    // Catch errors from child components
+    this.addEventListener(&#039;error&#039;, (e) =&gt; {
+      this.error = e.error || e;
+      this.renderContent();
+      e.stopPropagation();
+    });
+  }
+
+  renderContent() {
+    if (this.error) {
+      this.innerHTML = `
+        &lt;div class=&quot;error-boundary&quot;&gt;
+          &lt;h3&gt;Something went wrong&lt;/h3&gt;
+          &lt;p&gt;${this.error.message}&lt;/p&gt;
+          &lt;button onclick=&quot;location.reload()&quot;&gt;Reload&lt;/button&gt;
+        &lt;/div&gt;
+      `;
+    }
+  }
+}</code></pre>
+<h3>Global Error Monitor</h3>
+<pre><code class="language-javascript">class ErrorMonitor extends HTMLElement {
+  constructor() {
+    super();
+    this.errors = [];
+  }
+
+  connectedCallback() {
+    // Subscribe to error messages
+    this.unsubscribe = bus.subscribe(&#039;app.error&#039;, (msg) =&gt; {
+      this.logError(msg.data);
+    });
+
+    // Catch global errors
+    window.addEventListener(&#039;error&#039;, (e) =&gt; {
+      this.logError({
+        message: e.message,
+        source: e.filename,
+        line: e.lineno
+      });
+    });
+
+    // Catch promise rejections
+    window.addEventListener(&#039;unhandledrejection&#039;, (e) =&gt; {
+      this.logError({
+        message: e.reason?.message || &#039;Promise rejected&#039;,
+        stack: e.reason?.stack
+      });
+    });
+  }
+
+  logError(error) {
+    const entry = {
+      ...error,
+      timestamp: new Date().toISOString(),
+      url: location.href
+    };
+
+    this.errors.push(entry);
+    console.error(&#039;[App Error]&#039;, entry);
+
+    // Send to error tracking service
+    this.reportError(entry);
+  }
+
+  reportError(error) {
+    if (window.errorTracker) {
+      window.errorTracker.captureException(error);
+    }
+  }
+}</code></pre>
+<h2>Message Tracing</h2>
+<h3>Enable Bus Debugging</h3>
+<pre><code class="language-html">&lt;pan-bus debug=&quot;true&quot; enable-tracing=&quot;true&quot;&gt;&lt;/pan-bus&gt;</code></pre>
+<h3>Custom Message Tracer</h3>
+<pre><code class="language-javascript">class MessageTracer extends HTMLElement {
+  constructor() {
+    super();
+    this.log = [];
+    this.tracing = false;
+  }
+
+  connectedCallback() {
+    this.unsubscribe = bus.subscribe(&#039;*&#039;, (msg) =&gt; {
+      if (!this.tracing) return;
+
+      this.log.push({
+        topic: msg.topic,
+        data: msg.data,
+        timestamp: performance.now()
+      });
+
+      console.log(
+        `%c[MSG] ${msg.topic}`,
+        &#039;color: blue; font-weight: bold&#039;,
+        msg.data
+      );
+    });
+  }
+
+  startTracing() {
+    this.tracing = true;
+    this.log = [];
+  }
+
+  stopTracing() {
+    this.tracing = false;
+    return this.log;
+  }
+
+  exportLog() {
+    const blob = new Blob([JSON.stringify(this.log, null, 2)], {
+      type: &#039;application/json&#039;
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement(&#039;a&#039;);
+    a.href = url;
+    a.download = `message-trace-${Date.now()}.json`;
+    a.click();
+  }
+}</code></pre>
+<h2>Structured Logging</h2>
+<pre><code class="language-javascript">class Logger {
+  constructor() {
+    this.level = &#039;info&#039;; // debug, info, warn, error
+  }
+
+  log(level, message, context = {}) {
+    if (!this.shouldLog(level)) return;
+
+    const entry = {
+      timestamp: new Date().toISOString(),
+      level,
+      message,
+      context,
+      sessionId: this.getSessionId()
+    };
+
+    this.output(entry);
+    this.send(entry);
+  }
+
+  shouldLog(level) {
+    const levels = [&#039;debug&#039;, &#039;info&#039;, &#039;warn&#039;, &#039;error&#039;];
+    return levels.indexOf(level) &gt;= levels.indexOf(this.level);
+  }
+
+  output(entry) {
+    const styles = {
+      debug: &#039;color: gray&#039;,
+      info: &#039;color: blue&#039;,
+      warn: &#039;color: orange&#039;,
+      error: &#039;color: red; font-weight: bold&#039;
+    };
+
+    console.log(
+      `%c[${entry.level.toUpperCase()}] ${entry.message}`,
+      styles[entry.level],
+      entry.context
+    );
+  }
+
+  send(entry) {
+    if (entry.level === &#039;error&#039; || entry.level === &#039;warn&#039;) {
+      navigator.sendBeacon(&#039;/api/logs&#039;, JSON.stringify(entry));
+    }
+  }
+
+  getSessionId() {
+    return sessionStorage.getItem(&#039;sessionId&#039;) || &#039;unknown&#039;;
+  }
+
+  debug(message, context) { this.log(&#039;debug&#039;, message, context); }
+  info(message, context) { this.log(&#039;info&#039;, message, context); }
+  warn(message, context) { this.log(&#039;warn&#039;, message, context); }
+  error(message, context) { this.log(&#039;error&#039;, message, context); }
+}
+
+// Global logger instance
+const logger = new Logger();
+export { logger };</code></pre>
+<strong>Usage</strong>:
+<pre><code class="language-javascript">import { logger } from &#039;./logger.js&#039;;
+
+class UserService {
+  async login(username, password) {
+    logger.info(&#039;User login attempt&#039;, { username });
+
+    try {
+      const response = await fetch(&#039;/api/login&#039;, {
+        method: &#039;POST&#039;,
+        body: JSON.stringify({ username, password })
+      });
+
+      if (!response.ok) {
+        throw new Error(&#039;Login failed&#039;);
+      }
+
+      const data = await response.json();
+      logger.info(&#039;User logged in&#039;, { username, userId: data.userId });
+      return data;
+    } catch (error) {
+      logger.error(&#039;Login failed&#039;, { username, error: error.message });
+      throw error;
+    }
+  }
+}</code></pre>
+<h2>DevTools Integration</h2>
+<h3>Custom Console Formatters</h3>
+<pre><code class="language-javascript">// Enable custom formatters in Chrome DevTools
+if (window.devtoolsFormatters) {
+  window.devtoolsFormatters.push({
+    header(obj) {
+      if (!obj?.__larcMessage) return null;
+
+      return [&#039;div&#039;, { style: &#039;color: #00f; font-weight: bold&#039; },
+        `[LARC] ${obj.topic}`
+      ];
+    },
+    hasBody(obj) {
+      return obj?.__larcMessage;
+    },
+    body(obj) {
+      return [&#039;div&#039;, {},
+        [&#039;div&#039;, {}, `Topic: ${obj.topic}`],
+        [&#039;div&#039;, {}, `Data: `, [&#039;object&#039;, { object: obj.data }]],
+        [&#039;div&#039;, {}, `Time: ${new Date(obj.timestamp).toISOString()}`]
+      ];
+    }
+  });
+}</code></pre>
+<h3>Performance Monitoring</h3>
+<pre><code class="language-javascript">class PerformanceMonitor extends HTMLElement {
+  connectedCallback() {
+    this.unsubscribe = bus.subscribe(&#039;*&#039;, (msg) =&gt; {
+      const mark = `msg-${msg.topic}-${Date.now()}`;
+      performance.mark(mark);
+
+      setTimeout(() =&gt; {
+        performance.measure(msg.topic, mark);
+        const entries = performance.getEntriesByType(&#039;measure&#039;);
+        const latest = entries[entries.length - 1];
+
+        if (latest.duration &gt; 16) { // Slower than 60fps
+          console.warn(`Slow handler: ${msg.topic} took ${latest.duration}ms`);
+          bus.publish(&#039;performance.warning&#039;, {
+            topic: msg.topic,
+            duration: latest.duration
+          });
+        }
+
+        performance.clearMarks(mark);
+        performance.clearMeasures(msg.topic);
+      }, 0);
+    });
+  }
+}</code></pre>
+<h2>Common Pitfalls</h2>
+<h3>Message Type Typos</h3>
+<strong>Problem</strong>: Misspelled message topics  
+<strong>Solution</strong>: Use constants
+<pre><code class="language-javascript">// messages.js
+export const MSG = {
+  USER_LOGIN: &#039;user.login&#039;,
+  USER_LOGOUT: &#039;user.logout&#039;,
+  CART_UPDATE: &#039;cart.update&#039;
+};
+
+// Usage
+import { MSG } from &#039;./messages.js&#039;;
+
+bus.publish(MSG.USER_LOGIN, { userId: 123 });
+bus.subscribe(MSG.USER_LOGIN, (msg) =&gt; { /* works */ });</code></pre>
+<h3>Infinite Message Loops</h3>
+<strong>Problem</strong>: A → B → A → B forever  
+<strong>Solution</strong>: Loop detection
+<pre><code class="language-javascript">class LoopDetector extends HTMLElement {
+  constructor() {
+    super();
+    this.stack = [];
+  }
+
+  connectedCallback() {
+    this.unsubscribe = bus.subscribe(&#039;*&#039;, (msg) =&gt; {
+      this.stack.push(msg.topic);
+
+      const recent = this.stack.slice(-5);
+      const counts = {};
+      recent.forEach(t =&gt; counts[t] = (counts[t] || 0) + 1);
+
+      if (Object.values(counts).some(c =&gt; c &gt;= 3)) {
+        console.error(&#039;Message loop detected:&#039;, recent);
+        bus.publish(&#039;system.loop-detected&#039;, { sequence: recent });
+      }
+
+      setTimeout(() =&gt; this.stack.shift(), 1000);
+    });
+  }
+}</code></pre>
+<h3>Async Race Conditions</h3>
+<strong>Problem</strong>: Multiple overlapping async operations  
+<strong>Solution</strong>: Request ID tracking
+<pre><code class="language-javascript">class DataLoader extends HTMLElement {
+  constructor() {
+    super();
+    this.requestId = 0;
+  }
+
+  async loadData(id) {
+    const currentRequest = ++this.requestId;
+
+    try {
+      const data = await fetch(`/api/data/${id}`).then(r =&gt; r.json());
+
+      // Only update if still the latest request
+      if (currentRequest === this.requestId) {
+        this.data = data;
+        this.render();
+      }
+    } catch (error) {
+      if (currentRequest === this.requestId) {
+        this.showError(error);
+      }
+    }
+  }
+}</code></pre>
+<h3>Stale Closures</h3>
+<strong>Problem</strong>: Handler captures old state  
+<strong>Solution</strong>: Always access <code>this.state</code> directly
+<pre><code class="language-javascript">// Bad
+class BadCounter extends HTMLElement {
+  connectedCallback() {
+    const count = this.count; // Captured at registration time
+    this.unsubscribe = bus.subscribe(&#039;log&#039;, () =&gt; {
+      console.log(count); // Always logs initial value
+    });
+  }
+}
+
+// Good
+class GoodCounter extends HTMLElement {
+  connectedCallback() {
+    this.unsubscribe = bus.subscribe(&#039;log&#039;, () =&gt; {
+      console.log(this.count); // Always current value
+    });
+  }
+}</code></pre>
+<h2>Debugging Checklist</h2>
+<p>When something goes wrong:</p>
+<li><strong>Is the message being sent?</strong></li>
+   - Add <code>console.log()</code> before <code>publish()</code>
+   - Check MessageTracer
+<li><strong>Is the topic correct?</strong></li>
+   - Use message constants
+   - Check for typos
+<li><strong>Is the handler registered?</strong></li>
+   - Verify <code>subscribe()</code> is called
+   - Check component is mounted
+<li><strong>Is the handler called?</strong></li>
+   - Add breakpoint or <code>console.log()</code>
+   - Check wildcard patterns
+<li><strong>Is state updating?</strong></li>
+   - Log before/after changes
+   - Check property names
+<li><strong>Is render triggered?</strong></li>
+   - Verify render method runs
+   - Check for errors in render
+<li><strong>Are there async issues?</strong></li>
+   - Use request IDs
+   - Check Promise handling
+<li><strong>Is there a loop?</strong></li>
+   - Use LoopDetector
+   - Review message flow
+<h2>Component Reference</h2>
+<p>See <strong>pan-debug</strong> (Chapter 21) for browser-based debugging tools.</p>
+<h2>Complete Example</h2>
+<pre><code class="language-javascript">// Full error handling setup
+class App extends HTMLElement {
+  connectedCallback() {
+    // Global error monitor
+    const errorMonitor = document.createElement(&#039;error-monitor&#039;);
+    document.body.appendChild(errorMonitor);
+
+    // Message tracer (dev only)
+    if (import.meta.env.DEV) {
+      const tracer = document.createElement(&#039;message-tracer&#039;);
+      tracer.startTracing();
+      document.body.appendChild(tracer);
+    }
+
+    // Loop detector
+    const loopDetector = document.createElement(&#039;loop-detector&#039;);
+    document.body.appendChild(loopDetector);
+
+    // Performance monitor
+    const perfMonitor = document.createElement(&#039;performance-monitor&#039;);
+    document.body.appendChild(perfMonitor);
+
+    // Subscribe to errors
+    this.unsubscribe = bus.subscribe(&#039;app.error&#039;, (msg) =&gt; {
+      this.showErrorNotification(msg.data);
+    });
+  }
+
+  showErrorNotification(error) {
+    const notification = document.createElement(&#039;div&#039;);
+    notification.className = &#039;error-notification&#039;;
+    notification.textContent = error.message;
+    document.body.appendChild(notification);
+
+    setTimeout(() =&gt; notification.remove(), 5000);
+  }
+}</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 14 (Error Handling & Debugging)</li>
+<li><strong>Components</strong>: Chapter 21 (pan-debug)</li>
+<li><strong>Patterns</strong>: Appendix E (Error patterns)</li>
+<li><strong>Related</strong>: Chapter 12 (Performance), Chapter 13 (Testing)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Errors not caught</h3>
+<strong>Problem</strong>: Errors in async code not handled  
+<strong>Solution</strong>: Always use try-catch or <code>.catch()</code>, add global error handlers
+<h3>Missing stack traces</h3>
+<strong>Problem</strong>: Error stack is lost  
+<strong>Solution</strong>: Preserve <code>error.stack</code> when re-throwing or logging
+<h3>Too much logging in production</h3>
+<strong>Problem</strong>: Console spam, performance impact  
+<strong>Solution</strong>: Set log level to 'warn' or 'error' in production, use conditional logging
+<h3>Can't reproduce bug</h3>
+<strong>Problem</strong>: Error only happens for some users  
+<strong>Solution</strong>: Add user context to logs, enable remote error tracking (Sentry, LogRocket)
+<h3>Debug mode left on</h3>
+<strong>Problem</strong>: Debug code in production  
+<strong>Solution</strong>: Use environment variables, build-time dead code elimination
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/14-error-handling-and-debugging.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -27,6 +27,11 @@
   ],
   "Root": [
     {
+      "title": "🚀 LARC Launch Readiness - Updated Report",
+      "path": "LAUNCH_READINESS_UPDATED.html",
+      "category": "Root"
+    },
+    {
       "title": "Changelog",
       "path": "CHANGELOG.html",
       "category": "Root"
@@ -219,21 +224,6 @@
   ],
   "books/building-with-larc": [
     {
-      "title": "Advanced Patterns",
-      "path": "books/building-with-larc/chapter-19-advanced-patterns.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Authentication and Authorization",
-      "path": "books/building-with-larc/chapter-12-authentication-and-authorization.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Basic Message Flow",
-      "path": "books/building-with-larc/chapter-06-basic-message-flow.html",
-      "category": "books/building-with-larc"
-    },
-    {
       "title": "Book Build System - Complete Summary",
       "path": "books/building-with-larc/BUILD-SYSTEM-SUMMARY.html",
       "category": "books/building-with-larc"
@@ -241,6 +231,16 @@
     {
       "title": "Building the Book",
       "path": "books/building-with-larc/BUILD.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Building with LARC - Restructuring Complete",
+      "path": "books/building-with-larc/RESTRUCTURING_COMPLETE.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Building with LARC - Restructuring Status",
+      "path": "books/building-with-larc/RESTRUCTURING_STATUS.html",
       "category": "books/building-with-larc"
     },
     {
@@ -259,53 +259,8 @@
       "category": "books/building-with-larc"
     },
     {
-      "title": "Core Components Reference",
-      "path": "books/building-with-larc/chapter-21-core-components.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Core Concepts",
-      "path": "books/building-with-larc/chapter-04-core-concepts.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Data Components",
-      "path": "books/building-with-larc/chapter-22-data-components.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Data Fetching and APIs",
-      "path": "books/building-with-larc/chapter-11-data-fetching-and-apis.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Deployment and Production",
-      "path": "books/building-with-larc/chapter-20-deployment-and-production.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Error Handling and Debugging",
-      "path": "books/building-with-larc/chapter-18-error-handling-and-debugging.html",
-      "category": "books/building-with-larc"
-    },
-    {
       "title": "Event Envelope Specification",
       "path": "books/building-with-larc/appendix-b-event-envelope.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "File Management",
-      "path": "books/building-with-larc/chapter-14-file-management.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Forms and User Input",
-      "path": "books/building-with-larc/chapter-10-forms-and-user-input.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Getting Started",
-      "path": "books/building-with-larc/chapter-05-getting-started.html",
       "category": "books/building-with-larc"
     },
     {
@@ -316,16 +271,6 @@
     {
       "title": "Index",
       "path": "books/building-with-larc/index.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Integration Components",
-      "path": "books/building-with-larc/chapter-24-integration-components.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Introduction",
-      "path": "books/building-with-larc/chapter-01-introduction.html",
       "category": "books/building-with-larc"
     },
     {
@@ -344,18 +289,8 @@
       "category": "books/building-with-larc"
     },
     {
-      "title": "Performance Optimization",
-      "path": "books/building-with-larc/chapter-16-performance-optimization.html",
-      "category": "books/building-with-larc"
-    },
-    {
       "title": "Quick Start Guide - Book Building",
       "path": "books/building-with-larc/QUICKSTART.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Real-time Features",
-      "path": "books/building-with-larc/chapter-13-realtime-features.html",
       "category": "books/building-with-larc"
     },
     {
@@ -367,51 +302,113 @@
       "title": "Resources",
       "path": "books/building-with-larc/appendix-g-resources.html",
       "category": "books/building-with-larc"
+    }
+  ],
+  "books/building-with-larc/chapters": [
+    {
+      "title": "Advanced Patterns",
+      "path": "books/building-with-larc/chapters/15-advanced-patterns.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": "books/building-with-larc/chapters/08-authentication-and-authorization.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": "books/building-with-larc/chapters/17-core-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Concepts Quick Reference",
+      "path": "books/building-with-larc/chapters/02-core-concepts.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Components Reference",
+      "path": "books/building-with-larc/chapters/18-data-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "books/building-with-larc/chapters/07-data-fetching-and-apis.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": "books/building-with-larc/chapters/16-deployment-and-production.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": "books/building-with-larc/chapters/14-error-handling-and-debugging.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "File Management",
+      "path": "books/building-with-larc/chapters/10-file-management.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": "books/building-with-larc/chapters/06-forms-and-user-input.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": "books/building-with-larc/chapters/03-getting-started.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Integration Components Reference",
+      "path": "books/building-with-larc/chapters/20-integration-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Introduction",
+      "path": "books/building-with-larc/chapters/01-introduction.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": "books/building-with-larc/chapters/12-performance-optimization.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Real-time Features",
+      "path": "books/building-with-larc/chapters/09-realtime-features.html",
+      "category": "books/building-with-larc/chapters"
     },
     {
       "title": "Routing and Navigation",
-      "path": "books/building-with-larc/chapter-09-routing-and-navigation.html",
-      "category": "books/building-with-larc"
+      "path": "books/building-with-larc/chapters/05-routing-and-navigation.html",
+      "category": "books/building-with-larc/chapters"
     },
     {
       "title": "State Management",
-      "path": "books/building-with-larc/chapter-08-state-management.html",
-      "category": "books/building-with-larc"
+      "path": "books/building-with-larc/chapters/04-state-management.html",
+      "category": "books/building-with-larc/chapters"
     },
     {
       "title": "Testing Strategies",
-      "path": "books/building-with-larc/chapter-17-testing-strategies.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "The LARC Story",
-      "path": "books/building-with-larc/chapter-03-story.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "The Philosophy of LARC",
-      "path": "books/building-with-larc/chapter-02-philosophy.html",
-      "category": "books/building-with-larc"
+      "path": "books/building-with-larc/chapters/13-testing-strategies.html",
+      "category": "books/building-with-larc/chapters"
     },
     {
       "title": "Theming and Styling",
-      "path": "books/building-with-larc/chapter-15-theming-and-styling.html",
-      "category": "books/building-with-larc"
+      "path": "books/building-with-larc/chapters/11-theming-and-styling.html",
+      "category": "books/building-with-larc/chapters"
     },
     {
-      "title": "UI Components",
-      "path": "books/building-with-larc/chapter-23-ui-components.html",
-      "category": "books/building-with-larc"
+      "title": "UI Components Reference",
+      "path": "books/building-with-larc/chapters/19-ui-components.html",
+      "category": "books/building-with-larc/chapters"
     },
     {
-      "title": "Utility Components",
-      "path": "books/building-with-larc/chapter-25-utility-components.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Working with Components",
-      "path": "books/building-with-larc/chapter-07-working-with-components.html",
-      "category": "books/building-with-larc"
+      "title": "Utility Components Reference",
+      "path": "books/building-with-larc/chapters/21-utility-components.html",
+      "category": "books/building-with-larc/chapters"
     }
   ],
   "books": [

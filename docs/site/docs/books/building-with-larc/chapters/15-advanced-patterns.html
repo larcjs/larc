@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advanced Patterns · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Advanced Patterns">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>15-advanced-patterns</span>
+      </div>
+      <article class="docs-content">
+        <h1>Advanced Patterns</h1>
+<p>Quick reference for advanced LARC architecture patterns. For detailed tutorials, see <em>Learning LARC</em> Chapter 7.</p>
+<h2>Overview</h2>
+<p>Advanced patterns for complex scenarios: message bridging, multi-bus architectures, backend integration, micro-frontends, and plugin systems. These patterns solve scalability and modularity challenges in large applications.</p>
+<strong>Key Concepts:</strong>
+<ul><li>Message bridging between buses</li>
+<li>Domain-segregated architectures</li>
+<li>API gateway patterns</li>
+<li>Micro-frontend integration</li>
+<li>Plugin/middleware systems</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">// Bidirectional bridge between two buses
+class BidirectionalBridge {
+  constructor(busA, busB, config) {
+    this.busA = busA;
+    this.busB = busB;
+    
+    // Forward A → B
+    config.aToB.forEach(type =&gt; {
+      busA.subscribe(type, msg =&gt; busB.publish(type, msg.data));
+    });
+    
+    // Forward B → A
+    config.bToA.forEach(type =&gt; {
+      busB.subscribe(type, msg =&gt; busA.publish(type, msg.data));
+    });
+  }
+}
+
+// Usage
+const bridge = new BidirectionalBridge(mainBus, widgetBus, {
+  aToB: [&#039;theme.changed&#039;, &#039;user.login&#039;],
+  bToA: [&#039;widget.action&#039;]
+});</code></pre>
+<h2>Message Bridging Patterns</h2>
+<p>| Pattern | Use Case | Key Features |
+|---------|----------|--------------|
+| <strong>Basic Forward</strong> | One-way message relay | Simple topic mapping |
+| <strong>Bidirectional</strong> | Two-way communication | Transform and filter support |
+| <strong>Translation</strong> | Protocol conversion | Type and data transformation |
+| <strong>Hierarchical</strong> | Parent-child buses | Bubble-up and propagate-down |</p>
+<h2>Backend Integration Patterns</h2>
+<p>| Pattern | Use Case | Key Features |
+|---------|----------|--------------|
+| <strong>API Gateway</strong> | Centralized HTTP calls | Request queue, offline support |
+| <strong>WebSocket Bridge</strong> | Real-time bidirectional | Auto-reconnect, message queue |
+| <strong>GraphQL Client</strong> | Structured queries | Response caching, mutation invalidation |</p>
+<h2>Common Patterns</h2>
+<h3>Pattern 1: API Gateway Component</h3>
+<p>Centralize all API calls with offline support.</p>
+<pre><code class="language-javascript">class APIGateway extends HTMLElement {
+  connectedCallback() {
+    const bus = document.querySelector(&#039;pan-bus&#039;);
+    
+    bus.subscribe(&#039;api.request&#039;, async (msg) =&gt; {
+      const { method, endpoint, data, requestId } = msg.data;
+      
+      try {
+        const response = await fetch(`/api${endpoint}`, {
+          method,
+          headers: {
+            &#039;Content-Type&#039;: &#039;application/json&#039;,
+            &#039;Authorization&#039;: `Bearer ${this.token}`
+          },
+          body: data ? JSON.stringify(data) : undefined
+        });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        
+        const result = await response.json();
+        bus.publish(&#039;api.success&#039;, { requestId, result });
+        
+      } catch (error) {
+        bus.publish(&#039;api.error&#039;, { requestId, error: error.message });
+      }
+    });
+  }
+}
+
+customElements.define(&#039;api-gateway&#039;, APIGateway);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">// In any component
+bus.publish(&#039;api.request&#039;, {
+  method: &#039;GET&#039;,
+  endpoint: &#039;/users/123&#039;,
+  requestId: crypto.randomUUID()
+});
+
+bus.subscribe(&#039;api.success&#039;, (msg) =&gt; {
+  if (msg.data.requestId === myRequestId) {
+    this.user = msg.data.result;
+  }
+});</code></pre>
+<h3>Pattern 2: Micro-Frontend Loader</h3>
+<p>Load remote modules dynamically.</p>
+<pre><code class="language-javascript">class MicroFrontendLoader extends HTMLElement {
+  async loadModule(name, url, props) {
+    try {
+      const module = await import(/* webpackIgnore: true */ url);
+      const instance = new module.default(props);
+      
+      this.modules.set(name, instance);
+      this.dispatchEvent(new CustomEvent(&#039;module-loaded&#039;, { 
+        detail: { name } 
+      }));
+      
+    } catch (error) {
+      console.error(`Failed to load module ${name}:`, error);
+    }
+  }
+  
+  unloadModule(name) {
+    const module = this.modules.get(name);
+    if (module?.destroy) module.destroy();
+    this.modules.delete(name);
+  }
+}
+
+// Usage
+const loader = document.querySelector(&#039;mf-loader&#039;);
+await loader.loadModule(&#039;cart&#039;, &#039;https://cdn.example.com/cart.js&#039;, {
+  bus: document.querySelector(&#039;pan-bus&#039;),
+  apiEndpoint: &#039;/api/cart&#039;
+});</code></pre>
+<h3>Pattern 3: Plugin Registry with Hooks</h3>
+<p>Extensible plugin system.</p>
+<pre><code class="language-javascript">class PluginRegistry {
+  constructor(bus) {
+    this.bus = bus;
+    this.plugins = new Map();
+    this.hooks = new Map();
+  }
+  
+  register(id, plugin) {
+    // Initialize plugin
+    plugin.init({ bus: this.bus });
+    
+    // Register hooks
+    if (plugin.hooks) {
+      Object.entries(plugin.hooks).forEach(([hookName, handler]) =&gt; {
+        if (!this.hooks.has(hookName)) {
+          this.hooks.set(hookName, []);
+        }
+        this.hooks.get(hookName).push({ id, handler });
+      });
+    }
+    
+    this.plugins.set(id, plugin);
+  }
+  
+  async executeHook(hookName, data) {
+    const handlers = this.hooks.get(hookName) || [];
+    let result = data;
+    
+    for (const { handler } of handlers) {
+      result = await handler(result);
+    }
+    
+    return result;
+  }
+}
+
+// Plugin example
+const analyticsPlugin = {
+  init({ bus }) {
+    bus.subscribe(&#039;*&#039;, (msg) =&gt; {
+      gtag(&#039;event&#039;, msg.topic, msg.data);
+    });
+  },
+  
+  hooks: {
+    &#039;before-submit&#039;: (formData) =&gt; {
+      console.log(&#039;Analytics: Form submit&#039;, formData);
+      return formData;
+    }
+  }
+};
+
+// Usage
+const registry = new PluginRegistry(bus);
+registry.register(&#039;analytics&#039;, analyticsPlugin);
+
+const data = await registry.executeHook(&#039;before-submit&#039;, formData);</code></pre>
+<h2>Architecture Tables</h2>
+<h3>Multi-Bus Architecture</h3>
+<p>| Approach | Pros | Cons | Use Case |
+|----------|------|------|----------|
+| <strong>Domain-Segregated</strong> | Clear boundaries, testable | More complexity | Large apps with distinct domains |
+| <strong>Hierarchical</strong> | Natural parent-child | Bubble/propagate overhead | Nested module systems |
+| <strong>Federated</strong> | Independent deployment | Coordination needed | Micro-frontends |</p>
+<h3>Middleware Patterns</h3>
+<p>| Type | Use Case | Example |
+|------|----------|---------|
+| <strong>Logging</strong> | Debug message flow | Log all messages |
+| <strong>Rate Limiting</strong> | Prevent spam | Max 10 msgs/sec/topic |
+| <strong>Transform</strong> | Add metadata | Inject timestamp, userId |
+| <strong>Auth</strong> | Protect actions | Check token before API calls |
+| <strong>Error Handling</strong> | Catch failures | Try/catch middleware chain |</p>
+<h2>Complete Example</h2>
+<p>Multi-domain e-commerce app with API gateway, WebSocket, and plugin system.</p>
+<pre><code class="language-javascript">// 1. Create domain buses
+const buses = {
+  auth: document.createElement(&#039;pan-bus&#039;),
+  cart: document.createElement(&#039;pan-bus&#039;),
+  ui: document.createElement(&#039;pan-bus&#039;)
+};
+
+Object.values(buses).forEach(bus =&gt; document.body.appendChild(bus));
+
+// 2. Bridge auth events to UI
+buses.auth.subscribe(&#039;user.login&#039;, (msg) =&gt; {
+  buses.ui.publish(&#039;notification&#039;, {
+    message: `Welcome, ${msg.data.username}!`
+  });
+});
+
+// 3. API Gateway on auth bus
+class AuthAPI extends HTMLElement {
+  connectedCallback() {
+    const bus = document.querySelector(&#039;pan-bus[domain=&quot;auth&quot;]&#039;);
+    
+    bus.subscribe(&#039;auth.login&#039;, async (msg) =&gt; {
+      const response = await fetch(&#039;/api/login&#039;, {
+        method: &#039;POST&#039;,
+        body: JSON.stringify(msg.data)
+      });
+      
+      if (response.ok) {
+        const { token, user } = await response.json();
+        localStorage.setItem(&#039;token&#039;, token);
+        bus.publish(&#039;user.login&#039;, user);
+      }
+    });
+  }
+}
+
+customElements.define(&#039;auth-api&#039;, AuthAPI);
+
+// 4. WebSocket bridge for cart updates
+class CartSocket extends HTMLElement {
+  connectedCallback() {
+    this.ws = new WebSocket(&#039;wss://example.com/cart&#039;);
+    const bus = document.querySelector(&#039;pan-bus[domain=&quot;cart&quot;]&#039;);
+    
+    this.ws.onmessage = (event) =&gt; {
+      const update = JSON.parse(event.data);
+      bus.publish(&#039;cart.updated&#039;, update);
+    };
+    
+    bus.subscribe(&#039;cart.add-item&#039;, (msg) =&gt; {
+      this.ws.send(JSON.stringify({
+        action: &#039;add&#039;,
+        item: msg.data
+      }));
+    });
+  }
+}
+
+customElements.define(&#039;cart-socket&#039;, CartSocket);
+
+// 5. Plugin system
+const registry = new PluginRegistry(buses.ui);
+
+registry.register(&#039;analytics&#039;, {
+  init({ bus }) {
+    bus.subscribe(&#039;*&#039;, (msg) =&gt; {
+      gtag(&#039;event&#039;, msg.topic, msg.data);
+    });
+  }
+});
+
+registry.register(&#039;error-handler&#039;, {
+  init({ bus }) {
+    bus.subscribe(&#039;app.error&#039;, (msg) =&gt; {
+      Sentry.captureException(msg.data.error);
+    });
+  }
+});</code></pre>
+<h2>Component Reference</h2>
+<p>See Chapter 17 for core PAN Bus API documentation.</p>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 7 (Advanced Patterns)</li>
+<li><strong>Components</strong>: Chapter 17 (pan-bus), Chapter 20 (integration components)</li>
+<li><strong>Backend Integration</strong>: Chapter 7 (Data Fetching), Chapter 9 (Realtime Features)</li>
+<li><strong>Testing</strong>: Chapter 13 (mocking bridges and plugins)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Bridge Message Loops</h3>
+<strong>Problem</strong>: Messages bounce between bridges infinitely  
+<strong>Solution</strong>: Add loop detection with message IDs or use one-way bridges
+<pre><code class="language-javascript">const processedIds = new Set();
+
+bus.subscribe(&#039;*&#039;, (msg) =&gt; {
+  if (processedIds.has(msg.id)) return;
+  processedIds.add(msg.id);
+  
+  // Forward to other bus...
+  
+  // Clean up old IDs
+  if (processedIds.size &gt; 1000) {
+    processedIds.clear();
+  }
+});</code></pre>
+<h3>Plugin Hook Failures</h3>
+<strong>Problem</strong>: One plugin failure breaks entire hook chain  
+<strong>Solution</strong>: Wrap hooks in try/catch
+<pre><code class="language-javascript">async executeHook(hookName, data) {
+  const handlers = this.hooks.get(hookName) || [];
+  let result = data;
+  
+  for (const { id, handler } of handlers) {
+    try {
+      result = await handler(result);
+    } catch (error) {
+      console.error(`Plugin ${id} hook ${hookName} failed:`, error);
+      // Continue with other plugins
+    }
+  }
+  
+  return result;
+}</code></pre>
+<h3>WebSocket Reconnect Storms</h3>
+<strong>Problem</strong>: Exponential backoff too aggressive or too slow  
+<strong>Solution</strong>: Use capped exponential backoff
+<pre><code class="language-javascript">attemptReconnect() {
+  this.reconnectAttempts++;
+  
+  // Min 1s, max 30s, exponential between
+  const delay = Math.min(
+    1000 * Math.pow(2, this.reconnectAttempts),
+    30000
+  );
+  
+  setTimeout(() =&gt; this.connect(), delay);
+}</code></pre>
+<h3>Micro-Frontend Memory Leaks</h3>
+<strong>Problem</strong>: Modules not properly cleaned up on unload  
+<strong>Solution</strong>: Enforce destroy lifecycle
+<pre><code class="language-javascript">unloadModule(name) {
+  const module = this.modules.get(name);
+  
+  if (!module) return;
+  
+  // Call destroy if exists
+  if (module.destroy &amp;&amp; typeof module.destroy === &#039;function&#039;) {
+    try {
+      module.destroy();
+    } catch (error) {
+      console.error(`Module ${name} destroy failed:`, error);
+    }
+  }
+  
+  // Remove DOM elements
+  const container = this.querySelector(`[data-module=&quot;${name}&quot;]`);
+  if (container) container.remove();
+  
+  this.modules.delete(name);
+}</code></pre>
+<h3>Middleware Performance</h3>
+<strong>Problem</strong>: Too many middleware slow down message delivery  
+<strong>Solution</strong>: Profile and optimize critical path
+<pre><code class="language-javascript">// Add timing middleware in dev mode
+if (import.meta.env.DEV) {
+  registry.register(&#039;timing&#039;, {
+    priority: 1000, // Run first
+    middleware: async (context) =&gt; {
+      const start = performance.now();
+      context = await next(context);
+      const duration = performance.now() - start;
+      
+      if (duration &gt; 16) { // Longer than 1 frame
+        console.warn(`Slow middleware for ${context.type}: ${duration}ms`);
+      }
+      
+      return context;
+    }
+  });
+}</code></pre>
+<strong>See Also</strong>: <em>Learning LARC</em> Chapter 7 for hands-on advanced pattern tutorials.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/15-advanced-patterns.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

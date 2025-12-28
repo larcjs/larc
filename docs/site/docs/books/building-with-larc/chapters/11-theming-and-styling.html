@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Theming and Styling · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Theming and Styling">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>11-theming-and-styling</span>
+      </div>
+      <article class="docs-content">
+        <h1>Theming and Styling</h1>
+<p>Quick reference for theming and styling patterns in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 15.</p>
+<h2>Overview</h2>
+<p>LARC applications use CSS custom properties (variables) for themeable styling, supporting light/dark modes, system preferences, and dynamic theme switching via the PAN bus. The pan-theme-provider component manages global theme state.</p>
+<strong>Key Concepts</strong>:
+<ul><li>CSS custom properties: Runtime-modifiable variables (--color-primary)</li>
+<li>Semantic tokens: Meaningful names (--color-text-primary, not --gray-900)</li>
+<li>Theme provider: Component managing theme state via PAN bus</li>
+<li>System preference: Respect prefers-color-scheme media query</li>
+<li>Scoped themes: Component-specific styling independent of global theme</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-css">/* Define theme variables */
+:root {
+  --color-primary: #3b82f6;
+  --color-text: #111827;
+  --color-bg: #ffffff;
+}
+
+[data-theme=&quot;dark&quot;] {
+  --color-text: #f9fafb;
+  --color-bg: #111827;
+}
+
+/* Use in components */
+button {
+  background: var(--color-primary);
+  color: var(--color-bg);
+}</code></pre>
+<pre><code class="language-html">&lt;pan-theme-provider theme=&quot;auto&quot;&gt;&lt;/pan-theme-provider&gt;
+&lt;pan-theme-toggle&gt;&lt;/pan-theme-toggle&gt;</code></pre>
+<h2>Theme System Structure</h2>
+<h3>Two-Tier Token System</h3>
+<p>| Tier | Purpose | Example |
+|------|---------|---------|
+| <strong>Primitives</strong> | Raw color values | <code>--blue-500: #3b82f6</code> |
+| <strong>Semantic</strong> | Meaningful tokens | <code>--color-primary: var(--blue-500)</code> |</p>
+<p>Components use <strong>semantic tokens only</strong>, never primitives. This allows theme changes without updating components.</p>
+<h3>Standard Theme Variables</h3>
+<pre><code class="language-css">:root {
+  /* Colors */
+  --color-primary: #3b82f6;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f9fafb;
+  --color-border: #e5e7eb;
+  
+  /* Typography */
+  --font-family-base: system-ui, sans-serif;
+  --font-size-base: 1rem;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --line-height-normal: 1.5;
+  
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  
+  /* Borders &amp; Shadows */
+  --border-radius: 0.5rem;
+  --border-width: 1px;
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+}</code></pre>
+<h2>Dark Mode Implementation</h2>
+<h3>Manual Dark Mode Override</h3>
+<pre><code class="language-css">[data-theme=&quot;dark&quot;] {
+  --color-text-primary: #f9fafb;
+  --color-text-secondary: #d1d5db;
+  --color-bg-primary: #111827;
+  --color-bg-secondary: #1f2937;
+  --color-border: #374151;
+  --shadow-sm: 0 1px 2px 0 rgba(0,0,0,0.3);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.5);
+}</code></pre>
+<h3>System Preference Detection</h3>
+<pre><code class="language-css">@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=&quot;light&quot;]) {
+    --color-text-primary: #f9fafb;
+    --color-bg-primary: #111827;
+    /* ... other dark mode overrides */
+  }
+}</code></pre>
+<h2>Theme Provider Component</h2>
+<p>See Chapter 17 for full API documentation of <code>pan-theme-provider</code>.</p>
+<h3>Basic Usage</h3>
+<pre><code class="language-html">&lt;pan-theme-provider theme=&quot;auto&quot;&gt;&lt;/pan-theme-provider&gt;</code></pre>
+<h3>JavaScript API</h3>
+<pre><code class="language-javascript">const provider = document.querySelector(&#039;pan-theme-provider&#039;);
+
+// Set theme
+provider.setTheme(&#039;dark&#039;); // &#039;light&#039;, &#039;dark&#039;, or &#039;auto&#039;
+
+// Get current theme
+const theme = provider.getTheme(); // Returns setting (&#039;auto&#039;)
+const effective = provider.getEffectiveTheme(); // Returns actual (&#039;dark&#039;)
+
+// Listen for changes
+provider.addEventListener(&#039;theme-change&#039;, (e) =&gt; {
+  console.log(&#039;Theme:&#039;, e.detail.theme);
+});</code></pre>
+<h3>PAN Bus Integration</h3>
+<pre><code class="language-javascript">import { bus } from &#039;/core/pan-bus.mjs&#039;;
+
+// Subscribe to theme changes
+bus.subscribe(&#039;theme.changed&#039;, (msg) =&gt; {
+  console.log(&#039;New theme:&#039;, msg.data.effective);
+});
+
+// Request theme change
+bus.publish(&#039;theme.change&#039;, { theme: &#039;dark&#039; });</code></pre>
+<h2>Theme Toggle Component</h2>
+<pre><code class="language-html">&lt;!-- Icon button (default) --&gt;
+&lt;pan-theme-toggle&gt;&lt;/pan-theme-toggle&gt;
+
+&lt;!-- Button with label --&gt;
+&lt;pan-theme-toggle variant=&quot;button&quot; label=&quot;Theme&quot;&gt;&lt;/pan-theme-toggle&gt;
+
+&lt;!-- Dropdown with all options --&gt;
+&lt;pan-theme-toggle variant=&quot;dropdown&quot;&gt;&lt;/pan-theme-toggle&gt;</code></pre>
+<h2>Component-Specific Theming</h2>
+<h3>Shadow DOM Scoping</h3>
+<pre><code class="language-javascript">class BrandedCard extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          --card-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          --card-text: #ffffff;
+        }
+        
+        .card {
+          background: var(--card-bg);
+          color: var(--card-text);
+          padding: var(--space-lg);
+          border-radius: var(--border-radius);
+        }
+        
+        /* Allow customization */
+        :host([variant=&quot;flat&quot;]) {
+          --card-bg: var(--color-bg-secondary);
+          --card-text: var(--color-text-primary);
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;card&quot;&gt;&lt;slot&gt;&lt;/slot&gt;&lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h2>Responsive Theming</h2>
+<h3>Viewport-Based Variables</h3>
+<pre><code class="language-css">:root {
+  --space-page: var(--space-md);
+  --font-display: var(--font-size-2xl);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --space-page: var(--space-xl);
+    --font-display: var(--font-size-3xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --space-page: var(--space-2xl);
+    --font-display: 2.5rem;
+  }
+}
+
+.container {
+  padding: var(--space-page);
+}</code></pre>
+<h2>Smooth Theme Transitions</h2>
+<pre><code class="language-css">* {
+  transition:
+    background-color var(--transition-base),
+    border-color var(--transition-base),
+    color var(--transition-base);
+}
+
+/* Disable on page load */
+.no-transitions * {
+  transition: none !important;
+}
+
+/* Respect user preference */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}</code></pre>
+<pre><code class="language-javascript">// Disable transitions during initial theme apply
+document.documentElement.classList.add(&#039;no-transitions&#039;);
+applyTheme(theme);
+requestAnimationFrame(() =&gt; {
+  document.documentElement.classList.remove(&#039;no-transitions&#039;);
+});</code></pre>
+<h2>Multi-Brand Support</h2>
+<pre><code class="language-css">:root {
+  --brand-primary: #667eea;
+  --brand-logo: url(&#039;/logos/default.svg&#039;);
+}
+
+[data-brand=&quot;acme&quot;] {
+  --brand-primary: #10b981;
+  --brand-logo: url(&#039;/logos/acme.svg&#039;);
+}
+
+[data-brand=&quot;techstart&quot;] {
+  --brand-primary: #f59e0b;
+  --brand-logo: url(&#039;/logos/techstart.svg&#039;);
+}
+
+.brand-button {
+  background: var(--brand-primary);
+}</code></pre>
+<pre><code class="language-javascript">// Switch brands
+document.documentElement.setAttribute(&#039;data-brand&#039;, &#039;acme&#039;);</code></pre>
+<h2>Accessibility</h2>
+<h3>Contrast Requirements</h3>
+<p>Maintain WCAG contrast ratios:
+<ul><li><strong>AA Normal text</strong>: 4.5:1 minimum</li>
+<li><strong>AA Large text</strong>: 3:1 minimum  </li>
+<li><strong>AAA Normal text</strong>: 7:1 minimum</li>
+</ul>
+<pre><code class="language-css">/* Good contrast */
+:root {
+  --color-text-primary: #111827; /* 16.3:1 on white */
+  --color-bg-primary: #ffffff;
+}
+
+[data-theme=&quot;dark&quot;] {
+  --color-text-primary: #f9fafb; /* 17.5:1 on dark */
+  --color-bg-primary: #111827;
+}</code></pre></p>
+<h3>Reduced Motion</h3>
+<pre><code class="language-css">@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}</code></pre>
+<h3>High Contrast Mode</h3>
+<pre><code class="language-css">@media (prefers-contrast: high) {
+  :root {
+    --color-text-primary: #000000;
+    --color-bg-primary: #ffffff;
+    --color-border: #000000;
+    --border-width: 2px;
+  }
+}</code></pre>
+<h3>Screen Reader Announcements</h3>
+<pre><code class="language-javascript">function announceThemeChange(theme) {
+  const announcement = document.createElement(&#039;div&#039;);
+  announcement.setAttribute(&#039;role&#039;, &#039;status&#039;);
+  announcement.setAttribute(&#039;aria-live&#039;, &#039;polite&#039;);
+  announcement.className = &#039;sr-only&#039;;
+  announcement.textContent = `Theme changed to ${theme} mode`;
+  document.body.appendChild(announcement);
+  
+  setTimeout(() =&gt; announcement.remove(), 1000);
+}</code></pre>
+<h2>Performance Tips</h2>
+<p>| Optimization | Benefit |
+|--------------|---------|
+| Use data attributes for theme switching | Single change triggers all updates |
+| Avoid deep custom property nesting | Reduces lookup cost |
+| Transition specific properties only | Better performance than <code>all</code> |
+| Use CSS containment | Helps browser optimize rendering |</p>
+<h3>Efficient Theme Switching</h3>
+<pre><code class="language-javascript">// Good - single attribute change
+document.documentElement.setAttribute(&#039;data-theme&#039;, &#039;dark&#039;);
+
+// Bad - multiple property changes
+document.documentElement.style.setProperty(&#039;--color-text&#039;, &#039;#fff&#039;);
+document.documentElement.style.setProperty(&#039;--color-bg&#039;, &#039;#000&#039;);
+// ... dozens more</code></pre>
+<h2>Component Reference</h2>
+<p>See Chapter 17 for complete API documentation:
+<ul><li><strong>pan-theme-provider</strong>: Global theme management</li>
+<li><strong>pan-theme-toggle</strong>: Theme switcher UI control</li>
+</ul>
+<h2>Cross-References</h2></p>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 15 (Theming and Styling)</li>
+<li><strong>Components</strong>: Chapter 17 (pan-theme-provider, pan-theme-toggle)</li>
+<li><strong>Patterns</strong>: Appendix E (Theming Patterns)</li>
+<li><strong>Related</strong>: Chapter 19 (UI Components)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Issue: Theme not applying on load</h3>
+<strong>Problem</strong>: Flash of unstyled content
+<strong>Solution</strong>: Apply theme in inline <code><script></code> before loading components; add <code>no-transitions</code> class during initial load
+<h3>Issue: Custom properties not inheriting</h3>
+<strong>Problem</strong>: Shadow DOM doesn't inherit all properties
+<strong>Solution</strong>: Explicitly pass needed properties through; use CSS <code>:host</code> context
+<h3>Issue: Theme transition lag</h3>
+<strong>Problem</strong>: Too many properties transitioning
+<strong>Solution</strong>: Transition only color-related properties; use <code>prefers-reduced-motion</code> to disable
+<h3>Issue: Dark mode colors look washed out</h3>
+<strong>Problem</strong>: Using same colors as light mode
+<strong>Solution</strong>: Use slightly desaturated colors in dark mode; adjust shadows to be darker
+<h3>Issue: System preference not detected</h3>
+<strong>Problem</strong>: <code>prefers-color-scheme</code> not working
+<strong>Solution</strong>: Ensure HTTPS context; check browser support; verify media query syntax
+<p>See <em>Learning LARC</em> Chapter 15 for complete theming strategies, advanced CSS patterns, and design system integration.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/11-theming-and-styling.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

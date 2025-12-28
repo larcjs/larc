@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authentication and Authorization · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Authentication and Authorization">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>08-authentication-and-authorization</span>
+      </div>
+      <article class="docs-content">
+        <h1>Authentication and Authorization</h1>
+<p>Quick reference for authentication and authorization patterns in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 12.</p>
+<h2>Overview</h2>
+<p>Authentication verifies user identity ("who are you?") while authorization determines permissions ("what can you do?"). LARC applications typically use JWT tokens for authentication and role-based access control (RBAC) for authorization.</p>
+<strong>Key Concepts</strong>:
+<ul><li>JWT tokens: Cryptographically signed identity tokens with claims</li>
+<li>Token refresh: Automatic renewal before expiry</li>
+<li>Protected routes: Enforce authentication/authorization requirements</li>
+<li>RBAC: Role-based permission system with inheritance</li>
+<li>Session management: Timeout, activity tracking, secure storage</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">// Initialize authentication
+import { authService } from &#039;./services/auth.js&#039;;
+
+await authService.initialize();
+
+if (authService.getState().isAuthenticated) {
+  // User logged in
+  console.log(&#039;User:&#039;, authService.getState().user);
+} else {
+  // Redirect to login
+  window.location.href = &#039;/login&#039;;
+}
+
+// Login
+const success = await authService.login({
+  username: &#039;alice&#039;,
+  password: &#039;secret123&#039;
+});
+
+// Check permissions
+if (authService.hasRole(&#039;admin&#039;)) {
+  // Show admin features
+}</code></pre>
+<h2>Authentication Service API</h2>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>initialize()</code> | - | Promise\<boolean\> | Load stored tokens, verify, auto-refresh if needed |
+| <code>login(credentials)</code> | {username, password} | Promise\<boolean\> | Authenticate and store tokens |
+| <code>logout()</code> | - | void | Clear tokens and state |
+| <code>getState()</code> | - | AuthState | Get current authentication state |
+| <code>getAccessToken()</code> | - | string\|null | Get token for API requests |
+| <code>hasRole(role)</code> | role: string | boolean | Check if user has role |
+| <code>hasPermission(perm)</code> | permission: string | boolean | Check if user has permission |</p>
+<h3>AuthState Interface</h3>
+<pre><code class="language-typescript">interface AuthState {
+  isAuthenticated: boolean;
+  user: UserClaims | null;
+  tokens: AuthTokens | null;
+}
+
+interface UserClaims {
+  userId: string;
+  username: string;
+  roles: string[];
+  permissions: string[];
+}
+
+interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}</code></pre>
+<h2>API Interceptor Pattern</h2>
+<p>Automatically add authentication headers to requests:</p>
+<pre><code class="language-javascript">// Add bearer token to requests
+api.interceptors.request.use(async (config) =&gt; {
+  const token = authService.getAccessToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Handle 401 by refreshing token
+api.interceptors.response.use(
+  (response) =&gt; response,
+  async (error) =&gt; {
+    if (error.response?.status === 401 &amp;&amp; !error.config._retry) {
+      error.config._retry = true;
+      await authService.refreshAccessToken();
+      
+      const newToken = authService.getAccessToken();
+      error.config.headers.Authorization = `Bearer ${newToken}`;
+      return api(error.config);
+    }
+    return Promise.reject(error);
+  }
+);</code></pre>
+<h2>Protected Routes</h2>
+<h3>Route Guard Component</h3>
+<pre><code class="language-javascript">class ProtectedRoute extends HTMLElement {
+  connectedCallback() {
+    const state = authService.getState();
+    
+    if (!state.isAuthenticated) {
+      const redirect = encodeURIComponent(window.location.pathname);
+      window.location.href = `/login?redirect=${redirect}`;
+      return;
+    }
+    
+    // Check roles
+    const requiredRoles = this.getAttribute(&#039;roles&#039;)?.split(&#039;,&#039;) || [];
+    if (requiredRoles.length) {
+      const hasRole = requiredRoles.some(r =&gt; authService.hasRole(r));
+      if (!hasRole) {
+        window.location.href = &#039;/forbidden&#039;;
+        return;
+      }
+    }
+  }
+}
+
+customElements.define(&#039;protected-route&#039;, ProtectedRoute);</code></pre>
+<h3>Usage</h3>
+<pre><code class="language-html">&lt;!-- Public route --&gt;
+&lt;route path=&quot;/&quot; component=&quot;home-page&quot;&gt;&lt;/route&gt;
+
+&lt;!-- Requires authentication --&gt;
+&lt;route path=&quot;/dashboard&quot;&gt;
+  &lt;protected-route&gt;
+    &lt;dashboard-page&gt;&lt;/dashboard-page&gt;
+  &lt;/protected-route&gt;
+&lt;/route&gt;
+
+&lt;!-- Requires admin role --&gt;
+&lt;route path=&quot;/admin&quot;&gt;
+  &lt;protected-route roles=&quot;admin&quot;&gt;
+    &lt;admin-panel&gt;&lt;/admin-panel&gt;
+  &lt;/protected-route&gt;
+&lt;/route&gt;</code></pre>
+<h2>Role-Based Access Control</h2>
+<h3>RBAC Configuration</h3>
+<pre><code class="language-javascript">const ROLES = {
+  guest: {
+    id: &#039;guest&#039;,
+    permissions: [
+      { resource: &#039;content&#039;, action: &#039;read&#039;, scope: &#039;public&#039; }
+    ]
+  },
+  
+  user: {
+    id: &#039;user&#039;,
+    inherits: [&#039;guest&#039;],
+    permissions: [
+      { resource: &#039;profile&#039;, action: &#039;read&#039;, scope: &#039;own&#039; },
+      { resource: &#039;profile&#039;, action: &#039;update&#039;, scope: &#039;own&#039; },
+      { resource: &#039;content&#039;, action: &#039;create&#039;, scope: &#039;own&#039; }
+    ]
+  },
+  
+  moderator: {
+    id: &#039;moderator&#039;,
+    inherits: [&#039;user&#039;],
+    permissions: [
+      { resource: &#039;content&#039;, action: &#039;update&#039;, scope: &#039;all&#039; },
+      { resource: &#039;content&#039;, action: &#039;delete&#039;, scope: &#039;all&#039; }
+    ]
+  },
+  
+  admin: {
+    id: &#039;admin&#039;,
+    inherits: [&#039;moderator&#039;],
+    permissions: [
+      { resource: &#039;users&#039;, action: &#039;create&#039; },
+      { resource: &#039;users&#039;, action: &#039;update&#039; },
+      { resource: &#039;users&#039;, action: &#039;delete&#039; },
+      { resource: &#039;settings&#039;, action: &#039;update&#039; }
+    ]
+  }
+};</code></pre>
+<h3>Authorization Service API</h3>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>getPermissions(roleId)</code> | roleId: string | Permission[] | Get all permissions (including inherited) |
+| <code>hasPermission(roles, resource, action, scope?)</code> | roles: string[], resource: string, action: string, scope?: string | boolean | Check if any role has permission |
+| <code>canAccess(roles, resource, action, ownerId?, userId?)</code> | roles: string[], resource: string, action: string, ownerId?: string, userId?: string | boolean | Check access with ownership |</p>
+<h3>Conditional Rendering</h3>
+<pre><code class="language-javascript">class AuthorizedContent extends HTMLElement {
+  connectedCallback() {
+    const resource = this.getAttribute(&#039;resource&#039;);
+    const action = this.getAttribute(&#039;action&#039;);
+    
+    const state = authService.getState();
+    const authorized = state.user &amp;&amp; 
+      authz.hasPermission(state.user.roles, resource, action);
+    
+    if (!authorized) {
+      this.style.display = &#039;none&#039;;
+    }
+  }
+}
+
+customElements.define(&#039;authorized-content&#039;, AuthorizedContent);</code></pre>
+<h2>Session Management</h2>
+<h3>Session Timeout</h3>
+<pre><code class="language-javascript">class SessionManager {
+  constructor(timeoutMinutes, warningMinutes) {
+    this.timeoutMinutes = timeoutMinutes;
+    this.warningMinutes = warningMinutes;
+    this.setupActivityListeners();
+  }
+  
+  start() {
+    this.resetTimeout();
+  }
+  
+  resetTimeout() {
+    clearTimeout(this.timeoutId);
+    clearTimeout(this.warningId);
+    
+    // Warning before timeout
+    const warningMs = this.warningMinutes * 60 * 1000;
+    this.warningId = setTimeout(() =&gt; {
+      this.showWarning();
+    }, warningMs);
+    
+    // Logout on timeout
+    const timeoutMs = this.timeoutMinutes * 60 * 1000;
+    this.timeoutId = setTimeout(() =&gt; {
+      authService.logout();
+      window.location.href = &#039;/login?reason=timeout&#039;;
+    }, timeoutMs);
+  }
+  
+  setupActivityListeners() {
+    [&#039;mousedown&#039;, &#039;keydown&#039;, &#039;scroll&#039;, &#039;touchstart&#039;].forEach(event =&gt; {
+      document.addEventListener(event, () =&gt; {
+        if (authService.getState().isAuthenticated) {
+          this.resetTimeout();
+        }
+      }, { passive: true });
+    });
+  }
+}
+
+// Initialize with 30-minute timeout
+const sessionManager = new SessionManager(30, 25);
+sessionManager.start();</code></pre>
+<h2>Security Best Practices</h2>
+<h3>Input Validation</h3>
+<pre><code class="language-javascript">const validators = {
+  email: (value) =&gt; /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+  
+  password: (value) =&gt; {
+    const errors = [];
+    if (value.length &lt; 8) errors.push(&#039;8+ characters required&#039;);
+    if (!/[A-Z]/.test(value)) errors.push(&#039;Uppercase required&#039;);
+    if (!/[a-z]/.test(value)) errors.push(&#039;Lowercase required&#039;);
+    if (!/[0-9]/.test(value)) errors.push(&#039;Number required&#039;);
+    if (!/[^A-Za-z0-9]/.test(value)) errors.push(&#039;Special char required&#039;);
+    return { valid: errors.length === 0, errors };
+  },
+  
+  sanitize: (value) =&gt; 
+    value.replace(/[&lt;&gt;]/g, &#039;&#039;)
+         .replace(/javascript:/gi, &#039;&#039;)
+         .trim()
+};</code></pre>
+<h3>CSRF Protection</h3>
+<pre><code class="language-javascript">class CSRFProtection {
+  generateToken() {
+    const token = this.randomString(32);
+    sessionStorage.setItem(&#039;csrf-token&#039;, token);
+    return token;
+  }
+  
+  getToken() {
+    return sessionStorage.getItem(&#039;csrf-token&#039;) || &#039;&#039;;
+  }
+  
+  addToHeaders(headers) {
+    return {
+      ...headers,
+      &#039;X-CSRF-Token&#039;: this.getToken()
+    };
+  }
+  
+  randomString(length) {
+    const chars = &#039;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&#039;;
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+    return Array.from(array).map(x =&gt; chars[x % chars.length]).join(&#039;&#039;);
+  }
+}
+
+const csrf = new CSRFProtection();</code></pre>
+<h2>Component Reference</h2>
+<p>See Chapter 20 for authentication-related components:
+<ul><li><strong>pan-auth</strong>: Complete authentication component</li>
+<li><strong>pan-user-menu</strong>: User profile dropdown with logout</li>
+</ul>
+<h2>Complete Example: Login Form</h2></p>
+<pre><code class="language-javascript">class LoginForm extends HTMLElement {
+  connectedCallback() {
+    this.state = {
+      username: &#039;&#039;,
+      password: &#039;&#039;,
+      loading: false,
+      error: null
+    };
+    
+    csrf.generateToken();
+    this.render();
+  }
+  
+  async handleSubmit(e) {
+    e.preventDefault();
+    
+    this.state.loading = true;
+    this.state.error = null;
+    this.render();
+    
+    try {
+      const success = await authService.login({
+        username: this.state.username,
+        password: this.state.password
+      });
+      
+      if (success) {
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get(&#039;redirect&#039;) || &#039;/dashboard&#039;;
+        window.location.href = redirect;
+      } else {
+        this.state.error = &#039;Invalid credentials&#039;;
+      }
+    } catch (err) {
+      this.state.error = &#039;Login failed. Try again.&#039;;
+    } finally {
+      this.state.loading = false;
+      this.render();
+    }
+  }
+  
+  render() {
+    this.innerHTML = `
+      &lt;form class=&quot;login-form&quot;&gt;
+        ${this.state.error ? `&lt;div class=&quot;error&quot;&gt;${this.state.error}&lt;/div&gt;` : &#039;&#039;}
+        
+        &lt;label&gt;
+          Username
+          &lt;input name=&quot;username&quot; value=&quot;${this.state.username}&quot; required&gt;
+        &lt;/label&gt;
+        
+        &lt;label&gt;
+          Password
+          &lt;input type=&quot;password&quot; name=&quot;password&quot; value=&quot;${this.state.password}&quot; required&gt;
+        &lt;/label&gt;
+        
+        &lt;button type=&quot;submit&quot; ${this.state.loading ? &#039;disabled&#039; : &#039;&#039;}&gt;
+          ${this.state.loading ? &#039;Signing in...&#039; : &#039;Sign In&#039;}
+        &lt;/button&gt;
+      &lt;/form&gt;
+    `;
+    
+    this.querySelector(&#039;form&#039;).addEventListener(&#039;submit&#039;, (e) =&gt; this.handleSubmit(e));
+    this.querySelector(&#039;[name=&quot;username&quot;]&#039;).addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.state.username = e.target.value;
+    });
+    this.querySelector(&#039;[name=&quot;password&quot;]&#039;).addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.state.password = e.target.value;
+    });
+  }
+}
+
+customElements.define(&#039;login-form&#039;, LoginForm);</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 12 (Authentication and Authorization)</li>
+<li><strong>Components</strong>: Chapter 20 (pan-auth, pan-user-menu)</li>
+<li><strong>Patterns</strong>: Appendix E (Security Patterns)</li>
+<li><strong>Related</strong>: Chapter 7 (API Authentication), Chapter 9 (WebSocket Authentication)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Issue: Token expires during request</h3>
+<strong>Problem</strong>: 401 errors on long-running requests
+<strong>Solution</strong>: Refresh token before expiry (subtract 5 minutes from expiry time)
+<h3>Issue: Lost authentication on page refresh</h3>
+<strong>Problem</strong>: User logged out after reload
+<strong>Solution</strong>: Call <code>authService.initialize()</code> on app startup to restore session
+<h3>Issue: Infinite redirect loops</h3>
+<strong>Problem</strong>: Protected route redirects to login, login redirects to protected route
+<strong>Solution</strong>: Check authentication before redirect; use redirect parameter correctly
+<h3>Issue: CORS errors with credentials</h3>
+<strong>Problem</strong>: <code>Access-Control-Allow-Credentials</code> errors
+<strong>Solution</strong>: Set <code>credentials: 'include'</code> in fetch options, enable CORS on server
+<h3>Issue: XSS attacks via stored tokens</h3>
+<strong>Problem</strong>: Token accessible via JavaScript
+<strong>Solution</strong>: Use httpOnly cookies for refresh tokens; store access tokens in memory when possible
+<p>See <em>Learning LARC</em> Chapter 12 for complete authentication flows, OAuth integration, and multi-factor authentication patterns.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/08-authentication-and-authorization.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

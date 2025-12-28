@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Utility Components Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Utility Components Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>21-utility-components</span>
+      </div>
+      <article class="docs-content">
+        <h1>Utility Components Reference</h1>
+<p>API documentation for LARC's utility components. For tutorials, see <em>Learning LARC</em> Chapter 14.</p>
+<h2>pan-debug</h2>
+<strong>Purpose</strong>: Message tracing and debugging for PAN bus introspection  
+<strong>Import</strong>: <code>import { PanDebugManager } from './pan-debug.mjs';</code>  
+<strong>Global Access</strong>: <code>window.pan.debug</code> (when using pan-bus)
+<h3>Quick Example</h3>
+<pre><code class="language-javascript">// Access via global
+const debug = window.pan.debug;
+
+// Enable tracing
+debug.enableTracing({ maxBuffer: 500, sampleRate: 1.0 });
+
+// Query messages
+const recentMessages = debug.getTrace({ limit: 10 });
+console.log(&#039;Recent messages:&#039;, recentMessages);
+
+// Find specific messages
+const loginMessages = debug.findMessages({
+  topic: &#039;user.login&#039;,
+  timeRange: { start: Date.now() - 60000 } // Last minute
+});
+
+// Export for analysis
+const traceData = debug.exportTrace();
+console.log(&#039;Trace export:&#039;, traceData);
+
+// Disable when done
+debug.disableTracing();</code></pre>
+<h3>API</h3>
+<p>#### Constructor</p>
+<pre><code class="language-javascript">new PanDebugManager()</code></pre>
+<p>Creates debug manager with defaults:
+<ul><li><code>enabled</code>: false</li>
+<li><code>maxBuffer</code>: 1000</li>
+<li><code>sampleRate</code>: 1.0 (100%)</li>
+</ul>
+#### Configuration Methods</p>
+<p>| Method | Parameters | Description |
+|--------|-----------|-------------|
+| <code>enableTracing(options)</code> | options?: <code>{ maxBuffer?, sampleRate? }</code> | Enable message tracing |
+| <code>disableTracing()</code> | - | Disable tracing and clear buffer |
+| <code>setSampleRate(rate)</code> | rate: Number (0.0-1.0) | Set sampling rate |
+| <code>clearTrace()</code> | - | Clear trace buffer |</p>
+<strong>options:</strong>
+<ul><li><code>maxBuffer</code> (Number, default: 1000): Max messages to retain</li>
+<li><code>sampleRate</code> (Number, default: 1.0): Sampling rate (0.0-1.0)</li>
+</ul>
+#### Query Methods
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>getTrace(options)</code> | options?: <code>{ limit?, offset? }</code> | Array | Get trace buffer |
+| <code>findMessages(query)</code> | query: Object | Array | Find messages matching criteria |
+| <code>getStats()</code> | - | Object | Get statistics |
+| <code>exportTrace(format)</code> | format?: String | String/Object | Export trace data |</p>
+<strong>Query options:</strong>
+<ul><li><code>topic</code> (String): Match topic pattern</li>
+<li><code>clientId</code> (String): Filter by client ID</li>
+<li><code>timeRange</code> (Object): <code>{ start?, end? }</code> in milliseconds</li>
+<li><code>limit</code> (Number): Max results</li>
+</ul>
+<strong>Stats object:</strong>
+<pre><code class="language-javascript">{
+  totalMessages: 1523,
+  tracedMessages: 1523,
+  droppedMessages: 0,
+  bufferSize: 1000,
+  sampleRate: 1.0,
+  enabled: true
+}</code></pre>
+<h3>Complete Example</h3>
+<pre><code class="language-javascript">import { PanDebugManager } from &#039;./pan-debug.mjs&#039;;
+
+// Create and enable
+const debug = new PanDebugManager();
+debug.enableTracing({ maxBuffer: 1000, sampleRate: 0.1 }); // Sample 10%
+
+// Build debug UI
+function buildDebugPanel() {
+  const panel = document.createElement(&#039;div&#039;);
+  panel.style.cssText = `
+    position: fixed; bottom: 0; right: 0; width: 400px; height: 300px;
+    background: white; border: 1px solid #ccc; overflow: auto; 
+    font-family: monospace; font-size: 12px; padding: 10px;
+  `;
+
+  const refresh = () =&gt; {
+    const messages = debug.getTrace({ limit: 20 });
+    panel.innerHTML = `
+      &lt;h3&gt;PAN Bus Debug (${debug.getStats().totalMessages} total)&lt;/h3&gt;
+      &lt;button onclick=&quot;window.panDebug.clearTrace()&quot;&gt;Clear&lt;/button&gt;
+      &lt;button onclick=&quot;window.panDebug.exportToConsole()&quot;&gt;Export&lt;/button&gt;
+      &lt;hr&gt;
+      ${messages.map(msg =&gt; `
+        &lt;div style=&quot;margin: 5px 0; border-left: 3px solid #007bff; padding-left: 5px;&quot;&gt;
+          &lt;strong&gt;${msg.topic}&lt;/strong&gt;
+          &lt;small&gt;(${new Date(msg.timestamp).toLocaleTimeString()})&lt;/small&gt;
+          &lt;pre style=&quot;margin: 2px 0;&quot;&gt;${JSON.stringify(msg.data, null, 2)}&lt;/pre&gt;
+        &lt;/div&gt;
+      `).join(&#039;&#039;)}
+    `;
+  };
+
+  // Refresh every 2 seconds
+  setInterval(refresh, 2000);
+  refresh();
+
+  document.body.appendChild(panel);
+
+  // Expose controls
+  window.panDebug = {
+    clearTrace: () =&gt; { debug.clearTrace(); refresh(); },
+    exportToConsole: () =&gt; console.log(debug.exportTrace())
+  };
+}
+
+// Initialize when bus ready
+if (window.__panReady) {
+  buildDebugPanel();
+} else {
+  window.addEventListener(&#039;pan:sys.ready&#039;, buildDebugPanel, { once: true });
+}</code></pre>
+<h3>Helper Functions</h3>
+<pre><code class="language-javascript">// Filter by topic pattern
+function findByTopic(pattern) {
+  return debug.findMessages({ topic: pattern });
+}
+
+// Get message frequency
+function getMessageFrequency() {
+  const messages = debug.getTrace();
+  const freq = {};
+  messages.forEach(msg =&gt; {
+    freq[msg.topic] = (freq[msg.topic] || 0) + 1;
+  });
+  return Object.entries(freq).sort((a, b) =&gt; b[1] - a[1]);
+}
+
+// Find slow handlers
+function findSlowHandlers(thresholdMs = 100) {
+  const messages = debug.getTrace();
+  return messages.filter(msg =&gt; 
+    msg.processingTime &amp;&amp; msg.processingTime &gt; thresholdMs
+  );
+}</code></pre>
+<h3>Common Issues</h3>
+<strong>High memory usage</strong>: Reduce <code>maxBuffer</code> or <code>sampleRate</code>. For production, use <code>sampleRate: 0.01</code> (1%).
+<strong>Messages not appearing</strong>: Ensure tracing enabled and sampling rate > 0.
+<strong>Performance impact</strong>: Tracing adds overhead. Use sampling (0.01-0.1) in production, or disable entirely.
+<hr>
+<h2>pan-forwarder</h2>
+<strong>Purpose</strong>: Forward PAN messages to HTTP endpoints  
+<strong>Import</strong>: <code><pan-forwarder></code> custom element
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-forwarder
+  url=&quot;https://api.example.com/events&quot;
+  topics=&quot;user.login,user.logout,error.*&quot;
+  method=&quot;POST&quot;
+  debounce=&quot;500&quot;&gt;
+&lt;/pan-forwarder&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+// Messages matching topics are automatically forwarded
+// No additional code needed
+&lt;/script&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>url</code> | String | "" | HTTP endpoint URL |
+| <code>topics</code> | String | "*" | Comma-separated topic patterns |
+| <code>method</code> | String | "POST" | HTTP method |
+| <code>debounce</code> | Number | 0 | Debounce delay (ms) |
+| <code>batch-size</code> | Number | 1 | Batch multiple messages |
+| <code>batch-timeout</code> | Number | 1000 | Max batch wait time (ms) |
+| <code>credentials</code> | String | "" | Fetch credentials mode |
+| <code>deduplicate</code> | Boolean | false | Skip duplicate messages |</p>
+<h3>Headers Configuration</h3>
+<p>Configure headers via embedded JSON script:</p>
+<pre><code class="language-html">&lt;pan-forwarder url=&quot;/api/events&quot; topics=&quot;user.*&quot;&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+    {
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer TOKEN&quot;,
+        &quot;X-App-Version&quot;: &quot;1.0.0&quot;
+      }
+    }
+  &lt;/script&gt;
+&lt;/pan-forwarder&gt;</code></pre>
+<h3>Request Format</h3>
+<strong>Single message:</strong>
+<pre><code class="language-json">{
+  &quot;topic&quot;: &quot;user.login&quot;,
+  &quot;data&quot;: { &quot;userId&quot;: 123 },
+  &quot;timestamp&quot;: 1640000000000,
+  &quot;id&quot;: &quot;msg-abc123&quot;
+}</code></pre>
+<strong>Batched messages:</strong>
+<pre><code class="language-json">{
+  &quot;messages&quot;: [
+    { &quot;topic&quot;: &quot;user.login&quot;, &quot;data&quot;: {...}, &quot;timestamp&quot;: 1640000000000 },
+    { &quot;topic&quot;: &quot;user.action&quot;, &quot;data&quot;: {...}, &quot;timestamp&quot;: 1640000001000 }
+  ],
+  &quot;batchSize&quot;: 2
+}</code></pre>
+<h3>Complete Example</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-forwarder.mjs&#039;;
+    import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const pc = new PanClient();
+
+      // Application publishes messages normally
+      document.getElementById(&#039;login-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+        pc.publish(&#039;user.login&#039;, {
+          userId: 123,
+          timestamp: Date.now()
+        });
+        // Message automatically forwarded to server
+      });
+
+      // Track forwarding status
+      pc.subscribe(&#039;forwarder.success&#039;, (msg) =&gt; {
+        console.log(&#039;Forwarded:&#039;, msg.data.topic);
+      });
+
+      pc.subscribe(&#039;forwarder.error&#039;, (msg) =&gt; {
+        console.error(&#039;Forward failed:&#039;, msg.data.error);
+      });
+    });
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  
+  &lt;!-- Forward user events to analytics server --&gt;
+  &lt;pan-forwarder
+    url=&quot;https://analytics.example.com/events&quot;
+    topics=&quot;user.login,user.logout,user.action&quot;
+    method=&quot;POST&quot;
+    debounce=&quot;1000&quot;
+    batch-size=&quot;10&quot;
+    batch-timeout=&quot;5000&quot;&gt;
+    &lt;script type=&quot;application/json&quot;&gt;
+      {
+        &quot;headers&quot;: {
+          &quot;Authorization&quot;: &quot;Bearer analytics-token&quot;,
+          &quot;Content-Type&quot;: &quot;application/json&quot;
+        }
+      }
+    &lt;/script&gt;
+  &lt;/pan-forwarder&gt;
+
+  &lt;!-- Forward errors to monitoring service --&gt;
+  &lt;pan-forwarder
+    url=&quot;https://monitoring.example.com/errors&quot;
+    topics=&quot;error.*,*.error&quot;
+    method=&quot;POST&quot;
+    credentials=&quot;include&quot;&gt;
+    &lt;script type=&quot;application/json&quot;&gt;
+      {
+        &quot;headers&quot;: {
+          &quot;X-Service&quot;: &quot;my-app&quot;,
+          &quot;X-Environment&quot;: &quot;production&quot;
+        }
+      }
+    &lt;/script&gt;
+  &lt;/pan-forwarder&gt;
+
+  &lt;button id=&quot;login-btn&quot;&gt;Login (forwards to server)&lt;/button&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Server-Side Example</h3>
+<strong>Node.js/Express:</strong>
+<pre><code class="language-javascript">app.post(&#039;/events&#039;, express.json(), (req, res) =&gt; {
+  const { topic, data, timestamp } = req.body;
+  
+  console.log(`Received: ${topic}`, data);
+  
+  // Process event
+  if (topic === &#039;user.login&#039;) {
+    analytics.track(&#039;login&#039;, data);
+  }
+  
+  res.json({ success: true });
+});
+
+// Batched messages
+app.post(&#039;/events/batch&#039;, express.json(), (req, res) =&gt; {
+  const { messages } = req.body;
+  
+  messages.forEach(msg =&gt; {
+    console.log(`Received: ${msg.topic}`, msg.data);
+  });
+  
+  res.json({ success: true, processed: messages.length });
+});</code></pre>
+<h3>PAN Events</h3>
+<p>#### Published</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>forwarder.success</code> | <code>{ topic, url, status }</code> | Message forwarded successfully |
+| <code>forwarder.error</code> | <code>{ topic, url, error, status }</code> | Forward failed |</p>
+<h3>Common Issues</h3>
+<strong>Messages not forwarded</strong>: Check topic patterns match. Use <code>topics="*"</code> to forward all messages.
+<strong>CORS errors</strong>: Configure CORS headers on server. Use <code>credentials="include"</code> for cookies.
+<strong>Too many requests</strong>: Increase <code>debounce</code> or use <code>batch-size</code> to group messages.
+<strong>Duplicate forwards</strong>: Enable <code>deduplicate="true"</code> to skip duplicate messages within 5-second window.
+<strong>Server overload</strong>: Use batching (<code>batch-size="50"</code>, <code>batch-timeout="5000"</code>) to reduce request frequency.
+<hr>
+<h2>Summary</h2>
+<p>This chapter documented LARC's utility components:</p>
+<ul><li><strong>pan-debug</strong>: Message tracing and debugging with query capabilities</li>
+<li><strong>pan-forwarder</strong>: HTTP message forwarding for server integration</li>
+</ul>
+These components provide observability and extensibility without modifying core application logic.
+<strong>See Also</strong>:
+<ul><li>Tutorial: <em>Learning LARC</em> Chapter 14</li>
+<li>Core components: Chapter 17</li>
+<li>Integration patterns: Chapter 20</li>
+<li>Debugging guide: Appendix D</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/21-utility-components.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

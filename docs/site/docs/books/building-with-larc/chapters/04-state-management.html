@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>State Management · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - State Management">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>04-state-management</span>
+      </div>
+      <article class="docs-content">
+        <h1>State Management</h1>
+<p>Quick reference for state management patterns in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 6.</p>
+<h2>Overview</h2>
+<p>State management is the practice of tracking application data across components. LARC distinguishes between <strong>local state</strong> (component-specific) and <strong>shared state</strong> (application-wide), using the PAN bus for state synchronization.</p>
+<strong>Key Concepts</strong>:
+<ul><li>Local state: Component properties, ephemeral</li>
+<li>Shared state: Store components, persisted via localStorage, IndexedDB, or OPFS</li>
+<li>State stores: Components that manage and publish shared state</li>
+<li>Synchronization: Optimistic updates, debouncing, polling, conflict resolution</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">// State store component
+class UserStore extends HTMLElement {
+  constructor() {
+    super();
+    this.currentUser = null;
+  }
+
+  connectedCallback() {
+    this.subscriptions = [
+      subscribe(&#039;auth.login.success&#039;, (msg) =&gt; this.setUser(msg.data)),
+      subscribe(&#039;auth.logout&#039;, () =&gt; this.setUser(null))
+    ];
+    
+    this.loadPersistedUser();
+  }
+
+  setUser(user) {
+    this.currentUser = user;
+    publish(&#039;user.current&#039;, user);
+    
+    if (user) {
+      localStorage.setItem(&#039;currentUser&#039;, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(&#039;currentUser&#039;);
+    }
+  }
+
+  loadPersistedUser() {
+    const stored = localStorage.getItem(&#039;currentUser&#039;);
+    if (stored) {
+      try {
+        this.setUser(JSON.parse(stored));
+      } catch (error) {
+        console.error(&#039;Failed to load user:&#039;, error);
+      }
+    }
+  }
+
+  disconnectedCallback() {
+    this.subscriptions.forEach(unsub =&gt; unsub());
+  }
+}
+
+customElements.define(&#039;user-store&#039;, UserStore);</code></pre>
+<h2>Persistence Strategies</h2>
+<p>| Strategy | Size Limit | API Style | Use Case |
+|----------|------------|-----------|----------|
+| <strong>localStorage</strong> | 5-10 MB | Synchronous | Small settings, simple data |
+| <strong>IndexedDB</strong> | 100s of MB | Async (Promise) | Structured data, queries |
+| <strong>OPFS</strong> | GB+ | Async (File API) | Large files, binary data |</p>
+<h3>When to Use Each</h3>
+<ul><li><strong>localStorage</strong>: Settings, themes, small JSON (< 100 KB)</li>
+<li><strong>IndexedDB</strong>: Documents, cached API responses, structured records</li>
+<li><strong>OPFS</strong>: Images, videos, large text files, application data files</li>
+</ul>
+<h2>State Synchronization Patterns</h2>
+<h3>Optimistic Updates</h3>
+<p>| Step | Action |
+|------|--------|
+| 1 | Update local state immediately |
+| 2 | Publish updated state to UI |
+| 3 | Sync to server in background |
+| 4 | On success: Publish confirmation |
+| 5 | On error: Rollback and publish error |</p>
+<pre><code class="language-javascript">async addTodo(todo) {
+  // Step 1-2: Optimistic update
+  const temp = { id: `temp-${Date.now()}`, ...todo };
+  this.todos.push(temp);
+  publish(&#039;todos.loaded&#039;, { todos: this.todos });
+
+  try {
+    // Step 3: Sync to server
+    const response = await fetch(&#039;/api/todos&#039;, {
+      method: &#039;POST&#039;,
+      body: JSON.stringify(todo)
+    });
+    const saved = await response.json();
+    
+    // Step 4: Replace temp with server ID
+    this.todos = this.todos.map(t =&gt; t.id === temp.id ? saved : t);
+    publish(&#039;todos.loaded&#039;, { todos: this.todos });
+  } catch (error) {
+    // Step 5: Rollback on error
+    this.todos = this.todos.filter(t =&gt; t.id !== temp.id);
+    publish(&#039;todos.loaded&#039;, { todos: this.todos });
+    publish(&#039;todo.error&#039;, { error: error.message });
+  }
+}</code></pre>
+<h3>Debounced Sync</h3>
+<p>For high-frequency updates (e.g., text editor), debounce server sync while updating UI immediately:</p>
+<pre><code class="language-javascript">updateContent(content) {
+  this.content = content;
+  publish(&#039;editor.content.updated&#039;, { content }); // Immediate UI update
+  
+  clearTimeout(this.syncTimer);
+  this.syncTimer = setTimeout(() =&gt; {
+    this.syncToServer(); // Delayed server sync
+  }, 1000);
+}</code></pre>
+<h3>Polling</h3>
+<p>Poll server periodically for updates without WebSockets:</p>
+<pre><code class="language-javascript">startPolling() {
+  this.fetchNotifications();
+  this.pollTimer = setInterval(() =&gt; {
+    this.fetchNotifications();
+  }, 30000); // Every 30 seconds
+}</code></pre>
+<h2>Conflict Resolution Strategies</h2>
+<p>| Strategy | Description | Use Case |
+|----------|-------------|----------|
+| <strong>Last Write Wins</strong> | Most recent update overwrites | Simple apps, rare conflicts |
+| <strong>Timestamps</strong> | Keep update with newest timestamp | Async updates, out-of-order messages |
+| <strong>Version Vectors</strong> | Track causality across clients | Distributed systems, offline-first |
+| <strong>User Intervention</strong> | Detect conflict, prompt user | Collaborative apps, important data |</p>
+<h3>Example: Timestamp-Based Resolution</h3>
+<pre><code class="language-javascript">connectedCallback() {
+  this.unsubscribe = subscribe(&#039;data.update&#039;, (msg) =&gt; {
+    const { key, value, timestamp } = msg.data;
+    
+    // Only apply if newer
+    if (!this.timestamps[key] || timestamp &gt; this.timestamps[key]) {
+      this.data[key] = value;
+      this.timestamps[key] = timestamp;
+      publish(&#039;data.current&#039;, this.data);
+    }
+  });
+}</code></pre>
+<h2>Derived State Pattern</h2>
+<p>Compute derived state from source state rather than storing redundantly:</p>
+<pre><code class="language-javascript">publishDerivedState() {
+  const itemCount = this.items.reduce((sum, item) =&gt; sum + item.quantity, 0);
+  const subtotal = this.items.reduce((sum, item) =&gt; sum + (item.price * item.quantity), 0);
+  const tax = subtotal * 0.08;
+  const total = subtotal + tax;
+
+  publish(&#039;cart.state&#039;, {
+    items: this.items,
+    itemCount,
+    subtotal,
+    tax,
+    total
+  });
+}</code></pre>
+<h2>History and Time Travel</h2>
+<p>Implement undo/redo by maintaining state snapshots:</p>
+<pre><code class="language-javascript">addSnapshot(state) {
+  this.history = this.history.slice(0, this.currentIndex + 1);
+  this.history.push(JSON.parse(JSON.stringify(state)));
+  this.currentIndex++;
+  
+  if (this.history.length &gt; this.maxHistory) {
+    this.history.shift();
+    this.currentIndex--;
+  }
+  
+  publish(&#039;state.current&#039;, state);
+  publish(&#039;state.history.updated&#039;, {
+    canUndo: this.currentIndex &gt; 0,
+    canRedo: this.currentIndex &lt; this.history.length - 1
+  });
+}</code></pre>
+<h2>Performance Best Practices</h2>
+<p>| Practice | Why |
+|----------|-----|
+| Minimize updates | Only publish when state actually changes |
+| Batch updates | Combine multiple field changes into single message |
+| Immutable updates | Create new objects, don't mutate |
+| Debounce high-frequency | Don't publish every keystroke |
+| Lazy load | Load data on demand |
+| Prune old data | Remove stale data to prevent memory bloat |</p>
+<h2>Component Reference</h2>
+<ul><li><strong>pan-store</strong>: Reactive state store with persistence - See Chapter 18</li>
+<li><strong>pan-idb</strong>: IndexedDB wrapper component - See Chapter 18</li>
+</ul>
+<h2>Complete Example: Document Store with IndexedDB</h2>
+<pre><code class="language-javascript">class DocumentStore extends HTMLElement {
+  constructor() {
+    super();
+    this.db = new IndexedDBStore(&#039;app-db&#039;, &#039;documents&#039;);
+    this.documents = [];
+  }
+
+  async connectedCallback() {
+    this.subscriptions = [
+      subscribe(&#039;document.save&#039;, async (msg) =&gt; await this.saveDocument(msg.data)),
+      subscribe(&#039;document.delete&#039;, async (msg) =&gt; await this.deleteDocument(msg.data.id)),
+      subscribe(&#039;document.load&#039;, async (msg) =&gt; await this.loadDocument(msg.data.id))
+    ];
+
+    await this.loadAllDocuments();
+  }
+
+  async loadAllDocuments() {
+    try {
+      this.documents = await this.db.getAll();
+      publish(&#039;documents.loaded&#039;, { documents: this.documents });
+    } catch (error) {
+      console.error(&#039;Failed to load documents:&#039;, error);
+      publish(&#039;documents.error&#039;, { error: error.message });
+    }
+  }
+
+  async saveDocument(document) {
+    try {
+      await this.db.put(document);
+      this.documents = await this.db.getAll();
+      publish(&#039;document.saved&#039;, { document });
+      publish(&#039;documents.loaded&#039;, { documents: this.documents });
+    } catch (error) {
+      console.error(&#039;Failed to save document:&#039;, error);
+      publish(&#039;document.error&#039;, { error: error.message });
+    }
+  }
+
+  async deleteDocument(id) {
+    try {
+      await this.db.delete(id);
+      this.documents = await this.db.getAll();
+      publish(&#039;document.deleted&#039;, { id });
+      publish(&#039;documents.loaded&#039;, { documents: this.documents });
+    } catch (error) {
+      console.error(&#039;Failed to delete document:&#039;, error);
+      publish(&#039;document.error&#039;, { error: error.message });
+    }
+  }
+
+  async loadDocument(id) {
+    try {
+      const document = await this.db.get(id);
+      publish(&#039;document.loaded&#039;, { document });
+    } catch (error) {
+      console.error(&#039;Failed to load document:&#039;, error);
+      publish(&#039;document.error&#039;, { error: error.message });
+    }
+  }
+
+  disconnectedCallback() {
+    this.subscriptions.forEach(unsub =&gt; unsub());
+  }
+}
+
+customElements.define(&#039;document-store&#039;, DocumentStore);</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 6 (State Management)</li>
+<li><strong>Components</strong>: Chapter 18 (pan-store, pan-idb)</li>
+<li><strong>Patterns</strong>: Appendix E (Message Patterns)</li>
+<li><strong>Related</strong>: Chapter 5 (Routing), Chapter 7 (Data Fetching)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Issue: State not persisting</h3>
+<strong>Problem</strong>: Data lost on page reload
+<strong>Solution</strong>: Ensure <code>loadPersistedUser()</code> called in <code>connectedCallback()</code> and storage API used correctly
+<h3>Issue: Race conditions</h3>
+<strong>Problem</strong>: Concurrent updates causing inconsistent state
+<strong>Solution</strong>: Use timestamps or version vectors, implement conflict resolution strategy
+<h3>Issue: Memory leaks from subscriptions</h3>
+<strong>Problem</strong>: Memory grows over time
+<strong>Solution</strong>: Always unsubscribe in <code>disconnectedCallback()</code>, store subscription functions
+<h3>Issue: localStorage quota exceeded</h3>
+<strong>Problem</strong>: <code>QuotaExceededError</code> thrown
+<strong>Solution</strong>: Migrate to IndexedDB for larger data, implement data pruning strategy
+<h3>Issue: Stale data after optimistic update failure</h3>
+<strong>Problem</strong>: UI shows incorrect state after server error
+<strong>Solution</strong>: Implement rollback in catch block, publish error state
+<p>See <em>Learning LARC</em> Chapter 6 for detailed troubleshooting and advanced patterns.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/04-state-management.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

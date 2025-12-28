@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Components Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Data Components Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>18-data-components</span>
+      </div>
+      <article class="docs-content">
+        <h1>Data Components Reference</h1>
+<p>API documentation for LARC's data management components. For tutorials, see <em>Learning LARC</em> Chapter 6.</p>
+<h2>pan-store</h2>
+<strong>Purpose</strong>: Reactive state management for shared application state  
+<strong>Import</strong>: <code>import { createStore, bind } from './pan-store.mjs';</code>
+<h3>Quick Example</h3>
+<pre><code class="language-javascript">import { createStore } from &#039;./pan-store.mjs&#039;;
+
+const store = createStore({ count: 0, theme: &#039;light&#039; });
+
+// Subscribe to changes
+store.subscribe(({ detail }) =&gt; {
+  console.log(`${detail.key} changed to ${detail.value}`);
+});
+
+// Update state
+store.state.count++; // Triggers subscriber</code></pre>
+<h3>API</h3>
+<p>#### createStore(initial)</p>
+<p>Creates reactive store with optional initial state.</p>
+<strong>Parameters:</strong>
+<ul><li><code>initial</code> (Object, optional): Initial state</li>
+</ul>
+<strong>Returns:</strong> Store instance
+<strong>Properties:</strong>
+<ul><li><code>state</code> (Proxy): Reactive state object</li>
+</ul>
+#### Store Methods
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>subscribe(callback)</code> | callback: Function | Function | Subscribe to changes (returns unsubscribe fn) |
+| <code>set(key, value)</code> | key: String, value: Any | - | Set single property |
+| <code>patch(object)</code> | object: Object | - | Merge multiple properties |
+| <code>update(fn)</code> | fn: Function | - | Update using function |
+| <code>select(path)</code> | path: String | Any | Get nested value by dot-path |
+| <code>derive(key, deps, computeFn)</code> | key: String, deps: Array, computeFn: Function | Function | Create computed property |
+| <code>batch(fn)</code> | fn: Function | - | Batch multiple updates |
+| <code>use(middleware)</code> | middleware: Function | Function | Add middleware (returns unsubscribe) |
+| <code>snapshot()</code> | - | Object | Deep clone of current state |
+| <code>reset()</code> | - | - | Reset to initial values |
+| <code>has(key)</code> | key: String | Boolean | Check if property exists |
+| <code>delete(key)</code> | key: String | Boolean | Remove property |
+| <code>keys()</code> | - | Array | Get all property names |</p>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">const store = createStore({ count: 0 });
+
+// Direct access
+store.state.count++; // Triggers updates
+
+// Methods
+store.set(&#039;theme&#039;, &#039;dark&#039;);
+store.patch({ count: 5, theme: &#039;dark&#039; });
+store.update(state =&gt; { state.count += 1; return state; });
+
+// Derived values
+store.derive(&#039;doubled&#039;, [&#039;count&#039;], (count) =&gt; count * 2);
+console.log(store.state.doubled); // 10
+
+// Batching
+store.batch(({ set }) =&gt; {
+  set(&#039;loading&#039;, true);
+  set(&#039;error&#039;, null);
+}); // Single event
+
+// Cleanup
+const unsub = store.subscribe(handler);
+unsub();</code></pre>
+<h3>Events</h3>
+<ul><li><strong>state</strong>: Emitted on state change  </li>
+</ul>  Detail: <code>{ key, value, oldValue, state, batch?, changes?, deleted? }</code>
+  
+<ul><li><strong>derived</strong>: Emitted on derived value update  </li>
+</ul>  Detail: <code>{ key, value, state }</code>
+<h3>bind(element, store, mapping, options)</h3>
+<p>Two-way binding for form inputs.</p>
+<strong>Parameters:</strong>
+<ul><li><code>element</code> (HTMLElement): Container element</li>
+<li><code>store</code> (Store): Store instance</li>
+<li><code>mapping</code> (Object): CSS selectors to property names</li>
+<li><code>options</code> (Object, optional): <code>{ events: ['input', 'change'] }</code></li>
+</ul>
+<strong>Returns:</strong> Unbind function
+<strong>Usage:</strong>
+<pre><code class="language-javascript">const store = createStore({ username: &#039;&#039;, email: &#039;&#039; });
+const form = document.querySelector(&#039;#user-form&#039;);
+
+const unbind = bind(form, store, {
+  &#039;input[name=&quot;username&quot;]&#039;: &#039;username&#039;,
+  &#039;input[name=&quot;email&quot;]&#039;: &#039;email&#039;
+});
+
+// Input changes update store
+// Store changes update inputs</code></pre>
+<h3>Complete Example</h3>
+<pre><code class="language-javascript">import { createStore } from &#039;./pan-store.mjs&#039;;
+
+// Shopping cart with derived totals
+const cart = createStore({
+  items: [
+    { id: 1, name: &#039;Widget&#039;, price: 10, qty: 2 },
+    { id: 2, name: &#039;Gadget&#039;, price: 25, qty: 1 }
+  ],
+  taxRate: 0.08
+});
+
+// Derive subtotal
+cart.derive(&#039;subtotal&#039;, [&#039;items&#039;], (items) =&gt; {
+  return items.reduce((sum, item) =&gt; sum + (item.price * item.qty), 0);
+});
+
+// Derive tax and total
+cart.derive(&#039;tax&#039;, [&#039;subtotal&#039;, &#039;taxRate&#039;], (sub, rate) =&gt; sub * rate);
+cart.derive(&#039;total&#039;, [&#039;subtotal&#039;, &#039;tax&#039;], (sub, tax) =&gt; sub + tax);
+
+// Add logging middleware
+cart.use(({ key, value }) =&gt; {
+  console.log(`State changed: ${key} = ${value}`);
+});
+
+// Subscribe to total changes
+cart.subscribe(({ detail }) =&gt; {
+  if (detail.key === &#039;total&#039;) {
+    console.log(`Cart total: $${detail.value.toFixed(2)}`);
+  }
+});
+
+// Access computed values
+console.log(cart.state.subtotal); // 45
+console.log(cart.state.tax);      // 3.6
+console.log(cart.state.total);    // 48.6</code></pre>
+<h3>Common Issues</h3>
+<strong>Nested changes not detected</strong>
+<pre><code class="language-javascript">// Problem
+store.state.user.name = &#039;Ada&#039;; // No event
+
+// Solution: reassign parent
+store.state.user = { ...store.state.user, name: &#039;Ada&#039; };</code></pre>
+<strong>Performance with frequent updates</strong>
+<pre><code class="language-javascript">// Problem: 1000 individual events
+for (let i = 0; i &lt; 1000; i++) store.state.count = i;
+
+// Solution: use batch()
+store.batch(({ set }) =&gt; {
+  for (let i = 0; i &lt; 1000; i++) set(&#039;count&#039;, i);
+});</code></pre>
+<strong>Memory leaks</strong>
+<pre><code class="language-javascript">// Problem: no cleanup
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    store.subscribe(this.handleChange); // Leaks
+  }
+}
+
+// Solution: unsubscribe on disconnect
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.unsub = store.subscribe(this.handleChange);
+  }
+  disconnectedCallback() {
+    if (this.unsub) this.unsub();
+  }
+}</code></pre>
+<hr>
+<h2>pan-idb</h2>
+<strong>Purpose</strong>: IndexedDB integration via PAN message bus  
+<strong>Import</strong>: <code><pan-idb></code> custom element
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-idb
+  database=&quot;myapp&quot;
+  store=&quot;documents&quot;
+  key-path=&quot;id&quot;
+  auto-increment
+  indexes=&#039;[{&quot;name&quot;:&quot;byTitle&quot;,&quot;keyPath&quot;:&quot;title&quot;}]&#039;&gt;
+&lt;/pan-idb&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Add document
+pc.publish({
+  topic: &#039;documents.idb.add&#039;,
+  data: { item: { title: &#039;Report&#039;, content: &#039;...&#039; } }
+});
+
+// Listen for result
+pc.subscribe(&#039;documents.idb.result&#039;, (msg) =&gt; {
+  console.log(&#039;Saved with key:&#039;, msg.data.key);
+});
+&lt;/script&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>database</code> | String | - | Database name (required) |
+| <code>version</code> | Number | 1 | Database version |
+| <code>store</code> | String | - | Object store name (required) |
+| <code>key-path</code> | String | "id" | Primary key property |
+| <code>auto-increment</code> | Boolean | false | Use auto-incrementing keys |
+| <code>indexes</code> | JSON String | [] | Index configurations |</p>
+<strong>Index format:</strong>
+<pre><code class="language-json">[
+  {
+    &quot;name&quot;: &quot;byTitle&quot;,
+    &quot;keyPath&quot;: &quot;title&quot;,
+    &quot;unique&quot;: false,
+    &quot;multiEntry&quot;: false
+  }
+]</code></pre>
+<h3>PAN Topics</h3>
+<p>All topics follow pattern <code>{store}.idb.{operation}</code>.</p>
+<p>#### Subscribe (Commands)</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>{store}.idb.get</code> | <code>{ key }</code> | Retrieve item by key |
+| <code>{store}.idb.put</code> | <code>{ item }</code> | Insert or update item |
+| <code>{store}.idb.add</code> | <code>{ item }</code> | Insert item (fails if exists) |
+| <code>{store}.idb.delete</code> | <code>{ key }</code> | Delete item by key |
+| <code>{store}.idb.clear</code> | <code>{}</code> | Delete all items |
+| <code>{store}.idb.list</code> | <code>{ index?, range?, direction?, limit? }</code> | List items |
+| <code>{store}.idb.query</code> | <code>{ index, value }</code> | Query by index |
+| <code>{store}.idb.count</code> | <code>{ index? }</code> | Count items |</p>
+<p>#### Publish (Results)</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>{store}.idb.ready</code> | <code>{ database, store }</code> | Database initialized |
+| <code>{store}.idb.result</code> | <code>{ operation, success, ...data }</code> | Operation succeeded |
+| <code>{store}.idb.error</code> | <code>{ operation, success: false, error }</code> | Operation failed |</p>
+<strong>Result data by operation:</strong>
+<ul><li><code>get</code>: <code>{ item }</code></li>
+<li><code>put</code>/<code>add</code>: <code>{ key }</code></li>
+<li><code>list</code>/<code>query</code>: <code>{ items }</code></li>
+<li><code>count</code>: <code>{ count }</code></li>
+</ul>
+<h3>Methods</h3>
+<p>Direct JavaScript API (alternative to PAN topics):</p>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>get(key)</code> | key: Any | Promise\<Object\> | Retrieve item |
+| <code>put(item)</code> | item: Object | Promise\<Any\> | Insert/update item |
+| <code>add(item)</code> | item: Object | Promise\<Any\> | Insert item |
+| <code>delete(key)</code> | key: Any | Promise\<void\> | Delete item |
+| <code>clear()</code> | - | Promise\<void\> | Delete all |
+| <code>list(options)</code> | options: Object | Promise\<Array\> | List items |
+| <code>query(index, value)</code> | index: String, value: Any | Promise\<Array\> | Query by index |
+| <code>count(index)</code> | index?: String | Promise\<Number\> | Count items |</p>
+<strong>Usage:</strong>
+<pre><code class="language-javascript">const idb = document.querySelector(&#039;pan-idb&#039;);
+await customElements.whenDefined(&#039;pan-idb&#039;);
+await idb.initPromise;
+
+// CRUD operations
+const id = await idb.add({ title: &#039;Report&#039;, status: &#039;draft&#039; });
+const doc = await idb.get(id);
+doc.status = &#039;published&#039;;
+await idb.put(doc);
+
+// Query
+const drafts = await idb.query(&#039;byStatus&#039;, &#039;draft&#039;);
+const recent = await idb.list({ 
+  index: &#039;byCreated&#039;, 
+  direction: &#039;prev&#039;, 
+  limit: 5 
+});
+
+// Count and delete
+const total = await idb.count();
+await idb.delete(id);</code></pre>
+<h3>Complete Example</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Document Manager&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-idb
+    database=&quot;docapp&quot;
+    store=&quot;documents&quot;
+    key-path=&quot;id&quot;
+    auto-increment
+    indexes=&#039;[
+      {&quot;name&quot;:&quot;byTitle&quot;,&quot;keyPath&quot;:&quot;title&quot;},
+      {&quot;name&quot;:&quot;byCreated&quot;,&quot;keyPath&quot;:&quot;created&quot;}
+    ]&#039;&gt;
+  &lt;/pan-idb&gt;
+
+  &lt;form id=&quot;doc-form&quot;&gt;
+    &lt;input name=&quot;title&quot; placeholder=&quot;Title&quot; required&gt;
+    &lt;textarea name=&quot;content&quot; placeholder=&quot;Content&quot;&gt;&lt;/textarea&gt;
+    &lt;button type=&quot;submit&quot;&gt;Save&lt;/button&gt;
+  &lt;/form&gt;
+
+  &lt;ul id=&quot;doc-list&quot;&gt;&lt;/ul&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+    const pc = new PanClient();
+    const form = document.getElementById(&#039;doc-form&#039;);
+    const list = document.getElementById(&#039;doc-list&#039;);
+
+    // Wait for ready
+    pc.subscribe(&#039;documents.idb.ready&#039;, loadDocuments);
+
+    // Save document
+    form.addEventListener(&#039;submit&#039;, (e) =&gt; {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      pc.publish({
+        topic: &#039;documents.idb.add&#039;,
+        data: {
+          item: {
+            title: formData.get(&#039;title&#039;),
+            content: formData.get(&#039;content&#039;),
+            created: Date.now()
+          }
+        }
+      });
+
+      form.reset();
+    });
+
+    // Load documents
+    function loadDocuments() {
+      pc.publish({
+        topic: &#039;documents.idb.list&#039;,
+        data: { index: &#039;byCreated&#039;, direction: &#039;prev&#039;, limit: 20 }
+      });
+    }
+
+    // Render results
+    pc.subscribe(&#039;documents.idb.result&#039;, (msg) =&gt; {
+      if (msg.data.operation === &#039;add&#039;) loadDocuments();
+      if (msg.data.operation === &#039;list&#039;) renderDocuments(msg.data.items);
+      if (msg.data.operation === &#039;delete&#039;) loadDocuments();
+    });
+
+    function renderDocuments(docs) {
+      list.innerHTML = docs.map(doc =&gt; `
+        &lt;li&gt;
+          &lt;strong&gt;${doc.title}&lt;/strong&gt;
+          &lt;p&gt;${doc.content}&lt;/p&gt;
+          &lt;small&gt;${new Date(doc.created).toLocaleString()}&lt;/small&gt;
+          &lt;button onclick=&quot;deleteDoc(${doc.id})&quot;&gt;Delete&lt;/button&gt;
+        &lt;/li&gt;
+      `).join(&#039;&#039;);
+    }
+
+    window.deleteDoc = (id) =&gt; {
+      pc.publish({ topic: &#039;documents.idb.delete&#039;, data: { key: id } });
+    };
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Common Issues</h3>
+<strong>Database version conflicts</strong>: Different tabs with different versions
+<pre><code class="language-javascript">// Handle versionchange event
+idb.db.addEventListener(&#039;versionchange&#039;, () =&gt; {
+  idb.db.close();
+  alert(&#039;Database upgraded. Please reload.&#039;);
+});</code></pre>
+<strong>Quota exceeded</strong>: Check available storage
+<pre><code class="language-javascript">if (navigator.storage &amp;&amp; navigator.storage.estimate) {
+  const estimate = await navigator.storage.estimate();
+  const percent = (estimate.usage / estimate.quota) * 100;
+  if (percent &gt; 90) console.warn(&#039;Storage nearly full&#039;);
+}</code></pre>
+<strong>Index not working after schema changes</strong>: Increment version number
+<pre><code class="language-html">&lt;!-- Change version=&quot;1&quot; to version=&quot;2&quot; --&gt;
+&lt;pan-idb database=&quot;myapp&quot; store=&quot;docs&quot; version=&quot;2&quot;&gt;</code></pre>
+<strong>Transaction timeouts</strong>: Break bulk operations into batches
+<pre><code class="language-javascript">async function bulkInsert(items) {
+  const BATCH_SIZE = 100;
+  for (let i = 0; i &lt; items.length; i += BATCH_SIZE) {
+    const batch = items.slice(i, i + BATCH_SIZE);
+    for (const item of batch) await idb.add(item);
+    await new Promise(r =&gt; setTimeout(r, 0)); // Yield
+  }
+}</code></pre>
+<hr>
+<h2>Summary</h2>
+<p>This chapter documented LARC's data management components:</p>
+<ul><li><strong>pan-store</strong>: Reactive state management with Proxy-based observation</li>
+<li><strong>pan-idb</strong>: IndexedDB integration via PAN message bus</li>
+</ul>
+Use pan-store for reactive application state, pan-idb for persistent storage.
+<strong>See Also</strong>:
+<ul><li>Tutorial: <em>Learning LARC</em> Chapter 6</li>
+<li>Message bus: Chapter 17</li>
+<li>UI components: Chapter 19</li>
+<li>State patterns: Appendix A</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/18-data-components.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

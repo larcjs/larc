@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting Started · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Getting Started">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>03-getting-started</span>
+      </div>
+      <article class="docs-content">
+        <h1>Getting Started</h1>
+<p>Quick installation and setup reference. For detailed tutorials, see <em>Learning LARC</em> Chapter 3.</p>
+<h2>Installation</h2>
+<h3>Via CDN (No Build Tools)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;importmap&quot;&gt;
+  {
+    &quot;imports&quot;: {
+      &quot;@larc/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2/pan-client.mjs&quot;,
+      &quot;@larc/ui&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@2/&quot;
+    }
+  }
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  &lt;my-app&gt;&lt;/my-app&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { PanClient } from &#039;@larc/core&#039;;
+
+    class MyApp extends HTMLElement {
+      connectedCallback() {
+        this.innerHTML = &#039;&lt;h1&gt;Hello LARC!&lt;/h1&gt;&#039;;
+      }
+    }
+    customElements.define(&#039;my-app&#039;, MyApp);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Via npm</h3>
+<pre><code class="language-bash">npm install @larcjs/core @larcjs/ui</code></pre>
+<pre><code class="language-javascript">// In your module
+import { PanClient } from &#039;@larcjs/core&#039;;
+import &#039;@larcjs/ui/pan-button.mjs&#039;;</code></pre>
+<h3>Project Structure</h3>
+<pre><code class="language-plaintext">my-app/
+├── index.html
+├── app.mjs
+├── components/
+│   ├── my-component.mjs
+│   └── another-component.mjs
+└── styles/
+    └── main.css</code></pre>
+<h2>Development Server</h2>
+<p>Any static file server works:</p>
+<pre><code class="language-bash"># Python
+python3 -m http.server 8000
+
+# Node.js
+npx http-server -p 8000
+
+# PHP
+php -S localhost:8000</code></pre>
+<h2>Minimal Application</h2>
+<pre><code class="language-html">&lt;!-- index.html --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;LARC App&lt;/title&gt;
+  &lt;script type=&quot;importmap&quot;&gt;
+  {
+    &quot;imports&quot;: {
+      &quot;@larc/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2/pan-client.mjs&quot;
+    }
+  }
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+  &lt;my-app&gt;&lt;/my-app&gt;
+
+  &lt;script type=&quot;module&quot; src=&quot;/app.mjs&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<pre><code class="language-javascript">// app.mjs
+import { PanClient } from &#039;@larc/core&#039;;
+
+class MyApp extends HTMLElement {
+  connectedCallback() {
+    this.client = new PanClient(this);
+
+    // Subscribe to events
+    this.client.subscribe(&#039;app.ready&#039;, () =&gt; {
+      console.log(&#039;App is ready!&#039;);
+    });
+
+    // Render
+    this.innerHTML = `
+      &lt;h1&gt;My LARC Application&lt;/h1&gt;
+      &lt;button id=&quot;test-btn&quot;&gt;Test PAN Bus&lt;/button&gt;
+    `;
+
+    // Add event listener
+    this.querySelector(&#039;#test-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.client.publish({
+        topic: &#039;button.clicked&#039;,
+        data: { timestamp: Date.now() }
+      });
+    });
+  }
+}
+
+customElements.define(&#039;my-app&#039;, MyApp);</code></pre>
+<h2>Import Maps</h2>
+<p>Define module aliases for cleaner imports:</p>
+<pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@larc/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2/pan-client.mjs&quot;,
+    &quot;@larc/ui&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@2/&quot;,
+    &quot;@/&quot;: &quot;./src/&quot;,
+    &quot;components/&quot;: &quot;./components/&quot;
+  }
+}
+&lt;/script&gt;</code></pre>
+<p>Then use:</p>
+<pre><code class="language-javascript">import { PanClient } from &#039;@larc/core&#039;;
+import &#039;@larc/ui/pan-button.mjs&#039;;
+import MyComponent from &#039;@/my-component.mjs&#039;;
+import Header from &#039;components/header.mjs&#039;;</code></pre>
+<h2>Browser Requirements</h2>
+<p>| Browser | Minimum Version | Notes |
+|---------|----------------|-------|
+| Chrome | 90+ | Full support |
+| Firefox | 88+ | Full support |
+| Safari | 14+ | Full support |
+| Edge | 90+ | Full support |</p>
+<strong>Required features:</strong>
+<ul><li>Custom Elements v1</li>
+<li>Shadow DOM v1</li>
+<li>ES Modules</li>
+<li>Import Maps</li>
+</ul>
+Check support: <code>caniuse.com/custom-elementsv1</code>
+<h2>IDE Setup</h2>
+<h3>VS Code (Recommended)</h3>
+<p>Install extensions:
+<ul><li><strong>LARC Extension</strong> — Snippets, IntelliSense</li>
+<li><strong>ESLint</strong> — Code linting</li>
+<li><strong>Prettier</strong> — Code formatting</li>
+<li><strong>Live Server</strong> — Development server</li>
+</ul>
+<h3>TypeScript Support</h3></p>
+<pre><code class="language-bash">npm install --save-dev @larcjs/core-types</code></pre>
+<pre><code class="language-typescript">// my-component.ts
+import { PanClient } from &#039;@larcjs/core&#039;;
+import type { Message } from &#039;@larcjs/core-types&#039;;
+
+class MyComponent extends HTMLElement {
+  private client: PanClient;
+
+  connectedCallback(): void {
+    this.client = new PanClient(this);
+
+    this.client.subscribe(&#039;data.updated&#039;, (msg: Message) =&gt; {
+      console.log(msg.data);
+    });
+  }
+}</code></pre>
+<h2>Quick Verification</h2>
+<p>Test your setup:</p>
+<pre><code class="language-javascript">// Open browser console
+import { PanClient } from &#039;@larc/core&#039;;
+
+const client = new PanClient();
+await client.ready();
+
+client.subscribe(&#039;test&#039;, (msg) =&gt; console.log(&#039;Received:&#039;, msg.data));
+client.publish({ topic: &#039;test&#039;, data: { hello: &#039;world&#039; } });
+
+// Should log: Received: { hello: &#039;world&#039; }</code></pre>
+<h2>Next Steps</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 3 for step-by-step guide</li>
+<li><strong>Core concepts</strong>: Chapter 2 for quick reference</li>
+<li><strong>Components</strong>: Chapters 17-21 for API documentation</li>
+<li><strong>Examples</strong>: <code>github.com/larcjs/examples</code></li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Import Maps Not Working</h3>
+<strong>Problem</strong>: Imports fail with "Failed to resolve module specifier"
+<strong>Solution</strong>: Ensure import maps are in <code><head></code> before any module scripts
+<h3>PAN Bus Not Ready</h3>
+<strong>Problem</strong>: <code>client.ready()</code> never resolves
+<strong>Solution</strong>: Verify <code><pan-bus></code> element is in DOM before creating PanClient
+<h3>CORS Errors with CDN</h3>
+<strong>Problem</strong>: Module loading fails with CORS error
+<strong>Solution</strong>: Use a local development server, not <code>file://</code> protocol
+<p>See <em>Learning LARC</em> Chapter 3 for detailed troubleshooting.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/03-getting-started.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

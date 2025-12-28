@@ -1,0 +1,403 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Performance Optimization · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Performance Optimization">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>12-performance-optimization</span>
+      </div>
+      <article class="docs-content">
+        <h1>Performance Optimization</h1>
+<p>Quick reference for performance optimization in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 15.</p>
+<h2>Overview</h2>
+<p>Optimize LARC applications through efficient message patterns, lazy loading, virtual scrolling, and memory management. Performance optimization focuses on user-perceived speed: initial load time, interaction responsiveness, and smooth animations.</p>
+<strong>Key Concepts</strong>:
+<ul><li>Message filtering and throttling to reduce bus overhead</li>
+<li>Lazy loading components and routes for faster initial load</li>
+<li>Virtual scrolling to handle large data sets efficiently</li>
+<li>Debouncing/throttling high-frequency events</li>
+<li>Memory leak prevention through proper cleanup</li>
+<li>Bundle size optimization with tree shaking and code splitting</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">import { debounce, throttle } from &#039;../utils/timing.js&#039;;
+
+class OptimizedSearch extends HTMLElement {
+  connectedCallback() {
+    // Debounce search input (wait for typing to stop)
+    const debouncedSearch = debounce((value) =&gt; {
+      bus.publish(&#039;search.query&#039;, { query: value });
+    }, 300);
+    
+    this.querySelector(&#039;input&#039;).addEventListener(&#039;input&#039;, (e) =&gt; {
+      debouncedSearch(e.target.value);
+    });
+    
+    // Throttle scroll tracking (limit frequency)
+    const throttledScroll = throttle(() =&gt; {
+      bus.publish(&#039;scroll.position&#039;, { y: window.scrollY });
+    }, 100);
+    
+    window.addEventListener(&#039;scroll&#039;, throttledScroll);
+  }
+}</code></pre>
+<h2>Message Bus Optimization</h2>
+<p>| Pattern | Description | Use Case |
+|---------|-------------|----------|
+| Specific subscriptions | Subscribe to <code>user.<em></code> not <code></em></code> | Reduce handler invocations |
+| Early returns | Check message relevance first | Skip expensive processing |
+| Unsubscribe aggressively | Unsubscribe when done | Reduce memory and CPU overhead |
+| Throttle publishers | Limit publish frequency (50-100ms) | Mouse/scroll events |
+| Debounce publishers | Wait for pause (300ms) | User input, search |
+| Batch messages | Publish array not individual items | Bulk updates |</p>
+<strong>Throttle vs Debounce</strong>:
+<ul><li><strong>Throttle</strong>: Guarantees function runs at most once per interval (good for scroll)</li>
+<li><strong>Debounce</strong>: Waits for pause before running (good for search input)</li>
+</ul>
+<h2>Timing Utilities</h2>
+<h3>Debounce</h3>
+<pre><code class="language-javascript">// utils/debounce.js
+export function debounce(fn, delay) {
+  let timeoutId = null;
+  
+  const debounced = function(...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() =&gt; fn.apply(this, args), delay);
+  };
+  
+  debounced.cancel = () =&gt; clearTimeout(timeoutId);
+  return debounced;
+}</code></pre>
+<h3>Throttle</h3>
+<pre><code class="language-javascript">// utils/throttle.js
+export function throttle(fn, interval) {
+  let lastCall = 0;
+  
+  return function(...args) {
+    const now = Date.now();
+    if (now - lastCall &gt;= interval) {
+      lastCall = now;
+      fn.apply(this, args);
+    }
+  };
+}</code></pre>
+<h3>RAF Throttle</h3>
+<pre><code class="language-javascript">// utils/raf-throttle.js
+export class RAFThrottle {
+  constructor(callback) {
+    this.callback = callback;
+    this.rafId = null;
+  }
+  
+  trigger(...args) {
+    if (this.rafId === null) {
+      this.rafId = requestAnimationFrame(() =&gt; {
+        this.callback(...args);
+        this.rafId = null;
+      });
+    }
+  }
+  
+  cancel() {
+    if (this.rafId) cancelAnimationFrame(this.rafId);
+  }
+}</code></pre>
+<h2>Lazy Loading Patterns</h2>
+<h3>Component Lazy Loading</h3>
+<pre><code class="language-javascript">// Load component when near viewport
+class LazyLoader extends HTMLElement {
+  connectedCallback() {
+    const componentName = this.getAttribute(&#039;component&#039;);
+    const margin = this.getAttribute(&#039;load-distance&#039;) || &#039;600px&#039;;
+    
+    this.observer = new IntersectionObserver(
+      async (entries) =&gt; {
+        if (entries[0].isIntersecting) {
+          await import(`./components/${componentName}.mjs`);
+          const component = document.createElement(componentName);
+          this.replaceWith(component);
+        }
+      },
+      { rootMargin: margin }
+    );
+    
+    this.observer.observe(this);
+  }
+}</code></pre>
+<strong>Usage</strong>:
+<pre><code class="language-html">&lt;lazy-loader component=&quot;heavy-chart&quot; load-distance=&quot;400px&quot;&gt;&lt;/lazy-loader&gt;</code></pre>
+<h3>Route-Based Code Splitting</h3>
+<pre><code class="language-javascript">// app-router.mjs
+const routeMap = {
+  &#039;/&#039;: () =&gt; import(&#039;./pages/home-page.mjs&#039;),
+  &#039;/profile&#039;: () =&gt; import(&#039;./pages/profile-page.mjs&#039;),
+  &#039;/settings&#039;: () =&gt; import(&#039;./pages/settings-page.mjs&#039;)
+};
+
+class AppRouter extends HTMLElement {
+  async loadRoute(route) {
+    const loader = routeMap[route];
+    if (loader) {
+      await loader();
+      this.innerHTML = `&lt;${this.getComponentName(route)}&gt;&lt;/&gt;`;
+    }
+  }
+}</code></pre>
+<h2>Virtual Scrolling</h2>
+<p>For lists with 1,000+ items, render only visible rows:</p>
+<pre><code class="language-javascript">class VirtualList extends HTMLElement {
+  constructor() {
+    super();
+    this.items = [];
+    this.itemHeight = 50;
+    this.containerHeight = 600;
+    this.scrollTop = 0;
+  }
+  
+  render() {
+    const visibleCount = Math.ceil(this.containerHeight / this.itemHeight) + 2;
+    const startIndex = Math.floor(this.scrollTop / this.itemHeight);
+    const endIndex = Math.min(this.items.length, startIndex + visibleCount);
+    
+    const visibleItems = this.items.slice(startIndex, endIndex);
+    const totalHeight = this.items.length * this.itemHeight;
+    const offsetY = startIndex * this.itemHeight;
+    
+    this.innerHTML = `
+      &lt;div style=&quot;height: ${this.containerHeight}px; overflow-y: auto;&quot;&gt;
+        &lt;div style=&quot;height: ${totalHeight}px; position: relative;&quot;&gt;
+          &lt;div style=&quot;position: absolute; top: ${offsetY}px;&quot;&gt;
+            ${visibleItems.map(item =&gt; this.renderItem(item)).join(&#039;&#039;)}
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+    
+    this.querySelector(&#039;div&#039;).addEventListener(&#039;scroll&#039;, (e) =&gt; {
+      this.scrollTop = e.target.scrollTop;
+      this.render();
+    });
+  }
+  
+  renderItem(item) {
+    return `&lt;div style=&quot;height: ${this.itemHeight}px;&quot;&gt;${item.name}&lt;/div&gt;`;
+  }
+}</code></pre>
+<strong>Usage</strong>:
+<pre><code class="language-html">&lt;virtual-list item-height=&quot;60&quot; container-height=&quot;600&quot;&gt;&lt;/virtual-list&gt;</code></pre>
+<p>See <strong>pan-virtual-list</strong> (Chapter 19) for production-ready virtual list component.</p>
+<h2>Memory Management</h2>
+<p>| Pattern | Description | Example |
+|---------|-------------|---------|
+| Unsubscribe in <code>disconnectedCallback</code> | Clean up PAN subscriptions | <code>this.unsubscribe()</code> |
+| Remove event listeners | Clean up DOM listeners | <code>removeEventListener()</code> |
+| Clear timers/intervals | Stop periodic tasks | <code>clearInterval()</code> |
+| Cancel pending fetches | Abort ongoing requests | <code>AbortController.abort()</code> |
+| Use WeakMap for caches | Auto-cleanup with GC | <code>new WeakMap()</code> |</p>
+<h3>Cleanup Example</h3>
+<pre><code class="language-javascript">class LeakFreeComponent extends HTMLElement {
+  connectedCallback() {
+    // Subscribe to bus
+    this.unsubscribe = bus.subscribe(&#039;data.updated&#039;, this.handleData);
+    
+    // Add event listener
+    this.handleClick = this.handleClick.bind(this);
+    this.addEventListener(&#039;click&#039;, this.handleClick);
+    
+    // Set interval
+    this.intervalId = setInterval(() =&gt; this.update(), 5000);
+    
+    // Fetch with abort controller
+    this.abortController = new AbortController();
+    fetch(&#039;/api/data&#039;, { signal: this.abortController.signal });
+  }
+  
+  disconnectedCallback() {
+    // Clean up everything
+    if (this.unsubscribe) this.unsubscribe();
+    this.removeEventListener(&#039;click&#039;, this.handleClick);
+    clearInterval(this.intervalId);
+    this.abortController.abort();
+  }
+}</code></pre>
+<h2>Bundle Size Optimization</h2>
+<p>| Technique | Description | Savings |
+|-----------|-------------|---------|
+| Tree shaking | Remove unused exports | 20-40% |
+| Dynamic imports | Load code on demand | Initial: 50-70% |
+| Minification | Compress code | 30-50% |
+| Gzip/Brotli | Server compression | 70-80% |
+| Dependency auditing | Replace heavy libs | Varies |</p>
+<h3>Bundle Optimization Example</h3>
+<pre><code class="language-javascript">// Before: import everything
+import moment from &#039;moment&#039;; // 231 kB
+
+// After: use native APIs
+const formatter = new Intl.DateTimeFormat(&#039;en-US&#039;, {
+  year: &#039;numeric&#039;,
+  month: &#039;long&#039;,
+  day: &#039;numeric&#039;
+});
+formatter.format(new Date()); // 0 kB</code></pre>
+<h3>Build Configuration</h3>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;esbuild src/app.js --bundle --minify --splitting --outdir=dist&quot;
+  }
+}</code></pre>
+<h2>Performance Monitoring</h2>
+<pre><code class="language-javascript">class PerformanceMonitor extends HTMLElement {
+  connectedCallback() {
+    // Navigation timing
+    window.addEventListener(&#039;load&#039;, () =&gt; {
+      const nav = performance.getEntriesByType(&#039;navigation&#039;)[0];
+      console.log({
+        &#039;DNS&#039;: nav.domainLookupEnd - nav.domainLookupStart,
+        &#039;TCP&#039;: nav.connectEnd - nav.connectStart,
+        &#039;Request&#039;: nav.responseStart - nav.requestStart,
+        &#039;Response&#039;: nav.responseEnd - nav.responseStart,
+        &#039;DOM&#039;: nav.domComplete - nav.domLoading,
+        &#039;Total&#039;: nav.loadEventEnd - nav.fetchStart
+      });
+    });
+    
+    // Long task detection
+    new PerformanceObserver((list) =&gt; {
+      for (const entry of list.getEntries()) {
+        if (entry.duration &gt; 50) {
+          console.warn(`Long task: ${entry.duration}ms`);
+        }
+      }
+    }).observe({ entryTypes: [&#039;longtask&#039;] });
+    
+    // Core Web Vitals
+    new PerformanceObserver((list) =&gt; {
+      for (const entry of list.getEntries()) {
+        console.log(`${entry.name}: ${entry.value}`);
+      }
+    }).observe({ entryTypes: [&#039;largest-contentful-paint&#039;, &#039;first-input&#039;] });
+  }
+}</code></pre>
+<h2>Component Reference</h2>
+<p>See Chapter 19 for performance-optimized UI components:
+<ul><li><strong>pan-virtual-list</strong>: Production virtual scrolling</li>
+<li><strong>pan-lazy-image</strong>: Lazy image loading with IntersectionObserver</li>
+<li><strong>pan-suspense</strong>: Loading states and code splitting</li>
+</ul>
+<h2>Complete Example</h2></p>
+<pre><code class="language-javascript">// Optimized data table with virtual scrolling and search
+class OptimizedDataTable extends HTMLElement {
+  constructor() {
+    super();
+    this.items = [];
+    this.filteredItems = [];
+  }
+  
+  connectedCallback() {
+    // Subscribe to data
+    this.unsubscribe = bus.subscribe(&#039;table.data&#039;, (msg) =&gt; {
+      this.items = msg.data.items;
+      this.filteredItems = this.items;
+      this.render();
+    });
+    
+    // Debounced search
+    const debouncedFilter = debounce((query) =&gt; {
+      this.filteredItems = this.items.filter(item =&gt;
+        item.name.toLowerCase().includes(query.toLowerCase())
+      );
+      this.render();
+    }, 300);
+    
+    this.innerHTML = `
+      &lt;input type=&quot;text&quot; placeholder=&quot;Search...&quot; /&gt;
+      &lt;virtual-list item-height=&quot;50&quot; container-height=&quot;600&quot;&gt;&lt;/virtual-list&gt;
+    `;
+    
+    this.querySelector(&#039;input&#039;).addEventListener(&#039;input&#039;, (e) =&gt; {
+      debouncedFilter(e.target.value);
+    });
+  }
+  
+  render() {
+    const list = this.querySelector(&#039;virtual-list&#039;);
+    bus.publish(&#039;virtual-list.items&#039;, { items: this.filteredItems });
+  }
+  
+  disconnectedCallback() {
+    if (this.unsubscribe) this.unsubscribe();
+  }
+}
+
+customElements.define(&#039;optimized-data-table&#039;, OptimizedDataTable);</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 15 (Performance)</li>
+<li><strong>Components</strong>: Chapter 19 (pan-virtual-list, pan-lazy-image)</li>
+<li><strong>Patterns</strong>: Appendix E (Message patterns, optimization strategies)</li>
+<li><strong>Related</strong>: Chapter 13 (Testing), Chapter 14 (Debugging)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>High CPU usage from message bus</h3>
+<strong>Problem</strong>: Too many subscriptions or wildcard patterns  
+<strong>Solution</strong>: Use specific topics, unsubscribe aggressively, profile with <code>pan-debug</code>
+<h3>Memory leaks in SPAs</h3>
+<strong>Problem</strong>: Components not cleaning up subscriptions/listeners  
+<strong>Solution</strong>: Always implement <code>disconnectedCallback()</code> cleanup pattern
+<h3>Slow initial load</h3>
+<strong>Problem</strong>: Loading all code upfront  
+<strong>Solution</strong>: Lazy load routes/components, code split with dynamic imports
+<h3>Janky scrolling</h3>
+<strong>Problem</strong>: Heavy computations on scroll events  
+<strong>Solution</strong>: Use RAF throttle, virtual scrolling for lists, passive event listeners
+<h3>Large bundle size</h3>
+<strong>Problem</strong>: Including entire libraries for small features  
+<strong>Solution</strong>: Tree shake, use native APIs, check bundlephobia.com before adding dependencies
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/12-performance-optimization.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

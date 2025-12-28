@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deployment and Production · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Deployment and Production">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>16-deployment-and-production</span>
+      </div>
+      <article class="docs-content">
+        <h1>Deployment and Production</h1>
+<p>Quick reference for deploying LARC applications to production. For detailed tutorials, see <em>Learning LARC</em> Chapter 16.</p>
+<h2>Overview</h2>
+<p>LARC applications deploy as static files with optional build optimization. No complex pipelines required—serve vanilla JavaScript directly or optimize with minimal tooling.</p>
+<strong>Key Concepts:</strong>
+<ul><li>No-build deployment option</li>
+<li>Optional esbuild optimization</li>
+<li>CDN deployment strategies</li>
+<li>Caching policies</li>
+<li>Performance monitoring</li>
+<li>Production debugging tools</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">// Minimal esbuild configuration
+import * as esbuild from &#039;esbuild&#039;;
+
+await esbuild.build({
+  entryPoints: [&#039;src/app.js&#039;],
+  bundle: true,
+  minify: true,
+  sourcemap: true,
+  target: [&#039;es2020&#039;],
+  outfile: &#039;dist/app.js&#039;,
+  format: &#039;esm&#039;
+});</code></pre>
+<p>Deploy <code>dist/</code> folder to any static host (Cloudflare Pages, Netlify, Vercel).</p>
+<h2>Build Options</h2>
+<p>| Approach | Use Case | Complexity |
+|----------|----------|------------|
+| <strong>No Build</strong> | Small apps, rapid prototyping | None |
+| <strong>esbuild</strong> | Production optimization | Minimal |
+| <strong>Code Splitting</strong> | Large apps with routing | Low |
+| <strong>TypeScript</strong> | Type safety | Medium |</p>
+<h3>Build Configuration Example</h3>
+<pre><code class="language-json">{
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;node build.js&quot;,
+    &quot;dev&quot;: &quot;node build.js --watch&quot;
+  }
+}</code></pre>
+<h2>CDN Deployment</h2>
+<h3>Platform Commands</h3>
+<p>| Platform | Command | Config File |
+|----------|---------|-------------|
+| <strong>Cloudflare Pages</strong> | <code>wrangler pages publish dist</code> | <code>_headers</code> |
+| <strong>Netlify</strong> | <code>netlify deploy --dir=dist --prod</code> | <code>netlify.toml</code> |
+| <strong>Vercel</strong> | <code>vercel --prod</code> | <code>vercel.json</code> |</p>
+<h3>Cache Headers</h3>
+<pre><code class="language-plaintext"># _headers (Cloudflare)
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/index.html
+  Cache-Control: no-cache
+
+/service-worker.js
+  Cache-Control: no-cache</code></pre>
+<h2>Common Patterns</h2>
+<h3>Pattern 1: Service Worker Caching</h3>
+<p>Offline support and faster loads.</p>
+<pre><code class="language-javascript">// service-worker.js
+const CACHE_NAME = &#039;larc-app-v1&#039;;
+const URLS_TO_CACHE = [&#039;/&#039;, &#039;/index.html&#039;, &#039;/app.js&#039;, &#039;/styles.css&#039;];
+
+self.addEventListener(&#039;install&#039;, (event) =&gt; {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache =&gt; cache.addAll(URLS_TO_CACHE))
+  );
+});
+
+self.addEventListener(&#039;fetch&#039;, (event) =&gt; {
+  event.respondWith(
+    caches.match(event.request)
+      .then(response =&gt; response || fetch(event.request))
+  );
+});
+
+// Register in app
+if (&#039;serviceWorker&#039; in navigator) {
+  navigator.serviceWorker.register(&#039;/service-worker.js&#039;);
+}</code></pre>
+<h3>Pattern 2: Performance Monitoring</h3>
+<p>Track Core Web Vitals.</p>
+<pre><code class="language-javascript">class PerformanceMonitor extends HTMLElement {
+  connectedCallback() {
+    // Largest Contentful Paint
+    new PerformanceObserver((list) =&gt; {
+      const entries = list.getEntries();
+      const lcp = entries[entries.length - 1];
+      this.sendMetric(&#039;lcp&#039;, lcp.renderTime || lcp.loadTime);
+    }).observe({ entryTypes: [&#039;largest-contentful-paint&#039;] });
+
+    // First Input Delay
+    new PerformanceObserver((list) =&gt; {
+      for (const entry of list.getEntries()) {
+        const fid = entry.processingStart - entry.startTime;
+        this.sendMetric(&#039;fid&#039;, fid);
+      }
+    }).observe({ entryTypes: [&#039;first-input&#039;] });
+
+    // Cumulative Layout Shift
+    let clsScore = 0;
+    new PerformanceObserver((list) =&gt; {
+      for (const entry of list.getEntries()) {
+        if (!entry.hadRecentInput) clsScore += entry.value;
+      }
+      this.sendMetric(&#039;cls&#039;, clsScore);
+    }).observe({ entryTypes: [&#039;layout-shift&#039;] });
+  }
+
+  sendMetric(name, value) {
+    navigator.sendBeacon(&#039;/api/metrics&#039;, JSON.stringify({
+      metric: name,
+      value,
+      url: location.pathname,
+      timestamp: Date.now()
+    }));
+  }
+}
+
+customElements.define(&#039;perf-monitor&#039;, PerformanceMonitor);</code></pre>
+<h3>Pattern 3: Error Tracking</h3>
+<p>Production error monitoring.</p>
+<pre><code class="language-javascript">class ErrorTracker extends HTMLElement {
+  connectedCallback() {
+    // Global errors
+    window.addEventListener(&#039;error&#039;, (e) =&gt; {
+      this.trackError({
+        message: e.message,
+        stack: e.error?.stack,
+        source: e.filename,
+        line: e.lineno
+      });
+    });
+
+    // Unhandled promise rejections
+    window.addEventListener(&#039;unhandledrejection&#039;, (e) =&gt; {
+      this.trackError({
+        message: e.reason?.message || &#039;Promise rejected&#039;,
+        stack: e.reason?.stack
+      });
+    });
+  }
+
+  trackError(error) {
+    navigator.sendBeacon(&#039;/api/errors&#039;, JSON.stringify({
+      ...error,
+      timestamp: new Date().toISOString(),
+      url: location.href,
+      userAgent: navigator.userAgent
+    }));
+  }
+}
+
+customElements.define(&#039;error-tracker&#039;, ErrorTracker);</code></pre>
+<h3>Pattern 4: Feature Flags</h3>
+<p>Control features without redeployment.</p>
+<pre><code class="language-javascript">class FeatureFlags extends HTMLElement {
+  async connectedCallback() {
+    const bus = document.querySelector(&#039;pan-bus&#039;);
+    
+    // Load flags from server
+    const response = await fetch(&#039;/api/feature-flags&#039;);
+    this.flags = await response.json();
+    
+    bus.publish(&#039;flags.loaded&#039;, this.flags);
+    
+    // Check flags
+    bus.subscribe(&#039;flags.check&#039;, (msg) =&gt; {
+      const { flag, defaultValue } = msg.data;
+      const enabled = this.flags[flag] ?? defaultValue;
+      bus.publish(&#039;flags.result&#039;, { flag, enabled });
+    });
+  }
+}
+
+// Usage in components
+bus.publish(&#039;flags.check&#039;, { flag: &#039;new-feature&#039;, defaultValue: false });
+bus.subscribe(&#039;flags.result&#039;, (msg) =&gt; {
+  if (msg.data.flag === &#039;new-feature&#039; &amp;&amp; msg.data.enabled) {
+    // Show new feature
+  }
+});</code></pre>
+<h2>Caching Strategies</h2>
+<p>| Resource Type | Cache Duration | Strategy |
+|---------------|----------------|----------|
+| <strong>HTML</strong> | No cache | <code>no-cache, must-revalidate</code> |
+| <strong>JavaScript/CSS</strong> | 1 year | <code>public, max-age=31536000, immutable</code> |
+| <strong>Images</strong> | 30 days | <code>public, max-age=2592000</code> |
+| <strong>API Responses</strong> | 5 minutes | Client-side cache with invalidation |</p>
+<h3>API Response Caching</h3>
+<pre><code class="language-javascript">class CachedAPIClient extends HTMLElement {
+  constructor() {
+    super();
+    this.cache = new Map();
+    this.cacheDuration = 5 * 60 * 1000; // 5 minutes
+  }
+
+  async fetch(method, endpoint, data) {
+    const cacheKey = `${method}:${endpoint}`;
+    
+    // Check cache for GET
+    if (method === &#039;GET&#039;) {
+      const cached = this.cache.get(cacheKey);
+      if (cached &amp;&amp; Date.now() &lt; cached.expiresAt) {
+        return cached.data;
+      }
+    }
+    
+    // Fetch from API
+    const response = await fetch(endpoint, {
+      method,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: data ? JSON.stringify(data) : undefined
+    });
+    
+    const result = await response.json();
+    
+    // Cache GET responses
+    if (method === &#039;GET&#039;) {
+      this.cache.set(cacheKey, {
+        data: result,
+        expiresAt: Date.now() + this.cacheDuration
+      });
+    } else {
+      // Invalidate cache on mutations
+      this.cache.clear();
+    }
+    
+    return result;
+  }
+}</code></pre>
+<h2>Performance Metrics</h2>
+<h3>Core Web Vitals Targets</h3>
+<p>| Metric | Good | Needs Improvement | Poor |
+|--------|------|-------------------|------|
+| <strong>LCP</strong> (Largest Contentful Paint) | ≤2.5s | 2.5-4s | >4s |
+| <strong>FID</strong> (First Input Delay) | ≤100ms | 100-300ms | >300ms |
+| <strong>CLS</strong> (Cumulative Layout Shift) | ≤0.1 | 0.1-0.25 | >0.25 |
+| <strong>TTFB</strong> (Time to First Byte) | ≤800ms | 800-1800ms | >1800ms |</p>
+<h3>Custom Performance Marks</h3>
+<pre><code class="language-javascript">// Track specific operations
+performance.mark(&#039;load-start&#039;);
+await fetchData();
+performance.mark(&#039;load-end&#039;);
+performance.measure(&#039;data-load&#039;, &#039;load-start&#039;, &#039;load-end&#039;);
+
+const measurement = performance.getEntriesByName(&#039;data-load&#039;)[0];
+console.log(`Data load: ${measurement.duration}ms`);</code></pre>
+<h2>Complete Example</h2>
+<p>Production-ready deployment with monitoring.</p>
+<pre><code class="language-javascript">// build.js - Build script with optimization
+import * as esbuild from &#039;esbuild&#039;;
+import { statSync } from &#039;fs&#039;;
+
+const result = await esbuild.build({
+  entryPoints: [&#039;src/app.js&#039;],
+  bundle: true,
+  minify: true,
+  sourcemap: &#039;external&#039;,
+  target: [&#039;es2020&#039;],
+  outfile: &#039;dist/app.js&#039;,
+  metafile: true
+});
+
+// Check bundle size
+const stats = statSync(&#039;dist/app.js&#039;);
+const sizeKB = (stats.size / 1024).toFixed(2);
+console.log(`Bundle: ${sizeKB} KB`);
+
+if (parseFloat(sizeKB) &gt; 500) {
+  throw new Error(`Bundle too large: ${sizeKB} KB`);
+}
+
+// index.html - Production HTML
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;UTF-8&quot;&gt;
+  &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+  &lt;title&gt;LARC App&lt;/title&gt;
+  &lt;script type=&quot;module&quot; src=&quot;/app.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Core components --&gt;
+  &lt;pan-bus debug=&quot;false&quot;&gt;&lt;/pan-bus&gt;
+  &lt;error-tracker&gt;&lt;/error-tracker&gt;
+  &lt;perf-monitor&gt;&lt;/perf-monitor&gt;
+  &lt;feature-flags&gt;&lt;/feature-flags&gt;
+  
+  &lt;!-- App root --&gt;
+  &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+// netlify.toml - Netlify configuration
+[build]
+  publish = &quot;dist&quot;
+  command = &quot;npm run build&quot;
+
+[[headers]]
+  for = &quot;/*.js&quot;
+  [headers.values]
+    Cache-Control = &quot;public, max-age=31536000, immutable&quot;
+
+[[headers]]
+  for = &quot;/index.html&quot;
+  [headers.values]
+    Cache-Control = &quot;no-cache&quot;
+
+[[redirects]]
+  from = &quot;/*&quot;
+  to = &quot;/index.html&quot;
+  status = 200
+
+// app.js - Application entry
+import &#039;./core/pan-bus.mjs&#039;;
+import &#039;./components/error-tracker.js&#039;;
+import &#039;./components/perf-monitor.js&#039;;
+import &#039;./components/feature-flags.js&#039;;
+
+const bus = document.querySelector(&#039;pan-bus&#039;);
+
+// Wait for initialization
+bus.addEventListener(&#039;pan:sys.ready&#039;, () =&gt; {
+  console.log(&#039;LARC app initialized&#039;);
+  
+  // Register service worker
+  if (&#039;serviceWorker&#039; in navigator) {
+    navigator.serviceWorker.register(&#039;/service-worker.js&#039;)
+      .then(() =&gt; console.log(&#039;Service worker registered&#039;))
+      .catch(err =&gt; console.error(&#039;SW registration failed:&#039;, err));
+  }
+  
+  // Load main app
+  import(&#039;./main.js&#039;).then(module =&gt; {
+    module.init(bus);
+  });
+});</code></pre>
+<h2>Deployment Checklist</h2>
+<p>Pre-deployment verification:</p>
+<ul><li>[ ] Tests pass</li>
+<li>[ ] Bundle minified and under size limit</li>
+<li>[ ] Source maps generated (protected in production)</li>
+<li>[ ] Cache headers configured</li>
+<li>[ ] Service worker registered (if using)</li>
+<li>[ ] Error tracking enabled</li>
+<li>[ ] Performance monitoring active</li>
+<li>[ ] Feature flags configured</li>
+<li>[ ] Environment variables set</li>
+<li>[ ] SSL certificate valid</li>
+<li>[ ] CDN configured</li>
+<li>[ ] Monitoring alerts set up</li>
+<li>[ ] Rollback plan documented</li>
+</ul>
+<h2>Component Reference</h2>
+<ul><li>Performance monitoring: Use native PerformanceObserver API</li>
+<li>Error tracking: Integrate with Sentry, Rollbar, or custom backend</li>
+<li>Feature flags: Server-side control with client-side caching</li>
+</ul>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 16 (Deployment)</li>
+<li><strong>Performance</strong>: Chapter 12 (Performance Optimization)</li>
+<li><strong>Testing</strong>: Chapter 13 (Testing Strategies)</li>
+<li><strong>Error Handling</strong>: Chapter 14 (Error Handling and Debugging)</li>
+<li><strong>Configuration</strong>: Appendix C (Build and Deploy Configuration)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Service Worker Not Updating</h3>
+<strong>Problem</strong>: Users see stale cached content  
+<strong>Solution</strong>: Implement cache versioning and force update
+<pre><code class="language-javascript">const CACHE_NAME = &#039;larc-app-v2&#039;; // Increment version
+
+self.addEventListener(&#039;activate&#039;, (event) =&gt; {
+  event.waitUntil(
+    caches.keys().then(keys =&gt; {
+      return Promise.all(
+        keys.map(key =&gt; {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+});</code></pre>
+<h3>Source Maps Exposed to Public</h3>
+<strong>Problem</strong>: Source maps leak implementation details  
+<strong>Solution</strong>: Serve source maps only to authenticated users
+<pre><code class="language-javascript">// Edge function
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    
+    if (url.pathname.endsWith(&#039;.map&#039;)) {
+      const token = request.headers.get(&#039;Authorization&#039;);
+      if (!isValidDevToken(token)) {
+        return new Response(&#039;Unauthorized&#039;, { status: 401 });
+      }
+    }
+    
+    return fetch(request);
+  }
+};</code></pre>
+<h3>Cache Invalidation After Deploy</h3>
+<strong>Problem</strong>: Users load old cached assets with new HTML  
+<strong>Solution</strong>: Use cache busting with content hashes
+<pre><code class="language-javascript">// build.js - Add hash to filenames
+import { createHash } from &#039;crypto&#039;;
+
+const content = readFileSync(&#039;dist/app.js&#039;);
+const hash = createHash(&#039;sha256&#039;)
+  .update(content)
+  .digest(&#039;hex&#039;)
+  .slice(0, 8);
+
+renameSync(&#039;dist/app.js&#039;, `dist/app.${hash}.js`);
+
+// Update HTML references
+let html = readFileSync(&#039;src/index.html&#039;, &#039;utf-8&#039;);
+html = html.replace(&#039;app.js&#039;, `app.${hash}.js`);
+writeFileSync(&#039;dist/index.html&#039;, html);</code></pre>
+<h3>Performance Metrics Not Reporting</h3>
+<strong>Problem</strong>: sendBeacon blocked by CORS or content blockers  
+<strong>Solution</strong>: Use fallback and proper CORS headers
+<pre><code class="language-javascript">sendMetric(name, value) {
+  const payload = JSON.stringify({ metric: name, value });
+  
+  // Try sendBeacon first
+  const sent = navigator.sendBeacon(&#039;/api/metrics&#039;, payload);
+  
+  // Fallback to fetch
+  if (!sent) {
+    fetch(&#039;/api/metrics&#039;, {
+      method: &#039;POST&#039;,
+      body: payload,
+      keepalive: true
+    }).catch(err =&gt; console.error(&#039;Metric send failed:&#039;, err));
+  }
+}</code></pre>
+<h3>Bundle Size Exceeds Limits</h3>
+<strong>Problem</strong>: Build fails due to large bundle  
+<strong>Solution</strong>: Implement code splitting and lazy loading
+<pre><code class="language-javascript">// Router with lazy loading
+async loadRoute(route) {
+  const module = await import(`./routes/${route}.js`);
+  return new module.default();
+}
+
+// esbuild with splitting
+await esbuild.build({
+  entryPoints: [&#039;src/app.js&#039;, &#039;src/routes/*.js&#039;],
+  bundle: true,
+  splitting: true,
+  format: &#039;esm&#039;,
+  outdir: &#039;dist&#039;
+});</code></pre>
+<h3>Update Notifications Not Showing</h3>
+<strong>Problem</strong>: Users miss version updates  
+<strong>Solution</strong>: Implement version check with notification
+<pre><code class="language-javascript">class UpdateChecker extends HTMLElement {
+  async connectedCallback() {
+    const currentVersion = &#039;1.2.3&#039;;
+    
+    const response = await fetch(&#039;/version.json&#039;, { cache: &#039;no-cache&#039; });
+    const { version } = await response.json();
+    
+    if (version !== currentVersion) {
+      this.innerHTML = `
+        &lt;div class=&quot;update-banner&quot;&gt;
+          New version available!
+          &lt;button onclick=&quot;location.reload()&quot;&gt;Refresh&lt;/button&gt;
+        &lt;/div&gt;
+      `;
+    }
+  }
+}
+
+customElements.define(&#039;update-checker&#039;, UpdateChecker);</code></pre>
+<strong>See Also</strong>: <em>Learning LARC</em> Chapter 16 for step-by-step deployment tutorials.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/16-deployment-and-production.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

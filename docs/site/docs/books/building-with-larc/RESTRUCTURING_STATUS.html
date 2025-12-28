@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Building with LARC - Restructuring Status · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Building with LARC - Restructuring Status">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <span>RESTRUCTURING_STATUS</span>
+      </div>
+      <article class="docs-content">
+        <h1>Building with LARC - Restructuring Status</h1>
+<h2>Executive Summary</h2>
+<strong>Goal</strong>: Transform "Building with LARC" from a 1,376-page tutorial/reference hybrid into a lean "Programming Perl"-style reference manual of 550-650 pages.
+<strong>Current Progress</strong>: ~18% complete (foundation work done)
+<strong>Estimated Final Reduction</strong>: 60-65% (from 1,376 pages to 550-650 pages)
+<h2>Completed Work ✓</h2>
+<h3>Phase 1: Remove Redundant Chapters (COMPLETE)</h3>
+<ul><li>✅ Deleted chapter-02-philosophy.md (6,533 words) — Covered in Learning LARC Ch 1</li>
+<li>✅ Deleted chapter-03-story.md (2,935 words) — Narrative content</li>
+<li>✅ Deleted chapter-06-basic-message-flow.md (3,002 words) — Covered in Learning LARC Ch 5</li>
+<li>✅ Deleted chapter-07-working-with-components.md (2,980 words) — Covered in Learning LARC Ch 4,7</li>
+<li>✅ Renumbered remaining 21 chapters to close gaps</li>
+</ul>
+<strong>Impact</strong>: Removed 15,450 words (15% of total content)
+<h3>Phase 2: Convert to Reference Style (PARTIAL - 3/16 chapters)</h3>
+<ul><li>✅ Chapter 1 (Introduction): 305 lines → 143 lines (53% reduction)</li>
+</ul>  - Removed all "what is LARC" tutorial content
+  - Added prominent "Read Learning LARC first" notice
+  - Kept only: book structure, conventions, prerequisites
+<ul><li>✅ Chapter 2 (Core Concepts): 1,186 lines → 342 lines (71% reduction)</li>
+</ul>  - Converted from tutorial to quick reference lookup
+  - Kept essential API tables and cross-references
+  - Removed all progressive explanations
+<ul><li>✅ Chapter 3 (Getting Started): 1,302 lines → 258 lines (80% reduction)</li>
+</ul>  - Reduced to installation commands and minimal examples
+  - Removed step-by-step tutorials
+  - Cross-referenced Learning LARC Ch 3
+<strong>Impact</strong>: Reduced 2,050 lines across 3 chapters (avg 68% reduction)
+<h2>Remaining Work ⚠️</h2>
+<h3>Phase 2: Chapters 4-16 (13 chapters) — NOT STARTED</h3>
+<strong>Current</strong>: ~35,000 words, ~13,000 lines
+<strong>Target</strong>: ~10,000 words, ~4,000 lines (70% reduction)
+<strong>Priority</strong>: MEDIUM (smaller page impact than component chapters)
+<p>Chapters to convert:
+<ul><li>[x] Ch 1-3: Foundation (DONE)</li>
+<li>[ ] Ch 4: State Management (1,120 lines)</li>
+<li>[ ] Ch 5: Routing (775 lines)</li>
+<li>[ ] Ch 6: Forms (1,069 lines)</li>
+<li>[ ] Ch 7: APIs (1,082 lines)</li>
+<li>[ ] Ch 8: Authentication (1,219 lines)</li>
+<li>[ ] Ch 9: Realtime (1,333 lines)</li>
+<li>[ ] Ch 10: File Management (1,600 lines)</li>
+<li>[ ] Ch 11: Theming (937 lines)</li>
+<li>[ ] Ch 12: Performance (987 lines)</li>
+<li>[ ] Ch 13: Testing (1,024 lines)</li>
+<li>[ ] Ch 14: Debugging (880 lines)</li>
+<li>[ ] Ch 15: Patterns (974 lines)</li>
+<li>[ ] Ch 16: Deployment (1,024 lines)</li>
+</ul>
+<strong>Strategy for each</strong>:
+<li>Remove all "how-to" tutorials → Reference Learning LARC</li>
+<li>Keep only: Configuration tables, pattern summaries, quick examples</li>
+<li>Add cross-references to component chapters</li>
+<li>Target: 300-400 lines per chapter</li></p>
+<h3>Phase 3: Component Reference Chapters 17-21 — NOT STARTED</h3>
+<strong>Current</strong>: 8,236 lines, 307 code blocks
+<strong>Target</strong>: ~3,000 lines, ~100 code blocks (65% reduction)  
+<strong>Priority</strong>: <strong>HIGHEST</strong> (biggest contributor to page count)
+<p>| Chapter | Current | Code Blocks | Target Lines | Target Blocks |
+|---------|---------|-------------|--------------|---------------|
+| 17: Core Components | 1,912 | 87 | ~600 | ~20 |
+| 18: Data Components | 1,467 | 46 | ~500 | ~15 |
+| 19: UI Components | 1,354 | 63 | ~600 | ~20 |
+| 20: Integration | 2,111 | 66 | ~800 | ~25 |
+| 21: Utility | 1,392 | 45 | ~500 | ~20 |</p>
+<strong>Problem</strong>: Each component has 5-10 code examples. Way too many.
+<strong>Solution</strong>: Standard format per component:
+<pre><code class="language-markdown">## Component Name
+
+**Purpose**: One-sentence description
+**Import**: `import statement`
+
+### Quick Example
+[ONE complete example, 10-20 lines]
+
+### Attributes
+| Attribute | Type | Default | Description |
+[Table only - NO examples for each attribute]
+
+### Methods
+| Method | Parameters | Returns | Description |
+[Table only - ONE-LINE usage examples if complex]
+
+### Events  
+| Event | Payload | Description |
+[Table only]
+
+### Complete Example
+[ONE comprehensive real-world example, 30-50 lines]
+
+### See Also
+- Cross-references</code></pre>
+<strong>Action items</strong>:
+<li>For each component in chapters 17-21:</li>
+   - Remove all "<strong>Example:</strong>" sections except 2 per component
+   - Convert verbose method documentation to tables
+   - Remove redundant "When to use" discussions
+   - Keep API reference tables
+<li>Target: 70% reduction in lines, 75% reduction in code blocks</li>
+<h3>Phase 4: Update Build System — NOT STARTED</h3>
+<ul><li>[ ] Update index.md with new chapter structure</li>
+<li>[ ] Update Makefile/build-book.sh if needed</li>
+<li>[ ] Rebuild PDF: <code>make pdf</code></li>
+<li>[ ] Verify page count: Should be 550-650 pages (down from 1,376)</li>
+<li>[ ] Update README with new structure</li>
+</ul>
+<h2>Backup Location</h2>
+<p>All original files backed up to:
+<pre><code class="language-plaintext">/Users/cdr/Projects/larc-repos/docs/books/backup/building-with-larc-original-20251226/</code></pre></p>
+<h2>Progress Metrics</h2>
+<p>| Metric | Original | Current | Target | Progress |
+|--------|----------|---------|--------|----------|
+| <strong>Total Chapters</strong> | 25 + 7 appendices | 21 + 7 appendices | 21 + 7 | ✅ 100% |
+| <strong>Word Count</strong> | 103,583 | ~85,000 (est) | 38,000-40,000 | 🟡 18% |
+| <strong>Page Count</strong> | 1,376 | TBD | 550-650 | ⚠️ 0% (needs rebuild) |
+| <strong>Code Blocks</strong> | ~615 (ch 21-25 only) | ~607 | ~160 | ⚠️ 1% |</p>
+<h2>Next Steps (Priority Order)</h2>
+<h3>CRITICAL PATH:</h3>
+<li><strong>Streamline Chapters 17-21</strong> (component reference)</li>
+   - Automated script to remove redundant examples
+   - Manual review of API tables
+   - Est. time: 4-6 hours
+<li><strong>Rebuild PDF and verify page count</strong></li>
+   - Run <code>make pdf</code>
+   - Check if target (550-650 pages) achieved
+   - If not, proceed to step 3
+<li><strong>Trim Chapters 4-16</strong> (if needed)</li>
+   - Convert to dense reference style
+   - Remove tutorials
+   - Est. time: 4-6 hours
+<h3>OPTIONAL:</h3>
+<li><strong>Fine-tune appendices</strong> (if still over target)</li>
+<li><strong>Update cross-references</strong> throughout book</li>
+<li><strong>Generate updated index</strong></li>
+<h2>Automation Scripts</h2>
+<h3>Script 1: Slim Middle Chapters (4-16)</h3>
+<pre><code class="language-bash">/tmp/slim_chapters_4_16.sh
+# Converts tutorial chapters to reference style
+# Keeps: tables, config, patterns
+# Removes: tutorials, verbose explanations</code></pre>
+<h3>Script 2: Streamline Component Chapters (17-21)</h3>
+<pre><code class="language-bash">/tmp/streamline_components_17_21.py
+# For each component:
+# - Keep 1 quick example + 1 comprehensive example
+# - Remove all other code blocks
+# - Convert verbose docs to tables</code></pre>
+<h3>Script 3: Rebuild and Verify</h3>
+<pre><code class="language-bash">cd /Users/cdr/Projects/larc-repos/docs/books/building-with-larc
+make clean
+make pdf
+pdfinfo output/pdf/building-with-larc.pdf | grep Pages</code></pre>
+<h2>Success Criteria</h2>
+<ul><li>[ ] Page count: 550-650 pages (down from 1,376)</li>
+<li>[ ] Word count: 38,000-40,000 words (down from 103,583)</li>
+<li>[ ] Code blocks in ch 17-21: ~100 blocks (down from 307)</li>
+<li>[ ] All chapters converted to reference style</li>
+<li>[ ] Cross-references updated</li>
+<li>[ ] PDF builds successfully</li>
+<li>[ ] Book reads like "Programming Perl", not "Learning Perl"</li>
+</ul>
+<h2>Contact & Support</h2>
+<p>Questions about this restructuring:
+<ul><li>See: /Users/cdr/Projects/larc-repos/docs/books/RESTRUCTURING_PLAN.md</li>
+<li>Compare with: learning-larc book (the tutorial companion)</li>
+</ul>
+<hr>
+Last Updated: 2024-12-26
+Status: IN PROGRESS (18% complete)</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/RESTRUCTURING_STATUS.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
