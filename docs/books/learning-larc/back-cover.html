@@ -7,57 +7,115 @@
   <title>back-cover</title>
   <link rel="stylesheet" href="https://cdr2.com/pandoc.css" />
   <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
+    /* Back cover styles for 7x10 print */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      font-size: 12px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      font-size: 11pt;
+      line-height: 1.5;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
       height: 10in;
+      width: 7in;
+      padding: 0.5in;
       box-shadow: none;
+      color: #1a1a1a;
     }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    /* The extra [class] is a hack that increases specificity enough to
-       override a similar rule in reveal.js */
-    ul.task-list[class]{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      font-size: inherit;
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-    main {
-	    columns: 2;
-	    column-gap: 3em;
-    }
-    #col1 {
-	    break-after: column;
-    }
-    #col2 {
-	    margin-top: 15em;
-    }
-    #colorbar {
-	    background-color: #b31818;
-	    height: 1em;
-	    width: 100%;
-    }
+
     .toptitle {
-	    text-align: left;
-	    width: 100%;
-	    margin-bottom: 1em;
+      font-size: 18pt;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5em;
+      color: #1a1a1a;
     }
-    .links {
-	    text-align: right;
-	    border-top: 1px solid #000;
-	    padding-top: 1em;
+
+    #colorbar {
+      background-color: #b31818;
+      height: 0.15in;
+      width: 100%;
+      background-image:url("redbar.png");
+      background-size: cover;
+      margin-bottom: 1.5em;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .content {
+      flex: 1;
+    }
+
+    h2 {
+      font-size: 14pt;
+      font-weight: 700;
+      margin-bottom: 0.8em;
+      line-height: 1.3;
+      color: #1a1a1a;
+    }
+
+    p {
+      margin-bottom: 0.9em;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    ul {
+      margin: 0.8em 0 1em 1.2em;
+      list-style-type: disc;
+    }
+
+    ul li {
+      margin-bottom: 0.4em;
+      text-align: justify;
+      hyphens: auto;
+    }
+
+    .author-credit {
+      font-size: 9.5pt;
+      line-height: 1.4;
+      margin-top: 1em;
+      padding-top: 0.8em;
+      border-top: 1.5pt solid #1a1a1a;
+      color: #333;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 0.6em;
+    }
+
+    .footer-links .website {
+      font-size: 10pt;
+    }
+
+    .footer-links b {
+      font-weight: 600;
+    }
+
+    .footer-links a {
+      color: #1a1a1a;
+      text-decoration: none;
+    }
+
+    .footer-links img {
+      width: 1.1in;
+      height: auto;
+    }
+
+    strong {
+      font-weight: 600;
     }
   </style>
 </head>
@@ -65,53 +123,29 @@
 	<div class="toptitle">Learning LARC</div>
 	<div id="colorbar">&nbsp;</div>
 	<main>
-		<div class="col" id="col1">
-<h2 id="the-web-has-grown-up.-its-time-our-apps-did-too.">The Web Has
-Grown Up. It’s Time Our Apps Did Too.</h2>
-<p>Modern browsers aren’t the brittle playgrounds they once were.
-They’re fast, secure, richly capable application platforms — yet most of
-today’s development stacks still treat them like dumb terminals that
-need layers of tooling, bundling, and framework magic just to
-function.</p>
-<p><strong>Learning LARC</strong> shows another path.</p>
-<p>LARC embraces the browser as a mature runtime, using nothing but open
-standards — Web Components, modules, events, and message buses — to
-build complex, deeply interactive applications without build systems,
-without monoliths, and without ceremony. Through clear narrative
-examples and real architectural stories, this book teaches you how to
-design apps as ecosystems: small parts, clearly defined, communicating
-through a shared bus.</p>
-<p>You’ll learn how to structure large systems out of tiny cooperating
-modules, expose capabilities through message patterns instead of global
-state, keep your interfaces clean, and let the platform do the heavy
-lifting it was built for.</p>
-<p>No bundlers. No scaffolding. No twenty-layer dependency stacks. Just
-the browser, finally treated like the grown-up it is.</p>
-<p>Whether you’re maintaining a legacy system or starting fresh,
-<strong>Learning LARC</strong> will help you rethink how modern web apps
-can — and should — be built.</p>
+		<div class="content">
+<h2>The Web Has Grown Up. It's Time Our Apps Did Too.</h2>
+<p>Modern browsers are fast, secure, and richly capable application platforms—yet most development stacks still treat them like dumb terminals that need layers of tooling, bundling, and framework magic just to function.</p>
+<p><strong>Learning LARC</strong> shows another path. This book teaches you to build complex, interactive applications using nothing but open web standards: Web Components, ES modules, events, and message buses. No build systems. No monolithic frameworks. No ceremony.</p>
+
+<h2>What You'll Learn</h2>
+<ul>
+<li>Design applications as ecosystems of small, cooperating modules that communicate through a shared message bus</li>
+<li>Build Web Components that are truly reusable and framework-independent</li>
+<li>Structure large systems using message patterns instead of global state</li>
+<li>Leverage native browser capabilities without build tooling or bundlers</li>
+<li>Create loosely coupled architectures inspired by automotive and industrial control systems</li>
+<li>Develop applications that are maintainable, testable, and platform-native</li>
+</ul>
+
+<h2>Who This Book Is For</h2>
+<p>This book is for web developers who want to build sophisticated applications without the complexity of modern framework stacks. Whether you're maintaining legacy systems, starting fresh projects, or simply curious about what the web platform can do on its own, <strong>Learning LARC</strong> will help you rethink how modern web applications can—and should—be built.</p>
 		</div>
-		<div class="col" id="col2">
-<h2 id="about-the-author">About the Author</h2>
-<p>Christopher Robison is a veteran software engineer and architect with
-nearly three decades of experience building systems that range from
-biotech and online trading platforms to complex web applications and
-AI-driven tools. A lifelong maker with a deep appreciation for open
-standards, he has spent his career exploring the boundaries of what the
-web can do when you stop fighting the platform and start embracing
-it.</p>
-<p>He is the creator of LARC.js and the PAN message bus, a
-browser-native architecture inspired by the elegant simplicity of the
-automotive CAN bus. His work blends engineering pragmatism with a
-playful curiosity that has led him to design everything from 3D printers
-and robotics to interactive music systems and decentralized
-applications.</p>
-<p>Christopher currently lives in San Francisco, where he continues to
-build things that bridge the digital and physical worlds — and
-occasionally sneaks off to play punk rock shows with his band.</p>
-<div class="links">
-	<b>Website:</b> <a href="https://larcjs.com" target="_blank">https://larcjs.com</a><br>
-	<img src="qr.png">
+
+		<div class="author-credit">
+<div class="footer-links">
+	<div class="website"><b>Learn more:</b> <a href="https://larcjs.com">larcjs.com</a></div>
+	<img src="qr.png" alt="QR Code to larcjs.com">
 </div>
 		</div>
 	</main>

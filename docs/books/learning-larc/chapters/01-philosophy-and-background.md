@@ -118,7 +118,7 @@ Now, here's the same thing with native Web Components and LARC:
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="importmap">
+  <script type="module">
   {
     "imports": {
       "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/components@2.0.0/pan-card.mjs"
@@ -131,9 +131,6 @@ Now, here's the same thing with native Web Components and LARC:
     <p>Your content here</p>
   </pan-card>
 
-  <script type="module">
-    import '@larcjs/ui';
-  </script>
 </body>
 </html>
 ```

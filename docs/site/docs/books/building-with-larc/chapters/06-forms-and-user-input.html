@@ -1,0 +1,400 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forms and User Input · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Forms and User Input">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>06-forms-and-user-input</span>
+      </div>
+      <article class="docs-content">
+        <h1>Forms and User Input</h1>
+<p>Quick reference for form handling in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 10.</p>
+<h2>Overview</h2>
+<p>Forms enable user input through validation, submission handling, and error feedback. LARC uses standard HTML forms with JavaScript event handling—no magic, no framework-specific syntax.</p>
+<strong>Key Concepts</strong>:
+<ul><li>FormData API: Extract values from form inputs</li>
+<li>Validation strategies: Client-side and server-side validation</li>
+<li>Loading states: Provide feedback during async operations</li>
+<li>Error handling: Display meaningful messages</li>
+<li>File uploads: Handle files with modern APIs</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">class LoginForm extends LarcComponent {
+  constructor() {
+    super();
+    this.error = null;
+    this.loading = false;
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault();
+    
+    this.loading = true;
+    this.error = null;
+    this.render();
+
+    const formData = new FormData(event.target);
+    const credentials = {
+      email: formData.get(&#039;email&#039;),
+      password: formData.get(&#039;password&#039;)
+    };
+
+    try {
+      const response = await fetch(&#039;/api/login&#039;, {
+        method: &#039;POST&#039;,
+        headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+        body: JSON.stringify(credentials)
+      });
+
+      if (response.ok) {
+        const user = await response.json();
+        localStorage.setItem(&#039;user&#039;, JSON.stringify(user));
+        navigate(&#039;/dashboard&#039;);
+      } else {
+        this.error = &#039;Invalid credentials&#039;;
+      }
+    } catch (err) {
+      this.error = &#039;Network error. Please try again.&#039;;
+    } finally {
+      this.loading = false;
+      this.render();
+    }
+  }
+
+  template() {
+    return `
+      &lt;form onsubmit=&quot;this.handleSubmit(event)&quot;&gt;
+        ${this.error ? `&lt;div class=&quot;error&quot;&gt;${this.error}&lt;/div&gt;` : &#039;&#039;}
+        
+        &lt;input type=&quot;email&quot; name=&quot;email&quot; required autocomplete=&quot;email&quot;&gt;
+        &lt;input type=&quot;password&quot; name=&quot;password&quot; required&gt;
+        
+        &lt;button type=&quot;submit&quot; ?disabled=&quot;${this.loading}&quot;&gt;
+          ${this.loading ? &#039;Logging in...&#039; : &#039;Login&#039;}
+        &lt;/button&gt;
+      &lt;/form&gt;
+    `;
+  }
+}</code></pre>
+<h2>Validation Strategies</h2>
+<p>| Strategy | When | Implementation |
+|----------|------|----------------|
+| <strong>HTML5 validation</strong> | Simple cases | Use <code>required</code>, <code>pattern</code>, <code>min</code>, <code>max</code> attributes |
+| <strong>Client-side JS</strong> | Immediate feedback | Validate on <code>input</code> or <code>blur</code> events |
+| <strong>Server-side</strong> | Final authority | Always validate on server, return errors |
+| <strong>Schema validation</strong> | Complex forms | Use libraries like Zod, Yup, or JSON Schema |</p>
+<h3>Validation Example</h3>
+<pre><code class="language-javascript">validateEmail(email) {
+  const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return pattern.test(email);
+}
+
+handleInput(event) {
+  const email = event.target.value;
+  const isValid = this.validateEmail(email);
+  
+  const errorEl = this.querySelector(&#039;.email-error&#039;);
+  errorEl.textContent = isValid ? &#039;&#039; : &#039;Invalid email format&#039;;
+  errorEl.hidden = isValid;
+}</code></pre>
+<h2>Common Patterns</h2>
+<h3>Pattern 1: Two-Way Data Binding</h3>
+<pre><code class="language-javascript">class UserProfile extends LarcComponent {
+  constructor() {
+    super();
+    this.user = { name: &#039;&#039;, email: &#039;&#039;, bio: &#039;&#039; };
+  }
+
+  handleInput(field, event) {
+    this.user[field] = event.target.value;
+    this.updatePreview();
+  }
+
+  template() {
+    return `
+      &lt;form&gt;
+        &lt;input type=&quot;text&quot; value=&quot;${this.user.name}&quot; 
+               oninput=&quot;this.handleInput(&#039;name&#039;, event)&quot;&gt;
+        &lt;textarea oninput=&quot;this.handleInput(&#039;bio&#039;, event)&quot;&gt;${this.user.bio}&lt;/textarea&gt;
+        &lt;div class=&quot;preview&quot;&gt;${this.user.bio || &#039;No bio&#039;}&lt;/div&gt;
+      &lt;/form&gt;
+    `;
+  }
+}</code></pre>
+<h3>Pattern 2: File Upload</h3>
+<pre><code class="language-javascript">async handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append(&#039;file&#039;, file);
+
+  try {
+    const response = await fetch(&#039;/api/upload&#039;, {
+      method: &#039;POST&#039;,
+      body: formData
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      this.handleUploadSuccess(result);
+    }
+  } catch (err) {
+    this.showError(&#039;Upload failed&#039;);
+  }
+}</code></pre>
+<h3>Pattern 3: Schema-Driven Validation</h3>
+<pre><code class="language-javascript">import { z } from &#039;zod&#039;;
+
+const userSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8),
+  age: z.number().min(13).max(120)
+});
+
+async handleSubmit(event) {
+  event.preventDefault();
+  
+  const data = {
+    email: formData.get(&#039;email&#039;),
+    password: formData.get(&#039;password&#039;),
+    age: parseInt(formData.get(&#039;age&#039;))
+  };
+
+  try {
+    const validated = userSchema.parse(data);
+    await this.submitForm(validated);
+  } catch (err) {
+    this.displayValidationErrors(err.errors);
+  }
+}</code></pre>
+<h2>Input Types Reference</h2>
+<p>| Type | Use Case | Validation |
+|------|----------|------------|
+| <code>text</code> | General text input | <code>pattern</code>, <code>minlength</code>, <code>maxlength</code> |
+| <code>email</code> | Email addresses | Built-in email validation |
+| <code>password</code> | Passwords | <code>minlength</code>, autocomplete hints |
+| <code>number</code> | Numeric input | <code>min</code>, <code>max</code>, <code>step</code> |
+| <code>tel</code> | Phone numbers | <code>pattern</code> for format |
+| <code>url</code> | URLs | Built-in URL validation |
+| <code>date</code> | Dates | <code>min</code>, <code>max</code> for range |
+| <code>file</code> | File upload | <code>accept</code> for file types |
+| <code>checkbox</code> | Boolean choice | Check <code>.checked</code> property |
+| <code>radio</code> | Single choice | Group by <code>name</code> attribute |
+| <code>select</code> | Dropdown choice | Multiple with <code>multiple</code> attribute |</p>
+<h2>Error Display Patterns</h2>
+<h3>Inline Errors</h3>
+<pre><code class="language-javascript">template() {
+  return `
+    &lt;div class=&quot;form-group&quot;&gt;
+      &lt;label for=&quot;email&quot;&gt;Email&lt;/label&gt;
+      &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot;&gt;
+      &lt;span class=&quot;error&quot; ?hidden=&quot;${!this.errors.email}&quot;&gt;
+        ${this.errors.email}
+      &lt;/span&gt;
+    &lt;/div&gt;
+  `;
+}</code></pre>
+<h3>Summary Errors</h3>
+<pre><code class="language-javascript">template() {
+  return `
+    ${this.errors.length &gt; 0 ? `
+      &lt;div class=&quot;error-summary&quot;&gt;
+        &lt;h3&gt;Please fix the following errors:&lt;/h3&gt;
+        &lt;ul&gt;
+          ${this.errors.map(err =&gt; `&lt;li&gt;${err}&lt;/li&gt;`).join(&#039;&#039;)}
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    ` : &#039;&#039;}
+    &lt;form&gt;...&lt;/form&gt;
+  `;
+}</code></pre>
+<h2>Component Reference</h2>
+<ul><li><strong>pan-files</strong>: File upload component - See Chapter 19</li>
+<li><strong>pan-markdown-editor</strong>: Rich text editing - See Chapter 19</li>
+</ul>
+<h2>Complete Example: Registration Form</h2>
+<pre><code class="language-javascript">class RegistrationForm extends LarcComponent {
+  constructor() {
+    super();
+    this.errors = {};
+    this.loading = false;
+  }
+
+  validate(data) {
+    const errors = {};
+    
+    if (!data.email || !this.validateEmail(data.email)) {
+      errors.email = &#039;Valid email required&#039;;
+    }
+    
+    if (!data.password || data.password.length &lt; 8) {
+      errors.password = &#039;Password must be at least 8 characters&#039;;
+    }
+    
+    if (data.password !== data.confirmPassword) {
+      errors.confirmPassword = &#039;Passwords must match&#039;;
+    }
+    
+    return Object.keys(errors).length === 0 ? null : errors;
+  }
+
+  async handleSubmit(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const data = {
+      email: formData.get(&#039;email&#039;),
+      password: formData.get(&#039;password&#039;),
+      confirmPassword: formData.get(&#039;confirmPassword&#039;),
+      terms: formData.get(&#039;terms&#039;) === &#039;on&#039;
+    };
+
+    // Client-side validation
+    const validationErrors = this.validate(data);
+    if (validationErrors) {
+      this.errors = validationErrors;
+      this.render();
+      return;
+    }
+
+    // Submit to server
+    this.loading = true;
+    this.render();
+
+    try {
+      const response = await fetch(&#039;/api/register&#039;, {
+        method: &#039;POST&#039;,
+        headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+        body: JSON.stringify({ email: data.email, password: data.password })
+      });
+
+      if (response.ok) {
+        navigate(&#039;/welcome&#039;);
+      } else {
+        const error = await response.json();
+        this.errors = { general: error.message };
+      }
+    } catch (err) {
+      this.errors = { general: &#039;Network error. Please try again.&#039; };
+    } finally {
+      this.loading = false;
+      this.render();
+    }
+  }
+
+  template() {
+    return `
+      &lt;form class=&quot;registration-form&quot; onsubmit=&quot;this.handleSubmit(event)&quot;&gt;
+        &lt;h2&gt;Create Account&lt;/h2&gt;
+
+        ${this.errors.general ? `
+          &lt;div class=&quot;error-banner&quot;&gt;${this.errors.general}&lt;/div&gt;
+        ` : &#039;&#039;}
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;email&quot;&gt;Email&lt;/label&gt;
+          &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+          ${this.errors.email ? `&lt;span class=&quot;error&quot;&gt;${this.errors.email}&lt;/span&gt;` : &#039;&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;
+          &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt;
+          ${this.errors.password ? `&lt;span class=&quot;error&quot;&gt;${this.errors.password}&lt;/span&gt;` : &#039;&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;confirmPassword&quot;&gt;Confirm Password&lt;/label&gt;
+          &lt;input type=&quot;password&quot; id=&quot;confirmPassword&quot; name=&quot;confirmPassword&quot; required&gt;
+          ${this.errors.confirmPassword ? `&lt;span class=&quot;error&quot;&gt;${this.errors.confirmPassword}&lt;/span&gt;` : &#039;&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label&gt;
+            &lt;input type=&quot;checkbox&quot; name=&quot;terms&quot; required&gt;
+            I agree to the Terms of Service
+          &lt;/label&gt;
+        &lt;/div&gt;
+
+        &lt;button type=&quot;submit&quot; ?disabled=&quot;${this.loading}&quot;&gt;
+          ${this.loading ? &#039;Creating account...&#039; : &#039;Sign Up&#039;}
+        &lt;/button&gt;
+      &lt;/form&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;registration-form&#039;, RegistrationForm);</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 10 (Forms and User Input)</li>
+<li><strong>Components</strong>: Chapter 19 (pan-files, pan-markdown-editor)</li>
+<li><strong>Patterns</strong>: Appendix E (Form Patterns)</li>
+<li><strong>Related</strong>: Chapter 4 (State Management), Chapter 14 (Error Handling)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Issue: Form submits on Enter key</h3>
+<strong>Problem</strong>: Single-line inputs trigger form submission
+<strong>Solution</strong>: Use <code>onsubmit</code> handler with <code>preventDefault()</code>, not button click handlers
+<h3>Issue: FormData missing checkbox values</h3>
+<strong>Problem</strong>: Unchecked checkboxes don't appear in FormData
+<strong>Solution</strong>: Check for <code>null</code> or use <code>.get('field') === 'on'</code> pattern
+<h3>Issue: File upload fails with large files</h3>
+<strong>Problem</strong>: Request timeout or server rejects large payloads
+<strong>Solution</strong>: Implement chunked upload or use signed URLs for direct S3 upload
+<h3>Issue: Validation errors not clearing</h3>
+<strong>Problem</strong>: Error messages persist after fixing input
+<strong>Solution</strong>: Clear errors object before revalidation, or validate on input event
+<h3>Issue: Password managers not filling forms</h3>
+<strong>Problem</strong>: Autocomplete not working correctly
+<strong>Solution</strong>: Use proper <code>autocomplete</code> attributes (<code>email</code>, <code>current-password</code>, <code>new-password</code>)
+<p>See <em>Learning LARC</em> Chapter 10 for detailed form patterns and advanced validation strategies.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/06-forms-and-user-input.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

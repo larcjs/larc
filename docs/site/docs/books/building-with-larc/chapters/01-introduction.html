@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Introduction · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Introduction">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>01-introduction</span>
+      </div>
+      <article class="docs-content">
+        <h1>Introduction</h1>
+<em>Building with LARC</em> is a comprehensive reference manual for the Lightweight Asynchronous Relay Core (LARC) framework. This book documents LARC's architecture, components, APIs, and patterns for experienced developers who need detailed technical reference material.
+<h2>Prerequisites</h2>
+<strong>This is a reference manual, not a tutorial.</strong> Before using this book, you should:
+<li><strong>Read <em>Learning LARC</em> first</strong> — The companion tutorial book teaches LARC concepts, architecture, and development patterns through hands-on examples.</li>
+<li><strong>Have web development experience</strong> — Familiarity with JavaScript (ES6+), HTML5, CSS3, Web Components, HTTP/REST APIs, and browser development tools.</li>
+<li><strong>Understand LARC basics</strong> — Core concepts (PAN bus, pub/sub messaging, component lifecycle) covered in <em>Learning LARC</em> Chapters 1-5.</li>
+<p>If you're new to LARC, start with <em>Learning LARC</em>. This reference assumes you already know how to build LARC applications and need API documentation or implementation details.</p>
+<h2>How to Use This Book</h2>
+<h3>As a Reference</h3>
+<p>Jump directly to chapters covering your current need:</p>
+<ul><li><strong>Quick lookup</strong>: Use Part I (Chapters 1-3) for architecture overview and configuration</li>
+<li><strong>Task-specific</strong>: Part II (Chapters 4-16) covers specific features (state, routing, forms, etc.)</li>
+<li><strong>Component APIs</strong>: Part III (Chapters 17-21) provides exhaustive component documentation</li>
+<li><strong>Quick reference</strong>: Part IV (Appendices A-G) for message topics, patterns, glossary</li>
+</ul>
+<h3>Book Structure</h3>
+<strong>Part I: Quick Reference</strong> (Chapters 1-3)
+<ul><li>Architecture overview, message patterns, configuration options</li>
+</ul>
+<strong>Part II: Feature Implementation</strong> (Chapters 4-16)
+<ul><li>State management, routing, forms, APIs, authentication, real-time features, file management, theming, performance, testing, debugging, patterns, deployment</li>
+</ul>
+<strong>Part III: Component Reference</strong> (Chapters 17-21)
+<ul><li>Complete API documentation for core, data, UI, integration, and utility components</li>
+</ul>
+<strong>Part IV: Appendices</strong> (A-G)
+<ul><li>Message topics, event envelope spec, configuration, migration guide, recipes, glossary, resources</li>
+</ul>
+<h2>Conventions</h2>
+<h3>Code Examples</h3>
+<strong>Inline code</strong>: <code>component-name</code>, <code>attribute="value"</code>, <code>methodName()</code>
+<strong>Code blocks</strong>:
+<pre><code class="language-javascript">// JavaScript examples
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.render();
+  }
+}</code></pre>
+<pre><code class="language-html">&lt;!-- HTML examples --&gt;
+&lt;pan-card title=&quot;Example&quot;&gt;
+  &lt;p&gt;Content&lt;/p&gt;
+&lt;/pan-card&gt;</code></pre>
+<strong>Command line</strong>:
+<pre><code class="language-bash">$ npm install @larcjs/core
+$ python3 -m http.server 8000</code></pre>
+<p>The <code>$</code> is the shell prompt — don't type it.</p>
+<h3>Typography</h3>
+<ul><li><strong>Bold</strong>: New terms, emphasis, UI elements</li>
+<li><em>Italic</em>: File names, URLs, emphasis</li>
+<li><code>Constant width</code>: Code, commands, components, attributes</li>
+</ul>
+<h3>Annotations</h3>
+<blockquote><strong>NOTE</strong>: Additional context or clarification</blockquote>
+<blockquote><strong>WARNING</strong>: Common mistakes or surprising behavior</blockquote>
+<blockquote><strong>TIP</strong>: Practical advice from experience</blockquote>
+<h3>Message Topics</h3>
+<p>LARC uses hierarchical dot notation:</p>
+<pre><code class="language-plaintext">namespace.entity.action</code></pre>
+<p>Examples:
+<ul><li><code>user.auth.login</code> — User login event</li>
+<li><code>cart.items.add</code> — Add cart item</li>
+<li><code>user.*</code> — Wildcard: all user events</li>
+</ul>
+See Appendix A for complete topic registry.</p>
+<h3>Component Naming</h3>
+<ul><li>All lowercase with hyphens: <code>pan-button</code>, <code>pan-card</code></li>
+<li>Core components use <code>pan-</code> prefix</li>
+<li>Custom components use your own prefix or none</li>
+</ul>
+<h3>API Signatures</h3>
+<p>Type annotations for clarity (not actual TypeScript):</p>
+<pre><code class="language-javascript">publish(topic: string, payload: any, options?: object): void</code></pre>
+<p>TypeScript users: See <code>@larcjs/core-types</code> for official definitions.</p>
+<h2>Relationship to <em>Learning LARC</em></h2>
+<p>|  | Learning LARC | Building with LARC |
+|--|---------------|-------------------|
+| <strong>Purpose</strong> | Tutorial | Reference |
+| <strong>Audience</strong> | Beginners | Experienced developers |
+| <strong>Style</strong> | Narrative, progressive | Dense, lookup-focused |
+| <strong>Coverage</strong> | Curated essentials | Comprehensive |
+| <strong>When to use</strong> | Learning concepts | Building applications |</p>
+<strong>New to LARC?</strong> Complete <em>Learning LARC</em> before using this reference.
+<strong>Experienced?</strong> This book is your primary resource.
+<strong>Learning specific features?</strong> Check <em>Learning LARC</em> for tutorials, then this book for complete details.
+<h2>What's Next</h2>
+<ul><li><strong>Chapter 2</strong>: Architecture overview and core concepts reference</li>
+<li><strong>Chapter 3</strong>: Getting started — quick installation and setup</li>
+<li><strong>Chapters 4-16</strong>: Task-specific implementation guides</li>
+<li><strong>Chapters 17-21</strong>: Complete component API reference</li>
+<li><strong>Appendices</strong>: Quick lookup tables and reference material</li>
+</ul>
+All examples available at <code>github.com/larcjs/building-with-larc-examples</code>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/01-introduction.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

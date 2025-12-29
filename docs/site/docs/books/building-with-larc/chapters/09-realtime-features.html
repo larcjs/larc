@@ -1,0 +1,565 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real-time Features · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Real-time Features">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>09-realtime-features</span>
+      </div>
+      <article class="docs-content">
+        <h1>Real-time Features</h1>
+<p>Quick reference for real-time communication patterns in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 11.</p>
+<h2>Overview</h2>
+<p>Real-time features enable live data updates without page reloads using WebSockets, Server-Sent Events (SSE), BroadcastChannel for cross-tab sync, and Web Workers for background processing.</p>
+<strong>Key Concepts</strong>:
+<ul><li>WebSockets: Full-duplex bidirectional communication</li>
+<li>SSE: One-way server-to-client streaming</li>
+<li>BroadcastChannel: Cross-tab/window messaging</li>
+<li>Web Workers: Background thread processing</li>
+<li>Heartbeat: Keep-alive mechanism to detect disconnections</li>
+<li>Reconnection: Automatic recovery from connection failures</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">// WebSocket connection
+import { wsClient } from &#039;./services/websocket-client.js&#039;;
+
+await wsClient.connect();
+
+// Subscribe to events
+wsClient.on(&#039;notification&#039;, (data) =&gt; {
+  console.log(&#039;New notification:&#039;, data);
+});
+
+// Send message
+wsClient.send(&#039;chat.message&#039;, { text: &#039;Hello!&#039; });
+
+// Check connection
+if (wsClient.isConnected()) {
+  // Connected
+}</code></pre>
+<h2>WebSocket Client API</h2>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>connect()</code> | - | Promise\<void\> | Connect to WebSocket server |
+| <code>disconnect()</code> | - | void | Close connection |
+| <code>send(type, payload)</code> | type: string, payload: any | void | Send message to server |
+| <code>on(type, handler)</code> | type: string, handler: Function | Function | Subscribe to message type (returns unsubscribe) |
+| <code>isConnected()</code> | - | boolean | Check connection status |</p>
+<h3>WebSocket Configuration</h3>
+<pre><code class="language-javascript">class WebSocketClient {
+  constructor(config) {
+    this.config = {
+      url: &#039;ws://localhost:3000/ws&#039;,
+      reconnectInterval: 5000,        // Delay between reconnect attempts
+      maxReconnectAttempts: 10,       // Max reconnection attempts
+      heartbeatInterval: 30000,       // Heartbeat ping interval
+      ...config
+    };
+  }
+}</code></pre>
+<h3>WebSocket Connection Pattern</h3>
+<pre><code class="language-javascript">const wsClient = new WebSocketClient({
+  url: &#039;ws://localhost:3000/ws&#039;
+});
+
+// Connection lifecycle
+wsClient.on(&#039;connected&#039;, () =&gt; {
+  console.log(&#039;Connected&#039;);
+});
+
+wsClient.on(&#039;disconnected&#039;, ({ code, reason }) =&gt; {
+  console.log(&#039;Disconnected:&#039;, code, reason);
+});
+
+wsClient.on(&#039;error&#039;, ({ error }) =&gt; {
+  console.error(&#039;WebSocket error:&#039;, error);
+});
+
+wsClient.on(&#039;reconnect-failed&#039;, () =&gt; {
+  console.error(&#039;Reconnection failed&#039;);
+});
+
+await wsClient.connect();</code></pre>
+<h2>Server-Sent Events (SSE)</h2>
+<p>SSE provides one-way server-to-client streaming over HTTP. Simpler than WebSockets, automatic reconnection, works with existing HTTP infrastructure.</p>
+<h3>SSE Client API</h3>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>connect()</code> | - | void | Connect to SSE endpoint |
+| <code>disconnect()</code> | - | void | Close connection |
+| <code>on(eventName, handler)</code> | eventName: string, handler: Function | Function | Subscribe to named events |
+| <code>isConnected()</code> | - | boolean | Check connection status |</p>
+<h3>SSE Usage Pattern</h3>
+<pre><code class="language-javascript">import { SSEClient } from &#039;./services/sse-client.js&#039;;
+
+const sseClient = new SSEClient({
+  url: &#039;/api/events&#039;,
+  withCredentials: true,
+  reconnectDelay: 3000
+});
+
+sseClient.connect();
+
+// Subscribe to named events
+sseClient.on(&#039;activity&#039;, (data) =&gt; {
+  console.log(&#039;Activity:&#039;, data);
+});
+
+sseClient.on(&#039;notification&#039;, (data) =&gt; {
+  console.log(&#039;Notification:&#039;, data);
+});
+
+// Connection events
+sseClient.on(&#039;connected&#039;, () =&gt; console.log(&#039;SSE connected&#039;));
+sseClient.on(&#039;disconnected&#039;, () =&gt; console.log(&#039;SSE disconnected&#039;));</code></pre>
+<h2>BroadcastChannel: Cross-Tab Communication</h2>
+<p>Synchronize state across browser tabs and windows.</p>
+<h3>BroadcastChannel API</h3>
+<pre><code class="language-javascript">class TabSyncService {
+  constructor(channelName = &#039;app-sync&#039;) {
+    this.channel = new BroadcastChannel(channelName);
+    this.tabId = this.generateTabId();
+    
+    this.channel.onmessage = (event) =&gt; {
+      this.handleMessage(event.data);
+    };
+  }
+  
+  broadcast(type, payload) {
+    this.channel.postMessage({
+      type,
+      payload,
+      timestamp: Date.now(),
+      tabId: this.tabId
+    });
+  }
+  
+  on(type, handler) {
+    // Subscribe to message type
+  }
+}
+
+const tabSync = new TabSyncService();</code></pre>
+<h3>Cross-Tab Sync Patterns</h3>
+<pre><code class="language-javascript">// Sync authentication state
+tabSync.on(&#039;auth-logout&#039;, () =&gt; {
+  authService.logout();
+  window.location.href = &#039;/login&#039;;
+});
+
+tabSync.on(&#039;auth-login&#039;, (user) =&gt; {
+  window.location.reload();
+});
+
+// Broadcast logout to other tabs
+tabSync.broadcast(&#039;auth-logout&#039;, {});
+
+// Sync data changes
+tabSync.on(&#039;data-updated&#039;, ({ resource, id }) =&gt; {
+  // Refresh data in this tab
+  reloadResource(resource, id);
+});</code></pre>
+<h2>Web Workers: Background Processing</h2>
+<p>Run JavaScript in background threads without blocking UI.</p>
+<h3>Worker Creation</h3>
+<pre><code class="language-javascript">// worker.js
+self.onmessage = (event) =&gt; {
+  const { id, type, data, options } = event.data;
+  
+  try {
+    let result;
+    
+    switch (type) {
+      case &#039;sort&#039;:
+        result = sortData(data, options);
+        break;
+      case &#039;filter&#039;:
+        result = filterData(data, options);
+        break;
+      case &#039;aggregate&#039;:
+        result = aggregateData(data, options);
+        break;
+    }
+    
+    self.postMessage({ id, result });
+  } catch (error) {
+    self.postMessage({ id, result: null, error: error.message });
+  }
+};
+
+function sortData(data, options) {
+  const { field, order = &#039;asc&#039; } = options;
+  return [...data].sort((a, b) =&gt; {
+    const comparison = a[field] &lt; b[field] ? -1 : a[field] &gt; b[field] ? 1 : 0;
+    return order === &#039;asc&#039; ? comparison : -comparison;
+  });
+}</code></pre>
+<h3>Worker Manager</h3>
+<pre><code class="language-javascript">class WorkerManager {
+  constructor(workerUrl) {
+    this.worker = new Worker(workerUrl);
+    this.requestId = 0;
+    this.pendingRequests = new Map();
+    
+    this.worker.onmessage = (event) =&gt; {
+      const { id, result, error } = event.data;
+      const pending = this.pendingRequests.get(id);
+      
+      if (pending) {
+        this.pendingRequests.delete(id);
+        error ? pending.reject(new Error(error)) : pending.resolve(result);
+      }
+    };
+  }
+  
+  async process(type, data, options) {
+    const id = `req-${++this.requestId}`;
+    
+    return new Promise((resolve, reject) =&gt; {
+      this.pendingRequests.set(id, { resolve, reject });
+      this.worker.postMessage({ id, type, data, options });
+      
+      setTimeout(() =&gt; {
+        if (this.pendingRequests.has(id)) {
+          this.pendingRequests.delete(id);
+          reject(new Error(&#039;Request timeout&#039;));
+        }
+      }, 30000);
+    });
+  }
+  
+  terminate() {
+    this.worker.terminate();
+    this.pendingRequests.forEach(({ reject }) =&gt; {
+      reject(new Error(&#039;Worker terminated&#039;));
+    });
+    this.pendingRequests.clear();
+  }
+}
+
+const dataWorker = new WorkerManager(&#039;/workers/data-processor.js&#039;);
+
+// Use worker
+const sorted = await dataWorker.process(&#039;sort&#039;, data, {
+  field: &#039;name&#039;,
+  order: &#039;asc&#039;
+});</code></pre>
+<h2>Real-time Component Patterns</h2>
+<h3>Notification Feed</h3>
+<pre><code class="language-javascript">class NotificationFeed extends HTMLElement {
+  connectedCallback() {
+    this.notifications = [];
+    
+    wsClient.on(&#039;notification&#039;, (notification) =&gt; {
+      this.notifications.unshift(notification);
+      this.render();
+      
+      // Auto-dismiss after 5s
+      setTimeout(() =&gt; {
+        this.removeNotification(notification.id);
+      }, 5000);
+    });
+    
+    this.render();
+  }
+  
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;notifications&quot;&gt;
+        ${this.notifications.map(n =&gt; `
+          &lt;div class=&quot;notification ${n.type}&quot;&gt;
+            &lt;strong&gt;${n.title}&lt;/strong&gt;
+            &lt;p&gt;${n.message}&lt;/p&gt;
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;notification-feed&#039;, NotificationFeed);</code></pre>
+<h3>Live Activity Feed</h3>
+<pre><code class="language-javascript">class ActivityFeed extends HTMLElement {
+  async connectedCallback() {
+    this.activities = [];
+    
+    // Load initial data
+    const response = await fetch(&#039;/api/activities&#039;);
+    this.activities = await response.json();
+    
+    // Subscribe to live updates
+    sseClient.on(&#039;activity&#039;, (activity) =&gt; {
+      this.activities.unshift(activity);
+      this.activities = this.activities.slice(0, 100); // Limit
+      this.render();
+    });
+    
+    this.render();
+  }
+  
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;activities&quot;&gt;
+        ${this.activities.map(a =&gt; `
+          &lt;div class=&quot;activity&quot;&gt;
+            &lt;strong&gt;${a.userName}&lt;/strong&gt; ${a.action} &lt;em&gt;${a.target}&lt;/em&gt;
+            &lt;span class=&quot;time&quot;&gt;${this.formatTime(a.timestamp)}&lt;/span&gt;
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+  
+  formatTime(timestamp) {
+    const diff = Date.now() - timestamp;
+    if (diff &lt; 60000) return &#039;Just now&#039;;
+    if (diff &lt; 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    return new Date(timestamp).toLocaleString();
+  }
+}
+
+customElements.define(&#039;activity-feed&#039;, ActivityFeed);</code></pre>
+<h3>Collaborative Editor</h3>
+<pre><code class="language-javascript">class CollaborativeEditor extends HTMLElement {
+  connectedCallback() {
+    this.docId = this.getAttribute(&#039;doc-id&#039;);
+    this.content = &#039;&#039;;
+    this.collaborators = new Map();
+    
+    // Join document
+    wsClient.send(&#039;join-document&#039;, { docId: this.docId });
+    
+    // Subscribe to updates
+    wsClient.on(&#039;document-update&#039;, (update) =&gt; {
+      if (!this.isLocalUpdate) {
+        this.content = update.content;
+        this.render();
+      }
+    });
+    
+    wsClient.on(&#039;collaborator-joined&#039;, (collab) =&gt; {
+      this.collaborators.set(collab.userId, collab);
+      this.render();
+    });
+    
+    wsClient.on(&#039;collaborator-left&#039;, ({ userId }) =&gt; {
+      this.collaborators.delete(userId);
+      this.render();
+    });
+    
+    this.render();
+  }
+  
+  handleInput(e) {
+    this.content = e.target.value;
+    this.isLocalUpdate = true;
+    
+    wsClient.send(&#039;document-update&#039;, {
+      docId: this.docId,
+      content: this.content
+    });
+    
+    setTimeout(() =&gt; { this.isLocalUpdate = false; }, 100);
+  }
+  
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;editor&quot;&gt;
+        &lt;div class=&quot;collaborators&quot;&gt;
+          ${Array.from(this.collaborators.values()).map(c =&gt; `
+            &lt;div class=&quot;badge&quot;&gt;${c.name[0]}&lt;/div&gt;
+          `).join(&#039;&#039;)}
+        &lt;/div&gt;
+        &lt;textarea&gt;${this.content}&lt;/textarea&gt;
+      &lt;/div&gt;
+    `;
+    
+    this.querySelector(&#039;textarea&#039;).addEventListener(&#039;input&#039;, (e) =&gt; this.handleInput(e));
+  }
+}
+
+customElements.define(&#039;collaborative-editor&#039;, CollaborativeEditor);</code></pre>
+<h2>Component Reference</h2>
+<p>See Chapter 20 for real-time components:
+<ul><li><strong>pan-websocket</strong>: WebSocket connection management</li>
+<li><strong>pan-sse</strong>: Server-Sent Events integration</li>
+<li><strong>pan-live-data</strong>: Auto-refreshing data display</li>
+</ul>
+<h2>Advanced Patterns</h2></p>
+<h3>Optimistic Updates</h3>
+<pre><code class="language-javascript">class OptimisticList extends HTMLElement {
+  async addItem(item) {
+    // Add to UI immediately (optimistic)
+    this.items.push({ ...item, pending: true });
+    this.render();
+    
+    try {
+      // Send to server
+      const response = await fetch(&#039;/api/items&#039;, {
+        method: &#039;POST&#039;,
+        body: JSON.stringify(item)
+      });
+      
+      const serverItem = await response.json();
+      
+      // Replace pending with server version
+      const index = this.items.findIndex(i =&gt; i.pending);
+      this.items[index] = serverItem;
+      this.render();
+    } catch (err) {
+      // Rollback on error
+      this.items = this.items.filter(i =&gt; !i.pending);
+      this.render();
+      alert(&#039;Failed to add item&#039;);
+    }
+  }
+}</code></pre>
+<h3>Presence Tracking</h3>
+<pre><code class="language-javascript">class PresenceTracker {
+  constructor() {
+    this.users = new Map();
+    
+    wsClient.on(&#039;presence-update&#039;, ({ userId, status }) =&gt; {
+      this.users.set(userId, { userId, status, lastSeen: Date.now() });
+      this.notifySubscribers();
+    });
+    
+    wsClient.on(&#039;presence-offline&#039;, ({ userId }) =&gt; {
+      this.users.delete(userId);
+      this.notifySubscribers();
+    });
+    
+    // Send heartbeat
+    setInterval(() =&gt; {
+      wsClient.send(&#039;presence-heartbeat&#039;, {});
+    }, 30000);
+  }
+  
+  getOnlineUsers() {
+    return Array.from(this.users.values()).filter(u =&gt; u.status === &#039;online&#039;);
+  }
+}</code></pre>
+<h3>Conflict Resolution</h3>
+<pre><code class="language-javascript">class ConflictResolver {
+  async handleUpdate(localVersion, remoteVersion) {
+    if (localVersion.timestamp &gt; remoteVersion.timestamp) {
+      // Local wins - send to server
+      await this.sendUpdate(localVersion);
+    } else if (localVersion.timestamp &lt; remoteVersion.timestamp) {
+      // Remote wins - apply locally
+      this.applyUpdate(remoteVersion);
+    } else {
+      // Timestamps equal - merge
+      const merged = this.merge(localVersion, remoteVersion);
+      this.applyUpdate(merged);
+    }
+  }
+  
+  merge(local, remote) {
+    // Last-write-wins per field
+    return {
+      ...remote,
+      ...Object.entries(local).reduce((acc, [key, value]) =&gt; {
+        if (local[`${key}_timestamp`] &gt; remote[`${key}_timestamp`]) {
+          acc[key] = value;
+        }
+        return acc;
+      }, {})
+    };
+  }
+}</code></pre>
+<h2>Performance Considerations</h2>
+<p>| Strategy | Use Case | Implementation |
+|----------|----------|----------------|
+| <strong>Throttling</strong> | High-frequency events (scroll, mousemove) | Send update max once per 100-500ms |
+| <strong>Debouncing</strong> | Text input | Send update after 300ms of inactivity |
+| <strong>Batching</strong> | Multiple updates | Accumulate and send in single message |
+| <strong>Compression</strong> | Large payloads | Use MessagePack or gzip compression |
+| <strong>Selective sync</strong> | Large datasets | Only sync visible/relevant data |</p>
+<h3>Throttle Example</h3>
+<pre><code class="language-javascript">class ThrottledInput extends HTMLElement {
+  connectedCallback() {
+    let lastSent = 0;
+    const throttleMs = 300;
+    
+    this.querySelector(&#039;input&#039;).addEventListener(&#039;input&#039;, (e) =&gt; {
+      const now = Date.now();
+      if (now - lastSent &gt;= throttleMs) {
+        wsClient.send(&#039;input-update&#039;, { value: e.target.value });
+        lastSent = now;
+      }
+    });
+  }
+}</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 11 (Real-time Features)</li>
+<li><strong>Components</strong>: Chapter 20 (pan-websocket, pan-sse, pan-live-data)</li>
+<li><strong>Patterns</strong>: Appendix E (Real-time Patterns)</li>
+<li><strong>Related</strong>: Chapter 7 (API Integration), Chapter 12 (Performance)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Issue: Connection drops on mobile/sleep</h3>
+<strong>Problem</strong>: WebSocket closes when device sleeps
+<strong>Solution</strong>: Implement heartbeat + reconnection; use SSE for mobile
+<h3>Issue: Message order not guaranteed</h3>
+<strong>Problem</strong>: Messages arrive out of sequence
+<strong>Solution</strong>: Add sequence numbers; buffer and reorder on client
+<h3>Issue: Memory leaks from event listeners</h3>
+<strong>Problem</strong>: Component unmounts but listeners remain
+<strong>Solution</strong>: Always unsubscribe in <code>disconnectedCallback()</code>
+<h3>Issue: Duplicate messages on reconnect</h3>
+<strong>Problem</strong>: Server resends messages after reconnection
+<strong>Solution</strong>: Track message IDs; deduplicate on client
+<h3>Issue: High bandwidth usage</h3>
+<strong>Problem</strong>: Too many messages or large payloads
+<strong>Solution</strong>: Throttle updates; compress payloads; batch messages
+<p>See <em>Learning LARC</em> Chapter 11 for complete real-time patterns, WebSocket authentication, and scaling strategies.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/09-realtime-features.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

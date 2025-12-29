@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>File Management · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - File Management">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>10-file-management</span>
+      </div>
+      <article class="docs-content">
+        <h1>File Management</h1>
+<p>Quick reference for file management and OPFS (Origin Private File System) in LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 11.</p>
+<h2>Overview</h2>
+<p>OPFS provides browser-based file storage with high performance, large capacity (GB+), and persistence across sessions. Unlike localStorage (5-10MB) or IndexedDB, OPFS offers native file system operations ideal for offline-first apps and large file handling.</p>
+<strong>Key Concepts</strong>:
+<ul><li>OPFS: Origin Private File System - browser's private file storage</li>
+<li>FileSystemDirectoryHandle: Directory reference for operations</li>
+<li>FileSystemFileHandle: File reference for read/write operations</li>
+<li>Storage quota: Browser-managed space limits (best-effort persistence)</li>
+<li>Streaming: Handle large files without loading into memory</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">// Initialize OPFS
+const root = await navigator.storage.getDirectory();
+
+// Write file
+const fileHandle = await root.getFileHandle(&#039;notes.txt&#039;, { create: true });
+const writable = await fileHandle.createWritable();
+await writable.write(&#039;Hello OPFS!&#039;);
+await writable.close();
+
+// Read file
+const file = await fileHandle.getFile();
+const text = await file.text();
+console.log(text); // &quot;Hello OPFS!&quot;
+
+// List files
+for await (const [name, handle] of root.entries()) {
+  console.log(name, handle.kind); // &#039;notes.txt&#039; &#039;file&#039;
+}</code></pre>
+<h2>FileSystemService API</h2>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>initialize()</code> | - | Promise\<void\> | Initialize OPFS root handle |
+| <code>createDirectory(path)</code> | path: string | Promise\<DirectoryHandle\> | Create directory (recursive) |
+| <code>getDirectory(path)</code> | path: string | Promise\<DirectoryHandle\> | Get existing directory |
+| <code>listFiles(path)</code> | path?: string | Promise\<FileInfo[]\> | List files in directory |
+| <code>listDirectories(path)</code> | path?: string | Promise\<DirectoryInfo[]\> | List subdirectories |
+| <code>writeFile(path, name, content)</code> | path: string, name: string, content: Blob\|ArrayBuffer\|string | Promise\<void\> | Write or update file |
+| <code>readFile(path, name)</code> | path: string, name: string | Promise\<File\> | Read file contents |
+| <code>deleteFile(path, name)</code> | path: string, name: string | Promise\<void\> | Delete file |
+| <code>deleteDirectory(path, recursive?)</code> | path: string, recursive?: boolean | Promise\<void\> | Delete directory |
+| <code>fileExists(path, name)</code> | path: string, name: string | Promise\<boolean\> | Check if file exists |
+| <code>copyFile(src, dest)</code> | sourcePath: string, sourceFile: string, destPath: string, destFile: string | Promise\<void\> | Copy file |
+| <code>moveFile(src, dest)</code> | sourcePath: string, sourceFile: string, destPath: string, destFile: string | Promise\<void\> | Move file |
+| <code>getStorageInfo()</code> | - | Promise\<StorageInfo\> | Get quota and usage stats |
+| <code>getDirectorySize(path)</code> | path?: string | Promise\<number\> | Calculate total size (bytes) |</p>
+<h3>FileInfo Interface</h3>
+<pre><code class="language-typescript">interface FileInfo {
+  name: string;
+  size: number;
+  type: string;
+  handle: FileSystemFileHandle;
+  lastModified: number;
+}</code></pre>
+<h2>Common Operations</h2>
+<h3>Create and Write File</h3>
+<pre><code class="language-javascript">const fileSystem = new FileSystemService();
+await fileSystem.initialize();
+
+// Write text
+await fileSystem.writeFile(&#039;/&#039;, &#039;note.txt&#039;, &#039;Hello World&#039;);
+
+// Write binary
+const blob = new Blob([&#039;data&#039;], { type: &#039;application/octet-stream&#039; });
+await fileSystem.writeFile(&#039;/documents&#039;, &#039;file.bin&#039;, blob);
+
+// Write ArrayBuffer
+const buffer = new ArrayBuffer(1024);
+await fileSystem.writeFile(&#039;/data&#039;, &#039;binary.dat&#039;, buffer);</code></pre>
+<h3>Read and Process Files</h3>
+<pre><code class="language-javascript">// Read file
+const file = await fileSystem.readFile(&#039;/&#039;, &#039;note.txt&#039;);
+const text = await file.text();
+
+// Stream large files
+const file = await fileSystem.readFile(&#039;/&#039;, &#039;large-file.mp4&#039;);
+const stream = file.stream();
+const reader = stream.getReader();
+
+while (true) {
+  const { done, value } = await reader.read();
+  if (done) break;
+  processChunk(value);
+}</code></pre>
+<h3>Directory Operations</h3>
+<pre><code class="language-javascript">// Create nested directories
+await fileSystem.createDirectory(&#039;/documents/2024/reports&#039;);
+
+// List with filtering
+const files = await fileSystem.listFiles(&#039;/documents&#039;);
+const images = files.filter(f =&gt; f.type.startsWith(&#039;image/&#039;));
+
+// Recursive size calculation
+const size = await fileSystem.getDirectorySize(&#039;/documents&#039;);
+console.log(`Total: ${size} bytes`);</code></pre>
+<h2>Storage Quota Management</h2>
+<h3>Check Quota</h3>
+<pre><code class="language-javascript">const { usage, quota, percentUsed } = await fileSystem.getStorageInfo();
+
+console.log(`Used: ${usage} / ${quota} bytes (${percentUsed}%)`);
+
+if (percentUsed &gt; 75) {
+  alert(&#039;Running low on storage&#039;);
+}</code></pre>
+<h3>Request Persistent Storage</h3>
+<pre><code class="language-javascript">// Request persistence (prevents automatic eviction)
+if (navigator.storage?.persist) {
+  const isPersisted = await navigator.storage.persist();
+  console.log(&#039;Persistent:&#039;, isPersisted);
+}
+
+// Check current persistence status
+if (navigator.storage?.persisted) {
+  const persisted = await navigator.storage.persisted();
+  console.log(&#039;Currently persisted:&#039;, persisted);
+}</code></pre>
+<h2>File Upload Pattern</h2>
+<h3>Drag-and-Drop Upload</h3>
+<pre><code class="language-javascript">class FileUploadComponent extends HTMLElement {
+  connectedCallback() {
+    this.addEventListener(&#039;drop&#039;, async (e) =&gt; {
+      e.preventDefault();
+      
+      const files = Array.from(e.dataTransfer.files);
+      for (const file of files) {
+        await this.uploadFile(file);
+      }
+    });
+    
+    this.addEventListener(&#039;dragover&#039;, (e) =&gt; e.preventDefault());
+  }
+  
+  async uploadFile(file) {
+    const content = await file.arrayBuffer();
+    await fileSystem.writeFile(&#039;/&#039;, file.name, content);
+    this.dispatchEvent(new CustomEvent(&#039;file-uploaded&#039;, { 
+      detail: { name: file.name, size: file.size }
+    }));
+  }
+}</code></pre>
+<h3>Upload with Progress Tracking</h3>
+<pre><code class="language-javascript">async function uploadWithProgress(file, onProgress) {
+  const chunkSize = 1024 * 1024; // 1MB chunks
+  const chunks = Math.ceil(file.size / chunkSize);
+  
+  const fileHandle = await root.getFileHandle(file.name, { create: true });
+  const writable = await fileHandle.createWritable();
+  
+  for (let i = 0; i &lt; chunks; i++) {
+    const start = i * chunkSize;
+    const end = Math.min(start + chunkSize, file.size);
+    const chunk = file.slice(start, end);
+    
+    await writable.write(chunk);
+    onProgress((i + 1) / chunks * 100);
+  }
+  
+  await writable.close();
+}
+
+// Usage
+await uploadWithProgress(file, (percent) =&gt; {
+  console.log(`Upload: ${percent}%`);
+});</code></pre>
+<h2>File Download Pattern</h2>
+<pre><code class="language-javascript">async function downloadFile(path, fileName) {
+  const file = await fileSystem.readFile(path, fileName);
+  const url = URL.createObjectURL(file);
+  
+  const a = document.createElement(&#039;a&#039;);
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  
+  URL.revokeObjectURL(url);
+}</code></pre>
+<h2>File Browser Component</h2>
+<pre><code class="language-javascript">class FileBrowser extends HTMLElement {
+  async connectedCallback() {
+    this.currentPath = &#039;/&#039;;
+    await this.render();
+  }
+  
+  async render() {
+    const files = await fileSystem.listFiles(this.currentPath);
+    const dirs = await fileSystem.listDirectories(this.currentPath);
+    
+    this.innerHTML = `
+      &lt;div class=&quot;breadcrumb&quot;&gt;${this.currentPath}&lt;/div&gt;
+      
+      ${dirs.map(d =&gt; `
+        &lt;div class=&quot;dir&quot; onclick=&quot;navigate(&#039;${d.name}&#039;)&quot;&gt;
+          📁 ${d.name}
+        &lt;/div&gt;
+      `).join(&#039;&#039;)}
+      
+      ${files.map(f =&gt; `
+        &lt;div class=&quot;file&quot; onclick=&quot;open(&#039;${f.name}&#039;)&quot;&gt;
+          ${this.getIcon(f.type)} ${f.name} (${this.formatSize(f.size)})
+        &lt;/div&gt;
+      `).join(&#039;&#039;)}
+    `;
+  }
+  
+  getIcon(type) {
+    if (type.startsWith(&#039;image/&#039;)) return &#039;🖼️&#039;;
+    if (type.startsWith(&#039;video/&#039;)) return &#039;🎬&#039;;
+    if (type.startsWith(&#039;audio/&#039;)) return &#039;🎵&#039;;
+    if (type === &#039;application/pdf&#039;) return &#039;📄&#039;;
+    return &#039;📄&#039;;
+  }
+  
+  formatSize(bytes) {
+    const units = [&#039;B&#039;, &#039;KB&#039;, &#039;MB&#039;, &#039;GB&#039;];
+    let size = bytes;
+    let unitIndex = 0;
+    
+    while (size &gt;= 1024 &amp;&amp; unitIndex &lt; units.length - 1) {
+      size /= 1024;
+      unitIndex++;
+    }
+    
+    return `${size.toFixed(1)} ${units[unitIndex]}`;
+  }
+}
+
+customElements.define(&#039;file-browser&#039;, FileBrowser);</code></pre>
+<h2>Search and Filter</h2>
+<pre><code class="language-javascript">class FileSearch {
+  async search(query, options = {}) {
+    const results = [];
+    await this.searchDirectory(&#039;/&#039;, query, options, results);
+    return results.sort((a, b) =&gt; b.score - a.score);
+  }
+  
+  async searchDirectory(path, query, options, results) {
+    const files = await fileSystem.listFiles(path);
+    
+    for (const file of files) {
+      const score = this.matchFile(file, query, options);
+      if (score &gt; 0) {
+        results.push({ file, path, score });
+      }
+    }
+    
+    if (options.recursive) {
+      const dirs = await fileSystem.listDirectories(path);
+      for (const dir of dirs) {
+        const subPath = `${path}/${dir.name}`.replace(&#039;//&#039;, &#039;/&#039;);
+        await this.searchDirectory(subPath, query, options, results);
+      }
+    }
+  }
+  
+  matchFile(file, query, options) {
+    const name = file.name.toLowerCase();
+    const q = query.toLowerCase();
+    
+    let score = 0;
+    
+    if (name === q) score += 100;
+    else if (name.startsWith(q)) score += 50;
+    else if (name.includes(q)) score += 25;
+    else return 0;
+    
+    // Filter by type
+    if (options.types?.length) {
+      const matches = options.types.some(t =&gt; file.type.startsWith(t));
+      if (!matches) return 0;
+      score += 10;
+    }
+    
+    // Filter by size
+    if (options.minSize &amp;&amp; file.size &lt; options.minSize) return 0;
+    if (options.maxSize &amp;&amp; file.size &gt; options.maxSize) return 0;
+    
+    return score;
+  }
+}
+
+const fileSearch = new FileSearch();
+
+// Usage
+const results = await fileSearch.search(&#039;photo&#039;, {
+  types: [&#039;image/&#039;],
+  minSize: 1024 * 100, // 100KB min
+  recursive: true
+});</code></pre>
+<h2>Component Reference</h2>
+<p>See Chapter 19 for file management UI components:
+<ul><li><strong>pan-files</strong>: Complete file manager with browser, upload, quota display</li>
+<li><strong>pan-file-picker</strong>: File selection dialog</li>
+<li><strong>pan-image-viewer</strong>: Image preview and editing</li>
+</ul>
+<h2>Performance Tips</h2></p>
+<p>| Optimization | Implementation | Benefit |
+|--------------|----------------|---------|
+| <strong>Stream large files</strong> | Use <code>file.stream()</code> instead of <code>file.arrayBuffer()</code> | Reduce memory usage |
+| <strong>Batch operations</strong> | Group multiple writes in single transaction | Improve write speed |
+| <strong>Cache handles</strong> | Store FileSystemHandle references | Reduce lookup overhead |
+| <strong>Lazy loading</strong> | Load directory contents on demand | Faster initial render |
+| <strong>Background cleanup</strong> | Delete temp files in Web Worker | Non-blocking UI |</p>
+<h3>Streaming Example</h3>
+<pre><code class="language-javascript">async function processLargeFile(path, fileName) {
+  const file = await fileSystem.readFile(path, fileName);
+  const stream = file.stream();
+  const reader = stream.getReader();
+  
+  let bytesProcessed = 0;
+  
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    
+    await processChunk(value);
+    bytesProcessed += value.length;
+    updateProgress(bytesProcessed / file.size);
+  }
+}</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 11 (File Management and OPFS)</li>
+<li><strong>Components</strong>: Chapter 19 (pan-files, pan-file-picker, pan-image-viewer)</li>
+<li><strong>Patterns</strong>: Appendix E (File Management Patterns)</li>
+<li><strong>Related</strong>: Chapter 4 (State Management - IndexedDB), Chapter 12 (Performance)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Issue: "NotFoundError" when reading files</h3>
+<strong>Problem</strong>: File or directory doesn't exist
+<strong>Solution</strong>: Check existence with <code>fileExists()</code> before reading; handle errors gracefully
+<h3>Issue: "QuotaExceededError" on write</h3>
+<strong>Problem</strong>: Storage quota exceeded
+<strong>Solution</strong>: Check available space before write; request persistent storage; implement cleanup
+<h3>Issue: Files lost after browser update</h3>
+<strong>Problem</strong>: Non-persistent storage evicted
+<strong>Solution</strong>: Request persistence via <code>navigator.storage.persist()</code>; implement cloud backup
+<h3>Issue: Slow directory listing with many files</h3>
+<strong>Problem</strong>: Synchronous iteration blocks UI
+<strong>Solution</strong>: Paginate results; use Web Worker for processing; implement virtual scrolling
+<h3>Issue: OPFS not available in browser</h3>
+<strong>Problem</strong>: Older browser or insecure context (non-HTTPS)
+<strong>Solution</strong>: Feature detect <code>navigator.storage?.getDirectory</code>; provide fallback (IndexedDB)
+<p>See <em>Learning LARC</em> Chapter 11 for complete file management patterns, image processing, and cloud sync strategies.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/10-file-management.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

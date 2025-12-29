@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Core Components Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Core Components Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>17-core-components</span>
+      </div>
+      <article class="docs-content">
+        <h1>Core Components Reference</h1>
+<p>API documentation for LARC's core components. For tutorials, see <em>Learning LARC</em> Chapters 4-5.</p>
+<h2>pan-bus</h2>
+<strong>Purpose</strong>: Message bus for decoupled component communication via pub/sub
+<strong>Import</strong>: <code><script type="module" src="/core/pan-bus.mjs"></script></code>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-bus debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+const bus = document.querySelector(&#039;pan-bus&#039;);
+
+// Subscribe
+bus.subscribe(&#039;user.login&#039;, (msg) =&gt; {
+  console.log(&#039;User:&#039;, msg.data.name);
+});
+
+// Publish
+bus.publish(&#039;user.login&#039;, { name: &#039;Alice&#039; });
+&lt;/script&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>max-retained</code> | Integer | 1000 | Max retained messages (LRU eviction) |
+| <code>max-message-size</code> | Integer | 1048576 (1MB) | Max message size (bytes) |
+| <code>cleanup-interval</code> | Integer | 30000 (30s) | Cleanup interval (ms) |
+| <code>rate-limit</code> | Integer | 1000 | Max messages/client/second |
+| <code>allow-global-wildcard</code> | Boolean | true | Allow <code>*</code> wildcard subscriptions |
+| <code>debug</code> | Boolean | false | Enable console logging |
+| <code>enable-routing</code> | Boolean | false | Enable declarative routing |
+| <code>enable-tracing</code> | Boolean | false | Enable message tracing |</p>
+<h3>Methods</h3>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>publish(topic, data, options)</code> | topic: String, data: Any, options?: Object | undefined | Publish message |
+| <code>subscribe(topics, handler)</code> | topics: String\|Array, handler: Function | Function | Subscribe (returns unsubscribe fn) |
+| <code>PanBusEnhanced.matches(topic, pattern)</code> | topic: String, pattern: String | Boolean | Test if topic matches pattern |</p>
+<strong>Usage</strong>:
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+
+// Publish
+bus.publish(&#039;user.login&#039;, { userId: 123 });
+bus.publish(&#039;config&#039;, { theme: &#039;dark&#039; }, { retain: true });
+
+// Subscribe
+const unsub = bus.subscribe(&#039;user.*&#039;, (msg) =&gt; {
+  console.log(msg.topic, msg.data);
+});
+
+// Unsubscribe
+unsub();</code></pre>
+<h3>Events</h3>
+<strong>Incoming</strong> (components dispatch these):
+<ul><li><code>pan:hello</code> - Register client: <code>{ id, caps }</code></li>
+<li><code>pan:subscribe</code> - Subscribe: <code>{ topics, clientId, options }</code></li>
+<li><code>pan:unsubscribe</code> - Unsubscribe: <code>{ topics, clientId }</code></li>
+<li><code>pan:publish</code> - Publish: <code>{ topic, data, retain, clientId }</code></li>
+<li><code>pan:request</code> - Request (like publish): <code>{ topic, data, requestId }</code></li>
+<li><code>pan:sys.stats</code> - Get statistics</li>
+<li><code>pan:sys.clear-retained</code> - Clear retained: <code>{ pattern? }</code></li>
+</ul>
+<strong>Outgoing</strong> (bus dispatches these):
+<ul><li><code>pan:sys.ready</code> - Bus ready: <code>{ enhanced, routing, tracing, config }</code></li>
+<li><code>pan:sys.error</code> - Error: <code>{ code, message, details }</code></li>
+<li><code>pan:deliver</code> - Deliver message: <code>{ topic, data, id, ts, ...extras }</code></li>
+</ul>
+<h3>Complete Example</h3>
+<pre><code class="language-javascript">// Publisher component
+class LoginForm extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = &#039;&lt;button id=&quot;login&quot;&gt;Login&lt;/button&gt;&#039;;
+
+    this.querySelector(&#039;#login&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      const bus = document.querySelector(&#039;pan-bus&#039;);
+      bus.publish(&#039;user.login&#039;, {
+        userId: &#039;123&#039;,
+        name: &#039;Alice&#039;,
+        timestamp: Date.now()
+      });
+    });
+  }
+}
+
+// Subscriber component
+class Dashboard extends HTMLElement {
+  connectedCallback() {
+    const bus = document.querySelector(&#039;pan-bus&#039;);
+
+    this.unsubscribe = bus.subscribe(&#039;user.login&#039;, (msg) =&gt; {
+      this.innerHTML = `&lt;h1&gt;Welcome, ${msg.data.name}!&lt;/h1&gt;`;
+    });
+  }
+
+  disconnectedCallback() {
+    if (this.unsubscribe) this.unsubscribe();
+  }
+}
+
+customElements.define(&#039;login-form&#039;, LoginForm);
+customElements.define(&#039;dash-board&#039;, Dashboard);</code></pre>
+<h3>Common Issues</h3>
+<strong>Messages not delivered</strong>: Wait for <code>pan:sys.ready</code> event or check <code>window.__panReady</code>
+<strong>Memory leaks</strong>: Always unsubscribe in <code>disconnectedCallback()</code>
+<strong>Rate limiting</strong>: Increase <code>rate-limit</code> attribute for high-frequency apps
+<strong>JSON errors</strong>: Payloads must be JSON-serializable (no functions, DOM nodes, circular refs)
+<hr>
+<h2>pan-theme-provider</h2>
+<strong>Purpose</strong>: Manages app theme with system preference detection
+<strong>Import</strong>: <code><script type="module" src="/ui/pan-theme-provider.mjs"></script></code>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-theme-provider theme=&quot;auto&quot;&gt;&lt;/pan-theme-provider&gt;
+
+&lt;style&gt;
+  :root[data-theme=&quot;light&quot;] { --bg: #fff; --text: #000; }
+  :root[data-theme=&quot;dark&quot;] { --bg: #000; --text: #fff; }
+  body { background: var(--bg); color: var(--text); }
+&lt;/style&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>theme</code> | String | "auto" | Theme mode: "light", "dark", or "auto" |</p>
+<h3>Methods</h3>
+<p>| Method | Returns | Description |
+|--------|---------|-------------|
+| <code>setTheme(theme)</code> | undefined | Set theme: "light", "dark", or "auto" |
+| <code>getTheme()</code> | String | Get theme mode |
+| <code>getEffectiveTheme()</code> | String | Get actual theme ("light" or "dark") |
+| <code>getSystemTheme()</code> | String | Get system preference |</p>
+<strong>Usage</strong>:
+<pre><code class="language-javascript">const provider = document.querySelector(&#039;pan-theme-provider&#039;);
+provider.setTheme(&#039;dark&#039;);
+console.log(provider.getEffectiveTheme());  // &quot;dark&quot;</code></pre>
+<h3>Events</h3>
+<ul><li><strong>DOM</strong>: <code>theme-change</code> - Detail: <code>{ theme, effective }</code></li>
+<li><strong>PAN</strong>: <code>theme.changed</code> - Data: <code>{ theme, effective }</code></li>
+<li><strong>PAN</strong>: <code>theme.system-changed</code> - Data: <code>{ theme }</code></li>
+</ul>
+<h3>Complete Example</h3>
+<pre><code class="language-javascript">class ThemedApp extends HTMLElement {
+  connectedCallback() {
+    const bus = document.querySelector(&#039;pan-bus&#039;);
+
+    // Subscribe to theme changes
+    this.unsubscribe = bus.subscribe(&#039;theme.changed&#039;, (msg) =&gt; {
+      this.applyTheme(msg.data.effective);
+    });
+
+    // Get initial theme
+    const provider = document.querySelector(&#039;pan-theme-provider&#039;);
+    if (provider) {
+      this.applyTheme(provider.getEffectiveTheme());
+    }
+
+    // Persist preference
+    bus.subscribe(&#039;theme.changed&#039;, (msg) =&gt; {
+      localStorage.setItem(&#039;theme&#039;, msg.data.theme);
+    });
+  }
+
+  applyTheme(theme) {
+    this.className = `app theme-${theme}`;
+  }
+
+  disconnectedCallback() {
+    if (this.unsubscribe) this.unsubscribe();
+  }
+}
+
+customElements.define(&#039;themed-app&#039;, ThemedApp);</code></pre>
+<h3>Common Issues</h3>
+<strong>Theme not applying</strong>: Define CSS variables for both <code>[data-theme="light"]</code> and <code>[data-theme="dark"]</code>
+<strong>Flash on load</strong>: Set theme in inline <code><script></code> before loading components
+<strong>Not updating</strong>: Subscribe to <code>theme.changed</code> in <code>connectedCallback()</code>
+<hr>
+<h2>pan-theme-toggle</h2>
+<strong>Purpose</strong>: UI control for theme switching
+<strong>Import</strong>: <code><script type="module" src="/ui/pan-theme-toggle.mjs"></script></code>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-theme-toggle&gt;&lt;/pan-theme-toggle&gt;
+&lt;pan-theme-toggle variant=&quot;button&quot; label=&quot;Theme&quot;&gt;&lt;/pan-theme-toggle&gt;
+&lt;pan-theme-toggle variant=&quot;dropdown&quot;&gt;&lt;/pan-theme-toggle&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>label</code> | String | "" | Text label (button variant only) |
+| <code>variant</code> | String | "icon" | Style: "icon", "button", or "dropdown" |</p>
+<h3>Complete Example</h3>
+<pre><code class="language-html">&lt;nav class=&quot;toolbar&quot;&gt;
+  &lt;h1&gt;My App&lt;/h1&gt;
+  &lt;div class=&quot;actions&quot;&gt;
+    &lt;button&gt;Settings&lt;/button&gt;
+    &lt;pan-theme-toggle&gt;&lt;/pan-theme-toggle&gt;
+  &lt;/div&gt;
+&lt;/nav&gt;
+
+&lt;style&gt;
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem;
+    background: var(--surface);
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+&lt;/style&gt;</code></pre>
+<h3>Common Issues</h3>
+<strong>Not working</strong>: Ensure <code>pan-theme-provider</code> exists
+<strong>Wrong icon</strong>: Component subscribes on connect; add after <code>pan:sys.ready</code>
+<strong>Dropdown positioning</strong>: Wrap in <code>position: relative</code> container
+<hr>
+<h2>pan-routes</h2>
+<strong>Purpose</strong>: Runtime-configurable message routing
+<strong>Import</strong>: Enabled via <code><pan-bus enable-routing="true"></pan-bus></code>
+<strong>Access</strong>: <code>window.pan.routes</code> or <code>bus.routingManager</code>
+<h3>Quick Example</h3>
+<pre><code class="language-javascript">const routes = window.pan.routes;
+
+// Add route
+routes.add({
+  name: &#039;Login redirect&#039;,
+  match: { type: &#039;user.login.success&#039; },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: { topic: &#039;ui.navigate&#039;, data: { to: &#039;/dashboard&#039; } }
+    }
+  ]
+});</code></pre>
+<h3>Methods</h3>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>add(route)</code> | route: Object | Object | Add route (returns route with ID) |
+| <code>update(id, patch)</code> | id: String, patch: Object | Object | Update route |
+| <code>remove(id)</code> | id: String | Boolean | Remove route |
+| <code>enable(id)</code> / <code>disable(id)</code> | id: String | - | Enable/disable route |
+| <code>get(id)</code> | id: String | Object? | Get route by ID |
+| <code>list(filter?)</code> | filter?: Object | Array | List routes |
+| <code>clear()</code> | - | - | Remove all routes |
+| <code>registerTransformFn(id, fn)</code> | id: String, fn: Function | - | Register transform |
+| <code>registerHandler(id, fn)</code> | id: String, fn: Function | - | Register handler |
+| <code>getStats()</code> | - | Object | Get statistics |
+| <code>resetStats()</code> | - | - | Reset statistics |
+| <code>setEnabled(bool)</code> | enabled: Boolean | - | Enable/disable routing |
+| <code>onRoutesChanged(fn)</code> | fn: Function | Function | Subscribe to changes (returns unsub) |
+| <code>onError(fn)</code> | fn: Function | Function | Subscribe to errors (returns unsub) |</p>
+<h3>Route Configuration</h3>
+<pre><code class="language-javascript">{
+  id: String,           // Optional (auto-generated)
+  name: String,         // Required
+  enabled: Boolean,     // Default: true
+  order: Number,        // Default: 0 (execution order)
+  match: {             // Match criteria
+    type: String|Array,     // Message type(s)
+    topic: String|Array,    // Topic pattern(s)
+    source: String|Array,   // Source client(s)
+    tagsAny: Array,        // Has any tag
+    tagsAll: Array,        // Has all tags
+    where: Object          // Predicate (see below)
+  },
+  transform: Object,    // Optional transform
+  actions: Array,       // Actions to perform
+  meta: Object         // Optional metadata
+}</code></pre>
+<h3>Match Predicates</h3>
+<p>Operators: <code>eq</code>, <code>neq</code>, <code>gt</code>, <code>gte</code>, <code>lt</code>, <code>lte</code>, <code>in</code>, <code>regex</code>, <code>and</code>, <code>or</code>, <code>not</code></p>
+<pre><code class="language-javascript">// Simple
+where: { op: &#039;gt&#039;, path: &#039;payload.temp&#039;, value: 30 }
+
+// Regex
+where: { op: &#039;regex&#039;, path: &#039;payload.email&#039;, value: &#039;^[\\w-]+@&#039; }
+
+// Combined
+where: {
+  op: &#039;and&#039;,
+  children: [
+    { op: &#039;eq&#039;, path: &#039;payload.status&#039;, value: &#039;active&#039; },
+    { op: &#039;gt&#039;, path: &#039;payload.score&#039;, value: 75 }
+  ]
+}</code></pre>
+<h3>Transform Operations</h3>
+<pre><code class="language-javascript">// Identity (no change)
+transform: { op: &#039;identity&#039; }
+
+// Pick fields
+transform: {
+  op: &#039;pick&#039;,
+  paths: [&#039;payload.userId&#039;, &#039;meta.timestamp&#039;]
+}
+
+// Map with function (register first)
+routes.registerTransformFn(&#039;double&#039;, (x) =&gt; x * 2);
+transform: { op: &#039;map&#039;, path: &#039;payload.value&#039;, fnId: &#039;double&#039; }
+
+// Custom (register first)
+routes.registerTransformFn(&#039;custom&#039;, (msg) =&gt; ({ ...msg, payload: {} }));
+transform: { op: &#039;custom&#039;, fnId: &#039;custom&#039; }</code></pre>
+<h3>Actions</h3>
+<pre><code class="language-javascript">// EMIT - Publish new message
+{
+  type: &#039;EMIT&#039;,
+  message: { topic: &#039;new.topic&#039;, data: {} },
+  inherit: [&#039;payload&#039;, &#039;meta&#039;]
+}
+
+// FORWARD - Forward to different topic
+{
+  type: &#039;FORWARD&#039;,
+  topic: &#039;new.topic&#039;,
+  typeOverride: &#039;new.type&#039;  // Optional
+}
+
+// LOG - Console log
+{
+  type: &#039;LOG&#039;,
+  level: &#039;info&#039;,  // &#039;log&#039;, &#039;info&#039;, &#039;warn&#039;, &#039;error&#039;
+  template: &#039;User {{payload.id}} action&#039;
+}
+
+// CALL - Call registered handler
+{
+  type: &#039;CALL&#039;,
+  handlerId: &#039;myHandler&#039;
+}</code></pre>
+<h3>Complete Example</h3>
+<pre><code class="language-javascript">const routes = window.pan.routes;
+
+// Register handlers
+routes.registerHandler(&#039;notifyAdmin&#039;, async (msg) =&gt; {
+  await fetch(&#039;/api/admin/notify&#039;, {
+    method: &#039;POST&#039;,
+    body: JSON.stringify(msg)
+  });
+});
+
+routes.registerTransformFn(&#039;sanitize&#039;, (email) =&gt; {
+  return email.toLowerCase().trim();
+});
+
+// Workflow: Registration -&gt; Validation -&gt; Welcome
+routes.add({
+  name: &#039;User registration workflow&#039;,
+  order: 0,
+  match: { type: &#039;user.register&#039; },
+  transform: {
+    op: &#039;map&#039;,
+    path: &#039;payload.email&#039;,
+    fnId: &#039;sanitize&#039;
+  },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: { topic: &#039;email.validate&#039; },
+      inherit: [&#039;payload&#039;]
+    }
+  ]
+});
+
+routes.add({
+  name: &#039;Email validated -&gt; Welcome&#039;,
+  order: 10,
+  match: { type: &#039;email.validated&#039; },
+  actions: [
+    {
+      type: &#039;EMIT&#039;,
+      message: {
+        topic: &#039;email.send&#039;,
+        data: { template: &#039;welcome&#039; }
+      },
+      inherit: [&#039;payload&#039;]
+    }
+  ]
+});
+
+// Log high-value transactions
+routes.add({
+  name: &#039;High-value transaction alert&#039;,
+  match: {
+    type: &#039;transaction.complete&#039;,
+    where: { op: &#039;gt&#039;, path: &#039;payload.amount&#039;, value: 1000 }
+  },
+  actions: [
+    {
+      type: &#039;LOG&#039;,
+      level: &#039;warn&#039;,
+      template: &#039;High-value: ${{payload.amount}}&#039;
+    },
+    {
+      type: &#039;CALL&#039;,
+      handlerId: &#039;notifyAdmin&#039;
+    }
+  ]
+});
+
+// Filter invalid sensor data
+routes.add({
+  name: &#039;Filter sensor readings&#039;,
+  match: {
+    type: &#039;sensor.reading&#039;,
+    where: {
+      op: &#039;and&#039;,
+      children: [
+        { op: &#039;gte&#039;, path: &#039;payload.temp&#039;, value: -40 },
+        { op: &#039;lte&#039;, path: &#039;payload.temp&#039;, value: 85 }
+      ]
+    }
+  },
+  transform: {
+    op: &#039;pick&#039;,
+    paths: [&#039;payload.temp&#039;, &#039;meta.sensorId&#039;]
+  },
+  actions: [
+    { type: &#039;FORWARD&#039;, topic: &#039;sensor.valid&#039; }
+  ]
+});
+
+// Get stats
+console.log(routes.getStats());
+// {
+//   routesEvaluated: 150,
+//   routesMatched: 45,
+//   actionsExecuted: 67,
+//   errors: 0,
+//   routeCount: 4,
+//   enabledRouteCount: 4
+// }</code></pre>
+<h3>Common Issues</h3>
+<strong>Routes not firing</strong>: Enable routing with <code><pan-bus enable-routing="true"></code>
+<strong>Wrong matches</strong>: Enable debug mode: <code><pan-bus debug="true"></code>
+<strong>Transform not found</strong>: Register functions before adding routes
+<strong>Wrong order</strong>: Set explicit <code>order</code> property (lower executes first)
+<hr>
+<h2>Summary</h2>
+<p>This chapter documented LARC's four core components:</p>
+<ul><li><strong>pan-bus</strong>: Message bus infrastructure for pub/sub communication</li>
+<li><strong>pan-theme-provider</strong>: Centralized theme management</li>
+<li><strong>pan-theme-toggle</strong>: UI controls for theme switching</li>
+<li><strong>pan-routes</strong>: Message routing for workflows and orchestration</li>
+</ul>
+These form the backbone of every LARC application.
+<strong>See Also</strong>:
+<ul><li>Tutorial: <em>Learning LARC</em> Chapters 4-5</li>
+<li>State components: Chapter 18</li>
+<li>UI components: Chapter 19</li>
+<li>Message patterns: Appendix A</li>
+<li>Configuration: Appendix C</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/17-core-components.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

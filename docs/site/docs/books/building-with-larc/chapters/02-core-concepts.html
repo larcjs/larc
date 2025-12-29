@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Core Concepts Quick Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Core Concepts Quick Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>02-core-concepts</span>
+      </div>
+      <article class="docs-content">
+        <h1>Core Concepts Quick Reference</h1>
+<p>This chapter provides quick lookup for LARC's core concepts. For tutorials and detailed explanations, see <em>Learning LARC</em> Chapters 2-5.</p>
+<h2>Architecture Overview</h2>
+<p>LARC applications consist of:</p>
+<li><strong>PAN Bus</strong> (<code><pan-bus></code>) — Message routing system</li>
+<li><strong>Components</strong> — Web Components that publish/subscribe to messages</li>
+<li><strong>PanClient</strong> — Helper library for working with the bus</li>
+<li><strong>Message Topics</strong> — Hierarchical namespaces for routing</li>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  &lt;my-app&gt;&lt;/my-app&gt;
+
+  &lt;script type=&quot;module&quot; src=&quot;/app.mjs&quot;&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h2>Message Bus</h2>
+<strong>What</strong>: DOM-based pub/sub system for component communication
+<strong>Element</strong>: <code><pan-bus></code>
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 5
+<strong>Reference</strong>: Chapter 17
+<h3>Basic Usage</h3>
+<pre><code class="language-javascript">import { PanClient } from &#039;@larc/core&#039;;
+
+const client = new PanClient();
+await client.ready();
+
+// Publish
+client.publish({
+  topic: &#039;user.login&#039;,
+  data: { userId: 123 }
+});
+
+// Subscribe
+client.subscribe(&#039;user.login&#039;, (msg) =&gt; {
+  console.log(&#039;User logged in:&#039;, msg.data.userId);
+});</code></pre>
+<h3>Configuration</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>max-retained</code> | number | 1000 | Maximum retained messages |
+| <code>max-message-size</code> | number | 1MB | Maximum message size in bytes |
+| <code>debug</code> | boolean | false | Enable debug logging |
+| <code>allow-global-wildcard</code> | boolean | true | Allow <code>*</code> wildcard subscriptions |</p>
+<p>See Chapter 17 for complete pan-bus documentation.</p>
+<h2>Pub/Sub Pattern</h2>
+<strong>What</strong>: Decoupled component communication via topics
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 5
+<h3>Message Flow</h3>
+<pre><code class="language-plaintext">Publisher → PAN Bus → Subscribers</code></pre>
+<li>Component publishes message to topic</li>
+<li>Bus routes message to all subscribers of that topic</li>
+<li>Subscribers receive message and react</li>
+<h3>Wildcards</h3>
+<p>| Pattern | Matches | Example |
+|---------|---------|---------|
+| <code>user.*</code> | All user events | <code>user.login</code>, <code>user.logout</code> |
+| <code>*.error</code> | All error events | <code>api.error</code>, <code>db.error</code> |
+| <code>*</code> | All events | Everything (use sparingly) |</p>
+<h2>Message Topics</h2>
+<strong>Convention</strong>: <code>namespace.entity.action</code>
+<h3>Examples</h3>
+<pre><code class="language-plaintext">user.auth.login
+user.profile.update
+cart.items.add
+cart.checkout.start
+api.users.error
+theme.changed</code></pre>
+<h3>Best Practices</h3>
+<ul><li>Use lowercase with dots as separators</li>
+<li>Past tense for events: <code>user.logged-in</code> not <code>user.login</code></li>
+<li>Present for commands: <code>cart.checkout.start</code></li>
+<li>Namespace by domain: <code>api.<em></code>, <code>user.</em></code>, <code>cart.*</code></li>
+</ul>
+See Appendix A for complete topic registry.
+<h2>Components</h2>
+<strong>What</strong>: Web Components that use PAN bus for communication
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 4
+<strong>Reference</strong>: Chapters 17-21
+<h3>Basic Component</h3>
+<pre><code class="language-javascript">class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.client = new PanClient(this);
+
+    // Subscribe to messages
+    this.client.subscribe(&#039;data.updated&#039;, (msg) =&gt; {
+      this.render(msg.data);
+    });
+
+    // Publish messages
+    this.dispatchAction();
+  }
+
+  dispatchAction() {
+    this.client.publish({
+      topic: &#039;action.triggered&#039;,
+      data: { componentId: this.id }
+    });
+  }
+
+  disconnectedCallback() {
+    // PanClient automatically cleans up subscriptions
+  }
+}
+
+customElements.define(&#039;my-component&#039;, MyComponent);</code></pre>
+<h3>Lifecycle</h3>
+<p>| Callback | When Called | Use For |
+|----------|-------------|---------|
+| <code>constructor()</code> | Element created | Initialize properties |
+| <code>connectedCallback()</code> | Added to DOM | Subscribe, render, fetch data |
+| <code>disconnectedCallback()</code> | Removed from DOM | Cleanup (automatic with PanClient) |
+| <code>attributeChangedCallback()</code> | Attribute changes | Re-render on attribute updates |</p>
+<h2>PanClient</h2>
+<strong>What</strong>: Helper library for working with PAN bus
+<strong>Import</strong>: <code>import { PanClient } from '@larc/core'</code>
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 5
+<strong>Reference</strong>: Chapter 17
+<h3>API Summary</h3>
+<pre><code class="language-javascript">const client = new PanClient(element);
+
+// Wait for bus ready
+await client.ready();
+
+// Publish message
+client.publish({ topic, data, ...options });
+
+// Subscribe to topic
+client.subscribe(topic, handler);
+
+// Request/response pattern
+const response = await client.request(topic, data);
+
+// Respond to requests
+client.respond(topic, handler);
+
+// Unsubscribe (usually automatic)
+const unsubscribe = client.subscribe(topic, handler);
+unsubscribe();</code></pre>
+<h3>Constructor Options</h3>
+<pre><code class="language-javascript">new PanClient(element, options)</code></pre>
+<p>| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| <code>element</code> | HTMLElement | null | Owner element (auto-cleanup) |
+| <code>timeout</code> | number | 5000 | Request timeout (ms) |
+| <code>debug</code> | boolean | false | Enable debug logging |</p>
+<h2>State Management</h2>
+<strong>What</strong>: Reactive data stores for shared state
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 6
+<strong>Reference</strong>: Chapter 18
+<h3>Options</h3>
+<p>| Approach | Use For | Component |
+|----------|---------|-----------|
+| Component-local | UI state, temp values | N/A |
+| Shared objects | App config, settings | N/A |
+| <code>pan-store</code> | Reactive shared state | Chapter 18 |
+| <code>pan-idb</code> | Persistent IndexedDB | Chapter 18 |
+| LocalStorage | Simple persistence | N/A |</p>
+<h2>Routing</h2>
+<strong>What</strong>: URL-based navigation
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 9
+<strong>Reference</strong>: Chapter 18
+<pre><code class="language-javascript">// Message-based routing
+client.publish({
+  topic: &#039;app.navigate&#039;,
+  data: { path: &#039;/users/123&#039; }
+});</code></pre>
+<p>See Chapter 18 for <code>pan-router</code> component documentation.</p>
+<h2>Forms</h2>
+<strong>What</strong>: Form handling and validation
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 10
+<strong>Reference</strong>: Chapter 19
+<pre><code class="language-html">&lt;pan-form submit-topic=&quot;form.submitted&quot;&gt;
+  &lt;pan-input name=&quot;email&quot; type=&quot;email&quot; required&gt;&lt;/pan-input&gt;
+  &lt;pan-button type=&quot;submit&quot;&gt;Submit&lt;/pan-button&gt;
+&lt;/pan-form&gt;</code></pre>
+<p>See Chapter 19 for form component documentation.</p>
+<h2>Data Fetching</h2>
+<strong>What</strong>: API integration patterns
+<strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 11
+<strong>Reference</strong>: Chapter 20
+<pre><code class="language-javascript">// Via PanClient
+const response = await client.request(&#039;api.users.list&#039;, {});
+
+// Via pan-fetch component
+client.publish({
+  topic: &#039;api.fetch&#039;,
+  data: {
+    url: &#039;/api/users&#039;,
+    method: &#039;GET&#039;
+  }
+});</code></pre>
+<p>See Chapter 20 for integration components.</p>
+<h2>ES Modules</h2>
+<p>LARC uses standard ES modules:</p>
+<pre><code class="language-javascript">// Import from CDN
+import { PanClient } from &#039;https://cdn.jsdelivr.net/npm/@larcjs/core/pan-client.mjs&#039;;
+
+// Import from local
+import { PanClient } from &#039;/core/pan-client.mjs&#039;;
+
+// Use import maps (recommended)
+&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;@larc/core&quot;: &quot;/core/pan-client.mjs&quot;
+  }
+}
+&lt;/script&gt;</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorials</strong>: <em>Learning LARC</em> Chapters 2-5</li>
+<li><strong>PAN Bus API</strong>: Chapter 17 (pan-bus)</li>
+<li><strong>Component Reference</strong>: Chapters 17-21</li>
+<li><strong>Message Topics</strong>: Appendix A</li>
+<li><strong>Configuration</strong>: Appendix C</li>
+<li><strong>Patterns & Recipes</strong>: Appendix E</li>
+</ul>
+<h2>Quick Start</h2>
+<pre><code class="language-bash"># Install
+npm install @larcjs/core
+
+# Or use CDN
+https://cdn.jsdelivr.net/npm/@larcjs/core@latest/pan-bus.mjs</code></pre>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;importmap&quot;&gt;
+  {
+    &quot;imports&quot;: {
+      &quot;@larc/core&quot;: &quot;https://cdn.jsdelivr.net/npm/@larcjs/core@latest/pan-client.mjs&quot;
+    }
+  }
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus debug=&quot;true&quot;&gt;&lt;/pan-bus&gt;
+  &lt;my-app&gt;&lt;/my-app&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { PanClient } from &#039;@larc/core&#039;;
+
+    class MyApp extends HTMLElement {
+      connectedCallback() {
+        this.client = new PanClient(this);
+        this.innerHTML = &#039;&lt;h1&gt;Hello LARC!&lt;/h1&gt;&#039;;
+      }
+    }
+    customElements.define(&#039;my-app&#039;, MyApp);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>For detailed tutorials, see <em>Learning LARC</em> Chapter 3 (Getting Started).</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/02-core-concepts.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

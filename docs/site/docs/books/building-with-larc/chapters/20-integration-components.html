@@ -1,0 +1,628 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Integration Components Reference · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Integration Components Reference">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>20-integration-components</span>
+      </div>
+      <article class="docs-content">
+        <h1>Integration Components Reference</h1>
+<p>API documentation for LARC's integration components. For tutorials, see <em>Learning LARC</em> Chapter 11.</p>
+<h2>pan-data-connector</h2>
+<strong>Purpose</strong>: Declarative REST API bridge with CRUD pattern  
+<strong>Import</strong>: <code><script type="module" src="/ui/pan-data-connector.mjs"></script></code>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-data-connector
+  resource=&quot;users&quot;
+  base-url=&quot;https://api.example.com&quot;
+  key=&quot;id&quot;&gt;
+&lt;/pan-data-connector&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Fetch list
+pc.publish(&#039;users.list.get&#039;, { page: 1, limit: 20 });
+
+// Listen for results
+pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+  console.log(&#039;Users:&#039;, msg.data.items);
+});
+
+// Get single item
+pc.publish(&#039;users.item.get&#039;, { id: 123 });
+
+// Save item
+pc.publish(&#039;users.item.save&#039;, {
+  id: 123,
+  name: &#039;Alice&#039;,
+  email: &#039;alice@example.com&#039;
+});
+&lt;/script&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>resource</code> | String | "items" | Resource name (topic prefix) |
+| <code>base-url</code> | String | "" | API base URL |
+| <code>key</code> | String | "id" | Unique identifier field |
+| <code>list-path</code> | String | "/${resource}" | List endpoint template |
+| <code>item-path</code> | String | "/${resource}/:id" | Item endpoint template |
+| <code>update-method</code> | String | "PUT" | HTTP method for updates (PUT/PATCH) |
+| <code>credentials</code> | String | "" | Fetch credentials mode |</p>
+<strong>Headers configuration</strong> (via <code><script type="application/json"></code>):
+<pre><code class="language-html">&lt;pan-data-connector resource=&quot;users&quot; base-url=&quot;/api&quot;&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+    {
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer TOKEN&quot;,
+        &quot;X-API-Version&quot;: &quot;2023-01&quot;
+      }
+    }
+  &lt;/script&gt;
+&lt;/pan-data-connector&gt;</code></pre>
+<h3>PAN Topics</h3>
+<p>#### Subscribed (Requests)</p>
+<p>| Topic | Data | HTTP Request | Description |
+|-------|------|--------------|-------------|
+| <code>${resource}.list.get</code> | <code>{ ...query }</code> | GET /${resource} | Fetch list |
+| <code>${resource}.item.get</code> | <code>{ id }</code> | GET /${resource}/:id | Fetch single item |
+| <code>${resource}.item.save</code> | <code>{ id?, ...data }</code> | POST or PUT | Create/update item |
+| <code>${resource}.item.delete</code> | <code>{ id }</code> | DELETE /${resource}/:id | Delete item |</p>
+<p>#### Published (Responses)</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>${resource}.list.state</code> | <code>{ items: [...], meta? }</code> | List results (retained) |
+| <code>${resource}.item.state.${id}</code> | <code>{ ...item }</code> | Single item (retained) |
+| <code>${resource}.error</code> | <code>{ operation, error, status }</code> | Error occurred |</p>
+<h3>Complete Example</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-data-connector.mjs&#039;;
+    import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const pc = new PanClient();
+
+      // Render user list
+      pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+        const list = document.getElementById(&#039;user-list&#039;);
+        list.innerHTML = msg.data.items.map(user =&gt; `
+          &lt;li&gt;
+            ${user.name} (${user.email})
+            &lt;button onclick=&quot;editUser(${user.id})&quot;&gt;Edit&lt;/button&gt;
+            &lt;button onclick=&quot;deleteUser(${user.id})&quot;&gt;Delete&lt;/button&gt;
+          &lt;/li&gt;
+        `).join(&#039;&#039;);
+      });
+
+      // Handle errors
+      pc.subscribe(&#039;users.error&#039;, (msg) =&gt; {
+        console.error(&#039;API Error:&#039;, msg.data.error);
+        alert(`Error: ${msg.data.error}`);
+      });
+
+      // Load users on startup
+      pc.publish(&#039;users.list.get&#039;, {});
+
+      // CRUD operations
+      window.editUser = (id) =&gt; {
+        pc.publish(&#039;users.item.get&#039;, { id });
+        pc.subscribe(&#039;users.item.state.&#039; + id, (msg) =&gt; {
+          document.getElementById(&#039;name&#039;).value = msg.data.name;
+          document.getElementById(&#039;email&#039;).value = msg.data.email;
+          document.getElementById(&#039;user-id&#039;).value = msg.data.id;
+        });
+      };
+
+      window.saveUser = () =&gt; {
+        const id = document.getElementById(&#039;user-id&#039;).value;
+        pc.publish(&#039;users.item.save&#039;, {
+          id: id || undefined,
+          name: document.getElementById(&#039;name&#039;).value,
+          email: document.getElementById(&#039;email&#039;).value
+        });
+      };
+
+      window.deleteUser = (id) =&gt; {
+        if (confirm(&#039;Delete user?&#039;)) {
+          pc.publish(&#039;users.item.delete&#039;, { id });
+          setTimeout(() =&gt; pc.publish(&#039;users.list.get&#039;, {}), 100);
+        }
+      };
+    });
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  &lt;pan-data-connector resource=&quot;users&quot; base-url=&quot;/api&quot; key=&quot;id&quot;&gt;&lt;/pan-data-connector&gt;
+
+  &lt;div&gt;
+    &lt;h2&gt;Users&lt;/h2&gt;
+    &lt;ul id=&quot;user-list&quot;&gt;&lt;/ul&gt;
+
+    &lt;h3&gt;Edit User&lt;/h3&gt;
+    &lt;input type=&quot;hidden&quot; id=&quot;user-id&quot;&gt;
+    &lt;input id=&quot;name&quot; placeholder=&quot;Name&quot;&gt;
+    &lt;input id=&quot;email&quot; placeholder=&quot;Email&quot;&gt;
+    &lt;button onclick=&quot;saveUser()&quot;&gt;Save&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Common Issues</h3>
+<strong>401/403 errors</strong>: Configure authentication headers via embedded JSON script.
+<strong>CORS errors</strong>: Ensure API server sets appropriate CORS headers. Use <code>credentials="include"</code> for cookies.
+<strong>List doesn't update after save</strong>: Connector doesn't auto-refresh lists. Manually request: <code>pc.publish('${resource}.list.get', {})</code>.
+<strong>Non-standard API</strong>: Override <code>list-path</code> and <code>item-path</code> attributes for custom endpoints.
+<hr>
+<h2>pan-graphql-connector</h2>
+<strong>Purpose</strong>: GraphQL query and mutation bridge to PAN bus  
+<strong>Import</strong>: <code><script type="module" src="/ui/pan-graphql-connector.mjs"></script></code>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-graphql-connector
+  endpoint=&quot;https://api.example.com/graphql&quot;
+  resource=&quot;users&quot;&gt;
+  &lt;script type=&quot;application/graphql&quot; data-operation=&quot;list&quot;&gt;
+    query GetUsers($limit: Int) {
+      users(limit: $limit) {
+        id
+        name
+        email
+      }
+    }
+  &lt;/script&gt;
+
+  &lt;script type=&quot;application/graphql&quot; data-operation=&quot;get&quot;&gt;
+    query GetUser($id: ID!) {
+      user(id: $id) {
+        id
+        name
+        email
+        createdAt
+      }
+    }
+  &lt;/script&gt;
+&lt;/pan-graphql-connector&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Execute query
+pc.publish(&#039;users.list.get&#039;, { limit: 10 });
+
+pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+  console.log(&#039;Users:&#039;, msg.data);
+});
+&lt;/script&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>endpoint</code> | String | "/graphql" | GraphQL endpoint URL |
+| <code>resource</code> | String | "items" | Resource name (topic prefix) |
+| <code>key</code> | String | "id" | Unique identifier field |</p>
+<strong>GraphQL operations</strong> (via <code><script type="application/graphql"></code>):
+<ul><li><code>data-operation="list"</code>: List query</li>
+<li><code>data-operation="get"</code>: Single item query</li>
+<li><code>data-operation="create"</code>: Create mutation</li>
+<li><code>data-operation="update"</code>: Update mutation</li>
+<li><code>data-operation="delete"</code>: Delete mutation</li>
+</ul>
+<strong>Headers configuration</strong> (via <code><script type="application/json"></code>):
+<pre><code class="language-html">&lt;pan-graphql-connector endpoint=&quot;/graphql&quot; resource=&quot;users&quot;&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+    {
+      &quot;headers&quot;: {
+        &quot;Authorization&quot;: &quot;Bearer TOKEN&quot;
+      }
+    }
+  &lt;/script&gt;
+  &lt;!-- GraphQL scripts... --&gt;
+&lt;/pan-graphql-connector&gt;</code></pre>
+<h3>PAN Topics</h3>
+<p>Same as <code>pan-data-connector</code>:
+<ul><li>Subscribe: <code>${resource}.list.get</code>, <code>${resource}.item.get</code>, <code>${resource}.item.save</code>, <code>${resource}.item.delete</code></li>
+<li>Publish: <code>${resource}.list.state</code>, <code>${resource}.item.state.${id}</code>, <code>${resource}.error</code></li>
+</ul>
+<h3>Complete Example</h3></p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-graphql-connector.mjs&#039;;
+    import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const pc = new PanClient();
+
+      // Fetch users
+      pc.publish(&#039;users.list.get&#039;, { limit: 20 });
+
+      // Display results
+      pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+        document.getElementById(&#039;output&#039;).textContent = 
+          JSON.stringify(msg.data, null, 2);
+      });
+
+      // Handle errors
+      pc.subscribe(&#039;users.error&#039;, (msg) =&gt; {
+        console.error(&#039;GraphQL Error:&#039;, msg.data.error);
+      });
+    });
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  
+  &lt;pan-graphql-connector endpoint=&quot;https://api.example.com/graphql&quot; resource=&quot;users&quot;&gt;
+    &lt;script type=&quot;application/json&quot;&gt;
+      { &quot;headers&quot;: { &quot;Authorization&quot;: &quot;Bearer TOKEN&quot; } }
+    &lt;/script&gt;
+
+    &lt;script type=&quot;application/graphql&quot; data-operation=&quot;list&quot;&gt;
+      query GetUsers($limit: Int) {
+        users(limit: $limit) {
+          id
+          name
+          email
+        }
+      }
+    &lt;/script&gt;
+
+    &lt;script type=&quot;application/graphql&quot; data-operation=&quot;get&quot;&gt;
+      query GetUser($id: ID!) {
+        user(id: $id) {
+          id
+          name
+          email
+          createdAt
+        }
+      }
+    &lt;/script&gt;
+
+    &lt;script type=&quot;application/graphql&quot; data-operation=&quot;create&quot;&gt;
+      mutation CreateUser($input: UserInput!) {
+        createUser(input: $input) {
+          id
+          name
+          email
+        }
+      }
+    &lt;/script&gt;
+  &lt;/pan-graphql-connector&gt;
+
+  &lt;button onclick=&quot;pc.publish(&#039;users.list.get&#039;, { limit: 10 })&quot;&gt;Load Users&lt;/button&gt;
+  &lt;pre id=&quot;output&quot;&gt;&lt;/pre&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Common Issues</h3>
+<strong>Query not found</strong>: Ensure <code>data-operation</code> attribute matches operation type (list/get/create/update/delete).
+<strong>Variables not passed</strong>: Variable names must match GraphQL schema. Check operation definitions.
+<strong>Response path mapping</strong>: Use <code>data-path</code> attribute to specify nested result path: <code>data-path="data.users"</code>.
+<hr>
+<h2>pan-websocket</h2>
+<strong>Purpose</strong>: Bidirectional WebSocket communication via PAN bus  
+<strong>Import</strong>: <code><script type="module" src="/ui/pan-websocket.mjs"></script></code>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-websocket
+  url=&quot;wss://api.example.com/ws&quot;
+  auto-connect=&quot;true&quot;&gt;
+&lt;/pan-websocket&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Listen for connection
+pc.subscribe(&#039;ws.connected&#039;, (msg) =&gt; {
+  console.log(&#039;WebSocket connected&#039;);
+});
+
+// Send message
+pc.publish(&#039;ws.send&#039;, { 
+  type: &#039;subscribe&#039;,
+  channel: &#039;notifications&#039;
+});
+
+// Receive messages
+pc.subscribe(&#039;ws.message&#039;, (msg) =&gt; {
+  console.log(&#039;Received:&#039;, msg.data);
+});
+&lt;/script&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>url</code> | String | "" | WebSocket URL (ws:// or wss://) |
+| <code>auto-connect</code> | Boolean | false | Connect on component mount |
+| <code>auto-reconnect</code> | Boolean | true | Reconnect on disconnect |
+| <code>reconnect-delay</code> | Number | 1000 | Reconnect delay (ms) |
+| <code>max-reconnect-attempts</code> | Number | Infinity | Max reconnection attempts |</p>
+<h3>Methods</h3>
+<p>| Method | Parameters | Description |
+|--------|-----------|-------------|
+| <code>connect()</code> | - | Open WebSocket connection |
+| <code>disconnect()</code> | - | Close connection |
+| <code>send(data)</code> | data: Any | Send message (auto-serializes JSON) |</p>
+<h3>PAN Topics</h3>
+<p>#### Published</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>ws.connected</code> | <code>{ url }</code> | Connection opened |
+| <code>ws.disconnected</code> | <code>{ code, reason }</code> | Connection closed |
+| <code>ws.message</code> | <code>{ ...data }</code> | Message received |
+| <code>ws.error</code> | <code>{ error }</code> | Error occurred |</p>
+<p>#### Subscribed</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>ws.connect</code> | <code>{ url? }</code> | Open connection |
+| <code>ws.disconnect</code> | <code>{}</code> | Close connection |
+| <code>ws.send</code> | <code>{ ...data }</code> | Send message |</p>
+<h3>Complete Example</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-websocket.mjs&#039;;
+    import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const pc = new PanClient();
+
+      // Connection status
+      pc.subscribe(&#039;ws.connected&#039;, (msg) =&gt; {
+        document.getElementById(&#039;status&#039;).textContent = &#039;Connected&#039;;
+        document.getElementById(&#039;status&#039;).style.color = &#039;green&#039;;
+      });
+
+      pc.subscribe(&#039;ws.disconnected&#039;, (msg) =&gt; {
+        document.getElementById(&#039;status&#039;).textContent = &#039;Disconnected&#039;;
+        document.getElementById(&#039;status&#039;).style.color = &#039;red&#039;;
+      });
+
+      // Receive messages
+      pc.subscribe(&#039;ws.message&#039;, (msg) =&gt; {
+        const log = document.getElementById(&#039;log&#039;);
+        const entry = document.createElement(&#039;div&#039;);
+        entry.textContent = JSON.stringify(msg.data);
+        log.prepend(entry);
+      });
+
+      // Send message
+      window.sendMessage = () =&gt; {
+        const input = document.getElementById(&#039;message&#039;);
+        pc.publish(&#039;ws.send&#039;, { 
+          type: &#039;chat&#039;,
+          message: input.value,
+          timestamp: Date.now()
+        });
+        input.value = &#039;&#039;;
+      };
+
+      // Connect/disconnect
+      window.connect = () =&gt; pc.publish(&#039;ws.connect&#039;, {});
+      window.disconnect = () =&gt; pc.publish(&#039;ws.disconnect&#039;, {});
+    });
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  &lt;pan-websocket url=&quot;wss://api.example.com/ws&quot; auto-connect=&quot;false&quot;&gt;&lt;/pan-websocket&gt;
+
+  &lt;div&gt;
+    &lt;h2&gt;WebSocket Demo&lt;/h2&gt;
+    Status: &lt;span id=&quot;status&quot;&gt;Disconnected&lt;/span&gt;
+    &lt;button onclick=&quot;connect()&quot;&gt;Connect&lt;/button&gt;
+    &lt;button onclick=&quot;disconnect()&quot;&gt;Disconnect&lt;/button&gt;
+
+    &lt;div&gt;
+      &lt;input id=&quot;message&quot; placeholder=&quot;Enter message&quot;&gt;
+      &lt;button onclick=&quot;sendMessage()&quot;&gt;Send&lt;/button&gt;
+    &lt;/div&gt;
+
+    &lt;h3&gt;Log&lt;/h3&gt;
+    &lt;div id=&quot;log&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Common Issues</h3>
+<strong>Connection fails</strong>: Check URL scheme (ws:// for HTTP, wss:// for HTTPS). Ensure server is running.
+<strong>Auto-reconnect loops</strong>: Increase <code>reconnect-delay</code> or set <code>max-reconnect-attempts</code> to prevent rapid retries.
+<strong>Messages not received</strong>: Ensure message format matches expected structure. Check <code>ws.message</code> subscription.
+<strong>CORS issues</strong>: WebSocket doesn't use CORS. Check server's Origin header validation.
+<hr>
+<h2>pan-sse</h2>
+<strong>Purpose</strong>: Server-Sent Events streaming via PAN bus  
+<strong>Import</strong>: <code><script type="module" src="/ui/pan-sse.mjs"></script></code>
+<h3>Quick Example</h3>
+<pre><code class="language-html">&lt;pan-sse
+  url=&quot;https://api.example.com/events&quot;
+  auto-connect=&quot;true&quot;&gt;
+&lt;/pan-sse&gt;
+
+&lt;script type=&quot;module&quot;&gt;
+import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Listen for connection
+pc.subscribe(&#039;sse.connected&#039;, (msg) =&gt; {
+  console.log(&#039;SSE connected&#039;);
+});
+
+// Receive events
+pc.subscribe(&#039;sse.message&#039;, (msg) =&gt; {
+  console.log(&#039;Event:&#039;, msg.data);
+});
+
+// Receive custom event types
+pc.subscribe(&#039;sse.event.notification&#039;, (msg) =&gt; {
+  console.log(&#039;Notification:&#039;, msg.data);
+});
+&lt;/script&gt;</code></pre>
+<h3>Attributes</h3>
+<p>| Attribute | Type | Default | Description |
+|-----------|------|---------|-------------|
+| <code>url</code> | String | "" | SSE endpoint URL |
+| <code>auto-connect</code> | Boolean | false | Connect on mount |
+| <code>with-credentials</code> | Boolean | false | Include credentials in request |</p>
+<h3>Methods</h3>
+<p>| Method | Parameters | Description |
+|--------|-----------|-------------|
+| <code>connect()</code> | - | Open SSE connection |
+| <code>disconnect()</code> | - | Close connection |</p>
+<h3>PAN Topics</h3>
+<p>#### Published</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>sse.connected</code> | <code>{ url }</code> | Connection opened |
+| <code>sse.disconnected</code> | <code>{}</code> | Connection closed |
+| <code>sse.message</code> | <code>{ data, id?, type? }</code> | Default message event |
+| <code>sse.event.${type}</code> | <code>{ data, id? }</code> | Custom event type |
+| <code>sse.error</code> | <code>{ error }</code> | Error occurred |</p>
+<p>#### Subscribed</p>
+<p>| Topic | Data | Description |
+|-------|------|-------------|
+| <code>sse.connect</code> | <code>{ url? }</code> | Open connection |
+| <code>sse.disconnect</code> | <code>{}</code> | Close connection |</p>
+<h3>Complete Example</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot;&gt;
+    import &#039;./pan-bus.mjs&#039;;
+    import &#039;./pan-sse.mjs&#039;;
+    import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+    customElements.whenDefined(&#039;pan-bus&#039;).then(() =&gt; {
+      const pc = new PanClient();
+
+      // Connection status
+      pc.subscribe(&#039;sse.connected&#039;, (msg) =&gt; {
+        document.getElementById(&#039;status&#039;).textContent = &#039;Streaming&#039;;
+        document.getElementById(&#039;status&#039;).style.color = &#039;green&#039;;
+      });
+
+      pc.subscribe(&#039;sse.disconnected&#039;, (msg) =&gt; {
+        document.getElementById(&#039;status&#039;).textContent = &#039;Stopped&#039;;
+        document.getElementById(&#039;status&#039;).style.color = &#039;red&#039;;
+      });
+
+      // Receive default messages
+      pc.subscribe(&#039;sse.message&#039;, (msg) =&gt; {
+        addLog(&#039;message&#039;, msg.data);
+      });
+
+      // Receive custom event types
+      pc.subscribe(&#039;sse.event.update&#039;, (msg) =&gt; {
+        addLog(&#039;update&#039;, msg.data);
+      });
+
+      pc.subscribe(&#039;sse.event.notification&#039;, (msg) =&gt; {
+        addLog(&#039;notification&#039;, msg.data);
+      });
+
+      function addLog(type, data) {
+        const log = document.getElementById(&#039;log&#039;);
+        const entry = document.createElement(&#039;div&#039;);
+        entry.innerHTML = `&lt;strong&gt;${type}:&lt;/strong&gt; ${JSON.stringify(data)}`;
+        log.prepend(entry);
+      }
+
+      window.startStream = () =&gt; pc.publish(&#039;sse.connect&#039;, {});
+      window.stopStream = () =&gt; pc.publish(&#039;sse.disconnect&#039;, {});
+    });
+  &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  &lt;pan-sse url=&quot;https://api.example.com/events&quot; auto-connect=&quot;false&quot;&gt;&lt;/pan-sse&gt;
+
+  &lt;div&gt;
+    &lt;h2&gt;SSE Demo&lt;/h2&gt;
+    Status: &lt;span id=&quot;status&quot;&gt;Stopped&lt;/span&gt;
+    &lt;button onclick=&quot;startStream()&quot;&gt;Start&lt;/button&gt;
+    &lt;button onclick=&quot;stopStream()&quot;&gt;Stop&lt;/button&gt;
+
+    &lt;h3&gt;Event Log&lt;/h3&gt;
+    &lt;div id=&quot;log&quot;&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Common Issues</h3>
+<strong>Connection closes immediately</strong>: Server must keep connection open with proper headers: <code>Content-Type: text/event-stream</code>, <code>Cache-Control: no-cache</code>.
+<strong>Events not received</strong>: Check event format. Default events use <code>data:</code> prefix. Custom events use <code>event: type</code> followed by <code>data:</code>.
+<strong>CORS errors</strong>: Configure CORS headers on server. Use <code>with-credentials="true"</code> for authenticated streams.
+<strong>No reconnection</strong>: SSE automatically reconnects. To prevent, call <code>disconnect()</code> before page unload.
+<hr>
+<h2>Summary</h2>
+<p>This chapter documented LARC's integration components:</p>
+<ul><li><strong>pan-data-connector</strong>: REST API integration with CRUD pattern</li>
+<li><strong>pan-graphql-connector</strong>: GraphQL query and mutation bridge</li>
+<li><strong>pan-websocket</strong>: Bidirectional WebSocket communication</li>
+<li><strong>pan-sse</strong>: Server-Sent Events streaming</li>
+</ul>
+All components transform external protocols into PAN bus messages, maintaining architectural consistency.
+<strong>See Also</strong>:
+<ul><li>Tutorial: <em>Learning LARC</em> Chapter 11</li>
+<li>Core components: Chapter 17</li>
+<li>Data components: Chapter 18</li>
+<li>Authentication patterns: Appendix B</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/20-integration-components.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

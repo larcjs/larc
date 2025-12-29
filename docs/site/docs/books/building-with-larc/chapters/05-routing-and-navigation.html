@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Routing and Navigation · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Routing and Navigation">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>05-routing-and-navigation</span>
+      </div>
+      <article class="docs-content">
+        <h1>Routing and Navigation</h1>
+<p>Quick reference for client-side routing with LARC's <code>pan-routes</code> component. For detailed tutorials, see <em>Learning LARC</em> Chapter 9.</p>
+<h2>Overview</h2>
+<p>Client-side routing updates the URL and renders components without full page reloads. LARC's <code>pan-routes</code> component matches URL patterns to components, enabling seamless navigation experiences.</p>
+<strong>Key Concepts</strong>:
+<ul><li>Route patterns: Map URLs to components</li>
+<li>Dynamic parameters: Extract values from URLs (<code>:id</code>, <code>:username</code>)</li>
+<li>Navigation guards: Control access to routes</li>
+<li>Deep linking: Encode application state in URLs</li>
+<li>History management: Push vs. replace navigation</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-html">&lt;pan-app&gt;
+  &lt;pan-routes&gt;
+    &lt;pan-route path=&quot;/&quot; component=&quot;home-view&quot;&gt;&lt;/pan-route&gt;
+    &lt;pan-route path=&quot;/products&quot; component=&quot;product-list&quot;&gt;&lt;/pan-route&gt;
+    &lt;pan-route path=&quot;/products/:id&quot; component=&quot;product-detail&quot;&gt;&lt;/pan-route&gt;
+    &lt;pan-route path=&quot;*&quot; component=&quot;not-found-view&quot;&gt;&lt;/pan-route&gt;
+  &lt;/pan-routes&gt;
+&lt;/pan-app&gt;</code></pre>
+<pre><code class="language-javascript">class ProductDetail extends LarcComponent {
+  onRoute(params) {
+    // params.id extracted from URL
+    this.loadProduct(params.id);
+  }
+
+  async loadProduct(id) {
+    const response = await fetch(`/api/products/${id}`);
+    this.product = await response.json();
+    this.render();
+  }
+}</code></pre>
+<h2>Route Patterns</h2>
+<h3>Route Matching Order</h3>
+<p>Routes evaluate <strong>top to bottom</strong>. Place specific routes before general ones:</p>
+<p>| Priority | Pattern | Description |
+|----------|---------|-------------|
+| 1 | <code>/login</code> | Exact static paths first |
+| 2 | <code>/products/new</code> | Static before dynamic |
+| 3 | <code>/products/:id</code> | Dynamic parameters |
+| 4 | <code>/admin/:section</code> | General patterns |
+| 5 | <code>*</code> | Catch-all (404) last |</p>
+<h3>Dynamic Parameters</h3>
+<p>| Pattern | Example URL | Extracted Params |
+|---------|-------------|------------------|
+| <code>/products/:id</code> | <code>/products/123</code> | <code>{ id: '123' }</code> |
+| <code>/users/:username</code> | <code>/users/alice</code> | <code>{ username: 'alice' }</code> |
+| <code>/posts/:year/:month/:slug</code> | <code>/posts/2024/12/hello</code> | <code>{ year: '2024', month: '12', slug: 'hello' }</code> |
+| <code>/store/:category/:subcategory/:id</code> | <code>/store/electronics/phones/456</code> | <code>{ category: 'electronics', subcategory: 'phones', id: '456' }</code> |</p>
+<h3>Nested Routes</h3>
+<p>Use wildcard suffix (<code>*</code>) for nested route sections:</p>
+<pre><code class="language-html">&lt;pan-routes&gt;
+  &lt;pan-route path=&quot;/&quot; component=&quot;home-view&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;/products*&quot; component=&quot;product-section&quot;&gt;&lt;/pan-route&gt;
+  &lt;pan-route path=&quot;/admin*&quot; component=&quot;admin-section&quot;&gt;&lt;/pan-route&gt;
+&lt;/pan-routes&gt;</code></pre>
+<p>Product section contains its own sub-routes:</p>
+<pre><code class="language-javascript">class ProductSection extends LarcComponent {
+  template() {
+    return `
+      &lt;div class=&quot;product-section&quot;&gt;
+        &lt;nav class=&quot;sidebar&quot;&gt;...&lt;/nav&gt;
+        &lt;main&gt;
+          &lt;pan-routes&gt;
+            &lt;pan-route path=&quot;/products&quot; component=&quot;product-list&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;/products/new&quot; component=&quot;product-form&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;/products/:id&quot; component=&quot;product-detail&quot;&gt;&lt;/pan-route&gt;
+          &lt;/pan-routes&gt;
+        &lt;/main&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h2>Programmatic Navigation</h2>
+<h3>navigate() Function</h3>
+<pre><code class="language-javascript">import { navigate } from &#039;@larc/core&#039;;
+
+// Basic navigation
+navigate(&#039;/products/123&#039;);
+
+// Replace current history entry (don&#039;t add to back button)
+navigate(&#039;/login&#039;, { replace: true });
+
+// Navigate back/forward
+navigate(-1);  // Back one page
+navigate(1);   // Forward one page
+navigate(-2);  // Back two pages
+
+// Navigation after form submission
+async handleLogin(event) {
+  event.preventDefault();
+  const response = await fetch(&#039;/api/login&#039;, { /*...*/ });
+  
+  if (response.ok) {
+    navigate(&#039;/dashboard&#039;);
+  } else {
+    this.showError(&#039;Invalid credentials&#039;);
+  }
+}</code></pre>
+<h3>When to Use Replace</h3>
+<p>| Scenario | Use Replace |
+|----------|-------------|
+| Login redirects | Yes - Skip intermediate loading pages |
+| Fixing invalid URLs | Yes - User shouldn't return to bad URL |
+| Multi-step wizards | No - Allow back navigation between steps |
+| Normal navigation | No - Default push behavior |</p>
+<h2>Navigation Guards</h2>
+<p>Control access to routes based on authentication, roles, or state.</p>
+<h3>Auth Guard Pattern</h3>
+<pre><code class="language-javascript">class AuthGuard {
+  constructor() {
+    this.user = null;
+    this.loadUserFromStorage();
+  }
+
+  loadUserFromStorage() {
+    const stored = localStorage.getItem(&#039;user&#039;);
+    if (stored) this.user = JSON.parse(stored);
+  }
+
+  canActivate(route) {
+    if (!this.user) {
+      navigate(&#039;/login?redirect=&#039; + encodeURIComponent(route.path));
+      return false;
+    }
+    return true;
+  }
+
+  requiresRole(role) {
+    return this.user &amp;&amp; this.user.roles.includes(role);
+  }
+}
+
+const authGuard = new AuthGuard();</code></pre>
+<h3>Component Guard Hooks</h3>
+<pre><code class="language-javascript">class DashboardView extends LarcComponent {
+  beforeRoute(params) {
+    if (!authGuard.canActivate(this.route)) {
+      return false; // Cancel navigation
+    }
+    return true; // Allow navigation
+  }
+
+  onRoute(params) {
+    this.loadDashboardData();
+  }
+}
+
+class AdminPanel extends LarcComponent {
+  beforeRoute(params) {
+    if (!authGuard.requiresRole(&#039;admin&#039;)) {
+      navigate(&#039;/unauthorized&#039;);
+      return false;
+    }
+    return true;
+  }
+}
+
+class PostEditor extends LarcComponent {
+  beforeRouteLeave(to, from) {
+    if (this.isDirty) {
+      return confirm(&#039;You have unsaved changes. Leave anyway?&#039;);
+    }
+    return true;
+  }
+}</code></pre>
+<h2>Query Parameters and Deep Linking</h2>
+<p>Encode filters, search, pagination in URLs for bookmarkable state.</p>
+<pre><code class="language-javascript">class ProductList extends LarcComponent {
+  onRoute(params, query) {
+    const {
+      category = &#039;all&#039;,
+      sort = &#039;name&#039;,
+      page = 1,
+      search = &#039;&#039;
+    } = query;
+
+    this.loadProducts({ category, sort, page, search });
+  }
+
+  handleFilterChange(category) {
+    const currentQuery = this.getQueryParams();
+    navigate(`/products?${new URLSearchParams({
+      ...currentQuery,
+      category,
+      page: 1
+    })}`);
+  }
+
+  getQueryParams() {
+    return Object.fromEntries(
+      new URLSearchParams(window.location.search)
+    );
+  }
+}</code></pre>
+<h2>Hash Fragments</h2>
+<p>Use for section scrolling and anchors:</p>
+<pre><code class="language-javascript">class DocumentationView extends LarcComponent {
+  afterRender() {
+    const hash = window.location.hash;
+    if (hash) {
+      const element = this.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: &#039;smooth&#039; });
+      }
+    }
+  }
+
+  template() {
+    return `
+      &lt;article&gt;
+        &lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;/h1&gt;
+        &lt;p&gt;Content...&lt;/p&gt;
+        
+        &lt;h2 id=&quot;getting-started&quot;&gt;Getting Started&lt;/h2&gt;
+        &lt;p&gt;More content...&lt;/p&gt;
+        
+        &lt;nav&gt;
+          &lt;a href=&quot;#introduction&quot;&gt;Introduction&lt;/a&gt;
+          &lt;a href=&quot;#getting-started&quot;&gt;Getting Started&lt;/a&gt;
+        &lt;/nav&gt;
+      &lt;/article&gt;
+    `;
+  }
+}</code></pre>
+<h2>History Management</h2>
+<h3>Push vs. Replace</h3>
+<pre><code class="language-javascript">// Push (default): Adds to history, back button works
+navigate(&#039;/products/123&#039;);
+
+// Replace: Replaces current entry, skips this page on back
+navigate(&#039;/login&#039;, { replace: true });</code></pre>
+<h3>Scroll Position Preservation</h3>
+<pre><code class="language-javascript">class ScrollManager {
+  constructor() {
+    this.positions = new Map();
+    this.setupListeners();
+  }
+
+  setupListeners() {
+    window.addEventListener(&#039;beforeunload&#039;, () =&gt; {
+      this.savePosition(window.location.pathname);
+    });
+
+    window.addEventListener(&#039;load&#039;, () =&gt; {
+      this.restorePosition(window.location.pathname);
+    });
+  }
+
+  savePosition(path) {
+    this.positions.set(path, {
+      x: window.scrollX,
+      y: window.scrollY
+    });
+  }
+
+  restorePosition(path) {
+    const position = this.positions.get(path);
+    if (position) {
+      window.scrollTo(position.x, position.y);
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }
+}</code></pre>
+<h3>History Event Listener</h3>
+<pre><code class="language-javascript">window.addEventListener(&#039;popstate&#039;, (event) =&gt; {
+  // User clicked back/forward button
+  this.handleNavigation(event.state);
+});</code></pre>
+<h2>Active Link States</h2>
+<p>Highlight current route in navigation:</p>
+<pre><code class="language-javascript">class NavBar extends LarcComponent {
+  constructor() {
+    super();
+    this.currentPath = window.location.pathname;
+
+    window.addEventListener(&#039;popstate&#039;, () =&gt; {
+      this.currentPath = window.location.pathname;
+      this.render();
+    });
+  }
+
+  isActive(path) {
+    return this.currentPath === path;
+  }
+
+  isActivePrefix(prefix) {
+    return this.currentPath.startsWith(prefix);
+  }
+
+  template() {
+    return `
+      &lt;nav&gt;
+        &lt;a href=&quot;/&quot; class=&quot;${this.isActive(&#039;/&#039;) ? &#039;active&#039; : &#039;&#039;}&quot;&gt;Home&lt;/a&gt;
+        &lt;a href=&quot;/products&quot; class=&quot;${this.isActivePrefix(&#039;/products&#039;) ? &#039;active&#039; : &#039;&#039;}&quot;&gt;Products&lt;/a&gt;
+        &lt;a href=&quot;/about&quot; class=&quot;${this.isActive(&#039;/about&#039;) ? &#039;active&#039; : &#039;&#039;}&quot;&gt;About&lt;/a&gt;
+      &lt;/nav&gt;
+    `;
+  }
+}</code></pre>
+<h2>SEO Considerations</h2>
+<h3>Update Meta Tags on Route Change</h3>
+<pre><code class="language-javascript">class SEOManager {
+  updateMeta(route, data) {
+    document.title = data.title || &#039;Default Title&#039;;
+    this.setMetaTag(&#039;description&#039;, data.description || &#039;&#039;);
+    this.setMetaTag(&#039;og:title&#039;, data.title);
+    this.setMetaTag(&#039;og:description&#039;, data.description);
+    this.setMetaTag(&#039;og:url&#039;, window.location.href);
+    this.setLinkTag(&#039;canonical&#039;, window.location.href);
+  }
+
+  setMetaTag(name, content) {
+    let element = document.querySelector(`meta[name=&quot;${name}&quot;]`) ||
+                  document.querySelector(`meta[property=&quot;${name}&quot;]`);
+
+    if (!element) {
+      element = document.createElement(&#039;meta&#039;);
+      const attr = name.startsWith(&#039;og:&#039;) ? &#039;property&#039; : &#039;name&#039;;
+      element.setAttribute(attr, name);
+      document.head.appendChild(element);
+    }
+
+    element.setAttribute(&#039;content&#039;, content);
+  }
+
+  setLinkTag(rel, href) {
+    let element = document.querySelector(`link[rel=&quot;${rel}&quot;]`);
+    if (!element) {
+      element = document.createElement(&#039;link&#039;);
+      element.setAttribute(&#039;rel&#039;, rel);
+      document.head.appendChild(element);
+    }
+    element.setAttribute(&#039;href&#039;, href);
+  }
+}
+
+const seoManager = new SEOManager();
+
+class ProductDetail extends LarcComponent {
+  async onRoute(params) {
+    const product = await this.loadProduct(params.id);
+    
+    seoManager.updateMeta(this.route, {
+      title: `${product.name} - Our Store`,
+      description: product.description,
+      image: product.imageUrl
+    });
+  }
+}</code></pre>
+<h3>SSR and Prerendering</h3>
+<p>For maximum SEO, consider:
+<ul><li><strong>Server-side rendering (SSR)</strong>: Render initial HTML on server</li>
+<li><strong>Static prerendering</strong>: Generate HTML at build time for static routes</li>
+<li><strong>Dynamic rendering</strong>: Serve prerendered HTML to crawlers, SPA to users</li>
+</ul>
+See Appendix C (Deployment) for SSR and prerendering strategies.</p>
+<h2>Component Reference</h2>
+<p>See Chapter 18 for pan-routes API documentation and message patterns.</p>
+<h2>Complete Example: E-commerce App Routing</h2>
+<pre><code class="language-javascript">import { LarcComponent, navigate } from &#039;@larc/core&#039;;
+
+class MainApp extends LarcComponent {
+  constructor() {
+    super();
+    this.authGuard = new AuthGuard();
+    this.seoManager = new SEOManager();
+    this.scrollManager = new ScrollManager();
+    this.setupNavigation();
+  }
+
+  setupNavigation() {
+    window.addEventListener(&#039;popstate&#039;, () =&gt; {
+      this.render();
+    });
+  }
+
+  template() {
+    return `
+      &lt;div class=&quot;app&quot;&gt;
+        &lt;app-header&gt;&lt;/app-header&gt;
+        &lt;main&gt;
+          &lt;pan-routes&gt;
+            &lt;pan-route path=&quot;/&quot; component=&quot;home-view&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;/products&quot; component=&quot;product-list&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;/products/:id&quot; component=&quot;product-detail&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;/cart&quot; component=&quot;shopping-cart&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;/checkout&quot; component=&quot;checkout-view&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;/account*&quot; component=&quot;account-section&quot;&gt;&lt;/pan-route&gt;
+            &lt;pan-route path=&quot;*&quot; component=&quot;not-found-view&quot;&gt;&lt;/pan-route&gt;
+          &lt;/pan-routes&gt;
+        &lt;/main&gt;
+        &lt;app-footer&gt;&lt;/app-footer&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;main-app&#039;, MainApp);</code></pre>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 9 (Routing and Navigation)</li>
+<li><strong>Components</strong>: Chapter 18 (pan-routes API)</li>
+<li><strong>Patterns</strong>: Appendix E (Navigation Patterns)</li>
+<li><strong>Related</strong>: Chapter 4 (State Management), Chapter 16 (Deployment/SEO)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Issue: Routes not matching</h3>
+<strong>Problem</strong>: URL changes but component doesn't render
+<strong>Solution</strong>: Check route order (specific before general), ensure pan-routes is in DOM
+<h3>Issue: Back button breaks app</h3>
+<strong>Problem</strong>: Clicking back causes errors or blank page
+<strong>Solution</strong>: Implement proper cleanup in <code>disconnectedCallback()</code>, save/restore scroll position
+<h3>Issue: Parameters not updating</h3>
+<strong>Problem</strong>: Component doesn't re-render when URL params change
+<strong>Solution</strong>: Implement <code>onRoute(params)</code> lifecycle hook to react to param changes
+<h3>Issue: SEO crawlers not indexing pages</h3>
+<strong>Problem</strong>: Search engines see empty content
+<strong>Solution</strong>: Implement SSR or prerendering, ensure meta tags update correctly
+<h3>Issue: Nested routes conflict</h3>
+<strong>Problem</strong>: Child routes override parent routes
+<strong>Solution</strong>: Use wildcard suffix (<code>*</code>) in parent route pattern, ensure child patterns are more specific
+<p>See <em>Learning LARC</em> Chapter 9 for detailed troubleshooting and advanced routing patterns.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/05-routing-and-navigation.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Testing Strategies · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Testing Strategies">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">building-with-larc</a> / <a href="#">chapters</a> / <span>13-testing-strategies</span>
+      </div>
+      <article class="docs-content">
+        <h1>Testing Strategies</h1>
+<p>Quick reference for testing LARC applications. For detailed tutorials, see <em>Learning LARC</em> Chapter 14.</p>
+<h2>Overview</h2>
+<p>Test LARC applications using unit tests for components, integration tests for message flows, and E2E tests for complete workflows. Message-driven architecture simplifies testing through decoupling and observable side effects.</p>
+<strong>Key Concepts</strong>:
+<ul><li>Testing pyramid: Many unit tests, some integration tests, few E2E tests</li>
+<li>Mock PAN bus for isolated component testing</li>
+<li>Test message flows between components</li>
+<li>Use fake timers for interval/timeout testing</li>
+<li>E2E tests verify complete user workflows in real browsers</li>
+</ul>
+<h2>Quick Example</h2>
+<pre><code class="language-javascript">import { describe, it, expect, beforeEach } from &#039;vitest&#039;;
+import { CounterButton } from &#039;../components/counter-button.mjs&#039;;
+
+describe(&#039;CounterButton&#039;, () =&gt; {
+  let element;
+
+  beforeEach(() =&gt; {
+    element = document.createElement(&#039;counter-button&#039;);
+    document.body.appendChild(element);
+  });
+
+  it(&#039;should increment count when clicked&#039;, () =&gt; {
+    const button = element.querySelector(&#039;button&#039;);
+    
+    expect(element.count).toBe(0);
+    button.click();
+    expect(element.count).toBe(1);
+    button.click();
+    expect(element.count).toBe(2);
+  });
+});</code></pre>
+<h2>Test Environment Setup</h2>
+<h3>Vitest Configuration</h3>
+<pre><code class="language-javascript">// vitest.config.js
+import { defineConfig } from &#039;vitest/config&#039;;
+
+export default defineConfig({
+  test: {
+    environment: &#039;happy-dom&#039;,
+    globals: true,
+    setupFiles: [&#039;./tests/setup.js&#039;]
+  }
+});</code></pre>
+<h3>Test Setup</h3>
+<pre><code class="language-javascript">// tests/setup.js
+import { beforeEach, afterEach } from &#039;vitest&#039;;
+import { MockBus } from &#039;./mocks/mock-bus.js&#039;;
+
+let mockBus;
+
+beforeEach(() =&gt; {
+  mockBus = new MockBus();
+  global.publish = mockBus.publish.bind(mockBus);
+  global.subscribe = mockBus.subscribe.bind(mockBus);
+});
+
+afterEach(() =&gt; {
+  mockBus.reset();
+  document.body.innerHTML = &#039;&#039;;
+});
+
+export function getMockBus() {
+  return mockBus;
+}</code></pre>
+<h2>Mock PAN Bus</h2>
+<pre><code class="language-javascript">// tests/mocks/mock-bus.js
+class MockBus {
+  constructor() {
+    this.subscriptions = new Map();
+    this.published = [];
+  }
+
+  publish(topic, data) {
+    this.published.push({ topic, data, timestamp: Date.now() });
+    
+    // Trigger subscriptions
+    const handlers = this.subscriptions.get(topic) || [];
+    handlers.forEach(handler =&gt; handler({ topic, data }));
+    
+    // Trigger wildcard subscriptions
+    this.getWildcardHandlers(topic).forEach(handler =&gt; {
+      handler({ topic, data });
+    });
+  }
+
+  subscribe(pattern, handler) {
+    if (!this.subscriptions.has(pattern)) {
+      this.subscriptions.set(pattern, []);
+    }
+    
+    this.subscriptions.get(pattern).push(handler);
+    
+    // Return unsubscribe function
+    return () =&gt; {
+      const handlers = this.subscriptions.get(pattern);
+      const index = handlers.indexOf(handler);
+      if (index &gt; -1) handlers.splice(index, 1);
+    };
+  }
+
+  getWildcardHandlers(topic) {
+    const handlers = [];
+    for (const [pattern, patternHandlers] of this.subscriptions) {
+      if (this.matchesPattern(topic, pattern)) {
+        handlers.push(...patternHandlers);
+      }
+    }
+    return handlers;
+  }
+
+  matchesPattern(topic, pattern) {
+    if (pattern === &#039;*&#039;) return true;
+    if (pattern === topic) return false;
+    
+    const patternParts = pattern.split(&#039;.&#039;);
+    const topicParts = topic.split(&#039;.&#039;);
+    
+    if (patternParts.length !== topicParts.length) return false;
+    
+    return patternParts.every((part, i) =&gt; 
+      part === &#039;*&#039; || part === topicParts[i]
+    );
+  }
+
+  reset() {
+    this.subscriptions.clear();
+    this.published = [];
+  }
+
+  // Test helpers
+  getPublished(topic) {
+    return this.published.filter(msg =&gt; msg.topic === topic);
+  }
+
+  getLastPublished(topic) {
+    const messages = this.getPublished(topic);
+    return messages[messages.length - 1];
+  }
+
+  wasPublished(topic, data) {
+    return this.published.some(msg =&gt;
+      msg.topic === topic &amp;&amp;
+      JSON.stringify(msg.data) === JSON.stringify(data)
+    );
+  }
+}
+
+export { MockBus };</code></pre>
+<h2>Unit Testing Patterns</h2>
+<p>| Pattern | Description | Example |
+|---------|-------------|---------|
+| Component creation | Create and mount component | <code>document.createElement('my-component')</code> |
+| Attribute testing | Test attribute changes | <code>element.setAttribute('value', 'test')</code> |
+| Event testing | Simulate user interactions | <code>button.click()</code> |
+| Spy methods | Verify method calls | <code>vi.spyOn(element, 'method')</code> |
+| Mock fetch | Stub network requests | <code>global.fetch = vi.fn()</code> |</p>
+<h3>Testing Attributes</h3>
+<pre><code class="language-javascript">it(&#039;should update when attributes change&#039;, () =&gt; {
+  element.setAttribute(&#039;username&#039;, &#039;Alice&#039;);
+  expect(element.textContent).toContain(&#039;Alice&#039;);
+  
+  element.setAttribute(&#039;username&#039;, &#039;Bob&#039;);
+  expect(element.textContent).toContain(&#039;Bob&#039;);
+  expect(element.textContent).not.toContain(&#039;Alice&#039;);
+});</code></pre>
+<h3>Testing Message Publishing</h3>
+<pre><code class="language-javascript">it(&#039;should publish notification&#039;, () =&gt; {
+  const mockBus = getMockBus();
+  
+  element.showNotification(&#039;Hello&#039;);
+  
+  const published = mockBus.getLastPublished(&#039;notification.show&#039;);
+  expect(published).toBeDefined();
+  expect(published.data.message).toBe(&#039;Hello&#039;);
+});</code></pre>
+<h3>Testing Message Subscriptions</h3>
+<pre><code class="language-javascript">it(&#039;should update on message&#039;, () =&gt; {
+  publish(&#039;data.updated&#039;, { value: 42 });
+  
+  expect(element.value).toBe(42);
+  expect(element.textContent).toContain(&#039;42&#039;);
+});</code></pre>
+<h2>Integration Testing</h2>
+<p>Test multiple components communicating via PAN bus:</p>
+<pre><code class="language-javascript">describe(&#039;Shopping Cart Integration&#039;, () =&gt; {
+  let catalog, cart, badge;
+
+  beforeEach(() =&gt; {
+    catalog = document.createElement(&#039;product-catalog&#039;);
+    cart = document.createElement(&#039;shopping-cart&#039;);
+    badge = document.createElement(&#039;cart-badge&#039;);
+    
+    document.body.append(catalog, cart, badge);
+  });
+
+  it(&#039;should update cart and badge when product added&#039;, () =&gt; {
+    publish(&#039;cart.item.added&#039;, {
+      productId: 1,
+      name: &#039;Widget&#039;,
+      price: 10,
+      quantity: 1
+    });
+
+    expect(cart.items).toHaveLength(1);
+    expect(cart.items[0].name).toBe(&#039;Widget&#039;);
+    expect(badge.itemCount).toBe(1);
+  });
+
+  it(&#039;should publish cart.updated message&#039;, () =&gt; {
+    const mockBus = getMockBus();
+    
+    publish(&#039;cart.item.added&#039;, {
+      productId: 1,
+      name: &#039;Widget&#039;,
+      price: 10,
+      quantity: 1
+    });
+
+    const updated = mockBus.getLastPublished(&#039;cart.updated&#039;);
+    expect(updated.data.items).toHaveLength(1);
+    expect(updated.data.total).toBe(10);
+  });
+});</code></pre>
+<h2>Testing Async Operations</h2>
+<h3>Testing Promises</h3>
+<pre><code class="language-javascript">it(&#039;should load data&#039;, async () =&gt; {
+  global.fetch = vi.fn().mockResolvedValueOnce({
+    json: async () =&gt; ({ items: [1, 2, 3] })
+  });
+
+  const element = document.createElement(&#039;data-loader&#039;);
+  document.body.appendChild(element);
+
+  await vi.waitFor(() =&gt; {
+    const loaded = getMockBus().getLastPublished(&#039;data.loaded&#039;);
+    expect(loaded).toBeDefined();
+    expect(loaded.data.items).toEqual([1, 2, 3]);
+  });
+});</code></pre>
+<h3>Testing Errors</h3>
+<pre><code class="language-javascript">it(&#039;should handle fetch errors&#039;, async () =&gt; {
+  global.fetch = vi.fn().mockRejectedValueOnce(
+    new Error(&#039;Network error&#039;)
+  );
+
+  const element = document.createElement(&#039;data-loader&#039;);
+  document.body.appendChild(element);
+
+  await new Promise(resolve =&gt; setTimeout(resolve, 0));
+
+  const error = getMockBus().getLastPublished(&#039;data.error&#039;);
+  expect(error.data.error).toBe(&#039;Network error&#039;);
+});</code></pre>
+<h3>Testing Timers</h3>
+<pre><code class="language-javascript">it(&#039;should save at intervals&#039;, () =&gt; {
+  vi.useFakeTimers();
+  
+  const element = document.createElement(&#039;auto-saver&#039;);
+  document.body.appendChild(element);
+
+  vi.advanceTimersByTime(5000);
+  expect(getMockBus().getPublished(&#039;data.save&#039;)).toHaveLength(1);
+
+  vi.advanceTimersByTime(5000);
+  expect(getMockBus().getPublished(&#039;data.save&#039;)).toHaveLength(2);
+
+  vi.useRealTimers();
+});</code></pre>
+<h2>E2E Testing with Playwright</h2>
+<h3>Setup</h3>
+<pre><code class="language-bash">npm install -D @playwright/test
+npx playwright install</code></pre>
+<h3>E2E Test Example</h3>
+<pre><code class="language-javascript">// tests/e2e/shopping-cart.spec.js
+import { test, expect } from &#039;@playwright/test&#039;;
+
+test.describe(&#039;Shopping Cart&#039;, () =&gt; {
+  test.beforeEach(async ({ page }) =&gt; {
+    await page.goto(&#039;http://localhost:3000&#039;);
+  });
+
+  test(&#039;should add item to cart&#039;, async ({ page }) =&gt; {
+    await page.click(&#039;button:has-text(&quot;Add to Cart&quot;)&#039;);
+
+    const badge = page.locator(&#039;cart-badge&#039;);
+    await expect(badge).toContainText(&#039;1&#039;);
+
+    const cart = page.locator(&#039;shopping-cart&#039;);
+    await expect(cart).toContainText(&#039;Widget&#039;);
+    await expect(cart).toContainText(&#039;$10&#039;);
+  });
+
+  test(&#039;should persist cart after reload&#039;, async ({ page }) =&gt; {
+    await page.click(&#039;button:has-text(&quot;Add to Cart&quot;)&#039;);
+    await page.reload();
+
+    const cart = page.locator(&#039;shopping-cart&#039;);
+    await expect(cart).toContainText(&#039;Widget&#039;);
+  });
+});</code></pre>
+<h3>Testing Theme Switching</h3>
+<pre><code class="language-javascript">test(&#039;should toggle dark mode&#039;, async ({ page }) =&gt; {
+  await page.goto(&#039;http://localhost:3000&#039;);
+
+  const html = page.locator(&#039;html&#039;);
+  await expect(html).toHaveAttribute(&#039;data-theme&#039;, &#039;light&#039;);
+
+  await page.click(&#039;button:has-text(&quot;Dark&quot;)&#039;);
+  await expect(html).toHaveAttribute(&#039;data-theme&#039;, &#039;dark&#039;);
+
+  await page.reload();
+  await expect(html).toHaveAttribute(&#039;data-theme&#039;, &#039;dark&#039;);
+});</code></pre>
+<h2>Test Utilities</h2>
+<h3>Component Test Harness</h3>
+<pre><code class="language-javascript">// tests/utils/component-harness.js
+class ComponentHarness {
+  constructor(tagName, attributes = {}) {
+    this.element = document.createElement(tagName);
+    
+    for (const [key, value] of Object.entries(attributes)) {
+      this.element.setAttribute(key, value);
+    }
+    
+    document.body.appendChild(this.element);
+  }
+
+  query(selector) {
+    return this.element.querySelector(selector);
+  }
+
+  text() {
+    return this.element.textContent.trim();
+  }
+
+  click(selector) {
+    const el = selector ? this.query(selector) : this.element;
+    el.click();
+    return this;
+  }
+
+  type(selector, value) {
+    const input = this.query(selector);
+    input.value = value;
+    input.dispatchEvent(new Event(&#039;input&#039;, { bubbles: true }));
+    return this;
+  }
+
+  async waitFor(condition, timeout = 1000) {
+    const start = Date.now();
+    
+    while (Date.now() - start &lt; timeout) {
+      if (condition(this.element)) return;
+      await new Promise(resolve =&gt; setTimeout(resolve, 50));
+    }
+    
+    throw new Error(&#039;Timeout waiting for condition&#039;);
+  }
+
+  destroy() {
+    this.element.remove();
+  }
+}
+
+export { ComponentHarness };</code></pre>
+<strong>Usage</strong>:
+<pre><code class="language-javascript">const harness = new ComponentHarness(&#039;user-profile&#039;, { &#039;user-id&#039;: &#039;123&#039; });
+await harness.waitFor(el =&gt; el.textContent.includes(&#039;Alice&#039;));
+expect(harness.text()).toContain(&#039;Alice&#039;);
+harness.destroy();</code></pre>
+<h3>Message Helper</h3>
+<pre><code class="language-javascript">// tests/utils/message-helper.js
+class MessageHelper {
+  constructor() {
+    this.bus = getMockBus();
+  }
+
+  async publishAndWait(publishTopic, publishData, waitTopic, timeout = 1000) {
+    return new Promise((resolve, reject) =&gt; {
+      const timeoutId = setTimeout(() =&gt; {
+        unsubscribe();
+        reject(new Error(`Timeout waiting for ${waitTopic}`));
+      }, timeout);
+
+      const unsubscribe = subscribe(waitTopic, (msg) =&gt; {
+        clearTimeout(timeoutId);
+        unsubscribe();
+        resolve(msg.data);
+      });
+
+      publish(publishTopic, publishData);
+    });
+  }
+
+  assertPublished(topic, data = null) {
+    const messages = this.bus.getPublished(topic);
+    
+    if (messages.length === 0) {
+      throw new Error(`Expected message on topic &quot;${topic}&quot;`);
+    }
+    
+    if (data !== null) {
+      const match = messages.some(msg =&gt;
+        JSON.stringify(msg.data) === JSON.stringify(data)
+      );
+      
+      if (!match) {
+        throw new Error(`Expected message with data ${JSON.stringify(data)}`);
+      }
+    }
+  }
+}
+
+export { MessageHelper };</code></pre>
+<strong>Usage</strong>:
+<pre><code class="language-javascript">const helper = new MessageHelper();
+
+const response = await helper.publishAndWait(
+  &#039;data.request&#039;,
+  { id: 123 },
+  &#039;data.response&#039;
+);
+
+expect(response.id).toBe(123);
+helper.assertPublished(&#039;data.request&#039;, { id: 123 });</code></pre>
+<h2>Test Coverage</h2>
+<p>Run tests with coverage:</p>
+<pre><code class="language-bash">npm install -D @vitest/coverage-v8
+npx vitest --coverage</code></pre>
+<strong>Coverage Targets</strong>:
+<ul><li>Overall: 80%+</li>
+<li>Critical paths (auth, payments): 100%</li>
+<li>UI glue code: 50-70% acceptable</li>
+</ul>
+<h2>Testing Checklist</h2>
+<p>| Area | Unit Tests | Integration Tests | E2E Tests |
+|------|------------|-------------------|-----------|
+| Components render correctly | ✓ | | |
+| Attributes update DOM | ✓ | | |
+| Messages published | ✓ | | |
+| Messages received | ✓ | | |
+| Multi-component flows | | ✓ | |
+| Message patterns | | ✓ | |
+| User workflows | | | ✓ |
+| Persistence | | | ✓ |
+| Theme switching | | | ✓ |</p>
+<h2>Complete Example</h2>
+<pre><code class="language-javascript">// Full test suite for notification system
+import { describe, it, expect, beforeEach, vi } from &#039;vitest&#039;;
+import { NotificationDisplay } from &#039;../components/notification-display.mjs&#039;;
+import { NotificationService } from &#039;../services/notification-service.mjs&#039;;
+import { getMockBus } from &#039;./setup.js&#039;;
+
+describe(&#039;Notification System&#039;, () =&gt; {
+  let display, service, mockBus;
+
+  beforeEach(() =&gt; {
+    mockBus = getMockBus();
+    
+    display = document.createElement(&#039;notification-display&#039;);
+    service = new NotificationService();
+    
+    document.body.appendChild(display);
+  });
+
+  it(&#039;should show notification&#039;, () =&gt; {
+    service.show(&#039;Hello&#039;, &#039;info&#039;);
+
+    expect(display.notifications).toHaveLength(1);
+    expect(display.textContent).toContain(&#039;Hello&#039;);
+  });
+
+  it(&#039;should auto-dismiss after timeout&#039;, async () =&gt; {
+    vi.useFakeTimers();
+    
+    service.show(&#039;Temporary&#039;, &#039;info&#039;, { duration: 3000 });
+    
+    expect(display.notifications).toHaveLength(1);
+    
+    vi.advanceTimersByTime(3000);
+    
+    await vi.waitFor(() =&gt; {
+      expect(display.notifications).toHaveLength(0);
+    });
+    
+    vi.useRealTimers();
+  });
+
+  it(&#039;should handle multiple notifications&#039;, () =&gt; {
+    service.show(&#039;First&#039;, &#039;info&#039;);
+    service.show(&#039;Second&#039;, &#039;warning&#039;);
+    service.show(&#039;Third&#039;, &#039;error&#039;);
+
+    expect(display.notifications).toHaveLength(3);
+    expect(mockBus.getPublished(&#039;notification.show&#039;)).toHaveLength(3);
+  });
+});</code></pre>
+<h2>Component Reference</h2>
+<p>See Chapter 17 (pan-bus) for testing message patterns.</p>
+<h2>Cross-References</h2>
+<ul><li><strong>Tutorial</strong>: <em>Learning LARC</em> Chapter 14 (Testing)</li>
+<li><strong>Components</strong>: Chapter 17 (pan-bus testing helpers)</li>
+<li><strong>Patterns</strong>: Appendix E (Test patterns)</li>
+<li><strong>Related</strong>: Chapter 12 (Performance), Chapter 14 (Debugging)</li>
+</ul>
+<h2>Common Issues</h2>
+<h3>Tests failing intermittently</h3>
+<strong>Problem</strong>: Race conditions in async tests  
+<strong>Solution</strong>: Use <code>vi.waitFor()</code> or <code>await</code> properly, avoid fixed timeouts
+<h3>Mock bus not working</h3>
+<strong>Problem</strong>: Components using global <code>publish</code>/<code>subscribe</code> before mock setup  
+<strong>Solution</strong>: Import components after mock setup in <code>beforeEach</code>, use dynamic imports
+<h3>E2E tests timing out</h3>
+<strong>Problem</strong>: Waiting for elements that never appear  
+<strong>Solution</strong>: Use Playwright's auto-waiting, check network requests, verify app is running
+<h3>Coverage not including files</h3>
+<strong>Problem</strong>: Files not imported by tests  
+<strong>Solution</strong>: Add files to test suite or use coverage include patterns
+<h3>Memory leaks in tests</h3>
+<strong>Problem</strong>: Components not cleaned up  
+<strong>Solution</strong>: Always remove components in <code>afterEach</code>, clear timers with <code>vi.useRealTimers()</code>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/building-with-larc/chapters/13-testing-strategies.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
