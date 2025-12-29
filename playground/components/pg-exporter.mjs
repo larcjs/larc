@@ -106,8 +106,8 @@ class PgExporter extends HTMLElement {
 
   applyCodeChanges() {
     const codeOutput = this.querySelector('#code-output');
-    // Get the plain text content (strip any HTML formatting)
-    const code = this.getPlainTextFromElement(codeOutput).trim();
+    // Read the current HTML source directly from the editor element
+    const code = codeOutput.innerHTML.trim();
 
     if (!code || code === '<!-- No components yet -->') {
       return;
