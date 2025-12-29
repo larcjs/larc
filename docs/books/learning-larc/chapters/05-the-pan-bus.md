@@ -109,9 +109,9 @@ That's the foundation. Everything else builds on these three operations.
 
 ## Topics and Namespaces
 
-![**Figure 5.3:** Topic Namespace Structure](../images/05-pan-bus-3.png)
+![**Figure 5.2:** Topic Namespace Structure](../images/05-pan-bus-3.png)
 
-***Figure 5.3:** Topic Namespace Structure*
+***Figure 5.2:** Topic Namespace Structure*
 
 
 Topics are the routing keys for messages. Well-designed topics make your application's data flow clear and maintainable.
@@ -183,9 +183,9 @@ app.modal.close
 
 ### Wildcards
 
-![**Figure 5.4:** Wildcard Subscription Matching](../images/05-pan-bus-4.png)
+![**Figure 5.3:** Wildcard Subscription Matching](../images/05-pan-bus-4.png)
 
-***Figure 5.4:** Wildcard Subscription Matching*
+***Figure 5.3:** Wildcard Subscription Matching*
 
 
 Subscribe to multiple topics using wildcards:
@@ -259,13 +259,9 @@ pan.publish('app.domain.user.entity.profile.action.updated', { user });
 
 ## Publishing Messages
 
-![**Figure 5.2:** Message Flow Sequence](../images/05-pan-bus-2.png)
+![**Figure 5.4:** Message Flow Sequence](../images/05-pan-bus-2.png)
 
-***Figure 5.2:** Message Flow Sequence*
-
-
-![**Figure 5.2:** Message Flow Sequence](../images/05-pan-bus-2.png)
-***Figure 5.2:** Message Flow Sequence*
+***Figure 5.4:** Message Flow Sequence*
 
 
 Publishing is straightforward, but there are patterns and options to understand.
@@ -569,9 +565,9 @@ pan.subscribe('notification.*', (notification) => {
 
 ## Message Patterns
 
-![**Figure 5.6:** Event Pattern Comparison](../images/05-pan-bus-6.png)
+![**Figure 5.5:** Event Pattern Comparison](../images/05-pan-bus-6.png)
 
-***Figure 5.6:** Event Pattern Comparison*
+***Figure 5.5:** Event Pattern Comparison*
 
 
 The PAN bus supports several messaging patterns for different use cases.
@@ -602,9 +598,9 @@ pan.subscribe('settings.saved', (settings) => {
 
 ### 2. Request/Response
 
-![**Figure 5.5:** Request/Response Pattern](../images/05-pan-bus-5.png)
+![**Figure 5.6:** Request/Response Pattern](../images/05-pan-bus-5.png)
 
-***Figure 5.5:** Request/Response Pattern*
+***Figure 5.6:** Request/Response Pattern*
 
 
 Request data and wait for a response:
@@ -1160,3 +1156,12 @@ The PAN bus is central to LARC applications. Mastering it enables you to build s
    - Use event recorders for integration tests
    - Mock pan.publish/subscribe in unit tests
    - Verify event contracts between components
+
+---
+
+## Further Reading
+
+**For complete PAN bus API reference:**
+- *Building with LARC* Chapter 2: Core Concepts - Message bus architecture deep dive
+- *Building with LARC* Appendix A: Message Topics Reference - Standard topic conventions
+- *Building with LARC* Appendix B: Event Envelope Specification - Message format details

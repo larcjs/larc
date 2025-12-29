@@ -1175,3 +1175,12 @@ You now know how to build production-quality Web Components. The next chapter ex
    - Write tests as you build components
    - Test both happy paths and error cases
    - Use integration tests for component interaction
+
+---
+
+## Further Reading
+
+**For complete Web Components reference:**
+- *Building with LARC* Chapter 2: Core Concepts - Web Components architecture and lifecycle
+- *Building with LARC* Chapters 17-21: Component Reference - Complete API documentation
+- *Building with LARC* Chapter 13: Testing Strategies - Component testing patterns
