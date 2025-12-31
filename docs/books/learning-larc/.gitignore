@@ -2,7 +2,6 @@
 build/
 
 # Old build script output (if exists)
-output/
 
 # Node modules
 node_modules/
