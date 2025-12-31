@@ -125,6 +125,85 @@ const allFiles = await files.listFiles();
 </html>
 ```
 
+### Errors
+
+pan-files dispatches custom `error` events and publishes to `file.error` topic:
+
+| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| `OPFS_NOT_SUPPORTED` | Browser doesn't support OPFS | Use Chrome 102+, Edge 102+, or provide fallback |
+| `OPFS_INIT_FAILED` | Failed to initialize file system | Check HTTPS connection (or localhost) |
+| `FILE_NOT_FOUND` | File doesn't exist | Verify path or catch error gracefully |
+| `WRITE_FAILED` | Cannot write file | Check storage quota or permissions |
+| `READ_FAILED` | Cannot read file | Verify file exists and is accessible |
+| `DELETE_FAILED` | Cannot delete file | Check if file is locked or in use |
+| `QUOTA_EXCEEDED` | Storage quota exceeded | Clear old files or request persistent storage |
+| `INVALID_PATH` | Path contains invalid characters | Use valid path format (no `<>:"|?*`) |
+
+**Error handling example**:
+```javascript
+const files = document.querySelector('pan-files');
+const bus = document.querySelector('pan-bus');
+
+// Listen for errors via DOM event
+files.addEventListener('error', (e) => {
+  const { code, message, path } = e.detail;
+  console.error(`File error [${code}]:`, message);
+
+  switch (code) {
+    case 'OPFS_NOT_SUPPORTED':
+      showFallbackUI();
+      break;
+    case 'QUOTA_EXCEEDED':
+      promptUserToCleanup();
+      break;
+    case 'FILE_NOT_FOUND':
+      console.warn(`File not found: ${path}`);
+      break;
+  }
+});
+
+// Or subscribe via PAN bus
+bus.subscribe('file.error', (msg) => {
+  const { code, message, path } = msg.data;
+  displayErrorToUser(message);
+});
+
+// Safe file operations with try-catch
+async function safeWriteFile(path, content) {
+  try {
+    await files.writeFile(path, content);
+    await files.refresh();
+  } catch (err) {
+    console.error('Write failed:', err.message);
+    // Fallback to localStorage or download
+    localStorage.setItem(`backup_${path}`, content);
+  }
+}
+
+// Check quota before large operations
+if (navigator.storage && navigator.storage.estimate) {
+  const estimate = await navigator.storage.estimate();
+  const percentUsed = (estimate.usage / estimate.quota) * 100;
+  
+  if (percentUsed > 90) {
+    console.warn('Storage nearly full, cleanup recommended');
+  }
+}
+```
+
+**Exceptions thrown**:
+- `DOMException`: OPFS-specific errors (NotFoundError, QuotaExceededError)
+- `TypeError`: Invalid parameters (non-string path, invalid content type)
+- `Error`: General file operation failures
+
+**Browser Compatibility Notes**:
+- OPFS requires Chrome 102+, Edge 102+, Opera 88+
+- Not available in Firefox as of December 2024
+- Requires HTTPS or localhost (not available on `http://`)
+- Private/incognito mode may have reduced quota
+- Check support: `if ('storage' in navigator && 'getDirectory' in navigator.storage)`
+
 ### Common Issues
 
 **Files don't persist**: OPFS storage clears if user clears browser data, uses private mode, or exceeds quota. Provide export functionality for critical data.
@@ -295,6 +374,84 @@ editor.insertText('\n\n---\n\n');
 </body>
 </html>
 ```
+
+### Errors
+
+pan-markdown-editor dispatches `error` events for error conditions:
+
+| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| `RENDER_FAILED` | Preview rendering failed | Check markdown syntax or disable preview |
+| `AUTOSAVE_FAILED` | Auto-save operation failed | Check storage or disable autosave |
+| `INVALID_CONTENT` | Non-string content passed to `setValue()` | Pass valid string to `setValue()` |
+| `TOOLBAR_ACTION_FAILED` | Toolbar button action threw error | Check custom toolbar handlers |
+
+**Error handling example**:
+```javascript
+const editor = document.querySelector('pan-markdown-editor');
+
+// Listen for errors
+editor.addEventListener('error', (e) => {
+  const { code, message, action } = e.detail;
+  console.error(`Editor error [${code}]:`, message);
+
+  switch (code) {
+    case 'RENDER_FAILED':
+      // Disable preview temporarily
+      editor.removeAttribute('preview');
+      showNotification('Preview disabled due to rendering error');
+      break;
+
+    case 'AUTOSAVE_FAILED':
+      // Manual save prompt
+      if (confirm('Auto-save failed. Save manually?')) {
+        const content = editor.getValue();
+        manualSave(content);
+      }
+      break;
+
+    case 'INVALID_CONTENT':
+      console.warn('Attempted to set invalid content');
+      break;
+  }
+});
+
+// Safe setValue with validation
+function safeSetValue(content) {
+  if (typeof content !== 'string') {
+    console.error('Content must be a string');
+    return;
+  }
+  
+  try {
+    editor.setValue(content);
+  } catch (err) {
+    console.error('Failed to set editor content:', err);
+    // Fallback to plain textarea
+    useFallbackEditor(content);
+  }
+}
+
+// Monitor autosave with error handling
+const bus = document.querySelector('pan-bus');
+bus.subscribe('markdown.saved', (msg) => {
+  try {
+    localStorage.setItem('backup', msg.data.content);
+    console.log('Content backed up');
+  } catch (err) {
+    console.error('Backup failed:', err);
+  }
+});
+```
+
+**Exceptions thrown**:
+- `TypeError`: Invalid parameters (non-string content, invalid position)
+- `Error`: General operation failures (toolbar actions, preview rendering)
+
+**Performance Notes**:
+- Documents over 50KB may cause lag with preview enabled
+- Autosave debounces input by 1 second
+- Consider disabling preview for large documents: `if (content.length > 50000) editor.removeAttribute('preview')`
 
 ### Common Issues
 
@@ -499,6 +656,87 @@ await initialize({ debug: true, theme: 'dark' });
 </body>
 </html>
 ```
+
+### Errors
+
+pan-markdown-renderer dispatches `error` events when rendering fails:
+
+| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| `PARSE_ERROR` | Invalid markdown syntax | Check markdown format or sanitize input |
+| `RENDER_ERROR` | HTML generation failed | Simplify content or report bug |
+| `SANITIZATION_ERROR` | HTML sanitization failed | Check content or disable sanitization |
+| `INVALID_CONTENT` | Non-string content passed | Pass valid string to `setContent()` |
+
+**Error handling example**:
+```javascript
+const renderer = document.querySelector('pan-markdown-renderer');
+
+// Listen for errors
+renderer.addEventListener('error', (e) => {
+  const { code, message, content } = e.detail;
+  console.error(`Renderer error [${code}]:`, message);
+
+  switch (code) {
+    case 'PARSE_ERROR':
+      // Show raw markdown as fallback
+      renderer.shadowRoot.querySelector('.content').textContent = content;
+      showWarning('Markdown parsing failed, showing raw content');
+      break;
+
+    case 'RENDER_ERROR':
+      console.error('Failed to render markdown');
+      showFallbackRenderer();
+      break;
+
+    case 'SANITIZATION_ERROR':
+      // Retry with stricter sanitization
+      renderer.setAttribute('sanitize', 'true');
+      break;
+
+    case 'INVALID_CONTENT':
+      console.warn('Invalid content type provided');
+      break;
+  }
+});
+
+// Safe setContent with validation
+function safeSetContent(content) {
+  if (typeof content !== 'string') {
+    console.error('Content must be a string');
+    return;
+  }
+
+  try {
+    renderer.setContent(content);
+  } catch (err) {
+    console.error('Failed to render content:', err);
+    // Fallback to plain text
+    renderer.shadowRoot.querySelector('.content').textContent = content;
+  }
+}
+
+// Validate markdown before rendering
+function validateAndRender(markdown) {
+  // Check for balanced code fences
+  const fenceCount = (markdown.match(/```/g) || []).length;
+  if (fenceCount % 2 !== 0) {
+    console.warn('Unbalanced code fences detected');
+    markdown += '\n```'; // Auto-close
+  }
+
+  renderer.setContent(markdown);
+}
+```
+
+**Exceptions thrown**:
+- `TypeError`: Invalid parameters (non-string content)
+- `Error`: Parse or render failures
+
+**Performance Notes**:
+- Large documents (>100KB) may slow rendering
+- Complex tables with many rows cause layout reflow
+- Consider debouncing content updates for live preview
 
 ### Common Issues
 
