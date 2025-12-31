@@ -7,6 +7,7 @@ Quick reference for authentication and authorization patterns in LARC applicatio
 Authentication verifies user identity ("who are you?") while authorization determines permissions ("what can you do?"). LARC applications typically use JWT tokens for authentication and role-based access control (RBAC) for authorization.
 
 **Key Concepts**:
+
 - JWT tokens: Cryptographically signed identity tokens with claims
 - Token refresh: Automatic renewal before expiry
 - Protected routes: Enforce authentication/authorization requirements
@@ -342,6 +343,7 @@ const csrf = new CSRFProtection();
 ## Component Reference
 
 See Chapter 20 for authentication-related components:
+
 - **pan-auth**: Complete authentication component
 - **pan-user-menu**: User profile dropdown with logout
 

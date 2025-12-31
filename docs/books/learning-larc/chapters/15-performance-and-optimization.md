@@ -793,6 +793,7 @@ customElements.define('optimized-dashboard', OptimizedDashboard);
 **Symptoms**: Page gets slower over time, browser tab uses increasing memory.
 
 **Common causes**:
+
 - Event listeners not removed
 - Setters/intervals not cleared
 - Large objects cached indefinitely
@@ -859,6 +860,7 @@ Use browser DevTools to detect leaks:
 **Symptoms**: Long time before page shows content, poor LCP score.
 
 **Common causes**:
+
 - Loading too much JavaScript upfront
 - Synchronous data fetching
 - Rendering everything at once
@@ -915,6 +917,7 @@ console.table(
 ```
 
 **Solutions**:
+
 - Use import maps to share dependencies
 - Lazy load non-critical features
 - Use native APIs instead of libraries
@@ -984,6 +987,7 @@ requestAnimationFrame(updateLayout);
 ### Exercise 1: Optimize an Image Gallery
 
 Create an image gallery that:
+
 - Lazy loads images as they scroll into view
 - Uses Intersection Observer
 - Shows a loading placeholder
@@ -994,6 +998,7 @@ Create an image gallery that:
 ### Exercise 2: Build a Virtual List
 
 Implement a virtual list component that:
+
 - Renders only visible items
 - Handles variable-height items
 - Supports smooth scrolling
@@ -1004,6 +1009,7 @@ Implement a virtual list component that:
 ### Exercise 3: Implement Request Deduplication
 
 Create a data service that:
+
 - Prevents duplicate API calls for the same resource
 - Shares pending requests between components
 - Caches responses for 1 minute
@@ -1014,6 +1020,7 @@ Create a data service that:
 ### Exercise 4: Performance Dashboard
 
 Build a performance monitoring dashboard that:
+
 - Tracks all Core Web Vitals
 - Shows performance over time
 - Highlights performance regressions

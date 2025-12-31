@@ -7,6 +7,7 @@ Quick reference for state management patterns in LARC applications. For detailed
 State management is the practice of tracking application data across components. LARC distinguishes between **local state** (component-specific) and **shared state** (application-wide), using the PAN bus for state synchronization.
 
 **Key Concepts**:
+
 - Local state: Component properties, ephemeral
 - Shared state: Store components, persisted via localStorage, IndexedDB, or OPFS
 - State stores: Components that manage and publish shared state

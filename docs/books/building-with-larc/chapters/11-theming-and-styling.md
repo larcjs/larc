@@ -7,6 +7,7 @@ Quick reference for theming and styling patterns in LARC applications. For detai
 LARC applications use CSS custom properties (variables) for themeable styling, supporting light/dark modes, system preferences, and dynamic theme switching via the PAN bus. The pan-theme-provider component manages global theme state.
 
 **Key Concepts**:
+
 - CSS custom properties: Runtime-modifiable variables (--color-primary)
 - Semantic tokens: Meaningful names (--color-text-primary, not --gray-900)
 - Theme provider: Component managing theme state via PAN bus
@@ -300,6 +301,7 @@ document.documentElement.setAttribute('data-brand', 'acme');
 ### Contrast Requirements
 
 Maintain WCAG contrast ratios:
+
 - **AA Normal text**: 4.5:1 minimum
 - **AA Large text**: 3:1 minimum  
 - **AAA Normal text**: 7:1 minimum
@@ -381,6 +383,7 @@ document.documentElement.style.setProperty('--color-bg', '#000');
 ## Component Reference
 
 See Chapter 17 for complete API documentation:
+
 - **pan-theme-provider**: Global theme management
 - **pan-theme-toggle**: Theme switcher UI control
 

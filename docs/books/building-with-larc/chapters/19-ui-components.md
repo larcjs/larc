@@ -193,11 +193,13 @@ if (navigator.storage && navigator.storage.estimate) {
 ```
 
 **Exceptions thrown**:
+
 - `DOMException`: OPFS-specific errors (NotFoundError, QuotaExceededError)
 - `TypeError`: Invalid parameters (non-string path, invalid content type)
 - `Error`: General file operation failures
 
 **Browser Compatibility Notes**:
+
 - OPFS requires Chrome 102+, Edge 102+, Opera 88+
 - Not available in Firefox as of December 2024
 - Requires HTTPS or localhost (not available on `http://`)
@@ -445,10 +447,12 @@ bus.subscribe('markdown.saved', (msg) => {
 ```
 
 **Exceptions thrown**:
+
 - `TypeError`: Invalid parameters (non-string content, invalid position)
 - `Error`: General operation failures (toolbar actions, preview rendering)
 
 **Performance Notes**:
+
 - Documents over 50KB may cause lag with preview enabled
 - Autosave debounces input by 1 second
 - Consider disabling preview for large documents: `if (content.length > 50000) editor.removeAttribute('preview')`
@@ -730,10 +734,12 @@ function validateAndRender(markdown) {
 ```
 
 **Exceptions thrown**:
+
 - `TypeError`: Invalid parameters (non-string content)
 - `Error`: Parse or render failures
 
 **Performance Notes**:
+
 - Large documents (>100KB) may slow rendering
 - Complex tables with many rows cause layout reflow
 - Consider debouncing content updates for live preview
@@ -765,6 +771,7 @@ This chapter documented LARC's UI components:
 Use together for complete markdown applications or individually as needed.
 
 **See Also**:
+
 - Tutorial: *Learning LARC* Chapter 10
 - Core components: Chapter 17
 - Data components: Chapter 18

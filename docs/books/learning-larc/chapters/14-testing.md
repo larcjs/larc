@@ -323,6 +323,7 @@ open coverage/index.html
 ### What to Test
 
 Focus on:
+
 - **Public API** - Methods users will call
 - **Edge cases** - Empty inputs, null values, errors
 - **State changes** - Component updates correctly
@@ -330,6 +331,7 @@ Focus on:
 - **Integration points** - Component communication
 
 Skip testing:
+
 - **Framework internals** - Trust Web Components API
 - **Third-party libraries** - They have their own tests
 - **Trivial code** - Simple getters/setters
@@ -803,6 +805,7 @@ describe('pure functions', () => {
 ### Exercise 1: Test a Todo Component
 
 Write comprehensive tests for a todo component:
+
 - Renders list of todos
 - Adds new todo when form submitted
 - Toggles complete status on click
@@ -815,6 +818,7 @@ Write comprehensive tests for a todo component:
 ### Exercise 2: E2E Shopping Flow
 
 Create E2E tests for shopping cart:
+
 - Browse products
 - Add items to cart
 - Update quantities
@@ -827,6 +831,7 @@ Create E2E tests for shopping cart:
 ### Exercise 3: Visual Regression Suite
 
 Set up visual regression testing:
+
 - Capture screenshots of all components
 - Test different states (hover, focus, disabled)
 - Test responsive breakpoints
@@ -838,6 +843,7 @@ Set up visual regression testing:
 ### Exercise 4: TDD Calculator
 
 Build a calculator component using TDD:
+
 - Write tests first for basic operations (+, -, ×, ÷)
 - Implement each operation one at a time
 - Add tests for edge cases (divide by zero, overflow)

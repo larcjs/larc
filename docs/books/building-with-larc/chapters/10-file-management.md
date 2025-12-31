@@ -7,6 +7,7 @@ Quick reference for file management and OPFS (Origin Private File System) in LAR
 OPFS provides browser-based file storage with high performance, large capacity (GB+), and persistence across sessions. Unlike localStorage (5-10MB) or IndexedDB, OPFS offers native file system operations ideal for offline-first apps and large file handling.
 
 **Key Concepts**:
+
 - OPFS: Origin Private File System - browser's private file storage
 - FileSystemDirectoryHandle: Directory reference for operations
 - FileSystemFileHandle: File reference for read/write operations
@@ -347,6 +348,7 @@ const results = await fileSearch.search('photo', {
 ## Component Reference
 
 See Chapter 19 for file management UI components:
+
 - **pan-files**: Complete file manager with browser, upload, quota display
 - **pan-file-picker**: File selection dialog
 - **pan-image-viewer**: Image preview and editing

@@ -173,6 +173,61 @@ cart.subscribe(({ detail }) =&gt; {
 console.log(cart.state.subtotal); // 45
 console.log(cart.state.tax);      // 3.6
 console.log(cart.state.total);    // 48.6</code></pre>
+<h3>Errors</h3>
+<p>pan-store emits errors through the <code>error</code> event for error conditions:</p>
+<p>| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| Circular dependency | Derived value depends on itself | Review <code>derive()</code> dependency chains |
+| Invalid path | <code>select()</code> with non-string path | Use valid dot-notation string (e.g., <code>'user.name'</code>) |
+| Middleware error | Middleware function throws exception | Wrap middleware in try-catch or fix thrown error |
+| Frozen state | Attempting to modify frozen object | Unfreeze object or create new reference |
+| Type error | Non-object passed to <code>patch()</code> | Pass plain object to <code>patch()</code> |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const store = createStore({ count: 0 });
+
+// Listen for errors
+store.addEventListener(&#039;error&#039;, (e) =&gt; {
+  const { error, operation, key } = e.detail;
+  console.error(`Store error in ${operation}:`, error.message);
+
+  // Handle specific errors
+  if (error.message.includes(&#039;Circular&#039;)) {
+    // Remove circular dependencies
+    console.warn(`Circular dependency detected for key: ${key}`);
+  } else if (operation === &#039;middleware&#039;) {
+    // Middleware failed
+    console.error(&#039;Middleware error:&#039;, error);
+  }
+});
+
+// Safe derived value with error handling
+try {
+  store.derive(&#039;computed&#039;, [&#039;dep1&#039;], (dep) =&gt; {
+    if (!dep) throw new Error(&#039;Invalid dependency&#039;);
+    return dep * 2;
+  });
+} catch (err) {
+  console.error(&#039;Failed to create derived value:&#039;, err);
+}
+
+// Safe middleware usage
+store.use((state, changes) =&gt; {
+  try {
+    // Validate changes
+    if (changes.price &amp;&amp; changes.price &lt; 0) {
+      throw new Error(&#039;Price cannot be negative&#039;);
+    }
+    return changes;
+  } catch (err) {
+    console.error(&#039;Middleware validation failed:&#039;, err);
+    return null; // Reject changes
+  }
+});</code></pre>
+<strong>Exceptions thrown</strong>:
+<ul><li><code>TypeError</code>: Invalid parameters (e.g., non-string path, non-function callback)</li>
+<li><code>RangeError</code>: Invalid computed dependency (circular reference)</li>
+<li><code>Error</code>: Middleware exceptions (propagated from user code)</li>
+</ul>
 <h3>Common Issues</h3>
 <strong>Nested changes not detected</strong>
 <pre><code class="language-javascript">// Problem
@@ -396,6 +451,96 @@ await idb.delete(id);</code></pre>
   &lt;/script&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+<h3>Errors</h3>
+<p>pan-idb publishes error messages to <code>{storeName}.idb.error</code> topic:</p>
+<p>| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| <code>DB_OPEN_FAILED</code> | Cannot open IndexedDB | Check browser support, quota, or permissions |
+| <code>STORE_NOT_FOUND</code> | Object store doesn't exist | Set correct <code>store</code> attribute or upgrade database version |
+| <code>VERSION_ERROR</code> | Version downgrade attempted | Remove old database or increment version number |
+| <code>QUOTA_EXCEEDED</code> | Storage limit reached | Clear old data or request persistent storage |
+| <code>TRANSACTION_FAILED</code> | Transaction aborted | Check data validity, reduce transaction size |
+| <code>INDEX_ERROR</code> | Index operation failed | Verify index exists and data matches index keyPath |
+| <code>KEY_ERROR</code> | Invalid key provided | Use valid key type (number, string, date, array) |
+| <code>DATA_ERROR</code> | Data cannot be cloned | Remove non-cloneable values (functions, DOM nodes) |
+| <code>READ_ONLY_ERROR</code> | Write on readonly transaction | Use correct transaction mode |
+| <code>NOT_SUPPORTED</code> | Browser doesn't support IndexedDB | Provide fallback (localStorage, memory store) |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+const idb = document.querySelector(&#039;pan-idb&#039;);
+
+// Subscribe to errors
+bus.subscribe(&#039;documents.idb.error&#039;, (msg) =&gt; {
+  const { code, error, operation } = msg.data;
+  console.error(`IDB error [${code}]:`, error.message);
+
+  // Handle specific errors
+  switch (code) {
+    case &#039;QUOTA_EXCEEDED&#039;:
+      // Prompt user to clear data
+      if (confirm(&#039;Storage full. Clear old data?&#039;)) {
+        bus.publish({ topic: &#039;documents.idb.clear&#039; });
+      }
+      break;
+
+    case &#039;VERSION_ERROR&#039;:
+      // Database needs upgrade
+      console.warn(&#039;Please reload to upgrade database&#039;);
+      location.reload();
+      break;
+
+    case &#039;NOT_SUPPORTED&#039;:
+      // Fallback to alternative storage
+      console.warn(&#039;IndexedDB not available, using localStorage&#039;);
+      initLocalStorageFallback();
+      break;
+
+    case &#039;DB_OPEN_FAILED&#039;:
+      // Retry with exponential backoff
+      setTimeout(() =&gt; {
+        idb.setAttribute(&#039;database&#039;, idb.getAttribute(&#039;database&#039;));
+      }, 1000 * Math.pow(2, retryCount++));
+      break;
+
+    default:
+      // Generic error handling
+      showErrorNotification(`Database error: ${error.message}`);
+  }
+});
+
+// Graceful degradation
+bus.subscribe(&#039;documents.idb.error&#039;, async (msg) =&gt; {
+  if (msg.data.code === &#039;NOT_SUPPORTED&#039; || msg.data.code === &#039;DB_OPEN_FAILED&#039;) {
+    // Switch to memory-only mode
+    window.inMemoryStore = new Map();
+    console.warn(&#039;Using in-memory storage (data will not persist)&#039;);
+  }
+});
+
+// Quota management
+async function checkQuota() {
+  if (navigator.storage &amp;&amp; navigator.storage.estimate) {
+    const estimate = await navigator.storage.estimate();
+    const percentUsed = (estimate.usage / estimate.quota) * 100;
+
+    if (percentUsed &gt; 90) {
+      console.warn(`Storage ${percentUsed.toFixed(1)}% full`);
+      // Trigger cleanup
+      bus.publish({ topic: &#039;documents.idb.cleanup&#039; });
+    }
+  }
+}</code></pre>
+<strong>Exceptions thrown</strong>:
+<ul><li><code>DOMException</code>: IndexedDB-specific errors (InvalidStateError, ConstraintError, etc.)</li>
+<li><code>TypeError</code>: Invalid parameters (e.g., non-cloneable data)</li>
+<li><code>QuotaExceededError</code>: Storage limit reached</li>
+<li><code>Error</code>: General database operation failures</li>
+</ul>
+<strong>Browser Compatibility Notes</strong>:
+<ul><li>IndexedDB supported in all modern browsers (Chrome 24+, Firefox 16+, Safari 10+)</li>
+<li>Private browsing may disable or limit IndexedDB</li>
+<li>Check support: <code>if ('indexedDB' in window)</code></li>
+</ul>
 <h3>Common Issues</h3>
 <strong>Database version conflicts</strong>: Different tabs with different versions
 <pre><code class="language-javascript">// Handle versionchange event

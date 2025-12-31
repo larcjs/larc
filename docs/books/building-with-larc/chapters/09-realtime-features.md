@@ -7,6 +7,7 @@ Quick reference for real-time communication patterns in LARC applications. For d
 Real-time features enable live data updates without page reloads using WebSockets, Server-Sent Events (SSE), BroadcastChannel for cross-tab sync, and Web Workers for background processing.
 
 **Key Concepts**:
+
 - WebSockets: Full-duplex bidirectional communication
 - SSE: One-way server-to-client streaming
 - BroadcastChannel: Cross-tab/window messaging
@@ -432,6 +433,7 @@ customElements.define('collaborative-editor', CollaborativeEditor);
 ## Component Reference
 
 See Chapter 20 for real-time components:
+
 - **pan-websocket**: WebSocket connection management
 - **pan-sse**: Server-Sent Events integration
 - **pan-live-data**: Auto-refreshing data display

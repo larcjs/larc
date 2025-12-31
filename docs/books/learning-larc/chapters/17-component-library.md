@@ -1323,6 +1323,7 @@ observer.observe(document.body, {
 ### Exercise 1: Build a Toast Notification Component
 
 Create a `<pan-toast>` component that:
+
 - Shows temporary notifications
 - Supports different types (success, error, warning, info)
 - Auto-dismisses after a timeout
@@ -1334,6 +1335,7 @@ Create a `<pan-toast>` component that:
 ### Exercise 2: Create a Component Documentation Site
 
 Build an interactive documentation site for your components that:
+
 - Shows live examples with editable code
 - Displays component API (props, events, slots)
 - Includes accessibility information
@@ -1345,6 +1347,7 @@ Build an interactive documentation site for your components that:
 ### Exercise 3: Implement a Component Testing Suite
 
 Set up comprehensive testing for a component:
+
 - Unit tests for all functionality
 - Accessibility tests (keyboard nav, screen readers)
 - Visual regression tests with screenshots
@@ -1356,6 +1359,7 @@ Set up comprehensive testing for a component:
 ### Exercise 4: Publish a Component Package
 
 Package and publish a component library:
+
 - Set up proper package.json with exports
 - Create comprehensive README
 - Write CHANGELOG.md

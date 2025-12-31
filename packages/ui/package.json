@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/ui",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "LARC UI - Web components library built on the PAN messaging bus",
   "type": "module",
   "exports": {
@@ -222,7 +222,7 @@
   },
   "homepage": "https://larcjs.com",
   "peerDependencies": {
-    "@larcjs/core": "^2.0.0"
+    "@larcjs/core": "^2.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.1",

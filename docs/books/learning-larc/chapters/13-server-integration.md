@@ -1178,6 +1178,7 @@ setInterval(() => {
 ### Exercise 1: Build a Blog API
 
 Create a REST API with:
+
 - User registration and authentication
 - CRUD operations for blog posts
 - Comments on posts
@@ -1189,6 +1190,7 @@ Create a REST API with:
 ### Exercise 2: Real-Time Notifications
 
 Build a notification system with:
+
 - WebSocket connection for real-time delivery
 - Fallback to polling if WebSocket unavailable
 - Mark as read/unread functionality
@@ -1200,6 +1202,7 @@ Build a notification system with:
 ### Exercise 3: File Management System
 
 Create a file management API with:
+
 - Upload multiple files
 - Organize files in folders
 - Share files with other users
@@ -1211,6 +1214,7 @@ Create a file management API with:
 ### Exercise 4: GraphQL API
 
 Convert a REST API to GraphQL:
+
 - Define schema for users, posts, comments
 - Implement resolvers
 - Add authentication to resolvers

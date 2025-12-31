@@ -1093,6 +1093,7 @@ npm install --save-dev eslint
 ### Exercise 1: Set Up Complete Dev Environment
 
 Configure a full development environment with:
+
 - Dev server with live reload
 - VS Code with all recommended extensions
 - ESLint and Prettier configured
@@ -1104,6 +1105,7 @@ Configure a full development environment with:
 ### Exercise 2: Build a PAN Message Inspector
 
 Create a browser extension or dev panel that:
+
 - Shows all PAN messages in real-time
 - Filters messages by topic pattern
 - Records and exports message history
@@ -1115,6 +1117,7 @@ Create a browser extension or dev panel that:
 ### Exercise 3: Create Custom VS Code Extension
 
 Build a VS Code extension that:
+
 - Generates LARC component boilerplate
 - Validates component structure
 - Provides autocomplete for PAN topics
@@ -1126,6 +1129,7 @@ Build a VS Code extension that:
 ### Exercise 4: Implement Advanced Debugging
 
 Set up comprehensive debugging tools:
+
 - Component lifecycle logger
 - Performance profiler for renders
 - Network request interceptor

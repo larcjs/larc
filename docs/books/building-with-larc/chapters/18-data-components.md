@@ -214,6 +214,7 @@ store.use((state, changes) => {
 ```
 
 **Exceptions thrown**:
+
 - `TypeError`: Invalid parameters (e.g., non-string path, non-function callback)
 - `RangeError`: Invalid computed dependency (circular reference)
 - `Error`: Middleware exceptions (propagated from user code)
@@ -565,12 +566,14 @@ async function checkQuota() {
 ```
 
 **Exceptions thrown**:
+
 - `DOMException`: IndexedDB-specific errors (InvalidStateError, ConstraintError, etc.)
 - `TypeError`: Invalid parameters (e.g., non-cloneable data)
 - `QuotaExceededError`: Storage limit reached
 - `Error`: General database operation failures
 
 **Browser Compatibility Notes**:
+
 - IndexedDB supported in all modern browsers (Chrome 24+, Firefox 16+, Safari 10+)
 - Private browsing may disable or limit IndexedDB
 - Check support: `if ('indexedDB' in window)`
@@ -625,6 +628,7 @@ This chapter documented LARC's data management components:
 Use pan-store for reactive application state, pan-idb for persistent storage.
 
 **See Also**:
+
 - Tutorial: *Learning LARC* Chapter 6
 - Message bus: Chapter 17
 - UI components: Chapter 19

@@ -7,6 +7,7 @@ Quick reference for form handling in LARC applications. For detailed tutorials, 
 Forms enable user input through validation, submission handling, and error feedback. LARC uses standard HTML forms with JavaScript event handling—no magic, no framework-specific syntax.
 
 **Key Concepts**:
+
 - FormData API: Extract values from form inputs
 - Validation strategies: Client-side and server-side validation
 - Loading states: Provide feedback during async operations

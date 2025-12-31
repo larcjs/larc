@@ -228,6 +228,536 @@ class FetchMock {
 }
 
 export const fetchMock = new FetchMock();</code></pre>
+<p>Use in tests:</p>
+<pre><code class="language-javascript">import { fetchMock } from &#039;./fetch-mock.js&#039;;
+
+describe(&#039;UserList Component&#039;, () =&gt; {
+  beforeEach(() =&gt; {
+    fetchMock.enable();
+    fetchMock.mock(&#039;/api/users&#039;, [
+      { id: 1, name: &#039;Alice&#039; },
+      { id: 2, name: &#039;Bob&#039; }
+    ]);
+  });
+
+  afterEach(() =&gt; {
+    fetchMock.disable();
+  });
+
+  it(&#039;loads and displays users&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;user-list&gt;&lt;/user-list&gt;`);
+    await el.updateComplete;
+
+    const users = el.shadowRoot.querySelectorAll(&#039;.user&#039;);
+    expect(users.length).to.equal(2);
+  });
+});</code></pre>
+<h2>Visual Regression Testing</h2>
+<p>Catch visual changes with screenshot comparison:</p>
+<pre><code class="language-javascript">// visual.test.js
+import { test, expect } from &#039;@playwright/test&#039;;
+
+test.describe(&#039;Visual Regression&#039;, () =&gt; {
+  test(&#039;button should match snapshot&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;/components/button&#039;);
+
+    const button = page.locator(&#039;app-button&#039;);
+    await expect(button).toHaveScreenshot(&#039;button-default.png&#039;);
+  });
+
+  test(&#039;button hover state&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;/components/button&#039;);
+
+    const button = page.locator(&#039;app-button&#039;);
+    await button.hover();
+    await expect(button).toHaveScreenshot(&#039;button-hover.png&#039;);
+  });
+
+  test(&#039;dark mode theme&#039;, async ({ page }) =&gt; {
+    await page.goto(&#039;/&#039;);
+    await page.locator(&#039;[data-theme-toggle]&#039;).click();
+
+    await expect(page).toHaveScreenshot(&#039;homepage-dark.png&#039;, {
+      fullPage: true
+    });
+  });
+});</code></pre>
+<p>Run visual tests:</p>
+<pre><code class="language-bash"># First run creates baseline screenshots
+npx playwright test visual.test.js
+
+# Subsequent runs compare against baseline
+npx playwright test visual.test.js
+
+# Update baselines when changes are intentional
+npx playwright test visual.test.js --update-snapshots</code></pre>
+<h2>Test Coverage</h2>
+<p>Track which code is tested:</p>
+<pre><code class="language-javascript">// web-test-runner.config.js
+export default {
+  coverage: true,
+  coverageConfig: {
+    threshold: {
+      statements: 80,
+      branches: 75,
+      functions: 80,
+      lines: 80
+    },
+    include: [&#039;src/**/*.js&#039;],
+    exclude: [&#039;src/**/*.test.js&#039;, &#039;src/test/**&#039;]
+  }
+};</code></pre>
+<p>Generate coverage reports:</p>
+<pre><code class="language-bash">npx wtr --coverage
+
+# View HTML report
+open coverage/index.html</code></pre>
+<h3>What to Test</h3>
+<p>Focus on:</p>
+<ul><li><strong>Public API</strong> - Methods users will call</li>
+<li><strong>Edge cases</strong> - Empty inputs, null values, errors</li>
+<li><strong>State changes</strong> - Component updates correctly</li>
+<li><strong>User interactions</strong> - Clicks, typing, form submission</li>
+<li><strong>Integration points</strong> - Component communication</li>
+</ul>
+Skip testing:
+<ul><li><strong>Framework internals</strong> - Trust Web Components API</li>
+<li><strong>Third-party libraries</strong> - They have their own tests</li>
+<li><strong>Trivial code</strong> - Simple getters/setters</li>
+</ul>
+<h2>Component Testing Patterns</h2>
+<h3>Testing Async Loading</h3>
+<pre><code class="language-javascript">it(&#039;shows loading state then data&#039;, async () =&gt; {
+  const el = await fixture(html`&lt;user-profile user-id=&quot;1&quot;&gt;&lt;/user-profile&gt;`);
+
+  // Should show loading initially
+  expect(el.shadowRoot.querySelector(&#039;.loading&#039;)).to.exist;
+
+  // Wait for data
+  await waitUntil(() =&gt; !el.loading);
+
+  // Should show user data
+  expect(el.shadowRoot.querySelector(&#039;.user-name&#039;)).to.have.text(&#039;Alice&#039;);
+  expect(el.shadowRoot.querySelector(&#039;.loading&#039;)).to.not.exist;
+});</code></pre>
+<h3>Testing Error States</h3>
+<pre><code class="language-javascript">it(&#039;displays error message on fetch failure&#039;, async () =&gt; {
+  fetchMock.mock(&#039;/api/users&#039;, { error: &#039;Server error&#039; }, { status: 500 });
+
+  const el = await fixture(html`&lt;user-list&gt;&lt;/user-list&gt;`);
+  await el.updateComplete;
+
+  expect(el.shadowRoot.querySelector(&#039;.error&#039;)).to.have.text(&#039;Failed to load users&#039;);
+});</code></pre>
+<h3>Testing Form Validation</h3>
+<pre><code class="language-javascript">it(&#039;validates email format&#039;, async () =&gt; {
+  const el = await fixture(html`&lt;login-form&gt;&lt;/login-form&gt;`);
+
+  const emailInput = el.shadowRoot.querySelector(&#039;#email&#039;);
+  const form = el.shadowRoot.querySelector(&#039;form&#039;);
+
+  // Invalid email
+  emailInput.value = &#039;notanemail&#039;;
+  emailInput.dispatchEvent(new Event(&#039;input&#039;));
+
+  expect(el.errors.email).to.equal(&#039;Invalid email format&#039;);
+
+  // Valid email
+  emailInput.value = &#039;user@example.com&#039;;
+  emailInput.dispatchEvent(new Event(&#039;input&#039;));
+
+  expect(el.errors.email).to.be.undefined;
+});</code></pre>
+<h3>Testing Component Communication</h3>
+<pre><code class="language-javascript">it(&#039;publishes event on button click&#039;, async () =&gt; {
+  const el = await fixture(html`&lt;add-todo&gt;&lt;/add-todo&gt;`);
+
+  let publishedData = null;
+  mockPan.subscribe(&#039;todo.added&#039;, (msg) =&gt; {
+    publishedData = msg.data;
+  });
+
+  el.shadowRoot.querySelector(&#039;#todo-input&#039;).value = &#039;Buy milk&#039;;
+  el.shadowRoot.querySelector(&#039;button&#039;).click();
+
+  expect(publishedData).to.deep.equal({ text: &#039;Buy milk&#039; });
+});</code></pre>
+<h2>CI/CD Integration</h2>
+<h3>GitHub Actions</h3>
+<pre><code class="language-yaml"># .github/workflows/test.yml
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: &#039;18&#039;
+          cache: &#039;npm&#039;
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: npm test
+
+      - name: Run E2E tests
+        run: npx playwright test
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results/
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/lcov.info</code></pre>
+<h3>GitLab CI</h3>
+<pre><code class="language-yaml"># .gitlab-ci.yml
+stages:
+  - test
+  - report
+
+test:
+  stage: test
+  image: node:18
+  cache:
+    paths:
+      - node_modules/
+  script:
+    - npm ci
+    - npm test
+    - npx playwright test
+  artifacts:
+    when: always
+    paths:
+      - coverage/
+      - test-results/
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+
+coverage:
+  stage: report
+  image: node:18
+  script:
+    - npx nyc report --reporter=text-summary
+  coverage: &#039;/Lines\s*:\s*(\d+\.\d+)%/&#039;</code></pre>
+<h2>Test-Driven Development (TDD)</h2>
+<p>Write tests first, then implement:</p>
+<h3>Example: Building a Counter Component</h3>
+<strong>Step 1: Write the test</strong>
+<pre><code class="language-javascript">// counter.test.js
+describe(&#039;Counter&#039;, () =&gt; {
+  it(&#039;starts at zero&#039;, async () =&gt; {
+    const counter = await fixture(html`&lt;app-counter&gt;&lt;/app-counter&gt;`);
+    expect(counter.shadowRoot.querySelector(&#039;.count&#039;).textContent).to.equal(&#039;0&#039;);
+  });
+
+  it(&#039;increments when plus button clicked&#039;, async () =&gt; {
+    const counter = await fixture(html`&lt;app-counter&gt;&lt;/app-counter&gt;`);
+
+    counter.shadowRoot.querySelector(&#039;.plus-btn&#039;).click();
+    await counter.updateComplete;
+
+    expect(counter.shadowRoot.querySelector(&#039;.count&#039;).textContent).to.equal(&#039;1&#039;);
+  });
+
+  it(&#039;decrements when minus button clicked&#039;, async () =&gt; {
+    const counter = await fixture(html`&lt;app-counter&gt;&lt;/app-counter&gt;`);
+
+    counter.shadowRoot.querySelector(&#039;.plus-btn&#039;).click();
+    await counter.updateComplete;
+
+    counter.shadowRoot.querySelector(&#039;.minus-btn&#039;).click();
+    await counter.updateComplete;
+
+    expect(counter.shadowRoot.querySelector(&#039;.count&#039;).textContent).to.equal(&#039;0&#039;);
+  });
+
+  it(&#039;never goes below zero&#039;, async () =&gt; {
+    const counter = await fixture(html`&lt;app-counter&gt;&lt;/app-counter&gt;`);
+
+    counter.shadowRoot.querySelector(&#039;.minus-btn&#039;).click();
+    await counter.updateComplete;
+
+    expect(counter.shadowRoot.querySelector(&#039;.count&#039;).textContent).to.equal(&#039;0&#039;);
+  });
+});</code></pre>
+<strong>Step 2: Run tests (they fail)</strong>
+<pre><code class="language-bash">npx wtr
+# All tests fail - component doesn&#039;t exist yet</code></pre>
+<strong>Step 3: Implement minimal code</strong>
+<pre><code class="language-javascript">// counter.js
+class Counter extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.count = 0;
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  increment() {
+    this.count++;
+    this.render();
+  }
+
+  decrement() {
+    if (this.count &gt; 0) {
+      this.count--;
+      this.render();
+    }
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;div&gt;
+        &lt;button class=&quot;minus-btn&quot;&gt;-&lt;/button&gt;
+        &lt;span class=&quot;count&quot;&gt;${this.count}&lt;/span&gt;
+        &lt;button class=&quot;plus-btn&quot;&gt;+&lt;/button&gt;
+      &lt;/div&gt;
+    `;
+
+    this.shadowRoot.querySelector(&#039;.plus-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; this.increment());
+    this.shadowRoot.querySelector(&#039;.minus-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; this.decrement());
+  }
+
+  get updateComplete() {
+    return Promise.resolve();
+  }
+}
+
+customElements.define(&#039;app-counter&#039;, Counter);</code></pre>
+<strong>Step 4: Run tests (they pass)</strong>
+<pre><code class="language-bash">npx wtr
+# All tests pass!</code></pre>
+<strong>Step 5: Refactor with confidence</strong>
+<p>Tests ensure refactoring doesn't break functionality.</p>
+<h2>Advanced Testing Patterns</h2>
+<h3>Testing Custom Events</h3>
+<pre><code class="language-javascript">it(&#039;dispatches custom event with detail&#039;, async () =&gt; {
+  const el = await fixture(html`&lt;product-card&gt;&lt;/product-card&gt;`);
+
+  let eventDetail = null;
+  el.addEventListener(&#039;add-to-cart&#039;, (e) =&gt; {
+    eventDetail = e.detail;
+  });
+
+  el.shadowRoot.querySelector(&#039;.add-btn&#039;).click();
+
+  expect(eventDetail).to.deep.equal({
+    productId: 123,
+    quantity: 1
+  });
+});</code></pre>
+<h3>Testing Slots</h3>
+<pre><code class="language-javascript">it(&#039;renders slotted content&#039;, async () =&gt; {
+  const el = await fixture(html`
+    &lt;card-component&gt;
+      &lt;h2 slot=&quot;title&quot;&gt;My Title&lt;/h2&gt;
+      &lt;p&gt;My content&lt;/p&gt;
+    &lt;/card-component&gt;
+  `);
+
+  const title = el.shadowRoot.querySelector(&#039;slot[name=&quot;title&quot;]&#039;);
+  const assignedNodes = title.assignedNodes();
+
+  expect(assignedNodes[0].textContent).to.equal(&#039;My Title&#039;);
+});</code></pre>
+<h3>Testing Accessibility</h3>
+<pre><code class="language-javascript">import { expect } from &#039;@open-wc/testing&#039;;
+
+it(&#039;is accessible&#039;, async () =&gt; {
+  const el = await fixture(html`&lt;my-button&gt;Click me&lt;/my-button&gt;`);
+
+  await expect(el).to.be.accessible();
+});
+
+it(&#039;has correct ARIA attributes&#039;, async () =&gt; {
+  const el = await fixture(html`&lt;dialog-box&gt;&lt;/dialog-box&gt;`);
+
+  const dialog = el.shadowRoot.querySelector(&#039;[role=&quot;dialog&quot;]&#039;);
+  expect(dialog).to.have.attribute(&#039;aria-modal&#039;, &#039;true&#039;);
+  expect(dialog).to.have.attribute(&#039;aria-labelledby&#039;);
+});</code></pre>
+<h3>Testing Keyboard Navigation</h3>
+<pre><code class="language-javascript">it(&#039;navigates with arrow keys&#039;, async () =&gt; {
+  const el = await fixture(html`
+    &lt;tab-panel&gt;
+      &lt;tab-item&gt;Tab 1&lt;/tab-item&gt;
+      &lt;tab-item&gt;Tab 2&lt;/tab-item&gt;
+      &lt;tab-item&gt;Tab 3&lt;/tab-item&gt;
+    &lt;/tab-panel&gt;
+  `);
+
+  const tabs = el.shadowRoot.querySelectorAll(&#039;tab-item&#039;);
+
+  // Focus first tab
+  tabs[0].focus();
+
+  // Press arrow right
+  tabs[0].dispatchEvent(new KeyboardEvent(&#039;keydown&#039;, { key: &#039;ArrowRight&#039; }));
+
+  expect(document.activeElement).to.equal(tabs[1]);
+});</code></pre>
+<h2>Performance Testing</h2>
+<p>Test component performance:</p>
+<pre><code class="language-javascript">it(&#039;renders large list efficiently&#039;, async () =&gt; {
+  const items = Array.from({ length: 10000 }, (_, i) =&gt; ({
+    id: i,
+    name: `Item ${i}`
+  }));
+
+  const startTime = performance.now();
+
+  const el = await fixture(html`&lt;virtual-list .items=${items}&gt;&lt;/virtual-list&gt;`);
+  await el.updateComplete;
+
+  const renderTime = performance.now() - startTime;
+
+  // Should render in under 100ms
+  expect(renderTime).to.be.lessThan(100);
+
+  // Should only render visible items
+  const renderedItems = el.shadowRoot.querySelectorAll(&#039;.item&#039;);
+  expect(renderedItems.length).to.be.lessThan(50);
+});</code></pre>
+<h2>Troubleshooting Tests</h2>
+<h3>Problem: Tests Pass Locally but Fail in CI</h3>
+<strong>Symptom</strong>: Tests work on your machine but fail in GitHub Actions
+<strong>Solution</strong>: Common issues:
+<pre><code class="language-javascript">// 1. Timing issues - add proper waits
+await waitUntil(() =&gt; el.shadowRoot.querySelector(&#039;.data&#039;));
+
+// 2. Browser differences - use consistent browser
+// playwright.config.js
+projects: [
+  { name: &#039;chromium&#039;, use: { ...devices[&#039;Desktop Chrome&#039;] } }
+]
+
+// 3. Port conflicts - use random ports
+const port = Math.floor(Math.random() * 10000) + 50000;</code></pre>
+<h3>Problem: Flaky Tests</h3>
+<strong>Symptom</strong>: Tests sometimes pass, sometimes fail
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// Bad: Fixed timeout
+await new Promise(resolve =&gt; setTimeout(resolve, 1000));
+
+// Good: Wait for condition
+await waitUntil(() =&gt; el.dataLoaded);
+
+// Bad: Race condition
+el.loadData();
+expect(el.data).to.exist;
+
+// Good: Wait for async
+await el.loadData();
+expect(el.data).to.exist;</code></pre>
+<h3>Problem: Slow Tests</h3>
+<strong>Symptom</strong>: Test suite takes too long
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// 1. Run tests in parallel
+// web-test-runner.config.js
+export default {
+  concurrency: 10,
+  nodeResolve: true
+};
+
+// 2. Mock expensive operations
+beforeEach(() =&gt; {
+  fetchMock.mock(&#039;/api/expensive&#039;, cachedData);
+});
+
+// 3. Skip browser for pure logic
+describe(&#039;pure functions&#039;, () =&gt; {
+  it(&#039;calculates correctly&#039;, () =&gt; {
+    expect(calculateTotal([1, 2, 3])).to.equal(6);
+  });
+});</code></pre>
+<h2>Best Practices</h2>
+<li><strong>Test behavior, not implementation</strong> - Test what users see, not internal details</li>
+<li><strong>Keep tests focused</strong> - One assertion per test when possible</li>
+<li><strong>Use descriptive names</strong> - Test names should document behavior</li>
+<li><strong>Avoid test interdependence</strong> - Each test should run independently</li>
+<li><strong>Mock external dependencies</strong> - Don't rely on real APIs</li>
+<li><strong>Test error paths</strong> - Test failures, not just successes</li>
+<li><strong>Run tests often</strong> - Catch bugs early</li>
+<li><strong>Maintain test code</strong> - Refactor tests like production code</li>
+<li><strong>Use setup/teardown</strong> - DRY principle applies to tests</li>
+<li><strong>Achieve good coverage</strong> - Aim for 80%+, but focus on critical paths</li>
+<h2>Exercises</h2>
+<h3>Exercise 1: Test a Todo Component</h3>
+<p>Write comprehensive tests for a todo component:</p>
+<ul><li>Renders list of todos</li>
+<li>Adds new todo when form submitted</li>
+<li>Toggles complete status on click</li>
+<li>Deletes todo when delete button clicked</li>
+<li>Shows empty state when no todos</li>
+<li>Validates input before adding</li>
+</ul>
+<strong>Bonus</strong>: Test keyboard shortcuts (Enter to submit, Escape to clear).
+<h3>Exercise 2: E2E Shopping Flow</h3>
+<p>Create E2E tests for shopping cart:</p>
+<ul><li>Browse products</li>
+<li>Add items to cart</li>
+<li>Update quantities</li>
+<li>Apply coupon code</li>
+<li>Complete checkout</li>
+<li>Verify order confirmation</li>
+</ul>
+<strong>Bonus</strong>: Test as guest and authenticated user.
+<h3>Exercise 3: Visual Regression Suite</h3>
+<p>Set up visual regression testing:</p>
+<ul><li>Capture screenshots of all components</li>
+<li>Test different states (hover, focus, disabled)</li>
+<li>Test responsive breakpoints</li>
+<li>Test dark/light themes</li>
+<li>Integrate into CI pipeline</li>
+</ul>
+<strong>Bonus</strong>: Add Percy or Chromatic for cloud-based visual testing.
+<h3>Exercise 4: TDD Calculator</h3>
+<p>Build a calculator component using TDD:</p>
+<ul><li>Write tests first for basic operations (+, -, ×, ÷)</li>
+<li>Implement each operation one at a time</li>
+<li>Add tests for edge cases (divide by zero, overflow)</li>
+<li>Add memory functions (MC, MR, M+, M-)</li>
+<li>Keep tests passing throughout</li>
+</ul>
+<strong>Bonus</strong>: Add scientific functions (sin, cos, sqrt).
+<hr>
+<h2>Summary</h2>
+<p>Testing ensures your LARC applications work correctly and continue working as you make changes:</p>
+<ul><li><strong>Unit tests</strong> verify individual components in isolation</li>
+<li><strong>Integration tests</strong> verify components work together</li>
+<li><strong>E2E tests</strong> verify complete user workflows</li>
+<li><strong>Visual regression tests</strong> catch unintended visual changes</li>
+<li><strong>Test coverage</strong> ensures critical code is tested</li>
+<li><strong>CI/CD integration</strong> catches problems before deployment</li>
+<li><strong>TDD</strong> helps design better components</li>
+</ul>
+Good tests give you confidence to refactor, add features, and deploy. They're not overhead—they're insurance that saves time debugging production issues.
+<hr>
+<h2>Further Reading</h2>
+<strong>For complete testing reference:</strong>
+<ul><li><em>Building with LARC</em> Chapter 13: Testing Strategies - All testing patterns and tools</li>
+<li><em>Building with LARC</em> Appendix E: Recipes and Patterns - Testing recipes and examples</li>
+<li><a href="https://open-wc.org/docs/testing/testing-package/">@open-wc/testing documentation</a></li>
+<li><a href="https://playwright.dev/">Playwright documentation</a></li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/14-testing.md" target="_blank">

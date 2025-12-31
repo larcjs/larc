@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/ui-types",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "TypeScript type definitions for @larcjs/ui",
   "types": "index.d.ts",
   "type": "module",
@@ -13,8 +13,8 @@
     }
   },
   "peerDependencies": {
-    "@larcjs/ui": "^2.0.0",
-    "@larcjs/core-types": "^2.0.0"
+    "@larcjs/ui": "^3.0.0",
+    "@larcjs/core-types": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "@larcjs/ui": {

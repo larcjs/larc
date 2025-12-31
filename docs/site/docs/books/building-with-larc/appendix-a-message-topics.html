@@ -298,9 +298,9 @@ client.subscribe(&#039;users.item.select&#039;, (msg) =&gt; {
 <p>Item events notify about completed operations:</p>
 <p>| Topic | Trigger | Data |
 |-------|---------|------|
-| <code>${resource}.item.created</code> | Item created | <code>{ item: {...} }</code> |
-| <code>${resource}.item.updated</code> | Item updated | <code>{ item: {...} }</code> |
-| <code>${resource}.item.deleted</code> | Item deleted | <code>{ id: 123 }</code> |</p>
+| <code>\${resource}.item.created</code> | Item created | <code>{ item: {...} }</code> |
+| <code>\${resource}.item.updated</code> | Item updated | <code>{ item: {...} }</code> |
+| <code>\${resource}.item.deleted</code> | Item deleted | <code>{ id: 123 }</code> |</p>
 <strong>Example:</strong>
 <pre><code class="language-javascript">// After save operation completes
 client.publish({
@@ -594,14 +594,14 @@ client.publish({
 <strong>Quick Reference:</strong>
 <p>| Pattern | Example | Use Case |
 |---------|---------|----------|
-| <code>${resource}.list.state</code> | <code>users.list.state</code> | List data (retained) |
-| <code>${resource}.list.get</code> | <code>users.list.get</code> | Request list |
-| <code>${resource}.item.get</code> | <code>users.item.get</code> | Request single item |
-| <code>${resource}.item.save</code> | <code>users.item.save</code> | Save item |
-| <code>${resource}.item.delete</code> | <code>users.item.delete</code> | Delete item |
-| <code>${resource}.item.updated</code> | <code>users.item.updated</code> | Item updated event |
-| <code>${domain}.state</code> | <code>app.theme.state</code> | Global state (retained) |
-| <code>${domain}.${action}</code> | <code>nav.goto</code> | Command |</p>
+| <code>\${resource}.list.state</code> | <code>users.list.state</code> | List data (retained) |
+| <code>\${resource}.list.get</code> | <code>users.list.get</code> | Request list |
+| <code>\${resource}.item.get</code> | <code>users.item.get</code> | Request single item |
+| <code>\${resource}.item.save</code> | <code>users.item.save</code> | Save item |
+| <code>\${resource}.item.delete</code> | <code>users.item.delete</code> | Delete item |
+| <code>\${resource}.item.updated</code> | <code>users.item.updated</code> | Item updated event |
+| <code>\${domain}.state</code> | <code>app.theme.state</code> | Global state (retained) |
+| <code>\${domain}.\${action}</code> | <code>nav.goto</code> | Command |</p>
 <p>For complete API documentation, see the main API Reference.</p>
       </article>
       <footer class="docs-footer">
