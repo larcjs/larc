@@ -11,3 +11,6 @@ Thumbs.db
 *.swp
 *.swo
 playground/index.html.backup
+
+# Backups
+docs/books/backup/
