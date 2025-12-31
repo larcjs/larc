@@ -93,6 +93,7 @@ namespace.entity.action
 ```
 
 Examples:
+
 - `user.auth.login` — User login event
 - `cart.items.add` — Add cart item
 - `user.*` — Wildcard: all user events

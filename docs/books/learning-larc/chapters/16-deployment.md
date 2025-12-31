@@ -660,6 +660,7 @@ curl -I https://your-site.com | grep -E "X-Frame-Options|X-Content-Type"
 ```
 
 Or use online tools:
+
 - https://securityheaders.com
 - https://observatory.mozilla.org
 
@@ -1132,6 +1133,7 @@ export const config = await loadConfig();
 ```
 
 **Solutions**:
+
 - Enable compression (gzip/brotli)
 - Use CDN for static assets
 - Preload critical resources
@@ -1166,6 +1168,7 @@ export const config = await loadConfig();
 ### Exercise 1: Deploy to Netlify
 
 Deploy your LARC app to Netlify:
+
 - Set up a free Netlify account
 - Connect your Git repository
 - Configure build settings and environment variables
@@ -1177,6 +1180,7 @@ Deploy your LARC app to Netlify:
 ### Exercise 2: Create a CI/CD Pipeline
 
 Build a complete GitHub Actions workflow that:
+
 - Runs tests on every push
 - Deploys to staging on merge to `develop`
 - Deploys to production on merge to `main`
@@ -1187,6 +1191,7 @@ Build a complete GitHub Actions workflow that:
 ### Exercise 3: Implement Feature Flags
 
 Create a feature flag system that:
+
 - Loads flags from a remote config
 - Supports percentage-based rollouts
 - Allows user whitelisting
@@ -1198,6 +1203,7 @@ Create a feature flag system that:
 ### Exercise 4: Set Up Error Tracking
 
 Implement production error tracking:
+
 - Integrate Sentry or similar service
 - Capture unhandled errors and promise rejections
 - Track custom errors with context

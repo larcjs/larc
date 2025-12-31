@@ -224,6 +224,738 @@ getLCP(console.log);  // Largest Contentful Paint</code></pre>
 }
 
 customElements.define(&#039;virtual-list&#039;, VirtualList);</code></pre>
+<h2>Code Splitting and Dynamic Imports</h2>
+<p>Break your code into smaller chunks that load on demand:</p>
+<pre><code class="language-javascript">// Route-based code splitting
+class AppRouter extends HTMLElement {
+  constructor() {
+    super();
+    this.routes = new Map([
+      [&#039;/&#039;, () =&gt; import(&#039;./pages/home.js&#039;)],
+      [&#039;/products&#039;, () =&gt; import(&#039;./pages/products.js&#039;)],
+      [&#039;/admin&#039;, () =&gt; import(&#039;./pages/admin.js&#039;)]
+    ]);
+  }
+
+  async navigate(path) {
+    // Show loading state
+    this.innerHTML = &#039;&lt;div class=&quot;loading&quot;&gt;Loading...&lt;/div&gt;&#039;;
+
+    try {
+      const loader = this.routes.get(path);
+      if (!loader) {
+        throw new Error(&#039;Route not found&#039;);
+      }
+
+      // Load the module
+      const module = await loader();
+
+      // Render the page component
+      this.innerHTML = `&lt;${module.tagName}&gt;&lt;/${module.tagName}&gt;`;
+
+      // Track page load time
+      performance.mark(`page-${path}-loaded`);
+    } catch (error) {
+      this.innerHTML = `&lt;error-page message=&quot;${error.message}&quot;&gt;&lt;/error-page&gt;`;
+    }
+  }
+}
+
+// Feature-based code splitting
+class DataGrid extends HTMLElement {
+  async enableExport() {
+    if (!this.exportModule) {
+      // Only load export library when user needs it
+      this.exportModule = await import(&#039;https://cdn.jsdelivr.net/npm/xlsx/+esm&#039;);
+    }
+
+    const worksheet = this.exportModule.utils.json_to_sheet(this.data);
+    const workbook = this.exportModule.utils.book_new();
+    this.exportModule.utils.book_append_sheet(workbook, worksheet, &#039;Data&#039;);
+    this.exportModule.writeFile(workbook, &#039;export.xlsx&#039;);
+  }
+}</code></pre>
+<h2>Debouncing and Throttling</h2>
+<p>Control how often expensive operations run:</p>
+<pre><code class="language-javascript">// Debounce: Wait for user to stop typing
+function debounce(fn, delay = 300) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() =&gt; fn.apply(this, args), delay);
+  };
+}
+
+class SearchBox extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;input type=&quot;text&quot; placeholder=&quot;Search...&quot;&gt;
+      &lt;div class=&quot;results&quot;&gt;&lt;/div&gt;
+    `;
+
+    const input = this.querySelector(&#039;input&#039;);
+    const results = this.querySelector(&#039;.results&#039;);
+
+    // Debounce search API calls
+    const searchDebounced = debounce(async (query) =&gt; {
+      if (query.length &lt; 2) {
+        results.innerHTML = &#039;&#039;;
+        return;
+      }
+
+      results.innerHTML = &#039;Searching...&#039;;
+
+      const data = await fetch(`/api/search?q=${encodeURIComponent(query)}`)
+        .then(r =&gt; r.json());
+
+      results.innerHTML = data.map(item =&gt;
+        `&lt;div class=&quot;result&quot;&gt;${item.title}&lt;/div&gt;`
+      ).join(&#039;&#039;);
+    }, 300);
+
+    input.addEventListener(&#039;input&#039;, (e) =&gt; {
+      searchDebounced(e.target.value);
+    });
+  }
+}
+
+// Throttle: Limit scroll handler frequency
+function throttle(fn, delay = 100) {
+  let lastCall = 0;
+  return function (...args) {
+    const now = Date.now();
+    if (now - lastCall &gt;= delay) {
+      lastCall = now;
+      fn.apply(this, args);
+    }
+  };
+}
+
+class InfiniteScroll extends HTMLElement {
+  connectedCallback() {
+    const loadMore = throttle(() =&gt; {
+      const scrollBottom = this.scrollTop + this.clientHeight;
+      const threshold = this.scrollHeight - 200;
+
+      if (scrollBottom &gt;= threshold &amp;&amp; !this.loading) {
+        this.loadNextPage();
+      }
+    }, 200);
+
+    this.addEventListener(&#039;scroll&#039;, loadMore);
+  }
+
+  async loadNextPage() {
+    this.loading = true;
+    // Load more items...
+    this.loading = false;
+  }
+}</code></pre>
+<h2>Memoization for Expensive Computations</h2>
+<p>Cache computed values to avoid redundant work:</p>
+<pre><code class="language-javascript">class DataTable extends HTMLElement {
+  constructor() {
+    super();
+    this.cache = new Map();
+  }
+
+  // Memoize expensive sort operation
+  getSortedData(data, sortKey, direction) {
+    const cacheKey = `${sortKey}-${direction}`;
+
+    if (this.cache.has(cacheKey)) {
+      console.log(&#039;Using cached sort&#039;);
+      return this.cache.get(cacheKey);
+    }
+
+    console.log(&#039;Computing sort&#039;);
+    const sorted = [...data].sort((a, b) =&gt; {
+      const aVal = a[sortKey];
+      const bVal = b[sortKey];
+      const multiplier = direction === &#039;asc&#039; ? 1 : -1;
+      return aVal &lt; bVal ? -multiplier : aVal &gt; bVal ? multiplier : 0;
+    });
+
+    this.cache.set(cacheKey, sorted);
+    return sorted;
+  }
+
+  // Clear cache when data changes
+  set data(newData) {
+    this._data = newData;
+    this.cache.clear();
+    this.render();
+  }
+}
+
+// Memoize with WeakMap for object keys
+const memoizedCalculations = new WeakMap();
+
+function expensiveCalculation(obj) {
+  if (memoizedCalculations.has(obj)) {
+    return memoizedCalculations.get(obj);
+  }
+
+  const result = {
+    total: obj.items.reduce((sum, item) =&gt; sum + item.price, 0),
+    tax: obj.items.reduce((sum, item) =&gt; sum + item.price * 0.1, 0),
+    // ... more expensive calculations
+  };
+
+  memoizedCalculations.set(obj, result);
+  return result;
+}</code></pre>
+<h2>Bundle Size Optimization</h2>
+<p>Keep your JavaScript small:</p>
+<pre><code class="language-javascript">// Use import maps to share dependencies
+// In your HTML:
+/*
+&lt;script type=&quot;importmap&quot;&gt;
+{
+  &quot;imports&quot;: {
+    &quot;lit&quot;: &quot;https://cdn.jsdelivr.net/npm/lit@3/+esm&quot;,
+    &quot;lit/&quot;: &quot;https://cdn.jsdelivr.net/npm/lit@3/&quot;
+  }
+}
+&lt;/script&gt;
+*/
+
+// Multiple components can share the same lit import
+import { LitElement, html, css } from &#039;lit&#039;;
+
+// Tree-shake unused code by importing only what you need
+// ❌ Bad: imports everything
+import * as utils from &#039;./utils.js&#039;;
+
+// ✅ Good: imports only what&#039;s needed
+import { formatDate, formatCurrency } from &#039;./utils.js&#039;;
+
+// Prefer native APIs over libraries
+// ❌ Heavy date library (40KB+)
+import dayjs from &#039;dayjs&#039;;
+const formatted = dayjs(date).format(&#039;YYYY-MM-DD&#039;);
+
+// ✅ Native Intl (0KB)
+const formatted = new Intl.DateTimeFormat(&#039;en-US&#039;).format(date);
+
+// Use dynamic imports for conditional features
+if (user.isAdmin) {
+  const { AdminPanel } = await import(&#039;./admin.js&#039;);
+  // Use AdminPanel
+}</code></pre>
+<p>Check your bundle size:</p>
+<pre><code class="language-bash"># Analyze what&#039;s being loaded
+ls -lh dist/*.js
+
+# Use browser DevTools Network tab to see:
+# - Total KB transferred
+# - Uncompressed size
+# - Number of requests</code></pre>
+<h2>Web Vitals Monitoring</h2>
+<p>Monitor real user experience:</p>
+<pre><code class="language-javascript">// web-vitals-tracker.js
+class WebVitalsTracker {
+  constructor() {
+    this.metrics = {};
+  }
+
+  async track() {
+    // Import web-vitals library only when needed
+    const { onCLS, onFID, onLCP, onFCP, onTTFB } = await import(
+      &#039;https://cdn.jsdelivr.net/npm/web-vitals@3/+esm&#039;
+    );
+
+    onCLS((metric) =&gt; this.reportMetric(metric));
+    onFID((metric) =&gt; this.reportMetric(metric));
+    onLCP((metric) =&gt; this.reportMetric(metric));
+    onFCP((metric) =&gt; this.reportMetric(metric));
+    onTTFB((metric) =&gt; this.reportMetric(metric));
+  }
+
+  reportMetric(metric) {
+    this.metrics[metric.name] = metric.value;
+
+    // Send to analytics
+    if (navigator.sendBeacon) {
+      navigator.sendBeacon(&#039;/analytics&#039;, JSON.stringify({
+        metric: metric.name,
+        value: metric.value,
+        rating: metric.rating,
+        page: window.location.pathname
+      }));
+    }
+
+    // Log for development
+    console.log(`${metric.name}: ${metric.value} (${metric.rating})`);
+  }
+
+  getScores() {
+    return {
+      cls: this.metrics.CLS || 0,
+      fid: this.metrics.FID || 0,
+      lcp: this.metrics.LCP || 0,
+      fcp: this.metrics.FCP || 0,
+      ttfb: this.metrics.TTFB || 0
+    };
+  }
+}
+
+// Use in your app
+const vitals = new WebVitalsTracker();
+vitals.track();</code></pre>
+<p>Display performance scores to users:</p>
+<pre><code class="language-javascript">class PerformanceWidget extends HTMLElement {
+  async connectedCallback() {
+    const { onLCP, onFID, onCLS } = await import(
+      &#039;https://cdn.jsdelivr.net/npm/web-vitals@3/+esm&#039;
+    );
+
+    this.innerHTML = `
+      &lt;div class=&quot;vitals&quot;&gt;
+        &lt;div class=&quot;metric&quot;&gt;
+          &lt;span class=&quot;label&quot;&gt;LCP&lt;/span&gt;
+          &lt;span class=&quot;value lcp&quot;&gt;...&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;metric&quot;&gt;
+          &lt;span class=&quot;label&quot;&gt;FID&lt;/span&gt;
+          &lt;span class=&quot;value fid&quot;&gt;...&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;metric&quot;&gt;
+          &lt;span class=&quot;label&quot;&gt;CLS&lt;/span&gt;
+          &lt;span class=&quot;value cls&quot;&gt;...&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    onLCP(({ value, rating }) =&gt; {
+      this.querySelector(&#039;.lcp&#039;).textContent = `${Math.round(value)}ms`;
+      this.querySelector(&#039;.lcp&#039;).className = `value lcp ${rating}`;
+    });
+
+    onFID(({ value, rating }) =&gt; {
+      this.querySelector(&#039;.fid&#039;).textContent = `${Math.round(value)}ms`;
+      this.querySelector(&#039;.fid&#039;).className = `value fid ${rating}`;
+    });
+
+    onCLS(({ value, rating }) =&gt; {
+      this.querySelector(&#039;.cls&#039;).textContent = value.toFixed(3);
+      this.querySelector(&#039;.cls&#039;).className = `value cls ${rating}`;
+    });
+  }
+}
+
+customElements.define(&#039;performance-widget&#039;, PerformanceWidget);</code></pre>
+<h2>Real-World Example: Optimized Dashboard</h2>
+<p>Here's a complete dashboard with all optimization techniques applied:</p>
+<pre><code class="language-javascript">class OptimizedDashboard extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.cache = new Map();
+    this.loadedWidgets = new Set();
+  }
+
+  async connectedCallback() {
+    // 1. Render shell immediately (FCP)
+    this.renderShell();
+
+    // 2. Load critical data
+    await this.loadCriticalData();
+
+    // 3. Set up lazy loading for below-fold widgets
+    this.setupLazyLoading();
+
+    // 4. Track performance
+    this.trackPerformance();
+  }
+
+  renderShell() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+          container-type: inline-size;
+        }
+
+        .grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+          gap: 1rem;
+          padding: 1rem;
+        }
+
+        .widget {
+          background: white;
+          border-radius: 8px;
+          padding: 1rem;
+          min-height: 200px;
+        }
+
+        .skeleton {
+          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;grid&quot;&gt;
+        &lt;div class=&quot;widget&quot; data-widget=&quot;revenue&quot;&gt;
+          &lt;div class=&quot;skeleton&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;widget&quot; data-widget=&quot;users&quot;&gt;
+          &lt;div class=&quot;skeleton&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;widget&quot; data-widget=&quot;chart&quot; data-lazy&gt;
+          &lt;div class=&quot;skeleton&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;widget&quot; data-widget=&quot;table&quot; data-lazy&gt;
+          &lt;div class=&quot;skeleton&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+
+  async loadCriticalData() {
+    // Load above-the-fold widgets in parallel
+    const criticalWidgets = [&#039;revenue&#039;, &#039;users&#039;];
+
+    await Promise.all(
+      criticalWidgets.map(widget =&gt; this.loadWidget(widget))
+    );
+  }
+
+  setupLazyLoading() {
+    const lazyWidgets = this.shadowRoot.querySelectorAll(&#039;[data-lazy]&#039;);
+
+    const observer = new IntersectionObserver(
+      (entries) =&gt; {
+        entries.forEach(entry =&gt; {
+          if (entry.isIntersecting) {
+            const widgetName = entry.target.dataset.widget;
+            this.loadWidget(widgetName);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { rootMargin: &#039;50px&#039; }
+    );
+
+    lazyWidgets.forEach(widget =&gt; observer.observe(widget));
+  }
+
+  async loadWidget(name) {
+    if (this.loadedWidgets.has(name)) return;
+
+    performance.mark(`widget-${name}-start`);
+
+    try {
+      // Check cache first
+      let data = this.cache.get(name);
+
+      if (!data) {
+        // Load data with timeout
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() =&gt; controller.abort(), 5000);
+
+        data = await fetch(`/api/widgets/${name}`, {
+          signal: controller.signal
+        }).then(r =&gt; r.json());
+
+        clearTimeout(timeoutId);
+
+        // Cache for 5 minutes
+        this.cache.set(name, data);
+        setTimeout(() =&gt; this.cache.delete(name), 5 * 60 * 1000);
+      }
+
+      // Render widget
+      const widget = this.shadowRoot.querySelector(`[data-widget=&quot;${name}&quot;]`);
+      widget.innerHTML = this.renderWidget(name, data);
+
+      this.loadedWidgets.add(name);
+
+      performance.mark(`widget-${name}-end`);
+      performance.measure(
+        `widget-${name}`,
+        `widget-${name}-start`,
+        `widget-${name}-end`
+      );
+    } catch (error) {
+      console.error(`Failed to load widget ${name}:`, error);
+
+      const widget = this.shadowRoot.querySelector(`[data-widget=&quot;${name}&quot;]`);
+      widget.innerHTML = `
+        &lt;div class=&quot;error&quot;&gt;
+          &lt;p&gt;Failed to load ${name}&lt;/p&gt;
+          &lt;button onclick=&quot;this.getRootNode().host.loadWidget(&#039;${name}&#039;)&quot;&gt;
+            Retry
+          &lt;/button&gt;
+        &lt;/div&gt;
+      `;
+    }
+  }
+
+  renderWidget(name, data) {
+    switch (name) {
+      case &#039;revenue&#039;:
+        return `
+          &lt;h3&gt;Revenue&lt;/h3&gt;
+          &lt;div class=&quot;value&quot;&gt;$${data.total.toLocaleString()}&lt;/div&gt;
+          &lt;div class=&quot;change ${data.change &gt;= 0 ? &#039;positive&#039; : &#039;negative&#039;}&quot;&gt;
+            ${data.change &gt;= 0 ? &#039;↑&#039; : &#039;↓&#039;} ${Math.abs(data.change)}%
+          &lt;/div&gt;
+        `;
+
+      case &#039;users&#039;:
+        return `
+          &lt;h3&gt;Active Users&lt;/h3&gt;
+          &lt;div class=&quot;value&quot;&gt;${data.count.toLocaleString()}&lt;/div&gt;
+        `;
+
+      case &#039;chart&#039;:
+        // Lazy load chart library only when needed
+        return `&lt;canvas id=&quot;chart-${name}&quot;&gt;&lt;/canvas&gt;`;
+
+      case &#039;table&#039;:
+        return `
+          &lt;h3&gt;Recent Activity&lt;/h3&gt;
+          &lt;virtual-list&gt;&lt;/virtual-list&gt;
+        `;
+
+      default:
+        return `&lt;div&gt;Unknown widget: ${name}&lt;/div&gt;`;
+    }
+  }
+
+  trackPerformance() {
+    // Track load time
+    window.addEventListener(&#039;load&#039;, () =&gt; {
+      const loadTime = performance.timing.loadEventEnd -
+                      performance.timing.navigationStart;
+      console.log(`Dashboard loaded in ${loadTime}ms`);
+    });
+
+    // Track widget render times
+    const observer = new PerformanceObserver((list) =&gt; {
+      list.getEntries().forEach((entry) =&gt; {
+        if (entry.name.startsWith(&#039;widget-&#039;)) {
+          console.log(`${entry.name}: ${entry.duration}ms`);
+        }
+      });
+    });
+
+    observer.observe({ entryTypes: [&#039;measure&#039;] });
+  }
+}
+
+customElements.define(&#039;optimized-dashboard&#039;, OptimizedDashboard);</code></pre>
+<h2>Troubleshooting Performance Issues</h2>
+<h3>Problem 1: Memory Leaks</h3>
+<strong>Symptoms</strong>: Page gets slower over time, browser tab uses increasing memory.
+<strong>Common causes</strong>:
+<ul><li>Event listeners not removed</li>
+<li>Setters/intervals not cleared</li>
+<li>Large objects cached indefinitely</li>
+</ul>
+<strong>Solution</strong>:
+<pre><code class="language-javascript">class LeakyComponent extends HTMLElement {
+  connectedCallback() {
+    // ❌ Memory leak: handler never removed
+    window.addEventListener(&#039;resize&#039;, this.onResize);
+
+    // ❌ Memory leak: interval never cleared
+    this.intervalId = setInterval(() =&gt; this.update(), 1000);
+
+    // ❌ Memory leak: cache grows forever
+    this.cache = new Map();
+  }
+}
+
+class FixedComponent extends HTMLElement {
+  connectedCallback() {
+    // ✅ Store handler reference
+    this.onResize = () =&gt; this.handleResize();
+    window.addEventListener(&#039;resize&#039;, this.onResize);
+
+    // ✅ Store interval ID
+    this.intervalId = setInterval(() =&gt; this.update(), 1000);
+
+    // ✅ Use LRU cache with size limit
+    this.cache = new Map();
+    this.maxCacheSize = 100;
+  }
+
+  disconnectedCallback() {
+    // ✅ Clean up listener
+    window.removeEventListener(&#039;resize&#039;, this.onResize);
+
+    // ✅ Clear interval
+    clearInterval(this.intervalId);
+
+    // ✅ Clear cache
+    this.cache.clear();
+  }
+
+  addToCache(key, value) {
+    if (this.cache.size &gt;= this.maxCacheSize) {
+      // Remove oldest entry
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
+    }
+    this.cache.set(key, value);
+  }
+}</code></pre>
+<p>Use browser DevTools to detect leaks:
+<li>Open Performance Monitor (Cmd/Ctrl + Shift + P → "Performance Monitor")</li>
+<li>Watch JS heap size over time</li>
+<li>Take heap snapshots to find retained objects</li></p>
+<h3>Problem 2: Slow Initial Render</h3>
+<strong>Symptoms</strong>: Long time before page shows content, poor LCP score.
+<strong>Common causes</strong>:
+<ul><li>Loading too much JavaScript upfront</li>
+<li>Synchronous data fetching</li>
+<li>Rendering everything at once</li>
+</ul>
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// ❌ Bad: Wait for everything
+class SlowApp extends HTMLElement {
+  async connectedCallback() {
+    const data = await fetch(&#039;/api/data&#039;).then(r =&gt; r.json());
+    this.render(data);
+  }
+}
+
+// ✅ Good: Progressive rendering
+class FastApp extends HTMLElement {
+  connectedCallback() {
+    // 1. Show shell immediately
+    this.innerHTML = &#039;&lt;div class=&quot;shell&quot;&gt;Loading...&lt;/div&gt;&#039;;
+
+    // 2. Load data asynchronously
+    this.loadData();
+  }
+
+  async loadData() {
+    try {
+      const data = await fetch(&#039;/api/data&#039;).then(r =&gt; r.json());
+      this.render(data);
+    } catch (error) {
+      this.renderError(error);
+    }
+  }
+}</code></pre>
+<h3>Problem 3: Large Bundle Size</h3>
+<strong>Symptoms</strong>: Slow initial load, poor First Contentful Paint.
+<strong>Diagnosis</strong>:
+<pre><code class="language-javascript">// Analyze what&#039;s in your bundle
+console.table(
+  performance.getEntriesByType(&#039;resource&#039;)
+    .filter(r =&gt; r.initiatorType === &#039;script&#039;)
+    .map(r =&gt; ({
+      name: r.name.split(&#039;/&#039;).pop(),
+      size: `${(r.transferSize / 1024).toFixed(2)} KB`,
+      time: `${r.duration.toFixed(2)}ms`
+    }))
+);</code></pre>
+<strong>Solutions</strong>:
+<ul><li>Use import maps to share dependencies</li>
+<li>Lazy load non-critical features</li>
+<li>Use native APIs instead of libraries</li>
+<li>Tree-shake unused code</li>
+</ul>
+<h3>Problem 4: Layout Thrashing</h3>
+<strong>Symptoms</strong>: Janky scrolling, slow animations, poor FPS.
+<strong>Cause</strong>: Reading and writing DOM in the same frame.
+<pre><code class="language-javascript">// ❌ Bad: Forces multiple reflows
+items.forEach(item =&gt; {
+  const height = item.offsetHeight;  // Read (reflow)
+  item.style.height = height * 2 + &#039;px&#039;;  // Write (reflow)
+});
+
+// ✅ Good: Batch reads and writes
+const heights = items.map(item =&gt; item.offsetHeight);  // Batch reads
+items.forEach((item, i) =&gt; {
+  item.style.height = heights[i] * 2 + &#039;px&#039;;  // Batch writes
+});
+
+// ✅ Better: Use requestAnimationFrame
+function updateLayout() {
+  // All reads first
+  const measurements = elements.map(el =&gt; ({
+    width: el.offsetWidth,
+    height: el.offsetHeight
+  }));
+
+  // Then all writes
+  elements.forEach((el, i) =&gt; {
+    el.style.width = measurements[i].width * 2 + &#039;px&#039;;
+    el.style.height = measurements[i].height * 2 + &#039;px&#039;;
+  });
+}
+
+requestAnimationFrame(updateLayout);</code></pre>
+<h2>Performance Best Practices</h2>
+<li><strong>Load Critical Resources First</strong>: Prioritize above-the-fold content and user-interactive elements.</li>
+<li><strong>Lazy Load Everything Else</strong>: Use Intersection Observer for images, components, and heavy features.</li>
+<li><strong>Cache Aggressively</strong>: Use service workers, HTTP caching, and in-memory caches appropriately.</li>
+<li><strong>Measure Real Users</strong>: Track Web Vitals for actual user experiences, not just lab tests.</li>
+<li><strong>Debounce User Input</strong>: Don't make API calls on every keystroke—wait for users to finish typing.</li>
+<li><strong>Virtualize Long Lists</strong>: Never render more than ~50-100 items at once.</li>
+<li><strong>Code Split by Route</strong>: Load only the JavaScript needed for the current page.</li>
+<li><strong>Optimize Images</strong>: Use modern formats (WebP, AVIF), lazy loading, and responsive images.</li>
+<li><strong>Clean Up Resources</strong>: Always remove event listeners and clear intervals in <code>disconnectedCallback</code>.</li>
+<li><strong>Profile Before Optimizing</strong>: Use DevTools to find actual bottlenecks—don't guess.</li>
+<h2>Hands-On Exercises</h2>
+<h3>Exercise 1: Optimize an Image Gallery</h3>
+<p>Create an image gallery that:</p>
+<ul><li>Lazy loads images as they scroll into view</li>
+<li>Uses Intersection Observer</li>
+<li>Shows a loading placeholder</li>
+<li>Tracks LCP for the first visible image</li>
+</ul>
+<strong>Bonus</strong>: Add a "Load All" button that prefetches remaining images.
+<h3>Exercise 2: Build a Virtual List</h3>
+<p>Implement a virtual list component that:</p>
+<ul><li>Renders only visible items</li>
+<li>Handles variable-height items</li>
+<li>Supports smooth scrolling</li>
+<li>Works with 10,000+ items</li>
+</ul>
+<strong>Bonus</strong>: Add keyboard navigation and accessibility.
+<h3>Exercise 3: Implement Request Deduplication</h3>
+<p>Create a data service that:</p>
+<ul><li>Prevents duplicate API calls for the same resource</li>
+<li>Shares pending requests between components</li>
+<li>Caches responses for 1 minute</li>
+<li>Provides a cache invalidation API</li>
+</ul>
+<strong>Bonus</strong>: Add optimistic updates with rollback on error.
+<h3>Exercise 4: Performance Dashboard</h3>
+<p>Build a performance monitoring dashboard that:</p>
+<ul><li>Tracks all Core Web Vitals</li>
+<li>Shows performance over time</li>
+<li>Highlights performance regressions</li>
+<li>Exports data to CSV</li>
+</ul>
+<strong>Bonus</strong>: Add alerts when metrics exceed thresholds.
+<h2>Summary</h2>
+<p>Performance optimization is about making smart tradeoffs:</p>
+<ul><li><strong>Load less</strong>: Code split, lazy load, tree shake</li>
+<li><strong>Cache more</strong>: Service workers, HTTP cache, memory cache</li>
+<li><strong>Render efficiently</strong>: Virtual lists, debouncing, memoization</li>
+<li><strong>Measure everything</strong>: Web Vitals, Performance API, DevTools</li>
+</ul>
+Start with the low-hanging fruit (lazy loading, caching) and use DevTools to find the real bottlenecks. Remember: premature optimization is the root of all evil—measure first, then optimize.
+<h2>Further Reading</h2>
+<ul><li><strong>Building with LARC - Chapter 17 (Performance)</strong>: Deep dive into LARC-specific optimization techniques</li>
+<li><strong>Building with LARC - Chapter 8 (Lifecycle)</strong>: Component cleanup and resource management</li>
+<li><strong>Building with LARC - Chapter 11 (Best Practices)</strong>: Performance patterns and anti-patterns</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/15-performance-and-optimization.md" target="_blank">

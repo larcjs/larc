@@ -1439,6 +1439,7 @@ class SearchBox extends HTMLElement {
 ### Exercise 1: Build a Multi-Page E-Commerce App
 
 Build a complete e-commerce application with:
+
 - Product listing with filters and sorting
 - Individual product pages
 - Shopping cart with persistence
@@ -1457,6 +1458,7 @@ Build a complete e-commerce application with:
 ### Exercise 2: Create a Real-Time Dashboard
 
 Build a dashboard application that displays:
+
 - Real-time metrics (using WebSocket)
 - Interactive charts and graphs
 - Data filtering and time range selection
@@ -1475,6 +1477,7 @@ Build a dashboard application that displays:
 ### Exercise 3: Build a Blog CMS
 
 Create a complete content management system with:
+
 - Rich text editor for articles
 - Draft/publish workflow
 - Tag and category management
@@ -1495,6 +1498,7 @@ Create a complete content management system with:
 ### Exercise 4: Migrate an Existing Application
 
 Take an existing React or Vue application and migrate it to LARC:
+
 - Audit current architecture and dependencies
 - Create migration plan with phases
 - Implement hybrid approach (gradual migration)

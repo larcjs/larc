@@ -178,6 +178,867 @@ window.addEventListener(&#039;unhandledrejection&#039;, (event) =&gt; {
     })
   });
 });</code></pre>
+<h2>Netlify Deployment Walkthrough</h2>
+<p>Let's deploy a LARC app to Netlify step-by-step:</p>
+<strong>1. Prepare your project:</strong>
+<pre><code class="language-bash"># Project structure
+my-larc-app/
+├── public/
+│   ├── index.html
+│   ├── app.js
+│   ├── components/
+│   └── styles/
+├── netlify.toml
+└── package.json</code></pre>
+<strong>2. Create <code>netlify.toml</code>:</strong>
+<pre><code class="language-toml">[build]
+  publish = &quot;public&quot;
+
+[build.environment]
+  NODE_VERSION = &quot;18&quot;
+
+[[redirects]]
+  from = &quot;/*&quot;
+  to = &quot;/index.html&quot;
+  status = 200
+
+[[headers]]
+  for = &quot;/*.js&quot;
+  [headers.values]
+    Cache-Control = &quot;public, max-age=31536000, immutable&quot;
+
+[[headers]]
+  for = &quot;/*.css&quot;
+  [headers.values]
+    Cache-Control = &quot;public, max-age=31536000, immutable&quot;
+
+[[headers]]
+  for = &quot;/index.html&quot;
+  [headers.values]
+    Cache-Control = &quot;public, max-age=0, must-revalidate&quot;
+    X-Frame-Options = &quot;DENY&quot;
+    X-Content-Type-Options = &quot;nosniff&quot;
+    Referrer-Policy = &quot;strict-origin-when-cross-origin&quot;
+    Permissions-Policy = &quot;geolocation=(), microphone=(), camera=()&quot;</code></pre>
+<strong>3. Deploy via Netlify CLI:</strong>
+<pre><code class="language-bash"># Install Netlify CLI
+npm install -g netlify-cli
+
+# Login
+netlify login
+
+# Initialize site
+netlify init
+
+# Deploy
+netlify deploy --prod</code></pre>
+<strong>4. Set environment variables:</strong>
+<pre><code class="language-bash"># Via CLI
+netlify env:set API_URL &quot;https://api.example.com&quot;
+netlify env:set SENTRY_DSN &quot;https://...&quot;
+
+# Or in Netlify UI: Site Settings → Environment Variables</code></pre>
+<strong>5. Access in your app:</strong>
+<pre><code class="language-javascript">// Access Netlify environment variables
+const config = {
+  apiUrl: window.ENV?.API_URL || &#039;http://localhost:3000&#039;,
+  sentryDsn: window.ENV?.SENTRY_DSN
+};</code></pre>
+<h2>Vercel Deployment Walkthrough</h2>
+<p>Deploy to Vercel with zero configuration:</p>
+<strong>1. Install Vercel CLI:</strong>
+<pre><code class="language-bash">npm install -g vercel</code></pre>
+<strong>2. Create <code>vercel.json</code>:</strong>
+<pre><code class="language-json">{
+  &quot;version&quot;: 2,
+  &quot;builds&quot;: [
+    {
+      &quot;src&quot;: &quot;public/**&quot;,
+      &quot;use&quot;: &quot;@vercel/static&quot;
+    }
+  ],
+  &quot;routes&quot;: [
+    {
+      &quot;src&quot;: &quot;/(.*)&quot;,
+      &quot;dest&quot;: &quot;/public/$1&quot;
+    },
+    {
+      &quot;src&quot;: &quot;/.*&quot;,
+      &quot;dest&quot;: &quot;/public/index.html&quot;
+    }
+  ],
+  &quot;headers&quot;: [
+    {
+      &quot;source&quot;: &quot;/public/(.*\\.js|.*\\.css)&quot;,
+      &quot;headers&quot;: [
+        {
+          &quot;key&quot;: &quot;Cache-Control&quot;,
+          &quot;value&quot;: &quot;public, max-age=31536000, immutable&quot;
+        }
+      ]
+    }
+  ],
+  &quot;env&quot;: {
+    &quot;API_URL&quot;: &quot;@api-url&quot;,
+    &quot;NODE_ENV&quot;: &quot;production&quot;
+  }
+}</code></pre>
+<strong>3. Deploy:</strong>
+<pre><code class="language-bash"># First deployment
+vercel
+
+# Production deployment
+vercel --prod
+
+# Set secrets
+vercel secrets add api-url &quot;https://api.example.com&quot;</code></pre>
+<strong>4. Configure custom domain:</strong>
+<pre><code class="language-bash">vercel domains add www.example.com
+vercel alias deployment-url.vercel.app www.example.com</code></pre>
+<h2>GitHub Pages Deployment</h2>
+<p>Deploy directly from your GitHub repository:</p>
+<strong>1. Create GitHub Actions workflow:</strong>
+<pre><code class="language-yaml"># .github/workflows/deploy.yml
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: &quot;pages&quot;
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: &#039;./public&#039;
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4</code></pre>
+<strong>2. Configure repository:</strong>
+<li>Go to Settings → Pages</li>
+<li>Source: "GitHub Actions"</li>
+<li>Your site will be available at <code>https://username.github.io/repo-name/</code></li>
+<strong>3. Handle base path:</strong>
+<pre><code class="language-javascript">// config.js - Handle GitHub Pages subdirectory
+const basePath = window.location.pathname.includes(&#039;repo-name&#039;)
+  ? &#039;/repo-name&#039;
+  : &#039;&#039;;
+
+export const config = {
+  basePath,
+  apiUrl: `${basePath}/api`
+};
+
+// Use in router
+pan.publish(&#039;router.navigate&#039;, {
+  path: `${config.basePath}/about`
+});</code></pre>
+<h2>CI/CD Pipeline Example</h2>
+<p>Complete GitHub Actions workflow with testing and deployment:</p>
+<pre><code class="language-yaml"># .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: &#039;18&#039;
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: &#039;npm&#039;
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linter
+        run: npm run lint
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run E2E tests
+        run: npm run test:e2e
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: test-results/
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Create build info
+        run: |
+          echo &quot;Build: ${{ github.sha }}&quot; &gt; public/build.txt
+          echo &quot;Date: $(date)&quot; &gt;&gt; public/build.txt
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: public
+          path: public/
+
+  deploy-staging:
+    needs: build
+    if: github.ref == &#039;refs/heads/develop&#039;
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.example.com
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: public
+          path: public/
+
+      - name: Deploy to staging
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_STAGING_SITE_ID }}
+        with:
+          args: deploy --dir=public --prod
+
+  deploy-production:
+    needs: build
+    if: github.ref == &#039;refs/heads/main&#039;
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://example.com
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: public
+          path: public/
+
+      - name: Deploy to production
+        uses: netlify/actions/cli@master
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_PROD_SITE_ID }}
+        with:
+          args: deploy --dir=public --prod
+
+      - name: Notify deployment
+        run: |
+          curl -X POST ${{ secrets.SLACK_WEBHOOK }} \
+            -H &#039;Content-Type: application/json&#039; \
+            -d &#039;{&quot;text&quot;:&quot;✅ Deployed to production: ${{ github.sha }}&quot;}&#039;</code></pre>
+<h2>Docker Deployment</h2>
+<p>Package your app with Nginx for containerized deployment:</p>
+<strong>Dockerfile:</strong>
+<pre><code class="language-dockerfile"># Use Nginx as base
+FROM nginx:alpine
+
+# Copy app files
+COPY public/ /usr/share/nginx/html/
+
+# Copy custom Nginx config
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port
+EXPOSE 80
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost/health || exit 1
+
+CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre>
+<strong>nginx.conf:</strong>
+<pre><code class="language-nginx">server {
+  listen 80;
+  server_name _;
+  root /usr/share/nginx/html;
+  index index.html;
+
+  # Security headers
+  add_header X-Frame-Options &quot;DENY&quot; always;
+  add_header X-Content-Type-Options &quot;nosniff&quot; always;
+  add_header X-XSS-Protection &quot;1; mode=block&quot; always;
+  add_header Referrer-Policy &quot;strict-origin-when-cross-origin&quot; always;
+
+  # Gzip compression
+  gzip on;
+  gzip_vary on;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+  gzip_min_length 1024;
+
+  # Cache static assets
+  location ~* \.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2)$ {
+    expires 1y;
+    add_header Cache-Control &quot;public, immutable&quot;;
+  }
+
+  # No cache for HTML
+  location ~* \.html$ {
+    expires -1;
+    add_header Cache-Control &quot;no-store, no-cache, must-revalidate, proxy-revalidate&quot;;
+  }
+
+  # SPA fallback
+  location / {
+    try_files $uri $uri/ /index.html;
+  }
+
+  # Health check endpoint
+  location /health {
+    access_log off;
+    return 200 &quot;healthy\n&quot;;
+    add_header Content-Type text/plain;
+  }
+}</code></pre>
+<strong>Build and run:</strong>
+<pre><code class="language-bash"># Build image
+docker build -t my-larc-app:latest .
+
+# Run locally
+docker run -p 8080:80 my-larc-app:latest
+
+# Push to registry
+docker tag my-larc-app:latest registry.example.com/my-larc-app:latest
+docker push registry.example.com/my-larc-app:latest
+
+# Deploy with docker-compose
+cat &gt; docker-compose.yml &lt;&lt; EOF
+version: &#039;3.8&#039;
+services:
+  app:
+    image: my-larc-app:latest
+    ports:
+      - &quot;80:80&quot;
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+EOF
+
+docker-compose up -d</code></pre>
+<h2>Security Headers</h2>
+<p>Protect your app with proper HTTP headers:</p>
+<pre><code class="language-javascript">// For Netlify (_headers file)
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=()
+  Content-Security-Policy: default-src &#039;self&#039;; script-src &#039;self&#039; &#039;unsafe-inline&#039; https://cdn.jsdelivr.net; style-src &#039;self&#039; &#039;unsafe-inline&#039;; img-src &#039;self&#039; data: https:; font-src &#039;self&#039; data:; connect-src &#039;self&#039; https://api.example.com
+
+/*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate</code></pre>
+<p>Test security headers:</p>
+<pre><code class="language-bash">curl -I https://your-site.com | grep -E &quot;X-Frame-Options|X-Content-Type&quot;</code></pre>
+<p>Or use online tools:</p>
+<ul><li>https://securityheaders.com</li>
+<li>https://observatory.mozilla.org</li>
+</ul>
+<h2>Performance Optimization for Production</h2>
+<strong>1. Enable compression:</strong>
+<pre><code class="language-nginx"># Nginx
+gzip on;
+gzip_vary on;
+gzip_min_length 1024;
+gzip_types text/plain text/css text/xml text/javascript
+           application/x-javascript application/xml+rss
+           application/javascript application/json image/svg+xml;</code></pre>
+<strong>2. Set cache headers:</strong>
+<pre><code class="language-javascript">// For Cloudflare Workers
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    const response = await fetch(request);
+
+    // Clone response so we can modify headers
+    const newResponse = new Response(response.body, response);
+
+    if (url.pathname.match(/\.(js|css|png|jpg|jpeg|svg|woff2?)$/)) {
+      newResponse.headers.set(&#039;Cache-Control&#039;, &#039;public, max-age=31536000, immutable&#039;);
+    } else if (url.pathname.endsWith(&#039;.html&#039;)) {
+      newResponse.headers.set(&#039;Cache-Control&#039;, &#039;public, max-age=0, must-revalidate&#039;);
+    }
+
+    return newResponse;
+  }
+};</code></pre>
+<strong>3. Preload critical resources:</strong>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;!-- Preload critical resources --&gt;
+  &lt;link rel=&quot;preload&quot; href=&quot;/app.js&quot; as=&quot;script&quot;&gt;
+  &lt;link rel=&quot;preload&quot; href=&quot;/styles/main.css&quot; as=&quot;style&quot;&gt;
+
+  &lt;!-- Preconnect to external domains --&gt;
+  &lt;link rel=&quot;preconnect&quot; href=&quot;https://api.example.com&quot;&gt;
+  &lt;link rel=&quot;preconnect&quot; href=&quot;https://cdn.jsdelivr.net&quot;&gt;
+
+  &lt;!-- DNS prefetch for third-party domains --&gt;
+  &lt;link rel=&quot;dns-prefetch&quot; href=&quot;https://analytics.example.com&quot;&gt;
+&lt;/head&gt;
+&lt;/html&gt;</code></pre>
+<h2>Rollback Strategies</h2>
+<p>Prepare for when deployments go wrong:</p>
+<strong>1. Keep previous versions:</strong>
+<pre><code class="language-bash"># With Netlify CLI
+netlify deploy --prod  # Deploys new version
+
+# Rollback to previous deploy
+netlify rollback
+
+# Or via UI: Deploys tab → Click on previous deploy → &quot;Publish deploy&quot;</code></pre>
+<strong>2. Blue-green deployment:</strong>
+<pre><code class="language-yaml"># Deploy to staging (green), then swap with production (blue)
+name: Blue-Green Deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-green:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to green environment
+        run: |
+          netlify deploy --site=${{ secrets.GREEN_SITE_ID }} --prod
+
+      - name: Run smoke tests
+        run: npm run test:smoke -- --url=https://green.example.com
+
+      - name: Swap blue and green
+        if: success()
+        run: |
+          # Update DNS or load balancer to point to green
+          # This is provider-specific
+          echo &quot;Swapping environments...&quot;</code></pre>
+<strong>3. Feature flags for gradual rollout:</strong>
+<pre><code class="language-javascript">// feature-flags.js
+class FeatureFlags {
+  constructor() {
+    this.flags = {};
+    this.loadFlags();
+  }
+
+  async loadFlags() {
+    try {
+      const response = await fetch(&#039;/api/feature-flags&#039;);
+      this.flags = await response.json();
+    } catch (error) {
+      console.error(&#039;Failed to load feature flags:&#039;, error);
+    }
+  }
+
+  isEnabled(feature, userId = null) {
+    const flag = this.flags[feature];
+    if (!flag) return false;
+
+    // Global enable/disable
+    if (flag.enabled === false) return false;
+
+    // Percentage rollout
+    if (flag.percentage &amp;&amp; userId) {
+      const hash = this.hashUserId(userId);
+      return (hash % 100) &lt; flag.percentage;
+    }
+
+    // Whitelist
+    if (flag.whitelist &amp;&amp; userId) {
+      return flag.whitelist.includes(userId);
+    }
+
+    return flag.enabled;
+  }
+
+  hashUserId(userId) {
+    // Simple hash for percentage rollout
+    let hash = 0;
+    for (let i = 0; i &lt; userId.length; i++) {
+      hash = ((hash &lt;&lt; 5) - hash) + userId.charCodeAt(i);
+      hash = hash &amp; hash;
+    }
+    return Math.abs(hash);
+  }
+}
+
+export const featureFlags = new FeatureFlags();
+
+// Usage
+if (featureFlags.isEnabled(&#039;new-dashboard&#039;, user.id)) {
+  await import(&#039;./components/new-dashboard.js&#039;);
+} else {
+  await import(&#039;./components/old-dashboard.js&#039;);
+}</code></pre>
+<h2>Complete Deployment Example</h2>
+<p>Let's deploy a complete app with monitoring and error tracking:</p>
+<strong>1. Project structure:</strong>
+<pre><code class="language-plaintext">my-app/
+├── public/
+│   ├── index.html
+│   ├── app.js
+│   ├── config.js
+│   └── components/
+├── scripts/
+│   └── deploy.sh
+├── .github/workflows/
+│   └── deploy.yml
+├── netlify.toml
+└── package.json</code></pre>
+<strong>2. Environment-aware config:</strong>
+<pre><code class="language-javascript">// public/config.js
+const environments = {
+  local: {
+    apiUrl: &#039;http://localhost:3000&#039;,
+    sentryDsn: null,
+    analytics: null
+  },
+  staging: {
+    apiUrl: &#039;https://staging-api.example.com&#039;,
+    sentryDsn: &#039;https://...@sentry.io/staging&#039;,
+    analytics: &#039;UA-STAGING&#039;
+  },
+  production: {
+    apiUrl: &#039;https://api.example.com&#039;,
+    sentryDsn: &#039;https://...@sentry.io/prod&#039;,
+    analytics: &#039;UA-PROD&#039;
+  }
+};
+
+function detectEnvironment() {
+  const hostname = window.location.hostname;
+  if (hostname === &#039;localhost&#039; || hostname === &#039;127.0.0.1&#039;) {
+    return &#039;local&#039;;
+  }
+  if (hostname.includes(&#039;staging&#039;)) {
+    return &#039;staging&#039;;
+  }
+  return &#039;production&#039;;
+}
+
+export const config = environments[detectEnvironment()];</code></pre>
+<strong>3. Error tracking setup:</strong>
+<pre><code class="language-javascript">// public/monitoring.js
+import { config } from &#039;./config.js&#039;;
+
+class ErrorTracker {
+  constructor() {
+    if (config.sentryDsn) {
+      this.initSentry();
+    }
+    this.setupErrorHandlers();
+  }
+
+  async initSentry() {
+    const Sentry = await import(&#039;https://cdn.jsdelivr.net/npm/@sentry/browser@7/+esm&#039;);
+
+    Sentry.init({
+      dsn: config.sentryDsn,
+      environment: config.environment,
+      beforeSend(event) {
+        // Filter out noise
+        if (event.message?.includes(&#039;ResizeObserver&#039;)) {
+          return null;
+        }
+        return event;
+      }
+    });
+  }
+
+  setupErrorHandlers() {
+    window.addEventListener(&#039;error&#039;, (event) =&gt; {
+      this.captureError(event.error, {
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno
+      });
+    });
+
+    window.addEventListener(&#039;unhandledrejection&#039;, (event) =&gt; {
+      this.captureError(event.reason, {
+        type: &#039;unhandledrejection&#039;
+      });
+    });
+  }
+
+  captureError(error, context = {}) {
+    console.error(&#039;Error captured:&#039;, error, context);
+
+    // Send to your error tracking service
+    if (config.sentryDsn &amp;&amp; window.Sentry) {
+      window.Sentry.captureException(error, { extra: context });
+    }
+  }
+}
+
+export const errorTracker = new ErrorTracker();</code></pre>
+<strong>4. Deployment script:</strong>
+<pre><code class="language-bash">#!/bin/bash
+# scripts/deploy.sh
+
+set -e
+
+ENV=${1:-staging}
+
+echo &quot;🚀 Deploying to $ENV...&quot;
+
+# Run tests
+echo &quot;🧪 Running tests...&quot;
+npm test
+
+# Check for uncommitted changes
+if [[ -n $(git status -s) ]]; then
+  echo &quot;❌ Uncommitted changes detected. Commit or stash them first.&quot;
+  exit 1
+fi
+
+# Get current version
+VERSION=$(git rev-parse --short HEAD)
+echo &quot;📦 Version: $VERSION&quot;
+
+# Create build info
+cat &gt; public/build-info.json &lt;&lt; EOF
+{
+  &quot;version&quot;: &quot;$VERSION&quot;,
+  &quot;environment&quot;: &quot;$ENV&quot;,
+  &quot;buildDate&quot;: &quot;$(date -u +&quot;%Y-%m-%dT%H:%M:%SZ&quot;)&quot;,
+  &quot;branch&quot;: &quot;$(git rev-parse --abbrev-ref HEAD)&quot;
+}
+EOF
+
+# Deploy based on environment
+if [ &quot;$ENV&quot; = &quot;production&quot; ]; then
+  echo &quot;🌍 Deploying to production...&quot;
+  netlify deploy --prod --site=$NETLIFY_PROD_SITE_ID
+elif [ &quot;$ENV&quot; = &quot;staging&quot; ]; then
+  echo &quot;🔧 Deploying to staging...&quot;
+  netlify deploy --prod --site=$NETLIFY_STAGING_SITE_ID
+fi
+
+echo &quot;✅ Deployment complete!&quot;
+echo &quot;🔗 Check deployment: https://$ENV.example.com&quot;</code></pre>
+<h2>Troubleshooting Deployment Issues</h2>
+<h3>Problem 1: 404 on Refresh (SPA Routing)</h3>
+<strong>Symptoms</strong>: Navigating directly to <code>/about</code> returns 404, but clicking links works.
+<strong>Cause</strong>: Server doesn't know about client-side routes.
+<strong>Solution</strong>:
+<pre><code class="language-toml"># netlify.toml
+[[redirects]]
+  from = &quot;/*&quot;
+  to = &quot;/index.html&quot;
+  status = 200
+
+# vercel.json
+{
+  &quot;rewrites&quot;: [
+    { &quot;source&quot;: &quot;/(.*)&quot;, &quot;destination&quot;: &quot;/index.html&quot; }
+  ]
+}
+
+# Apache .htaccess
+&lt;IfModule mod_rewrite.c&gt;
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+&lt;/IfModule&gt;</code></pre>
+<h3>Problem 2: CORS Errors in Production</h3>
+<strong>Symptoms</strong>: API calls work locally but fail in production with CORS errors.
+<strong>Cause</strong>: API server not configured to allow your production domain.
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// Backend CORS configuration
+app.use(cors({
+  origin: [
+    &#039;https://example.com&#039;,
+    &#039;https://www.example.com&#039;,
+    &#039;https://staging.example.com&#039;
+  ],
+  credentials: true
+}));
+
+// Or use environment variable
+app.use(cors({
+  origin: process.env.ALLOWED_ORIGINS?.split(&#039;,&#039;),
+  credentials: true
+}));</code></pre>
+<strong>Alternative</strong>: Use a proxy in your deployment config:
+<pre><code class="language-toml"># netlify.toml
+[[redirects]]
+  from = &quot;/api/*&quot;
+  to = &quot;https://api.example.com/:splat&quot;
+  status = 200
+  force = true</code></pre>
+<h3>Problem 3: Environment Variables Not Working</h3>
+<strong>Symptoms</strong>: App can't read environment variables, falls back to defaults.
+<strong>Cause</strong>: Build-time vs. runtime configuration confusion.
+<strong>Solution</strong>:
+<p>For runtime configuration, inject variables into HTML:</p>
+<pre><code class="language-html">&lt;!-- Injected by build process or server --&gt;
+&lt;script&gt;
+  window.ENV = {
+    API_URL: &quot;%%API_URL%%&quot;,
+    SENTRY_DSN: &quot;%%SENTRY_DSN%%&quot;
+  };
+&lt;/script&gt;</code></pre>
+<p>Or load from a config endpoint:</p>
+<pre><code class="language-javascript">async function loadConfig() {
+  try {
+    const response = await fetch(&#039;/config.json&#039;);
+    return await response.json();
+  } catch (error) {
+    console.error(&#039;Failed to load config:&#039;, error);
+    return {
+      apiUrl: &#039;http://localhost:3000&#039;,
+      // fallback values
+    };
+  }
+}
+
+export const config = await loadConfig();</code></pre>
+<h3>Problem 4: Slow Initial Load</h3>
+<strong>Symptoms</strong>: First visit takes several seconds to show content.
+<strong>Diagnosis</strong>:
+<pre><code class="language-javascript">// Add timing to index.html
+&lt;script&gt;
+  window.perfMetrics = {
+    navigationStart: performance.timing.navigationStart,
+    fetchStart: performance.timing.fetchStart,
+    domainLookupEnd: performance.timing.domainLookupEnd,
+    connectEnd: performance.timing.connectEnd,
+    responseEnd: performance.timing.responseEnd,
+    domContentLoadedEventEnd: performance.timing.domContentLoadedEventEnd,
+    loadEventEnd: performance.timing.loadEventEnd
+  };
+
+  window.addEventListener(&#039;load&#039;, () =&gt; {
+    const metrics = window.perfMetrics;
+    console.log(&#039;DNS lookup:&#039;, metrics.domainLookupEnd - metrics.fetchStart);
+    console.log(&#039;TCP connection:&#039;, metrics.connectEnd - metrics.domainLookupEnd);
+    console.log(&#039;Response time:&#039;, metrics.responseEnd - metrics.connectEnd);
+    console.log(&#039;DOM processing:&#039;, metrics.domContentLoadedEventEnd - metrics.responseEnd);
+    console.log(&#039;Total load time:&#039;, metrics.loadEventEnd - metrics.navigationStart);
+  });
+&lt;/script&gt;</code></pre>
+<strong>Solutions</strong>:
+<ul><li>Enable compression (gzip/brotli)</li>
+<li>Use CDN for static assets</li>
+<li>Preload critical resources</li>
+<li>Lazy load non-critical components</li>
+<li>Optimize images</li>
+<li>Minify JavaScript and CSS</li>
+</ul>
+<h2>Deployment Best Practices</h2>
+<li><strong>Automate Everything</strong>: Use CI/CD pipelines for consistent, reliable deployments.</li>
+<li><strong>Test Before Deploying</strong>: Run linters, unit tests, and E2E tests in your pipeline.</li>
+<li><strong>Use Staging Environments</strong>: Test production builds in a staging environment first.</li>
+<li><strong>Monitor Deployments</strong>: Track errors, performance, and user behavior after each deploy.</li>
+<li><strong>Enable Rollbacks</strong>: Keep previous versions and be ready to rollback quickly.</li>
+<li><strong>Version Your Releases</strong>: Tag releases in Git and track which version is deployed where.</li>
+<li><strong>Secure Your Secrets</strong>: Never commit API keys or secrets. Use environment variables or secret managers.</li>
+<li><strong>Set Cache Headers Properly</strong>: Long cache for assets (with versioned filenames), no cache for HTML.</li>
+<li><strong>Use Health Checks</strong>: Implement <code>/health</code> endpoints to verify deployments succeeded.</li>
+<li><strong>Document Your Process</strong>: Maintain runbooks for common deployment scenarios and troubleshooting.</li>
+<h2>Hands-On Exercises</h2>
+<h3>Exercise 1: Deploy to Netlify</h3>
+<p>Deploy your LARC app to Netlify:</p>
+<ul><li>Set up a free Netlify account</li>
+<li>Connect your Git repository</li>
+<li>Configure build settings and environment variables</li>
+<li>Set up a custom domain (or use Netlify subdomain)</li>
+<li>Configure security headers</li>
+</ul>
+<strong>Bonus</strong>: Set up preview deployments for pull requests.
+<h3>Exercise 2: Create a CI/CD Pipeline</h3>
+<p>Build a complete GitHub Actions workflow that:</p>
+<ul><li>Runs tests on every push</li>
+<li>Deploys to staging on merge to <code>develop</code></li>
+<li>Deploys to production on merge to <code>main</code></li>
+<li>Sends notifications on deployment success/failure</li>
+</ul>
+<strong>Bonus</strong>: Add automated performance testing with Lighthouse CI.
+<h3>Exercise 3: Implement Feature Flags</h3>
+<p>Create a feature flag system that:</p>
+<ul><li>Loads flags from a remote config</li>
+<li>Supports percentage-based rollouts</li>
+<li>Allows user whitelisting</li>
+<li>Caches flags locally</li>
+<li>Has a UI to toggle features</li>
+</ul>
+<strong>Bonus</strong>: Add A/B testing with analytics integration.
+<h3>Exercise 4: Set Up Error Tracking</h3>
+<p>Implement production error tracking:</p>
+<ul><li>Integrate Sentry or similar service</li>
+<li>Capture unhandled errors and promise rejections</li>
+<li>Track custom errors with context</li>
+<li>Filter out noise (ResizeObserver, etc.)</li>
+<li>Set up alerts for critical errors</li>
+</ul>
+<strong>Bonus</strong>: Add user session replay for debugging.
+<h2>Summary</h2>
+<p>Deploying LARC applications is straightforward—no build process means fewer things to go wrong. Key takeaways:</p>
+<ul><li><strong>Static hosting is simple</strong>: Use Netlify, Vercel, GitHub Pages, or any static host</li>
+<li><strong>Automate with CI/CD</strong>: Let GitHub Actions handle testing and deployment</li>
+<li><strong>Security matters</strong>: Set proper headers, use HTTPS, configure CSP</li>
+<li><strong>Monitor production</strong>: Track errors, performance, and user experience</li>
+<li><strong>Be ready to rollback</strong>: Keep previous versions and have a rollback plan</li>
+</ul>
+Start with simple deployments and add sophistication as needed. The beauty of LARC's no-build approach is that deployment remains simple even as your app grows.
+<h2>Further Reading</h2>
+<ul><li><strong>Building with LARC - Chapter 18 (Deployment)</strong>: Advanced deployment patterns and strategies</li>
+<li><strong>Building with LARC - Chapter 19 (Performance)</strong>: Production optimization techniques</li>
+<li><strong>Building with LARC - Chapter 11 (Best Practices)</strong>: Security and reliability patterns</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/16-deployment.md" target="_blank">

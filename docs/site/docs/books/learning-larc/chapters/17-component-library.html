@@ -177,6 +177,1076 @@ class PanButton extends HTMLElement {
   }
 }</code></pre>
 <pre><code class="language-bash">npm publish --access public</code></pre>
+<h2>Building a Complete Component</h2>
+<p>Let's build a production-ready dialog component from scratch:</p>
+<pre><code class="language-javascript">// components/core/pan-dialog.js
+
+/**
+ * A modal dialog component with accessibility support.
+ *
+ * @element pan-dialog
+ *
+ * @attr {boolean} open - Controls dialog visibility
+ * @attr {string} title - Dialog title
+ * @attr {boolean} modal - Whether dialog is modal (blocks background)
+ * @attr {boolean} close-on-escape - Close on Escape key (default: true)
+ * @attr {boolean} close-on-backdrop - Close on backdrop click (default: true)
+ *
+ * @fires open - Fired when dialog opens
+ * @fires close - Fired when dialog closes
+ * @fires cancel - Fired when user tries to close (cancelable)
+ *
+ * @slot - Main dialog content
+ * @slot header - Custom header content
+ * @slot footer - Custom footer content
+ *
+ * @csspart dialog - The dialog container
+ * @csspart header - The header section
+ * @csspart body - The body section
+ * @csspart footer - The footer section
+ *
+ * @cssprop --dialog-width - Dialog width (default: 500px)
+ * @cssprop --dialog-max-width - Maximum dialog width (default: 90vw)
+ * @cssprop --dialog-backdrop - Backdrop color (default: rgba(0,0,0,0.5))
+ *
+ * @example
+ * &lt;pan-dialog open title=&quot;Confirm Delete&quot;&gt;
+ *   &lt;p&gt;Are you sure you want to delete this item?&lt;/p&gt;
+ *   &lt;div slot=&quot;footer&quot;&gt;
+ *     &lt;button&gt;Cancel&lt;/button&gt;
+ *     &lt;button&gt;Delete&lt;/button&gt;
+ *   &lt;/div&gt;
+ * &lt;/pan-dialog&gt;
+ */
+class PanDialog extends HTMLElement {
+  static observedAttributes = [&#039;open&#039;, &#039;title&#039;];
+
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this._previouslyFocused = null;
+  }
+
+  connectedCallback() {
+    this.render();
+    this.setupAccessibility();
+    this.setupEventListeners();
+  }
+
+  disconnectedCallback() {
+    this.removeEventListeners();
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+
+    if (name === &#039;open&#039;) {
+      newValue !== null ? this.show() : this.hide();
+    } else if (name === &#039;title&#039;) {
+      this.updateTitle();
+    }
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1000;
+        }
+
+        :host([open]) {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .backdrop {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: var(--dialog-backdrop, rgba(0, 0, 0, 0.5));
+          animation: fadeIn 0.2s ease-out;
+        }
+
+        .dialog {
+          position: relative;
+          width: var(--dialog-width, 500px);
+          max-width: var(--dialog-max-width, 90vw);
+          max-height: 90vh;
+          background: var(--dialog-bg, white);
+          border-radius: var(--border-radius, 8px);
+          box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+          display: flex;
+          flex-direction: column;
+          animation: slideUp 0.3s ease-out;
+        }
+
+        .header {
+          padding: var(--space-md, 16px);
+          border-bottom: 1px solid var(--border-color, #e0e0e0);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .title {
+          font-size: var(--font-size-lg, 1.25rem);
+          font-weight: 600;
+          margin: 0;
+        }
+
+        .close-button {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          padding: 4px 8px;
+          border-radius: 4px;
+          color: var(--color-text-secondary, #666);
+        }
+
+        .close-button:hover {
+          background: var(--color-hover, #f0f0f0);
+        }
+
+        .body {
+          padding: var(--space-md, 16px);
+          overflow-y: auto;
+          flex: 1;
+        }
+
+        .footer {
+          padding: var(--space-md, 16px);
+          border-top: 1px solid var(--border-color, #e0e0e0);
+          display: flex;
+          justify-content: flex-end;
+          gap: var(--space-sm, 8px);
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+          from {
+            transform: translateY(20px);
+            opacity: 0;
+          }
+          to {
+            transform: translateY(0);
+            opacity: 1;
+          }
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;backdrop&quot; part=&quot;backdrop&quot;&gt;&lt;/div&gt;
+      &lt;div class=&quot;dialog&quot; part=&quot;dialog&quot; role=&quot;dialog&quot; aria-modal=&quot;true&quot;&gt;
+        &lt;div class=&quot;header&quot; part=&quot;header&quot;&gt;
+          &lt;slot name=&quot;header&quot;&gt;
+            &lt;h2 class=&quot;title&quot; id=&quot;dialog-title&quot;&gt;${this.getAttribute(&#039;title&#039;) || &#039;&#039;}&lt;/h2&gt;
+          &lt;/slot&gt;
+          &lt;button class=&quot;close-button&quot; aria-label=&quot;Close dialog&quot; type=&quot;button&quot;&gt;
+            ×
+          &lt;/button&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;body&quot; part=&quot;body&quot;&gt;
+          &lt;slot&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;footer&quot; part=&quot;footer&quot;&gt;
+          &lt;slot name=&quot;footer&quot;&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+
+  setupAccessibility() {
+    const dialog = this.shadowRoot.querySelector(&#039;.dialog&#039;);
+    dialog.setAttribute(&#039;aria-labelledby&#039;, &#039;dialog-title&#039;);
+
+    // Set focus trap
+    const focusableElements = dialog.querySelectorAll(
+      &#039;button, [href], input, select, textarea, [tabindex]:not([tabindex=&quot;-1&quot;])&#039;
+    );
+
+    this._firstFocusable = focusableElements[0];
+    this._lastFocusable = focusableElements[focusableElements.length - 1];
+  }
+
+  setupEventListeners() {
+    // Close button
+    this.shadowRoot.querySelector(&#039;.close-button&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.close();
+    });
+
+    // Backdrop click
+    if (this.hasAttribute(&#039;close-on-backdrop&#039;) || !this.hasAttribute(&#039;close-on-backdrop&#039;)) {
+      this.shadowRoot.querySelector(&#039;.backdrop&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+        this.close();
+      });
+    }
+
+    // Escape key
+    this._keydownHandler = (e) =&gt; {
+      if (e.key === &#039;Escape&#039; &amp;&amp; (this.hasAttribute(&#039;close-on-escape&#039;) || !this.hasAttribute(&#039;close-on-escape&#039;))) {
+        this.close();
+      }
+
+      // Focus trap
+      if (e.key === &#039;Tab&#039; &amp;&amp; this.hasAttribute(&#039;open&#039;)) {
+        if (e.shiftKey) {
+          if (document.activeElement === this._firstFocusable) {
+            e.preventDefault();
+            this._lastFocusable?.focus();
+          }
+        } else {
+          if (document.activeElement === this._lastFocusable) {
+            e.preventDefault();
+            this._firstFocusable?.focus();
+          }
+        }
+      }
+    };
+
+    document.addEventListener(&#039;keydown&#039;, this._keydownHandler);
+  }
+
+  removeEventListeners() {
+    document.removeEventListener(&#039;keydown&#039;, this._keydownHandler);
+  }
+
+  show() {
+    // Store previously focused element
+    this._previouslyFocused = document.activeElement;
+
+    // Prevent body scroll
+    document.body.style.overflow = &#039;hidden&#039;;
+
+    // Focus first focusable element
+    setTimeout(() =&gt; {
+      this._firstFocusable?.focus();
+    }, 100);
+
+    // Fire event
+    this.dispatchEvent(new CustomEvent(&#039;open&#039;));
+  }
+
+  hide() {
+    // Restore body scroll
+    document.body.style.overflow = &#039;&#039;;
+
+    // Restore focus
+    this._previouslyFocused?.focus();
+
+    // Fire event
+    this.dispatchEvent(new CustomEvent(&#039;close&#039;));
+  }
+
+  close() {
+    // Fire cancelable event
+    const event = new CustomEvent(&#039;cancel&#039;, {
+      cancelable: true
+    });
+
+    this.dispatchEvent(event);
+
+    if (!event.defaultPrevented) {
+      this.removeAttribute(&#039;open&#039;);
+    }
+  }
+
+  updateTitle() {
+    const titleEl = this.shadowRoot.getElementById(&#039;dialog-title&#039;);
+    if (titleEl) {
+      titleEl.textContent = this.getAttribute(&#039;title&#039;) || &#039;&#039;;
+    }
+  }
+}
+
+customElements.define(&#039;pan-dialog&#039;, PanDialog);</code></pre>
+<h2>Component Showcase</h2>
+<p>Build a documentation page to showcase components:</p>
+<pre><code class="language-javascript">// docs/showcase.js
+class ComponentShowcase extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;style&gt;
+        .showcase {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem;
+        }
+
+        .component-demo {
+          margin: 2rem 0;
+          padding: 2rem;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+        }
+
+        .demo-title {
+          font-size: 1.5rem;
+          margin-bottom: 1rem;
+        }
+
+        .demo-example {
+          padding: 1rem;
+          background: #f8f8f8;
+          border-radius: 4px;
+          margin: 1rem 0;
+        }
+
+        .demo-code {
+          background: #282c34;
+          color: #abb2bf;
+          padding: 1rem;
+          border-radius: 4px;
+          overflow-x: auto;
+        }
+
+        .demo-props {
+          margin-top: 1rem;
+        }
+
+        .prop-table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .prop-table th,
+        .prop-table td {
+          text-align: left;
+          padding: 0.5rem;
+          border-bottom: 1px solid #e0e0e0;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;showcase&quot;&gt;
+        &lt;h1&gt;Component Library&lt;/h1&gt;
+
+        &lt;div class=&quot;component-demo&quot;&gt;
+          &lt;h2 class=&quot;demo-title&quot;&gt;Dialog&lt;/h2&gt;
+          &lt;p&gt;A modal dialog with accessibility features.&lt;/p&gt;
+
+          &lt;div class=&quot;demo-example&quot;&gt;
+            &lt;button id=&quot;open-dialog&quot;&gt;Open Dialog&lt;/button&gt;
+            &lt;pan-dialog id=&quot;demo-dialog&quot; title=&quot;Example Dialog&quot;&gt;
+              &lt;p&gt;This is a sample dialog with default settings.&lt;/p&gt;
+              &lt;div slot=&quot;footer&quot;&gt;
+                &lt;button id=&quot;cancel-btn&quot;&gt;Cancel&lt;/button&gt;
+                &lt;button id=&quot;confirm-btn&quot; style=&quot;background: #0066cc; color: white; padding: 8px 16px; border: none; border-radius: 4px; cursor: pointer;&quot;&gt;Confirm&lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/pan-dialog&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;demo-code&quot;&gt;
+&lt;pre&gt;&amp;lt;pan-dialog open title=&quot;Example Dialog&quot;&amp;gt;
+  &amp;lt;p&amp;gt;This is a sample dialog.&amp;lt;/p&amp;gt;
+  &amp;lt;div slot=&quot;footer&quot;&amp;gt;
+    &amp;lt;button&amp;gt;Cancel&amp;lt;/button&amp;gt;
+    &amp;lt;button&amp;gt;Confirm&amp;lt;/button&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;/pan-dialog&amp;gt;&lt;/pre&gt;
+          &lt;/div&gt;
+
+          &lt;div class=&quot;demo-props&quot;&gt;
+            &lt;h3&gt;Properties&lt;/h3&gt;
+            &lt;table class=&quot;prop-table&quot;&gt;
+              &lt;thead&gt;
+                &lt;tr&gt;
+                  &lt;th&gt;Attribute&lt;/th&gt;
+                  &lt;th&gt;Type&lt;/th&gt;
+                  &lt;th&gt;Default&lt;/th&gt;
+                  &lt;th&gt;Description&lt;/th&gt;
+                &lt;/tr&gt;
+              &lt;/thead&gt;
+              &lt;tbody&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;&lt;code&gt;open&lt;/code&gt;&lt;/td&gt;
+                  &lt;td&gt;boolean&lt;/td&gt;
+                  &lt;td&gt;false&lt;/td&gt;
+                  &lt;td&gt;Controls dialog visibility&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;&lt;code&gt;title&lt;/code&gt;&lt;/td&gt;
+                  &lt;td&gt;string&lt;/td&gt;
+                  &lt;td&gt;&quot;&quot;&lt;/td&gt;
+                  &lt;td&gt;Dialog title&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;&lt;code&gt;close-on-escape&lt;/code&gt;&lt;/td&gt;
+                  &lt;td&gt;boolean&lt;/td&gt;
+                  &lt;td&gt;true&lt;/td&gt;
+                  &lt;td&gt;Close on Escape key&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;&lt;code&gt;close-on-backdrop&lt;/code&gt;&lt;/td&gt;
+                  &lt;td&gt;boolean&lt;/td&gt;
+                  &lt;td&gt;true&lt;/td&gt;
+                  &lt;td&gt;Close on backdrop click&lt;/td&gt;
+                &lt;/tr&gt;
+              &lt;/tbody&gt;
+            &lt;/table&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    // Setup demo interactivity
+    this.setupDemos();
+  }
+
+  setupDemos() {
+    const openBtn = this.querySelector(&#039;#open-dialog&#039;);
+    const dialog = this.querySelector(&#039;#demo-dialog&#039;);
+    const cancelBtn = this.querySelector(&#039;#cancel-btn&#039;);
+    const confirmBtn = this.querySelector(&#039;#confirm-btn&#039;);
+
+    openBtn.addEventListener(&#039;click&#039;, () =&gt; {
+      dialog.setAttribute(&#039;open&#039;, &#039;&#039;);
+    });
+
+    cancelBtn.addEventListener(&#039;click&#039;, () =&gt; {
+      dialog.removeAttribute(&#039;open&#039;);
+    });
+
+    confirmBtn.addEventListener(&#039;click&#039;, () =&gt; {
+      alert(&#039;Confirmed!&#039;);
+      dialog.removeAttribute(&#039;open&#039;);
+    });
+  }
+}
+
+customElements.define(&#039;component-showcase&#039;, ComponentShowcase);</code></pre>
+<h2>Testing Components</h2>
+<p>Write comprehensive tests for your components:</p>
+<pre><code class="language-javascript">// components/core/pan-dialog.test.js
+import { expect, fixture, html, oneEvent } from &#039;@open-wc/testing&#039;;
+import &#039;./pan-dialog.js&#039;;
+
+describe(&#039;PanDialog&#039;, () =&gt; {
+  it(&#039;should render with default attributes&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog&gt;&lt;/pan-dialog&gt;`);
+    expect(el).to.exist;
+    expect(el.hasAttribute(&#039;open&#039;)).to.be.false;
+  });
+
+  it(&#039;should show when open attribute is set&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog open&gt;&lt;/pan-dialog&gt;`);
+    const computedStyle = window.getComputedStyle(el);
+    expect(computedStyle.display).to.equal(&#039;flex&#039;);
+  });
+
+  it(&#039;should hide when open attribute is removed&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog open&gt;&lt;/pan-dialog&gt;`);
+    el.removeAttribute(&#039;open&#039;);
+    await el.updateComplete;
+    const computedStyle = window.getComputedStyle(el);
+    expect(computedStyle.display).to.equal(&#039;none&#039;);
+  });
+
+  it(&#039;should fire open event when opened&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog&gt;&lt;/pan-dialog&gt;`);
+    setTimeout(() =&gt; el.setAttribute(&#039;open&#039;, &#039;&#039;));
+    const { detail } = await oneEvent(el, &#039;open&#039;);
+    expect(detail).to.exist;
+  });
+
+  it(&#039;should fire close event when closed&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog open&gt;&lt;/pan-dialog&gt;`);
+    setTimeout(() =&gt; el.removeAttribute(&#039;open&#039;));
+    const { detail } = await oneEvent(el, &#039;close&#039;);
+    expect(detail).to.exist;
+  });
+
+  it(&#039;should close on backdrop click&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog open close-on-backdrop&gt;&lt;/pan-dialog&gt;`);
+    const backdrop = el.shadowRoot.querySelector(&#039;.backdrop&#039;);
+
+    setTimeout(() =&gt; backdrop.click());
+    await oneEvent(el, &#039;cancel&#039;);
+
+    expect(el.hasAttribute(&#039;open&#039;)).to.be.false;
+  });
+
+  it(&#039;should close on Escape key&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog open close-on-escape&gt;&lt;/pan-dialog&gt;`);
+
+    setTimeout(() =&gt; {
+      const event = new KeyboardEvent(&#039;keydown&#039;, { key: &#039;Escape&#039; });
+      document.dispatchEvent(event);
+    });
+
+    await oneEvent(el, &#039;cancel&#039;);
+    expect(el.hasAttribute(&#039;open&#039;)).to.be.false;
+  });
+
+  it(&#039;should trap focus within dialog&#039;, async () =&gt; {
+    const el = await fixture(html`
+      &lt;pan-dialog open&gt;
+        &lt;button id=&quot;btn1&quot;&gt;Button 1&lt;/button&gt;
+        &lt;button id=&quot;btn2&quot;&gt;Button 2&lt;/button&gt;
+      &lt;/pan-dialog&gt;
+    `);
+
+    const btn1 = el.querySelector(&#039;#btn1&#039;);
+    const btn2 = el.querySelector(&#039;#btn2&#039;);
+
+    btn2.focus();
+    expect(document.activeElement).to.equal(btn2);
+
+    // Simulate Tab key on last focusable element
+    const tabEvent = new KeyboardEvent(&#039;keydown&#039;, { key: &#039;Tab&#039;, bubbles: true });
+    document.dispatchEvent(tabEvent);
+
+    // Should wrap to first focusable element
+    expect(document.activeElement).to.equal(btn1);
+  });
+
+  it(&#039;should support custom CSS parts&#039;, async () =&gt; {
+    const el = await fixture(html`&lt;pan-dialog open&gt;&lt;/pan-dialog&gt;`);
+    const dialog = el.shadowRoot.querySelector(&#039;[part=&quot;dialog&quot;]&#039;);
+    const header = el.shadowRoot.querySelector(&#039;[part=&quot;header&quot;]&#039;);
+    const body = el.shadowRoot.querySelector(&#039;[part=&quot;body&quot;]&#039;);
+
+    expect(dialog).to.exist;
+    expect(header).to.exist;
+    expect(body).to.exist;
+  });
+
+  it(&#039;should render slotted content&#039;, async () =&gt; {
+    const el = await fixture(html`
+      &lt;pan-dialog open&gt;
+        &lt;p&gt;Custom content&lt;/p&gt;
+        &lt;button slot=&quot;footer&quot;&gt;Action&lt;/button&gt;
+      &lt;/pan-dialog&gt;
+    `);
+
+    const paragraph = el.querySelector(&#039;p&#039;);
+    const footerButton = el.querySelector(&#039;[slot=&quot;footer&quot;]&#039;);
+
+    expect(paragraph.textContent).to.equal(&#039;Custom content&#039;);
+    expect(footerButton.textContent).to.equal(&#039;Action&#039;);
+  });
+});</code></pre>
+<h2>Theming System</h2>
+<p>Create a comprehensive theming system:</p>
+<pre><code class="language-javascript">// themes/theme-manager.js
+class ThemeManager {
+  constructor() {
+    this.themes = new Map();
+    this.currentTheme = &#039;default&#039;;
+  }
+
+  registerTheme(name, tokens) {
+    this.themes.set(name, tokens);
+  }
+
+  applyTheme(name) {
+    const theme = this.themes.get(name);
+    if (!theme) {
+      console.warn(`Theme &quot;${name}&quot; not found`);
+      return;
+    }
+
+    // Apply CSS custom properties to :root
+    Object.entries(theme).forEach(([key, value]) =&gt; {
+      document.documentElement.style.setProperty(key, value);
+    });
+
+    this.currentTheme = name;
+
+    // Store preference
+    localStorage.setItem(&#039;theme&#039;, name);
+
+    // Dispatch event
+    window.dispatchEvent(new CustomEvent(&#039;theme-changed&#039;, {
+      detail: { theme: name }
+    }));
+  }
+
+  getCurrentTheme() {
+    return this.currentTheme;
+  }
+
+  getAvailableThemes() {
+    return Array.from(this.themes.keys());
+  }
+}
+
+export const themeManager = new ThemeManager();
+
+// Register default theme
+themeManager.registerTheme(&#039;default&#039;, {
+  &#039;--color-primary&#039;: &#039;#0066cc&#039;,
+  &#039;--color-secondary&#039;: &#039;#6c757d&#039;,
+  &#039;--color-success&#039;: &#039;#28a745&#039;,
+  &#039;--color-danger&#039;: &#039;#dc3545&#039;,
+  &#039;--color-warning&#039;: &#039;#ffc107&#039;,
+  &#039;--color-info&#039;: &#039;#17a2b8&#039;,
+
+  &#039;--color-text&#039;: &#039;#212529&#039;,
+  &#039;--color-text-secondary&#039;: &#039;#6c757d&#039;,
+  &#039;--color-bg&#039;: &#039;#ffffff&#039;,
+  &#039;--color-bg-secondary&#039;: &#039;#f8f9fa&#039;,
+
+  &#039;--space-xs&#039;: &#039;4px&#039;,
+  &#039;--space-sm&#039;: &#039;8px&#039;,
+  &#039;--space-md&#039;: &#039;16px&#039;,
+  &#039;--space-lg&#039;: &#039;24px&#039;,
+  &#039;--space-xl&#039;: &#039;32px&#039;,
+
+  &#039;--font-family&#039;: &#039;-apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, sans-serif&#039;,
+  &#039;--font-size-sm&#039;: &#039;0.875rem&#039;,
+  &#039;--font-size-md&#039;: &#039;1rem&#039;,
+  &#039;--font-size-lg&#039;: &#039;1.25rem&#039;,
+  &#039;--font-size-xl&#039;: &#039;1.5rem&#039;,
+
+  &#039;--border-radius&#039;: &#039;4px&#039;,
+  &#039;--border-radius-lg&#039;: &#039;8px&#039;,
+  &#039;--border-width&#039;: &#039;1px&#039;,
+  &#039;--border-color&#039;: &#039;#dee2e6&#039;,
+
+  &#039;--shadow-sm&#039;: &#039;0 1px 2px rgba(0, 0, 0, 0.05)&#039;,
+  &#039;--shadow-md&#039;: &#039;0 4px 6px rgba(0, 0, 0, 0.1)&#039;,
+  &#039;--shadow-lg&#039;: &#039;0 10px 15px rgba(0, 0, 0, 0.1)&#039;,
+});
+
+// Register dark theme
+themeManager.registerTheme(&#039;dark&#039;, {
+  &#039;--color-primary&#039;: &#039;#4d9fff&#039;,
+  &#039;--color-secondary&#039;: &#039;#6c757d&#039;,
+  &#039;--color-success&#039;: &#039;#28a745&#039;,
+  &#039;--color-danger&#039;: &#039;#dc3545&#039;,
+  &#039;--color-warning&#039;: &#039;#ffc107&#039;,
+  &#039;--color-info&#039;: &#039;#17a2b8&#039;,
+
+  &#039;--color-text&#039;: &#039;#e9ecef&#039;,
+  &#039;--color-text-secondary&#039;: &#039;#adb5bd&#039;,
+  &#039;--color-bg&#039;: &#039;#212529&#039;,
+  &#039;--color-bg-secondary&#039;: &#039;#343a40&#039;,
+
+  &#039;--border-color&#039;: &#039;#495057&#039;,
+
+  &#039;--shadow-sm&#039;: &#039;0 1px 2px rgba(0, 0, 0, 0.3)&#039;,
+  &#039;--shadow-md&#039;: &#039;0 4px 6px rgba(0, 0, 0, 0.4)&#039;,
+  &#039;--shadow-lg&#039;: &#039;0 10px 15px rgba(0, 0, 0, 0.4)&#039;,
+});
+
+// Apply saved theme or default
+const savedTheme = localStorage.getItem(&#039;theme&#039;) || &#039;default&#039;;
+themeManager.applyTheme(savedTheme);</code></pre>
+<strong>Theme switcher component:</strong>
+<pre><code class="language-javascript">class ThemeSwitcher extends HTMLElement {
+  connectedCallback() {
+    import(&#039;./theme-manager.js&#039;).then(({ themeManager }) =&gt; {
+      this.themeManager = themeManager;
+      this.render();
+    });
+  }
+
+  render() {
+    const themes = this.themeManager.getAvailableThemes();
+    const current = this.themeManager.getCurrentTheme();
+
+    this.innerHTML = `
+      &lt;style&gt;
+        .theme-switcher {
+          display: inline-flex;
+          gap: 0.5rem;
+        }
+
+        .theme-button {
+          padding: 0.5rem 1rem;
+          border: 1px solid var(--border-color);
+          border-radius: var(--border-radius);
+          background: var(--color-bg);
+          color: var(--color-text);
+          cursor: pointer;
+        }
+
+        .theme-button.active {
+          background: var(--color-primary);
+          color: white;
+          border-color: var(--color-primary);
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;theme-switcher&quot;&gt;
+        ${themes.map(theme =&gt; `
+          &lt;button
+            class=&quot;theme-button ${theme === current ? &#039;active&#039; : &#039;&#039;}&quot;
+            data-theme=&quot;${theme}&quot;
+          &gt;
+            ${theme}
+          &lt;/button&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+
+    // Add event listeners
+    this.querySelectorAll(&#039;.theme-button&#039;).forEach(btn =&gt; {
+      btn.addEventListener(&#039;click&#039;, () =&gt; {
+        const theme = btn.dataset.theme;
+        this.themeManager.applyTheme(theme);
+        this.render();
+      });
+    });
+  }
+}
+
+customElements.define(&#039;theme-switcher&#039;, ThemeSwitcher);</code></pre>
+<h2>Publishing to npm</h2>
+<p>Prepare your library for npm:</p>
+<strong>1. package.json configuration:</strong>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;@myorg/larc-components&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;LARC component library&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;main&quot;: &quot;./index.js&quot;,
+  &quot;exports&quot;: {
+    &quot;.&quot;: {
+      &quot;import&quot;: &quot;./index.js&quot;,
+      &quot;types&quot;: &quot;./index.d.ts&quot;
+    },
+    &quot;./dialog&quot;: {
+      &quot;import&quot;: &quot;./components/core/pan-dialog.js&quot;,
+      &quot;types&quot;: &quot;./components/core/pan-dialog.d.ts&quot;
+    },
+    &quot;./button&quot;: {
+      &quot;import&quot;: &quot;./components/core/pan-button.js&quot;
+    },
+    &quot;./themes/*&quot;: &quot;./themes/*&quot;
+  },
+  &quot;files&quot;: [
+    &quot;components/&quot;,
+    &quot;themes/&quot;,
+    &quot;index.js&quot;,
+    &quot;README.md&quot;
+  ],
+  &quot;keywords&quot;: [
+    &quot;web-components&quot;,
+    &quot;larc&quot;,
+    &quot;components&quot;,
+    &quot;ui&quot;
+  ],
+  &quot;customElements&quot;: &quot;custom-elements.json&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;web-test-runner \&quot;components/**/*.test.js\&quot;&quot;,
+    &quot;analyze&quot;: &quot;wca analyze \&quot;components/**/*.js\&quot; --outFile custom-elements.json&quot;,
+    &quot;prepublishOnly&quot;: &quot;npm test &amp;&amp; npm run analyze&quot;
+  },
+  &quot;repository&quot;: {
+    &quot;type&quot;: &quot;git&quot;,
+    &quot;url&quot;: &quot;https://github.com/myorg/larc-components&quot;
+  },
+  &quot;license&quot;: &quot;MIT&quot;
+}</code></pre>
+<strong>2. Create README.md:</strong>
+<pre><code class="language-markdown"># @myorg/larc-components
+
+A collection of accessible, themeable web components built with LARC.
+
+## Installation</code></pre>bash
+npm install @myorg/larc-components
+<pre><code class="language-plaintext">## Usage
+
+### Import all components</code></pre>javascript
+import '@myorg/larc-components';
+<pre><code class="language-plaintext">### Import specific components</code></pre>javascript
+import '@myorg/larc-components/dialog';
+import '@myorg/larc-components/button';
+<pre><code class="language-plaintext">### Use in HTML</code></pre>html
+<pan-dialog open title="Example">
+  <p>Dialog content</p>
+</pan-dialog>
+<pre><code class="language-plaintext">## Theming</code></pre>javascript
+import { themeManager } from '@myorg/larc-components/themes/theme-manager.js';
+<p>// Apply dark theme
+themeManager.applyTheme('dark');</p>
+<p>// Register custom theme
+themeManager.registerTheme('custom', {
+  '--color-primary': '#ff0000',
+  // ...more tokens
+});
+<pre><code class="language-plaintext">## Components
+
+- `&lt;pan-dialog&gt;` - Modal dialog
+- `&lt;pan-button&gt;` - Button component
+- `&lt;pan-card&gt;` - Card container
+- More coming soon...
+
+## License
+
+MIT</code></pre></p>
+<strong>3. Publish:</strong>
+<pre><code class="language-bash"># Login to npm
+npm login
+
+# Publish (first time)
+npm publish --access public
+
+# Publish update
+npm version patch  # or minor, major
+npm publish</code></pre>
+<h2>Version Management</h2>
+<p>Follow semantic versioning and maintain a changelog:</p>
+<pre><code class="language-markdown"># Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.2.0] - 2024-01-15
+
+### Added
+- New `&lt;pan-dialog&gt;` component with full accessibility support
+- Dark theme support
+- CSS parts for style customization
+
+### Changed
+- Improved button component focus styles
+- Updated default theme colors
+
+### Fixed
+- Fixed focus trap in dialog component
+- Fixed memory leak in theme manager
+
+## [1.1.0] - 2024-01-01
+
+### Added
+- New `&lt;pan-card&gt;` component
+- Theme switcher component
+
+### Changed
+- Breaking: Renamed `variant` to `type` in button component
+
+### Migration Guide
+
+Update button variant attribute:</code></pre>html
+<!-- Before -->
+<pan-button variant="primary">Click</pan-button>
+<!-- After -->
+<pan-button type="primary">Click</pan-button>
+<pre><code class="language-plaintext">## [1.0.0] - 2023-12-01
+
+- Initial release</code></pre>
+<h2>Component API Design Patterns</h2>
+<p>Design consistent, predictable component APIs:</p>
+<strong>1. Boolean attributes:</strong>
+<pre><code class="language-javascript">// ✅ Good: Use presence/absence
+&lt;pan-dialog open&gt;&lt;/pan-dialog&gt;
+&lt;pan-button disabled&gt;&lt;/pan-button&gt;
+
+// ❌ Bad: Use string values
+&lt;pan-dialog open=&quot;true&quot;&gt;&lt;/pan-dialog&gt;</code></pre>
+<strong>2. Enum attributes:</strong>
+<pre><code class="language-javascript">// ✅ Good: Use lowercase, hyphenated
+&lt;pan-button variant=&quot;primary&quot;&gt;&lt;/pan-button&gt;
+&lt;pan-input type=&quot;email&quot;&gt;&lt;/pan-input&gt;
+
+// ❌ Bad: Use camelCase or weird casing
+&lt;pan-button variant=&quot;Primary&quot;&gt;&lt;/pan-button&gt;</code></pre>
+<strong>3. Event naming:</strong>
+<pre><code class="language-javascript">// ✅ Good: Use present tense for state changes
+element.addEventListener(&#039;open&#039;, () =&gt; {});
+element.addEventListener(&#039;close&#039;, () =&gt; {});
+
+// ✅ Good: Use past tense for completed actions
+element.addEventListener(&#039;loaded&#039;, () =&gt; {});
+element.addEventListener(&#039;changed&#039;, () =&gt; {});</code></pre>
+<strong>4. CSS custom properties:</strong>
+<pre><code class="language-javascript">// ✅ Good: Namespace and descriptive
+--dialog-width
+--button-primary-bg
+--card-border-radius
+
+// ❌ Bad: Generic or unclear
+--width
+--bg
+--radius</code></pre>
+<strong>5. Slots:</strong>
+<pre><code class="language-javascript">// ✅ Good: Named slots for specific content
+&lt;slot name=&quot;header&quot;&gt;&lt;/slot&gt;
+&lt;slot name=&quot;footer&quot;&gt;&lt;/slot&gt;
+&lt;slot&gt;&lt;/slot&gt;  // default slot
+
+// ❌ Bad: Too many unnamed slots</code></pre>
+<h2>Troubleshooting Component Libraries</h2>
+<h3>Problem 1: Styles Bleeding Between Components</h3>
+<strong>Symptoms</strong>: Components inherit unwanted styles from global CSS or other components.
+<strong>Cause</strong>: Not using Shadow DOM or improperly scoped styles.
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// ✅ Always use Shadow DOM for encapsulation
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });  // ← Critical!
+  }
+
+  connectedCallback() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        /* These styles won&#039;t leak out */
+        :host {
+          display: block;
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;content&quot;&gt;
+        &lt;slot&gt;&lt;/slot&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h3>Problem 2: Components Not Updating When Attributes Change</h3>
+<strong>Symptoms</strong>: Changing attributes doesn't update the component.
+<strong>Cause</strong>: Not implementing <code>observedAttributes</code> or <code>attributeChangedCallback</code>.
+<strong>Solution</strong>:
+<pre><code class="language-javascript">class MyComponent extends HTMLElement {
+  // ✅ Declare which attributes to watch
+  static observedAttributes = [&#039;value&#039;, &#039;disabled&#039;];
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (oldValue === newValue) return;
+
+    // Handle attribute change
+    if (name === &#039;value&#039;) {
+      this.updateValue(newValue);
+    } else if (name === &#039;disabled&#039;) {
+      this.updateDisabledState(newValue !== null);
+    }
+  }
+}</code></pre>
+<h3>Problem 3: Memory Leaks in Components</h3>
+<strong>Symptoms</strong>: Memory usage grows over time, especially when components are added/removed.
+<strong>Cause</strong>: Event listeners not cleaned up.
+<strong>Solution</strong>:
+<pre><code class="language-javascript">class MyComponent extends HTMLElement {
+  connectedCallback() {
+    // Store handler reference
+    this._resizeHandler = () =&gt; this.handleResize();
+    window.addEventListener(&#039;resize&#039;, this._resizeHandler);
+
+    this._panSubscriptionId = pan.subscribe(&#039;data.updated&#039;, () =&gt; {
+      this.refresh();
+    });
+  }
+
+  disconnectedCallback() {
+    // ✅ Clean up everything
+    window.removeEventListener(&#039;resize&#039;, this._resizeHandler);
+
+    if (this._panSubscriptionId) {
+      pan.unsubscribe(this._panSubscriptionId);
+    }
+  }
+}</code></pre>
+<h3>Problem 4: Slow Component Registration</h3>
+<strong>Symptoms</strong>: Initial page load is slow when many components are imported.
+<strong>Cause</strong>: Importing all components upfront.
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// ❌ Bad: Import everything upfront
+import &#039;./components/dialog.js&#039;;
+import &#039;./components/button.js&#039;;
+import &#039;./components/card.js&#039;;
+// ... 50 more imports
+
+// ✅ Good: Lazy load on demand
+const componentRegistry = new Map([
+  [&#039;pan-dialog&#039;, () =&gt; import(&#039;./components/dialog.js&#039;)],
+  [&#039;pan-button&#039;, () =&gt; import(&#039;./components/button.js&#039;)],
+  [&#039;pan-card&#039;, () =&gt; import(&#039;./components/card.js&#039;)]
+]);
+
+// Auto-load when component is used
+const observer = new MutationObserver((mutations) =&gt; {
+  mutations.forEach(mutation =&gt; {
+    mutation.addedNodes.forEach(node =&gt; {
+      if (node.nodeType === 1) {
+        const tagName = node.tagName.toLowerCase();
+        if (componentRegistry.has(tagName)) {
+          componentRegistry.get(tagName)();
+          componentRegistry.delete(tagName);  // Load once
+        }
+      }
+    });
+  });
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});</code></pre>
+<h2>Component Library Best Practices</h2>
+<li><strong>Always Use Shadow DOM</strong>: Encapsulate styles and prevent leakage.</li>
+<li><strong>Document Everything</strong>: Use JSDoc comments for all public APIs.</li>
+<li><strong>Test Thoroughly</strong>: Unit tests, accessibility tests, and visual regression tests.</li>
+<li><strong>Follow Web Standards</strong>: Use standard HTML attributes and patterns when possible.</li>
+<li><strong>Make Components Composable</strong>: Small, focused components that work well together.</li>
+<li><strong>Provide Customization</strong>: CSS parts, custom properties, and slots for flexibility.</li>
+<li><strong>Accessibility First</strong>: Always include ARIA attributes, keyboard navigation, and focus management.</li>
+<li><strong>Version Carefully</strong>: Follow semantic versioning and provide migration guides for breaking changes.</li>
+<li><strong>Optimize Performance</strong>: Lazy load components, clean up resources, avoid unnecessary re-renders.</li>
+<li><strong>Maintain Consistency</strong>: Use consistent naming, patterns, and behaviors across all components.</li>
+<h2>Hands-On Exercises</h2>
+<h3>Exercise 1: Build a Toast Notification Component</h3>
+<p>Create a <code><pan-toast></code> component that:</p>
+<ul><li>Shows temporary notifications</li>
+<li>Supports different types (success, error, warning, info)</li>
+<li>Auto-dismisses after a timeout</li>
+<li>Stacks multiple toasts</li>
+<li>Has accessible announcements (aria-live)</li>
+</ul>
+<strong>Bonus</strong>: Add slide-in animations and a queue system.
+<h3>Exercise 2: Create a Component Documentation Site</h3>
+<p>Build an interactive documentation site for your components that:</p>
+<ul><li>Shows live examples with editable code</li>
+<li>Displays component API (props, events, slots)</li>
+<li>Includes accessibility information</li>
+<li>Has a theme switcher</li>
+<li>Provides copy-paste code snippets</li>
+</ul>
+<strong>Bonus</strong>: Generate documentation from JSDoc comments automatically.
+<h3>Exercise 3: Implement a Component Testing Suite</h3>
+<p>Set up comprehensive testing for a component:</p>
+<ul><li>Unit tests for all functionality</li>
+<li>Accessibility tests (keyboard nav, screen readers)</li>
+<li>Visual regression tests with screenshots</li>
+<li>Performance tests (render time)</li>
+<li>Cross-browser testing</li>
+</ul>
+<strong>Bonus</strong>: Integrate tests into CI/CD pipeline.
+<h3>Exercise 4: Publish a Component Package</h3>
+<p>Package and publish a component library:</p>
+<ul><li>Set up proper package.json with exports</li>
+<li>Create comprehensive README</li>
+<li>Write CHANGELOG.md</li>
+<li>Publish to npm</li>
+<li>Set up automated versioning and releases</li>
+</ul>
+<strong>Bonus</strong>: Create a landing page with examples and documentation.
+<h2>Summary</h2>
+<p>Building a component library is about more than just writing components—it's about creating a sustainable system:</p>
+<ul><li><strong>Organize logically</strong>: Group related components, use consistent naming</li>
+<li><strong>Document thoroughly</strong>: Every component, prop, event, and slot</li>
+<li><strong>Test comprehensively</strong>: Unit, integration, accessibility, visual</li>
+<li><strong>Theme consistently</strong>: Design tokens and CSS custom properties</li>
+<li><strong>Version carefully</strong>: Semantic versioning with clear changelogs</li>
+<li><strong>Distribute effectively</strong>: npm, CDN, or monorepo</li>
+</ul>
+A well-maintained component library accelerates development and ensures consistency across your applications.
+<h2>Further Reading</h2>
+<ul><li><strong>Building with LARC - Chapter 15 (Component Patterns)</strong>: Advanced component architecture</li>
+<li><strong>Building with LARC - Chapter 5 (Shadow DOM)</strong>: Deep dive into encapsulation</li>
+<li><strong>Building with LARC - Chapter 10 (Accessibility)</strong>: Making components accessible</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/17-component-library.md" target="_blank">

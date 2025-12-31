@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Build Scripts · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Build Scripts">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">scripts</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>Build Scripts</h1>
+<h2>Component Sync Workflow</h2>
+<h3>Overview</h3>
+<p>UI components are maintained in <code>@larcjs/ui</code> as the <strong>source of truth</strong>, then automatically synced to <code>@larcjs/core/components/</code> during build and publish.</p>
+<p>This allows:
+<ul><li><strong>@larcjs/ui</strong> - Standalone UI components package</li>
+<li><strong>@larcjs/core</strong> - "Batteries included" package with components built-in for one-liner setup</li>
+</ul>
+<h3>Automatic Sync</h3></p>
+<p>Components sync automatically:</p>
+<strong>During build:</strong>
+<pre><code class="language-bash">npm run build              # Syncs, then builds all packages
+npm run build:all          # Syncs, builds, and minifies</code></pre>
+<strong>During publish:</strong>
+<pre><code class="language-bash">npm run changeset:publish  # Syncs before publishing
+# or
+npm publish                # prepublishOnly hook syncs automatically</code></pre>
+<h3>Manual Sync</h3>
+<p>Force sync components without building:</p>
+<pre><code class="language-bash">npm run sync:components</code></pre>
+<h3>Component Development Workflow</h3>
+<li><strong>Edit components in <code>packages/ui/</code></strong></li>
+   <pre><code class="language-bash">cd packages/ui
+   vim pan-card.mjs</code></pre>
+<li><strong>Test locally</strong></li>
+   <pre><code class="language-bash">npm run serve:examples</code></pre>
+<li><strong>Build (auto-syncs to core)</strong></li>
+   <pre><code class="language-bash">npm run build:all</code></pre>
+<li><strong>Publish (auto-syncs before publishing)</strong></li>
+   <pre><code class="language-bash">npm run changeset:publish</code></pre>
+<h3>What Gets Synced</h3>
+<p>All <code>.mjs</code> and <code>.min.mjs</code> files from <code>packages/ui/</code>:
+<ul><li><code>pan-*.mjs</code> - PAN components</li>
+<li><code>pan-*.min.mjs</code> - Minified versions</li>
+<li><code>*.mjs</code> - Other components (drag-drop-list, file-upload, etc.)</li>
+</ul>
+<h3>Result</h3></p>
+<p>Both packages published with identical components:
+<ul><li><code>@larcjs/ui</code> - Original source</li>
+<li><code>@larcjs/core/components/</code> - Synced copy</li>
+</ul>
+Users can use either:
+<pre><code class="language-html">&lt;!-- One-liner: core with everything --&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;&gt;&lt;/script&gt;
+
+&lt;!-- Minimal: bus only, explicit component imports --&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.0/pan-card.mjs&quot;&gt;&lt;/script&gt;</code></pre></p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/scripts/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Workspace Build Workflow · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Workspace Build Workflow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>WORKSPACE-WORKFLOW</span>
+      </div>
+      <article class="docs-content">
+        <h1>Workspace Build Workflow</h1>
+<h2>Monorepo Structure</h2>
+<pre><code class="language-plaintext">larc/ (root)
+├── packages/
+│   ├── core/              → @larcjs/core (includes synced components)
+│   ├── core-lite/         → @larcjs/core-lite
+│   ├── ui/                → @larcjs/ui (SOURCE OF TRUTH for components)
+│   ├── apps/              → @larcjs/apps
+│   ├── examples/          → @larcjs/examples
+│   └── ...
+├── cli/                   → create-larc-app
+├── registry/              → @larcjs/registry
+├── react-adapter/         → @larcjs/react-adapter
+└── docs/site/             → @larcjs/site</code></pre>
+<h2>Build Order with Component Sync</h2>
+<h3>1. Root Level Build</h3>
+<pre><code class="language-bash">npm run build</code></pre>
+<strong>Execution flow:</strong>
+<pre><code class="language-plaintext">1. sync:components (root)
+   └─&gt; Copies @larcjs/ui/* to @larcjs/core/components/
+
+2. npm run build --workspaces --if-present
+   ├─&gt; @larcjs/ui (builds first - independent)
+   ├─&gt; @larcjs/core (builds with fresh components)
+   ├─&gt; @larcjs/core-lite (builds)
+   ├─&gt; @larcjs/apps (depends on core + ui)
+   ├─&gt; @larcjs/react-adapter (depends on core)
+   └─&gt; ... (all other workspaces)</code></pre>
+<h3>2. Individual Workspace Build</h3>
+<pre><code class="language-bash">npm run build:core    # Just @larcjs/core
+npm run build:ui      # Just @larcjs/ui</code></pre>
+<strong>Execution flow:</strong>
+<pre><code class="language-plaintext">npm run build --workspace @larcjs/core
+└─&gt; Runs @larcjs/core&#039;s build script
+    └─&gt; sync:components (if prepublishOnly)
+    └─&gt; build script</code></pre>
+<h3>3. Publish Workflow</h3>
+<pre><code class="language-bash">npm run changeset:publish</code></pre>
+<strong>Execution flow:</strong>
+<pre><code class="language-plaintext">1. sync:components (root level)
+   └─&gt; Ensures core has latest UI components
+
+2. changeset publish
+   ├─&gt; Bumps versions
+   ├─&gt; For each package:
+   │   ├─&gt; prepublishOnly hook (syncs again if @larcjs/core)
+   │   └─&gt; npm publish
+   └─&gt; Git tags + push</code></pre>
+<h2>Workspace Dependencies</h2>
+<pre><code class="language-plaintext">@larcjs/ui (standalone)
+  └─&gt; No dependencies (source of truth)
+
+@larcjs/core
+  └─&gt; Synced from: @larcjs/ui/components
+  └─&gt; peerDependencies: none
+
+@larcjs/apps
+  └─&gt; @larcjs/core
+  └─&gt; @larcjs/ui
+
+@larcjs/react-adapter
+  └─&gt; @larcjs/core
+  └─&gt; react (peer)
+
+@larcjs/devtools
+  └─&gt; @larcjs/core</code></pre>
+<h2>Development Workflow</h2>
+<h3>Edit UI Component</h3>
+<pre><code class="language-bash"># 1. Edit in source of truth
+vim packages/ui/pan-card.mjs
+
+# 2. Test individually
+cd packages/ui
+npm run test
+
+# 3. Build all (syncs to core automatically)
+cd ../..
+npm run build:all</code></pre>
+<h3>Publish Changes</h3>
+<pre><code class="language-bash"># 1. Create changeset
+npm run changeset
+# Select packages: @larcjs/ui, @larcjs/core
+
+# 2. Version bump
+npm run changeset:version
+
+# 3. Publish (auto-syncs before publishing)
+npm run changeset:publish</code></pre>
+<h2>Key Points</h2>
+<p>✅ <strong>Workspaces respected</strong> - Each package builds independently
+✅ <strong>Sync happens first</strong> - Components synced before any builds
+✅ <strong>Dependencies honored</strong> - Workspace dependencies build in order
+✅ <strong>Single source</strong> - Components maintained only in <code>@larcjs/ui</code>
+✅ <strong>Auto-sync</strong> - Core always gets latest components at build/publish</p>
+<h2>Commands Summary</h2>
+<p>| Command | What It Does | Sync? |
+|---------|--------------|-------|
+| <code>npm run build</code> | Build all workspaces | ✅ Yes (before) |
+| <code>npm run build:all</code> | Build + minify all | ✅ Yes (before) |
+| <code>npm run build:core</code> | Build core only | ⚠️ Only if prepublish |
+| <code>npm run build:ui</code> | Build ui only | ❌ No |
+| <code>npm run sync:components</code> | Manual sync | ✅ Yes |
+| <code>npm run changeset:publish</code> | Publish all changed | ✅ Yes (before) |
+| <code>npm test</code> | Test all workspaces | ❌ No |
+| <code>npm run clean</code> | Clean all workspaces | ❌ No |</p>
+<h2>Best Practices</h2>
+<li><strong>Always edit in <code>packages/ui/</code></strong> - Never edit <code>packages/core/components/</code> directly</li>
+<li><strong>Run <code>npm run build:all</code></strong> - Ensures everything syncs and builds</li>
+<li><strong>Use changesets for publishing</strong> - Handles versioning and sync automatically</li>
+<li><strong>Test after sync</strong> - Run <code>npm test</code> after building to verify everything works</li>
+<h2>Troubleshooting</h2>
+<strong>Components out of sync?</strong>
+<pre><code class="language-bash">npm run sync:components
+npm run build:all</code></pre>
+<strong>Want to see what will sync?</strong>
+<pre><code class="language-bash">ls packages/ui/*.mjs | wc -l        # Source
+ls packages/core/components/*.mjs | wc -l  # Destination</code></pre>
+<strong>Need to rebuild everything clean?</strong>
+<pre><code class="language-bash">npm run clean
+npm run build:all</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/WORKSPACE-WORKFLOW.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -66,6 +66,7 @@ unsub();
 ### Events
 
 **Incoming** (components dispatch these):
+
 - `pan:hello` - Register client: `{ id, caps }`
 - `pan:subscribe` - Subscribe: `{ topics, clientId, options }`
 - `pan:unsubscribe` - Unsubscribe: `{ topics, clientId }`
@@ -75,6 +76,7 @@ unsub();
 - `pan:sys.clear-retained` - Clear retained: `{ pattern? }`
 
 **Outgoing** (bus dispatches these):
+
 - `pan:sys.ready` - Bus ready: `{ enhanced, routing, tracing, config }`
 - `pan:sys.error` - Error: `{ code, message, details }`
 - `pan:deliver` - Deliver message: `{ topic, data, id, ts, ...extras }`
@@ -158,6 +160,7 @@ bus.addEventListener('pan:sys.error', (e) => {
 ```
 
 **Exceptions thrown**:
+
 - `TypeError`: Invalid parameters (e.g., non-string topic, non-function handler)
 - `RangeError`: Attribute values out of bounds (e.g., negative rate-limit)
 
@@ -272,6 +275,7 @@ try {
 ```
 
 **Exceptions thrown**:
+
 - `TypeError`: Invalid theme value passed to `setTheme()`
 - `DOMException`: localStorage access denied (privacy mode)
 
@@ -659,6 +663,7 @@ try {
 ```
 
 **Exceptions thrown**:
+
 - `Error`: Invalid route configuration (missing required fields)
 - `TypeError`: Invalid parameters (e.g., non-function handler)
 - `RangeError`: Invalid `order` value
@@ -677,6 +682,7 @@ This chapter documented LARC's four core components:
 These form the backbone of every LARC application.
 
 **See Also**:
+
 - Tutorial: *Learning LARC* Chapters 4-5
 - State components: Chapter 18
 - UI components: Chapter 19

@@ -170,6 +170,873 @@ pan.subscribe(&#039;*&#039;, (data, topic) =&gt; {
   console.log(`[PAN] ${topic}`, data);
 });</code></pre>
 <p>Or use the LARC DevTools extension for a visual message inspector.</p>
+<h2>Complete Development Environment Setup</h2>
+<p>Let's set up a full-featured development environment:</p>
+<strong>1. Project structure:</strong>
+<pre><code class="language-plaintext">my-larc-project/
+├── public/
+│   ├── index.html
+│   ├── app.js
+│   ├── components/
+│   └── styles/
+├── tests/
+│   ├── unit/
+│   └── e2e/
+├── .vscode/
+│   ├── settings.json
+│   ├── extensions.json
+│   └── snippets/
+├── .eslintrc.js
+├── .prettierrc
+├── package.json
+└── dev-server.js</code></pre>
+<strong>2. Package.json with dev scripts:</strong>
+<pre><code class="language-json">{
+  &quot;name&quot;: &quot;my-larc-app&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;scripts&quot;: {
+    &quot;dev&quot;: &quot;node dev-server.js&quot;,
+    &quot;test&quot;: &quot;web-test-runner \&quot;tests/**/*.test.js\&quot;&quot;,
+    &quot;test:watch&quot;: &quot;npm test -- --watch&quot;,
+    &quot;lint&quot;: &quot;eslint &#039;**/*.{js,mjs}&#039;&quot;,
+    &quot;lint:fix&quot;: &quot;eslint &#039;**/*.{js,mjs}&#039; --fix&quot;,
+    &quot;format&quot;: &quot;prettier --write &#039;**/*.{js,mjs,html,css,json,md}&#039;&quot;,
+    &quot;format:check&quot;: &quot;prettier --check &#039;**/*.{js,mjs,html,css,json,md}&#039;&quot;,
+    &quot;analyze&quot;: &quot;wca analyze &#039;public/components/**/*.js&#039; --outFile custom-elements.json&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@open-wc/testing&quot;: &quot;^4.0.0&quot;,
+    &quot;@web/dev-server&quot;: &quot;^0.4.0&quot;,
+    &quot;@web/test-runner&quot;: &quot;^0.18.0&quot;,
+    &quot;eslint&quot;: &quot;^8.0.0&quot;,
+    &quot;prettier&quot;: &quot;^3.0.0&quot;,
+    &quot;web-component-analyzer&quot;: &quot;^2.0.0&quot;,
+    &quot;ws&quot;: &quot;^8.0.0&quot;
+  }
+}</code></pre>
+<strong>3. Complete dev server with HMR:</strong>
+<pre><code class="language-javascript">// dev-server.js
+import { createServer } from &#039;http&#039;;
+import { readFile } from &#039;fs/promises&#039;;
+import { watch } from &#039;fs&#039;;
+import { join, extname } from &#039;path&#039;;
+import { WebSocketServer } from &#039;ws&#039;;
+
+const PORT = 3000;
+const PUBLIC_DIR = &#039;./public&#039;;
+
+const contentTypes = {
+  &#039;.html&#039;: &#039;text/html; charset=utf-8&#039;,
+  &#039;.js&#039;: &#039;application/javascript; charset=utf-8&#039;,
+  &#039;.mjs&#039;: &#039;application/javascript; charset=utf-8&#039;,
+  &#039;.css&#039;: &#039;text/css; charset=utf-8&#039;,
+  &#039;.json&#039;: &#039;application/json; charset=utf-8&#039;,
+  &#039;.png&#039;: &#039;image/png&#039;,
+  &#039;.jpg&#039;: &#039;image/jpeg&#039;,
+  &#039;.svg&#039;: &#039;image/svg+xml&#039;,
+  &#039;.ico&#039;: &#039;image/x-icon&#039;
+};
+
+// HTTP Server
+const server = createServer(async (req, res) =&gt; {
+  try {
+    // Handle SPA routing - serve index.html for non-file routes
+    let filePath = join(PUBLIC_DIR, req.url === &#039;/&#039; ? &#039;index.html&#039; : req.url);
+
+    // Try to read the file
+    let content;
+    try {
+      content = await readFile(filePath);
+    } catch (err) {
+      // If file not found and URL doesn&#039;t have extension, serve index.html
+      if (!extname(req.url)) {
+        filePath = join(PUBLIC_DIR, &#039;index.html&#039;);
+        content = await readFile(filePath);
+      } else {
+        throw err;
+      }
+    }
+
+    const ext = extname(filePath);
+    const contentType = contentTypes[ext] || &#039;application/octet-stream&#039;;
+
+    // Inject live reload script for HTML files
+    if (ext === &#039;.html&#039;) {
+      const liveReloadScript = `
+        &lt;script&gt;
+          (function() {
+            const ws = new WebSocket(&#039;ws://localhost:${PORT}&#039;);
+            ws.onmessage = (event) =&gt; {
+              if (event.data === &#039;reload&#039;) {
+                console.log(&#039;[Dev Server] Reloading...&#039;);
+                location.reload();
+              } else if (event.data.startsWith(&#039;hmr:&#039;)) {
+                const module = event.data.substring(4);
+                console.log(&#039;[Dev Server] Hot reload:&#039;, module);
+                // Implement HMR logic here
+              }
+            };
+            ws.onerror = () =&gt; console.error(&#039;[Dev Server] WebSocket error&#039;);
+            ws.onclose = () =&gt; console.log(&#039;[Dev Server] Disconnected&#039;);
+          })();
+        &lt;/script&gt;
+      `;
+      content = Buffer.from(
+        content.toString().replace(&#039;&lt;/body&gt;&#039;, `${liveReloadScript}&lt;/body&gt;`)
+      );
+    }
+
+    res.writeHead(200, {
+      &#039;Content-Type&#039;: contentType,
+      &#039;Cache-Control&#039;: &#039;no-cache&#039;,
+      &#039;Access-Control-Allow-Origin&#039;: &#039;*&#039;
+    });
+    res.end(content);
+  } catch (err) {
+    console.error(&#039;Server error:&#039;, err);
+    res.writeHead(404, { &#039;Content-Type&#039;: &#039;text/html&#039; });
+    res.end(`
+      &lt;!DOCTYPE html&gt;
+      &lt;html&gt;
+        &lt;head&gt;&lt;title&gt;404 Not Found&lt;/title&gt;&lt;/head&gt;
+        &lt;body&gt;
+          &lt;h1&gt;404 - Not Found&lt;/h1&gt;
+          &lt;p&gt;${req.url}&lt;/p&gt;
+        &lt;/body&gt;
+      &lt;/html&gt;
+    `);
+  }
+});
+
+// WebSocket for live reload
+const wss = new WebSocketServer({ server });
+
+wss.on(&#039;connection&#039;, (ws) =&gt; {
+  console.log(&#039;Client connected&#039;);
+  ws.on(&#039;close&#039;, () =&gt; console.log(&#039;Client disconnected&#039;));
+});
+
+// File watcher
+watch(PUBLIC_DIR, { recursive: true }, (eventType, filename) =&gt; {
+  if (filename) {
+    console.log(`File changed: ${filename}`);
+
+    // Notify all connected clients
+    wss.clients.forEach(client =&gt; {
+      if (client.readyState === 1) { // WebSocket.OPEN
+        if (filename.endsWith(&#039;.js&#039;) || filename.endsWith(&#039;.mjs&#039;)) {
+          client.send(`hmr:${filename}`);
+        } else {
+          client.send(&#039;reload&#039;);
+        }
+      }
+    });
+  }
+});
+
+server.listen(PORT, () =&gt; {
+  console.log(`
+🚀 Dev server running at http://localhost:${PORT}
+📁 Serving: ${PUBLIC_DIR}
+🔥 Live reload enabled
+  `);
+});</code></pre>
+<h2>Advanced VS Code Configuration</h2>
+<strong>Complete settings.json:</strong>
+<pre><code class="language-json">{
+  &quot;editor.formatOnSave&quot;: true,
+  &quot;editor.defaultFormatter&quot;: &quot;esbenp.prettier-vscode&quot;,
+  &quot;editor.codeActionsOnSave&quot;: {
+    &quot;source.fixAll.eslint&quot;: &quot;explicit&quot;
+  },
+  &quot;editor.quickSuggestions&quot;: {
+    &quot;strings&quot;: true
+  },
+  &quot;emmet.includeLanguages&quot;: {
+    &quot;javascript&quot;: &quot;html&quot;
+  },
+  &quot;files.associations&quot;: {
+    &quot;*.mjs&quot;: &quot;javascript&quot;
+  },
+  &quot;files.exclude&quot;: {
+    &quot;**/.git&quot;: true,
+    &quot;**/node_modules&quot;: true,
+    &quot;**/.DS_Store&quot;: true
+  },
+  &quot;search.exclude&quot;: {
+    &quot;**/node_modules&quot;: true,
+    &quot;**/dist&quot;: true,
+    &quot;**/.git&quot;: true
+  },
+  &quot;javascript.preferences.quoteStyle&quot;: &quot;single&quot;,
+  &quot;javascript.suggest.autoImports&quot;: true,
+  &quot;javascript.updateImportsOnFileMove.enabled&quot;: &quot;always&quot;,
+  &quot;css.lint.unknownAtRules&quot;: &quot;ignore&quot;
+}</code></pre>
+<strong>Recommended extensions:</strong>
+<pre><code class="language-json">// .vscode/extensions.json
+{
+  &quot;recommendations&quot;: [
+    &quot;dbaeumer.vscode-eslint&quot;,
+    &quot;esbenp.prettier-vscode&quot;,
+    &quot;bradlc.vscode-tailwindcss&quot;,
+    &quot;ritwickdey.liveserver&quot;,
+    &quot;christian-kohler.path-intellisense&quot;,
+    &quot;zignd.html-css-class-completion&quot;,
+    &quot;formulahendry.auto-rename-tag&quot;
+  ]
+}</code></pre>
+<strong>Custom snippets:</strong>
+<pre><code class="language-json">// .vscode/snippets/larc.code-snippets
+{
+  &quot;LARC Component with Shadow DOM&quot;: {
+    &quot;prefix&quot;: &quot;larc-component&quot;,
+    &quot;body&quot;: [
+      &quot;/**&quot;,
+      &quot; * ${1:ComponentName} - ${2:Component description}&quot;,
+      &quot; * @element ${3:component-name}&quot;,
+      &quot; */&quot;,
+      &quot;class ${1:ComponentName} extends HTMLElement {&quot;,
+      &quot;  constructor() {&quot;,
+      &quot;    super();&quot;,
+      &quot;    this.attachShadow({ mode: &#039;open&#039; });&quot;,
+      &quot;  }&quot;,
+      &quot;&quot;,
+      &quot;  connectedCallback() {&quot;,
+      &quot;    this.render();&quot;,
+      &quot;  }&quot;,
+      &quot;&quot;,
+      &quot;  disconnectedCallback() {&quot;,
+      &quot;    // Clean up&quot;,
+      &quot;  }&quot;,
+      &quot;&quot;,
+      &quot;  render() {&quot;,
+      &quot;    this.shadowRoot.innerHTML = `&quot;,
+      &quot;      &lt;style&gt;&quot;,
+      &quot;        :host {&quot;,
+      &quot;          display: block;&quot;,
+      &quot;        }&quot;,
+      &quot;      &lt;/style&gt;&quot;,
+      &quot;      &lt;div class=\&quot;${3:component-name}\&quot;&gt;&quot;,
+      &quot;        $4&quot;,
+      &quot;      &lt;/div&gt;&quot;,
+      &quot;    `;&quot;,
+      &quot;  }&quot;,
+      &quot;}&quot;,
+      &quot;&quot;,
+      &quot;customElements.define(&#039;${3:component-name}&#039;, ${1:ComponentName});&quot;
+    ],
+    &quot;description&quot;: &quot;Create a LARC component with Shadow DOM&quot;
+  },
+  &quot;PAN Subscribe&quot;: {
+    &quot;prefix&quot;: &quot;pan-sub&quot;,
+    &quot;body&quot;: [
+      &quot;this.subscription = pan.subscribe(&#039;${1:topic}&#039;, (data) =&gt; {&quot;,
+      &quot;  $2&quot;,
+      &quot;});&quot;
+    ],
+    &quot;description&quot;: &quot;Subscribe to PAN topic&quot;
+  },
+  &quot;PAN Publish&quot;: {
+    &quot;prefix&quot;: &quot;pan-pub&quot;,
+    &quot;body&quot;: [
+      &quot;pan.publish(&#039;${1:topic}&#039;, {&quot;,
+      &quot;  $2&quot;,
+      &quot;});&quot;
+    ],
+    &quot;description&quot;: &quot;Publish to PAN topic&quot;
+  }
+}</code></pre>
+<h2>ESLint and Prettier Configuration</h2>
+<strong>Complete ESLint config:</strong>
+<pre><code class="language-javascript">// eslint.config.js
+export default [
+  {
+    files: [&#039;**/*.{js,mjs}&#039;],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: &#039;module&#039;,
+      globals: {
+        window: &#039;readonly&#039;,
+        document: &#039;readonly&#039;,
+        customElements: &#039;readonly&#039;,
+        HTMLElement: &#039;readonly&#039;,
+        console: &#039;readonly&#039;,
+        fetch: &#039;readonly&#039;,
+        localStorage: &#039;readonly&#039;,
+        sessionStorage: &#039;readonly&#039;,
+        navigator: &#039;readonly&#039;,
+        URL: &#039;readonly&#039;,
+        URLSearchParams: &#039;readonly&#039;
+      }
+    },
+    rules: {
+      // Best practices
+      &#039;no-unused-vars&#039;: [&#039;warn&#039;, { argsIgnorePattern: &#039;^_&#039; }],
+      &#039;no-console&#039;: [&#039;warn&#039;, { allow: [&#039;warn&#039;, &#039;error&#039;, &#039;info&#039;] }],
+      &#039;prefer-const&#039;: &#039;error&#039;,
+      &#039;no-var&#039;: &#039;error&#039;,
+      &#039;eqeqeq&#039;: [&#039;error&#039;, &#039;always&#039;],
+      &#039;no-eval&#039;: &#039;error&#039;,
+      &#039;no-implied-eval&#039;: &#039;error&#039;,
+
+      // Formatting (let Prettier handle most)
+      &#039;semi&#039;: [&#039;error&#039;, &#039;always&#039;],
+      &#039;quotes&#039;: [&#039;error&#039;, &#039;single&#039;, { avoidEscape: true }],
+      &#039;comma-dangle&#039;: [&#039;error&#039;, &#039;never&#039;],
+
+      // ES6+
+      &#039;arrow-spacing&#039;: &#039;error&#039;,
+      &#039;prefer-arrow-callback&#039;: &#039;warn&#039;,
+      &#039;prefer-template&#039;: &#039;warn&#039;,
+      &#039;template-curly-spacing&#039;: &#039;error&#039;,
+      &#039;object-shorthand&#039;: &#039;warn&#039;,
+
+      // Async
+      &#039;no-async-promise-executor&#039;: &#039;error&#039;,
+      &#039;require-await&#039;: &#039;warn&#039;,
+
+      // Custom Elements
+      &#039;no-constructor-return&#039;: &#039;error&#039;
+    }
+  },
+  {
+    files: [&#039;**/*.test.{js,mjs}&#039;],
+    languageOptions: {
+      globals: {
+        describe: &#039;readonly&#039;,
+        it: &#039;readonly&#039;,
+        expect: &#039;readonly&#039;,
+        beforeEach: &#039;readonly&#039;,
+        afterEach: &#039;readonly&#039;
+      }
+    }
+  }
+];</code></pre>
+<strong>Prettier configuration:</strong>
+<pre><code class="language-json">// .prettierrc
+{
+  &quot;semi&quot;: true,
+  &quot;singleQuote&quot;: true,
+  &quot;trailingComma&quot;: &quot;none&quot;,
+  &quot;printWidth&quot;: 100,
+  &quot;tabWidth&quot;: 2,
+  &quot;useTabs&quot;: false,
+  &quot;arrowParens&quot;: &quot;avoid&quot;,
+  &quot;endOfLine&quot;: &quot;lf&quot;
+}</code></pre>
+<strong>Ignore files:</strong>
+<pre><code class="language-plaintext"># .prettierignore
+node_modules
+dist
+build
+coverage
+*.min.js
+package-lock.json</code></pre>
+<h2>Advanced Debugging Techniques</h2>
+<strong>1. Source maps for debugging:</strong>
+<p>Although LARC doesn't need transpilation, you can still use source maps for development:</p>
+<pre><code class="language-javascript">// Add inline source maps during development
+if (import.meta.env?.MODE === &#039;development&#039;) {
+  Error.stackTraceLimit = Infinity;
+}</code></pre>
+<strong>2. Component debugger:</strong>
+<pre><code class="language-javascript">// debug-component.js
+export function debugComponent(ComponentClass) {
+  const originalConnected = ComponentClass.prototype.connectedCallback;
+  const originalDisconnected = ComponentClass.prototype.disconnectedCallback;
+  const originalAttributeChanged = ComponentClass.prototype.attributeChangedCallback;
+
+  ComponentClass.prototype.connectedCallback = function(...args) {
+    console.log(`[Connected] &lt;${this.tagName.toLowerCase()}&gt;`, this);
+    return originalConnected?.apply(this, args);
+  };
+
+  ComponentClass.prototype.disconnectedCallback = function(...args) {
+    console.log(`[Disconnected] &lt;${this.tagName.toLowerCase()}&gt;`, this);
+    return originalDisconnected?.apply(this, args);
+  };
+
+  ComponentClass.prototype.attributeChangedCallback = function(name, old, val) {
+    console.log(`[Attribute] &lt;${this.tagName.toLowerCase()}&gt; ${name}: ${old} → ${val}`);
+    return originalAttributeChanged?.call(this, name, old, val);
+  };
+
+  return ComponentClass;
+}
+
+// Usage
+@debugComponent
+class MyComponent extends HTMLElement {
+  // ...
+}</code></pre>
+<strong>3. Performance profiling:</strong>
+<pre><code class="language-javascript">// performance-tracker.js
+class PerformanceTracker {
+  constructor(name) {
+    this.name = name;
+    this.marks = new Map();
+  }
+
+  start(label) {
+    const markName = `${this.name}:${label}:start`;
+    performance.mark(markName);
+    this.marks.set(label, markName);
+  }
+
+  end(label) {
+    const startMark = this.marks.get(label);
+    if (!startMark) {
+      console.warn(`No start mark for ${label}`);
+      return;
+    }
+
+    const endMark = `${this.name}:${label}:end`;
+    performance.mark(endMark);
+
+    const measureName = `${this.name}:${label}`;
+    performance.measure(measureName, startMark, endMark);
+
+    const measure = performance.getEntriesByName(measureName)[0];
+    console.log(`⏱ ${measureName}: ${measure.duration.toFixed(2)}ms`);
+
+    // Clean up
+    performance.clearMarks(startMark);
+    performance.clearMarks(endMark);
+    performance.clearMeasures(measureName);
+    this.marks.delete(label);
+  }
+}
+
+// Usage in component
+class MyComponent extends HTMLElement {
+  constructor() {
+    super();
+    this.perf = new PerformanceTracker(&#039;MyComponent&#039;);
+  }
+
+  connectedCallback() {
+    this.perf.start(&#039;render&#039;);
+    this.render();
+    this.perf.end(&#039;render&#039;);
+  }
+}</code></pre>
+<strong>4. Network debugging:</strong>
+<pre><code class="language-javascript">// network-debugger.js
+const originalFetch = window.fetch;
+
+window.fetch = function(...args) {
+  const startTime = performance.now();
+  const [url, options] = args;
+
+  console.log(`[Fetch] →`, {
+    url,
+    method: options?.method || &#039;GET&#039;,
+    headers: options?.headers,
+    body: options?.body
+  });
+
+  return originalFetch.apply(this, args)
+    .then(response =&gt; {
+      const duration = performance.now() - startTime;
+      console.log(`[Fetch] ← ${response.status} (${duration.toFixed(0)}ms)`, url);
+      return response;
+    })
+    .catch(error =&gt; {
+      const duration = performance.now() - startTime;
+      console.error(`[Fetch] ✗ (${duration.toFixed(0)}ms)`, url, error);
+      throw error;
+    });
+};</code></pre>
+<h2>PAN Bus DevTools</h2>
+<p>Build a visual inspector for PAN messages:</p>
+<pre><code class="language-javascript">// pan-devtools.js
+class PanDevTools extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.messages = [];
+    this.maxMessages = 100;
+    this.filter = &#039;&#039;;
+  }
+
+  connectedCallback() {
+    this.render();
+    this.setupPanMonitoring();
+  }
+
+  setupPanMonitoring() {
+    // Subscribe to all topics
+    pan.subscribe(&#039;*&#039;, (data, topic) =&gt; {
+      this.logMessage({
+        timestamp: new Date(),
+        topic,
+        data,
+        type: &#039;received&#039;
+      });
+    });
+
+    // Intercept publishes (if PAN client supports it)
+    const originalPublish = pan.publish;
+    pan.publish = (topic, data) =&gt; {
+      this.logMessage({
+        timestamp: new Date(),
+        topic,
+        data,
+        type: &#039;sent&#039;
+      });
+      return originalPublish.call(pan, topic, data);
+    };
+  }
+
+  logMessage(message) {
+    this.messages.unshift(message);
+    if (this.messages.length &gt; this.maxMessages) {
+      this.messages.pop();
+    }
+    this.renderMessages();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          width: 400px;
+          max-height: 600px;
+          background: #1e1e1e;
+          color: #d4d4d4;
+          font-family: &#039;Monaco&#039;, &#039;Courier New&#039;, monospace;
+          font-size: 12px;
+          box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+          display: flex;
+          flex-direction: column;
+          z-index: 10000;
+        }
+
+        .header {
+          padding: 8px;
+          background: #252526;
+          border-bottom: 1px solid #3e3e42;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .title {
+          font-weight: bold;
+          color: #4ec9b0;
+        }
+
+        .controls {
+          display: flex;
+          gap: 8px;
+        }
+
+        button {
+          background: #3e3e42;
+          border: none;
+          color: #d4d4d4;
+          padding: 4px 8px;
+          border-radius: 3px;
+          cursor: pointer;
+          font-size: 11px;
+        }
+
+        button:hover {
+          background: #4e4e52;
+        }
+
+        .filter {
+          padding: 8px;
+          border-bottom: 1px solid #3e3e42;
+        }
+
+        input {
+          width: 100%;
+          padding: 4px 8px;
+          background: #3c3c3c;
+          border: 1px solid #3e3e42;
+          color: #d4d4d4;
+          border-radius: 3px;
+          font-size: 11px;
+        }
+
+        .messages {
+          flex: 1;
+          overflow-y: auto;
+          padding: 8px;
+        }
+
+        .message {
+          margin-bottom: 8px;
+          padding: 8px;
+          background: #252526;
+          border-left: 3px solid #4ec9b0;
+          border-radius: 3px;
+        }
+
+        .message.sent {
+          border-left-color: #569cd6;
+        }
+
+        .message-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 4px;
+        }
+
+        .topic {
+          color: #4ec9b0;
+          font-weight: bold;
+        }
+
+        .timestamp {
+          color: #858585;
+          font-size: 10px;
+        }
+
+        .data {
+          color: #ce9178;
+          white-space: pre-wrap;
+          word-break: break-all;
+        }
+
+        .type {
+          display: inline-block;
+          padding: 2px 6px;
+          border-radius: 3px;
+          font-size: 10px;
+          margin-left: 8px;
+        }
+
+        .type.sent {
+          background: #569cd6;
+        }
+
+        .type.received {
+          background: #4ec9b0;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;header&quot;&gt;
+        &lt;span class=&quot;title&quot;&gt;PAN DevTools&lt;/span&gt;
+        &lt;div class=&quot;controls&quot;&gt;
+          &lt;button id=&quot;clear-btn&quot;&gt;Clear&lt;/button&gt;
+          &lt;button id=&quot;close-btn&quot;&gt;Close&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;filter&quot;&gt;
+        &lt;input type=&quot;text&quot; id=&quot;filter-input&quot; placeholder=&quot;Filter by topic...&quot;&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;messages&quot; id=&quot;messages&quot;&gt;&lt;/div&gt;
+    `;
+
+    // Setup event listeners
+    this.shadowRoot.getElementById(&#039;clear-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.messages = [];
+      this.renderMessages();
+    });
+
+    this.shadowRoot.getElementById(&#039;close-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      this.remove();
+    });
+
+    this.shadowRoot.getElementById(&#039;filter-input&#039;).addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.filter = e.target.value.toLowerCase();
+      this.renderMessages();
+    });
+  }
+
+  renderMessages() {
+    const messagesEl = this.shadowRoot.getElementById(&#039;messages&#039;);
+    if (!messagesEl) return;
+
+    const filtered = this.filter
+      ? this.messages.filter(m =&gt; m.topic.toLowerCase().includes(this.filter))
+      : this.messages;
+
+    messagesEl.innerHTML = filtered.map(msg =&gt; `
+      &lt;div class=&quot;message ${msg.type}&quot;&gt;
+        &lt;div class=&quot;message-header&quot;&gt;
+          &lt;span class=&quot;topic&quot;&gt;${msg.topic}&lt;/span&gt;
+          &lt;span class=&quot;timestamp&quot;&gt;${msg.timestamp.toLocaleTimeString()}.${msg.timestamp.getMilliseconds()}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div&gt;
+          &lt;span class=&quot;type ${msg.type}&quot;&gt;${msg.type}&lt;/span&gt;
+        &lt;/div&gt;
+        &lt;div class=&quot;data&quot;&gt;${JSON.stringify(msg.data, null, 2)}&lt;/div&gt;
+      &lt;/div&gt;
+    `).join(&#039;&#039;);
+  }
+}
+
+customElements.define(&#039;pan-devtools&#039;, PanDevTools);
+
+// Add to page with keyboard shortcut
+document.addEventListener(&#039;keydown&#039;, (e) =&gt; {
+  if (e.ctrlKey &amp;&amp; e.shiftKey &amp;&amp; e.key === &#039;P&#039;) {
+    if (!document.querySelector(&#039;pan-devtools&#039;)) {
+      document.body.appendChild(document.createElement(&#039;pan-devtools&#039;));
+    }
+  }
+});</code></pre>
+<h2>Optional Build Tools</h2>
+<p>While LARC doesn't need a build step, sometimes you want to bundle for production:</p>
+<strong>Using esbuild for optimization:</strong>
+<pre><code class="language-javascript">// build.js
+import * as esbuild from &#039;esbuild&#039;;
+
+await esbuild.build({
+  entryPoints: [&#039;public/app.js&#039;],
+  bundle: true,
+  minify: true,
+  sourcemap: true,
+  target: [&#039;es2020&#039;],
+  outfile: &#039;dist/app.min.js&#039;,
+  format: &#039;esm&#039;,
+  splitting: false,
+  treeShaking: true
+});
+
+console.log(&#039;✅ Build complete&#039;);</code></pre>
+<strong>Using Rollup:</strong>
+<pre><code class="language-javascript">// rollup.config.js
+import { terser } from &#039;rollup-plugin-terser&#039;;
+import resolve from &#039;@rollup/plugin-node-resolve&#039;;
+
+export default {
+  input: &#039;public/app.js&#039;,
+  output: {
+    file: &#039;dist/app.min.js&#039;,
+    format: &#039;esm&#039;,
+    sourcemap: true
+  },
+  plugins: [
+    resolve(),
+    terser()
+  ]
+};</code></pre>
+<h2>Troubleshooting Tooling Issues</h2>
+<h3>Problem 1: Live Reload Not Working</h3>
+<strong>Symptoms</strong>: Changes aren't reflected after saving files.
+<strong>Diagnosis</strong>:
+<pre><code class="language-bash"># Check if dev server is running
+ps aux | grep node
+
+# Check WebSocket connection in browser console
+# Should see WebSocket connected message</code></pre>
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// Ensure WebSocket script is injected
+// Check browser console for WebSocket errors
+// Verify port 3000 is not blocked by firewall
+
+// Alternative: Use browser extension like LiveReload</code></pre>
+<h3>Problem 2: ESLint Errors in VS Code</h3>
+<strong>Symptoms</strong>: Red squiggly lines everywhere, but code works fine.
+<strong>Cause</strong>: ESLint configuration mismatch.
+<strong>Solution</strong>:
+<pre><code class="language-bash"># Reinstall ESLint
+npm install --save-dev eslint
+
+# Restart VS Code ESLint server
+# Cmd+Shift+P → &quot;ESLint: Restart ESLint Server&quot;
+
+# Check ESLint output panel
+# View → Output → Select &quot;ESLint&quot; from dropdown</code></pre>
+<h3>Problem 3: Import Paths Not Resolving</h3>
+<strong>Symptoms</strong>: VS Code shows import errors, but browser loads fine.
+<strong>Cause</strong>: VS Code doesn't understand import maps.
+<strong>Solution</strong>:
+<pre><code class="language-json">// jsconfig.json - Help VS Code understand paths
+{
+  &quot;compilerOptions&quot;: {
+    &quot;module&quot;: &quot;esnext&quot;,
+    &quot;moduleResolution&quot;: &quot;bundler&quot;,
+    &quot;baseUrl&quot;: &quot;./public&quot;,
+    &quot;paths&quot;: {
+      &quot;@components/*&quot;: [&quot;components/*&quot;],
+      &quot;@utils/*&quot;: [&quot;utils/*&quot;]
+    }
+  },
+  &quot;include&quot;: [&quot;public/**/*&quot;],
+  &quot;exclude&quot;: [&quot;node_modules&quot;, &quot;dist&quot;]
+}</code></pre>
+<h3>Problem 4: Shadow DOM Not Visible in DevTools</h3>
+<strong>Symptoms</strong>: Can't inspect Shadow DOM elements.
+<strong>Cause</strong>: Shadow DOM panel not enabled.
+<strong>Solution</strong>:
+<li>Open Chrome DevTools</li>
+<li>Go to Settings (gear icon)</li>
+<li>Preferences → Elements → Enable "Show user agent shadow DOM"</li>
+<li>Now you can see <code>#shadow-root</code> in Elements panel</li>
+<h2>Tooling Best Practices</h2>
+<li><strong>Use a Dev Server</strong>: Never open HTML files directly—use a local server for proper CORS and module loading.</li>
+<li><strong>Enable Live Reload</strong>: Instant feedback speeds up development significantly.</li>
+<li><strong>Configure Your Editor</strong>: Proper linting, formatting, and snippets save hours of work.</li>
+<li><strong>Debug with DevTools</strong>: Master the Elements, Console, Network, and Performance panels.</li>
+<li><strong>Monitor PAN Messages</strong>: Use a visual inspector to understand message flow.</li>
+<li><strong>Profile Performance</strong>: Use Performance API and DevTools to find bottlenecks.</li>
+<li><strong>Automate Formatting</strong>: Let Prettier handle code style—focus on logic.</li>
+<li><strong>Test Continuously</strong>: Run tests in watch mode during development.</li>
+<li><strong>Document As You Go</strong>: JSDoc comments help VS Code provide better autocomplete.</li>
+<li><strong>Keep It Simple</strong>: Don't over-tool. Start minimal and add tools as needed.</li>
+<h2>Hands-On Exercises</h2>
+<h3>Exercise 1: Set Up Complete Dev Environment</h3>
+<p>Configure a full development environment with:</p>
+<ul><li>Dev server with live reload</li>
+<li>VS Code with all recommended extensions</li>
+<li>ESLint and Prettier configured</li>
+<li>Custom snippets for LARC components</li>
+<li>Git hooks for pre-commit linting</li>
+</ul>
+<strong>Bonus</strong>: Add automated testing on file save.
+<h3>Exercise 2: Build a PAN Message Inspector</h3>
+<p>Create a browser extension or dev panel that:</p>
+<ul><li>Shows all PAN messages in real-time</li>
+<li>Filters messages by topic pattern</li>
+<li>Records and exports message history</li>
+<li>Shows message timing and frequency</li>
+<li>Highlights retained vs. transient messages</li>
+</ul>
+<strong>Bonus</strong>: Add ability to publish test messages.
+<h3>Exercise 3: Create Custom VS Code Extension</h3>
+<p>Build a VS Code extension that:</p>
+<ul><li>Generates LARC component boilerplate</li>
+<li>Validates component structure</li>
+<li>Provides autocomplete for PAN topics</li>
+<li>Shows component documentation on hover</li>
+<li>Refactors component names across files</li>
+</ul>
+<strong>Bonus</strong>: Publish to VS Code marketplace.
+<h3>Exercise 4: Implement Advanced Debugging</h3>
+<p>Set up comprehensive debugging tools:</p>
+<ul><li>Component lifecycle logger</li>
+<li>Performance profiler for renders</li>
+<li>Network request interceptor</li>
+<li>Error boundary with stack traces</li>
+<li>State inspector for component properties</li>
+</ul>
+<strong>Bonus</strong>: Create a dashboard showing all metrics.
+<h2>Summary</h2>
+<p>Good tooling makes LARC development faster and more enjoyable:</p>
+<ul><li><strong>Dev server</strong>: Live reload and hot module replacement</li>
+<li><strong>Editor setup</strong>: VS Code configuration, extensions, snippets</li>
+<li><strong>Linting</strong>: ESLint for code quality, Prettier for formatting</li>
+<li><strong>Debugging</strong>: DevTools mastery, PAN inspector, performance tracking</li>
+<li><strong>Automation</strong>: npm scripts, git hooks, CI integration</li>
+</ul>
+Start simple and add tools as your project grows. The beauty of LARC is you can be productive with just a text editor and a browser—everything else is optional.
+<h2>Further Reading</h2>
+<ul><li><strong>Building with LARC - Chapter 20 (DevTools)</strong>: Advanced debugging techniques</li>
+<li><strong>Building with LARC - Chapter 11 (Best Practices)</strong>: Development workflow patterns</li>
+<li><strong>Building with LARC - Chapter 14 (Testing)</strong>: Testing infrastructure setup</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/18-tooling.md" target="_blank">

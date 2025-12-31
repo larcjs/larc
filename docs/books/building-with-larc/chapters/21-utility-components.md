@@ -44,6 +44,7 @@ new PanDebugManager()
 ```
 
 Creates debug manager with defaults:
+
 - `enabled`: false
 - `maxBuffer`: 1000
 - `sampleRate`: 1.0 (100%)
@@ -889,6 +890,7 @@ This chapter documented LARC's utility components:
 These components provide observability and extensibility without modifying core application logic.
 
 **See Also**:
+
 - Tutorial: *Learning LARC* Chapter 14
 - Core components: Chapter 17
 - Integration patterns: Chapter 20

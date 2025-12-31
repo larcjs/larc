@@ -375,6 +375,648 @@ class SSEClient {
 }
 
 customElements.define(&#039;user-list&#039;, UserList);</code></pre>
+<h2>GraphQL Integration</h2>
+<p>While REST APIs are common, GraphQL offers precise data fetching—request exactly what you need, nothing more. Here's how to integrate GraphQL with LARC:</p>
+<pre><code class="language-javascript">// graphql-client.js
+class GraphQLClient {
+  constructor(endpoint) {
+    this.endpoint = endpoint;
+  }
+
+  async query(query, variables = {}) {
+    const response = await fetch(this.endpoint, {
+      method: &#039;POST&#039;,
+      headers: {
+        &#039;Content-Type&#039;: &#039;application/json&#039;,
+        &#039;Authorization&#039;: `Bearer ${localStorage.getItem(&#039;authToken&#039;)}`
+      },
+      body: JSON.stringify({ query, variables })
+    });
+
+    const { data, errors } = await response.json();
+
+    if (errors) {
+      throw new GraphQLError(errors);
+    }
+
+    return data;
+  }
+
+  async mutation(mutation, variables = {}) {
+    return this.query(mutation, variables);
+  }
+}
+
+class GraphQLError extends Error {
+  constructor(errors) {
+    super(errors.map(e =&gt; e.message).join(&#039;, &#039;));
+    this.errors = errors;
+  }
+}
+
+export const graphql = new GraphQLClient(&#039;/graphql&#039;);</code></pre>
+<h3>Using GraphQL in Components</h3>
+<pre><code class="language-javascript">class UserProfile extends HTMLElement {
+  async connectedCallback() {
+    const userId = this.getAttribute(&#039;user-id&#039;);
+
+    const query = `
+      query GetUser($id: ID!) {
+        user(id: $id) {
+          id
+          name
+          email
+          avatar
+          posts {
+            id
+            title
+            publishedAt
+          }
+        }
+      }
+    `;
+
+    try {
+      const { user } = await graphql.query(query, { id: userId });
+      this.renderUser(user);
+    } catch (error) {
+      this.renderError(error);
+    }
+  }
+
+  renderUser(user) {
+    this.innerHTML = `
+      &lt;div class=&quot;profile&quot;&gt;
+        &lt;img src=&quot;${user.avatar}&quot; alt=&quot;${user.name}&quot;&gt;
+        &lt;h2&gt;${user.name}&lt;/h2&gt;
+        &lt;p&gt;${user.email}&lt;/p&gt;
+        &lt;h3&gt;Recent Posts&lt;/h3&gt;
+        &lt;ul&gt;
+          ${user.posts.map(post =&gt; `
+            &lt;li&gt;${post.title} (${new Date(post.publishedAt).toLocaleDateString()})&lt;/li&gt;
+          `).join(&#039;&#039;)}
+        &lt;/ul&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h2>Real-World Example: Building a Dashboard</h2>
+<p>Let's build a complete dashboard that fetches data from multiple API endpoints, handles loading states, and updates in real-time.</p>
+<h3>The Dashboard Component</h3>
+<pre><code class="language-javascript">// components/dashboard.js
+import { api } from &#039;../lib/api-client.js&#039;;
+import { pan } from &#039;@larcjs/core&#039;;
+
+class Dashboard extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.state = {
+      stats: null,
+      activity: [],
+      loading: true,
+      error: null
+    };
+  }
+
+  async connectedCallback() {
+    // Subscribe to real-time updates
+    pan.subscribe(&#039;ws.message.stats-updated&#039;, ({ stats }) =&gt; {
+      this.state.stats = stats;
+      this.render();
+    });
+
+    pan.subscribe(&#039;ws.message.activity-added&#039;, ({ activity }) =&gt; {
+      this.state.activity.unshift(activity);
+      this.render();
+    });
+
+    await this.loadData();
+    this.render();
+  }
+
+  async loadData() {
+    try {
+      // Load multiple endpoints in parallel
+      const [stats, activity] = await Promise.all([
+        api.getCached(&#039;/stats&#039;, 30000),
+        api.get(&#039;/activity?limit=10&#039;)
+      ]);
+
+      this.state = {
+        stats,
+        activity,
+        loading: false,
+        error: null
+      };
+    } catch (error) {
+      this.state = {
+        ...this.state,
+        loading: false,
+        error: error.message
+      };
+    }
+  }
+
+  async refreshData() {
+    this.state.loading = true;
+    this.render();
+    await this.loadData();
+    this.render();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+          padding: 20px;
+        }
+
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+
+        .stats {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 20px;
+          margin-bottom: 30px;
+        }
+
+        .stat-card {
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+          font-size: 32px;
+          font-weight: bold;
+          color: #667eea;
+        }
+
+        .stat-label {
+          color: #666;
+          margin-top: 5px;
+        }
+
+        .activity {
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .activity-header {
+          padding: 20px;
+          border-bottom: 1px solid #eee;
+          font-weight: 600;
+        }
+
+        .activity-item {
+          padding: 15px 20px;
+          border-bottom: 1px solid #eee;
+        }
+
+        .activity-item:last-child {
+          border-bottom: none;
+        }
+
+        .loading {
+          text-align: center;
+          padding: 40px;
+          color: #666;
+        }
+
+        .error {
+          background: #fee;
+          color: #c00;
+          padding: 15px;
+          border-radius: 4px;
+        }
+
+        button {
+          background: #667eea;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        button:hover {
+          background: #5568d3;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;header&quot;&gt;
+        &lt;h1&gt;Dashboard&lt;/h1&gt;
+        &lt;button @click=&quot;${() =&gt; this.refreshData()}&quot;&gt;Refresh&lt;/button&gt;
+      &lt;/div&gt;
+
+      ${this.state.loading &amp;&amp; !this.state.stats ? `
+        &lt;div class=&quot;loading&quot;&gt;Loading dashboard...&lt;/div&gt;
+      ` : &#039;&#039;}
+
+      ${this.state.error ? `
+        &lt;div class=&quot;error&quot;&gt;Error: ${this.state.error}&lt;/div&gt;
+      ` : &#039;&#039;}
+
+      ${this.state.stats ? `
+        &lt;div class=&quot;stats&quot;&gt;
+          &lt;div class=&quot;stat-card&quot;&gt;
+            &lt;div class=&quot;stat-value&quot;&gt;${this.state.stats.totalUsers}&lt;/div&gt;
+            &lt;div class=&quot;stat-label&quot;&gt;Total Users&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;stat-card&quot;&gt;
+            &lt;div class=&quot;stat-value&quot;&gt;${this.state.stats.activeUsers}&lt;/div&gt;
+            &lt;div class=&quot;stat-label&quot;&gt;Active Users&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;stat-card&quot;&gt;
+            &lt;div class=&quot;stat-value&quot;&gt;${this.state.stats.revenue}&lt;/div&gt;
+            &lt;div class=&quot;stat-label&quot;&gt;Revenue&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;stat-card&quot;&gt;
+            &lt;div class=&quot;stat-value&quot;&gt;${this.state.stats.conversionRate}%&lt;/div&gt;
+            &lt;div class=&quot;stat-label&quot;&gt;Conversion Rate&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      ` : &#039;&#039;}
+
+      ${this.state.activity.length &gt; 0 ? `
+        &lt;div class=&quot;activity&quot;&gt;
+          &lt;div class=&quot;activity-header&quot;&gt;Recent Activity&lt;/div&gt;
+          ${this.state.activity.map(item =&gt; `
+            &lt;div class=&quot;activity-item&quot;&gt;
+              &lt;strong&gt;${item.user}&lt;/strong&gt; ${item.action}
+              &lt;span style=&quot;color: #999; font-size: 14px;&quot;&gt;
+                ${this.formatTime(item.timestamp)}
+              &lt;/span&gt;
+            &lt;/div&gt;
+          `).join(&#039;&#039;)}
+        &lt;/div&gt;
+      ` : &#039;&#039;}
+    `;
+
+    // Attach event listeners
+    const refreshBtn = this.shadowRoot.querySelector(&#039;button&#039;);
+    if (refreshBtn) {
+      refreshBtn.addEventListener(&#039;click&#039;, () =&gt; this.refreshData());
+    }
+  }
+
+  formatTime(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now - date;
+
+    if (diff &lt; 60000) return &#039;just now&#039;;
+    if (diff &lt; 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff &lt; 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    return date.toLocaleDateString();
+  }
+}
+
+customElements.define(&#039;app-dashboard&#039;, Dashboard);</code></pre>
+<p>This dashboard demonstrates:</p>
+<ul><li><strong>Parallel data loading</strong> with <code>Promise.all</code></li>
+<li><strong>Caching</strong> for stats that don't change often</li>
+<li><strong>Real-time updates</strong> via PAN bus</li>
+<li><strong>Loading and error states</strong></li>
+<li><strong>Manual refresh</strong> capability</li>
+<li><strong>Relative time formatting</strong></li>
+</ul>
+<h2>Error Handling Patterns</h2>
+<h3>Circuit Breaker Pattern</h3>
+<p>Prevent cascading failures by stopping requests to failing services:</p>
+<pre><code class="language-javascript">class CircuitBreaker {
+  constructor(threshold = 5, timeout = 60000) {
+    this.failureCount = 0;
+    this.threshold = threshold;
+    this.timeout = timeout;
+    this.state = &#039;CLOSED&#039;; // CLOSED, OPEN, HALF_OPEN
+    this.nextAttempt = Date.now();
+  }
+
+  async execute(fn) {
+    if (this.state === &#039;OPEN&#039;) {
+      if (Date.now() &lt; this.nextAttempt) {
+        throw new Error(&#039;Circuit breaker is OPEN&#039;);
+      }
+      this.state = &#039;HALF_OPEN&#039;;
+    }
+
+    try {
+      const result = await fn();
+      this.onSuccess();
+      return result;
+    } catch (error) {
+      this.onFailure();
+      throw error;
+    }
+  }
+
+  onSuccess() {
+    this.failureCount = 0;
+    this.state = &#039;CLOSED&#039;;
+  }
+
+  onFailure() {
+    this.failureCount++;
+    if (this.failureCount &gt;= this.threshold) {
+      this.state = &#039;OPEN&#039;;
+      this.nextAttempt = Date.now() + this.timeout;
+      pan.publish(&#039;circuit-breaker.opened&#039;, {
+        breaker: this
+      });
+    }
+  }
+}
+
+// Usage
+const userApiBreaker = new CircuitBreaker();
+
+async function fetchUsers() {
+  return userApiBreaker.execute(() =&gt; api.get(&#039;/users&#039;));
+}</code></pre>
+<h3>Fallback Strategies</h3>
+<p>Provide graceful degradation when APIs fail:</p>
+<pre><code class="language-javascript">class FallbackApiClient extends ApiClient {
+  async getWithFallback(endpoint, fallbackData) {
+    try {
+      return await this.get(endpoint);
+    } catch (error) {
+      console.warn(`API call failed, using fallback for ${endpoint}`);
+      pan.publish(&#039;api.fallback&#039;, { endpoint, error });
+      return fallbackData;
+    }
+  }
+
+  async getWithCacheFallback(endpoint) {
+    try {
+      const data = await this.get(endpoint);
+      localStorage.setItem(`fallback:${endpoint}`, JSON.stringify(data));
+      return data;
+    } catch (error) {
+      const cached = localStorage.getItem(`fallback:${endpoint}`);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+      throw error;
+    }
+  }
+}</code></pre>
+<h2>Optimistic Updates</h2>
+<p>Update UI immediately before the server responds:</p>
+<pre><code class="language-javascript">class TodoList extends HTMLElement {
+  async addTodo(text) {
+    const optimisticTodo = {
+      id: `temp-${Date.now()}`,
+      text,
+      completed: false,
+      pending: true
+    };
+
+    // Add to UI immediately
+    this.todos.push(optimisticTodo);
+    this.render();
+
+    try {
+      // Send to server
+      const savedTodo = await api.post(&#039;/todos&#039;, { text });
+
+      // Replace optimistic todo with server response
+      const index = this.todos.findIndex(t =&gt; t.id === optimisticTodo.id);
+      this.todos[index] = savedTodo;
+      this.render();
+
+    } catch (error) {
+      // Revert on failure
+      this.todos = this.todos.filter(t =&gt; t.id !== optimisticTodo.id);
+      this.render();
+
+      pan.publish(&#039;notification.error&#039;, {
+        message: &#039;Failed to add todo&#039;
+      });
+    }
+  }
+}</code></pre>
+<h2>Infinite Scroll / Pagination</h2>
+<p>Load more data as the user scrolls:</p>
+<pre><code class="language-javascript">class InfiniteList extends HTMLElement {
+  constructor() {
+    super();
+    this.items = [];
+    this.page = 1;
+    this.loading = false;
+    this.hasMore = true;
+  }
+
+  connectedCallback() {
+    this.render();
+    this.loadMore();
+
+    // Intersection Observer for infinite scroll
+    const sentinel = this.querySelector(&#039;.sentinel&#039;);
+    const observer = new IntersectionObserver(entries =&gt; {
+      if (entries[0].isIntersecting &amp;&amp; !this.loading &amp;&amp; this.hasMore) {
+        this.loadMore();
+      }
+    });
+    observer.observe(sentinel);
+  }
+
+  async loadMore() {
+    if (this.loading || !this.hasMore) return;
+
+    this.loading = true;
+    this.render();
+
+    try {
+      const data = await api.get(`/items?page=${this.page}&amp;limit=20`);
+
+      this.items.push(...data.items);
+      this.hasMore = data.hasMore;
+      this.page++;
+
+    } catch (error) {
+      console.error(&#039;Failed to load more items:&#039;, error);
+    } finally {
+      this.loading = false;
+      this.render();
+    }
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;items&quot;&gt;
+        ${this.items.map(item =&gt; `
+          &lt;div class=&quot;item&quot;&gt;${item.title}&lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+
+      ${this.loading ? &#039;&lt;div class=&quot;loading&quot;&gt;Loading...&lt;/div&gt;&#039; : &#039;&#039;}
+      ${this.hasMore ? &#039;&lt;div class=&quot;sentinel&quot;&gt;&lt;/div&gt;&#039; : &#039;&#039;}
+      ${!this.hasMore ? &#039;&lt;div class=&quot;end&quot;&gt;No more items&lt;/div&gt;&#039; : &#039;&#039;}
+    `;
+  }
+}</code></pre>
+<h2>Troubleshooting</h2>
+<h3>Problem: CORS Errors</h3>
+<strong>Symptom</strong>: <code>Access to fetch at 'https://api.example.com' from origin 'http://localhost:3000' has been blocked by CORS policy</code>
+<strong>Solution</strong>: Configure your server to send CORS headers:
+<pre><code class="language-javascript">// Express.js example
+app.use((req, res, next) =&gt; {
+  res.header(&#039;Access-Control-Allow-Origin&#039;, &#039;http://localhost:3000&#039;);
+  res.header(&#039;Access-Control-Allow-Methods&#039;, &#039;GET, POST, PUT, DELETE&#039;);
+  res.header(&#039;Access-Control-Allow-Headers&#039;, &#039;Content-Type, Authorization&#039;);
+  res.header(&#039;Access-Control-Allow-Credentials&#039;, &#039;true&#039;);
+  next();
+});</code></pre>
+<p>Or use a proxy in development:</p>
+<pre><code class="language-javascript">// vite.config.js
+export default {
+  server: {
+    proxy: {
+      &#039;/api&#039;: {
+        target: &#039;https://api.example.com&#039;,
+        changeOrigin: true,
+        rewrite: (path) =&gt; path.replace(/^\/api/, &#039;&#039;)
+      }
+    }
+  }
+};</code></pre>
+<h3>Problem: Requests Timing Out</h3>
+<strong>Symptom</strong>: Fetch hangs indefinitely or takes too long
+<strong>Solution</strong>: Add timeout to fetch requests:
+<pre><code class="language-javascript">async function fetchWithTimeout(url, options = {}, timeout = 5000) {
+  const controller = new AbortController();
+  const id = setTimeout(() =&gt; controller.abort(), timeout);
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal
+    });
+    clearTimeout(id);
+    return response;
+  } catch (error) {
+    clearTimeout(id);
+    if (error.name === &#039;AbortError&#039;) {
+      throw new Error(&#039;Request timeout&#039;);
+    }
+    throw error;
+  }
+}</code></pre>
+<h3>Problem: Memory Leaks from Uncancelled Requests</h3>
+<strong>Symptom</strong>: Component removed but requests still updating state
+<strong>Solution</strong>: Cancel requests when component disconnects:
+<pre><code class="language-javascript">class UserList extends HTMLElement {
+  constructor() {
+    super();
+    this.abortController = new AbortController();
+  }
+
+  async connectedCallback() {
+    try {
+      const response = await fetch(&#039;/api/users&#039;, {
+        signal: this.abortController.signal
+      });
+      const users = await response.json();
+      this.render(users);
+    } catch (error) {
+      if (error.name !== &#039;AbortError&#039;) {
+        console.error(error);
+      }
+    }
+  }
+
+  disconnectedCallback() {
+    this.abortController.abort();
+  }
+}</code></pre>
+<h3>Problem: Stale Data After Navigation</h3>
+<strong>Symptom</strong>: Old data briefly appears before loading new data
+<strong>Solution</strong>: Clear cache or reset state on navigation:
+<pre><code class="language-javascript">pan.subscribe(&#039;navigation.changed&#039;, () =&gt; {
+  // Clear API cache
+  api.clearCache();
+
+  // Or invalidate specific endpoints
+  api.invalidate(&#039;/users&#039;);
+});</code></pre>
+<h2>Best Practices</h2>
+<li><strong>Centralize API logic</strong> - Use a single API client, not scattered fetch calls</li>
+<li><strong>Handle loading states</strong> - Always show feedback during async operations</li>
+<li><strong>Implement caching</strong> - Reduce server load and improve perceived performance</li>
+<li><strong>Use optimistic updates</strong> - Make UI feel instant for common operations</li>
+<li><strong>Fail gracefully</strong> - Provide fallbacks, don't just show error messages</li>
+<li><strong>Cancel requests</strong> - Clean up when components unmount</li>
+<li><strong>Use the PAN bus</strong> - Decouple components from API implementation details</li>
+<li><strong>Implement retries</strong> - Networks are unreliable, retry with backoff</li>
+<li><strong>Monitor API health</strong> - Use circuit breakers for failing services</li>
+<li><strong>Test with mocks</strong> - Don't depend on live APIs for tests</li>
+<h2>Exercises</h2>
+<h3>Exercise 1: Weather Dashboard</h3>
+<p>Build a weather dashboard that:</p>
+<ul><li>Fetches current weather for a city</li>
+<li>Displays 5-day forecast</li>
+<li>Caches results for 30 minutes</li>
+<li>Updates automatically when city changes</li>
+<li>Shows loading spinner during fetch</li>
+<li>Handles API errors gracefully</li>
+</ul>
+<strong>Bonus</strong>: Add geolocation to auto-detect user's city.
+<h3>Exercise 2: Infinite Scroll Blog</h3>
+<p>Create a blog list with infinite scroll that:</p>
+<ul><li>Loads 10 posts initially</li>
+<li>Loads 10 more as user scrolls down</li>
+<li>Shows loading indicator at bottom</li>
+<li>Handles "no more posts" state</li>
+<li>Implements pull-to-refresh on mobile</li>
+</ul>
+<strong>Bonus</strong>: Add search that filters posts while maintaining infinite scroll.
+<h3>Exercise 3: Real-Time Chat</h3>
+<p>Build a simple chat application that:</p>
+<ul><li>Uses WebSockets for real-time messages</li>
+<li>Shows typing indicators</li>
+<li>Displays online/offline status</li>
+<li>Reconnects automatically when connection drops</li>
+<li>Falls back to polling if WebSockets unavailable</li>
+</ul>
+<strong>Bonus</strong>: Add message read receipts and "User is typing..." indicators.
+<h3>Exercise 4: Optimistic Todo List</h3>
+<p>Create a todo list with optimistic updates:</p>
+<ul><li>Add todos instantly (before server confirms)</li>
+<li>Revert if server rejects</li>
+<li>Show pending state with different styling</li>
+<li>Handle offline mode (queue operations)</li>
+<li>Sync when connection restored</li>
+</ul>
+<strong>Bonus</strong>: Use IndexedDB for offline storage and sync queue.
+<hr>
+<h2>Summary</h2>
+<p>Data fetching is the bridge between your frontend and the world. LARC embraces native browser APIs (fetch, WebSocket, EventSource) while providing patterns that make common tasks simple:</p>
+<ul><li><strong>Use fetch</strong> for HTTP requests, enhance with retries and timeouts</li>
+<li><strong>Build an API client</strong> to centralize authentication and error handling</li>
+<li><strong>Integrate with PAN bus</strong> to decouple components from API details</li>
+<li><strong>Implement caching</strong> to improve performance and reduce server load</li>
+<li><strong>Handle errors gracefully</strong> with circuit breakers and fallbacks</li>
+<li><strong>Use optimistic updates</strong> to make UI feel instant</li>
+<li><strong>Choose the right tool</strong>: REST for standard APIs, GraphQL for flexible queries, WebSockets for bidirectional real-time, SSE for server push</li>
+</ul>
+The web platform provides excellent data fetching capabilities. LARC helps you use them effectively.
+<hr>
+<h2>Further Reading</h2>
+<strong>For complete API integration reference:</strong>
+<ul><li><em>Building with LARC</em> Chapter 7: Data Fetching and APIs - All patterns and strategies</li>
+<li><em>Building with LARC</em> Chapter 20: Integration Components - pan-data-connector, pan-websocket, pan-sse API reference</li>
+<li><em>Building with LARC</em> Appendix E: Recipes and Patterns - API integration recipes</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/11-data-fetching-and-apis.md" target="_blank">

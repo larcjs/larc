@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Books Cross-Reference Guide · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Books Cross-Reference Guide">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <span>CROSS-REFERENCE-GUIDE</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Books Cross-Reference Guide</h1>
+<p>This guide maps topics between <em>Learning LARC</em> (tutorial) and <em>Building with LARC</em> (reference manual) to help readers find complementary information in both books.</p>
+<hr>
+<h2>How to Use This Guide</h2>
+<ul><li><strong>Learning LARC → Building with LARC</strong>: Find deeper API documentation and patterns</li>
+<li><strong>Building with LARC → Learning LARC</strong>: Find tutorial examples and hands-on exercises</li>
+</ul>
+<hr>
+<h2>Chapter Mapping by Topic</h2>
+<h3>Foundations</h3>
+<p>| Topic | Learning LARC | Building with LARC |
+|-------|---------------|-------------------|
+| <strong>Philosophy & Background</strong> | Ch 1: Philosophy and Background | Ch 1: Introduction |
+| <strong>Core Concepts</strong> | Ch 2: Core Concepts | Ch 2: Core Concepts |
+| <strong>Getting Started</strong> | Ch 3: Getting Started | Ch 3: Getting Started |</p>
+<hr>
+<h3>Component Development</h3>
+<p>| Topic | Learning LARC | Building with LARC |
+|-------|---------------|-------------------|
+| <strong>Creating Components</strong> | Ch 4: Creating Web Components | - |
+| <strong>PAN Bus Fundamentals</strong> | Ch 5: The PAN Bus | Ch 2: Core Concepts |
+| <strong>State Management</strong> | Ch 6: State Management | Ch 4: State Management |
+| <strong>Advanced Patterns</strong> | Ch 7: Advanced Component Patterns | Ch 15: Advanced Patterns |</p>
+<hr>
+<h3>Application Building</h3>
+<p>| Topic | Learning LARC | Building with LARC |
+|-------|---------------|-------------------|
+| <strong>Routing</strong> | Ch 8: Routing and Navigation | Ch 5: Routing and Navigation |
+| <strong>Forms</strong> | Ch 9: Forms and Validation | Ch 6: Forms and User Input |
+| <strong>Data Fetching</strong> | Ch 11: Data Fetching and APIs | Ch 7: Data Fetching and APIs |
+| <strong>Authentication</strong> | Ch 12: Authentication and Security | Ch 8: Authentication and Authorization |
+| <strong>Server Integration</strong> | Ch 13: Server Integration | (covered across multiple chapters) |</p>
+<hr>
+<h3>Advanced Topics</h3>
+<p>| Topic | Learning LARC | Building with LARC |
+|-------|---------------|-------------------|
+| <strong>Testing</strong> | Ch 14: Testing | Ch 13: Testing Strategies |
+| <strong>Performance</strong> | Ch 15: Performance and Optimization | Ch 12: Performance Optimization |
+| <strong>Deployment</strong> | Ch 16: Deployment | Ch 16: Deployment and Production |
+| <strong>Real-time Features</strong> | Ch 11: Data Fetching (WebSockets/SSE) | Ch 9: Real-time Features |
+| <strong>File Management</strong> | (covered in Ch 13: Server Integration) | Ch 10: File Management |
+| <strong>Theming</strong> | Ch 4: Creating Web Components (styling) | Ch 11: Theming and Styling |</p>
+<hr>
+<h3>Ecosystem</h3>
+<p>| Topic | Learning LARC | Building with LARC |
+|-------|---------------|-------------------|
+| <strong>Component Libraries</strong> | Ch 17: Component Library | Ch 17-21: Component Reference |
+| <strong>Tooling</strong> | Ch 18: Tooling | Ch 14: Error Handling and Debugging |
+| <strong>Real-World Apps</strong> | Ch 19: Real-World Applications | (examples throughout) |</p>
+<hr>
+<h2>Component Documentation Cross-Reference</h2>
+<p>| Component | Learning LARC | Building with LARC |
+|-----------|---------------|-------------------|
+| <strong>pan-bus</strong> | Ch 5: The PAN Bus | Ch 17: Core Components |
+| <strong>pan-store</strong> | Ch 6: State Management | Ch 18: Data Components |
+| <strong>pan-idb</strong> | Ch 6: State Management | Ch 18: Data Components |
+| <strong>pan-routes</strong> | Ch 8: Routing and Navigation | Ch 17: Core Components |
+| <strong>pan-theme-provider</strong> | Ch 4: Creating Web Components | Ch 17: Core Components |
+| <strong>pan-theme-toggle</strong> | Ch 4: Creating Web Components | Ch 17: Core Components |
+| <strong>pan-files</strong> | Ch 13: Server Integration | Ch 19: UI Components |
+| <strong>pan-markdown-editor</strong> | Ch 9: Forms and Validation | Ch 19: UI Components |
+| <strong>pan-markdown-renderer</strong> | Ch 9: Forms and Validation | Ch 19: UI Components |
+| <strong>pan-data-connector</strong> | Ch 11: Data Fetching and APIs | Ch 20: Integration Components |
+| <strong>pan-graphql-connector</strong> | Ch 11: Data Fetching and APIs | Ch 20: Integration Components |
+| <strong>pan-websocket</strong> | Ch 11: Data Fetching and APIs | Ch 20: Integration Components |
+| <strong>pan-sse</strong> | Ch 11: Data Fetching and APIs | Ch 20: Integration Components |
+| <strong>pan-debug</strong> | Ch 18: Tooling | Ch 21: Utility Components |
+| <strong>pan-forwarder</strong> | Ch 13: Server Integration | Ch 21: Utility Components |</p>
+<hr>
+<h2>Appendices Cross-Reference</h2>
+<p>| Topic | Learning LARC | Building with LARC |
+|-------|---------------|-------------------|
+| <strong>Web Components API</strong> | Appendix A | (integrated throughout) |
+| <strong>PAN Bus API</strong> | Appendix B | Ch 2: Core Concepts |
+| <strong>Component Quick Reference</strong> | Appendix C | Ch 17-21: Component Reference |
+| <strong>Migration Guides</strong> | Appendix D | Appendix D: Migration Guide |
+| <strong>Message Topics</strong> | Appendix B | Appendix A: Message Topics Reference |
+| <strong>Event Envelope</strong> | (in Ch 5) | Appendix B: Event Envelope Specification |
+| <strong>Configuration Options</strong> | (throughout chapters) | Appendix C: Configuration Options |
+| <strong>Recipes & Patterns</strong> | (as exercises) | Appendix E: Recipes and Patterns |
+| <strong>Glossary</strong> | (inline definitions) | Appendix F: Glossary |
+| <strong>Resources</strong> | Appendix E | Appendix G: Resources |</p>
+<hr>
+<h2>By Learning Path</h2>
+<h3>"I'm Just Starting with LARC"</h3>
+<strong>Start here:</strong>
+<li><em>Learning LARC</em> Ch 1-3 (Philosophy, Concepts, Getting Started)</li>
+<li><em>Building with LARC</em> Ch 1 (Introduction) - understand book relationship</li>
+<li><em>Learning LARC</em> Ch 4-7 (Components, PAN Bus, State, Patterns)</li>
+<strong>Then explore:</strong>
+<ul><li><em>Learning LARC</em> Ch 8-10 (Routing, Forms, Data) with hands-on exercises</li>
+<li>Refer to <em>Building with LARC</em> for API details as needed</li>
+</ul>
+<hr>
+<h3>"I Know the Basics, Need Production Patterns"</h3>
+<strong>Focus on:</strong>
+<li><em>Learning LARC</em> Ch 11-16 (Data, Auth, Server, Testing, Performance, Deployment)</li>
+<li><em>Building with LARC</em> Ch 4-16 (Implementation details for production)</li>
+<li><em>Building with LARC</em> Appendix E (Recipes and Patterns)</li>
+<strong>Reference:</strong>
+<ul><li><em>Learning LARC</em> Ch 19 for complete real-world applications</li>
+<li><em>Building with LARC</em> Ch 16 for deployment strategies</li>
+</ul>
+<hr>
+<h3>"I Need API Documentation"</h3>
+<strong>Go straight to:</strong>
+<li><em>Building with LARC</em> Ch 17-21 (Component Reference)</li>
+<li><em>Building with LARC</em> Appendices A-C (Message Topics, Event Envelope, Configuration)</li>
+<li><em>Building with LARC</em> Index (when completed)</li>
+<strong>Supplement with:</strong>
+<ul><li><em>Learning LARC</em> chapters for usage examples</li>
+<li><em>Building with LARC</em> Appendix E for copy-paste recipes</li>
+</ul>
+<hr>
+<h3>"I'm Migrating from React/Vue/Angular"</h3>
+<strong>Essential reading:</strong>
+<li><em>Learning LARC</em> Ch 1 (understand philosophy differences)</li>
+<li><em>Learning LARC</em> Appendix D (Migration Cheat Sheet)</li>
+<li><em>Building with LARC</em> Appendix D (Migration Guide)</li>
+<li><em>Learning LARC</em> Ch 19 (Real-World Applications - see complete examples)</li>
+<strong>Then work through:</strong>
+<ul><li><em>Learning LARC</em> Ch 2-7 sequentially (rebuild mental models)</li>
+<li>Use <em>Building with LARC</em> as API reference</li>
+</ul>
+<hr>
+<h2>Quick Topic Finder</h2>
+<h3>When You Need...</h3>
+<strong>Tutorial/Examples</strong>: <em>Learning LARC</em>
+<ul><li>Progressive learning path</li>
+<li>Hands-on exercises (4 per chapter in Ch 11-19)</li>
+<li>Troubleshooting sections</li>
+<li>Complete case studies (Ch 19)</li>
+</ul>
+<strong>API Reference</strong>: <em>Building with LARC</em>
+<ul><li>Component documentation with attributes/methods/events</li>
+<li>Quick reference tables</li>
+<li>Copy-paste recipes</li>
+<li>Exhaustive API coverage</li>
+</ul>
+<strong>Best Practices</strong>: Both books
+<ul><li><em>Learning LARC</em>: 10 best practices per chapter (Ch 11-19)</li>
+<li><em>Building with LARC</em>: Appendix E (Recipes and Patterns)</li>
+</ul>
+<strong>Real Code</strong>: Both books
+<ul><li><em>Learning LARC</em>: Complete applications (Ch 19: E-commerce, Dashboard, CMS)</li>
+<li><em>Building with LARC</em>: Component recipes (Appendix E)</li>
+</ul>
+<strong>Troubleshooting</strong>: Both books
+<ul><li><em>Learning LARC</em>: Problem/Symptom/Cause/Solution format (Ch 11-19)</li>
+<li><em>Building with LARC</em>: Common pitfalls (Ch 14, 18)</li>
+</ul>
+<hr>
+<h2>Special Cross-References</h2>
+<h3>State Management Deep Dive</h3>
+<li>Start: <em>Learning LARC</em> Ch 6 (conceptual overview with examples)</li>
+<li>Deep dive: <em>Building with LARC</em> Ch 4 (patterns and strategies)</li>
+<li>Components: <em>Building with LARC</em> Ch 18 (pan-store, pan-idb APIs)</li>
+<li>Practice: <em>Learning LARC</em> Ch 6 exercises + Ch 19 case studies</li>
+<h3>Authentication Implementation</h3>
+<li>Tutorial: <em>Learning LARC</em> Ch 12 (complete auth flow)</li>
+<li>Reference: <em>Building with LARC</em> Ch 8 (JWT patterns, security)</li>
+<li>Practice: <em>Learning LARC</em> Ch 12 exercises (OAuth integration)</li>
+<li>Production: <em>Learning LARC</em> Ch 19 (real-world auth in e-commerce app)</li>
+<h3>Performance Optimization</h3>
+<li>Learn: <em>Learning LARC</em> Ch 15 (lazy loading, code splitting, virtual scrolling)</li>
+<li>Reference: <em>Building with LARC</em> Ch 12 (optimization patterns)</li>
+<li>Measure: <em>Learning LARC</em> Ch 15 (Web Vitals monitoring)</li>
+<li>Apply: <em>Learning LARC</em> Ch 19 (optimized dashboard case study)</li>
+<h3>Testing Strategy</h3>
+<li>Foundations: <em>Learning LARC</em> Ch 14 (unit, integration, E2E)</li>
+<li>Patterns: <em>Building with LARC</em> Ch 13 (test utilities, mocking)</li>
+<li>Practice: <em>Learning LARC</em> Ch 14 exercises (TDD kata)</li>
+<li>Real-world: <em>Learning LARC</em> Ch 19 (testing async components)</li>
+<hr>
+<h2>Notes for Readers</h2>
+<h3>Reading Both Books</h3>
+<strong>Optimal approach:</strong>
+<li>Read <em>Learning LARC</em> chapters sequentially (tutorial path)</li>
+<li>Keep <em>Building with LARC</em> open for API lookups</li>
+<li>Use this cross-reference to find related content</li>
+<li>Do exercises in <em>Learning LARC</em> to reinforce concepts</li>
+<h3>Reading Only One Book</h3>
+<strong>If you only have <em>Learning LARC</em>:</strong>
+<ul><li>You can build complete LARC applications</li>
+<li>Exercises provide hands-on practice</li>
+<li>Ch 19 demonstrates production patterns</li>
+<li>Appendices cover essential APIs</li>
+</ul>
+<strong>If you only have <em>Building with LARC</em>:</strong>
+<ul><li>You have complete API reference</li>
+<li>Recipes provide working code</li>
+<li>May miss pedagogical progression</li>
+<li>Recommend getting <em>Learning LARC</em> for examples</li>
+</ul>
+<hr>
+<h2>Version Information</h2>
+<ul><li><em>Learning LARC</em>: 19 chapters + 5 appendices (~450-500 pages)</li>
+<li><em>Building with LARC</em>: 21 chapters + 7 appendices (~320-350 pages)</li>
+<li>Both books cover LARC 3.x</li>
+<li>Last updated: December 2024</li>
+</ul>
+<hr>
+<strong>For questions about which book to use:</strong>
+<ul><li><strong>Learning?</strong> Start with <em>Learning LARC</em></li>
+<li><strong>Looking up APIs?</strong> Use <em>Building with LARC</em></li>
+<li><strong>Building production apps?</strong> Use both together</li>
+<li><strong>Migrating frameworks?</strong> Read migration guides in both</li>
+</ul>
+<hr>
+<em>This cross-reference guide is maintained as part of the LARC documentation project.</em>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/CROSS-REFERENCE-GUIDE.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

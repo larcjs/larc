@@ -14,3 +14,6 @@ playground/index.html.backup
 
 # Backups
 docs/books/backup/
+
+# Temporary files
+.tmp

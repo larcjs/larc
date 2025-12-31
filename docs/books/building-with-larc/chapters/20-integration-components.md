@@ -48,8 +48,8 @@ pc.publish('users.item.save', {
 | `resource` | String | "items" | Resource name (topic prefix) |
 | `base-url` | String | "" | API base URL |
 | `key` | String | "id" | Unique identifier field |
-| `list-path` | String | "/${resource}" | List endpoint template |
-| `item-path` | String | "/${resource}/:id" | Item endpoint template |
+| `list-path` | String | "/\${resource}" | List endpoint template |
+| `item-path` | String | "/\${resource}/:id" | Item endpoint template |
 | `update-method` | String | "PUT" | HTTP method for updates (PUT/PATCH) |
 | `credentials` | String | "" | Fetch credentials mode |
 
@@ -73,18 +73,18 @@ pc.publish('users.item.save', {
 
 | Topic | Data | HTTP Request | Description |
 |-------|------|--------------|-------------|
-| `${resource}.list.get` | `{ ...query }` | GET /${resource} | Fetch list |
-| `${resource}.item.get` | `{ id }` | GET /${resource}/:id | Fetch single item |
-| `${resource}.item.save` | `{ id?, ...data }` | POST or PUT | Create/update item |
-| `${resource}.item.delete` | `{ id }` | DELETE /${resource}/:id | Delete item |
+| `\${resource}.list.get` | `{ ...query }` | GET /\${resource} | Fetch list |
+| `\${resource}.item.get` | `{ id }` | GET /\${resource}/:id | Fetch single item |
+| `\${resource}.item.save` | `{ id?, ...data }` | POST or PUT | Create/update item |
+| `\${resource}.item.delete` | `{ id }` | DELETE /\${resource}/:id | Delete item |
 
 #### Published (Responses)
 
 | Topic | Data | Description |
 |-------|------|-------------|
-| `${resource}.list.state` | `{ items: [...], meta? }` | List results (retained) |
-| `${resource}.item.state.${id}` | `{ ...item }` | Single item (retained) |
-| `${resource}.error` | `{ operation, error, status }` | Error occurred |
+| `\${resource}.list.state` | `{ items: [...], meta? }` | List results (retained) |
+| `\${resource}.item.state.\${id}` | `{ ...item }` | Single item (retained) |
+| `\${resource}.error` | `{ operation, error, status }` | Error occurred |
 
 ### Complete Example
 
@@ -264,6 +264,7 @@ function saveUserOptimistically(user) {
 
 **HTTP Status Codes**:
 All HTTP status codes are passed through in the error message:
+
 - 400: Bad Request
 - 401: Unauthorized
 - 403: Forbidden
@@ -341,6 +342,7 @@ pc.subscribe('users.list.state', (msg) => {
 | `key` | String | "id" | Unique identifier field |
 
 **GraphQL operations** (via `<script type="application/graphql">`):
+
 - `data-operation="list"`: List query
 - `data-operation="get"`: Single item query
 - `data-operation="create"`: Create mutation
@@ -364,6 +366,7 @@ pc.subscribe('users.list.state', (msg) => {
 ### PAN Topics
 
 Same as `pan-data-connector`:
+
 - Subscribe: `${resource}.list.get`, `${resource}.item.get`, `${resource}.item.save`, `${resource}.item.delete`
 - Publish: `${resource}.list.state`, `${resource}.item.state.${id}`, `${resource}.error`
 
@@ -523,6 +526,7 @@ pc.subscribe('users.list.state', (msg) => {
 
 **GraphQL Error Extensions**:
 GraphQL servers often include error codes in `extensions`:
+
 - `UNAUTHENTICATED`: Not logged in
 - `FORBIDDEN`: Insufficient permissions
 - `BAD_USER_INPUT`: Invalid variables
@@ -803,6 +807,7 @@ pc.subscribe('ws.connected', () => {
 
 **WebSocket Close Codes**:
 Standard close codes passed in `ws.disconnected`:
+
 - 1000: Normal closure
 - 1001: Going away (page unload)
 - 1002: Protocol error
@@ -884,7 +889,7 @@ pc.subscribe('sse.event.notification', (msg) => {
 | `sse.connected` | `{ url }` | Connection opened |
 | `sse.disconnected` | `{}` | Connection closed |
 | `sse.message` | `{ data, id?, type? }` | Default message event |
-| `sse.event.${type}` | `{ data, id? }` | Custom event type |
+| `sse.event.\${type}` | `{ data, id? }` | Custom event type |
 | `sse.error` | `{ error }` | Error occurred |
 
 #### Subscribed
@@ -1060,6 +1065,7 @@ if (!('EventSource' in window)) {
 ```
 
 **Browser Compatibility**:
+
 - SSE (EventSource API) supported in all modern browsers
 - Not available in IE11 (use polyfill or fallback to polling)
 - Check support: `if ('EventSource' in window)`
@@ -1067,6 +1073,7 @@ if (!('EventSource' in window)) {
 - Maximum reconnection delay: typically 3 seconds
 
 **Server Requirements**:
+
 - Must send `Content-Type: text/event-stream`
 - Must send `Cache-Control: no-cache`
 - Keep connection open (don't close after each event)
@@ -1097,6 +1104,7 @@ This chapter documented LARC's integration components:
 All components transform external protocols into PAN bus messages, maintaining architectural consistency.
 
 **See Also**:
+
 - Tutorial: *Learning LARC* Chapter 11
 - Core components: Chapter 17
 - Data components: Chapter 18

@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/react-adapter",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "React hooks for LARC PAN bus integration",
   "type": "module",
   "main": "./src/index.js",
@@ -46,7 +46,7 @@
     "access": "public"
   },
   "peerDependencies": {
-    "@larcjs/core": "^2.0.0",
+    "@larcjs/core": "^2.1.0",
     "react": "^18.0.0"
   },
   "peerDependenciesMeta": {
@@ -55,7 +55,7 @@
     }
   },
   "devDependencies": {
-    "@larcjs/core-types": "^2.0.0",
+    "@larcjs/core-types": "^3.0.0",
     "@testing-library/react": "^14.0.0",
     "@vitejs/plugin-react": "^4.2.0",
     "@vitest/coverage-v8": "^4.0.15",

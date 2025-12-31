@@ -806,6 +806,1174 @@ customElements.define(&#039;responsive-image&#039;, ResponsiveImage);</code></pr
 }
 
 customElements.define(&#039;event-bridge&#039;, EventBridge);</code></pre>
+<h2>Recipe 11: File Upload with Progress</h2>
+<p>Multi-file upload with progress tracking and validation.</p>
+<pre><code class="language-javascript">class FileUpload extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.maxSize = parseInt(this.getAttribute(&#039;max-size&#039;)) || 5 * 1024 * 1024; // 5MB
+    this.accept = this.getAttribute(&#039;accept&#039;) || &#039;*/*&#039;;
+    this.multiple = this.hasAttribute(&#039;multiple&#039;);
+
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .upload-area {
+          border: 2px dashed #ccc;
+          border-radius: 0.5rem;
+          padding: 2rem;
+          text-align: center;
+          cursor: pointer;
+          transition: border-color 0.3s;
+        }
+        .upload-area:hover { border-color: #2196f3; }
+        .upload-area.dragover { border-color: #4caf50; background: #f0f8f0; }
+        .file-list { margin-top: 1rem; }
+        .file-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem;
+          border: 1px solid #ddd;
+          border-radius: 0.25rem;
+          margin-bottom: 0.5rem;
+        }
+        .progress-bar {
+          flex: 1;
+          height: 8px;
+          background: #e0e0e0;
+          border-radius: 4px;
+          overflow: hidden;
+        }
+        .progress-fill {
+          height: 100%;
+          background: #4caf50;
+          transition: width 0.3s;
+        }
+        .remove-btn {
+          background: #f44336;
+          color: white;
+          border: none;
+          padding: 0.25rem 0.5rem;
+          border-radius: 0.25rem;
+          cursor: pointer;
+        }
+        .error { color: #f44336; font-size: 0.875rem; }
+      &lt;/style&gt;
+      &lt;div class=&quot;upload-area&quot;&gt;
+        &lt;input type=&quot;file&quot; style=&quot;display: none&quot; accept=&quot;${this.accept}&quot; ${this.multiple ? &#039;multiple&#039; : &#039;&#039;}&gt;
+        &lt;p&gt;📁 Drag files here or click to browse&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;div class=&quot;file-list&quot;&gt;&lt;/div&gt;
+    `;
+
+    this.uploadArea = this.shadowRoot.querySelector(&#039;.upload-area&#039;);
+    this.fileInput = this.shadowRoot.querySelector(&#039;input[type=&quot;file&quot;]&#039;);
+    this.fileList = this.shadowRoot.querySelector(&#039;.file-list&#039;);
+
+    this.setupEvents();
+  }
+
+  setupEvents() {
+    this.uploadArea.addEventListener(&#039;click&#039;, () =&gt; this.fileInput.click());
+    this.fileInput.addEventListener(&#039;change&#039;, (e) =&gt; this.handleFiles(e.target.files));
+
+    this.uploadArea.addEventListener(&#039;dragover&#039;, (e) =&gt; {
+      e.preventDefault();
+      this.uploadArea.classList.add(&#039;dragover&#039;);
+    });
+
+    this.uploadArea.addEventListener(&#039;dragleave&#039;, () =&gt; {
+      this.uploadArea.classList.remove(&#039;dragover&#039;);
+    });
+
+    this.uploadArea.addEventListener(&#039;drop&#039;, (e) =&gt; {
+      e.preventDefault();
+      this.uploadArea.classList.remove(&#039;dragover&#039;);
+      this.handleFiles(e.dataTransfer.files);
+    });
+  }
+
+  handleFiles(files) {
+    Array.from(files).forEach(file =&gt; {
+      if (file.size &gt; this.maxSize) {
+        this.showError(`${file.name} exceeds ${this.maxSize / 1024 / 1024}MB limit`);
+        return;
+      }
+      this.uploadFile(file);
+    });
+  }
+
+  async uploadFile(file) {
+    const fileId = Date.now() + Math.random();
+    const fileItem = this.createFileItem(file, fileId);
+    this.fileList.appendChild(fileItem);
+
+    const formData = new FormData();
+    formData.append(&#039;file&#039;, file);
+
+    try {
+      const response = await fetch(this.getAttribute(&#039;upload-url&#039;) || &#039;/api/upload&#039;, {
+        method: &#039;POST&#039;,
+        body: formData,
+        headers: {
+          &#039;X-File-Name&#039;: file.name
+        }
+      });
+
+      if (!response.ok) throw new Error(&#039;Upload failed&#039;);
+
+      const result = await response.json();
+      this.updateProgress(fileId, 100);
+      this.pan.dispatch(&#039;file:uploaded&#039;, { file: file.name, result });
+    } catch (error) {
+      this.showError(`Failed to upload ${file.name}`);
+      fileItem.querySelector(&#039;.progress-bar&#039;).style.display = &#039;none&#039;;
+      fileItem.querySelector(&#039;.error&#039;).textContent = error.message;
+    }
+  }
+
+  createFileItem(file, id) {
+    const div = document.createElement(&#039;div&#039;);
+    div.className = &#039;file-item&#039;;
+    div.dataset.id = id;
+    div.innerHTML = `
+      &lt;span&gt;${file.name} (${(file.size / 1024).toFixed(1)}KB)&lt;/span&gt;
+      &lt;div class=&quot;progress-bar&quot;&gt;
+        &lt;div class=&quot;progress-fill&quot; style=&quot;width: 0%&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+      &lt;button class=&quot;remove-btn&quot;&gt;Remove&lt;/button&gt;
+      &lt;div class=&quot;error&quot;&gt;&lt;/div&gt;
+    `;
+
+    div.querySelector(&#039;.remove-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      div.remove();
+      this.pan.dispatch(&#039;file:removed&#039;, { file: file.name });
+    });
+
+    return div;
+  }
+
+  updateProgress(fileId, percent) {
+    const item = this.fileList.querySelector(`[data-id=&quot;${fileId}&quot;]`);
+    if (item) {
+      const fill = item.querySelector(&#039;.progress-fill&#039;);
+      fill.style.width = `${percent}%`;
+    }
+  }
+
+  showError(message) {
+    const error = document.createElement(&#039;div&#039;);
+    error.className = &#039;error&#039;;
+    error.textContent = message;
+    this.fileList.appendChild(error);
+    setTimeout(() =&gt; error.remove(), 5000);
+  }
+}
+
+customElements.define(&#039;file-upload&#039;, FileUpload);</code></pre>
+<h2>Recipe 12: Autocomplete Input</h2>
+<p>Dropdown suggestions with keyboard navigation.</p>
+<pre><code class="language-javascript">class AutocompleteInput extends HTMLElement {
+  constructor() {
+    super();
+    this.selectedIndex = -1;
+    this.suggestions = [];
+  }
+
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .wrapper { position: relative; }
+        input {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #ccc;
+          border-radius: 0.25rem;
+        }
+        .suggestions {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: white;
+          border: 1px solid #ccc;
+          border-top: none;
+          max-height: 200px;
+          overflow-y: auto;
+          z-index: 1000;
+          display: none;
+        }
+        .suggestions.open { display: block; }
+        .suggestion {
+          padding: 0.5rem;
+          cursor: pointer;
+        }
+        .suggestion:hover, .suggestion.selected {
+          background: #f0f0f0;
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;wrapper&quot;&gt;
+        &lt;input type=&quot;text&quot; placeholder=&quot;${this.getAttribute(&#039;placeholder&#039;) || &#039;Search...&#039;}&quot;&gt;
+        &lt;div class=&quot;suggestions&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    this.input = this.shadowRoot.querySelector(&#039;input&#039;);
+    this.dropdown = this.shadowRoot.querySelector(&#039;.suggestions&#039;);
+
+    this.setupEvents();
+  }
+
+  setupEvents() {
+    this.input.addEventListener(&#039;input&#039;, (e) =&gt; this.handleInput(e.target.value));
+    this.input.addEventListener(&#039;keydown&#039;, (e) =&gt; this.handleKeydown(e));
+    this.input.addEventListener(&#039;blur&#039;, () =&gt; setTimeout(() =&gt; this.hideDropdown(), 200));
+
+    this.dropdown.addEventListener(&#039;click&#039;, (e) =&gt; {
+      if (e.target.classList.contains(&#039;suggestion&#039;)) {
+        this.selectSuggestion(e.target.textContent);
+      }
+    });
+  }
+
+  async handleInput(value) {
+    if (value.length &lt; 2) {
+      this.hideDropdown();
+      return;
+    }
+
+    try {
+      const apiUrl = this.getAttribute(&#039;api&#039;);
+      const response = await fetch(`${apiUrl}?q=${encodeURIComponent(value)}`);
+      this.suggestions = await response.json();
+      this.renderSuggestions();
+    } catch (error) {
+      console.error(&#039;Autocomplete failed:&#039;, error);
+    }
+  }
+
+  renderSuggestions() {
+    if (this.suggestions.length === 0) {
+      this.hideDropdown();
+      return;
+    }
+
+    this.dropdown.innerHTML = this.suggestions
+      .map(s =&gt; `&lt;div class=&quot;suggestion&quot;&gt;${s}&lt;/div&gt;`)
+      .join(&#039;&#039;);
+    this.dropdown.classList.add(&#039;open&#039;);
+    this.selectedIndex = -1;
+  }
+
+  handleKeydown(e) {
+    const items = this.dropdown.querySelectorAll(&#039;.suggestion&#039;);
+
+    switch (e.key) {
+      case &#039;ArrowDown&#039;:
+        e.preventDefault();
+        this.selectedIndex = Math.min(this.selectedIndex + 1, items.length - 1);
+        this.updateSelection(items);
+        break;
+      case &#039;ArrowUp&#039;:
+        e.preventDefault();
+        this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
+        this.updateSelection(items);
+        break;
+      case &#039;Enter&#039;:
+        e.preventDefault();
+        if (this.selectedIndex &gt;= 0) {
+          this.selectSuggestion(items[this.selectedIndex].textContent);
+        }
+        break;
+      case &#039;Escape&#039;:
+        this.hideDropdown();
+        break;
+    }
+  }
+
+  updateSelection(items) {
+    items.forEach((item, i) =&gt; {
+      item.classList.toggle(&#039;selected&#039;, i === this.selectedIndex);
+    });
+  }
+
+  selectSuggestion(value) {
+    this.input.value = value;
+    this.hideDropdown();
+    this.pan.dispatch(&#039;autocomplete:selected&#039;, { value });
+  }
+
+  hideDropdown() {
+    this.dropdown.classList.remove(&#039;open&#039;);
+    this.selectedIndex = -1;
+  }
+}
+
+customElements.define(&#039;autocomplete-input&#039;, AutocompleteInput);</code></pre>
+<h2>Recipe 13: Sortable Data Table</h2>
+<p>Table with sortable columns and highlighting.</p>
+<pre><code class="language-javascript">class SortableTable extends HTMLElement {
+  constructor() {
+    super();
+    this.sortColumn = null;
+    this.sortDirection = &#039;asc&#039;;
+  }
+
+  connectedCallback() {
+    this.data = JSON.parse(this.getAttribute(&#039;data&#039;) || &#039;[]&#039;);
+    this.columns = JSON.parse(this.getAttribute(&#039;columns&#039;) || &#039;[]&#039;);
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;style&gt;
+        table { width: 100%; border-collapse: collapse; }
+        th {
+          background: #f5f5f5;
+          padding: 0.75rem;
+          text-align: left;
+          cursor: pointer;
+          user-select: none;
+        }
+        th:hover { background: #e0e0e0; }
+        th.sorted::after {
+          content: &#039;↑&#039;;
+          margin-left: 0.5rem;
+        }
+        th.sorted.desc::after { content: &#039;↓&#039;; }
+        td { padding: 0.75rem; border-top: 1px solid #ddd; }
+        tr:hover { background: #f9f9f9; }
+      &lt;/style&gt;
+      &lt;table&gt;
+        &lt;thead&gt;
+          &lt;tr&gt;
+            ${this.columns.map(col =&gt; `
+              &lt;th data-key=&quot;${col.key}&quot;&gt;${col.label}&lt;/th&gt;
+            `).join(&#039;&#039;)}
+          &lt;/tr&gt;
+        &lt;/thead&gt;
+        &lt;tbody&gt;
+          ${this.renderRows()}
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    `;
+
+    this.querySelectorAll(&#039;th&#039;).forEach(th =&gt; {
+      th.addEventListener(&#039;click&#039;, () =&gt; this.handleSort(th.dataset.key));
+    });
+  }
+
+  renderRows() {
+    return this.data.map(row =&gt; `
+      &lt;tr&gt;
+        ${this.columns.map(col =&gt; `&lt;td&gt;${row[col.key] || &#039;&#039;}&lt;/td&gt;`).join(&#039;&#039;)}
+      &lt;/tr&gt;
+    `).join(&#039;&#039;);
+  }
+
+  handleSort(key) {
+    if (this.sortColumn === key) {
+      this.sortDirection = this.sortDirection === &#039;asc&#039; ? &#039;desc&#039; : &#039;asc&#039;;
+    } else {
+      this.sortColumn = key;
+      this.sortDirection = &#039;asc&#039;;
+    }
+
+    this.data.sort((a, b) =&gt; {
+      const aVal = a[key];
+      const bVal = b[key];
+      const modifier = this.sortDirection === &#039;asc&#039; ? 1 : -1;
+
+      if (typeof aVal === &#039;number&#039;) {
+        return (aVal - bVal) * modifier;
+      }
+      return String(aVal).localeCompare(String(bVal)) * modifier;
+    });
+
+    this.render();
+    this.updateSortIndicator();
+  }
+
+  updateSortIndicator() {
+    this.querySelectorAll(&#039;th&#039;).forEach(th =&gt; {
+      th.classList.remove(&#039;sorted&#039;, &#039;desc&#039;);
+      if (th.dataset.key === this.sortColumn) {
+        th.classList.add(&#039;sorted&#039;);
+        if (this.sortDirection === &#039;desc&#039;) {
+          th.classList.add(&#039;desc&#039;);
+        }
+      }
+    });
+  }
+}
+
+customElements.define(&#039;sortable-table&#039;, SortableTable);</code></pre>
+<h2>Recipe 14: Tabs Component</h2>
+<p>Accessible tabs with keyboard support.</p>
+<pre><code class="language-javascript">class TabsComponent extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.currentTab = 0;
+    this.render();
+    this.setupKeyboardNav();
+  }
+
+  render() {
+    const tabs = Array.from(this.querySelectorAll(&#039;[slot^=&quot;tab-&quot;]&#039;));
+    const panels = Array.from(this.querySelectorAll(&#039;[slot^=&quot;panel-&quot;]&#039;));
+
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .tabs {
+          display: flex;
+          border-bottom: 2px solid #ddd;
+          gap: 0.5rem;
+        }
+        .tab {
+          padding: 0.75rem 1.5rem;
+          background: none;
+          border: none;
+          border-bottom: 2px solid transparent;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: all 0.3s;
+        }
+        .tab:hover { background: #f5f5f5; }
+        .tab[aria-selected=&quot;true&quot;] {
+          border-bottom-color: #2196f3;
+          color: #2196f3;
+        }
+        .panel {
+          padding: 1.5rem 0;
+          display: none;
+        }
+        .panel[aria-hidden=&quot;false&quot;] { display: block; }
+      &lt;/style&gt;
+      &lt;div class=&quot;tabs&quot; role=&quot;tablist&quot;&gt;
+        ${tabs.map((tab, i) =&gt; `
+          &lt;button
+            class=&quot;tab&quot;
+            role=&quot;tab&quot;
+            aria-selected=&quot;${i === 0}&quot;
+            aria-controls=&quot;panel-${i}&quot;
+            id=&quot;tab-${i}&quot;
+            tabindex=&quot;${i === 0 ? 0 : -1}&quot;&gt;
+            ${tab.textContent}
+          &lt;/button&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+      ${panels.map((panel, i) =&gt; `
+        &lt;div
+          class=&quot;panel&quot;
+          role=&quot;tabpanel&quot;
+          id=&quot;panel-${i}&quot;
+          aria-labelledby=&quot;tab-${i}&quot;
+          aria-hidden=&quot;${i !== 0}&quot;&gt;
+          &lt;slot name=&quot;panel-${i}&quot;&gt;&lt;/slot&gt;
+        &lt;/div&gt;
+      `).join(&#039;&#039;)}
+    `;
+
+    this.shadowRoot.querySelectorAll(&#039;.tab&#039;).forEach((tab, i) =&gt; {
+      tab.addEventListener(&#039;click&#039;, () =&gt; this.selectTab(i));
+    });
+  }
+
+  selectTab(index) {
+    this.currentTab = index;
+
+    this.shadowRoot.querySelectorAll(&#039;.tab&#039;).forEach((tab, i) =&gt; {
+      tab.setAttribute(&#039;aria-selected&#039;, i === index);
+      tab.setAttribute(&#039;tabindex&#039;, i === index ? 0 : -1);
+    });
+
+    this.shadowRoot.querySelectorAll(&#039;.panel&#039;).forEach((panel, i) =&gt; {
+      panel.setAttribute(&#039;aria-hidden&#039;, i !== index);
+    });
+
+    this.pan.dispatch(&#039;tab:changed&#039;, { index });
+  }
+
+  setupKeyboardNav() {
+    this.shadowRoot.querySelector(&#039;.tabs&#039;).addEventListener(&#039;keydown&#039;, (e) =&gt; {
+      const tabs = this.shadowRoot.querySelectorAll(&#039;.tab&#039;);
+      let newIndex = this.currentTab;
+
+      switch (e.key) {
+        case &#039;ArrowLeft&#039;:
+          newIndex = Math.max(0, this.currentTab - 1);
+          break;
+        case &#039;ArrowRight&#039;:
+          newIndex = Math.min(tabs.length - 1, this.currentTab + 1);
+          break;
+        case &#039;Home&#039;:
+          newIndex = 0;
+          break;
+        case &#039;End&#039;:
+          newIndex = tabs.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      e.preventDefault();
+      this.selectTab(newIndex);
+      tabs[newIndex].focus();
+    });
+  }
+}
+
+customElements.define(&#039;tabs-component&#039;, TabsComponent);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;tabs-component&gt;
+  &lt;span slot=&quot;tab-0&quot;&gt;Overview&lt;/span&gt;
+  &lt;span slot=&quot;tab-1&quot;&gt;Details&lt;/span&gt;
+  &lt;span slot=&quot;tab-2&quot;&gt;Reviews&lt;/span&gt;
+  
+  &lt;div slot=&quot;panel-0&quot;&gt;&lt;p&gt;Overview content...&lt;/p&gt;&lt;/div&gt;
+  &lt;div slot=&quot;panel-1&quot;&gt;&lt;p&gt;Details content...&lt;/p&gt;&lt;/div&gt;
+  &lt;div slot=&quot;panel-2&quot;&gt;&lt;p&gt;Reviews content...&lt;/p&gt;&lt;/div&gt;
+&lt;/tabs-component&gt;</code></pre>
+<h2>Recipe 15: Accordion Component</h2>
+<p>Expandable sections with smooth animations.</p>
+<pre><code class="language-javascript">class AccordionComponent extends HTMLElement {
+  connectedCallback() {
+    this.allowMultiple = this.hasAttribute(&#039;allow-multiple&#039;);
+    this.render();
+  }
+
+  render() {
+    const items = Array.from(this.querySelectorAll(&#039;[slot^=&quot;item-&quot;]&#039;));
+    
+    this.innerHTML = `
+      &lt;style&gt;
+        .accordion-item {
+          border: 1px solid #ddd;
+          margin-bottom: 0.5rem;
+          border-radius: 0.25rem;
+        }
+        .accordion-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem;
+          background: #f5f5f5;
+          cursor: pointer;
+          user-select: none;
+        }
+        .accordion-header:hover { background: #e0e0e0; }
+        .accordion-icon {
+          transition: transform 0.3s;
+        }
+        .accordion-item.open .accordion-icon {
+          transform: rotate(180deg);
+        }
+        .accordion-content {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s ease;
+        }
+        .accordion-item.open .accordion-content {
+          max-height: 500px;
+        }
+        .accordion-body {
+          padding: 1rem;
+        }
+      &lt;/style&gt;
+      ${items.map((item, i) =&gt; {
+        const title = item.querySelector(&#039;[slot=&quot;title&quot;]&#039;)?.textContent || `Section ${i + 1}`;
+        const content = item.querySelector(&#039;[slot=&quot;content&quot;]&#039;)?.innerHTML || &#039;&#039;;
+        
+        return `
+          &lt;div class=&quot;accordion-item&quot; data-index=&quot;${i}&quot;&gt;
+            &lt;div class=&quot;accordion-header&quot;&gt;
+              &lt;span&gt;${title}&lt;/span&gt;
+              &lt;span class=&quot;accordion-icon&quot;&gt;▼&lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div class=&quot;accordion-content&quot;&gt;
+              &lt;div class=&quot;accordion-body&quot;&gt;${content}&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        `;
+      }).join(&#039;&#039;)}
+    `;
+
+    this.querySelectorAll(&#039;.accordion-header&#039;).forEach(header =&gt; {
+      header.addEventListener(&#039;click&#039;, () =&gt; {
+        const item = header.parentElement;
+        this.toggleItem(item);
+      });
+    });
+  }
+
+  toggleItem(item) {
+    const isOpen = item.classList.contains(&#039;open&#039;);
+
+    if (!this.allowMultiple) {
+      this.querySelectorAll(&#039;.accordion-item&#039;).forEach(i =&gt; {
+        i.classList.remove(&#039;open&#039;);
+      });
+    }
+
+    if (!isOpen) {
+      item.classList.add(&#039;open&#039;);
+      this.pan.dispatch(&#039;accordion:opened&#039;, { index: item.dataset.index });
+    } else {
+      item.classList.remove(&#039;open&#039;);
+      this.pan.dispatch(&#039;accordion:closed&#039;, { index: item.dataset.index });
+    }
+  }
+}
+
+customElements.define(&#039;accordion-component&#039;, AccordionComponent);</code></pre>
+<h2>Recipe 16: Context Menu</h2>
+<p>Right-click custom menu.</p>
+<pre><code class="language-javascript">class ContextMenu extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.items = JSON.parse(this.getAttribute(&#039;items&#039;) || &#039;[]&#039;);
+    this.render();
+    this.setupTriggers();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          position: fixed;
+          z-index: 10000;
+          display: none;
+        }
+        :host(.visible) { display: block; }
+        .menu {
+          background: white;
+          border: 1px solid #ddd;
+          border-radius: 0.25rem;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          min-width: 150px;
+        }
+        .menu-item {
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .menu-item:hover { background: #f5f5f5; }
+        .menu-separator {
+          height: 1px;
+          background: #ddd;
+          margin: 0.25rem 0;
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;menu&quot;&gt;
+        ${this.items.map(item =&gt; 
+          item.separator 
+            ? &#039;&lt;div class=&quot;menu-separator&quot;&gt;&lt;/div&gt;&#039;
+            : `&lt;div class=&quot;menu-item&quot; data-action=&quot;${item.action}&quot;&gt;
+                 ${item.icon || &#039;&#039;} ${item.label}
+               &lt;/div&gt;`
+        ).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+
+    this.shadowRoot.querySelectorAll(&#039;.menu-item&#039;).forEach(item =&gt; {
+      item.addEventListener(&#039;click&#039;, () =&gt; {
+        this.handleAction(item.dataset.action);
+        this.hide();
+      });
+    });
+  }
+
+  setupTriggers() {
+    const target = this.getAttribute(&#039;target&#039;);
+    const elements = target ? document.querySelectorAll(target) : [document];
+
+    elements.forEach(el =&gt; {
+      el.addEventListener(&#039;contextmenu&#039;, (e) =&gt; {
+        e.preventDefault();
+        this.show(e.clientX, e.clientY, el);
+      });
+    });
+
+    document.addEventListener(&#039;click&#039;, () =&gt; this.hide());
+  }
+
+  show(x, y, target) {
+    this.style.left = `${x}px`;
+    this.style.top = `${y}px`;
+    this.classList.add(&#039;visible&#039;);
+    this.currentTarget = target;
+  }
+
+  hide() {
+    this.classList.remove(&#039;visible&#039;);
+  }
+
+  handleAction(action) {
+    this.pan.dispatch(&#039;context-menu:action&#039;, {
+      action,
+      target: this.currentTarget
+    });
+  }
+}
+
+customElements.define(&#039;context-menu&#039;, ContextMenu);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;context-menu
+  target=&quot;.list-item&quot;
+  items=&#039;[
+    {&quot;label&quot;: &quot;Edit&quot;, &quot;action&quot;: &quot;edit&quot;, &quot;icon&quot;: &quot;✏️&quot;},
+    {&quot;label&quot;: &quot;Delete&quot;, &quot;action&quot;: &quot;delete&quot;, &quot;icon&quot;: &quot;🗑️&quot;},
+    {&quot;separator&quot;: true},
+    {&quot;label&quot;: &quot;Share&quot;, &quot;action&quot;: &quot;share&quot;, &quot;icon&quot;: &quot;🔗&quot;}
+  ]&#039;&gt;
+&lt;/context-menu&gt;</code></pre>
+<h2>Recipe 17: Copy to Clipboard</h2>
+<p>One-click copy with visual feedback.</p>
+<pre><code class="language-javascript">class CopyButton extends HTMLElement {
+  connectedCallback() {
+    this.text = this.getAttribute(&#039;text&#039;) || this.textContent;
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;button class=&quot;copy-btn&quot;&gt;
+        &lt;span class=&quot;icon&quot;&gt;📋&lt;/span&gt;
+        &lt;span class=&quot;label&quot;&gt;Copy&lt;/span&gt;
+      &lt;/button&gt;
+      &lt;style&gt;
+        .copy-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border: 1px solid #ddd;
+          border-radius: 0.25rem;
+          background: white;
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+        .copy-btn:hover {
+          background: #f5f5f5;
+          border-color: #2196f3;
+        }
+        .copy-btn.success {
+          background: #4caf50;
+          color: white;
+          border-color: #4caf50;
+        }
+      &lt;/style&gt;
+    `;
+
+    this.button = this.querySelector(&#039;.copy-btn&#039;);
+    this.button.addEventListener(&#039;click&#039;, () =&gt; this.copyToClipboard());
+  }
+
+  async copyToClipboard() {
+    try {
+      await navigator.clipboard.writeText(this.text);
+      this.showSuccess();
+      this.pan.dispatch(&#039;clipboard:copied&#039;, { text: this.text });
+    } catch (error) {
+      console.error(&#039;Copy failed:&#039;, error);
+      this.showError();
+    }
+  }
+
+  showSuccess() {
+    const icon = this.querySelector(&#039;.icon&#039;);
+    const label = this.querySelector(&#039;.label&#039;);
+    
+    icon.textContent = &#039;✓&#039;;
+    label.textContent = &#039;Copied!&#039;;
+    this.button.classList.add(&#039;success&#039;);
+
+    setTimeout(() =&gt; {
+      icon.textContent = &#039;📋&#039;;
+      label.textContent = &#039;Copy&#039;;
+      this.button.classList.remove(&#039;success&#039;);
+    }, 2000);
+  }
+
+  showError() {
+    const label = this.querySelector(&#039;.label&#039;);
+    label.textContent = &#039;Failed&#039;;
+    setTimeout(() =&gt; {
+      label.textContent = &#039;Copy&#039;;
+    }, 2000);
+  }
+}
+
+customElements.define(&#039;copy-button&#039;, CopyButton);</code></pre>
+<h2>Recipe 18: Dark Mode Toggle</h2>
+<p>Theme switching with system preference detection and persistence.</p>
+<pre><code class="language-javascript">class DarkModeToggle extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.initTheme();
+    this.render();
+  }
+
+  initTheme() {
+    const saved = localStorage.getItem(&#039;theme&#039;);
+    const systemPrefers = window.matchMedia(&#039;(prefers-color-scheme: dark)&#039;).matches;
+    this.theme = saved || (systemPrefers ? &#039;dark&#039; : &#039;light&#039;);
+    this.applyTheme();
+
+    // Listen for system theme changes
+    window.matchMedia(&#039;(prefers-color-scheme: dark)&#039;).addEventListener(&#039;change&#039;, (e) =&gt; {
+      if (!localStorage.getItem(&#039;theme&#039;)) {
+        this.theme = e.matches ? &#039;dark&#039; : &#039;light&#039;;
+        this.applyTheme();
+      }
+    });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        button {
+          background: none;
+          border: 1px solid var(--border-color, #ddd);
+          border-radius: 2rem;
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 1rem;
+          transition: all 0.3s;
+        }
+        button:hover {
+          background: var(--hover-bg, #f5f5f5);
+        }
+      &lt;/style&gt;
+      &lt;button&gt;
+        &lt;span class=&quot;icon&quot;&gt;${this.theme === &#039;dark&#039; ? &#039;🌙&#039; : &#039;☀️&#039;}&lt;/span&gt;
+        &lt;span&gt;${this.theme === &#039;dark&#039; ? &#039;Dark&#039; : &#039;Light&#039;}&lt;/span&gt;
+      &lt;/button&gt;
+    `;
+
+    this.shadowRoot.querySelector(&#039;button&#039;).addEventListener(&#039;click&#039;, () =&gt; this.toggle());
+  }
+
+  toggle() {
+    this.theme = this.theme === &#039;light&#039; ? &#039;dark&#039; : &#039;light&#039;;
+    this.applyTheme();
+    this.saveTheme();
+    this.render();
+  }
+
+  applyTheme() {
+    document.documentElement.setAttribute(&#039;data-theme&#039;, this.theme);
+    document.documentElement.style.colorScheme = this.theme;
+    this.pan.dispatch(&#039;theme:changed&#039;, { theme: this.theme });
+  }
+
+  saveTheme() {
+    localStorage.setItem(&#039;theme&#039;, this.theme);
+  }
+}
+
+customElements.define(&#039;dark-mode-toggle&#039;, DarkModeToggle);</code></pre>
+<strong>CSS Variables:</strong>
+<pre><code class="language-css">:root {
+  --bg-color: white;
+  --text-color: #333;
+  --border-color: #ddd;
+}
+
+[data-theme=&quot;dark&quot;] {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --border-color: #444;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}</code></pre>
+<h2>Recipe 19: Skeleton Loader</h2>
+<p>Loading placeholders for better perceived performance.</p>
+<pre><code class="language-javascript">class SkeletonLoader extends HTMLElement {
+  connectedCallback() {
+    this.type = this.getAttribute(&#039;type&#039;) || &#039;text&#039;;
+    this.lines = parseInt(this.getAttribute(&#039;lines&#039;)) || 3;
+    this.render();
+  }
+
+  render() {
+    const templates = {
+      text: this.renderTextSkeleton(),
+      card: this.renderCardSkeleton(),
+      list: this.renderListSkeleton(),
+      profile: this.renderProfileSkeleton()
+    };
+
+    this.innerHTML = `
+      &lt;style&gt;
+        .skeleton {
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+        .skeleton-line {
+          height: 1rem;
+          background: #e0e0e0;
+          border-radius: 0.25rem;
+          margin-bottom: 0.5rem;
+        }
+        .skeleton-circle {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #e0e0e0;
+        }
+        .skeleton-rect {
+          height: 200px;
+          background: #e0e0e0;
+          border-radius: 0.5rem;
+          margin-bottom: 1rem;
+        }
+      &lt;/style&gt;
+      ${templates[this.type] || templates.text}
+    `;
+  }
+
+  renderTextSkeleton() {
+    return Array(this.lines)
+      .fill(0)
+      .map((_, i) =&gt; {
+        const width = i === this.lines - 1 ? &#039;60%&#039; : &#039;100%&#039;;
+        return `&lt;div class=&quot;skeleton skeleton-line&quot; style=&quot;width: ${width}&quot;&gt;&lt;/div&gt;`;
+      })
+      .join(&#039;&#039;);
+  }
+
+  renderCardSkeleton() {
+    return `
+      &lt;div class=&quot;skeleton skeleton-rect&quot;&gt;&lt;/div&gt;
+      ${this.renderTextSkeleton()}
+    `;
+  }
+
+  renderListSkeleton() {
+    return Array(this.lines)
+      .fill(0)
+      .map(() =&gt; `
+        &lt;div style=&quot;display: flex; gap: 1rem; margin-bottom: 1rem;&quot;&gt;
+          &lt;div class=&quot;skeleton skeleton-circle&quot;&gt;&lt;/div&gt;
+          &lt;div style=&quot;flex: 1;&quot;&gt;
+            &lt;div class=&quot;skeleton skeleton-line&quot;&gt;&lt;/div&gt;
+            &lt;div class=&quot;skeleton skeleton-line&quot; style=&quot;width: 70%&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      `)
+      .join(&#039;&#039;);
+  }
+
+  renderProfileSkeleton() {
+    return `
+      &lt;div style=&quot;display: flex; gap: 1rem; align-items: center;&quot;&gt;
+        &lt;div class=&quot;skeleton skeleton-circle&quot; style=&quot;width: 80px; height: 80px;&quot;&gt;&lt;/div&gt;
+        &lt;div style=&quot;flex: 1;&quot;&gt;
+          &lt;div class=&quot;skeleton skeleton-line&quot; style=&quot;width: 200px;&quot;&gt;&lt;/div&gt;
+          &lt;div class=&quot;skeleton skeleton-line&quot; style=&quot;width: 150px;&quot;&gt;&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;skeleton-loader&#039;, SkeletonLoader);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;skeleton-loader type=&quot;card&quot; lines=&quot;3&quot;&gt;&lt;/skeleton-loader&gt;
+&lt;skeleton-loader type=&quot;list&quot; lines=&quot;5&quot;&gt;&lt;/skeleton-loader&gt;
+&lt;skeleton-loader type=&quot;profile&quot;&gt;&lt;/skeleton-loader&gt;</code></pre>
+<h2>Recipe 20: Countdown Timer</h2>
+<p>Countdown timer with custom formatting.</p>
+<pre><code class="language-javascript">class CountdownTimer extends HTMLElement {
+  connectedCallback() {
+    this.targetDate = new Date(this.getAttribute(&#039;target&#039;)).getTime();
+    this.format = this.getAttribute(&#039;format&#039;) || &#039;dhms&#039;; // days, hours, minutes, seconds
+    this.render();
+    this.startCountdown();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;style&gt;
+        .countdown {
+          display: flex;
+          gap: 1rem;
+          font-family: monospace;
+        }
+        .time-unit {
+          text-align: center;
+        }
+        .value {
+          display: block;
+          font-size: 2rem;
+          font-weight: bold;
+        }
+        .label {
+          display: block;
+          font-size: 0.875rem;
+          color: #666;
+          text-transform: uppercase;
+        }
+        .expired {
+          color: #f44336;
+          font-size: 1.5rem;
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;countdown&quot;&gt;&lt;/div&gt;
+    `;
+
+    this.container = this.querySelector(&#039;.countdown&#039;);
+  }
+
+  startCountdown() {
+    this.updateDisplay();
+    this.interval = setInterval(() =&gt; this.updateDisplay(), 1000);
+  }
+
+  updateDisplay() {
+    const now = Date.now();
+    const distance = this.targetDate - now;
+
+    if (distance &lt; 0) {
+      this.container.innerHTML = &#039;&lt;div class=&quot;expired&quot;&gt;Time expired!&lt;/div&gt;&#039;;
+      clearInterval(this.interval);
+      this.pan.dispatch(&#039;countdown:expired&#039;, { target: this.targetDate });
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    const parts = [];
+    if (this.format.includes(&#039;d&#039;)) parts.push({ value: days, label: &#039;Days&#039; });
+    if (this.format.includes(&#039;h&#039;)) parts.push({ value: hours, label: &#039;Hours&#039; });
+    if (this.format.includes(&#039;m&#039;)) parts.push({ value: minutes, label: &#039;Minutes&#039; });
+    if (this.format.includes(&#039;s&#039;)) parts.push({ value: seconds, label: &#039;Seconds&#039; });
+
+    this.container.innerHTML = parts
+      .map(p =&gt; `
+        &lt;div class=&quot;time-unit&quot;&gt;
+          &lt;span class=&quot;value&quot;&gt;${String(p.value).padStart(2, &#039;0&#039;)}&lt;/span&gt;
+          &lt;span class=&quot;label&quot;&gt;${p.label}&lt;/span&gt;
+        &lt;/div&gt;
+      `)
+      .join(&#039;&#039;);
+  }
+
+  disconnectedCallback() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
+}
+
+customElements.define(&#039;countdown-timer&#039;, CountdownTimer);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;countdown-timer target=&quot;2024-12-31T23:59:59&quot; format=&quot;dhms&quot;&gt;&lt;/countdown-timer&gt;</code></pre>
+<h2>Recipe 21: Progress Bar</h2>
+<p>Visual progress indicator with customization.</p>
+<pre><code class="language-javascript">class ProgressBar extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.value = parseFloat(this.getAttribute(&#039;value&#039;)) || 0;
+    this.max = parseFloat(this.getAttribute(&#039;max&#039;)) || 100;
+    this.showLabel = this.hasAttribute(&#039;show-label&#039;);
+    this.render();
+
+    this.pan.subscribe(&#039;progress:update&#039;, (event) =&gt; {
+      if (event.detail.id === this.id) {
+        this.updateProgress(event.detail.value);
+      }
+    });
+  }
+
+  render() {
+    const percent = (this.value / this.max) * 100;
+
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .progress-container {
+          width: 100%;
+          background: #e0e0e0;
+          border-radius: 1rem;
+          overflow: hidden;
+          position: relative;
+        }
+        .progress-bar {
+          height: 2rem;
+          background: linear-gradient(90deg, #4caf50, #8bc34a);
+          border-radius: 1rem;
+          transition: width 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: bold;
+        }
+        .label {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          line-height: 2rem;
+          color: ${percent &gt; 50 ? &#039;white&#039; : &#039;#333&#039;};
+          z-index: 1;
+        }
+      &lt;/style&gt;
+      &lt;div class=&quot;progress-container&quot;&gt;
+        ${this.showLabel ? `&lt;div class=&quot;label&quot;&gt;${percent.toFixed(0)}%&lt;/div&gt;` : &#039;&#039;}
+        &lt;div class=&quot;progress-bar&quot; style=&quot;width: ${percent}%&quot;&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+
+  updateProgress(value) {
+    this.value = value;
+    this.setAttribute(&#039;value&#039;, value);
+    this.render();
+
+    if (this.value &gt;= this.max) {
+      this.pan.dispatch(&#039;progress:complete&#039;, { id: this.id });
+    }
+  }
+
+  static get observedAttributes() {
+    return [&#039;value&#039;];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === &#039;value&#039; &amp;&amp; oldValue !== newValue) {
+      this.value = parseFloat(newValue);
+      this.render();
+    }
+  }
+}
+
+customElements.define(&#039;progress-bar&#039;, ProgressBar);</code></pre>
+<strong>Usage:</strong>
+<pre><code class="language-html">&lt;progress-bar id=&quot;upload-progress&quot; value=&quot;45&quot; max=&quot;100&quot; show-label&gt;&lt;/progress-bar&gt;
+
+&lt;script&gt;
+// Update progress
+pc.publish(&#039;progress:update&#039;, { id: &#039;upload-progress&#039;, value: 75 });
+&lt;/script&gt;</code></pre>
 <h2>Common Patterns</h2>
 <h3>Pattern: Component Composition</h3>
 <p>Build complex components from simpler ones.</p>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Deployment Process · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Deployment Process">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>DEPLOYMENT</span>
+      </div>
+      <article class="docs-content">
+        <h1>Deployment Process</h1>
+<h2>Component Sync Architecture</h2>
+<h3>Source of Truth</h3>
+<ul><li><strong>Components developed in:</strong> <code>packages/ui/</code></li>
+<li><strong>Synced automatically to:</strong> <code>packages/core/components/</code></li>
+<li><strong>Script:</strong> <code>scripts/sync-components.js</code></li>
+</ul>
+<h3>Automatic Syncing</h3>
+<p>Components sync automatically in these scenarios:</p>
+<p>#### 1. During Build
+<pre><code class="language-bash">npm run build         # Syncs + builds all packages
+npm run build:all     # Syncs + builds + minifies</code></pre></p>
+<p>#### 2. During Publish
+<pre><code class="language-bash">npm run changeset:publish   # Syncs before publishing
+npm publish                 # prepublishOnly hook syncs</code></pre></p>
+<p>#### 3. Manual Sync
+<pre><code class="language-bash">npm run sync:components     # Force sync without building</code></pre></p>
+<h3>Development Workflow</h3>
+<pre><code class="language-bash"># 1. Edit components (source of truth)
+cd packages/ui
+vim pan-card.mjs
+
+# 2. Test locally
+npm run serve:examples
+
+# 3. Build (auto-syncs to core)
+npm run build:all
+
+# 4. Publish (auto-syncs before publish)
+npm run changeset:publish</code></pre>
+<h3>What Gets Synced</h3>
+<p>All 130 component files from <code>@larcjs/ui</code>:
+<ul><li><code>pan-*.mjs</code> - 115 PAN components + minified versions</li>
+<li>Other components (drag-drop-list, file-upload, etc.)</li>
+</ul>
+<h3>Published Packages</h3></p>
+<strong>@larcjs/ui</strong> (Source)
+<ul><li>Original component source files</li>
+<li>For users who want component-only package</li>
+</ul>
+<strong>@larcjs/core</strong> (Includes synced components)
+<ul><li>PAN messaging bus</li>
+<li>Auto-loader</li>
+<li>All UI components in <code>/components/</code></li>
+<li>"Batteries included" - one-liner setup</li>
+</ul>
+<h3>Result: Two Usage Patterns</h3>
+<strong>Pattern 1: One-liner (most users)</strong>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;pan-card&gt;Hello!&lt;/pan-card&gt;</code></pre>
+<strong>Pattern 2: Minimal (advanced users)</strong>
+<pre><code class="language-html">&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.0/pan-card.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<h3>No Duplication Concerns</h3>
+<p>Code is duplicated across packages but <strong>maintained in one place</strong>:
+<ul><li>✅ Edit once in <code>packages/ui/</code></li>
+<li>✅ Auto-sync to <code>packages/core/components/</code></li>
+<li>✅ Both packages stay in sync</li>
+<li>✅ No manual copying needed</li>
+</ul>
+<h3>Checklist Before Publishing</h3></p>
+<ul><li>[ ] Components edited in <code>packages/ui/</code></li>
+<li>[ ] Tests pass: <code>npm test</code></li>
+<li>[ ] Build runs: <code>npm run build:all</code> (auto-syncs)</li>
+<li>[ ] Publish: <code>npm run changeset:publish</code> (auto-syncs)</li>
+</ul>
+That's it! The sync happens automatically. 🎉
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/DEPLOYMENT.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

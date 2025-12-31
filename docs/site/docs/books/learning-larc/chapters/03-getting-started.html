@@ -471,8 +471,8 @@ Display component receives update and re-renders</code></pre>
 <li><strong>No Props:</strong> No prop drilling or lifting state up</li>
 <li><strong>Easy Testing:</strong> Each component can be tested in isolation</li>
 <h2>Project Structure</h2>
-<p>!<a href="../images/01-architecture-overview-5.png"><strong>Figure 3.2:</strong> LARC Deployment Architecture</a></p>
-<strong><em>Figure 3.2:</strong> LARC Deployment Architecture</em>
+<p>!<a href="../images/01-architecture-overview-5.png"><strong>Figure 3.1:</strong> LARC Deployment Architecture</a></p>
+<strong><em>Figure 3.1:</strong> LARC Deployment Architecture</em>
 <p>As your application grows, organization becomes important. Here's a recommended structure:</p>
 <pre><code class="language-plaintext">my-app/
 ├── index.html              # Entry point
@@ -530,8 +530,8 @@ Display component receives update and re-renders</code></pre>
     - Component-specific styles in Shadow DOM
     - CSS custom properties for theming</p>
 <h2>Import Maps Explained</h2>
-<p>!<a href="../images/01-architecture-overview-4.png"><strong>Figure 3.1:</strong> Module Loading with Import Maps</a></p>
-<strong><em>Figure 3.1:</strong> Module Loading with Import Maps</em>
+<p>!<a href="../images/01-architecture-overview-4.png"><strong>Figure 3.2:</strong> Module Loading with Import Maps</a></p>
+<strong><em>Figure 3.2:</strong> Module Loading with Import Maps</em>
 <p>Import Maps are a browser standard that replaces the need for bundlers to resolve module paths.</p>
 <h3>Basic Import Map</h3>
 <pre><code class="language-html">&lt;script type=&quot;importmap&quot;&gt;
@@ -890,6 +890,13 @@ observer.observe(element, { attributes: true });</code></pre>
     - Add path aliases for your components
     - Import an external library (lodash, dayjs, etc.)</p>
 <p>Take your time with these exercises. Understanding these patterns now will make the rest of the book much easier.</p>
+<hr>
+<h2>Further Reading</h2>
+<strong>For detailed API reference and configuration options:</strong>
+<ul><li><em>Building with LARC</em> Chapter 3: Getting Started - Complete installation options and troubleshooting</li>
+<li><em>Building with LARC</em> Chapter 2: Core Concepts - Architecture and messaging patterns reference</li>
+<li><em>Building with LARC</em> Appendix C: Configuration Options - All configuration parameters</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/03-getting-started.md" target="_blank">

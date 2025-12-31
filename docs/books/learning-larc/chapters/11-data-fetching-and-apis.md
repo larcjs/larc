@@ -709,6 +709,7 @@ customElements.define('app-dashboard', Dashboard);
 ```
 
 This dashboard demonstrates:
+
 - **Parallel data loading** with `Promise.all`
 - **Caching** for stats that don't change often
 - **Real-time updates** via PAN bus
@@ -1043,6 +1044,7 @@ pan.subscribe('navigation.changed', () => {
 ### Exercise 1: Weather Dashboard
 
 Build a weather dashboard that:
+
 - Fetches current weather for a city
 - Displays 5-day forecast
 - Caches results for 30 minutes
@@ -1055,6 +1057,7 @@ Build a weather dashboard that:
 ### Exercise 2: Infinite Scroll Blog
 
 Create a blog list with infinite scroll that:
+
 - Loads 10 posts initially
 - Loads 10 more as user scrolls down
 - Shows loading indicator at bottom
@@ -1066,6 +1069,7 @@ Create a blog list with infinite scroll that:
 ### Exercise 3: Real-Time Chat
 
 Build a simple chat application that:
+
 - Uses WebSockets for real-time messages
 - Shows typing indicators
 - Displays online/offline status
@@ -1077,6 +1081,7 @@ Build a simple chat application that:
 ### Exercise 4: Optimistic Todo List
 
 Create a todo list with optimistic updates:
+
 - Add todos instantly (before server confirms)
 - Revert if server rejects
 - Show pending state with different styling

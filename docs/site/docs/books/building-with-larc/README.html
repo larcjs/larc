@@ -71,7 +71,7 @@ npm run build</code></pre>
 <hr>
 <h2>Table of Contents</h2>
 <h3>Part I: Foundations</h3>
-<strong><a href="chapter-01-introduction.md">Chapter 1: Introduction</a></strong> (2,335 words)
+<strong><a href="chapters/01-introduction.md">Chapter 1: Introduction</a></strong>
 <ul><li>What is LARC?</li>
 <li>Who should use this book</li>
 <li>How to use this book</li>
@@ -79,31 +79,15 @@ npm run build</code></pre>
 <li>Prerequisites and assumptions</li>
 <li>Book conventions and notation</li>
 </ul>
-<strong><a href="chapter-02-philosophy.md">Chapter 2: The Philosophy of LARC</a></strong> (5,122 words)
-<ul><li>The state management crisis</li>
-<li>Message-passing architecture</li>
-<li>DOM-native communication principles</li>
-<li>Zero-dependency, zero-build philosophy</li>
-<li>Progressive enhancement and graceful degradation</li>
-<li>Comparison to other approaches (Redux, Vuex, MobX, Context API)</li>
-</ul>
-<strong><a href="chapter-03-story.md">Chapter 3: The LARC Story</a></strong> (3,400 words)
-<ul><li>Origins and motivation</li>
-<li>Design decisions and trade-offs</li>
-<li>Evolution of the PAN (Page Area Network) concept</li>
-<li>Real-world use cases and applications</li>
-<li>Community and ecosystem</li>
-</ul>
-<strong><a href="chapter-04-core-concepts.md">Chapter 4: Core Concepts</a></strong> (5,000+ words)
+<strong><a href="chapters/02-core-concepts.md">Chapter 2: Core Concepts</a></strong>
 <ul><li>Message bus architecture</li>
 <li>Pub/sub pattern in depth</li>
 <li>Topics and routing</li>
 <li>Message lifecycle</li>
 <li>Components and composition</li>
 <li>State management strategies</li>
-<li>Event envelopes and metadata</li>
 </ul>
-<strong><a href="chapter-05-getting-started.md">Chapter 5: Getting Started</a></strong> (4,100 words)
+<strong><a href="chapters/03-getting-started.md">Chapter 3: Getting Started</a></strong>
 <ul><li>Installation and setup</li>
 <li>Project structure recommendations</li>
 <li>Development environment</li>
@@ -113,30 +97,14 @@ npm run build</code></pre>
 </ul>
 <hr>
 <h3>Part II: Building Applications</h3>
-<strong><a href="chapter-06-basic-message-flow.md">Chapter 6: Basic Message Flow</a></strong> (3,936 words)
-<ul><li>Publishing messages</li>
-<li>Subscribing to topics</li>
-<li>Wildcard patterns</li>
-<li>Message retention</li>
-<li>Unsubscribing and cleanup</li>
-</ul>
-<strong><a href="chapter-07-working-with-components.md">Chapter 7: Working with Components</a></strong> (4,203 words)
-<ul><li>Creating web components</li>
-<li>Component lifecycle</li>
-<li>Shadow DOM considerations</li>
-<li>Connecting components via PAN bus</li>
-<li>Component communication patterns</li>
-<li>Reusable component design</li>
-</ul>
-<strong><a href="chapter-08-state-management.md">Chapter 8: State Management</a></strong> (4,448 words)
+<strong><a href="chapters/04-state-management.md">Chapter 4: State Management</a></strong>
 <ul><li>Local vs. shared state</li>
-<li>State persistence strategies</li>
-<li>IndexedDB integration</li>
-<li>OPFS (Origin Private File System)</li>
-<li>Synchronization patterns</li>
+<li>State persistence strategies (localStorage, IndexedDB, OPFS)</li>
+<li>State synchronization patterns</li>
+<li>Optimistic updates</li>
 <li>Conflict resolution</li>
 </ul>
-<strong><a href="chapter-09-routing-and-navigation.md">Chapter 9: Routing and Navigation</a></strong> (4,000 words)
+<strong><a href="chapters/05-routing-and-navigation.md">Chapter 5: Routing and Navigation</a></strong>
 <ul><li>Client-side routing with pan-routes</li>
 <li>Route definitions and patterns</li>
 <li>Navigation guards</li>
@@ -144,7 +112,7 @@ npm run build</code></pre>
 <li>History management</li>
 <li>SEO considerations</li>
 </ul>
-<strong><a href="chapter-10-forms-and-user-input.md">Chapter 10: Forms and User Input</a></strong> (4,200 words)
+<strong><a href="chapters/06-forms-and-user-input.md">Chapter 6: Forms and User Input</a></strong>
 <ul><li>Form handling patterns</li>
 <li>Schema-driven forms</li>
 <li>Validation strategies</li>
@@ -152,7 +120,7 @@ npm run build</code></pre>
 <li>Rich text editing</li>
 <li>Markdown integration</li>
 </ul>
-<strong><a href="chapter-11-data-fetching-and-apis.md">Chapter 11: Data Fetching and APIs</a></strong> (4,100 words)
+<strong><a href="chapters/07-data-fetching-and-apis.md">Chapter 7: Data Fetching and APIs</a></strong>
 <ul><li>REST API integration</li>
 <li>GraphQL connectors</li>
 <li>WebSocket communication</li>
@@ -160,7 +128,7 @@ npm run build</code></pre>
 <li>Error handling and retries</li>
 <li>Caching strategies</li>
 </ul>
-<strong><a href="chapter-12-authentication-and-authorization.md">Chapter 12: Authentication and Authorization</a></strong> (3,900 words)
+<strong><a href="chapters/08-authentication-and-authorization.md">Chapter 8: Authentication and Authorization</a></strong>
 <ul><li>JWT authentication patterns</li>
 <li>Session management</li>
 <li>Role-based access control</li>
@@ -168,14 +136,14 @@ npm run build</code></pre>
 <li>Protected routes</li>
 <li>Token refresh strategies</li>
 </ul>
-<strong><a href="chapter-13-realtime-features.md">Chapter 13: Real-time Features</a></strong> (3,800 words)
+<strong><a href="chapters/09-realtime-features.md">Chapter 9: Real-time Features</a></strong>
 <ul><li>WebSocket integration</li>
 <li>SSE for live updates</li>
 <li>BroadcastChannel for multi-tab sync</li>
 <li>Web Workers for background tasks</li>
 <li>Real-time collaboration patterns</li>
 </ul>
-<strong><a href="chapter-14-file-management.md">Chapter 14: File Management</a></strong> (3,700 words)
+<strong><a href="chapters/10-file-management.md">Chapter 10: File Management</a></strong>
 <ul><li>OPFS file operations</li>
 <li>File browser components</li>
 <li>Upload and download</li>
@@ -183,7 +151,7 @@ npm run build</code></pre>
 <li>Directory navigation</li>
 <li>Storage quotas and limits</li>
 </ul>
-<strong><a href="chapter-15-theming-and-styling.md">Chapter 15: Theming and Styling</a></strong> (3,800 words)
+<strong><a href="chapters/11-theming-and-styling.md">Chapter 11: Theming and Styling</a></strong>
 <ul><li>CSS custom properties</li>
 <li>Theme system architecture</li>
 <li>Light/dark mode</li>
@@ -191,7 +159,7 @@ npm run build</code></pre>
 <li>Dynamic theme switching</li>
 <li>Responsive design patterns</li>
 </ul>
-<strong><a href="chapter-16-performance-optimization.md">Chapter 16: Performance Optimization</a></strong> (4,200 words)
+<strong><a href="chapters/12-performance-optimization.md">Chapter 12: Performance Optimization</a></strong>
 <ul><li>Message filtering and routing efficiency</li>
 <li>Component lazy loading</li>
 <li>Virtual scrolling for large lists</li>
@@ -199,7 +167,7 @@ npm run build</code></pre>
 <li>Memory management</li>
 <li>Bundle size optimization</li>
 </ul>
-<strong><a href="chapter-17-testing-strategies.md">Chapter 17: Testing Strategies</a></strong> (4,500 words)
+<strong><a href="chapters/13-testing-strategies.md">Chapter 13: Testing Strategies</a></strong>
 <ul><li>Unit testing components</li>
 <li>Integration testing message flows</li>
 <li>E2E testing with PAN apps</li>
@@ -207,7 +175,7 @@ npm run build</code></pre>
 <li>Testing async operations</li>
 <li>Test utilities and helpers</li>
 </ul>
-<strong><a href="chapter-18-error-handling-and-debugging.md">Chapter 18: Error Handling and Debugging</a></strong> (4,100 words)
+<strong><a href="chapters/14-error-handling-and-debugging.md">Chapter 14: Error Handling and Debugging</a></strong>
 <ul><li>Error boundaries</li>
 <li>Message tracing</li>
 <li>DevTools integration</li>
@@ -215,7 +183,7 @@ npm run build</code></pre>
 <li>Error reporting</li>
 <li>Common pitfalls and solutions</li>
 </ul>
-<strong><a href="chapter-19-advanced-patterns.md">Chapter 19: Advanced Patterns</a></strong> (4,000 words)
+<strong><a href="chapters/15-advanced-patterns.md">Chapter 15: Advanced Patterns</a></strong>
 <ul><li>Message forwarding and bridging</li>
 <li>Multi-bus architectures</li>
 <li>Backend integration strategies</li>
@@ -223,7 +191,7 @@ npm run build</code></pre>
 <li>Plugin systems</li>
 <li>Middleware patterns</li>
 </ul>
-<strong><a href="chapter-20-deployment-and-production.md">Chapter 20: Deployment and Production</a></strong> (4,200 words)
+<strong><a href="chapters/16-deployment-and-production.md">Chapter 16: Deployment and Production</a></strong>
 <ul><li>Build considerations (or lack thereof)</li>
 <li>CDN deployment</li>
 <li>Caching strategies</li>
@@ -233,28 +201,28 @@ npm run build</code></pre>
 </ul>
 <hr>
 <h3>Part III: Component Reference</h3>
-<strong><a href="chapter-21-core-components.md">Chapter 21: Core Components</a></strong> (5,849 words)
+<strong><a href="chapters/17-core-components.md">Chapter 17: Core Components</a></strong>
 <ul><li><strong>pan-bus</strong>: Message bus with pub/sub architecture</li>
 <li><strong>pan-theme-provider</strong>: Theme management system</li>
 <li><strong>pan-theme-toggle</strong>: Theme switching UI control</li>
 <li><strong>pan-routes</strong>: Message routing and transformation</li>
 </ul>
-<strong><a href="chapter-22-data-components.md">Chapter 22: Data Components</a></strong> (5,100 words)
+<strong><a href="chapters/18-data-components.md">Chapter 18: Data Components</a></strong>
 <ul><li><strong>pan-store</strong>: Reactive state management</li>
 <li><strong>pan-idb</strong>: IndexedDB integration</li>
 </ul>
-<strong><a href="chapter-23-ui-components.md">Chapter 23: UI Components</a></strong> (4,138 words)
+<strong><a href="chapters/19-ui-components.md">Chapter 19: UI Components</a></strong>
 <ul><li><strong>pan-files</strong>: File browser with OPFS</li>
 <li><strong>pan-markdown-editor</strong>: Rich markdown editor</li>
 <li><strong>pan-markdown-renderer</strong>: Markdown display</li>
 </ul>
-<strong><a href="chapter-24-integration-components.md">Chapter 24: Integration Components</a></strong> (5,977 words)
+<strong><a href="chapters/20-integration-components.md">Chapter 20: Integration Components</a></strong>
 <ul><li><strong>pan-data-connector</strong>: REST API integration</li>
 <li><strong>pan-graphql-connector</strong>: GraphQL client</li>
 <li><strong>pan-websocket</strong>: WebSocket communication</li>
 <li><strong>pan-sse</strong>: Server-Sent Events</li>
 </ul>
-<strong><a href="chapter-25-utility-components.md">Chapter 25: Utility Components</a></strong> (4,800 words)
+<strong><a href="chapters/21-utility-components.md">Chapter 21: Utility Components</a></strong>
 <ul><li><strong>pan-debug</strong>: Message tracing and debugging</li>
 <li><strong>pan-forwarder</strong>: HTTP message forwarding</li>
 </ul>
@@ -307,18 +275,32 @@ npm run build</code></pre>
 </ul>
 <hr>
 <h2>Book Statistics</h2>
-<ul><li><strong>Total Chapters</strong>: 25 chapters + 7 appendices + index</li>
-<li><strong>Total Word Count</strong>: ~115,000 words</li>
+<ul><li><strong>Total Chapters</strong>: 21 chapters + 7 appendices + index</li>
+<li><strong>Total Word Count</strong>: ~82,000 words</li>
 <li><strong>Code Examples</strong>: 200+ complete, working examples</li>
 <li><strong>Components Documented</strong>: 13 core LARC components</li>
-<li><strong>Recipes</strong>: 10 practical, copy-paste ready patterns</li>
+<li><strong>Recipes</strong>: 10+ practical, copy-paste ready patterns</li>
 </ul>
+<hr>
+<h2>Browser Compatibility</h2>
+<p>LARC requires modern browsers with support for:
+<ul><li><strong>Custom Elements v1</strong> (Chrome 54+, Firefox 63+, Safari 10.1+, Edge 79+)</li>
+<li><strong>Shadow DOM v1</strong> (Chrome 53+, Firefox 63+, Safari 10+, Edge 79+)</li>
+<li><strong>ES Modules</strong> (Chrome 61+, Firefox 60+, Safari 11+, Edge 79+)</li>
+<li><strong>Import Maps</strong> (Chrome 89+, Firefox 108+, Safari 16.4+, Edge 89+)</li>
+</ul>
+<strong>Minimum versions</strong>:
+<ul><li>Chrome/Edge: 89+ (March 2021)</li>
+<li>Firefox: 108+ (December 2022)</li>
+<li>Safari: 16.4+ (March 2023)</li>
+</ul>
+All code examples in this reference manual work without polyfills or transpilation in these browsers. For production applications targeting older browsers, consider using appropriate polyfills.</p>
 <hr>
 <h2>How to Use This Book</h2>
 <h3>As a Learning Resource</h3>
-Read Part I (Chapters 1-5) to understand LARC's philosophy and core concepts. Then work through Part II (Chapters 6-20) following the practical examples.
+Read Part I (Chapters 1-3) to understand LARC's philosophy and core concepts. Then work through Part II (Chapters 4-16) following the practical examples.
 <h3>As a Reference</h3>
-Keep Part III (Chapters 21-25) bookmarked for quick API lookups. Use the Index to quickly find specific topics, patterns, or components.
+Keep Part III (Chapters 17-21) bookmarked for quick API lookups. Use the Index to quickly find specific topics, patterns, or components.
 <h3>As a Problem-Solving Guide</h3>
 When you encounter a specific challenge, consult:
 <ul><li><strong>Chapter 18</strong> for debugging issues</li>

@@ -274,6 +274,842 @@ res.cookie(&#039;token&#039;, jwt, {
 <p>Set CSP headers to prevent XSS attacks:</p>
 <pre><code class="language-html">&lt;meta http-equiv=&quot;Content-Security-Policy&quot;
       content=&quot;default-src &#039;self&#039;; script-src &#039;self&#039;&quot;&gt;</code></pre>
+<h2>Complete Login/Signup Flow</h2>
+<p>Let's build a complete authentication system with login and signup components that work together:</p>
+<h3>Login Component</h3>
+<pre><code class="language-javascript">// components/login-form.js
+import { auth } from &#039;../services/auth.js&#039;;
+import { pan } from &#039;@larcjs/core&#039;;
+
+class LoginForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.state = {
+      email: &#039;&#039;,
+      password: &#039;&#039;,
+      loading: false,
+      error: null
+    };
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault();
+
+    this.state.loading = true;
+    this.state.error = null;
+    this.render();
+
+    try {
+      const user = await auth.login(this.state.email, this.state.password);
+
+      // Redirect to intended destination or dashboard
+      const returnUrl = sessionStorage.getItem(&#039;returnUrl&#039;) || &#039;/dashboard&#039;;
+      sessionStorage.removeItem(&#039;returnUrl&#039;);
+      pan.publish(&#039;router.navigate&#039;, { path: returnUrl });
+
+    } catch (error) {
+      this.state.error = error.message;
+      this.state.loading = false;
+      this.render();
+    }
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          display: block;
+          max-width: 400px;
+          margin: 50px auto;
+        }
+
+        form {
+          background: white;
+          padding: 30px;
+          border-radius: 8px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+          margin: 0 0 20px;
+          color: #333;
+        }
+
+        .error {
+          background: #fee;
+          color: #c00;
+          padding: 10px;
+          border-radius: 4px;
+          margin-bottom: 15px;
+        }
+
+        .form-group {
+          margin-bottom: 15px;
+        }
+
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: 600;
+          color: #555;
+        }
+
+        input {
+          width: 100%;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 14px;
+        }
+
+        input:focus {
+          outline: none;
+          border-color: #667eea;
+        }
+
+        button {
+          width: 100%;
+          padding: 12px;
+          background: #667eea;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 16px;
+          cursor: pointer;
+        }
+
+        button:hover:not(:disabled) {
+          background: #5568d3;
+        }
+
+        button:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .signup-link {
+          text-align: center;
+          margin-top: 15px;
+          color: #666;
+        }
+
+        .signup-link a {
+          color: #667eea;
+          text-decoration: none;
+        }
+      &lt;/style&gt;
+
+      &lt;form&gt;
+        &lt;h2&gt;Login&lt;/h2&gt;
+
+        ${this.state.error ? `
+          &lt;div class=&quot;error&quot;&gt;${this.state.error}&lt;/div&gt;
+        ` : &#039;&#039;}
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;email&quot;&gt;Email&lt;/label&gt;
+          &lt;input
+            type=&quot;email&quot;
+            id=&quot;email&quot;
+            value=&quot;${this.state.email}&quot;
+            required
+            autocomplete=&quot;email&quot;
+          &gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;
+          &lt;input
+            type=&quot;password&quot;
+            id=&quot;password&quot;
+            value=&quot;${this.state.password}&quot;
+            required
+            autocomplete=&quot;current-password&quot;
+          &gt;
+        &lt;/div&gt;
+
+        &lt;button type=&quot;submit&quot; ?disabled=&quot;${this.state.loading}&quot;&gt;
+          ${this.state.loading ? &#039;Logging in...&#039; : &#039;Login&#039;}
+        &lt;/button&gt;
+
+        &lt;div class=&quot;signup-link&quot;&gt;
+          Don&#039;t have an account? &lt;a href=&quot;/signup&quot;&gt;Sign up&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    `;
+
+    // Attach event listeners
+    const form = this.shadowRoot.querySelector(&#039;form&#039;);
+    const emailInput = this.shadowRoot.querySelector(&#039;#email&#039;);
+    const passwordInput = this.shadowRoot.querySelector(&#039;#password&#039;);
+
+    form.addEventListener(&#039;submit&#039;, (e) =&gt; this.handleSubmit(e));
+
+    emailInput.addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.state.email = e.target.value;
+    });
+
+    passwordInput.addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.state.password = e.target.value;
+    });
+
+    // Handle signup link
+    const signupLink = this.shadowRoot.querySelector(&#039;.signup-link a&#039;);
+    signupLink?.addEventListener(&#039;click&#039;, (e) =&gt; {
+      e.preventDefault();
+      pan.publish(&#039;router.navigate&#039;, { path: &#039;/signup&#039; });
+    });
+  }
+}
+
+customElements.define(&#039;login-form&#039;, LoginForm);</code></pre>
+<h3>Signup Component</h3>
+<pre><code class="language-javascript">// components/signup-form.js
+class SignupForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.state = {
+      name: &#039;&#039;,
+      email: &#039;&#039;,
+      password: &#039;&#039;,
+      confirmPassword: &#039;&#039;,
+      loading: false,
+      errors: {}
+    };
+  }
+
+  connectedCallback() {
+    this.render();
+  }
+
+  validate() {
+    const errors = {};
+
+    if (!this.state.name || this.state.name.length &lt; 2) {
+      errors.name = &#039;Name must be at least 2 characters&#039;;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(this.state.email)) {
+      errors.email = &#039;Invalid email address&#039;;
+    }
+
+    if (this.state.password.length &lt; 8) {
+      errors.password = &#039;Password must be at least 8 characters&#039;;
+    }
+
+    if (this.state.password !== this.state.confirmPassword) {
+      errors.confirmPassword = &#039;Passwords do not match&#039;;
+    }
+
+    return errors;
+  }
+
+  async handleSubmit(e) {
+    e.preventDefault();
+
+    const errors = this.validate();
+    if (Object.keys(errors).length &gt; 0) {
+      this.state.errors = errors;
+      this.render();
+      return;
+    }
+
+    this.state.loading = true;
+    this.state.errors = {};
+    this.render();
+
+    try {
+      const response = await fetch(&#039;/api/auth/signup&#039;, {
+        method: &#039;POST&#039;,
+        headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+        body: JSON.stringify({
+          name: this.state.name,
+          email: this.state.email,
+          password: this.state.password
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || &#039;Signup failed&#039;);
+      }
+
+      const { accessToken, refreshToken, user } = await response.json();
+
+      auth.setTokens(accessToken, refreshToken);
+      pan.publish(&#039;auth.login&#039;, { user }, { retained: true });
+      pan.publish(&#039;router.navigate&#039;, { path: &#039;/dashboard&#039; });
+
+    } catch (error) {
+      this.state.errors = { general: error.message };
+      this.state.loading = false;
+      this.render();
+    }
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        /* Similar styles to login-form */
+        :host {
+          display: block;
+          max-width: 400px;
+          margin: 50px auto;
+        }
+        /* ... (copy styles from login-form) ... */
+      &lt;/style&gt;
+
+      &lt;form&gt;
+        &lt;h2&gt;Create Account&lt;/h2&gt;
+
+        ${this.state.errors.general ? `
+          &lt;div class=&quot;error&quot;&gt;${this.state.errors.general}&lt;/div&gt;
+        ` : &#039;&#039;}
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;name&quot;&gt;Name&lt;/label&gt;
+          &lt;input type=&quot;text&quot; id=&quot;name&quot; value=&quot;${this.state.name}&quot; required&gt;
+          ${this.state.errors.name ? `
+            &lt;span class=&quot;field-error&quot;&gt;${this.state.errors.name}&lt;/span&gt;
+          ` : &#039;&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;email&quot;&gt;Email&lt;/label&gt;
+          &lt;input type=&quot;email&quot; id=&quot;email&quot; value=&quot;${this.state.email}&quot; required&gt;
+          ${this.state.errors.email ? `
+            &lt;span class=&quot;field-error&quot;&gt;${this.state.errors.email}&lt;/span&gt;
+          ` : &#039;&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;
+          &lt;input type=&quot;password&quot; id=&quot;password&quot; required autocomplete=&quot;new-password&quot;&gt;
+          ${this.state.errors.password ? `
+            &lt;span class=&quot;field-error&quot;&gt;${this.state.errors.password}&lt;/span&gt;
+          ` : &#039;&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;form-group&quot;&gt;
+          &lt;label for=&quot;confirmPassword&quot;&gt;Confirm Password&lt;/label&gt;
+          &lt;input type=&quot;password&quot; id=&quot;confirmPassword&quot; required&gt;
+          ${this.state.errors.confirmPassword ? `
+            &lt;span class=&quot;field-error&quot;&gt;${this.state.errors.confirmPassword}&lt;/span&gt;
+          ` : &#039;&#039;}
+        &lt;/div&gt;
+
+        &lt;button type=&quot;submit&quot; ?disabled=&quot;${this.state.loading}&quot;&gt;
+          ${this.state.loading ? &#039;Creating account...&#039; : &#039;Sign Up&#039;}
+        &lt;/button&gt;
+
+        &lt;div class=&quot;login-link&quot;&gt;
+          Already have an account? &lt;a href=&quot;/login&quot;&gt;Login&lt;/a&gt;
+        &lt;/div&gt;
+      &lt;/form&gt;
+    `;
+
+    // Attach event listeners (similar to login-form)
+    const form = this.shadowRoot.querySelector(&#039;form&#039;);
+    form.addEventListener(&#039;submit&#039;, (e) =&gt; this.handleSubmit(e));
+
+    // Update state on input
+    [&#039;name&#039;, &#039;email&#039;, &#039;password&#039;, &#039;confirmPassword&#039;].forEach(field =&gt; {
+      const input = this.shadowRoot.querySelector(`#${field}`);
+      input?.addEventListener(&#039;input&#039;, (e) =&gt; {
+        this.state[field] = e.target.value;
+      });
+    });
+  }
+}
+
+customElements.define(&#039;signup-form&#039;, SignupForm);</code></pre>
+<h2>OAuth Integration (GitHub Example)</h2>
+<p>OAuth allows users to log in with existing accounts from providers like GitHub, Google, or Facebook:</p>
+<h3>OAuth Flow</h3>
+<pre><code class="language-javascript">// services/oauth.js
+class OAuthService {
+  constructor() {
+    this.providers = {
+      github: {
+        clientId: &#039;your-github-client-id&#039;,
+        authUrl: &#039;https://github.com/login/oauth/authorize&#039;,
+        scope: &#039;read:user user:email&#039;
+      }
+    };
+  }
+
+  initiateLogin(provider) {
+    const config = this.providers[provider];
+    if (!config) throw new Error(`Unknown provider: ${provider}`);
+
+    const redirectUri = `${window.location.origin}/auth/callback`;
+    const state = this.generateState();
+
+    // Store state for CSRF protection
+    sessionStorage.setItem(&#039;oauth_state&#039;, state);
+
+    const params = new URLSearchParams({
+      client_id: config.clientId,
+      redirect_uri: redirectUri,
+      scope: config.scope,
+      state
+    });
+
+    // Redirect to provider
+    window.location.href = `${config.authUrl}?${params}`;
+  }
+
+  generateState() {
+    return Array.from(crypto.getRandomValues(new Uint8Array(16)))
+      .map(b =&gt; b.toString(16).padStart(2, &#039;0&#039;))
+      .join(&#039;&#039;);
+  }
+
+  async handleCallback() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get(&#039;code&#039;);
+    const state = params.get(&#039;state&#039;);
+
+    // Verify state (CSRF protection)
+    const storedState = sessionStorage.getItem(&#039;oauth_state&#039;);
+    if (state !== storedState) {
+      throw new Error(&#039;Invalid state parameter&#039;);
+    }
+
+    // Exchange code for token with your backend
+    const response = await fetch(&#039;/api/auth/github/callback&#039;, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ code })
+    });
+
+    if (!response.ok) {
+      throw new Error(&#039;OAuth authentication failed&#039;);
+    }
+
+    const { accessToken, refreshToken, user } = await response.json();
+
+    auth.setTokens(accessToken, refreshToken);
+    pan.publish(&#039;auth.login&#039;, { user }, { retained: true });
+
+    // Clean up
+    sessionStorage.removeItem(&#039;oauth_state&#039;);
+
+    return user;
+  }
+}
+
+export const oauth = new OAuthService();</code></pre>
+<h3>OAuth Button Component</h3>
+<pre><code class="language-javascript">class OAuthButtons extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;style&gt;
+        .oauth-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin: 20px 0;
+        }
+
+        .oauth-button {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          padding: 12px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          background: white;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+
+        .oauth-button:hover {
+          background: #f5f5f5;
+        }
+
+        .oauth-button img {
+          width: 20px;
+          height: 20px;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;oauth-buttons&quot;&gt;
+        &lt;button class=&quot;oauth-button&quot; data-provider=&quot;github&quot;&gt;
+          &lt;img src=&quot;/icons/github.svg&quot; alt=&quot;GitHub&quot;&gt;
+          &lt;span&gt;Continue with GitHub&lt;/span&gt;
+        &lt;/button&gt;
+
+        &lt;button class=&quot;oauth-button&quot; data-provider=&quot;google&quot;&gt;
+          &lt;img src=&quot;/icons/google.svg&quot; alt=&quot;Google&quot;&gt;
+          &lt;span&gt;Continue with Google&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;div class=&quot;divider&quot;&gt;
+        &lt;span&gt;or&lt;/span&gt;
+      &lt;/div&gt;
+    `;
+
+    this.querySelectorAll(&#039;[data-provider]&#039;).forEach(button =&gt; {
+      button.addEventListener(&#039;click&#039;, () =&gt; {
+        const provider = button.dataset.provider;
+        oauth.initiateLogin(provider);
+      });
+    });
+  }
+}
+
+customElements.define(&#039;oauth-buttons&#039;, OAuthButtons);</code></pre>
+<h2>Session Management</h2>
+<p>Track active sessions and allow users to log out from all devices:</p>
+<pre><code class="language-javascript">// services/session-manager.js
+class SessionManager {
+  async getSessions() {
+    return await api.get(&#039;/auth/sessions&#039;);
+  }
+
+  async revokeSession(sessionId) {
+    await api.delete(`/auth/sessions/${sessionId}`);
+    pan.publish(&#039;session.revoked&#039;, { sessionId });
+  }
+
+  async revokeAllSessions() {
+    await api.delete(&#039;/auth/sessions&#039;);
+    pan.publish(&#039;session.all-revoked&#039;);
+    auth.logout();
+  }
+}
+
+export const sessionManager = new SessionManager();</code></pre>
+<h3>Sessions Component</h3>
+<pre><code class="language-javascript">class SessionsList extends HTMLElement {
+  constructor() {
+    super();
+    this.sessions = [];
+  }
+
+  async connectedCallback() {
+    await this.loadSessions();
+    this.render();
+
+    pan.subscribe(&#039;session.revoked&#039;, () =&gt; this.loadSessions());
+  }
+
+  async loadSessions() {
+    try {
+      this.sessions = await sessionManager.getSessions();
+      this.render();
+    } catch (error) {
+      console.error(&#039;Failed to load sessions:&#039;, error);
+    }
+  }
+
+  async revokeSession(sessionId) {
+    if (!confirm(&#039;Revoke this session?&#039;)) return;
+
+    try {
+      await sessionManager.revokeSession(sessionId);
+    } catch (error) {
+      alert(&#039;Failed to revoke session&#039;);
+    }
+  }
+
+  async revokeAll() {
+    if (!confirm(&#039;Log out from all devices?&#039;)) return;
+
+    try {
+      await sessionManager.revokeAllSessions();
+    } catch (error) {
+      alert(&#039;Failed to revoke sessions&#039;);
+    }
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;sessions&quot;&gt;
+        &lt;h3&gt;Active Sessions&lt;/h3&gt;
+
+        ${this.sessions.map(session =&gt; `
+          &lt;div class=&quot;session&quot; data-current=&quot;${session.isCurrent}&quot;&gt;
+            &lt;div class=&quot;session-info&quot;&gt;
+              &lt;strong&gt;${session.device}&lt;/strong&gt;
+              &lt;span&gt;${session.location}&lt;/span&gt;
+              &lt;small&gt;Last active: ${new Date(session.lastActive).toLocaleString()}&lt;/small&gt;
+            &lt;/div&gt;
+            ${session.isCurrent ? `
+              &lt;span class=&quot;badge&quot;&gt;Current&lt;/span&gt;
+            ` : `
+              &lt;button onclick=&quot;this.closest(&#039;sessions-list&#039;).revokeSession(&#039;${session.id}&#039;)&quot;&gt;
+                Revoke
+              &lt;/button&gt;
+            `}
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+
+        &lt;button class=&quot;danger&quot; onclick=&quot;this.closest(&#039;sessions-list&#039;).revokeAll()&quot;&gt;
+          Log out from all devices
+        &lt;/button&gt;
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;sessions-list&#039;, SessionsList);</code></pre>
+<h2>XSS and CSRF Protection</h2>
+<h3>Preventing XSS (Cross-Site Scripting)</h3>
+<p>Always sanitize user input before rendering:</p>
+<pre><code class="language-javascript">// utils/sanitize.js
+const ALLOWED_TAGS = [&#039;b&#039;, &#039;i&#039;, &#039;em&#039;, &#039;strong&#039;, &#039;a&#039;, &#039;p&#039;, &#039;br&#039;];
+
+function sanitizeHtml(html) {
+  const div = document.createElement(&#039;div&#039;);
+  div.innerHTML = html;
+
+  // Remove all scripts
+  div.querySelectorAll(&#039;script&#039;).forEach(el =&gt; el.remove());
+
+  // Remove event handlers
+  div.querySelectorAll(&#039;*&#039;).forEach(el =&gt; {
+    [...el.attributes].forEach(attr =&gt; {
+      if (attr.name.startsWith(&#039;on&#039;)) {
+        el.removeAttribute(attr.name);
+      }
+    });
+
+    // Remove tags not in allowlist
+    if (!ALLOWED_TAGS.includes(el.tagName.toLowerCase())) {
+      el.replaceWith(...el.childNodes);
+    }
+  });
+
+  return div.innerHTML;
+}
+
+export { sanitizeHtml };</code></pre>
+<h3>CSRF Protection</h3>
+<p>Include CSRF tokens in state-changing requests:</p>
+<pre><code class="language-javascript">// api-client.js
+class SecureApiClient {
+  getCsrfToken() {
+    // Get from meta tag or cookie
+    return document.querySelector(&#039;meta[name=&quot;csrf-token&quot;]&#039;)?.content;
+  }
+
+  async fetch(endpoint, options = {}) {
+    const headers = {
+      &#039;Content-Type&#039;: &#039;application/json&#039;,
+      &#039;X-CSRF-Token&#039;: this.getCsrfToken(),
+      ...options.headers
+    };
+
+    return fetch(endpoint, { ...options, headers });
+  }
+}</code></pre>
+<p>Server should validate CSRF tokens on state-changing requests (POST, PUT, DELETE).</p>
+<h2>Password Reset Flow</h2>
+<pre><code class="language-javascript">// components/password-reset.js
+class PasswordResetForm extends HTMLElement {
+  async handleRequest(e) {
+    e.preventDefault();
+    const email = this.querySelector(&#039;#email&#039;).value;
+
+    try {
+      await fetch(&#039;/api/auth/password-reset&#039;, {
+        method: &#039;POST&#039;,
+        headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+        body: JSON.stringify({ email })
+      });
+
+      this.innerHTML = `
+        &lt;p&gt;If an account exists for ${email}, you will receive a password reset email.&lt;/p&gt;
+      `;
+    } catch (error) {
+      this.showError(&#039;Failed to send reset email&#039;);
+    }
+  }
+
+  async handleReset(e) {
+    e.preventDefault();
+    const token = new URLSearchParams(window.location.search).get(&#039;token&#039;);
+    const password = this.querySelector(&#039;#password&#039;).value;
+
+    try {
+      await fetch(&#039;/api/auth/password-reset/confirm&#039;, {
+        method: &#039;POST&#039;,
+        headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+        body: JSON.stringify({ token, password })
+      });
+
+      pan.publish(&#039;router.navigate&#039;, { path: &#039;/login&#039; });
+      pan.publish(&#039;notification.success&#039;, {
+        message: &#039;Password reset successful&#039;
+      });
+    } catch (error) {
+      this.showError(&#039;Failed to reset password&#039;);
+    }
+  }
+}</code></pre>
+<h2>Troubleshooting</h2>
+<h3>Problem: Token Expires Too Quickly</h3>
+<strong>Symptom</strong>: Users frequently get logged out
+<strong>Solution</strong>: Implement automatic token refresh in background:
+<pre><code class="language-javascript">// Auto-refresh tokens before expiry
+class TokenRefreshManager {
+  constructor() {
+    this.refreshInterval = null;
+  }
+
+  start() {
+    // Check token every minute
+    this.refreshInterval = setInterval(async () =&gt; {
+      const token = auth.getToken();
+      if (!token) return;
+
+      const payload = auth.decodeToken(token);
+      const expiresIn = (payload.exp * 1000) - Date.now();
+
+      // Refresh if expires in less than 5 minutes
+      if (expiresIn &lt; 5 * 60 * 1000) {
+        try {
+          await auth.refresh();
+        } catch (error) {
+          console.error(&#039;Auto-refresh failed:&#039;, error);
+          auth.logout();
+        }
+      }
+    }, 60 * 1000);
+  }
+
+  stop() {
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
+  }
+}
+
+export const tokenRefresh = new TokenRefreshManager();</code></pre>
+<h3>Problem: OAuth Callback Not Working</h3>
+<strong>Symptom</strong>: After OAuth redirect, nothing happens
+<strong>Solution</strong>: Ensure callback route is registered and handles the code:
+<pre><code class="language-javascript">// In your router setup
+pan.subscribe(&#039;route.changed&#039;, ({ path }) =&gt; {
+  if (path === &#039;/auth/callback&#039;) {
+    oauth.handleCallback()
+      .then(() =&gt; {
+        pan.publish(&#039;router.navigate&#039;, { path: &#039;/dashboard&#039; });
+      })
+      .catch(error =&gt; {
+        console.error(&#039;OAuth callback failed:&#039;, error);
+        pan.publish(&#039;router.navigate&#039;, { path: &#039;/login&#039; });
+      });
+  }
+});</code></pre>
+<h3>Problem: Users See Flash of Protected Content</h3>
+<strong>Symptom</strong>: Protected page renders briefly before redirect to login
+<strong>Solution</strong>: Check authentication before mounting component:
+<pre><code class="language-javascript">class ProtectedPage extends HTMLElement {
+  connectedCallback() {
+    // Don&#039;t render until auth check complete
+    this.checkAuthThenRender();
+  }
+
+  async checkAuthThenRender() {
+    if (!auth.isAuthenticated()) {
+      sessionStorage.setItem(&#039;returnUrl&#039;, window.location.pathname);
+      pan.publish(&#039;router.navigate&#039;, { path: &#039;/login&#039; });
+      return;
+    }
+
+    this.render();
+  }
+
+  render() {
+    // Only called if authenticated
+    this.innerHTML = `
+      &lt;h1&gt;Protected Content&lt;/h1&gt;
+      &lt;p&gt;Only authenticated users see this&lt;/p&gt;
+    `;
+  }
+}</code></pre>
+<h3>Problem: Infinite Redirect Loop</h3>
+<strong>Symptom</strong>: App keeps redirecting between login and protected route
+<strong>Solution</strong>: Check for redirect loops in route guard:
+<pre><code class="language-javascript">class RouteGuard extends HTMLElement {
+  checkAuth() {
+    if (!auth.isAuthenticated() &amp;&amp; window.location.pathname !== &#039;/login&#039;) {
+      sessionStorage.setItem(&#039;returnUrl&#039;, window.location.pathname);
+      pan.publish(&#039;router.navigate&#039;, { path: &#039;/login&#039; });
+    }
+  }
+}</code></pre>
+<h2>Best Practices</h2>
+<li><strong>Never store passwords</strong> - Always hash on the server</li>
+<li><strong>Use HTTPS everywhere</strong> - Tokens in plaintext over HTTP are vulnerable</li>
+<li><strong>Implement token refresh</strong> - Don't force users to re-login frequently</li>
+<li><strong>Validate on the server</strong> - Client-side validation is for UX, not security</li>
+<li><strong>Use httpOnly cookies for tokens</strong> - Protects against XSS</li>
+<li><strong>Implement CSRF protection</strong> - Required for cookie-based auth</li>
+<li><strong>Rate limit authentication endpoints</strong> - Prevent brute force attacks</li>
+<li><strong>Log authentication events</strong> - Track suspicious activity</li>
+<li><strong>Use secure password requirements</strong> - Minimum 8 characters, complexity rules</li>
+<li><strong>Provide 2FA</strong> - Add extra layer of security for sensitive apps</li>
+<h2>Exercises</h2>
+<h3>Exercise 1: Add "Remember Me"</h3>
+<p>Extend the login form with a "Remember Me" checkbox that:</p>
+<ul><li>Uses a longer-lived refresh token when checked</li>
+<li>Falls back to session-only auth when unchecked</li>
+<li>Persists the preference across sessions</li>
+</ul>
+<h3>Exercise 2: Implement 2FA</h3>
+<p>Add two-factor authentication:</p>
+<ul><li>Generate TOTP secret on enrollment</li>
+<li>Display QR code for authenticator apps</li>
+<li>Validate TOTP codes on login</li>
+<li>Provide backup codes for account recovery</li>
+</ul>
+<h3>Exercise 3: Password Strength Meter</h3>
+<p>Build a password strength indicator that:</p>
+<ul><li>Shows strength in real-time as user types</li>
+<li>Checks length, character variety, common passwords</li>
+<li>Provides feedback on how to improve</li>
+<li>Blocks weak passwords on submission</li>
+</ul>
+<h3>Exercise 4: Activity Log</h3>
+<p>Create an activity log component that:</p>
+<ul><li>Tracks login attempts, password changes, session activity</li>
+<li>Displays timeline of security events</li>
+<li>Alerts on suspicious activity (new device, new location)</li>
+<li>Allows filtering by event type</li>
+</ul>
+<hr>
+<h2>Summary</h2>
+<p>Authentication and security are critical to any application that handles user data. LARC applications use industry-standard patterns:</p>
+<ul><li><strong>JWT tokens</strong> for stateless authentication</li>
+<li><strong>Automatic token refresh</strong> to maintain sessions</li>
+<li><strong>OAuth integration</strong> for social login</li>
+<li><strong>RBAC</strong> for fine-grained authorization</li>
+<li><strong>XSS and CSRF protection</strong> to prevent attacks</li>
+<li><strong>Secure token storage</strong> with httpOnly cookies when possible</li>
+<li><strong>Route guards</strong> to protect sensitive pages</li>
+<li><strong>Session management</strong> to track and revoke active sessions</li>
+</ul>
+Security isn't a checkbox—it's an ongoing practice. Stay updated on security best practices, use HTTPS everywhere, validate all input, and treat user data with respect.
+<hr>
+<h2>Further Reading</h2>
+<strong>For complete authentication reference:</strong>
+<ul><li><em>Building with LARC</em> Chapter 8: Authentication and Authorization - All auth patterns and strategies</li>
+<li><em>Building with LARC</em> Chapter 14: Error Handling and Debugging - Security debugging</li>
+<li><em>Building with LARC</em> Appendix E: Recipes and Patterns - Auth implementation recipes</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/12-authentication-and-security.md" target="_blank">

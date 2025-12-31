@@ -282,6 +282,900 @@ class UserRepository {
     await this.db.query(&#039;DELETE FROM users WHERE id = ?&#039;, [id]);
   }
 }</code></pre>
+<h2>Complete CRUD API Example</h2>
+<p>Let's build a complete REST API for a todo application with full CRUD operations:</p>
+<h3>Express Backend with SQLite</h3>
+<pre><code class="language-javascript">// server/app.js
+const express = require(&#039;express&#039;);
+const cors = require(&#039;cors&#039;);
+const sqlite3 = require(&#039;sqlite3&#039;).verbose();
+const { open } = require(&#039;sqlite&#039;);
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// Database setup
+let db;
+(async () =&gt; {
+  db = await open({
+    filename: &#039;./database.sqlite&#039;,
+    driver: sqlite3.Database
+  });
+
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS todos (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      title TEXT NOT NULL,
+      completed BOOLEAN DEFAULT 0,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+})();
+
+// Get all todos
+app.get(&#039;/api/todos&#039;, async (req, res) =&gt; {
+  try {
+    const todos = await db.all(&#039;SELECT * FROM todos ORDER BY created_at DESC&#039;);
+    res.json(todos);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Get single todo
+app.get(&#039;/api/todos/:id&#039;, async (req, res) =&gt; {
+  try {
+    const todo = await db.get(&#039;SELECT * FROM todos WHERE id = ?&#039;, req.params.id);
+    if (!todo) {
+      return res.status(404).json({ error: &#039;Todo not found&#039; });
+    }
+    res.json(todo);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Create todo
+app.post(&#039;/api/todos&#039;, async (req, res) =&gt; {
+  try {
+    const { title } = req.body;
+    if (!title) {
+      return res.status(400).json({ error: &#039;Title is required&#039; });
+    }
+
+    const result = await db.run(
+      &#039;INSERT INTO todos (title) VALUES (?)&#039;,
+      title
+    );
+
+    const todo = await db.get(&#039;SELECT * FROM todos WHERE id = ?&#039;, result.lastID);
+    res.status(201).json(todo);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Update todo
+app.put(&#039;/api/todos/:id&#039;, async (req, res) =&gt; {
+  try {
+    const { title, completed } = req.body;
+
+    await db.run(
+      &#039;UPDATE todos SET title = ?, completed = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?&#039;,
+      title,
+      completed ? 1 : 0,
+      req.params.id
+    );
+
+    const todo = await db.get(&#039;SELECT * FROM todos WHERE id = ?&#039;, req.params.id);
+    res.json(todo);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Delete todo
+app.delete(&#039;/api/todos/:id&#039;, async (req, res) =&gt; {
+  try {
+    await db.run(&#039;DELETE FROM todos WHERE id = ?&#039;, req.params.id);
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(3000, () =&gt; console.log(&#039;Server running on http://localhost:3000&#039;));</code></pre>
+<h3>Frontend Integration</h3>
+<pre><code class="language-javascript">// frontend/services/todo-service.js
+class TodoService {
+  constructor(baseUrl = &#039;http://localhost:3000/api&#039;) {
+    this.baseUrl = baseUrl;
+  }
+
+  async getAll() {
+    const response = await fetch(`${this.baseUrl}/todos`);
+    if (!response.ok) throw new Error(&#039;Failed to fetch todos&#039;);
+    return response.json();
+  }
+
+  async create(title) {
+    const response = await fetch(`${this.baseUrl}/todos`, {
+      method: &#039;POST&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify({ title })
+    });
+    if (!response.ok) throw new Error(&#039;Failed to create todo&#039;);
+    return response.json();
+  }
+
+  async update(id, updates) {
+    const response = await fetch(`${this.baseUrl}/todos/${id}`, {
+      method: &#039;PUT&#039;,
+      headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+      body: JSON.stringify(updates)
+    });
+    if (!response.ok) throw new Error(&#039;Failed to update todo&#039;);
+    return response.json();
+  }
+
+  async delete(id) {
+    const response = await fetch(`${this.baseUrl}/todos/${id}`, {
+      method: &#039;DELETE&#039;
+    });
+    if (!response.ok) throw new Error(&#039;Failed to delete todo&#039;);
+  }
+}
+
+export const todoService = new TodoService();</code></pre>
+<h2>Using ORMs</h2>
+<p>Object-Relational Mappers simplify database operations. Here's Prisma (Node.js) and SQLAlchemy (Python):</p>
+<h3>Prisma (Node.js)</h3>
+<pre><code class="language-javascript">// prisma/schema.prisma
+datasource db {
+  provider = &quot;postgresql&quot;
+  url      = env(&quot;DATABASE_URL&quot;)
+}
+
+generator client {
+  provider = &quot;prisma-client-js&quot;
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String?
+  posts     Post[]
+  createdAt DateTime @default(now())
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  Int
+  createdAt DateTime @default(now())
+}</code></pre>
+<pre><code class="language-javascript">// server/routes/posts.js
+const { PrismaClient } = require(&#039;@prisma/client&#039;);
+const prisma = new PrismaClient();
+
+app.get(&#039;/api/posts&#039;, async (req, res) =&gt; {
+  const posts = await prisma.post.findMany({
+    include: {
+      author: {
+        select: { id: true, name: true, email: true }
+      }
+    },
+    orderBy: { createdAt: &#039;desc&#039; }
+  });
+  res.json(posts);
+});
+
+app.post(&#039;/api/posts&#039;, authenticate, async (req, res) =&gt; {
+  const { title, content } = req.body;
+
+  const post = await prisma.post.create({
+    data: {
+      title,
+      content,
+      author: {
+        connect: { id: req.user.id }
+      }
+    },
+    include: { author: true }
+  });
+
+  res.status(201).json(post);
+});
+
+app.put(&#039;/api/posts/:id&#039;, authenticate, async (req, res) =&gt; {
+  const { id } = req.params;
+  const { title, content, published } = req.body;
+
+  // Check ownership
+  const post = await prisma.post.findUnique({
+    where: { id: parseInt(id) }
+  });
+
+  if (post.authorId !== req.user.id) {
+    return res.status(403).json({ error: &#039;Forbidden&#039; });
+  }
+
+  const updated = await prisma.post.update({
+    where: { id: parseInt(id) },
+    data: { title, content, published },
+    include: { author: true }
+  });
+
+  res.json(updated);
+});</code></pre>
+<h3>SQLAlchemy (Python)</h3>
+<pre><code class="language-python"># models.py
+from sqlalchemy import Column, Integer, String, Text, Boolean, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
+from datetime import datetime
+from database import Base
+
+class User(Base):
+    __tablename__ = &quot;users&quot;
+
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, index=True)
+    name = Column(String)
+    hashed_password = Column(String)
+    posts = relationship(&quot;Post&quot;, back_populates=&quot;author&quot;)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+class Post(Base):
+    __tablename__ = &quot;posts&quot;
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String, index=True)
+    content = Column(Text)
+    published = Column(Boolean, default=False)
+    author_id = Column(Integer, ForeignKey(&quot;users.id&quot;))
+    author = relationship(&quot;User&quot;, back_populates=&quot;posts&quot;)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+# routes.py
+from fastapi import FastAPI, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+import models, schemas
+from database import get_db
+
+app = FastAPI()
+
+@app.get(&quot;/api/posts&quot;, response_model=List[schemas.Post])
+def get_posts(db: Session = Depends(get_db)):
+    return db.query(models.Post).order_by(models.Post.created_at.desc()).all()
+
+@app.post(&quot;/api/posts&quot;, response_model=schemas.Post)
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db), user=Depends(get_current_user)):
+    db_post = models.Post(**post.dict(), author_id=user.id)
+    db.add(db_post)
+    db.commit()
+    db.refresh(db_post)
+    return db_post
+
+@app.put(&quot;/api/posts/{post_id}&quot;, response_model=schemas.Post)
+def update_post(post_id: int, post: schemas.PostUpdate, db: Session = Depends(get_db), user=Depends(get_current_user)):
+    db_post = db.query(models.Post).filter(models.Post.id == post_id).first()
+    if not db_post:
+        raise HTTPException(status_code=404, detail=&quot;Post not found&quot;)
+    if db_post.author_id != user.id:
+        raise HTTPException(status_code=403, detail=&quot;Not authorized&quot;)
+
+    for key, value in post.dict(exclude_unset=True).items():
+        setattr(db_post, key, value)
+
+    db.commit()
+    db.refresh(db_post)
+    return db_post</code></pre>
+<h2>File Upload and Download</h2>
+<p>Handle file uploads from LARC components:</p>
+<h3>Express File Upload</h3>
+<pre><code class="language-javascript">// server.js
+const multer = require(&#039;multer&#039;);
+const path = require(&#039;path&#039;);
+
+// Configure storage
+const storage = multer.diskStorage({
+  destination: (req, file, cb) =&gt; {
+    cb(null, &#039;uploads/&#039;);
+  },
+  filename: (req, file, cb) =&gt; {
+    const uniqueSuffix = Date.now() + &#039;-&#039; + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  fileFilter: (req, file, cb) =&gt; {
+    const allowedTypes = /jpeg|jpg|png|gif|pdf/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+
+    if (mimetype &amp;&amp; extname) {
+      return cb(null, true);
+    }
+    cb(new Error(&#039;Invalid file type&#039;));
+  }
+});
+
+// Upload endpoint
+app.post(&#039;/api/upload&#039;, authenticate, upload.single(&#039;file&#039;), async (req, res) =&gt; {
+  if (!req.file) {
+    return res.status(400).json({ error: &#039;No file uploaded&#039; });
+  }
+
+  // Save file metadata to database
+  const file = await db.files.create({
+    userId: req.user.id,
+    filename: req.file.filename,
+    originalName: req.file.originalname,
+    mimetype: req.file.mimetype,
+    size: req.file.size,
+    path: req.file.path
+  });
+
+  res.json({
+    id: file.id,
+    filename: file.filename,
+    url: `/uploads/${file.filename}`
+  });
+});
+
+// Download endpoint
+app.get(&#039;/api/files/:id/download&#039;, authenticate, async (req, res) =&gt; {
+  const file = await db.files.findById(req.params.id);
+
+  if (!file) {
+    return res.status(404).json({ error: &#039;File not found&#039; });
+  }
+
+  res.download(file.path, file.originalName);
+});
+
+// Serve uploaded files
+app.use(&#039;/uploads&#039;, express.static(&#039;uploads&#039;));</code></pre>
+<h3>Frontend Upload Component</h3>
+<pre><code class="language-javascript">class FileUpload extends HTMLElement {
+  async handleUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append(&#039;file&#039;, file);
+
+    try {
+      const token = auth.getToken();
+      const response = await fetch(&#039;http://localhost:3000/api/upload&#039;, {
+        method: &#039;POST&#039;,
+        headers: {
+          &#039;Authorization&#039;: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) throw new Error(&#039;Upload failed&#039;);
+
+      const result = await response.json();
+      pan.publish(&#039;file.uploaded&#039;, result);
+
+      this.showSuccess(`File uploaded: ${result.filename}`);
+    } catch (error) {
+      this.showError(error.message);
+    }
+  }
+
+  connectedCallback() {
+    this.innerHTML = `
+      &lt;div class=&quot;upload-container&quot;&gt;
+        &lt;input type=&quot;file&quot; id=&quot;file-input&quot;&gt;
+        &lt;button onclick=&quot;document.getElementById(&#039;file-input&#039;).click()&quot;&gt;
+          Choose File
+        &lt;/button&gt;
+        &lt;div class=&quot;message&quot;&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    this.querySelector(&#039;#file-input&#039;).addEventListener(&#039;change&#039;, (e) =&gt; {
+      this.handleUpload(e);
+    });
+  }
+}
+
+customElements.define(&#039;file-upload&#039;, FileUpload);</code></pre>
+<h2>Real-Time Chat Application</h2>
+<p>Complete example combining HTTP and WebSocket:</p>
+<h3>Backend (Node.js)</h3>
+<pre><code class="language-javascript">// chat-server.js
+const express = require(&#039;express&#039;);
+const http = require(&#039;http&#039;);
+const WebSocket = require(&#039;ws&#039;);
+const jwt = require(&#039;jsonwebtoken&#039;);
+
+const app = express();
+const server = http.createServer(app);
+const wss = new WebSocket.Server({ server });
+
+app.use(express.json());
+
+// Store active connections
+const connections = new Map(); // ws -&gt; user
+const rooms = new Map(); // roomId -&gt; Set of ws
+
+// REST API for chat history
+app.get(&#039;/api/rooms/:roomId/messages&#039;, authenticate, async (req, res) =&gt; {
+  const messages = await db.query(
+    &#039;SELECT * FROM messages WHERE room_id = ? ORDER BY created_at ASC&#039;,
+    [req.params.roomId]
+  );
+  res.json(messages);
+});
+
+app.post(&#039;/api/rooms/:roomId/messages&#039;, authenticate, async (req, res) =&gt; {
+  const { content } = req.body;
+
+  const message = await db.query(
+    &#039;INSERT INTO messages (room_id, user_id, content) VALUES (?, ?, ?)&#039;,
+    [req.params.roomId, req.user.id, content]
+  );
+
+  res.status(201).json(message);
+});
+
+// WebSocket for real-time
+wss.on(&#039;connection&#039;, (ws, req) =&gt; {
+  const url = new URL(req.url, &#039;ws://localhost&#039;);
+  const token = url.searchParams.get(&#039;token&#039;);
+
+  try {
+    const user = jwt.verify(token, process.env.JWT_SECRET);
+    connections.set(ws, user);
+
+    ws.on(&#039;message&#039;, (data) =&gt; {
+      const message = JSON.parse(data);
+      handleMessage(ws, user, message);
+    });
+
+    ws.on(&#039;close&#039;, () =&gt; {
+      connections.delete(ws);
+      // Remove from all rooms
+      rooms.forEach(roomClients =&gt; roomClients.delete(ws));
+    });
+
+    ws.send(JSON.stringify({ type: &#039;connected&#039;, user }));
+  } catch {
+    ws.close(4001, &#039;Unauthorized&#039;);
+  }
+});
+
+function handleMessage(ws, user, message) {
+  switch (message.type) {
+    case &#039;join-room&#039;:
+      if (!rooms.has(message.roomId)) {
+        rooms.set(message.roomId, new Set());
+      }
+      rooms.get(message.roomId).add(ws);
+
+      // Notify room
+      broadcastToRoom(message.roomId, {
+        type: &#039;user-joined&#039;,
+        user: { id: user.id, name: user.name }
+      });
+      break;
+
+    case &#039;leave-room&#039;:
+      rooms.get(message.roomId)?.delete(ws);
+
+      broadcastToRoom(message.roomId, {
+        type: &#039;user-left&#039;,
+        user: { id: user.id, name: user.name }
+      });
+      break;
+
+    case &#039;chat-message&#039;:
+      // Save to database
+      db.query(
+        &#039;INSERT INTO messages (room_id, user_id, content) VALUES (?, ?, ?)&#039;,
+        [message.roomId, user.id, message.content]
+      ).then(result =&gt; {
+        // Broadcast to room
+        broadcastToRoom(message.roomId, {
+          type: &#039;chat-message&#039;,
+          message: {
+            id: result.insertId,
+            userId: user.id,
+            userName: user.name,
+            content: message.content,
+            createdAt: new Date()
+          }
+        });
+      });
+      break;
+
+    case &#039;typing&#039;:
+      broadcastToRoom(message.roomId, {
+        type: &#039;user-typing&#039;,
+        user: { id: user.id, name: user.name }
+      }, ws);
+      break;
+  }
+}
+
+function broadcastToRoom(roomId, message, exclude = null) {
+  const roomClients = rooms.get(roomId);
+  if (!roomClients) return;
+
+  roomClients.forEach(client =&gt; {
+    if (client !== exclude &amp;&amp; client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
+  });
+}
+
+server.listen(3000, () =&gt; console.log(&#039;Chat server running on port 3000&#039;));</code></pre>
+<h3>Frontend Chat Component</h3>
+<pre><code class="language-javascript">class ChatRoom extends HTMLElement {
+  constructor() {
+    super();
+    this.roomId = this.getAttribute(&#039;room-id&#039;);
+    this.messages = [];
+    this.ws = null;
+    this.typingTimer = null;
+  }
+
+  async connectedCallback() {
+    await this.loadHistory();
+    this.connectWebSocket();
+    this.render();
+  }
+
+  async loadHistory() {
+    try {
+      this.messages = await api.get(`/rooms/${this.roomId}/messages`);
+    } catch (error) {
+      console.error(&#039;Failed to load chat history:&#039;, error);
+    }
+  }
+
+  connectWebSocket() {
+    const token = auth.getToken();
+    this.ws = new WebSocket(`ws://localhost:3000?token=${token}`);
+
+    this.ws.onopen = () =&gt; {
+      this.ws.send(JSON.stringify({
+        type: &#039;join-room&#039;,
+        roomId: this.roomId
+      }));
+    };
+
+    this.ws.onmessage = (event) =&gt; {
+      const data = JSON.parse(event.data);
+      this.handleWebSocketMessage(data);
+    };
+
+    this.ws.onclose = () =&gt; {
+      // Reconnect after 3 seconds
+      setTimeout(() =&gt; this.connectWebSocket(), 3000);
+    };
+  }
+
+  handleWebSocketMessage(data) {
+    switch (data.type) {
+      case &#039;chat-message&#039;:
+        this.messages.push(data.message);
+        this.render();
+        this.scrollToBottom();
+        break;
+
+      case &#039;user-joined&#039;:
+        this.showNotification(`${data.user.name} joined`);
+        break;
+
+      case &#039;user-left&#039;:
+        this.showNotification(`${data.user.name} left`);
+        break;
+
+      case &#039;user-typing&#039;:
+        this.showTypingIndicator(data.user.name);
+        break;
+    }
+  }
+
+  sendMessage(content) {
+    if (!content.trim()) return;
+
+    this.ws.send(JSON.stringify({
+      type: &#039;chat-message&#039;,
+      roomId: this.roomId,
+      content
+    }));
+
+    this.querySelector(&#039;#message-input&#039;).value = &#039;&#039;;
+  }
+
+  handleTyping() {
+    clearTimeout(this.typingTimer);
+
+    this.ws.send(JSON.stringify({
+      type: &#039;typing&#039;,
+      roomId: this.roomId
+    }));
+
+    this.typingTimer = setTimeout(() =&gt; {
+      // Stop typing indicator after 2 seconds
+    }, 2000);
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;style&gt;
+        .chat-container {
+          display: flex;
+          flex-direction: column;
+          height: 600px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+        }
+
+        .messages {
+          flex: 1;
+          overflow-y: auto;
+          padding: 20px;
+        }
+
+        .message {
+          margin-bottom: 15px;
+        }
+
+        .message-author {
+          font-weight: 600;
+          color: #667eea;
+        }
+
+        .message-content {
+          margin-top: 5px;
+        }
+
+        .message-time {
+          font-size: 12px;
+          color: #999;
+        }
+
+        .input-area {
+          display: flex;
+          gap: 10px;
+          padding: 15px;
+          border-top: 1px solid #ddd;
+        }
+
+        input {
+          flex: 1;
+          padding: 10px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+
+        button {
+          padding: 10px 20px;
+          background: #667eea;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;chat-container&quot;&gt;
+        &lt;div class=&quot;messages&quot;&gt;
+          ${this.messages.map(msg =&gt; `
+            &lt;div class=&quot;message&quot;&gt;
+              &lt;div class=&quot;message-author&quot;&gt;${msg.userName}&lt;/div&gt;
+              &lt;div class=&quot;message-content&quot;&gt;${this.escapeHtml(msg.content)}&lt;/div&gt;
+              &lt;div class=&quot;message-time&quot;&gt;${new Date(msg.createdAt).toLocaleTimeString()}&lt;/div&gt;
+            &lt;/div&gt;
+          `).join(&#039;&#039;)}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;input-area&quot;&gt;
+          &lt;input
+            type=&quot;text&quot;
+            id=&quot;message-input&quot;
+            placeholder=&quot;Type a message...&quot;
+          &gt;
+          &lt;button id=&quot;send-btn&quot;&gt;Send&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    const input = this.querySelector(&#039;#message-input&#039;);
+    const sendBtn = this.querySelector(&#039;#send-btn&#039;);
+
+    input.addEventListener(&#039;input&#039;, () =&gt; this.handleTyping());
+    input.addEventListener(&#039;keypress&#039;, (e) =&gt; {
+      if (e.key === &#039;Enter&#039;) {
+        this.sendMessage(input.value);
+      }
+    });
+
+    sendBtn.addEventListener(&#039;click&#039;, () =&gt; {
+      this.sendMessage(input.value);
+    });
+  }
+
+  escapeHtml(text) {
+    const div = document.createElement(&#039;div&#039;);
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  scrollToBottom() {
+    const messages = this.querySelector(&#039;.messages&#039;);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  disconnectedCallback() {
+    if (this.ws) {
+      this.ws.send(JSON.stringify({
+        type: &#039;leave-room&#039;,
+        roomId: this.roomId
+      }));
+      this.ws.close();
+    }
+  }
+}
+
+customElements.define(&#039;chat-room&#039;, ChatRoom);</code></pre>
+<h2>Troubleshooting</h2>
+<h3>Problem: CORS Errors in Development</h3>
+<strong>Symptom</strong>: <code>Access-Control-Allow-Origin</code> errors
+<strong>Solution</strong>: Configure CORS properly for development:
+<pre><code class="language-javascript">// Express
+const cors = require(&#039;cors&#039;);
+app.use(cors({
+  origin: &#039;http://localhost:5173&#039;, // Your frontend URL
+  credentials: true
+}));
+
+// Or for all origins in development
+if (process.env.NODE_ENV === &#039;development&#039;) {
+  app.use(cors({ origin: &#039;*&#039; }));
+}</code></pre>
+<h3>Problem: Database Connection Pool Exhaustion</h3>
+<strong>Symptom</strong>: "Too many connections" errors
+<strong>Solution</strong>: Configure connection pooling:
+<pre><code class="language-javascript">const { Pool } = require(&#039;pg&#039;);
+
+const pool = new Pool({
+  max: 20, // Maximum connections
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+});
+
+// Always release connections
+app.get(&#039;/api/users&#039;, async (req, res) =&gt; {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(&#039;SELECT * FROM users&#039;);
+    res.json(result.rows);
+  } finally {
+    client.release(); // Important!
+  }
+});</code></pre>
+<h3>Problem: File Uploads Failing</h3>
+<strong>Symptom</strong>: 413 Payload Too Large or multipart parsing errors
+<strong>Solution</strong>: Increase limits and configure multer properly:
+<pre><code class="language-javascript">app.use(express.json({ limit: &#039;10mb&#039; }));
+app.use(express.urlencoded({ limit: &#039;10mb&#039;, extended: true }));
+
+const upload = multer({
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB
+    files: 5 // Max 5 files
+  }
+});</code></pre>
+<h3>Problem: WebSocket Connection Drops</h3>
+<strong>Symptom</strong>: Frequent disconnections
+<strong>Solution</strong>: Implement heartbeat/ping-pong:
+<pre><code class="language-javascript">// Server
+wss.on(&#039;connection&#039;, (ws) =&gt; {
+  ws.isAlive = true;
+  ws.on(&#039;pong&#039;, () =&gt; {
+    ws.isAlive = true;
+  });
+});
+
+// Ping clients every 30 seconds
+const interval = setInterval(() =&gt; {
+  wss.clients.forEach((ws) =&gt; {
+    if (ws.isAlive === false) return ws.terminate();
+
+    ws.isAlive = false;
+    ws.ping();
+  });
+}, 30000);
+
+// Client
+setInterval(() =&gt; {
+  if (ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ type: &#039;ping&#039; }));
+  }
+}, 30000);</code></pre>
+<h2>Best Practices</h2>
+<li><strong>Use environment variables</strong> - Never hardcode secrets or config</li>
+<li><strong>Validate input</strong> - Always validate on the server, not just client</li>
+<li><strong>Use connection pooling</strong> - Reuse database connections</li>
+<li><strong>Implement rate limiting</strong> - Prevent abuse with rate limits</li>
+<li><strong>Log errors properly</strong> - Use structured logging (Winston, Bunyan)</li>
+<li><strong>Handle graceful shutdown</strong> - Close connections properly on SIGTERM</li>
+<li><strong>Use transactions</strong> - For operations that must succeed or fail together</li>
+<li><strong>Sanitize user input</strong> - Prevent SQL injection and XSS</li>
+<li><strong>Set security headers</strong> - Use helmet.js or similar</li>
+<li><strong>Monitor performance</strong> - Use APM tools (New Relic, DataDog)</li>
+<h2>Exercises</h2>
+<h3>Exercise 1: Build a Blog API</h3>
+<p>Create a REST API with:</p>
+<ul><li>User registration and authentication</li>
+<li>CRUD operations for blog posts</li>
+<li>Comments on posts</li>
+<li>Search functionality</li>
+<li>Tag/category filtering</li>
+</ul>
+<strong>Bonus</strong>: Add pagination and sorting options.
+<h3>Exercise 2: Real-Time Notifications</h3>
+<p>Build a notification system with:</p>
+<ul><li>WebSocket connection for real-time delivery</li>
+<li>Fallback to polling if WebSocket unavailable</li>
+<li>Mark as read/unread functionality</li>
+<li>Notification categories (info, warning, error)</li>
+<li>Persistence to database</li>
+</ul>
+<strong>Bonus</strong>: Add push notifications for mobile.
+<h3>Exercise 3: File Management System</h3>
+<p>Create a file management API with:</p>
+<ul><li>Upload multiple files</li>
+<li>Organize files in folders</li>
+<li>Share files with other users</li>
+<li>Generate temporary download links</li>
+<li>Thumbnail generation for images</li>
+</ul>
+<strong>Bonus</strong>: Implement file versioning.
+<h3>Exercise 4: GraphQL API</h3>
+<p>Convert a REST API to GraphQL:</p>
+<ul><li>Define schema for users, posts, comments</li>
+<li>Implement resolvers</li>
+<li>Add authentication to resolvers</li>
+<li>Implement subscriptions for real-time</li>
+<li>Optimize N+1 queries with DataLoader</li>
+</ul>
+<strong>Bonus</strong>: Add GraphQL Playground for testing.
+<hr>
+<h2>Summary</h2>
+<p>Server integration with LARC follows standard web patterns—your frontend communicates via HTTP and WebSockets, regardless of backend technology:</p>
+<ul><li><strong>REST APIs</strong> with Express, Flask, FastAPI, or PHP</li>
+<li><strong>ORMs</strong> like Prisma, SQLAlchemy for database access</li>
+<li><strong>File uploads</strong> with multer or similar libraries</li>
+<li><strong>Real-time features</strong> with WebSockets</li>
+<li><strong>Authentication</strong> via JWT tokens</li>
+<li><strong>Database patterns</strong> with repositories and connection pooling</li>
+</ul>
+LARC doesn't dictate your backend choices. Use whatever server technology fits your team's expertise and requirements. The PAN bus on the frontend keeps your components decoupled from implementation details.
+<hr>
+<h2>Further Reading</h2>
+<strong>For complete server integration reference:</strong>
+<ul><li><em>Building with LARC</em> Chapter 13: Server Integration - Backend patterns and API design</li>
+<li><em>Building with LARC</em> Chapter 7: Data Fetching and APIs - HTTP and WebSocket patterns</li>
+<li><em>Building with LARC</em> Appendix E: Recipes and Patterns - Server integration recipes</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/13-server-integration.md" target="_blank">

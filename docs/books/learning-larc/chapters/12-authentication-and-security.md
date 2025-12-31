@@ -1147,6 +1147,7 @@ class RouteGuard extends HTMLElement {
 ### Exercise 1: Add "Remember Me"
 
 Extend the login form with a "Remember Me" checkbox that:
+
 - Uses a longer-lived refresh token when checked
 - Falls back to session-only auth when unchecked
 - Persists the preference across sessions
@@ -1154,6 +1155,7 @@ Extend the login form with a "Remember Me" checkbox that:
 ### Exercise 2: Implement 2FA
 
 Add two-factor authentication:
+
 - Generate TOTP secret on enrollment
 - Display QR code for authenticator apps
 - Validate TOTP codes on login
@@ -1162,6 +1164,7 @@ Add two-factor authentication:
 ### Exercise 3: Password Strength Meter
 
 Build a password strength indicator that:
+
 - Shows strength in real-time as user types
 - Checks length, character variety, common passwords
 - Provides feedback on how to improve
@@ -1170,6 +1173,7 @@ Build a password strength indicator that:
 ### Exercise 4: Activity Log
 
 Create an activity log component that:
+
 - Tracks login attempts, password changes, session activity
 - Displays timeline of security events
 - Alerts on suspicious activity (new device, new location)

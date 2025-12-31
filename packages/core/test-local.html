@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Local Test - LARC Core with Components</title>
+  <!-- Load from local file -->
+  <script type="module" src="./pan.mjs"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>Local Test</h1>
+  <p>Testing autoloader with local components...</p>
+
+  <pan-card>
+    <h2>🎉 Success!</h2>
+    <p>If you see this styled card, the autoloader found pan-card.mjs in ./components/</p>
+  </pan-card>
+
+  <hr>
+
+  <pan-card>
+    <h3>Test Other Components</h3>
+    <p>These should auto-load too:</p>
+  </pan-card>
+
+  <script type="module">
+    // Test that PanClient is available
+    import { PanClient } from './pan-client.mjs';
+    const client = new PanClient();
+    console.log('✅ PanClient loaded');
+
+    client.publish('test.message', { text: 'Hello from test!' });
+    client.subscribe('test.message', (msg) => {
+      console.log('✅ Messaging works:', msg);
+    });
+  </script>
+</body>
+</html>

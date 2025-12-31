@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.0.0
+
+### Patch Changes
+
+- Updated dependencies
+  - @larcjs/core@2.1.0
+
 All notable changes to this project will be documented in this file.
 
 This project adheres to Keep a Changelog, and aims to follow Semantic Versioning.
@@ -26,19 +33,23 @@ This release adds a comprehensive suite of state management components for build
 #### ✨ New Components
 
 **State Management:**
+
 - **pan-state-sync** - Cross-tab state synchronization using BroadcastChannel API
+
   - Leader election with automatic failover
   - Conflict resolution strategies (last-write-wins, merge, custom)
   - Tab visibility handling and automatic reconnection
   - Heartbeat monitoring for leader health checks
 
 - **pan-computed-state** - Derived/computed state with automatic dependency tracking
+
   - Multi-source dependencies with wildcard support
   - Async computation support
   - Memoization strategies (none, shallow, deep)
   - Debouncing for performance optimization
 
 - **pan-offline-sync** - Offline-first support with automatic queue management
+
   - IndexedDB-based mutation queue with persistence
   - Exponential backoff retry logic
   - Network status monitoring with automatic sync
@@ -46,6 +57,7 @@ This release adds a comprehensive suite of state management components for build
   - Configurable endpoints for API synchronization
 
 - **pan-persistence-strategy** - Declarative persistence routing
+
   - Multiple storage backends (memory, localStorage, sessionStorage, IndexedDB)
   - TTL (time-to-live) support for cache expiration
   - Automatic state hydration on page load
@@ -53,6 +65,7 @@ This release adds a comprehensive suite of state management components for build
   - Topic-based routing rules
 
 - **pan-schema-validator** - Runtime JSON Schema validation (no build tools required)
+
   - Subset of JSON Schema Draft-07
   - Strict and warning modes
   - Built-in format validators (email, uri, date-time, uuid, ipv4, ipv6)
@@ -60,6 +73,7 @@ This release adds a comprehensive suite of state management components for build
   - Zero dependencies, browser-native
 
 - **pan-undo-redo** - Time-travel debugging with history management
+
   - Configurable history stack size
   - Automatic change batching (100ms window)
   - Jump to specific timestamp
@@ -101,6 +115,7 @@ This release adds a comprehensive suite of state management components for build
 #### 🎯 Use Cases Enabled
 
 This release enables:
+
 - **Offline-first PWAs** - Work without network, sync when available
 - **Collaborative apps** - Multi-tab state synchronization
 - **Complex state management** - Derived state, validation, undo/redo
@@ -135,7 +150,9 @@ This is the first production-ready release of PAN. The **core messaging infrastr
 #### ✅ Core Infrastructure (Production-Ready)
 
 **Core Modules:**
+
 - **pan-bus.mjs** - DOM-native event bus with pub/sub messaging
+
   - Exact and wildcard topic matching (`users.*`, `users.**`)
   - Retained message support for state management
   - Request/reply pattern with automatic cleanup
@@ -144,6 +161,7 @@ This is the first production-ready release of PAN. The **core messaging infrastr
   - Zero memory leaks validated
 
 - **pan-client.mjs** - High-level client API
+
   - `publish()`, `subscribe()`, `request()`, `retained()` methods
   - AbortSignal support for subscription cleanup
   - Configurable host and bus element
@@ -152,6 +170,7 @@ This is the first production-ready release of PAN. The **core messaging infrastr
 - **pan-autoload.mjs** - Automatic component discovery and loading
 
 **API Stability:**
+
 - All core APIs locked (no breaking changes in v1.x)
 - Semantic versioning policy documented
 - API stability guarantees in API_STABILITY.md
@@ -159,6 +178,7 @@ This is the first production-ready release of PAN. The **core messaging infrastr
 #### ✅ Testing & Quality (80%+ Coverage)
 
 **Test Suites:**
+
 - 85 comprehensive test suites covering all core functionality
 - 80%+ code coverage of core modules (1,054 lines)
 - Core functionality tests (pan-bus, pan-client, pan-autoload)
@@ -168,6 +188,7 @@ This is the first production-ready release of PAN. The **core messaging infrastr
 - Performance benchmarks with Playwright + Chrome DevTools Protocol
 
 **Test Infrastructure:**
+
 - Playwright-based test runner
 - Chrome DevTools Protocol integration for memory profiling
 - HTTP server for realistic browser environment
@@ -176,6 +197,7 @@ This is the first production-ready release of PAN. The **core messaging infrastr
 #### ✅ Performance Validation
 
 **Benchmark Results:**
+
 - Message Throughput: 300,300 msg/sec (30x threshold)
 - Subscribe Speed: 434,783 ops/sec (434x threshold)
 - Unsubscribe Speed: 114,943 ops/sec (114x threshold)
@@ -187,6 +209,7 @@ This is the first production-ready release of PAN. The **core messaging infrastr
 - Large Datasets: <1ms (10k items, 2.93 MB)
 
 **Performance Characteristics:**
+
 - Sub-millisecond latency for all operations
 - Linear scalability
 - Zero memory leaks
@@ -197,6 +220,7 @@ See docs/PERFORMANCE.md for detailed benchmarks.
 #### ✅ Documentation
 
 **Core Documentation:**
+
 - API_REFERENCE.md - Complete API documentation with examples
 - TOPICS.md - Topic naming conventions and patterns
 - QUICK_START.md - Getting started guide
@@ -211,10 +235,12 @@ See docs/PERFORMANCE.md for detailed benchmarks.
 #### 🔄 Browser Support
 
 **Tested (v1.0):**
+
 - ✅ Chrome (latest 2 versions)
 - ✅ Edge (Chromium-based)
 
 **Not Yet Tested (Planned for v1.1):**
+
 - ⏳ Firefox, Safari, mobile browsers
 
 **Note:** Core uses standard DOM APIs likely to work on all modern browsers.
@@ -222,6 +248,7 @@ See docs/PERFORMANCE.md for detailed benchmarks.
 #### 🔒 Security (Production-Ready)
 
 **Completed:**
+
 - ✅ Security best practices documentation
 - ✅ Content Security Policy guidelines
 - ✅ Input sanitization patterns
@@ -238,6 +265,7 @@ See docs/PERFORMANCE.md for detailed benchmarks.
 #### ✅ Components (Production-Ready)
 
 **40+ UI components organized by layer:**
+
 - Core: pan-layout, pan-header, pan-footer, pan-theme-provider, pan-icon
 - Data: pan-data-table, pan-data-list, pan-data-grid, pan-chart
 - Forms: pan-form, pan-field, pan-input, pan-select, pan-button, etc.
@@ -246,11 +274,13 @@ See docs/PERFORMANCE.md for detailed benchmarks.
 - Building Blocks: pan-card, pan-badge, pan-tabs, pan-accordion, pan-breadcrumbs, pan-pagination
 
 **Security Status:**
+
 - ✅ High-risk components audited and approved
 - ✅ Defense-in-depth architecture verified
 - ⚠️ Limited browser compatibility testing (Chrome-only, multi-browser testing planned for v1.1)
 
 **Demo Applications:**
+
 - Invoice Manager - CRUD operations with data table
 - Markdown Notes - Markdown editor with file management
 - Contact Manager - Contact list with search and filtering
@@ -259,11 +289,13 @@ See docs/PERFORMANCE.md for detailed benchmarks.
 ### Added
 
 - **Component Autoload System** (`pan-autoload.mjs`): Automatic on-demand loading of components from the `components/` directory. No manual imports required—just use custom elements and they load automatically when approaching the viewport.
+
   - Configurable components path and root margin
   - Per-element module override with `data-module` attribute
   - Automatic registration of default exports
 
 - **Router & Navigation**:
+
   - `<pan-router>`: URL routing with `nav.state` topic synchronization
     - History and hash mode support
     - Route guards with auth integration
@@ -274,12 +306,14 @@ See docs/PERFORMANCE.md for detailed benchmarks.
     - Intercepts clicks for SPA navigation
 
 - **WebSocket Bridge** (`<pan-websocket>`): Bidirectional WebSocket ↔ PAN communication
+
   - Automatic reconnection with exponential backoff
   - Heartbeat/ping support
   - Topic filtering for inbound and outbound messages
   - Connection status events (`ws.connected`, `ws.disconnected`, `ws.error`)
 
 - **IndexedDB Bridge** (`<pan-idb>`): Client-side database operations via PAN topics
+
   - Full CRUD operations through topic-based API
   - Index support with queries
   - Multiple stores and databases
@@ -287,12 +321,14 @@ See docs/PERFORMANCE.md for detailed benchmarks.
   - Operations: `get`, `put`, `add`, `delete`, `clear`, `list`, `query`, `count`
 
 - **Component Gallery** (`gallery.html`): Interactive component showcase
+
   - Live playground with code editor and preview
   - Search and category filtering
   - Direct links to component source code
   - Real-time examples for all components
 
 - **New Examples**:
+
   - `15-router.html`: SPA routing with navigation and route parameters
   - `16-websocket.html`: Real-time chat demo with WebSocket bridge
   - `17-indexeddb.html`: Contact manager with IndexedDB persistence
@@ -333,12 +369,14 @@ None. This is the first stable release. All core APIs are now locked.
 Core APIs remain compatible. No breaking changes for existing users of pan-bus and pan-client.
 
 **What's stable now:**
+
 - ✅ All core API signatures locked
 - ✅ PanMessage envelope format locked
 - ✅ Topic conventions locked
 - ✅ CustomEvent names locked
 
 **What's still experimental:**
+
 - ⚠️ UI components (may have breaking changes)
 - ⚠️ Component-specific APIs
 
