@@ -3,7 +3,7 @@
 ## A
 
 **addEventListener()**, Chapter 4, Chapter 7
-**Accessibility**, Chapter 15, Chapter 17, Chapter 23
+**Accessibility**, Chapter 15, Chapter 17, Chapter 19
 **Acknowledgments**, Preface
 **Action topics**, Chapter 4, Appendix A
 **ActiveForm (todo status)**, Chapter 19
@@ -16,12 +16,12 @@
 **Apache configuration**, Chapter 5, Chapter 20
 **API design**, Chapter 11, Appendix G
 **API integration**, Chapter 11
-**API reference**, Chapter 21-25, Appendix G
+**API reference**, Chapter 17-21, Appendix G
 **API topics**, Chapter 4, Chapter 11
 **Application state**, Chapter 8
 **Architectural decisions**, Chapter 2, Chapter 19
 **Asynchronous patterns**, Chapter 6, Chapter 11
-**Attributes (component)**, Chapter 4, Chapter 7, Chapter 21-25
+**Attributes (component)**, Chapter 4, Chapter 7, Chapter 17-21
 **attributeChangedCallback()**, Chapter 7
 **Authentication**, Chapter 12
 
@@ -42,7 +42,7 @@
   - Node.js, Appendix G
   - Python/Flask, Appendix G
 **Best practices**, Chapter 6-20
-**Boolean attributes**, Chapter 7, Chapter 21-25
+**Boolean attributes**, Chapter 7, Chapter 17-21
 **Branching logic**, Chapter 19
 **BroadcastChannel API**, Chapter 8, Chapter 13, Appendix G
 **Browser compatibility**, Chapter 5, Chapter 20
@@ -68,7 +68,7 @@
   - Rollup, Chapter 20
   - Vite, Chapter 5, Chapter 20
   - Webpack, Chapter 20
-**Bus statistics**, Chapter 4, Chapter 21
+**Bus statistics**, Chapter 4, Chapter 17
 
 ## C
 
@@ -89,7 +89,7 @@
 **Command-line tools**, Chapter 5, Appendix G
 **Community resources**, Appendix G
 **Comparison with other frameworks**, Chapter 2
-**Component API reference**, Chapter 21-25
+**Component API reference**, Chapter 17-21
 **Component autoloading**, Chapter 4, Chapter 5, Chapter 7
 **Component composition**, Chapter 4, Chapter 7
 **Component development guide**, Appendix G
@@ -107,7 +107,7 @@
 **Composition patterns**, Chapter 4, Chapter 7, Chapter 19
 **Configuration**
   - larc-config.mjs, Chapter 5
-  - pan-bus attributes, Chapter 4, Chapter 21
+  - pan-bus attributes, Chapter 4, Chapter 17
   - Path configuration, Chapter 5
 **connectedCallback()**, Chapter 7
 **Console logging**, Chapter 4, Chapter 18
@@ -135,7 +135,7 @@
 
 **Dark mode**, Chapter 15
 **Dashboard applications**, Chapter 19
-**Data components**, Chapter 22
+**Data components**, Chapter 18
 **Data fetching**, Chapter 11
 
   - Caching strategies, Chapter 11
@@ -146,9 +146,9 @@
 **Debugging**, Chapter 5, Chapter 18
 
   - Browser DevTools, Chapter 5, Chapter 18
-  - Debug mode, Chapter 4, Chapter 21
+  - Debug mode, Chapter 4, Chapter 17
   - LARC DevTools extension, Appendix G
-  - Message tracing, Chapter 18, Chapter 21
+  - Message tracing, Chapter 18, Chapter 17
 **Decoupled architecture**, Chapter 2, Chapter 4
 **Deduplication (messages)**, Chapter 4
 **Deep linking**, Chapter 9
@@ -218,7 +218,7 @@
   - OPFS integration, Chapter 14
   - Upload handling, Chapter 14
 **File paths**, Chapter 1, Chapter 5
-**Filtering (data)**, Chapter 22
+**Filtering (data)**, Chapter 18
 **Firefox Developer Tools**, Chapter 5
 **Form handling**, Chapter 10
 
@@ -236,7 +236,7 @@
 **GitHub Discussions**, Appendix G
 **GitHub Pages**, Chapter 20, Appendix G
 **Global state**, Chapter 8
-**Global wildcard subscriptions**, Chapter 4, Chapter 21
+**Global wildcard subscriptions**, Chapter 4, Chapter 17
 **Glossary**, Appendix F
 **Governance**, Appendix G
 
@@ -253,18 +253,18 @@
 
 ## I
 
-**Icons**, Chapter 23
+**Icons**, Chapter 19
 **IDE support**, Chapter 5, Appendix G
 **Import maps**, Chapter 5, Chapter 20
 **IndexedDB**, Chapter 8, Chapter 14, Appendix G
-**Infinite scroll**, Chapter 22
+**Infinite scroll**, Chapter 18
 **Initial state loading**, Chapter 8
 **Installation options**, Chapter 5
 
   - CDN, Chapter 5
   - Git clone, Chapter 5
   - NPM, Chapter 5
-**Integration components**, Chapter 24
+**Integration components**, Chapter 20
 **IntersectionObserver**, Chapter 4, Chapter 5, Chapter 16
 **Introduction**, Chapter 1
 
@@ -292,7 +292,7 @@
 **Lifecycle methods**, Chapter 7
 **Lightweight architecture**, Chapter 1, Chapter 2
 **Live Server**, Chapter 5
-**Loading states**, Chapter 11, Chapter 22
+**Loading states**, Chapter 11, Chapter 18
 **Local development**, Chapter 5
 **Local state**, Chapter 8
 **localStorage**, Chapter 5, Chapter 8
@@ -300,34 +300,34 @@
 
 ## M
 
-**Markdown editor**, Chapter 23
-**Memory management**, Chapter 4, Chapter 16, Chapter 21
-**Message bus**, Chapter 4, Chapter 21
+**Markdown editor**, Chapter 19
+**Memory management**, Chapter 4, Chapter 16, Chapter 17
+**Message bus**, Chapter 4, Chapter 17
 
-  - Configuration, Chapter 4, Chapter 21
+  - Configuration, Chapter 4, Chapter 17
   - Debug mode, Chapter 4
   - Initialization, Chapter 5
-  - Rate limiting, Chapter 21
-  - Statistics, Chapter 4, Chapter 21
+  - Rate limiting, Chapter 17
+  - Statistics, Chapter 4, Chapter 17
 **Message envelope structure**, Chapter 4, Chapter 6, Appendix B
 **Message flow**, Chapter 6
 **Message IDs**, Chapter 4
 **Message lifecycle**, Chapter 4
 **Message patterns**, Chapter 6, Chapter 19
 **Message retention**, Chapter 4, Chapter 8
-**Message routing**, Chapter 4, Chapter 21
-**Message size limits**, Chapter 4, Chapter 21
+**Message routing**, Chapter 4, Chapter 17
+**Message size limits**, Chapter 4, Chapter 17
 **Message timestamps**, Chapter 4
 **Message topics**, Chapter 1, Chapter 4, Appendix A
-**Message tracing**, Chapter 18, Chapter 21
-**Message validation**, Chapter 4, Chapter 21
+**Message tracing**, Chapter 18, Chapter 17
+**Message validation**, Chapter 4, Chapter 17
 **Metadata (message)**, Chapter 4, Chapter 6
-**Method signatures**, Chapter 1, Chapter 21-25
+**Method signatures**, Chapter 1, Chapter 17-25
 **Microservices pattern**, Chapter 19
 **Migration guide**, Appendix D
 **MIME types**, Chapter 5
 **Mobile browser support**, Chapter 5
-**Modal dialogs**, Chapter 23
+**Modal dialogs**, Chapter 19
 **Module loading**, Chapter 5, Chapter 7
 **Multi-step forms**, Chapter 10
 **Multi-tenant systems**, Chapter 4
@@ -344,7 +344,7 @@
 **Network errors**, Chapter 11, Chapter 18
 **Nginx configuration**, Chapter 5, Chapter 20
 **Node.js backend**, Appendix G
-**Notifications**, Chapter 23
+**Notifications**, Chapter 19
 **NPM installation**, Chapter 5
 **NPM packages**, Appendix G
 
@@ -366,28 +366,28 @@
 
 ## P
 
-**Pagination**, Chapter 11, Chapter 22
+**Pagination**, Chapter 11, Chapter 18
 **PAN (Page Area Network)**, Chapter 1, Chapter 3, Chapter 4
-**pan-bus component**, Chapter 4, Chapter 21
+**pan-bus component**, Chapter 4, Chapter 17
 
-  - Attributes, Chapter 21
-  - Configuration, Chapter 4, Chapter 21
-  - Events, Chapter 21
-  - Methods, Chapter 21
-**pan-button component**, Chapter 23
-**pan-card component**, Chapter 23
+  - Attributes, Chapter 17
+  - Configuration, Chapter 4, Chapter 17
+  - Events, Chapter 17
+  - Methods, Chapter 17
+**pan-button component**, Chapter 19
+**pan-card component**, Chapter 19
 **pan-client API**, Chapter 4, Chapter 6
-**pan-data-table component**, Chapter 22
+**pan-data-table component**, Chapter 18
 **pan-form component**, Chapter 10
-**pan-markdown-editor component**, Chapter 23
-**pan-routes component**, Chapter 9, Chapter 21
-**pan-storage component**, Chapter 8, Chapter 22
-**pan-theme-provider component**, Chapter 15, Chapter 21
-**pan-theme-toggle component**, Chapter 15, Chapter 21
+**pan-markdown-editor component**, Chapter 19
+**pan-routes component**, Chapter 9, Chapter 17
+**pan-storage component**, Chapter 8, Chapter 18
+**pan-theme-provider component**, Chapter 15, Chapter 17
+**pan-theme-toggle component**, Chapter 15, Chapter 17
 **pan:deliver event**, Chapter 4, Chapter 6
 **pan:publish event**, Chapter 4, Chapter 6
-**pan:sys.ready event**, Chapter 5, Chapter 21
-**pan:sys.stats**, Chapter 4, Chapter 21
+**pan:sys.ready event**, Chapter 5, Chapter 17
+**pan:sys.stats**, Chapter 4, Chapter 17
 **Pattern matching (topics)**, Chapter 4
 **Performance optimization**, Chapter 16
 
@@ -422,7 +422,7 @@
 
 ## R
 
-**Rate limiting**, Chapter 21
+**Rate limiting**, Chapter 17
 **React comparison**, Chapter 2
 **Reactive patterns**, Chapter 8, Appendix G
 **Real-time features**, Chapter 13
@@ -487,11 +487,11 @@
   - Styling, Chapter 15
 **Shopping cart example**, Chapter 4, Chapter 8
 **Single Page Applications (SPA)**, Chapter 9
-**Slot elements**, Chapter 7, Chapter 23
+**Slot elements**, Chapter 7, Chapter 19
 **Smashing Magazine**, Appendix G
 **Social media**, Appendix G
 **Software requirements**, Chapter 5
-**Sorting (data)**, Chapter 22
+**Sorting (data)**, Chapter 18
 **Stack Overflow**, Appendix G
 **State management**, Chapter 8
 
@@ -519,7 +519,7 @@
 ## T
 
 **Tab synchronization**, Chapter 8, Chapter 13
-**Table components**, Chapter 22
+**Table components**, Chapter 18
 **Task list example**, Chapter 4, Chapter 5
 **Templates (HTML)**, Chapter 7
 **Testing**, Chapter 17
@@ -539,13 +539,13 @@
 **Throttling**, Chapter 16
 **Time-to-Interactive (TTI)**, Chapter 16
 **Timestamps (message)**, Chapter 4
-**Toast notifications**, Chapter 23
+**Toast notifications**, Chapter 19
 **TodoWrite patterns**, Chapter 19
 **Topic conventions**, Chapter 1, Chapter 4, Appendix A
 **Topic hierarchies**, Chapter 4, Appendix A
 **Topic patterns**, Chapter 4
 **Topic wildcards**, Chapter 4
-**Tracing (message)**, Chapter 18, Chapter 21
+**Tracing (message)**, Chapter 18, Chapter 17
 **Training resources**, Appendix G
 **Tree shaking**, Chapter 20
 **Troubleshooting**, Chapter 5, Chapter 18
@@ -564,7 +564,7 @@
 
 ## U
 
-**UI components**, Chapter 23
+**UI components**, Chapter 19
 **Undo/redo**, Chapter 8, Chapter 19
 **Unit testing**, Chapter 17
 **unpkg CDN**, Chapter 5, Appendix G
@@ -573,19 +573,19 @@
 **URL routing**, Chapter 9
 **User authentication**, Chapter 12
 **User input handling**, Chapter 10
-**Utility components**, Chapter 25
+**Utility components**, Chapter 21
 **UUID generation**, Chapter 4
 
 ## V
 
 **Validation**
   - Form validation, Chapter 10
-  - Message validation, Chapter 4, Chapter 21
+  - Message validation, Chapter 4, Chapter 17
 **Vercel deployment**, Chapter 20, Appendix G
 **Video tutorials**, Appendix G
 **Vim configuration**, Chapter 5
 **Virtual DOM**, Chapter 2, Chapter 4
-**Virtual scrolling**, Chapter 16, Chapter 22
+**Virtual scrolling**, Chapter 16, Chapter 18
 **Visual regression testing**, Chapter 17
 **Vite**, Chapter 5, Chapter 20
 **Vue comparison**, Chapter 2
@@ -608,9 +608,9 @@
 **WebStorm**, Chapter 5
 **Webpack**, Chapter 1, Chapter 20
 **Who should read this book**, Chapter 1
-**Wildcard subscriptions**, Chapter 4, Chapter 21
+**Wildcard subscriptions**, Chapter 4, Chapter 17
 **window.panClient**, Chapter 5, Chapter 6
-**window.__panReady**, Chapter 5, Chapter 21
+**window.__panReady**, Chapter 5, Chapter 17
 **Workshops**, Appendix G
 
 ## X
@@ -642,14 +642,14 @@
 
 ## Components Quick Reference
 
-**Core Components** (Chapter 21)
+**Core Components** (Chapter 17)
 
 - pan-bus
 - pan-theme-provider
 - pan-theme-toggle
 - pan-routes
 
-**Data Components** (Chapter 22)
+**Data Components** (Chapter 18)
 
 - pan-store
 - pan-storage
@@ -658,7 +658,7 @@
 - pan-filter
 - pan-sort
 
-**UI Components** (Chapter 23)
+**UI Components** (Chapter 19)
 
 - pan-button
 - pan-card
@@ -668,7 +668,7 @@
 - pan-accordion
 - pan-markdown-editor
 
-**Integration Components** (Chapter 24)
+**Integration Components** (Chapter 20)
 
 - pan-http
 - pan-websocket
@@ -676,7 +676,7 @@
 - pan-auth
 - pan-analytics
 
-**Utility Components** (Chapter 25)
+**Utility Components** (Chapter 21)
 
 - pan-logger
 - pan-validator

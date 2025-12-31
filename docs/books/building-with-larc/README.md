@@ -43,7 +43,7 @@ npm run build
 
 ### Part I: Foundations
 
-**[Chapter 1: Introduction](chapter-01-introduction.md)** (2,335 words)
+**[Chapter 1: Introduction](chapters/01-introduction.md)**
 
 - What is LARC?
 - Who should use this book
@@ -52,24 +52,7 @@ npm run build
 - Prerequisites and assumptions
 - Book conventions and notation
 
-**[Chapter 2: The Philosophy of LARC](chapter-02-philosophy.md)** (5,122 words)
-
-- The state management crisis
-- Message-passing architecture
-- DOM-native communication principles
-- Zero-dependency, zero-build philosophy
-- Progressive enhancement and graceful degradation
-- Comparison to other approaches (Redux, Vuex, MobX, Context API)
-
-**[Chapter 3: The LARC Story](chapter-03-story.md)** (3,400 words)
-
-- Origins and motivation
-- Design decisions and trade-offs
-- Evolution of the PAN (Page Area Network) concept
-- Real-world use cases and applications
-- Community and ecosystem
-
-**[Chapter 4: Core Concepts](chapter-04-core-concepts.md)** (5,000+ words)
+**[Chapter 2: Core Concepts](chapters/02-core-concepts.md)**
 
 - Message bus architecture
 - Pub/sub pattern in depth
@@ -77,9 +60,8 @@ npm run build
 - Message lifecycle
 - Components and composition
 - State management strategies
-- Event envelopes and metadata
 
-**[Chapter 5: Getting Started](chapter-05-getting-started.md)** (4,100 words)
+**[Chapter 3: Getting Started](chapters/03-getting-started.md)**
 
 - Installation and setup
 - Project structure recommendations
@@ -92,33 +74,15 @@ npm run build
 
 ### Part II: Building Applications
 
-**[Chapter 6: Basic Message Flow](chapter-06-basic-message-flow.md)** (3,936 words)
-
-- Publishing messages
-- Subscribing to topics
-- Wildcard patterns
-- Message retention
-- Unsubscribing and cleanup
-
-**[Chapter 7: Working with Components](chapter-07-working-with-components.md)** (4,203 words)
-
-- Creating web components
-- Component lifecycle
-- Shadow DOM considerations
-- Connecting components via PAN bus
-- Component communication patterns
-- Reusable component design
-
-**[Chapter 8: State Management](chapter-08-state-management.md)** (4,448 words)
+**[Chapter 4: State Management](chapters/04-state-management.md)**
 
 - Local vs. shared state
-- State persistence strategies
-- IndexedDB integration
-- OPFS (Origin Private File System)
-- Synchronization patterns
+- State persistence strategies (localStorage, IndexedDB, OPFS)
+- State synchronization patterns
+- Optimistic updates
 - Conflict resolution
 
-**[Chapter 9: Routing and Navigation](chapter-09-routing-and-navigation.md)** (4,000 words)
+**[Chapter 5: Routing and Navigation](chapters/05-routing-and-navigation.md)**
 
 - Client-side routing with pan-routes
 - Route definitions and patterns
@@ -127,7 +91,7 @@ npm run build
 - History management
 - SEO considerations
 
-**[Chapter 10: Forms and User Input](chapter-10-forms-and-user-input.md)** (4,200 words)
+**[Chapter 6: Forms and User Input](chapters/06-forms-and-user-input.md)**
 
 - Form handling patterns
 - Schema-driven forms
@@ -136,7 +100,7 @@ npm run build
 - Rich text editing
 - Markdown integration
 
-**[Chapter 11: Data Fetching and APIs](chapter-11-data-fetching-and-apis.md)** (4,100 words)
+**[Chapter 7: Data Fetching and APIs](chapters/07-data-fetching-and-apis.md)**
 
 - REST API integration
 - GraphQL connectors
@@ -145,7 +109,7 @@ npm run build
 - Error handling and retries
 - Caching strategies
 
-**[Chapter 12: Authentication and Authorization](chapter-12-authentication-and-authorization.md)** (3,900 words)
+**[Chapter 8: Authentication and Authorization](chapters/08-authentication-and-authorization.md)**
 
 - JWT authentication patterns
 - Session management
@@ -154,7 +118,7 @@ npm run build
 - Protected routes
 - Token refresh strategies
 
-**[Chapter 13: Real-time Features](chapter-13-realtime-features.md)** (3,800 words)
+**[Chapter 9: Real-time Features](chapters/09-realtime-features.md)**
 
 - WebSocket integration
 - SSE for live updates
@@ -162,7 +126,7 @@ npm run build
 - Web Workers for background tasks
 - Real-time collaboration patterns
 
-**[Chapter 14: File Management](chapter-14-file-management.md)** (3,700 words)
+**[Chapter 10: File Management](chapters/10-file-management.md)**
 
 - OPFS file operations
 - File browser components
@@ -171,7 +135,7 @@ npm run build
 - Directory navigation
 - Storage quotas and limits
 
-**[Chapter 15: Theming and Styling](chapter-15-theming-and-styling.md)** (3,800 words)
+**[Chapter 11: Theming and Styling](chapters/11-theming-and-styling.md)**
 
 - CSS custom properties
 - Theme system architecture
@@ -180,7 +144,7 @@ npm run build
 - Dynamic theme switching
 - Responsive design patterns
 
-**[Chapter 16: Performance Optimization](chapter-16-performance-optimization.md)** (4,200 words)
+**[Chapter 12: Performance Optimization](chapters/12-performance-optimization.md)**
 
 - Message filtering and routing efficiency
 - Component lazy loading
@@ -189,7 +153,7 @@ npm run build
 - Memory management
 - Bundle size optimization
 
-**[Chapter 17: Testing Strategies](chapter-17-testing-strategies.md)** (4,500 words)
+**[Chapter 13: Testing Strategies](chapters/13-testing-strategies.md)**
 
 - Unit testing components
 - Integration testing message flows
@@ -198,7 +162,7 @@ npm run build
 - Testing async operations
 - Test utilities and helpers
 
-**[Chapter 18: Error Handling and Debugging](chapter-18-error-handling-and-debugging.md)** (4,100 words)
+**[Chapter 14: Error Handling and Debugging](chapters/14-error-handling-and-debugging.md)**
 
 - Error boundaries
 - Message tracing
@@ -207,7 +171,7 @@ npm run build
 - Error reporting
 - Common pitfalls and solutions
 
-**[Chapter 19: Advanced Patterns](chapter-19-advanced-patterns.md)** (4,000 words)
+**[Chapter 15: Advanced Patterns](chapters/15-advanced-patterns.md)**
 
 - Message forwarding and bridging
 - Multi-bus architectures
@@ -216,7 +180,7 @@ npm run build
 - Plugin systems
 - Middleware patterns
 
-**[Chapter 20: Deployment and Production](chapter-20-deployment-and-production.md)** (4,200 words)
+**[Chapter 16: Deployment and Production](chapters/16-deployment-and-production.md)**
 
 - Build considerations (or lack thereof)
 - CDN deployment
@@ -229,32 +193,32 @@ npm run build
 
 ### Part III: Component Reference
 
-**[Chapter 21: Core Components](chapter-21-core-components.md)** (5,849 words)
+**[Chapter 17: Core Components](chapters/17-core-components.md)**
 
 - **pan-bus**: Message bus with pub/sub architecture
 - **pan-theme-provider**: Theme management system
 - **pan-theme-toggle**: Theme switching UI control
 - **pan-routes**: Message routing and transformation
 
-**[Chapter 22: Data Components](chapter-22-data-components.md)** (5,100 words)
+**[Chapter 18: Data Components](chapters/18-data-components.md)**
 
 - **pan-store**: Reactive state management
 - **pan-idb**: IndexedDB integration
 
-**[Chapter 23: UI Components](chapter-23-ui-components.md)** (4,138 words)
+**[Chapter 19: UI Components](chapters/19-ui-components.md)**
 
 - **pan-files**: File browser with OPFS
 - **pan-markdown-editor**: Rich markdown editor
 - **pan-markdown-renderer**: Markdown display
 
-**[Chapter 24: Integration Components](chapter-24-integration-components.md)** (5,977 words)
+**[Chapter 20: Integration Components](chapters/20-integration-components.md)**
 
 - **pan-data-connector**: REST API integration
 - **pan-graphql-connector**: GraphQL client
 - **pan-websocket**: WebSocket communication
 - **pan-sse**: Server-Sent Events
 
-**[Chapter 25: Utility Components](chapter-25-utility-components.md)** (4,800 words)
+**[Chapter 21: Utility Components](chapters/21-utility-components.md)**
 
 - **pan-debug**: Message tracing and debugging
 - **pan-forwarder**: HTTP message forwarding
@@ -320,21 +284,38 @@ npm run build
 
 ## Book Statistics
 
-- **Total Chapters**: 25 chapters + 7 appendices + index
-- **Total Word Count**: ~115,000 words
+- **Total Chapters**: 21 chapters + 7 appendices + index
+- **Total Word Count**: ~82,000 words
 - **Code Examples**: 200+ complete, working examples
 - **Components Documented**: 13 core LARC components
-- **Recipes**: 10 practical, copy-paste ready patterns
+- **Recipes**: 10+ practical, copy-paste ready patterns
+
+---
+
+## Browser Compatibility
+
+LARC requires modern browsers with support for:
+- **Custom Elements v1** (Chrome 54+, Firefox 63+, Safari 10.1+, Edge 79+)
+- **Shadow DOM v1** (Chrome 53+, Firefox 63+, Safari 10+, Edge 79+)
+- **ES Modules** (Chrome 61+, Firefox 60+, Safari 11+, Edge 79+)
+- **Import Maps** (Chrome 89+, Firefox 108+, Safari 16.4+, Edge 89+)
+
+**Minimum versions**:
+- Chrome/Edge: 89+ (March 2021)
+- Firefox: 108+ (December 2022)
+- Safari: 16.4+ (March 2023)
+
+All code examples in this reference manual work without polyfills or transpilation in these browsers. For production applications targeting older browsers, consider using appropriate polyfills.
 
 ---
 
 ## How to Use This Book
 
 ### As a Learning Resource
-Read Part I (Chapters 1-5) to understand LARC's philosophy and core concepts. Then work through Part II (Chapters 6-20) following the practical examples.
+Read Part I (Chapters 1-3) to understand LARC's philosophy and core concepts. Then work through Part II (Chapters 4-16) following the practical examples.
 
 ### As a Reference
-Keep Part III (Chapters 21-25) bookmarked for quick API lookups. Use the Index to quickly find specific topics, patterns, or components.
+Keep Part III (Chapters 17-21) bookmarked for quick API lookups. Use the Index to quickly find specific topics, patterns, or components.
 
 ### As a Problem-Solving Guide
 When you encounter a specific challenge, consult:

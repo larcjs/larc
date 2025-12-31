@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LARC Demo - Web Components + Messaging</title>
 
-  <!-- Load LARC autoloader -->
+  <!-- Load LARC components -->
   <script type="module" src="https://unpkg.com/@larcjs/core@1.1.2/src/pan.mjs"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/devtools@1.1.2/src/pan-inspector.mjs"></script>
 
   <style>
     * {
@@ -281,7 +282,7 @@
   <pan-bus enable-routing="false" debug="true"></pan-bus>
 
   <script type="module">
-    import { PanClient } from 'https://unpkg.com/@larcjs/core@1.1.2/src/index.js';
+    import { PanClient } from 'https://unpkg.com/@larcjs/core@1.1.2/src/pan-client.mjs';
 
     // Create client
     const client = new PanClient();

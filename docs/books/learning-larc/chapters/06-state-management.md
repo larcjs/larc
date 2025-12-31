@@ -480,10 +480,6 @@ class UserMenu extends HTMLElement {
 ***Figure 6.2:** pan-store Architecture*
 
 
-![**Figure 6.2:** pan-store Architecture](../images/06-state-management-9.png)
-***Figure 6.2:** pan-store Architecture*
-
-
 LARC provides a built-in component for state management:
 
 ```html
@@ -1260,3 +1256,12 @@ Choose the simplest solution that meets your needs, then scale up complexity as 
    - Check quota before storing
    - Clean up old data
    - Provide clear error messages when full
+
+---
+
+## Further Reading
+
+**For complete state management reference:**
+- *Building with LARC* Chapter 4: State Management - All state patterns and strategies
+- *Building with LARC* Chapter 18: Data Components - pan-store and pan-idb API reference
+- *Building with LARC* Appendix E: Recipes and Patterns - State management recipes

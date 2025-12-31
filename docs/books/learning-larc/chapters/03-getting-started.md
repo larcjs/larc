@@ -516,9 +516,9 @@ Display component receives update and re-renders
 
 ## Project Structure
 
-![**Figure 3.2:** LARC Deployment Architecture](../images/01-architecture-overview-5.png)
+![**Figure 3.1:** LARC Deployment Architecture](../images/01-architecture-overview-5.png)
 
-***Figure 3.2:** LARC Deployment Architecture*
+***Figure 3.1:** LARC Deployment Architecture*
 
 
 As your application grows, organization becomes important. Here's a recommended structure:
@@ -592,9 +592,9 @@ my-app/
 
 ## Import Maps Explained
 
-![**Figure 3.1:** Module Loading with Import Maps](../images/01-architecture-overview-4.png)
+![**Figure 3.2:** Module Loading with Import Maps](../images/01-architecture-overview-4.png)
 
-***Figure 3.1:** Module Loading with Import Maps*
+***Figure 3.2:** Module Loading with Import Maps*
 
 
 Import Maps are a browser standard that replaces the need for bundlers to resolve module paths.
@@ -1054,3 +1054,12 @@ You now have a solid foundation for building LARC applications. The next chapter
     - Import an external library (lodash, dayjs, etc.)
 
 Take your time with these exercises. Understanding these patterns now will make the rest of the book much easier.
+
+---
+
+## Further Reading
+
+**For detailed API reference and configuration options:**
+- *Building with LARC* Chapter 3: Getting Started - Complete installation options and troubleshooting
+- *Building with LARC* Chapter 2: Core Concepts - Architecture and messaging patterns reference
+- *Building with LARC* Appendix C: Configuration Options - All configuration parameters

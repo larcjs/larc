@@ -124,6 +124,43 @@ customElements.define('dash-board', Dashboard);
 **Rate limiting**: Increase `rate-limit` attribute for high-frequency apps
 **JSON errors**: Payloads must be JSON-serializable (no functions, DOM nodes, circular refs)
 
+### Errors
+
+The pan-bus component dispatches `pan:sys.error` events for error conditions:
+
+| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| `RATE_LIMIT` | Client exceeds rate limit | Increase `rate-limit` attribute or reduce publish frequency |
+| `MESSAGE_TOO_LARGE` | Message exceeds max size | Increase `max-message-size` or reduce payload size |
+| `INVALID_TOPIC` | Topic name is invalid | Use alphanumeric + dots (e.g., `user.login`) |
+| `SUBSCRIPTION_FAILED` | Handler threw exception | Fix handler code, check console for details |
+| `RETAINED_OVERFLOW` | Too many retained messages | Increase `max-retained` or clean up old messages |
+| `WILDCARD_DISABLED` | `*` wildcard used when disabled | Set `allow-global-wildcard="true"` |
+
+**Error handling example**:
+```javascript
+const bus = document.querySelector('pan-bus');
+
+// Listen for errors
+bus.addEventListener('pan:sys.error', (e) => {
+  const { code, message, details } = e.detail;
+  console.error(`PAN Bus Error [${code}]:`, message, details);
+
+  // Handle specific errors
+  if (code === 'RATE_LIMIT') {
+    // Slow down publishing
+    enableThrottling();
+  } else if (code === 'MESSAGE_TOO_LARGE') {
+    // Split large payloads
+    splitPayload(details.payload);
+  }
+});
+```
+
+**Exceptions thrown**:
+- `TypeError`: Invalid parameters (e.g., non-string topic, non-function handler)
+- `RangeError`: Attribute values out of bounds (e.g., negative rate-limit)
+
 ---
 
 ## pan-theme-provider
@@ -213,6 +250,31 @@ customElements.define('themed-app', ThemedApp);
 **Flash on load**: Set theme in inline `<script>` before loading components
 **Not updating**: Subscribe to `theme.changed` in `connectedCallback()`
 
+### Errors
+
+| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| Invalid theme value | `setTheme()` called with invalid value | Use "light", "dark", or "auto" only |
+| `matchMedia` not supported | Old browser | Provide polyfill or default to "light" |
+| localStorage quota | Storage full | Clear old data or use memory-only mode |
+
+**Error handling example**:
+```javascript
+const provider = document.querySelector('pan-theme-provider');
+
+try {
+  provider.setTheme('custom'); // Invalid!
+} catch (e) {
+  console.error('Theme error:', e.message);
+  // Fallback to auto
+  provider.setTheme('auto');
+}
+```
+
+**Exceptions thrown**:
+- `TypeError`: Invalid theme value passed to `setTheme()`
+- `DOMException`: localStorage access denied (privacy mode)
+
 ---
 
 ## pan-theme-toggle
@@ -267,6 +329,32 @@ customElements.define('themed-app', ThemedApp);
 **Not working**: Ensure `pan-theme-provider` exists
 **Wrong icon**: Component subscribes on connect; add after `pan:sys.ready`
 **Dropdown positioning**: Wrap in `position: relative` container
+
+### Errors
+
+| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| Provider not found | `pan-theme-provider` missing | Add `<pan-theme-provider>` to page |
+| Invalid variant | Unsupported `variant` attribute | Use "icon", "button", or "dropdown" |
+| Event not dispatched | pan-bus not ready | Wait for `pan:sys.ready` or add toggle after bus loads |
+
+**Error handling example**:
+```javascript
+// Ensure provider exists
+window.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.querySelector('pan-theme-toggle');
+  const provider = document.querySelector('pan-theme-provider');
+
+  if (!provider) {
+    console.warn('pan-theme-toggle requires pan-theme-provider');
+    // Add provider dynamically
+    const newProvider = document.createElement('pan-theme-provider');
+    document.body.prepend(newProvider);
+  }
+});
+```
+
+**Exceptions thrown**: None (component fails gracefully without provider)
 
 ---
 
@@ -520,6 +608,60 @@ console.log(routes.getStats());
 **Wrong matches**: Enable debug mode: `<pan-bus debug="true">`
 **Transform not found**: Register functions before adding routes
 **Wrong order**: Set explicit `order` property (lower executes first)
+
+### Errors
+
+Subscribe to errors using `onError()`:
+
+| Error Type | Cause | Resolution |
+|------------|-------|------------|
+| `INVALID_ROUTE` | Missing required fields (`name`, `match`, or `actions`) | Provide all required fields in route config |
+| `ROUTE_NOT_FOUND` | `update()` or `remove()` with invalid ID | Check route exists with `get(id)` first |
+| `PREDICATE_ERROR` | Invalid `where` operator or structure | Use supported operators: `eq`, `gt`, `lt`, `in`, `regex`, `and`, `or`, `not` |
+| `TRANSFORM_ERROR` | Transform function threw exception | Fix transform function or handle errors within it |
+| `TRANSFORM_NOT_FOUND` | `fnId` not registered | Call `registerTransformFn(id, fn)` before using |
+| `ACTION_ERROR` | Action execution failed | Check action configuration and registered handlers |
+| `HANDLER_NOT_FOUND` | `CALL` action with unregistered handler | Call `registerHandler(id, fn)` before using |
+
+**Error handling example**:
+```javascript
+const routes = window.pan.routes;
+
+// Subscribe to errors
+const unsubscribe = routes.onError((error) => {
+  console.error('Route error:', error);
+
+  // Handle specific errors
+  switch (error.code) {
+    case 'TRANSFORM_ERROR':
+      // Disable problematic route
+      routes.disable(error.routeId);
+      notifyAdmin('Route failed', error);
+      break;
+
+    case 'HANDLER_NOT_FOUND':
+      // Register missing handler
+      routes.registerHandler(error.handlerId, fallbackHandler);
+      break;
+  }
+});
+
+// Validate route before adding
+try {
+  routes.add({
+    name: 'My Route',
+    match: { type: 'test' },
+    actions: [{ type: 'LOG', level: 'info', template: 'Test' }]
+  });
+} catch (e) {
+  console.error('Failed to add route:', e.message);
+}
+```
+
+**Exceptions thrown**:
+- `Error`: Invalid route configuration (missing required fields)
+- `TypeError`: Invalid parameters (e.g., non-function handler)
+- `RangeError`: Invalid `order` value
 
 ---
 

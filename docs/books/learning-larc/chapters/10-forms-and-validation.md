@@ -637,3 +637,12 @@ This chapter covered:
 4. **Disable during submission** - Prevent double-submission
 5. **Show progress for uploads** - Users want to see progress
 6. **Handle errors gracefully** - Network can fail, handle it well
+
+---
+
+## Further Reading
+
+**For complete forms and validation reference:**
+- *Building with LARC* Chapter 6: Forms and User Input - All form patterns and validation strategies
+- *Building with LARC* Chapter 19: UI Components - pan-files and pan-markdown-editor reference
+- *Building with LARC* Appendix E: Recipes and Patterns - Form validation recipes
