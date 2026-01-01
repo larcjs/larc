@@ -238,16 +238,26 @@ class PgExporter extends HTMLElement {
         }
       });
 
-      // Sanitize href and src to prevent javascript: protocol
+      // Sanitize href and src to prevent scriptable protocols
       if (el.hasAttribute('href')) {
         const href = el.getAttribute('href');
-        if (href.toLowerCase().trim().startsWith('javascript:')) {
+        const hrefValue = href.toLowerCase().trim();
+        if (
+          hrefValue.startsWith('javascript:') ||
+          hrefValue.startsWith('data:') ||
+          hrefValue.startsWith('vbscript:')
+        ) {
           el.removeAttribute('href');
         }
       }
       if (el.hasAttribute('src')) {
         const src = el.getAttribute('src');
-        if (src.toLowerCase().trim().startsWith('javascript:')) {
+        const srcValue = src.toLowerCase().trim();
+        if (
+          srcValue.startsWith('javascript:') ||
+          srcValue.startsWith('data:') ||
+          srcValue.startsWith('vbscript:')
+        ) {
           el.removeAttribute('src');
         }
       }
