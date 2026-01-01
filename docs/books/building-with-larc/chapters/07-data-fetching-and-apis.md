@@ -7,6 +7,7 @@ Quick reference for API integration and data fetching in LARC applications. For 
 Modern web applications fetch data from APIs using REST, GraphQL, or WebSockets. LARC provides components and patterns for handling async data loading, caching, error recovery, and real-time updates.
 
 **Key Concepts**:
+
 - REST APIs: Standard HTTP methods (GET, POST, PUT, DELETE)
 - GraphQL: Query-based data fetching with precise field selection
 - Error handling: Retry logic, fallbacks, user feedback

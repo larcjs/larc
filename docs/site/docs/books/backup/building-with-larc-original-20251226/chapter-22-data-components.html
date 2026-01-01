@@ -1,0 +1,1198 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data Components · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Data Components">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">backup</a> / <a href="#">building-with-larc-original-20251226</a> / <span>chapter-22-data-components</span>
+      </div>
+      <article class="docs-content">
+        <h1>Data Components</h1>
+<em>In which we explore state management and persistent storage without losing track of what's true</em>
+<p>Data is the lifeblood of any application, but managing that data—keeping it consistent, synchronized, and available—is where complexity breeds. An application without proper data management is like a library where books randomly teleport between shelves. Eventually, nobody trusts anything they find.</p>
+<p>This chapter covers LARC's data components: tools designed to manage state and persistent storage in ways that feel predictable and maintainable. We'll explore <code>pan-store</code>, a reactive state management solution built on JavaScript Proxies and EventTarget, and <code>pan-idb</code>, a component that bridges IndexedDB with LARC's message bus. By the end, you'll understand how to build applications that handle data with discipline and grace.</p>
+<h2>Overview</h2>
+<p>LARC provides two core components for data management:</p>
+<ul><li><strong>pan-store</strong>: Reactive state management for in-memory application state</li>
+<li><strong>pan-idb</strong>: IndexedDB integration for persistent client-side storage</li>
+</ul>
+These components operate independently but complement each other. Use <code>pan-store</code> for reactive application state that needs to be synchronized across components. Use <code>pan-idb</code> when you need data to persist across sessions or when working with large datasets that exceed reasonable memory limits.
+<p>Both components communicate via the PAN bus, making them first-class participants in LARC's message-based architecture. State changes become messages. Database operations become requests. Everything flows through topics, maintaining the architectural consistency that makes LARC applications comprehensible.</p>
+<h2>pan-store: Reactive State Management</h2>
+<h3>Purpose</h3>
+<code>pan-store</code> provides reactive state management using JavaScript Proxies and the EventTarget API. It's designed for shared application state that needs to be observed by multiple components without tight coupling.
+<p>Think of it as a specialized key-value store that automatically notifies subscribers when values change. Set a property, and any component listening for that change receives a message. No manual event dispatching, no brittle observer patterns, just reactive updates that work.</p>
+<h3>When to Use</h3>
+<p>Use <code>pan-store</code> when you need:</p>
+<ul><li><strong>Shared state across components</strong>: User preferences, authentication status, shopping cart contents</li>
+<li><strong>Reactive updates</strong>: Components that need to re-render when specific values change</li>
+<li><strong>Middleware hooks</strong>: Logging, validation, or side effects on state changes</li>
+<li><strong>Derived values</strong>: Computed properties that depend on other state</li>
+<li><strong>Undo/redo functionality</strong>: State snapshots make time-travel debugging possible</li>
+</ul>
+<h3>When Not to Use</h3>
+<p>Avoid <code>pan-store</code> for:</p>
+<ul><li><strong>Local component state</strong>: Use plain JavaScript properties instead</li>
+<li><strong>Large datasets</strong>: IndexedDB or OPFS are better suited for bulk data</li>
+<li><strong>Transient UI state</strong>: Dropdown open/closed, hover states, animation frames</li>
+<li><strong>High-frequency updates</strong>: Thousands of changes per second may cause performance issues</li>
+</ul>
+<h3>Installation</h3>
+<pre><code class="language-javascript">import { createStore, bind } from &#039;./pan-store.mjs&#039;;</code></pre>
+<p>The module exports two functions:</p>
+<ul><li><code>createStore(initial)</code>: Creates a new reactive store</li>
+<li><code>bind(element, store, mapping, options)</code>: Binds form inputs to store properties</li>
+</ul>
+<h3>API Reference</h3>
+<p>#### createStore(initial)</p>
+<p>Creates a reactive store with optional initial state.</p>
+<strong>Parameters:</strong>
+<ul><li><code>initial</code> (Object, optional): Initial state object. Defaults to <code>{}</code></li>
+</ul>
+<strong>Returns:</strong> Store instance with the following methods and properties
+<strong>Example:</strong>
+<pre><code class="language-javascript">const store = createStore({
+  count: 0,
+  user: { name: &#039;Ada&#039;, role: &#039;admin&#039; }
+});</code></pre>
+<p>#### Store Properties</p>
+<strong>state</strong> (Proxy)
+<p>The reactive state object. Access and modify properties directly:</p>
+<pre><code class="language-javascript">store.state.count = 5;
+console.log(store.state.count); // 5</code></pre>
+<p>Any assignment triggers change events and notifies subscribers.</p>
+<p>#### Store Methods</p>
+<strong>subscribe(callback)</strong>
+<p>Subscribes to state changes.</p>
+<strong>Parameters:</strong>
+<ul><li><code>callback</code> (Function): Called when state changes. Receives event object with <code>detail</code> containing:</li>
+</ul>
+  - <code>key</code> (String): Changed property name
+  - <code>value</code> (Any): New value
+  - <code>oldValue</code> (Any): Previous value
+  - <code>state</code> (Proxy): Current state object
+<strong>Returns:</strong> Unsubscribe function
+<strong>Example:</strong>
+<pre><code class="language-javascript">const unsub = store.subscribe(({ detail }) =&gt; {
+  console.log(`${detail.key} changed from ${detail.oldValue} to ${detail.value}`);
+});
+
+// Later, unsubscribe
+unsub();</code></pre>
+<strong>set(key, value)</strong>
+<p>Sets a single property.</p>
+<strong>Parameters:</strong>
+<ul><li><code>key</code> (String): Property name</li>
+<li><code>value</code> (Any): New value</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.set(&#039;theme&#039;, &#039;dark&#039;);</code></pre>
+<strong>patch(object)</strong>
+<p>Merges multiple properties at once.</p>
+<strong>Parameters:</strong>
+<ul><li><code>object</code> (Object): Properties to merge</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.patch({
+  theme: &#039;dark&#039;,
+  fontSize: 16
+});</code></pre>
+<strong>update(fn)</strong>
+<p>Updates state using a function.</p>
+<strong>Parameters:</strong>
+<ul><li><code>fn</code> (Function): Receives current state snapshot, returns new state (or mutates and returns undefined)</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.update(state =&gt; {
+  state.count += 1;
+  return state;
+});</code></pre>
+<strong>select(path)</strong>
+<p>Retrieves nested value by dot-notation path.</p>
+<strong>Parameters:</strong>
+<ul><li><code>path</code> (String): Dot-separated property path</li>
+</ul>
+<strong>Returns:</strong> Value at path, or <code>undefined</code> if not found
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.state.user = { profile: { name: &#039;Ada&#039; } };
+const name = store.select(&#039;user.profile.name&#039;); // &#039;Ada&#039;</code></pre>
+<strong>derive(key, deps, computeFn)</strong>
+<p>Creates a computed/derived value.</p>
+<strong>Parameters:</strong>
+<ul><li><code>key</code> (String): Name for derived property</li>
+<li><code>deps</code> (Array|Function): Dependency property names, or compute function if omitted</li>
+<li><code>computeFn</code> (Function): Computation function receiving dependency values</li>
+</ul>
+<strong>Returns:</strong> Unsubscribe function
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.state.firstName = &#039;Ada&#039;;
+store.state.lastName = &#039;Lovelace&#039;;
+
+store.derive(&#039;fullName&#039;, [&#039;firstName&#039;, &#039;lastName&#039;], (first, last) =&gt; {
+  return `${first} ${last}`;
+});
+
+console.log(store.state.fullName); // &#039;Ada Lovelace&#039;</code></pre>
+<strong>batch(fn)</strong>
+<p>Batches multiple updates into single change event.</p>
+<strong>Parameters:</strong>
+<ul><li><code>fn</code> (Function): Receives object with <code>set(key, value)</code> method and <code>state</code> proxy</li>
+</ul>
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.batch(({ set }) =&gt; {
+  set(&#039;loading&#039;, true);
+  set(&#039;error&#039;, null);
+  set(&#039;data&#039;, null);
+});</code></pre>
+<strong>use(middleware)</strong>
+<p>Adds middleware function called on every state change.</p>
+<strong>Parameters:</strong>
+<ul><li><code>middleware</code> (Function): Receives object with <code>key</code>, <code>value</code>, <code>oldValue</code>, <code>state</code></li>
+</ul>
+<strong>Returns:</strong> Unsubscribe function
+<strong>Example:</strong>
+<pre><code class="language-javascript">const unuse = store.use(({ key, value }) =&gt; {
+  console.log(`[Middleware] ${key} = ${value}`);
+});</code></pre>
+<strong>snapshot()</strong>
+<p>Creates deep clone of current state.</p>
+<strong>Returns:</strong> Plain object with current state
+<strong>Example:</strong>
+<pre><code class="language-javascript">const current = store.snapshot();
+console.log(current); // { count: 5, theme: &#039;dark&#039; }</code></pre>
+<strong>reset()</strong>
+<p>Resets state to initial values.</p>
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.reset();</code></pre>
+<strong>has(key)</strong>
+<p>Checks if property exists (including derived properties).</p>
+<strong>Parameters:</strong>
+<ul><li><code>key</code> (String): Property name</li>
+</ul>
+<strong>Returns:</strong> Boolean
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.has(&#039;count&#039;); // true
+store.has(&#039;nonexistent&#039;); // false</code></pre>
+<strong>delete(key)</strong>
+<p>Removes property from state.</p>
+<strong>Parameters:</strong>
+<ul><li><code>key</code> (String): Property name</li>
+</ul>
+<strong>Returns:</strong> Boolean (true if deleted, false if didn't exist)
+<strong>Example:</strong>
+<pre><code class="language-javascript">store.delete(&#039;temporaryFlag&#039;);</code></pre>
+<strong>keys()</strong>
+<p>Returns all property names, including derived properties.</p>
+<strong>Returns:</strong> Array of strings
+<strong>Example:</strong>
+<pre><code class="language-javascript">const allKeys = store.keys(); // [&#039;count&#039;, &#039;theme&#039;, &#039;fullName&#039;]</code></pre>
+<p>#### Store Events</p>
+<strong>state</strong>
+<p>Emitted when state changes.</p>
+<strong>Event Detail:</strong>
+<ul><li><code>key</code> (String): Changed property name</li>
+<li><code>value</code> (Any): New value</li>
+<li><code>oldValue</code> (Any): Previous value</li>
+<li><code>state</code> (Proxy): Current state</li>
+<li><code>batch</code> (Boolean, optional): True if part of batch update</li>
+<li><code>changes</code> (Array, optional): Array of changes in batch</li>
+<li><code>deleted</code> (Boolean, optional): True if property was deleted</li>
+</ul>
+<strong>derived</strong>
+<p>Emitted when derived value updates.</p>
+<strong>Event Detail:</strong>
+<ul><li><code>key</code> (String): Derived property name</li>
+<li><code>value</code> (Any): New computed value</li>
+<li><code>state</code> (Proxy): Current state</li>
+</ul>
+<h3>bind(element, store, mapping, options)</h3>
+<p>Binds form inputs to store properties, creating two-way data binding.</p>
+<strong>Parameters:</strong>
+<ul><li><code>element</code> (HTMLElement): Container element</li>
+<li><code>store</code> (Store): Store instance</li>
+<li><code>mapping</code> (Object): Map of CSS selectors to property names</li>
+<li><code>options</code> (Object, optional):</li>
+</ul>
+  - <code>events</code> (Array): Events to listen for (default: <code>['input', 'change']</code>)
+<strong>Returns:</strong> Unbind function
+<strong>Example:</strong>
+<pre><code class="language-javascript">const store = createStore({ username: &#039;&#039;, email: &#039;&#039; });
+
+const form = document.querySelector(&#039;#user-form&#039;);
+const unbind = bind(form, store, {
+  &#039;input[name=&quot;username&quot;]&#039;: &#039;username&#039;,
+  &#039;input[name=&quot;email&quot;]&#039;: &#039;email&#039;
+});
+
+// Input changes update store
+// Store changes update inputs</code></pre>
+<h3>Complete Working Examples</h3>
+<p>#### Basic Counter</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Counter with pan-store&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div id=&quot;app&quot;&gt;
+    &lt;h1&gt;Count: &lt;span id=&quot;count&quot;&gt;0&lt;/span&gt;&lt;/h1&gt;
+    &lt;button id=&quot;increment&quot;&gt;+&lt;/button&gt;
+    &lt;button id=&quot;decrement&quot;&gt;-&lt;/button&gt;
+    &lt;button id=&quot;reset&quot;&gt;Reset&lt;/button&gt;
+  &lt;/div&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { createStore } from &#039;./pan-store.mjs&#039;;
+
+    const store = createStore({ count: 0 });
+
+    // Subscribe to changes
+    store.subscribe(({ detail }) =&gt; {
+      if (detail.key === &#039;count&#039;) {
+        document.getElementById(&#039;count&#039;).textContent = detail.value;
+      }
+    });
+
+    // Bind buttons
+    document.getElementById(&#039;increment&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      store.state.count++;
+    });
+
+    document.getElementById(&#039;decrement&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      store.state.count--;
+    });
+
+    document.getElementById(&#039;reset&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      store.reset();
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>#### Form Binding</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Form Binding&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;form id=&quot;settings&quot;&gt;
+    &lt;label&gt;
+      Theme:
+      &lt;select name=&quot;theme&quot;&gt;
+        &lt;option value=&quot;light&quot;&gt;Light&lt;/option&gt;
+        &lt;option value=&quot;dark&quot;&gt;Dark&lt;/option&gt;
+      &lt;/select&gt;
+    &lt;/label&gt;
+
+    &lt;label&gt;
+      &lt;input type=&quot;checkbox&quot; name=&quot;notifications&quot;&gt;
+      Enable notifications
+    &lt;/label&gt;
+
+    &lt;label&gt;
+      Font size:
+      &lt;input type=&quot;range&quot; name=&quot;fontSize&quot; min=&quot;12&quot; max=&quot;24&quot;&gt;
+    &lt;/label&gt;
+  &lt;/form&gt;
+
+  &lt;pre id=&quot;output&quot;&gt;&lt;/pre&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { createStore, bind } from &#039;./pan-store.mjs&#039;;
+
+    const store = createStore({
+      theme: &#039;light&#039;,
+      notifications: false,
+      fontSize: 16
+    });
+
+    // Bind form inputs
+    const form = document.getElementById(&#039;settings&#039;);
+    bind(form, store, {
+      &#039;select[name=&quot;theme&quot;]&#039;: &#039;theme&#039;,
+      &#039;input[name=&quot;notifications&quot;]&#039;: &#039;notifications&#039;,
+      &#039;input[name=&quot;fontSize&quot;]&#039;: &#039;fontSize&#039;
+    });
+
+    // Display current state
+    const output = document.getElementById(&#039;output&#039;);
+    store.subscribe(() =&gt; {
+      output.textContent = JSON.stringify(store.snapshot(), null, 2);
+    });
+
+    // Initial render
+    output.textContent = JSON.stringify(store.snapshot(), null, 2);
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>#### Derived Values and Middleware</p>
+<pre><code class="language-javascript">import { createStore } from &#039;./pan-store.mjs&#039;;
+
+// Create store with cart items
+const store = createStore({
+  items: [
+    { id: 1, name: &#039;Widget&#039;, price: 10, quantity: 2 },
+    { id: 2, name: &#039;Gadget&#039;, price: 25, quantity: 1 }
+  ],
+  taxRate: 0.08
+});
+
+// Derive subtotal
+store.derive(&#039;subtotal&#039;, [&#039;items&#039;], (items) =&gt; {
+  return items.reduce((sum, item) =&gt; sum + (item.price * item.quantity), 0);
+});
+
+// Derive tax
+store.derive(&#039;tax&#039;, [&#039;subtotal&#039;, &#039;taxRate&#039;], (subtotal, rate) =&gt; {
+  return subtotal * rate;
+});
+
+// Derive total
+store.derive(&#039;total&#039;, [&#039;subtotal&#039;, &#039;tax&#039;], (subtotal, tax) =&gt; {
+  return subtotal + tax;
+});
+
+// Add logging middleware
+store.use(({ key, value, oldValue }) =&gt; {
+  console.log(`State changed: ${key}`, { oldValue, newValue: value });
+});
+
+// Add validation middleware
+store.use(({ key, value }) =&gt; {
+  if (key === &#039;taxRate&#039; &amp;&amp; (value &lt; 0 || value &gt; 1)) {
+    console.error(&#039;Invalid tax rate:&#039;, value);
+  }
+});
+
+// Subscribe to total changes
+store.subscribe(({ detail }) =&gt; {
+  if (detail.key === &#039;total&#039;) {
+    console.log(`Cart total: $${detail.value.toFixed(2)}`);
+  }
+});
+
+// Access computed values
+console.log(store.state.subtotal); // 45
+console.log(store.state.tax); // 3.6
+console.log(store.state.total); // 48.6</code></pre>
+<p>#### Time-Travel Debugging</p>
+<pre><code class="language-javascript">import { createStore } from &#039;./pan-store.mjs&#039;;
+
+const store = createStore({ position: { x: 0, y: 0 } });
+
+// History tracking
+const history = [store.snapshot()];
+let historyIndex = 0;
+
+store.subscribe(() =&gt; {
+  // Save snapshot after each change
+  const snapshot = store.snapshot();
+  history.splice(historyIndex + 1);
+  history.push(snapshot);
+  historyIndex = history.length - 1;
+});
+
+function undo() {
+  if (historyIndex &gt; 0) {
+    historyIndex--;
+    store.patch(history[historyIndex]);
+  }
+}
+
+function redo() {
+  if (historyIndex &lt; history.length - 1) {
+    historyIndex++;
+    store.patch(history[historyIndex]);
+  }
+}
+
+// Make changes
+store.state.position = { x: 10, y: 20 };
+store.state.position = { x: 15, y: 25 };
+
+console.log(store.state.position); // { x: 15, y: 25 }
+
+undo();
+console.log(store.state.position); // { x: 10, y: 20 }
+
+undo();
+console.log(store.state.position); // { x: 0, y: 0 }
+
+redo();
+console.log(store.state.position); // { x: 10, y: 20 }</code></pre>
+<h3>Common Issues and Solutions</h3>
+<strong>Issue: Nested object changes not detected</strong>
+<pre><code class="language-javascript">// Problem: Direct mutation doesn&#039;t trigger updates
+store.state.user.name = &#039;Ada&#039;; // No event fired
+
+// Solution: Reassign the parent object
+store.state.user = { ...store.state.user, name: &#039;Ada&#039; };
+
+// Or use update()
+store.update(state =&gt; {
+  state.user.name = &#039;Ada&#039;;
+  return state;
+});</code></pre>
+<strong>Issue: Circular references causing errors</strong>
+<pre><code class="language-javascript">// Problem: snapshot() fails with circular structures
+const store = createStore({});
+store.state.self = store.state; // Circular reference
+
+// Solution: Avoid circular references, or use custom serialization
+store.use(({ key, value }) =&gt; {
+  // Custom handling for specific keys
+  if (key === &#039;self&#039;) {
+    return; // Skip serialization
+  }
+});</code></pre>
+<strong>Issue: Performance with frequent updates</strong>
+<pre><code class="language-javascript">// Problem: Hundreds of updates firing individual events
+for (let i = 0; i &lt; 1000; i++) {
+  store.state.count = i; // 1000 events
+}
+
+// Solution: Use batch()
+store.batch(({ set }) =&gt; {
+  for (let i = 0; i &lt; 1000; i++) {
+    set(&#039;count&#039;, i);
+  }
+}); // Single event</code></pre>
+<strong>Issue: Memory leaks from uncanceled subscriptions</strong>
+<pre><code class="language-javascript">// Problem: Subscriptions outlive components
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    store.subscribe(this.handleChange); // Never unsubscribed
+  }
+}
+
+// Solution: Store unsub function and call in disconnectedCallback
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.unsub = store.subscribe(this.handleChange);
+  }
+
+  disconnectedCallback() {
+    if (this.unsub) this.unsub();
+  }
+}</code></pre>
+<h2>pan-idb: IndexedDB Integration</h2>
+<h3>Purpose</h3>
+<code>pan-idb</code> provides a declarative interface to IndexedDB through LARC's message bus. It handles database initialization, schema upgrades, and CRUD operations via PAN topics, abstracting away IndexedDB's verbose API.
+<p>Think of it as a database component that speaks the language of your application. Instead of managing transactions, cursors, and error handlers manually, you publish messages and receive results.</p>
+<h3>When to Use</h3>
+<p>Use <code>pan-idb</code> when you need:</p>
+<ul><li><strong>Persistent client-side storage</strong>: Data that survives page reloads and browser restarts</li>
+<li><strong>Offline-first applications</strong>: Local storage for sync later</li>
+<li><strong>Large datasets</strong>: Gigabytes of data that won't fit in memory</li>
+<li><strong>Structured queries</strong>: Indexed lookups by multiple fields</li>
+<li><strong>File-like data</strong>: Blobs, images, or binary data</li>
+</ul>
+<h3>When Not to Use</h3>
+<p>Avoid <code>pan-idb</code> for:</p>
+<ul><li><strong>Simple key-value storage</strong>: Use localStorage or sessionStorage</li>
+<li><strong>Transient state</strong>: Use pan-store for in-memory state</li>
+<li><strong>Small data</strong>: Overhead isn't worth it for tiny datasets</li>
+<li><strong>Server-authoritative data</strong>: If server is source of truth, cache in memory instead</li>
+</ul>
+<h3>Installation</h3>
+<code>pan-idb</code> is a custom element. Include it in your HTML or create it programmatically:
+<pre><code class="language-html">&lt;pan-idb
+  database=&quot;myapp&quot;
+  store=&quot;documents&quot;
+  key-path=&quot;id&quot;
+  auto-increment
+  indexes=&#039;[{&quot;name&quot;:&quot;byTitle&quot;,&quot;keyPath&quot;:&quot;title&quot;},{&quot;name&quot;:&quot;byDate&quot;,&quot;keyPath&quot;:&quot;created&quot;}]&#039;&gt;
+&lt;/pan-idb&gt;</code></pre>
+<h3>Attributes Reference</h3>
+<strong>database</strong> (required)
+<p>Database name.</p>
+<strong>Type:</strong> String
+<strong>Default:</strong> None
+<strong>Example:</strong> <code>database="myapp"</code>
+<strong>version</strong>
+<p>Database version number. Increment to trigger schema upgrade.</p>
+<strong>Type:</strong> Number
+<strong>Default:</strong> <code>1</code>
+<strong>Example:</strong> <code>version="2"</code>
+<strong>store</strong> (required)
+<p>Object store name (similar to table name).</p>
+<strong>Type:</strong> String
+<strong>Default:</strong> None
+<strong>Example:</strong> <code>store="documents"</code>
+<strong>key-path</strong>
+<p>Property name to use as primary key.</p>
+<strong>Type:</strong> String
+<strong>Default:</strong> <code>"id"</code>
+<strong>Example:</strong> <code>key-path="documentId"</code>
+<strong>auto-increment</strong>
+<p>Use auto-incrementing keys. Presence of attribute enables it.</p>
+<strong>Type:</strong> Boolean
+<strong>Default:</strong> <code>false</code>
+<strong>Example:</strong> <code>auto-increment</code> (no value needed)
+<strong>indexes</strong>
+<p>JSON array of index configurations.</p>
+<strong>Type:</strong> JSON String
+<strong>Default:</strong> <code>[]</code>
+<strong>Format:</strong>
+<pre><code class="language-json">[
+  {
+    &quot;name&quot;: &quot;byTitle&quot;,
+    &quot;keyPath&quot;: &quot;title&quot;,
+    &quot;unique&quot;: false,
+    &quot;multiEntry&quot;: false
+  }
+]</code></pre>
+<h3>PAN Topics</h3>
+<p>All topics follow the pattern <code>{store}.idb.{operation}</code>. For a store named <code>documents</code>, topics are:</p>
+<p>#### Subscribe Topics (Commands)</p>
+<strong>{store}.idb.get</strong>
+<p>Retrieve item by key.</p>
+<strong>Message Data:</strong>
+<ul><li><code>key</code> (Any): Item key</li>
+</ul>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.get&#039;,
+  data: { key: 123 }
+});</code></pre>
+<strong>{store}.idb.put</strong>
+<p>Insert or update item.</p>
+<strong>Message Data:</strong>
+<ul><li><code>item</code> (Object): Item to store</li>
+</ul>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.put&#039;,
+  data: {
+    item: { id: 123, title: &#039;Report&#039;, content: &#039;...&#039; }
+  }
+});</code></pre>
+<strong>{store}.idb.add</strong>
+<p>Insert item (fails if key exists).</p>
+<strong>Message Data:</strong>
+<ul><li><code>item</code> (Object): Item to add</li>
+</ul>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.add&#039;,
+  data: {
+    item: { id: 456, title: &#039;New Doc&#039; }
+  }
+});</code></pre>
+<strong>{store}.idb.delete</strong>
+<p>Delete item by key.</p>
+<strong>Message Data:</strong>
+<ul><li><code>key</code> (Any): Item key</li>
+</ul>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.delete&#039;,
+  data: { key: 123 }
+});</code></pre>
+<strong>{store}.idb.clear</strong>
+<p>Delete all items.</p>
+<strong>Message Data:</strong> Empty object <code>{}</code>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.clear&#039;,
+  data: {}
+});</code></pre>
+<strong>{store}.idb.list</strong>
+<p>List items with optional filtering.</p>
+<strong>Message Data:</strong>
+<ul><li><code>index</code> (String, optional): Index name to use</li>
+<li><code>range</code> (IDBKeyRange, optional): Key range for filtering</li>
+<li><code>direction</code> (String, optional): <code>'next'</code>, <code>'prev'</code>, <code>'nextunique'</code>, <code>'prevunique'</code></li>
+<li><code>limit</code> (Number, optional): Maximum results</li>
+</ul>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.list&#039;,
+  data: {
+    index: &#039;byDate&#039;,
+    direction: &#039;prev&#039;,
+    limit: 10
+  }
+});</code></pre>
+<strong>{store}.idb.query</strong>
+<p>Query by index.</p>
+<strong>Message Data:</strong>
+<ul><li><code>index</code> (String): Index name</li>
+<li><code>value</code> (Any): Value to match</li>
+</ul>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.query&#039;,
+  data: {
+    index: &#039;byTitle&#039;,
+    value: &#039;Report&#039;
+  }
+});</code></pre>
+<strong>{store}.idb.count</strong>
+<p>Count items.</p>
+<strong>Message Data:</strong>
+<ul><li><code>index</code> (String, optional): Index name</li>
+</ul>
+<strong>Response:</strong> <code>{store}.idb.result</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">pc.publish({
+  topic: &#039;documents.idb.count&#039;,
+  data: {}
+});</code></pre>
+<p>#### Publish Topics (Results)</p>
+<strong>{store}.idb.ready</strong>
+<p>Published when database is initialized and ready.</p>
+<strong>Event Data:</strong>
+<ul><li><code>database</code> (String): Database name</li>
+<li><code>store</code> (String): Store name</li>
+</ul>
+<strong>{store}.idb.result</strong>
+<p>Published after successful operation.</p>
+<strong>Event Data:</strong>
+<ul><li><code>operation</code> (String): Operation name (<code>'get'</code>, <code>'put'</code>, etc.)</li>
+<li><code>success</code> (Boolean): Always <code>true</code></li>
+<li><code>requestId</code> (String, optional): Original request ID</li>
+<li>Additional fields depend on operation:</li>
+</ul>
+  - <code>get</code>: <code>item</code> (Object)
+  - <code>put</code>/<code>add</code>: <code>key</code> (Any)
+  - <code>list</code>/<code>query</code>: <code>items</code> (Array)
+  - <code>count</code>: <code>count</code> (Number)
+<strong>{store}.idb.error</strong>
+<p>Published after failed operation.</p>
+<strong>Event Data:</strong>
+<ul><li><code>operation</code> (String): Operation name</li>
+<li><code>success</code> (Boolean): Always <code>false</code></li>
+<li><code>error</code> (String): Error message</li>
+<li><code>requestId</code> (String, optional): Original request ID</li>
+</ul>
+<h3>Methods Reference</h3>
+<p>The component also exposes JavaScript methods for direct usage:</p>
+<strong>async get(key)</strong>
+<p>Retrieve item by key.</p>
+<strong>Returns:</strong> Promise resolving to item or <code>undefined</code>
+<strong>Example:</strong>
+<pre><code class="language-javascript">const idb = document.querySelector(&#039;pan-idb&#039;);
+const doc = await idb.get(123);</code></pre>
+<strong>async put(item)</strong>
+<p>Insert or update item.</p>
+<strong>Returns:</strong> Promise resolving to key
+<strong>Example:</strong>
+<pre><code class="language-javascript">const key = await idb.put({ id: 123, title: &#039;Updated&#039; });</code></pre>
+<strong>async add(item)</strong>
+<p>Insert item (throws if exists).</p>
+<strong>Returns:</strong> Promise resolving to key
+<strong>async delete(key)</strong>
+<p>Delete item.</p>
+<strong>Returns:</strong> Promise resolving to <code>undefined</code>
+<strong>async clear()</strong>
+<p>Delete all items.</p>
+<strong>Returns:</strong> Promise resolving to <code>undefined</code>
+<strong>async list(options)</strong>
+<p>List items.</p>
+<strong>Parameters:</strong>
+<ul><li><code>options</code> (Object): Same as message data</li>
+</ul>
+<strong>Returns:</strong> Promise resolving to array of items
+<strong>async query(index, value)</strong>
+<p>Query by index.</p>
+<strong>Returns:</strong> Promise resolving to array of items
+<strong>async count(index)</strong>
+<p>Count items.</p>
+<strong>Returns:</strong> Promise resolving to number
+<h3>Complete Working Examples</h3>
+<p>#### Document Storage</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;Document Manager&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-idb
+    database=&quot;docapp&quot;
+    store=&quot;documents&quot;
+    key-path=&quot;id&quot;
+    auto-increment
+    indexes=&#039;[
+      {&quot;name&quot;:&quot;byTitle&quot;,&quot;keyPath&quot;:&quot;title&quot;},
+      {&quot;name&quot;:&quot;byCreated&quot;,&quot;keyPath&quot;:&quot;created&quot;}
+    ]&#039;&gt;
+  &lt;/pan-idb&gt;
+
+  &lt;form id=&quot;doc-form&quot;&gt;
+    &lt;input name=&quot;title&quot; placeholder=&quot;Title&quot; required&gt;
+    &lt;textarea name=&quot;content&quot; placeholder=&quot;Content&quot;&gt;&lt;/textarea&gt;
+    &lt;button type=&quot;submit&quot;&gt;Save&lt;/button&gt;
+  &lt;/form&gt;
+
+  &lt;ul id=&quot;doc-list&quot;&gt;&lt;/ul&gt;
+
+  &lt;script type=&quot;module&quot;&gt;
+    import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+    const pc = new PanClient();
+    const form = document.getElementById(&#039;doc-form&#039;);
+    const list = document.getElementById(&#039;doc-list&#039;);
+
+    // Wait for database ready
+    pc.subscribe(&#039;documents.idb.ready&#039;, loadDocuments);
+
+    // Save document
+    form.addEventListener(&#039;submit&#039;, async (e) =&gt; {
+      e.preventDefault();
+      const formData = new FormData(form);
+
+      pc.publish({
+        topic: &#039;documents.idb.add&#039;,
+        data: {
+          item: {
+            title: formData.get(&#039;title&#039;),
+            content: formData.get(&#039;content&#039;),
+            created: Date.now()
+          }
+        }
+      });
+
+      form.reset();
+    });
+
+    // Listen for save results
+    pc.subscribe(&#039;documents.idb.result&#039;, (msg) =&gt; {
+      if (msg.data.operation === &#039;add&#039;) {
+        loadDocuments();
+      }
+    });
+
+    // Load and display documents
+    function loadDocuments() {
+      pc.publish({
+        topic: &#039;documents.idb.list&#039;,
+        data: {
+          index: &#039;byCreated&#039;,
+          direction: &#039;prev&#039;,
+          limit: 20
+        }
+      });
+    }
+
+    pc.subscribe(&#039;documents.idb.result&#039;, (msg) =&gt; {
+      if (msg.data.operation === &#039;list&#039;) {
+        renderDocuments(msg.data.items);
+      }
+    });
+
+    function renderDocuments(docs) {
+      list.innerHTML = docs.map(doc =&gt; `
+        &lt;li&gt;
+          &lt;strong&gt;${doc.title}&lt;/strong&gt;
+          &lt;p&gt;${doc.content}&lt;/p&gt;
+          &lt;small&gt;${new Date(doc.created).toLocaleString()}&lt;/small&gt;
+          &lt;button onclick=&quot;deleteDoc(${doc.id})&quot;&gt;Delete&lt;/button&gt;
+        &lt;/li&gt;
+      `).join(&#039;&#039;);
+    }
+
+    window.deleteDoc = (id) =&gt; {
+      pc.publish({
+        topic: &#039;documents.idb.delete&#039;,
+        data: { key: id }
+      });
+    };
+
+    pc.subscribe(&#039;documents.idb.result&#039;, (msg) =&gt; {
+      if (msg.data.operation === &#039;delete&#039;) {
+        loadDocuments();
+      }
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>#### Direct API Usage</p>
+<pre><code class="language-javascript">// Get reference to component
+const idb = document.querySelector(&#039;pan-idb&#039;);
+
+// Wait for ready
+await customElements.whenDefined(&#039;pan-idb&#039;);
+await idb.initPromise;
+
+// CRUD operations
+const id = await idb.add({
+  title: &#039;Report Q4&#039;,
+  status: &#039;draft&#039;,
+  created: Date.now()
+});
+
+const doc = await idb.get(id);
+console.log(doc);
+
+doc.status = &#039;published&#039;;
+await idb.put(doc);
+
+// Query by index
+const drafts = await idb.query(&#039;byStatus&#039;, &#039;draft&#039;);
+console.log(`Found ${drafts.length} drafts`);
+
+// List all with limit
+const recent = await idb.list({
+  index: &#039;byCreated&#039;,
+  direction: &#039;prev&#039;,
+  limit: 5
+});
+
+// Count items
+const total = await idb.count();
+console.log(`Total documents: ${total}`);
+
+// Delete
+await idb.delete(id);</code></pre>
+<p>#### Offline Task Queue</p>
+<pre><code class="language-javascript">import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+class OfflineQueue {
+  constructor() {
+    this.pc = new PanClient();
+    this.setupDatabase();
+    this.setupListeners();
+  }
+
+  setupDatabase() {
+    const idb = document.createElement(&#039;pan-idb&#039;);
+    idb.setAttribute(&#039;database&#039;, &#039;offline-queue&#039;);
+    idb.setAttribute(&#039;store&#039;, &#039;tasks&#039;);
+    idb.setAttribute(&#039;key-path&#039;, &#039;id&#039;);
+    idb.setAttribute(&#039;auto-increment&#039;, &#039;&#039;);
+    idb.setAttribute(&#039;indexes&#039;, JSON.stringify([
+      { name: &#039;byStatus&#039;, keyPath: &#039;status&#039; },
+      { name: &#039;byTimestamp&#039;, keyPath: &#039;timestamp&#039; }
+    ]));
+    document.body.appendChild(idb);
+    this.idb = idb;
+  }
+
+  setupListeners() {
+    // Process queue when online
+    window.addEventListener(&#039;online&#039;, () =&gt; this.processQueue());
+
+    // Listen for new tasks
+    this.pc.subscribe(&#039;queue.add&#039;, (msg) =&gt; {
+      this.enqueue(msg.data.task);
+    });
+  }
+
+  async enqueue(task) {
+    await this.idb.add({
+      ...task,
+      status: &#039;pending&#039;,
+      timestamp: Date.now()
+    });
+
+    if (navigator.onLine) {
+      this.processQueue();
+    }
+  }
+
+  async processQueue() {
+    const pending = await this.idb.query(&#039;byStatus&#039;, &#039;pending&#039;);
+
+    for (const task of pending) {
+      try {
+        await this.executeTask(task);
+        await this.idb.delete(task.id);
+      } catch (error) {
+        console.error(&#039;Task failed:&#039;, error);
+        // Update task status
+        task.status = &#039;failed&#039;;
+        task.error = error.message;
+        await this.idb.put(task);
+      }
+    }
+  }
+
+  async executeTask(task) {
+    // Execute actual task (e.g., API call)
+    const response = await fetch(task.url, {
+      method: task.method,
+      body: JSON.stringify(task.data)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    return response.json();
+  }
+}
+
+// Usage
+const queue = new OfflineQueue();
+
+// Enqueue tasks
+queue.pc.publish({
+  topic: &#039;queue.add&#039;,
+  data: {
+    task: {
+      url: &#039;/api/items&#039;,
+      method: &#039;POST&#039;,
+      data: { name: &#039;New Item&#039; }
+    }
+  }
+});</code></pre>
+<p>#### Syncing with pan-store</p>
+<pre><code class="language-javascript">import { createStore } from &#039;./pan-store.mjs&#039;;
+import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+class PersistentStore {
+  constructor(storeName, initialState = {}) {
+    this.storeName = storeName;
+    this.store = createStore(initialState);
+    this.pc = new PanClient();
+    this.setupPersistence();
+    this.loadPersistedState();
+  }
+
+  setupPersistence() {
+    // Create IndexedDB component
+    const idb = document.createElement(&#039;pan-idb&#039;);
+    idb.setAttribute(&#039;database&#039;, &#039;persistent-stores&#039;);
+    idb.setAttribute(&#039;store&#039;, &#039;states&#039;);
+    idb.setAttribute(&#039;key-path&#039;, &#039;name&#039;);
+    document.body.appendChild(idb);
+    this.idb = idb;
+
+    // Save on every change
+    this.store.subscribe(({ detail }) =&gt; {
+      this.persist();
+    });
+  }
+
+  async loadPersistedState() {
+    await customElements.whenDefined(&#039;pan-idb&#039;);
+    await this.idb.initPromise;
+
+    const saved = await this.idb.get(this.storeName);
+    if (saved &amp;&amp; saved.state) {
+      this.store.patch(saved.state);
+    }
+  }
+
+  async persist() {
+    const snapshot = this.store.snapshot();
+    await this.idb.put({
+      name: this.storeName,
+      state: snapshot,
+      updated: Date.now()
+    });
+  }
+
+  get state() {
+    return this.store.state;
+  }
+}
+
+// Usage
+const appStore = new PersistentStore(&#039;app&#039;, {
+  theme: &#039;light&#039;,
+  sidebarOpen: true,
+  fontSize: 14
+});
+
+// Changes automatically persist
+appStore.state.theme = &#039;dark&#039;;
+
+// State restored on page reload</code></pre>
+<h3>Common Issues and Solutions</h3>
+<strong>Issue: Database version conflicts</strong>
+<pre><code class="language-javascript">// Problem: Different tabs have different versions
+// Tab 1 opens v1, Tab 2 tries v2, Tab 1 blocks upgrade
+
+// Solution: Handle versionchange event
+const idb = document.querySelector(&#039;pan-idb&#039;);
+idb.db.addEventListener(&#039;versionchange&#039;, () =&gt; {
+  idb.db.close();
+  alert(&#039;Database upgraded. Please reload page.&#039;);
+});</code></pre>
+<strong>Issue: Quota exceeded errors</strong>
+<pre><code class="language-javascript">// Problem: Storing too much data
+// Error: QuotaExceededError
+
+// Solution: Check available storage
+if (navigator.storage &amp;&amp; navigator.storage.estimate) {
+  const estimate = await navigator.storage.estimate();
+  const percent = (estimate.usage / estimate.quota) * 100;
+
+  if (percent &gt; 90) {
+    console.warn(&#039;Storage nearly full:&#039;, percent.toFixed(1) + &#039;%&#039;);
+    // Trigger cleanup
+  }
+}</code></pre>
+<strong>Issue: Index not working after changes</strong>
+<pre><code class="language-javascript">// Problem: Modified keyPath but index still references old path
+
+// Solution: Increment version and recreate indexes
+// Change version=&quot;1&quot; to version=&quot;2&quot; in HTML
+// onupgradeneeded handler will recreate indexes</code></pre>
+<strong>Issue: Transactions timing out</strong>
+<pre><code class="language-javascript">// Problem: Long-running operation causes transaction timeout
+
+// Solution: Break into smaller transactions
+async function bulkInsert(items) {
+  const BATCH_SIZE = 100;
+
+  for (let i = 0; i &lt; items.length; i += BATCH_SIZE) {
+    const batch = items.slice(i, i + BATCH_SIZE);
+
+    for (const item of batch) {
+      await idb.add(item);
+    }
+
+    // Allow other operations between batches
+    await new Promise(resolve =&gt; setTimeout(resolve, 0));
+  }
+}</code></pre>
+<h2>Combining pan-store and pan-idb</h2>
+<p>The real power emerges when combining reactive state with persistent storage:</p>
+<pre><code class="language-javascript">import { createStore } from &#039;./pan-store.mjs&#039;;
+
+class HybridStore {
+  constructor(name, initial = {}) {
+    this.name = name;
+    this.memory = createStore(initial);
+    this.setupPersistence();
+    this.setupSync();
+  }
+
+  setupPersistence() {
+    const idb = document.createElement(&#039;pan-idb&#039;);
+    idb.setAttribute(&#039;database&#039;, &#039;hybrid-stores&#039;);
+    idb.setAttribute(&#039;store&#039;, &#039;data&#039;);
+    idb.setAttribute(&#039;key-path&#039;, &#039;key&#039;);
+    document.body.appendChild(idb);
+    this.idb = idb;
+  }
+
+  async setupSync() {
+    await customElements.whenDefined(&#039;pan-idb&#039;);
+    await this.idb.initPromise;
+
+    // Load persisted data
+    const items = await this.idb.list();
+    for (const item of items) {
+      if (item.store === this.name) {
+        this.memory.state[item.key] = item.value;
+      }
+    }
+
+    // Sync changes to IndexedDB
+    this.memory.subscribe(async ({ detail }) =&gt; {
+      if (detail.deleted) {
+        await this.idb.delete(`${this.name}.${detail.key}`);
+      } else {
+        await this.idb.put({
+          key: `${this.name}.${detail.key}`,
+          store: this.name,
+          value: detail.value,
+          updated: Date.now()
+        });
+      }
+    });
+  }
+
+  get state() {
+    return this.memory.state;
+  }
+
+  subscribe(fn) {
+    return this.memory.subscribe(fn);
+  }
+}
+
+// Usage: reactive AND persistent
+const userPrefs = new HybridStore(&#039;preferences&#039;, {
+  theme: &#039;light&#039;,
+  language: &#039;en&#039;
+});
+
+// Reactive updates
+userPrefs.subscribe(({ detail }) =&gt; {
+  console.log(&#039;Preference changed:&#039;, detail.key);
+});
+
+// Changes persist automatically
+userPrefs.state.theme = &#039;dark&#039;;</code></pre>
+<h2>Related Components</h2>
+<ul><li><strong>pan-client</strong>: Underlying message bus for PAN communication</li>
+<li><strong>pan-persistence-strategy</strong>: Advanced persistence patterns</li>
+<li><strong>pan-offline-sync</strong>: Synchronization with remote servers</li>
+<li><strong>pan-event</strong>: Event delegation and routing</li>
+</ul>
+<h2>Best Practices</h2>
+<li><strong>Choose the right tool</strong>: Use pan-store for reactive state, pan-idb for persistence</li>
+<li><strong>Avoid excessive persistence</strong>: Don't save every keystroke to IndexedDB</li>
+<li><strong>Version your schemas</strong>: Plan for database migrations</li>
+<li><strong>Handle errors gracefully</strong>: Storage operations can fail</li>
+<li><strong>Test offline scenarios</strong>: Ensure app works without network</li>
+<li><strong>Clean up subscriptions</strong>: Prevent memory leaks</li>
+<li><strong>Use indexes wisely</strong>: Every index adds storage overhead</li>
+<li><strong>Batch operations</strong>: Group related changes when possible</li>
+<li><strong>Monitor storage quota</strong>: Don't assume unlimited space</li>
+<li><strong>Document your state shape</strong>: Make data structures explicit</li>
+<h2>Conclusion</h2>
+<p>Data management doesn't have to be chaotic. With <code>pan-store</code> and <code>pan-idb</code>, you have tools that handle state and persistence in ways that feel natural within LARC's architecture. Changes flow through messages, operations return predictable results, and components stay loosely coupled.</p>
+<p>The key is choosing the right abstraction for your data. Ephemeral UI state stays in component properties. Shared reactive state lives in pan-store. Persistent data goes in pan-idb. Everything communicates via the PAN bus.</p>
+<p>When you structure your data management this way, applications become comprehensible again. You know where state lives, how it changes, and when it persists. That clarity—knowing what's true about your application—is worth more than any clever framework feature.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/backup/building-with-larc-original-20251226/chapter-22-data-components.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

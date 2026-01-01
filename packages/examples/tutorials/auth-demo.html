@@ -214,6 +214,10 @@
 
   <!-- PAN Core -->
   <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module">
+    // Load autoloader for component discovery
+    await import('../src/pan.mjs');
+  </script>
   <script type="module" src="/ui/pan-client.mjs"></script>
   <script type="module" src="/ui/pan-auth.mjs"></script>
   <script type="module" src="/ui/pan-data-connector.mjs"></script>

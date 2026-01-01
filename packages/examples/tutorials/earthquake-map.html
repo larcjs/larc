@@ -290,6 +290,10 @@
 
   <!-- App Logic -->
   <script type="module">
+    // Load autoloader to enable component discovery
+    await import('../src/pan.mjs');
+
+    // Then import app dependencies
     import { PanClient } from '/core/pan-client.mjs';
     const pc = new PanClient();
 

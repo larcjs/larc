@@ -127,8 +127,8 @@ const unsubscribe = pan.subscribe(&#039;topic.name&#039;, (data) =&gt; {
 unsubscribe();</code></pre>
 <p>That's the foundation. Everything else builds on these three operations.</p>
 <h2>Topics and Namespaces</h2>
-<p>!<a href="../images/05-pan-bus-3.png"><strong>Figure 5.3:</strong> Topic Namespace Structure</a></p>
-<strong><em>Figure 5.3:</strong> Topic Namespace Structure</em>
+<p>!<a href="../images/05-pan-bus-3.png"><strong>Figure 5.2:</strong> Topic Namespace Structure</a></p>
+<strong><em>Figure 5.2:</strong> Topic Namespace Structure</em>
 <p>Topics are the routing keys for messages. Well-designed topics make your application's data flow clear and maintainable.</p>
 <h3>Topic Naming Conventions</h3>
 <p>Use dot notation to create hierarchies:</p>
@@ -177,8 +177,8 @@ app.theme.change
 app.modal.open
 app.modal.close</code></pre>
 <h3>Wildcards</h3>
-<p>!<a href="../images/05-pan-bus-4.png"><strong>Figure 5.4:</strong> Wildcard Subscription Matching</a></p>
-<strong><em>Figure 5.4:</strong> Wildcard Subscription Matching</em>
+<p>!<a href="../images/05-pan-bus-4.png"><strong>Figure 5.3:</strong> Wildcard Subscription Matching</a></p>
+<strong><em>Figure 5.3:</strong> Wildcard Subscription Matching</em>
 <p>Subscribe to multiple topics using wildcards:</p>
 <pre><code class="language-javascript">// Subscribe to all user events
 pan.subscribe(&#039;user.*&#039;, (data) =&gt; {
@@ -231,10 +231,8 @@ pan.publish(&#039;user.profile.updated&#039;, { user });
 // ❌ Bad - too nested
 pan.publish(&#039;app.domain.user.entity.profile.action.updated&#039;, { user });</code></pre>
 <h2>Publishing Messages</h2>
-<p>!<a href="../images/05-pan-bus-2.png"><strong>Figure 5.2:</strong> Message Flow Sequence</a></p>
-<strong><em>Figure 5.2:</strong> Message Flow Sequence</em>
-<p>!<a href="../images/05-pan-bus-2.png"><strong>Figure 5.2:</strong> Message Flow Sequence</a>
-<strong><em>Figure 5.2:</strong> Message Flow Sequence</em></p>
+<p>!<a href="../images/05-pan-bus-2.png"><strong>Figure 5.4:</strong> Message Flow Sequence</a></p>
+<strong><em>Figure 5.4:</strong> Message Flow Sequence</em>
 <p>Publishing is straightforward, but there are patterns and options to understand.</p>
 <h3>Basic Publishing</h3>
 <pre><code class="language-javascript">pan.publish(&#039;event.name&#039;, { any: &#039;data&#039; });</code></pre>
@@ -485,8 +483,8 @@ pan.subscribe(&#039;notification.*&#039;, (notification) =&gt; {
   }
 });</code></pre>
 <h2>Message Patterns</h2>
-<p>!<a href="../images/05-pan-bus-6.png"><strong>Figure 5.6:</strong> Event Pattern Comparison</a></p>
-<strong><em>Figure 5.6:</strong> Event Pattern Comparison</em>
+<p>!<a href="../images/05-pan-bus-6.png"><strong>Figure 5.5:</strong> Event Pattern Comparison</a></p>
+<strong><em>Figure 5.5:</strong> Event Pattern Comparison</em>
 <p>The PAN bus supports several messaging patterns for different use cases.</p>
 <h3>1. Fire and Forget</h3>
 <p>Most common pattern. Publish and continue without waiting:</p>
@@ -507,8 +505,8 @@ pan.subscribe(&#039;settings.saved&#039;, (settings) =&gt; {
 <li>Action is non-critical</li>
 </ul>
 <h3>2. Request/Response</h3>
-<p>!<a href="../images/05-pan-bus-5.png"><strong>Figure 5.5:</strong> Request/Response Pattern</a></p>
-<strong><em>Figure 5.5:</strong> Request/Response Pattern</em>
+<p>!<a href="../images/05-pan-bus-5.png"><strong>Figure 5.6:</strong> Request/Response Pattern</a></p>
+<strong><em>Figure 5.6:</strong> Request/Response Pattern</em>
 <p>Request data and wait for a response:</p>
 <pre><code class="language-javascript">// Responder
 pan.respond(&#039;auth.token.get&#039;, async () =&gt; {
@@ -990,6 +988,13 @@ The PAN bus is central to LARC applications. Mastering it enables you to build s
    - Use event recorders for integration tests
    - Mock pan.publish/subscribe in unit tests
    - Verify event contracts between components
+<hr>
+<h2>Further Reading</h2>
+<strong>For complete PAN bus API reference:</strong>
+<ul><li><em>Building with LARC</em> Chapter 2: Core Concepts - Message bus architecture deep dive</li>
+<li><em>Building with LARC</em> Appendix A: Message Topics Reference - Standard topic conventions</li>
+<li><em>Building with LARC</em> Appendix B: Event Envelope Specification - Message format details</li>
+</ul>
       </article>
       <footer class="docs-footer">
         <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/chapters/05-the-pan-bus.md" target="_blank">

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Quickstart - Zero Config Setup · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Quickstart - Zero Config Setup">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">core</a> / <span>QUICKSTART</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Quickstart - Zero Config Setup</h1>
+<h2>The Simplest Possible Setup</h2>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-card&gt;
+    &lt;h1&gt;That&#039;s it!&lt;/h1&gt;
+    &lt;p&gt;One line. Zero config. All components auto-load.&lt;/p&gt;
+  &lt;/pan-card&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h2>What You Get</h2>
+<ul><li><strong>PAN Messaging Bus</strong> - Publish/subscribe communication between components</li>
+<li><strong>Auto-loading Components</strong> - 60+ UI components load on-demand as they appear</li>
+<li><strong>Zero Build</strong> - No npm, no webpack, no bundlers needed</li>
+<li><strong>Zero Config</strong> - Works out of the box, components auto-discovered</li>
+</ul>
+<h2>Available Components</h2>
+<p>All components auto-load from <code>@larcjs/core/components/</code>:</p>
+<ul><li><code><pan-card></code> - Card container</li>
+<li><code><pan-data-table></code> - Data grid with sorting/filtering</li>
+<li><code><pan-form></code> - Auto-generating forms</li>
+<li><code><pan-data-connector></code> - REST API connector</li>
+<li><code><pan-router></code> - Client-side routing</li>
+<li><code><pan-auth></code> - Authentication helper</li>
+<li>...and 50+ more!</li>
+</ul>
+<h2>Using the Messaging Bus</h2>
+<pre><code class="language-html">&lt;script type=&quot;module&quot;&gt;
+  import { PanClient } from &#039;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-client.mjs&#039;;
+
+  const client = new PanClient();
+
+  // Publish
+  client.publish(&#039;user.login&#039;, { username: &#039;john&#039; });
+
+  // Subscribe
+  client.subscribe(&#039;user.login&#039;, (msg) =&gt; {
+    console.log(&#039;User logged in:&#039;, msg.data);
+  });
+&lt;/script&gt;</code></pre>
+<h2>Local Development</h2>
+<pre><code class="language-html">&lt;!-- Use local files --&gt;
+&lt;script type=&quot;module&quot; src=&quot;./pan.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+<p>Components will auto-load from <code>./components/</code> directory.</p>
+<h2>That's All!</h2>
+<p>Seriously. One script tag. That's the entire setup.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/core/QUICKSTART.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

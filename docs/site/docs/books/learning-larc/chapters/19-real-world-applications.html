@@ -218,103 +218,1168 @@ class DashboardPage extends HTMLElement {
 <li><strong>Profile before optimizing</strong>: Measure performance before assuming where bottlenecks are.</li>
 <li><strong>Document as you go</strong>: Future you will thank present you.</li>
 <li><strong>Progressive enhancement</strong>: Build core functionality first, then enhance for modern browsers.</li>
-<hr>
-<h1>Appendices</h1>
-<h2>Appendix A: Web Components API Reference</h2>
-<h3>Custom Elements</h3>
-<strong>Defining elements:</strong>
-<pre><code class="language-javascript">customElements.define(&#039;my-element&#039;, MyElement);
-customElements.define(&#039;my-element&#039;, MyElement, { extends: &#039;button&#039; });</code></pre>
-<strong>Retrieving definitions:</strong>
-<pre><code class="language-javascript">customElements.get(&#039;my-element&#039;);  // Returns constructor or undefined
-await customElements.whenDefined(&#039;my-element&#039;);  // Resolves when defined
-customElements.upgrade(element);  // Upgrade an element</code></pre>
-<h3>Lifecycle Callbacks</h3>
-<p>| Callback | When Called |
-|----------|-------------|
-| <code>constructor()</code> | Element created |
-| <code>connectedCallback()</code> | Element added to DOM |
-| <code>disconnectedCallback()</code> | Element removed from DOM |
-| <code>attributeChangedCallback(name, oldVal, newVal)</code> | Observed attribute changed |
-| <code>adoptedCallback()</code> | Element moved to new document |</p>
-<h3>Shadow DOM</h3>
-<pre><code class="language-javascript">// Attach shadow root
-const shadow = element.attachShadow({ mode: &#039;open&#039; });
+<h3>Complete Checkout Flow</h3>
+<p>Let's implement the full checkout process:</p>
+<pre><code class="language-javascript">// checkout-form.js
+class CheckoutForm extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+  }
 
-// Access shadow root
-element.shadowRoot  // null if mode is &#039;closed&#039;
+  connectedCallback() {
+    this.render();
+    this.setupEventListeners();
+  }
 
-// Slots
-const slot = shadow.querySelector(&#039;slot&#039;);
-slot.assignedNodes();  // All assigned nodes
-slot.assignedElements();  // Only element nodes</code></pre>
-<h2>Appendix B: PAN Bus API Reference</h2>
-<h3>Publishing</h3>
-<pre><code class="language-javascript">// Simple publish
-pan.publish(&#039;topic&#039;, data);
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        form {
+          max-width: 600px;
+          margin: 0 auto;
+        }
 
-// With options
-pan.publish(&#039;topic&#039;, data, { retained: true });</code></pre>
-<h3>Subscribing</h3>
-<pre><code class="language-javascript">// Subscribe
-const unsubscribe = pan.subscribe(&#039;topic&#039;, (data) =&gt; {
-  console.log(data);
-});
+        .section {
+          margin-bottom: 2rem;
+          padding: 1.5rem;
+          border: 1px solid #e0e0e0;
+          border-radius: 8px;
+        }
 
-// Wildcard subscribe
-pan.subscribe(&#039;user.*&#039;, (data, topic) =&gt; {
-  console.log(topic, data);
-});
+        .field {
+          margin-bottom: 1rem;
+        }
 
-// Unsubscribe
-unsubscribe();</code></pre>
-<h3>Request/Response</h3>
-<pre><code class="language-javascript">// Request with timeout
-const result = await pan.request(&#039;service.getData&#039;, { id: 1 }, 5000);
+        label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+        }
 
-// Respond to requests
-pan.respond(&#039;service.getData&#039;, async ({ id }) =&gt; {
-  return await fetchData(id);
+        input, select {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+
+        .error {
+          color: #dc3545;
+          font-size: 0.875rem;
+          margin-top: 0.25rem;
+        }
+
+        button {
+          width: 100%;
+          padding: 1rem;
+          background: #0066cc;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+
+        button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+      &lt;/style&gt;
+
+      &lt;form id=&quot;checkout-form&quot;&gt;
+        &lt;div class=&quot;section&quot;&gt;
+          &lt;h2&gt;Shipping Information&lt;/h2&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;email&quot;&gt;Email&lt;/label&gt;
+            &lt;input type=&quot;email&quot; id=&quot;email&quot; required&gt;
+            &lt;div class=&quot;error&quot; id=&quot;email-error&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;name&quot;&gt;Full Name&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;name&quot; required&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;address&quot;&gt;Address&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;address&quot; required&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;city&quot;&gt;City&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;city&quot; required&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;zip&quot;&gt;ZIP Code&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;zip&quot; pattern=&quot;[0-9]{5}&quot; required&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;section&quot;&gt;
+          &lt;h2&gt;Payment Information&lt;/h2&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;card-number&quot;&gt;Card Number&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;card-number&quot; pattern=&quot;[0-9]{16}&quot; required&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;expiry&quot;&gt;Expiry Date&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;expiry&quot; placeholder=&quot;MM/YY&quot; required&gt;
+          &lt;/div&gt;
+          &lt;div class=&quot;field&quot;&gt;
+            &lt;label for=&quot;cvv&quot;&gt;CVV&lt;/label&gt;
+            &lt;input type=&quot;text&quot; id=&quot;cvv&quot; pattern=&quot;[0-9]{3}&quot; required&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;button type=&quot;submit&quot; id=&quot;submit-btn&quot;&gt;Place Order&lt;/button&gt;
+      &lt;/form&gt;
+    `;
+  }
+
+  setupEventListeners() {
+    const form = this.shadowRoot.getElementById(&#039;checkout-form&#039;);
+    const submitBtn = this.shadowRoot.getElementById(&#039;submit-btn&#039;);
+
+    form.addEventListener(&#039;submit&#039;, async (e) =&gt; {
+      e.preventDefault();
+
+      if (!this.validate()) {
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = &#039;Processing...&#039;;
+
+      try {
+        const order = this.getFormData();
+        const result = await orderService.submit(order);
+
+        pan.publish(&#039;order.completed&#039;, { orderId: result.id });
+        pan.publish(&#039;router.navigate&#039;, { path: `/order-confirmation/${result.id}` });
+      } catch (error) {
+        alert(&#039;Order failed: &#039; + error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = &#039;Place Order&#039;;
+      }
+    });
+  }
+
+  validate() {
+    // Implement validation logic
+    return true;
+  }
+
+  getFormData() {
+    const form = this.shadowRoot.getElementById(&#039;checkout-form&#039;);
+    return {
+      email: form.email.value,
+      name: form.name.value,
+      address: form.address.value,
+      city: form.city.value,
+      zip: form.zip.value,
+      payment: {
+        cardNumber: form[&#039;card-number&#039;].value,
+        expiry: form.expiry.value,
+        cvv: form.cvv.value
+      }
+    };
+  }
+}
+
+customElements.define(&#039;checkout-form&#039;, CheckoutForm);</code></pre>
+<h3>Inventory Management</h3>
+<p>Admin panel for managing products:</p>
+<pre><code class="language-javascript">// admin-inventory.js
+class AdminInventory extends HTMLElement {
+  async connectedCallback() {
+    this.products = await productService.getAll();
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;admin-panel&quot;&gt;
+        &lt;h1&gt;Inventory Management&lt;/h1&gt;
+        &lt;button class=&quot;add-product-btn&quot;&gt;Add New Product&lt;/button&gt;
+
+        &lt;table class=&quot;inventory-table&quot;&gt;
+          &lt;thead&gt;
+            &lt;tr&gt;
+              &lt;th&gt;ID&lt;/th&gt;
+              &lt;th&gt;Name&lt;/th&gt;
+              &lt;th&gt;Price&lt;/th&gt;
+              &lt;th&gt;Stock&lt;/th&gt;
+              &lt;th&gt;Status&lt;/th&gt;
+              &lt;th&gt;Actions&lt;/th&gt;
+            &lt;/tr&gt;
+          &lt;/thead&gt;
+          &lt;tbody&gt;
+            ${this.products.map(p =&gt; `
+              &lt;tr&gt;
+                &lt;td&gt;${p.id}&lt;/td&gt;
+                &lt;td&gt;${p.name}&lt;/td&gt;
+                &lt;td&gt;$${p.price}&lt;/td&gt;
+                &lt;td&gt;${p.stock}&lt;/td&gt;
+                &lt;td&gt;
+                  &lt;span class=&quot;badge ${p.stock &gt; 0 ? &#039;in-stock&#039; : &#039;out-of-stock&#039;}&quot;&gt;
+                    ${p.stock &gt; 0 ? &#039;In Stock&#039; : &#039;Out of Stock&#039;}
+                  &lt;/span&gt;
+                &lt;/td&gt;
+                &lt;td&gt;
+                  &lt;button onclick=&quot;this.getRootNode().host.editProduct(${p.id})&quot;&gt;
+                    Edit
+                  &lt;/button&gt;
+                  &lt;button onclick=&quot;this.getRootNode().host.deleteProduct(${p.id})&quot;&gt;
+                    Delete
+                  &lt;/button&gt;
+                &lt;/td&gt;
+              &lt;/tr&gt;
+            `).join(&#039;&#039;)}
+          &lt;/tbody&gt;
+        &lt;/table&gt;
+      &lt;/div&gt;
+    `;
+  }
+
+  async editProduct(id) {
+    const product = this.products.find(p =&gt; p.id === id);
+    // Show edit dialog
+    pan.publish(&#039;dialog.open&#039;, {
+      component: &#039;product-edit-form&#039;,
+      data: product
+    });
+  }
+
+  async deleteProduct(id) {
+    if (!confirm(&#039;Are you sure?&#039;)) return;
+
+    await productService.delete(id);
+    this.products = this.products.filter(p =&gt; p.id !== id);
+    this.render();
+  }
+}
+
+customElements.define(&#039;admin-inventory&#039;, AdminInventory);</code></pre>
+<h2>Case Study: Blog/CMS Application</h2>
+<p>A content management system demonstrates LARC's flexibility for content-heavy applications.</p>
+<h3>Architecture</h3>
+<pre><code class="language-plaintext">blog/
+├── index.html
+├── components/
+│   ├── article-editor.js
+│   ├── article-list.js
+│   ├── article-card.js
+│   ├── markdown-renderer.js
+│   └── tag-selector.js
+├── services/
+│   ├── content-service.js
+│   └── media-service.js
+└── admin/
+    ├── dashboard.js
+    ├── editor.js
+    └── settings.js</code></pre>
+<h3>Rich Text Editor</h3>
+<pre><code class="language-javascript">// article-editor.js
+class ArticleEditor extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({ mode: &#039;open&#039; });
+    this.article = { title: &#039;&#039;, content: &#039;&#039;, tags: [] };
+  }
+
+  connectedCallback() {
+    pan.subscribe(&#039;article.load&#039;, ({ article }) =&gt; {
+      this.article = article;
+      this.render();
+    });
+
+    this.render();
+    this.setupAutoSave();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        .editor {
+          max-width: 900px;
+          margin: 0 auto;
+          padding: 2rem;
+        }
+
+        .title-input {
+          width: 100%;
+          font-size: 2rem;
+          font-weight: bold;
+          border: none;
+          border-bottom: 2px solid #e0e0e0;
+          padding: 0.5rem 0;
+          margin-bottom: 2rem;
+        }
+
+        .content-editor {
+          min-height: 400px;
+          border: 1px solid #e0e0e0;
+          border-radius: 4px;
+          padding: 1rem;
+          font-family: monospace;
+        }
+
+        .toolbar {
+          display: flex;
+          gap: 0.5rem;
+          margin-bottom: 1rem;
+          padding: 0.5rem;
+          background: #f5f5f5;
+          border-radius: 4px;
+        }
+
+        .toolbar button {
+          padding: 0.5rem 1rem;
+          background: white;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        .save-status {
+          text-align: right;
+          color: #666;
+          font-size: 0.875rem;
+          margin-top: 1rem;
+        }
+      &lt;/style&gt;
+
+      &lt;div class=&quot;editor&quot;&gt;
+        &lt;input
+          type=&quot;text&quot;
+          class=&quot;title-input&quot;
+          placeholder=&quot;Article Title&quot;
+          value=&quot;${this.article.title}&quot;
+        &gt;
+
+        &lt;div class=&quot;toolbar&quot;&gt;
+          &lt;button data-action=&quot;bold&quot;&gt;Bold&lt;/button&gt;
+          &lt;button data-action=&quot;italic&quot;&gt;Italic&lt;/button&gt;
+          &lt;button data-action=&quot;link&quot;&gt;Link&lt;/button&gt;
+          &lt;button data-action=&quot;image&quot;&gt;Image&lt;/button&gt;
+          &lt;button data-action=&quot;code&quot;&gt;Code Block&lt;/button&gt;
+        &lt;/div&gt;
+
+        &lt;textarea
+          class=&quot;content-editor&quot;
+          placeholder=&quot;Write your article in Markdown...&quot;
+        &gt;${this.article.content}&lt;/textarea&gt;
+
+        &lt;div class=&quot;save-status&quot;&gt;
+          &lt;span class=&quot;status-text&quot;&gt;All changes saved&lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;actions&quot;&gt;
+          &lt;button class=&quot;preview-btn&quot;&gt;Preview&lt;/button&gt;
+          &lt;button class=&quot;publish-btn&quot;&gt;Publish&lt;/button&gt;
+          &lt;button class=&quot;save-draft-btn&quot;&gt;Save Draft&lt;/button&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+
+    this.setupEditorEvents();
+  }
+
+  setupEditorEvents() {
+    const titleInput = this.shadowRoot.querySelector(&#039;.title-input&#039;);
+    const contentEditor = this.shadowRoot.querySelector(&#039;.content-editor&#039;);
+
+    titleInput.addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.article.title = e.target.value;
+      this.markDirty();
+    });
+
+    contentEditor.addEventListener(&#039;input&#039;, (e) =&gt; {
+      this.article.content = e.target.value;
+      this.markDirty();
+    });
+
+    // Toolbar actions
+    this.shadowRoot.querySelectorAll(&#039;[data-action]&#039;).forEach(btn =&gt; {
+      btn.addEventListener(&#039;click&#039;, () =&gt; {
+        this.applyFormatting(btn.dataset.action);
+      });
+    });
+  }
+
+  setupAutoSave() {
+    setInterval(() =&gt; {
+      if (this.dirty) {
+        this.save();
+      }
+    }, 10000); // Auto-save every 10 seconds
+  }
+
+  markDirty() {
+    this.dirty = true;
+    this.shadowRoot.querySelector(&#039;.status-text&#039;).textContent = &#039;Unsaved changes&#039;;
+  }
+
+  async save() {
+    try {
+      await contentService.save(this.article);
+      this.dirty = false;
+      this.shadowRoot.querySelector(&#039;.status-text&#039;).textContent = &#039;All changes saved&#039;;
+    } catch (error) {
+      this.shadowRoot.querySelector(&#039;.status-text&#039;).textContent = &#039;Save failed&#039;;
+    }
+  }
+
+  applyFormatting(action) {
+    const textarea = this.shadowRoot.querySelector(&#039;.content-editor&#039;);
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+
+    let formattedText;
+    switch (action) {
+      case &#039;bold&#039;:
+        formattedText = `**${selectedText}**`;
+        break;
+      case &#039;italic&#039;:
+        formattedText = `*${selectedText}*`;
+        break;
+      case &#039;code&#039;:
+        formattedText = `\`\`\`\n${selectedText}\n\`\`\``;
+        break;
+      case &#039;link&#039;:
+        formattedText = `[${selectedText}](url)`;
+        break;
+      case &#039;image&#039;:
+        formattedText = `![${selectedText}](image-url)`;
+        break;
+    }
+
+    textarea.value =
+      textarea.value.substring(0, start) +
+      formattedText +
+      textarea.value.substring(end);
+
+    this.article.content = textarea.value;
+    this.markDirty();
+  }
+}
+
+customElements.define(&#039;article-editor&#039;, ArticleEditor);</code></pre>
+<h3>Content Preview</h3>
+<pre><code class="language-javascript">// markdown-renderer.js
+class MarkdownRenderer extends HTMLElement {
+  static observedAttributes = [&#039;content&#039;];
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === &#039;content&#039; &amp;&amp; oldValue !== newValue) {
+      this.render();
+    }
+  }
+
+  async render() {
+    const markdown = this.getAttribute(&#039;content&#039;) || &#039;&#039;;
+
+    // Use marked.js for markdown parsing
+    const { marked } = await import(&#039;https://cdn.jsdelivr.net/npm/marked@12/+esm&#039;);
+
+    this.innerHTML = `
+      &lt;div class=&quot;markdown-content&quot;&gt;
+        ${marked.parse(markdown)}
+      &lt;/div&gt;
+    `;
+  }
+}
+
+customElements.define(&#039;markdown-renderer&#039;, MarkdownRenderer);</code></pre>
+<h2>Architecture Decisions and Tradeoffs</h2>
+<h3>When to Use LARC</h3>
+<strong>✅ Great for:</strong>
+<ul><li>Progressive web apps</li>
+<li>Content-heavy sites (blogs, documentation)</li>
+<li>Dashboards and admin panels</li>
+<li>Internal tools</li>
+<li>Prototypes and MVPs</li>
+<li>Projects with long maintenance horizons</li>
+</ul>
+<strong>❌ Consider alternatives for:</strong>
+<ul><li>Apps requiring server-side rendering for SEO</li>
+<li>Highly interactive games (use Canvas/WebGL directly)</li>
+<li>Apps requiring React Native for mobile</li>
+<li>Teams deeply invested in React/Vue ecosystem</li>
+</ul>
+<h3>State Management Patterns</h3>
+<strong>Local State (Component Properties):</strong>
+<pre><code class="language-javascript">class Counter extends HTMLElement {
+  constructor() {
+    super();
+    this.count = 0; // Local state
+  }
+
+  increment() {
+    this.count++;
+    this.render();
+  }
+}</code></pre>
+<strong>Shared State (PAN Bus):</strong>
+<pre><code class="language-javascript">// One component publishes
+pan.publish(&#039;user.login&#039;, { userId, name });
+
+// Many components subscribe
+pan.subscribe(&#039;user.login&#039;, ({ name }) =&gt; {
+  this.userName = name;
+  this.render();
 });</code></pre>
-<h2>Appendix C: Component Quick Reference</h2>
-<p>| Component | Purpose | Key Attributes |
-|-----------|---------|----------------|
-| <code>pan-router</code> | Client-side routing | <code>base</code> |
-| <code>pan-route</code> | Route definition | <code>path</code>, <code>component</code> |
-| <code>pan-store</code> | State management | <code>persist</code>, <code>namespace</code> |
-| <code>pan-fetch</code> | Data fetching | <code>url</code>, <code>method</code>, <code>auto</code> |</p>
-<h2>Appendix D: Migration Cheat Sheet</h2>
-<h3>React → LARC</h3>
-<p>| React | LARC |
-|-------|------|
-| JSX | Template literals |
-| <code>props</code> | Attributes/properties |
-| <code>useState</code> | Instance properties |
-| <code>useEffect</code> | <code>connectedCallback</code> |
-| Context | PAN bus |
-| Redux | <code>pan-store</code> |</p>
-<h3>Vue → LARC</h3>
-<p>| Vue | LARC |
-|-----|------|
-| Templates | Template literals |
-| <code>v-if</code> | Ternary in template |
-| <code>v-for</code> | <code>array.map()</code> |
-| <code>computed</code> | Getters |
-| Vuex | <code>pan-store</code> |</p>
-<h2>Appendix E: Resources</h2>
-<h3>Official</h3>
-<ul><li>Documentation: https://larcjs.com/docs</li>
-<li>GitHub: https://github.com/larcjs/larc</li>
-<li>Examples: https://github.com/larcjs/larc/tree/main/packages/examples</li>
+<strong>Persistent State (LocalStorage + PAN):</strong>
+<pre><code class="language-javascript">class AppState {
+  constructor() {
+    this.state = JSON.parse(localStorage.getItem(&#039;app-state&#039;)) || {};
+
+    pan.subscribe(&#039;state.*&#039;, (data, topic) =&gt; {
+      const key = topic.split(&#039;.&#039;)[1];
+      this.state[key] = data;
+      localStorage.setItem(&#039;app-state&#039;, JSON.stringify(this.state));
+    });
+  }
+
+  get(key) {
+    return this.state[key];
+  }
+
+  set(key, value) {
+    pan.publish(`state.${key}`, value);
+  }
+}
+
+export const appState = new AppState();</code></pre>
+<h3>Scaling Considerations</h3>
+<strong>Code Organization:</strong>
+<pre><code class="language-plaintext">large-app/
+├── index.html
+├── app.js
+├── features/
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── services/
+│   │   └── index.js
+│   ├── products/
+│   │   ├── components/
+│   │   ├── services/
+│   │   └── index.js
+│   └── checkout/
+│       ├── components/
+│       ├── services/
+│       └── index.js
+├── shared/
+│   ├── components/
+│   ├── services/
+│   └── utils/
+└── config/
+    ├── router.js
+    └── pan.js</code></pre>
+<strong>Lazy Loading Features:</strong>
+<pre><code class="language-javascript">// app.js - Load features on demand
+const features = {
+  &#039;auth&#039;: () =&gt; import(&#039;./features/auth/index.js&#039;),
+  &#039;products&#039;: () =&gt; import(&#039;./features/products/index.js&#039;),
+  &#039;checkout&#039;: () =&gt; import(&#039;./features/checkout/index.js&#039;)
+};
+
+pan.subscribe(&#039;feature.load&#039;, async ({ name }) =&gt; {
+  if (features[name]) {
+    await features[name]();
+    pan.publish(&#039;feature.loaded&#039;, { name });
+  }
+});
+
+// Auto-load on route change
+pan.subscribe(&#039;router.navigate&#039;, ({ path }) =&gt; {
+  const feature = path.split(&#039;/&#039;)[1];
+  pan.publish(&#039;feature.load&#039;, { name: feature });
+});</code></pre>
+<h3>Performance at Scale</h3>
+<strong>Virtual Scrolling for Large Lists:</strong>
+<pre><code class="language-javascript">class VirtualList extends HTMLElement {
+  constructor() {
+    super();
+    this.items = [];
+    this.itemHeight = 50;
+    this.visibleCount = 20;
+    this.scrollTop = 0;
+  }
+
+  set data(items) {
+    this.items = items;
+    this.render();
+  }
+
+  connectedCallback() {
+    this.addEventListener(&#039;scroll&#039;, () =&gt; {
+      this.scrollTop = this.scrollTop;
+      requestAnimationFrame(() =&gt; this.render());
+    });
+  }
+
+  render() {
+    const startIndex = Math.floor(this.scrollTop / this.itemHeight);
+    const endIndex = Math.min(startIndex + this.visibleCount, this.items.length);
+    const visibleItems = this.items.slice(startIndex, endIndex);
+
+    this.innerHTML = `
+      &lt;div style=&quot;height: ${this.items.length * this.itemHeight}px; position: relative;&quot;&gt;
+        ${visibleItems.map((item, i) =&gt; `
+          &lt;div style=&quot;
+            position: absolute;
+            top: ${(startIndex + i) * this.itemHeight}px;
+            height: ${this.itemHeight}px;
+            width: 100%;
+          &quot;&gt;
+            ${item.name}
+          &lt;/div&gt;
+        `).join(&#039;&#039;)}
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<strong>Memoization and Caching:</strong>
+<pre><code class="language-javascript">class ProductCatalog extends HTMLElement {
+  constructor() {
+    super();
+    this.cache = new Map();
+    this.cacheTimeout = 5 * 60 * 1000; // 5 minutes
+  }
+
+  async getProducts(category) {
+    const cacheKey = `products-${category}`;
+    const cached = this.cache.get(cacheKey);
+
+    if (cached &amp;&amp; Date.now() - cached.timestamp &lt; this.cacheTimeout) {
+      return cached.data;
+    }
+
+    const data = await productService.getByCategory(category);
+
+    this.cache.set(cacheKey, {
+      data,
+      timestamp: Date.now()
+    });
+
+    return data;
+  }
+}</code></pre>
+<h2>Maintenance and Evolution</h2>
+<h3>Versioning Components</h3>
+<pre><code class="language-javascript">// v1/button.js
+class ButtonV1 extends HTMLElement {
+  // Original implementation
+}
+customElements.define(&#039;app-button-v1&#039;, ButtonV1);
+
+// v2/button.js
+class ButtonV2 extends HTMLElement {
+  // New implementation with breaking changes
+}
+customElements.define(&#039;app-button&#039;, ButtonV2);
+
+// Migration path: Both versions coexist
+// Old code uses app-button-v1
+// New code uses app-button
+// Gradual migration over time</code></pre>
+<h3>Feature Flags</h3>
+<pre><code class="language-javascript">// feature-flags.js
+class FeatureFlags {
+  constructor() {
+    this.flags = {
+      &#039;new-checkout&#039;: false,
+      &#039;beta-dashboard&#039;: true,
+      &#039;experimental-editor&#039;: false
+    };
+  }
+
+  isEnabled(feature) {
+    return this.flags[feature] ?? false;
+  }
+
+  enable(feature) {
+    this.flags[feature] = true;
+    pan.publish(&#039;feature-flag.changed&#039;, { feature, enabled: true });
+  }
+}
+
+export const featureFlags = new FeatureFlags();
+
+// Usage in component
+class Checkout extends HTMLElement {
+  connectedCallback() {
+    if (featureFlags.isEnabled(&#039;new-checkout&#039;)) {
+      this.innerHTML = &#039;&lt;new-checkout-flow&gt;&lt;/new-checkout-flow&gt;&#039;;
+    } else {
+      this.innerHTML = &#039;&lt;legacy-checkout-flow&gt;&lt;/legacy-checkout-flow&gt;&#039;;
+    }
+  }
+}</code></pre>
+<h3>Migration from React</h3>
+<p>Here's how to migrate a React app to LARC:</p>
+<strong>React Component:</strong>
+<pre><code class="language-javascript">function TodoItem({ todo, onComplete }) {
+  return (
+    &lt;div className=&quot;todo-item&quot;&gt;
+      &lt;input
+        type=&quot;checkbox&quot;
+        checked={todo.completed}
+        onChange={() =&gt; onComplete(todo.id)}
+      /&gt;
+      &lt;span&gt;{todo.text}&lt;/span&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+<strong>LARC Equivalent:</strong>
+<pre><code class="language-javascript">class TodoItem extends HTMLElement {
+  static observedAttributes = [&#039;completed&#039;];
+
+  connectedCallback() {
+    this.render();
+  }
+
+  attributeChangedCallback() {
+    this.render();
+  }
+
+  render() {
+    const completed = this.hasAttribute(&#039;completed&#039;);
+    const text = this.getAttribute(&#039;text&#039;) || &#039;&#039;;
+
+    this.innerHTML = `
+      &lt;div class=&quot;todo-item&quot;&gt;
+        &lt;input
+          type=&quot;checkbox&quot;
+          ${completed ? &#039;checked&#039; : &#039;&#039;}
+        &gt;
+        &lt;span&gt;${text}&lt;/span&gt;
+      &lt;/div&gt;
+    `;
+
+    this.querySelector(&#039;input&#039;).addEventListener(&#039;change&#039;, () =&gt; {
+      pan.publish(&#039;todo.complete&#039;, { id: this.getAttribute(&#039;todo-id&#039;) });
+    });
+  }
+}
+
+customElements.define(&#039;todo-item&#039;, TodoItem);</code></pre>
+<h3>Migration from Vue</h3>
+<strong>Vue Component:</strong>
+<pre><code class="language-vue">&lt;template&gt;
+  &lt;div class=&quot;user-card&quot;&gt;
+    &lt;img :src=&quot;user.avatar&quot; :alt=&quot;user.name&quot;&gt;
+    &lt;h3&gt;{{ user.name }}&lt;/h3&gt;
+    &lt;p&gt;{{ user.email }}&lt;/p&gt;
+    &lt;button @click=&quot;viewProfile&quot;&gt;View Profile&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  props: [&#039;user&#039;],
+  methods: {
+    viewProfile() {
+      this.$router.push(`/user/${this.user.id}`);
+    }
+  }
+}
+&lt;/script&gt;</code></pre>
+<strong>LARC Equivalent:</strong>
+<pre><code class="language-javascript">class UserCard extends HTMLElement {
+  static observedAttributes = [&#039;user-id&#039;];
+
+  async connectedCallback() {
+    const userId = this.getAttribute(&#039;user-id&#039;);
+    this.user = await userService.get(userId);
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      &lt;div class=&quot;user-card&quot;&gt;
+        &lt;img src=&quot;${this.user.avatar}&quot; alt=&quot;${this.user.name}&quot;&gt;
+        &lt;h3&gt;${this.user.name}&lt;/h3&gt;
+        &lt;p&gt;${this.user.email}&lt;/p&gt;
+        &lt;button class=&quot;view-btn&quot;&gt;View Profile&lt;/button&gt;
+      &lt;/div&gt;
+    `;
+
+    this.querySelector(&#039;.view-btn&#039;).addEventListener(&#039;click&#039;, () =&gt; {
+      pan.publish(&#039;router.navigate&#039;, { path: `/user/${this.user.id}` });
+    });
+  }
+}
+
+customElements.define(&#039;user-card&#039;, UserCard);</code></pre>
+<h2>Real-World Challenges and Solutions</h2>
+<h3>Challenge 1: SEO for Content Sites</h3>
+<strong>Problem</strong>: Client-side rendering isn't indexed by search engines.
+<strong>Solution</strong>: Pre-render static content
+<pre><code class="language-javascript">// build-static.js - Pre-render pages at build time
+import { JSDOM } from &#039;jsdom&#039;;
+import { writeFileSync } from &#039;fs&#039;;
+
+async function prerender(url, outputPath) {
+  const dom = new JSDOM(html);
+  global.window = dom.window;
+  global.document = dom.window.document;
+
+  // Load and execute components
+  await import(&#039;./components/article-page.js&#039;);
+
+  // Wait for async content to load
+  await new Promise(resolve =&gt; setTimeout(resolve, 1000));
+
+  // Write rendered HTML
+  writeFileSync(outputPath, dom.serialize());
+}
+
+// Pre-render all blog posts
+const posts = await contentService.getAllPosts();
+for (const post of posts) {
+  await prerender(`/blog/${post.slug}`, `dist/blog/${post.slug}.html`);
+}</code></pre>
+<h3>Challenge 2: Complex State Synchronization</h3>
+<strong>Problem</strong>: Multiple components need to stay in sync with complex state.
+<strong>Solution</strong>: Centralized state manager
+<pre><code class="language-javascript">// state-manager.js
+class StateManager {
+  constructor() {
+    this.state = {};
+    this.subscribers = new Map();
+  }
+
+  get(path) {
+    return path.split(&#039;.&#039;).reduce((obj, key) =&gt; obj?.[key], this.state);
+  }
+
+  set(path, value) {
+    const keys = path.split(&#039;.&#039;);
+    const lastKey = keys.pop();
+    const target = keys.reduce((obj, key) =&gt; {
+      if (!obj[key]) obj[key] = {};
+      return obj[key];
+    }, this.state);
+
+    target[lastKey] = value;
+
+    // Notify subscribers
+    pan.publish(`state.${path}`, value);
+  }
+
+  subscribe(path, callback) {
+    return pan.subscribe(`state.${path}`, callback);
+  }
+}
+
+export const state = new StateManager();</code></pre>
+<h3>Challenge 3: Testing Async Component Behavior</h3>
+<strong>Problem</strong>: Components with async data loading are hard to test.
+<strong>Solution</strong>: Dependency injection and mocking
+<pre><code class="language-javascript">// product-list.test.js
+import { fixture, html } from &#039;@open-wc/testing&#039;;
+import &#039;./product-list.js&#039;;
+
+// Mock service
+const mockProductService = {
+  getAll: () =&gt; Promise.resolve([
+    { id: 1, name: &#039;Product 1&#039;, price: 10 },
+    { id: 2, name: &#039;Product 2&#039;, price: 20 }
+  ])
+};
+
+describe(&#039;ProductList&#039;, () =&gt; {
+  it(&#039;renders products after loading&#039;, async () =&gt; {
+    // Inject mock
+    window.productService = mockProductService;
+
+    const el = await fixture(html`&lt;product-list&gt;&lt;/product-list&gt;`);
+
+    // Wait for async render
+    await new Promise(resolve =&gt; setTimeout(resolve, 100));
+
+    const products = el.querySelectorAll(&#039;product-card&#039;);
+    expect(products.length).to.equal(2);
+  });
+});</code></pre>
+<h2>Team Practices and Workflows</h2>
+<h3>Code Review Checklist</h3>
+<ul><li>[ ] Component follows single responsibility principle</li>
+<li>[ ] Shadow DOM used for encapsulation</li>
+<li>[ ] Event listeners cleaned up in <code>disconnectedCallback</code></li>
+<li>[ ] Attributes declared in <code>observedAttributes</code></li>
+<li>[ ] JSDoc comments for public API</li>
+<li>[ ] Tests cover happy path and error cases</li>
+<li>[ ] Accessible (keyboard navigation, ARIA)</li>
+<li>[ ] Performance profiled (if rendering > 100 items)</li>
 </ul>
-<h3>Web Standards</h3>
-<ul><li>MDN Web Components: https://developer.mozilla.org/en-US/docs/Web/Web_Components</li>
-<li>Custom Elements Spec: https://html.spec.whatwg.org/multipage/custom-elements.html</li>
-<li>Shadow DOM Spec: https://dom.spec.whatwg.org/#shadow-trees</li>
+<h3>Component Design Guidelines</h3>
+<li><strong>Keep components small</strong>: If a component is > 200 lines, split it</li>
+<li><strong>Prefer composition</strong>: Use slots and nested components</li>
+<li><strong>Clear naming</strong>: <code><user-profile-card></code> not <code><component-5></code></li>
+<li><strong>Consistent patterns</strong>: All similar components follow same structure</li>
+<li><strong>Document props</strong>: JSDoc with type information</li>
+<li><strong>Handle errors gracefully</strong>: Show user-friendly error messages</li>
+<h3>Development Workflow</h3>
+<pre><code class="language-bash"># 1. Create feature branch
+git checkout -b feature/user-authentication
+
+# 2. Write component with tests
+npm run test:watch
+
+# 3. Run linter
+npm run lint
+
+# 4. Create PR
+git push origin feature/user-authentication
+
+# 5. CI runs tests and linter
+# 6. Code review
+# 7. Merge to main
+# 8. Deploy to production
+npm run deploy</code></pre>
+<h2>Troubleshooting Real-World Applications</h2>
+<h3>Problem 1: Component State Gets Out of Sync</h3>
+<strong>Symptoms</strong>: UI shows stale data, actions don't reflect in other parts of the app
+<strong>Cause</strong>: Multiple sources of truth, missed PAN bus updates
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// Bad: Duplicated state
+class ProductCard extends HTMLElement {
+  constructor() {
+    super();
+    this.product = null;  // Local copy
+  }
+}
+
+// Good: Single source of truth
+class ProductCard extends HTMLElement {
+  connectedCallback() {
+    // Subscribe to state changes
+    this.unsub = pan.subscribe(&#039;products.*.updated&#039;, (data, topic) =&gt; {
+      const productId = topic.split(&#039;.&#039;)[1];
+      if (productId === this.productId) {
+        this.render();
+      }
+    });
+  }
+}</code></pre>
+<h3>Problem 2: Memory Leaks in Long-Running Apps</h3>
+<strong>Symptoms</strong>: App slows down over time, browser tab uses increasing memory
+<strong>Cause</strong>: Event listeners not cleaned up, retained references
+<strong>Solution</strong>:
+<pre><code class="language-javascript">class Dashboard extends HTMLElement {
+  connectedCallback() {
+    // Track subscriptions for cleanup
+    this.subscriptions = [
+      pan.subscribe(&#039;metrics.updated&#039;, this.handleMetrics),
+      pan.subscribe(&#039;alerts.new&#039;, this.handleAlert)
+    ];
+
+    // Track intervals
+    this.updateInterval = setInterval(() =&gt; this.fetchUpdates(), 5000);
+  }
+
+  disconnectedCallback() {
+    // Clean up all subscriptions
+    this.subscriptions.forEach(unsub =&gt; unsub());
+    this.subscriptions = [];
+
+    // Clear intervals
+    clearInterval(this.updateInterval);
+  }
+}</code></pre>
+<h3>Problem 3: Performance Degrades with Large Datasets</h3>
+<strong>Symptoms</strong>: Slow rendering, laggy interactions when displaying many items
+<strong>Cause</strong>: Rendering all items at once, no virtualization
+<strong>Solution</strong>:
+<pre><code class="language-javascript">// Use virtual scrolling for large lists
+class VirtualProductList extends HTMLElement {
+  render() {
+    const viewportHeight = this.clientHeight;
+    const scrollTop = this.scrollTop;
+    const itemHeight = 100;
+
+    // Calculate visible range
+    const startIndex = Math.floor(scrollTop / itemHeight);
+    const endIndex = Math.ceil((scrollTop + viewportHeight) / itemHeight);
+
+    // Only render visible items
+    const visibleItems = this.products.slice(startIndex, endIndex + 1);
+
+    this.innerHTML = `
+      &lt;div style=&quot;height: ${this.products.length * itemHeight}px&quot;&gt;
+        &lt;div style=&quot;transform: translateY(${startIndex * itemHeight}px)&quot;&gt;
+          ${visibleItems.map(product =&gt; this.renderItem(product)).join(&#039;&#039;)}
+        &lt;/div&gt;
+      &lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<h3>Problem 4: Race Conditions with Async Operations</h3>
+<strong>Symptoms</strong>: Wrong data displayed, operations complete out of order
+<strong>Cause</strong>: Multiple async requests, no cancellation or ordering
+<strong>Solution</strong>:
+<pre><code class="language-javascript">class SearchBox extends HTMLElement {
+  constructor() {
+    super();
+    this.abortController = null;
+    this.requestId = 0;
+  }
+
+  async search(query) {
+    // Cancel previous request
+    if (this.abortController) {
+      this.abortController.abort();
+    }
+
+    this.abortController = new AbortController();
+    const currentRequestId = ++this.requestId;
+
+    try {
+      const results = await fetch(`/api/search?q=${query}`, {
+        signal: this.abortController.signal
+      });
+
+      // Only update if this is still the latest request
+      if (currentRequestId === this.requestId) {
+        this.displayResults(await results.json());
+      }
+    } catch (err) {
+      if (err.name !== &#039;AbortError&#039;) throw err;
+    }
+  }
+}</code></pre>
+<h2>Real-World Application Best Practices</h2>
+<li><strong>Design for Scale from Day One</strong></li>
+   - Plan component boundaries before coding
+   - Use lazy loading for routes and heavy components
+   - Profile performance early and often
+<li><strong>Establish Clear State Management Patterns</strong></li>
+   - Single source of truth for shared state
+   - Local state for component-specific data
+   - Document state flow in architecture diagrams
+<li><strong>Implement Comprehensive Error Handling</strong></li>
+   - Catch errors at component boundaries
+   - Display user-friendly error messages
+   - Log errors for debugging and monitoring
+<li><strong>Write Tests for Critical Paths</strong></li>
+   - Test user journeys end-to-end
+   - Cover edge cases and error scenarios
+   - Maintain test coverage above 80%
+<li><strong>Optimize for Production</strong></li>
+   - Minify and compress assets
+   - Enable HTTP/2 and compression
+   - Use CDN for static assets
+   - Implement service worker caching
+<li><strong>Monitor and Measure</strong></li>
+   - Track Core Web Vitals
+   - Set up error tracking (Sentry, etc.)
+   - Monitor real user metrics
+   - Set up alerts for performance regressions
+<li><strong>Plan for Evolution</strong></li>
+   - Version your components
+   - Use feature flags for gradual rollouts
+   - Keep dependencies up to date
+   - Document breaking changes
+<li><strong>Prioritize Developer Experience</strong></li>
+   - Set up linting and formatting
+   - Create component templates/generators
+   - Document common patterns
+   - Maintain example implementations
+<li><strong>Focus on Accessibility</strong></li>
+   - Test with screen readers
+   - Support keyboard navigation
+   - Follow ARIA best practices
+   - Include accessibility in code review checklist
+<li><strong>Build for the Long Term</strong></li>
+    - Prefer web standards over frameworks
+    - Keep dependencies minimal
+    - Write clear, self-documenting code
+    - Invest in comprehensive documentation
+<h2>Hands-On Exercises</h2>
+<h3>Exercise 1: Build a Multi-Page E-Commerce App</h3>
+<p>Build a complete e-commerce application with:</p>
+<ul><li>Product listing with filters and sorting</li>
+<li>Individual product pages</li>
+<li>Shopping cart with persistence</li>
+<li>Checkout flow with form validation</li>
+<li>Admin panel for inventory management</li>
 </ul>
-<h3>Community</h3>
-<ul><li>Discord: https://discord.gg/larc</li>
-<li>Forum: https://forum.larcjs.com</li>
+<strong>Requirements:</strong>
+<ul><li>Use PAN bus for state management</li>
+<li>Implement lazy loading for routes</li>
+<li>Add comprehensive error handling</li>
+<li>Include unit and E2E tests</li>
+<li>Deploy to production hosting</li>
+</ul>
+<strong>Bonus Challenge:</strong> Add user authentication with JWT tokens and implement role-based access control for admin features.
+<h3>Exercise 2: Create a Real-Time Dashboard</h3>
+<p>Build a dashboard application that displays:</p>
+<ul><li>Real-time metrics (using WebSocket)</li>
+<li>Interactive charts and graphs</li>
+<li>Data filtering and time range selection</li>
+<li>Alert notifications</li>
+<li>User preferences and saved views</li>
+</ul>
+<strong>Requirements:</strong>
+<ul><li>Virtual scrolling for large datasets</li>
+<li>Optimistic UI updates</li>
+<li>Service worker for offline functionality</li>
+<li>Performance profiled (60fps interactions)</li>
+<li>Responsive design for mobile/desktop</li>
+</ul>
+<strong>Bonus Challenge:</strong> Implement data export (CSV, PDF), scheduled reports, and email notifications for alerts.
+<h3>Exercise 3: Build a Blog CMS</h3>
+<p>Create a complete content management system with:</p>
+<ul><li>Rich text editor for articles</li>
+<li>Draft/publish workflow</li>
+<li>Tag and category management</li>
+<li>SEO optimization (meta tags, sitemaps)</li>
+<li>Media library for images</li>
+<li>Comment moderation</li>
+</ul>
+<strong>Requirements:</strong>
+<ul><li>Server integration (Node.js or your choice)</li>
+<li>Client-side routing with SSR for SEO</li>
+<li>Form validation and error handling</li>
+<li>Auto-save functionality</li>
+<li>Search functionality</li>
+<li>User roles (admin, editor, author)</li>
+</ul>
+<strong>Bonus Challenge:</strong> Add markdown support with live preview, scheduled publishing, and content analytics (views, engagement).
+<h3>Exercise 4: Migrate an Existing Application</h3>
+<p>Take an existing React or Vue application and migrate it to LARC:</p>
+<ul><li>Audit current architecture and dependencies</li>
+<li>Create migration plan with phases</li>
+<li>Implement hybrid approach (gradual migration)</li>
+<li>Maintain feature parity during migration</li>
+<li>Compare bundle sizes and performance</li>
+</ul>
+<strong>Requirements:</strong>
+<ul><li>Document migration process</li>
+<li>Create mapping guide (React/Vue → LARC)</li>
+<li>Identify and solve migration challenges</li>
+<li>Set up automated tests to prevent regressions</li>
+<li>Deploy both versions and compare metrics</li>
+</ul>
+<strong>Bonus Challenge:</strong> Create a migration tool/CLI that automates conversion of common component patterns.
+<h2>Summary</h2>
+<p>Building real applications with LARC teaches you to:</p>
+<ul><li><strong>Think in components</strong>: Break UI into small, reusable pieces</li>
+<li><strong>Leverage web standards</strong>: Use what browsers provide</li>
+<li><strong>Embrace simplicity</strong>: No build step means faster development</li>
+<li><strong>Scale thoughtfully</strong>: Lazy load, virtualize, cache strategically</li>
+<li><strong>Test continuously</strong>: Catch bugs early with comprehensive tests</li>
+<li><strong>Profile performance</strong>: Measure before optimizing</li>
+<li><strong>Plan for evolution</strong>: Version components, use feature flags</li>
+</ul>
+LARC's no-build philosophy and standards-based approach make it ideal for long-lived projects that need maintainability and performance at scale.
+<h2>Further Reading</h2>
+<ul><li><strong>Building with LARC - All Chapters</strong>: Complete API reference and advanced patterns</li>
+<li><strong>MDN Web Components</strong>: Deep dive into the platform</li>
+<li><strong>Open-wc</strong>: Testing and tooling best practices for web components</li>
 </ul>
       </article>
       <footer class="docs-footer">

@@ -7,6 +7,7 @@ Quick reference for client-side routing with LARC's `pan-routes` component. For 
 Client-side routing updates the URL and renders components without full page reloads. LARC's `pan-routes` component matches URL patterns to components, enabling seamless navigation experiences.
 
 **Key Concepts**:
+
 - Route patterns: Map URLs to components
 - Dynamic parameters: Extract values from URLs (`:id`, `:username`)
 - Navigation guards: Control access to routes
@@ -428,6 +429,7 @@ class ProductDetail extends LarcComponent {
 ### SSR and Prerendering
 
 For maximum SEO, consider:
+
 - **Server-side rendering (SSR)**: Render initial HTML on server
 - **Static prerendering**: Generate HTML at build time for static routes
 - **Dynamic rendering**: Serve prerendered HTML to crawlers, SPA to users

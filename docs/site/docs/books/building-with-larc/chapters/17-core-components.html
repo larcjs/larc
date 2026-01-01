@@ -147,6 +147,37 @@ customElements.define(&#039;dash-board&#039;, Dashboard);</code></pre>
 <strong>Memory leaks</strong>: Always unsubscribe in <code>disconnectedCallback()</code>
 <strong>Rate limiting</strong>: Increase <code>rate-limit</code> attribute for high-frequency apps
 <strong>JSON errors</strong>: Payloads must be JSON-serializable (no functions, DOM nodes, circular refs)
+<h3>Errors</h3>
+<p>The pan-bus component dispatches <code>pan:sys.error</code> events for error conditions:</p>
+<p>| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| <code>RATE_LIMIT</code> | Client exceeds rate limit | Increase <code>rate-limit</code> attribute or reduce publish frequency |
+| <code>MESSAGE_TOO_LARGE</code> | Message exceeds max size | Increase <code>max-message-size</code> or reduce payload size |
+| <code>INVALID_TOPIC</code> | Topic name is invalid | Use alphanumeric + dots (e.g., <code>user.login</code>) |
+| <code>SUBSCRIPTION_FAILED</code> | Handler threw exception | Fix handler code, check console for details |
+| <code>RETAINED_OVERFLOW</code> | Too many retained messages | Increase <code>max-retained</code> or clean up old messages |
+| <code>WILDCARD_DISABLED</code> | <code>*</code> wildcard used when disabled | Set <code>allow-global-wildcard="true"</code> |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const bus = document.querySelector(&#039;pan-bus&#039;);
+
+// Listen for errors
+bus.addEventListener(&#039;pan:sys.error&#039;, (e) =&gt; {
+  const { code, message, details } = e.detail;
+  console.error(`PAN Bus Error [${code}]:`, message, details);
+
+  // Handle specific errors
+  if (code === &#039;RATE_LIMIT&#039;) {
+    // Slow down publishing
+    enableThrottling();
+  } else if (code === &#039;MESSAGE_TOO_LARGE&#039;) {
+    // Split large payloads
+    splitPayload(details.payload);
+  }
+});</code></pre>
+<strong>Exceptions thrown</strong>:
+<ul><li><code>TypeError</code>: Invalid parameters (e.g., non-string topic, non-function handler)</li>
+<li><code>RangeError</code>: Attribute values out of bounds (e.g., negative rate-limit)</li>
+</ul>
 <hr>
 <h2>pan-theme-provider</h2>
 <strong>Purpose</strong>: Manages app theme with system preference detection
@@ -215,6 +246,26 @@ customElements.define(&#039;themed-app&#039;, ThemedApp);</code></pre>
 <strong>Theme not applying</strong>: Define CSS variables for both <code>[data-theme="light"]</code> and <code>[data-theme="dark"]</code>
 <strong>Flash on load</strong>: Set theme in inline <code><script></code> before loading components
 <strong>Not updating</strong>: Subscribe to <code>theme.changed</code> in <code>connectedCallback()</code>
+<h3>Errors</h3>
+<p>| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| Invalid theme value | <code>setTheme()</code> called with invalid value | Use "light", "dark", or "auto" only |
+| <code>matchMedia</code> not supported | Old browser | Provide polyfill or default to "light" |
+| localStorage quota | Storage full | Clear old data or use memory-only mode |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const provider = document.querySelector(&#039;pan-theme-provider&#039;);
+
+try {
+  provider.setTheme(&#039;custom&#039;); // Invalid!
+} catch (e) {
+  console.error(&#039;Theme error:&#039;, e.message);
+  // Fallback to auto
+  provider.setTheme(&#039;auto&#039;);
+}</code></pre>
+<strong>Exceptions thrown</strong>:
+<ul><li><code>TypeError</code>: Invalid theme value passed to <code>setTheme()</code></li>
+<li><code>DOMException</code>: localStorage access denied (privacy mode)</li>
+</ul>
 <hr>
 <h2>pan-theme-toggle</h2>
 <strong>Purpose</strong>: UI control for theme switching
@@ -255,6 +306,26 @@ customElements.define(&#039;themed-app&#039;, ThemedApp);</code></pre>
 <strong>Not working</strong>: Ensure <code>pan-theme-provider</code> exists
 <strong>Wrong icon</strong>: Component subscribes on connect; add after <code>pan:sys.ready</code>
 <strong>Dropdown positioning</strong>: Wrap in <code>position: relative</code> container
+<h3>Errors</h3>
+<p>| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| Provider not found | <code>pan-theme-provider</code> missing | Add <code><pan-theme-provider></code> to page |
+| Invalid variant | Unsupported <code>variant</code> attribute | Use "icon", "button", or "dropdown" |
+| Event not dispatched | pan-bus not ready | Wait for <code>pan:sys.ready</code> or add toggle after bus loads |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">// Ensure provider exists
+window.addEventListener(&#039;DOMContentLoaded&#039;, () =&gt; {
+  const toggle = document.querySelector(&#039;pan-theme-toggle&#039;);
+  const provider = document.querySelector(&#039;pan-theme-provider&#039;);
+
+  if (!provider) {
+    console.warn(&#039;pan-theme-toggle requires pan-theme-provider&#039;);
+    // Add provider dynamically
+    const newProvider = document.createElement(&#039;pan-theme-provider&#039;);
+    document.body.prepend(newProvider);
+  }
+});</code></pre>
+<strong>Exceptions thrown</strong>: None (component fails gracefully without provider)
 <hr>
 <h2>pan-routes</h2>
 <strong>Purpose</strong>: Runtime-configurable message routing
@@ -476,6 +547,54 @@ console.log(routes.getStats());
 <strong>Wrong matches</strong>: Enable debug mode: <code><pan-bus debug="true"></code>
 <strong>Transform not found</strong>: Register functions before adding routes
 <strong>Wrong order</strong>: Set explicit <code>order</code> property (lower executes first)
+<h3>Errors</h3>
+<p>Subscribe to errors using <code>onError()</code>:</p>
+<p>| Error Type | Cause | Resolution |
+|------------|-------|------------|
+| <code>INVALID_ROUTE</code> | Missing required fields (<code>name</code>, <code>match</code>, or <code>actions</code>) | Provide all required fields in route config |
+| <code>ROUTE_NOT_FOUND</code> | <code>update()</code> or <code>remove()</code> with invalid ID | Check route exists with <code>get(id)</code> first |
+| <code>PREDICATE_ERROR</code> | Invalid <code>where</code> operator or structure | Use supported operators: <code>eq</code>, <code>gt</code>, <code>lt</code>, <code>in</code>, <code>regex</code>, <code>and</code>, <code>or</code>, <code>not</code> |
+| <code>TRANSFORM_ERROR</code> | Transform function threw exception | Fix transform function or handle errors within it |
+| <code>TRANSFORM_NOT_FOUND</code> | <code>fnId</code> not registered | Call <code>registerTransformFn(id, fn)</code> before using |
+| <code>ACTION_ERROR</code> | Action execution failed | Check action configuration and registered handlers |
+| <code>HANDLER_NOT_FOUND</code> | <code>CALL</code> action with unregistered handler | Call <code>registerHandler(id, fn)</code> before using |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const routes = window.pan.routes;
+
+// Subscribe to errors
+const unsubscribe = routes.onError((error) =&gt; {
+  console.error(&#039;Route error:&#039;, error);
+
+  // Handle specific errors
+  switch (error.code) {
+    case &#039;TRANSFORM_ERROR&#039;:
+      // Disable problematic route
+      routes.disable(error.routeId);
+      notifyAdmin(&#039;Route failed&#039;, error);
+      break;
+
+    case &#039;HANDLER_NOT_FOUND&#039;:
+      // Register missing handler
+      routes.registerHandler(error.handlerId, fallbackHandler);
+      break;
+  }
+});
+
+// Validate route before adding
+try {
+  routes.add({
+    name: &#039;My Route&#039;,
+    match: { type: &#039;test&#039; },
+    actions: [{ type: &#039;LOG&#039;, level: &#039;info&#039;, template: &#039;Test&#039; }]
+  });
+} catch (e) {
+  console.error(&#039;Failed to add route:&#039;, e.message);
+}</code></pre>
+<strong>Exceptions thrown</strong>:
+<ul><li><code>Error</code>: Invalid route configuration (missing required fields)</li>
+<li><code>TypeError</code>: Invalid parameters (e.g., non-function handler)</li>
+<li><code>RangeError</code>: Invalid <code>order</code> value</li>
+</ul>
 <hr>
 <h2>Summary</h2>
 <p>This chapter documented LARC's four core components:</p>

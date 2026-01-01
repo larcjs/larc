@@ -75,12 +75,12 @@ debug.disableTracing();</code></pre>
 <h3>API</h3>
 <p>#### Constructor</p>
 <pre><code class="language-javascript">new PanDebugManager()</code></pre>
-<p>Creates debug manager with defaults:
+<p>Creates debug manager with defaults:</p>
 <ul><li><code>enabled</code>: false</li>
 <li><code>maxBuffer</code>: 1000</li>
 <li><code>sampleRate</code>: 1.0 (100%)</li>
 </ul>
-#### Configuration Methods</p>
+#### Configuration Methods
 <p>| Method | Parameters | Description |
 |--------|-----------|-------------|
 | <code>enableTracing(options)</code> | options?: <code>{ maxBuffer?, sampleRate? }</code> | Enable message tracing |
@@ -188,6 +188,184 @@ function findSlowHandlers(thresholdMs = 100) {
     msg.processingTime &amp;&amp; msg.processingTime &gt; thresholdMs
   );
 }</code></pre>
+<h3>Errors</h3>
+<p>pan-debug can encounter various error conditions during tracing operations. All errors are thrown as standard JavaScript errors.</p>
+<p>#### Error Conditions</p>
+<p>| Code | Cause | Resolution |
+|------|-------|------------|
+| <code>BUFFER_OVERFLOW</code> | Trace buffer exceeded maxBuffer limit | Increase maxBuffer, reduce sampleRate, or clear trace more frequently |
+| <code>INVALID_SAMPLE_RATE</code> | sampleRate outside 0.0-1.0 range | Provide valid sample rate between 0.0 and 1.0 |
+| <code>QUERY_FAILED</code> | findMessages() query malformed | Check query object format (topic, clientId, timeRange) |
+| <code>EXPORT_FAILED</code> | exportTrace() serialization error | Check for circular references or non-serializable data |
+| <code>MEMORY_EXCEEDED</code> | Trace buffer consuming too much memory | Reduce maxBuffer or use lower sampleRate |</p>
+<p>#### Error Handling</p>
+<pre><code class="language-javascript">import { PanDebugManager } from &#039;./pan-debug.mjs&#039;;
+
+const debug = new PanDebugManager();
+
+// Safe initialization with error handling
+function initializeDebugger(options = {}) {
+  try {
+    // Validate sample rate
+    const sampleRate = options.sampleRate ?? 1.0;
+    if (sampleRate &lt; 0 || sampleRate &gt; 1.0) {
+      throw new Error(&#039;INVALID_SAMPLE_RATE: Sample rate must be between 0.0 and 1.0&#039;);
+    }
+
+    // Enable tracing with validated options
+    debug.enableTracing({
+      maxBuffer: options.maxBuffer || 1000,
+      sampleRate: sampleRate
+    });
+
+    console.log(&#039;Debug tracing enabled&#039;);
+  } catch (err) {
+    console.error(&#039;Debug initialization failed:&#039;, err.message);
+    // Fallback to minimal tracing
+    debug.enableTracing({ maxBuffer: 100, sampleRate: 0.01 });
+  }
+}
+
+// Safe query with error handling
+function safeQuery(queryOptions) {
+  try {
+    // Validate time range
+    if (queryOptions.timeRange) {
+      const { start, end } = queryOptions.timeRange;
+      if (start &amp;&amp; end &amp;&amp; start &gt; end) {
+        throw new Error(&#039;QUERY_FAILED: Invalid time range (start &gt; end)&#039;);
+      }
+    }
+
+    const results = debug.findMessages(queryOptions);
+    return results;
+  } catch (err) {
+    console.error(&#039;Query failed:&#039;, err.message);
+    return [];
+  }
+}
+
+// Safe export with size checking
+function safeExport(format = &#039;json&#039;) {
+  try {
+    const stats = debug.getStats();
+    
+    // Check buffer size before export
+    if (stats.tracedMessages &gt; 10000) {
+      console.warn(&#039;Large trace buffer, export may be slow&#039;);
+      // Optionally export in chunks
+      const chunkSize = 1000;
+      const chunks = [];
+      for (let i = 0; i &lt; stats.tracedMessages; i += chunkSize) {
+        const chunk = debug.getTrace({ limit: chunkSize, offset: i });
+        chunks.push(chunk);
+      }
+      return chunks;
+    }
+
+    const exportData = debug.exportTrace(format);
+    return exportData;
+  } catch (err) {
+    console.error(&#039;Export failed:&#039;, err.message);
+    // Return minimal diagnostic data
+    return { error: err.message, stats: debug.getStats() };
+  }
+}
+
+// Memory monitoring
+function monitorMemory() {
+  const stats = debug.getStats();
+  const estimatedSize = stats.bufferSize * 1000; // ~1KB per message
+
+  if (estimatedSize &gt; 10 * 1024 * 1024) { // 10MB threshold
+    console.warn(&#039;MEMORY_EXCEEDED: Trace buffer exceeding 10MB&#039;);
+    debug.clearTrace();
+    debug.setSampleRate(0.1); // Reduce to 10%
+  }
+}
+
+// Periodic memory check
+setInterval(monitorMemory, 30000);
+
+// Example: Safe debug UI with error boundaries
+function buildRobustDebugPanel() {
+  try {
+    initializeDebugger({ maxBuffer: 500, sampleRate: 0.1 });
+
+    const panel = document.createElement(&#039;div&#039;);
+    panel.id = &#039;debug-panel&#039;;
+
+    const refresh = () =&gt; {
+      try {
+        const messages = safeQuery({ limit: 20 });
+        const stats = debug.getStats();
+
+        panel.innerHTML = `
+          &lt;h3&gt;PAN Debug (${stats.totalMessages} total, ${stats.droppedMessages} dropped)&lt;/h3&gt;
+          &lt;p&gt;Buffer: ${stats.tracedMessages}/${stats.bufferSize} | Rate: ${stats.sampleRate * 100}%&lt;/p&gt;
+          &lt;button onclick=&quot;clearDebugTrace()&quot;&gt;Clear&lt;/button&gt;
+          &lt;button onclick=&quot;exportDebugTrace()&quot;&gt;Export&lt;/button&gt;
+          ${stats.droppedMessages &gt; 0 ? &#039;&lt;span style=&quot;color:red;&quot;&gt;⚠ Messages dropped&lt;/span&gt;&#039; : &#039;&#039;}
+          &lt;hr&gt;
+          ${messages.length === 0 ? &#039;&lt;p&gt;No messages traced&lt;/p&gt;&#039; : 
+            messages.map(msg =&gt; `
+              &lt;div style=&quot;margin: 5px 0; padding: 5px; border: 1px solid #ddd;&quot;&gt;
+                &lt;strong&gt;${msg.topic}&lt;/strong&gt;
+                &lt;small&gt;${new Date(msg.timestamp).toLocaleTimeString()}&lt;/small&gt;
+                &lt;pre&gt;${JSON.stringify(msg.data, null, 2).substring(0, 200)}&lt;/pre&gt;
+              &lt;/div&gt;
+            `).join(&#039;&#039;)
+          }
+        `;
+      } catch (err) {
+        panel.innerHTML = `&lt;p style=&quot;color:red;&quot;&gt;Error: ${err.message}&lt;/p&gt;`;
+      }
+    };
+
+    setInterval(refresh, 2000);
+    refresh();
+    document.body.appendChild(panel);
+
+    // Global safe controls
+    window.clearDebugTrace = () =&gt; {
+      try {
+        debug.clearTrace();
+        refresh();
+      } catch (err) {
+        console.error(&#039;Clear failed:&#039;, err.message);
+      }
+    };
+
+    window.exportDebugTrace = () =&gt; {
+      try {
+        const data = safeExport();
+        console.log(&#039;Exported trace:&#039;, data);
+        // Optionally download as file
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: &#039;application/json&#039; });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement(&#039;a&#039;);
+        a.href = url;
+        a.download = `pan-trace-${Date.now()}.json`;
+        a.click();
+      } catch (err) {
+        console.error(&#039;Export failed:&#039;, err.message);
+      }
+    };
+
+  } catch (err) {
+    console.error(&#039;Debug panel initialization failed:&#039;, err.message);
+  }
+}</code></pre>
+<p>#### Exceptions Thrown</p>
+<ul><li><strong>TypeError</strong>: Invalid parameter types (e.g., non-numeric sample rate)</li>
+<li><strong>Error</strong>: General tracing errors (buffer overflow, query failures, export errors)</li>
+</ul>
+#### Performance Considerations
+<ul><li>Large buffers (>1000 messages) increase memory usage significantly</li>
+<li>High sample rates (>0.1) can impact application performance</li>
+<li>Export operations on large traces (>5000 messages) may block UI thread</li>
+<li>Consider Web Workers for large export operations in production</li>
+</ul>
 <h3>Common Issues</h3>
 <strong>High memory usage</strong>: Reduce <code>maxBuffer</code> or <code>sampleRate</code>. For production, use <code>sampleRate: 0.01</code> (1%).
 <strong>Messages not appearing</strong>: Ensure tracing enabled and sampling rate > 0.
@@ -350,6 +528,297 @@ app.post(&#039;/events/batch&#039;, express.json(), (req, res) =&gt; {
 |-------|------|-------------|
 | <code>forwarder.success</code> | <code>{ topic, url, status }</code> | Message forwarded successfully |
 | <code>forwarder.error</code> | <code>{ topic, url, error, status }</code> | Forward failed |</p>
+<h3>Errors</h3>
+<p>pan-forwarder can encounter various error conditions when forwarding messages to HTTP endpoints. All errors are published as PAN messages on the <code>forwarder.error</code> topic.</p>
+<p>#### Error Conditions</p>
+<p>| Code | Cause | Resolution |
+|------|-------|------------|
+| <code>NETWORK_ERROR</code> | Network connection failed | Check internet connectivity, verify URL is reachable |
+| <code>HTTP_ERROR</code> | Server returned error status (4xx, 5xx) | Check server logs, verify authentication, check endpoint exists |
+| <code>BATCH_TIMEOUT</code> | Batch timeout exceeded before filling | Reduce batch-timeout or batch-size for low-volume scenarios |
+| <code>TOPIC_MISMATCH</code> | No topics matched messages | Verify topic patterns, use "*" to match all messages |
+| <code>PARSE_ERROR</code> | Response body parsing failed | Check server returns valid JSON, verify Content-Type header |
+| <code>CORS_ERROR</code> | Cross-origin request blocked | Configure CORS headers on server, check credentials mode |
+| <code>INVALID_CONFIG</code> | Malformed configuration JSON | Validate JSON syntax in embedded script tag |</p>
+<p>#### Error Handling</p>
+<pre><code class="language-javascript">import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Monitor forwarding errors
+pc.subscribe(&#039;forwarder.error&#039;, (msg) =&gt; {
+  const { topic, url, error, status, response } = msg.data;
+  console.error(`Forward failed [${topic}]:`, error);
+
+  // Handle different error scenarios
+  switch (true) {
+    case error.includes(&#039;NETWORK_ERROR&#039;):
+      handleNetworkError(topic, msg.data.originalMessage);
+      break;
+
+    case status === 401:
+      console.error(&#039;Authentication required&#039;);
+      refreshAuthToken();
+      break;
+
+    case status === 429:
+      console.warn(&#039;Rate limited, backing off&#039;);
+      increaseDebounce();
+      break;
+
+    case status &gt;= 500:
+      console.warn(&#039;Server error, will retry&#039;);
+      queueForRetry(topic, msg.data.originalMessage);
+      break;
+
+    case error.includes(&#039;CORS_ERROR&#039;):
+      console.error(&#039;CORS configuration issue on server&#039;);
+      showCorsWarning();
+      break;
+
+    default:
+      console.error(&#039;Unhandled forward error:&#039;, error);
+      logToErrorTracking({ topic, error, status });
+  }
+});
+
+// Track successful forwards
+let forwardCount = 0;
+pc.subscribe(&#039;forwarder.success&#039;, (msg) =&gt; {
+  forwardCount++;
+  console.log(`Forwarded ${msg.data.topic} (total: ${forwardCount})`);
+});
+
+// Network error handling with offline queue
+const offlineQueue = [];
+let isOnline = navigator.onLine;
+
+function handleNetworkError(topic, originalMessage) {
+  if (!isOnline) {
+    console.log(&#039;Queueing message for offline:&#039;, topic);
+    offlineQueue.push({ topic, data: originalMessage });
+    localStorage.setItem(&#039;forwarder_queue&#039;, JSON.stringify(offlineQueue));
+  }
+}
+
+// Restore queue when online
+window.addEventListener(&#039;online&#039;, () =&gt; {
+  isOnline = true;
+  const saved = localStorage.getItem(&#039;forwarder_queue&#039;);
+  if (saved) {
+    const queue = JSON.parse(saved);
+    console.log(`Replaying ${queue.length} queued messages`);
+    queue.forEach(({ topic, data }) =&gt; {
+      pc.publish(topic, data);
+    });
+    localStorage.removeItem(&#039;forwarder_queue&#039;);
+    offlineQueue.length = 0;
+  }
+});
+
+window.addEventListener(&#039;offline&#039;, () =&gt; {
+  isOnline = false;
+  console.warn(&#039;Network offline, queueing messages&#039;);
+});
+
+// Retry logic with exponential backoff
+const retryQueue = [];
+let retryTimer = null;
+
+function queueForRetry(topic, message, retries = 0) {
+  if (retries &gt;= 3) {
+    console.error(&#039;Max retries exceeded for:&#039;, topic);
+    logToErrorTracking({ topic, message, error: &#039;max_retries_exceeded&#039; });
+    return;
+  }
+
+  retryQueue.push({ topic, message, retries });
+
+  if (!retryTimer) {
+    const delay = Math.pow(2, retries) * 1000; // 1s, 2s, 4s
+    retryTimer = setTimeout(() =&gt; {
+      console.log(`Retrying ${retryQueue.length} messages...`);
+      const batch = [...retryQueue];
+      retryQueue.length = 0;
+      retryTimer = null;
+
+      batch.forEach(({ topic, message, retries }) =&gt; {
+        pc.publish(topic, message);
+        // Monitor if it fails again
+        const unsubscribe = pc.subscribe(&#039;forwarder.error&#039;, (msg) =&gt; {
+          if (msg.data.topic === topic) {
+            queueForRetry(topic, message, retries + 1);
+            unsubscribe();
+          }
+        });
+      });
+    }, delay);
+  }
+}
+
+// Dynamic debounce adjustment for rate limiting
+let currentDebounce = 0;
+
+function increaseDebounce() {
+  currentDebounce = Math.min(currentDebounce + 500, 5000); // Max 5s
+  console.log(`Increased debounce to ${currentDebounce}ms`);
+  
+  // Update forwarder element
+  const forwarder = document.querySelector(&#039;pan-forwarder&#039;);
+  if (forwarder) {
+    forwarder.setAttribute(&#039;debounce&#039;, currentDebounce);
+  }
+}
+
+// Reset debounce after successful forwards
+let successCount = 0;
+pc.subscribe(&#039;forwarder.success&#039;, () =&gt; {
+  successCount++;
+  if (successCount &gt;= 10 &amp;&amp; currentDebounce &gt; 0) {
+    currentDebounce = Math.max(currentDebounce - 500, 0);
+    console.log(`Reduced debounce to ${currentDebounce}ms`);
+    const forwarder = document.querySelector(&#039;pan-forwarder&#039;);
+    if (forwarder) {
+      forwarder.setAttribute(&#039;debounce&#039;, currentDebounce);
+    }
+    successCount = 0;
+  }
+});
+
+// Authentication token refresh
+async function refreshAuthToken() {
+  try {
+    const response = await fetch(&#039;/api/refresh-token&#039;, {
+      method: &#039;POST&#039;,
+      credentials: &#039;include&#039;
+    });
+    
+    if (response.ok) {
+      const { token } = await response.json();
+      
+      // Update forwarder headers
+      const forwarder = document.querySelector(&#039;pan-forwarder&#039;);
+      const scriptTag = forwarder.querySelector(&#039;script[type=&quot;application/json&quot;]&#039;);
+      const config = JSON.parse(scriptTag.textContent);
+      config.headers.Authorization = `Bearer ${token}`;
+      scriptTag.textContent = JSON.stringify(config, null, 2);
+      
+      console.log(&#039;Auth token refreshed&#039;);
+    } else {
+      console.error(&#039;Token refresh failed, redirecting to login&#039;);
+      window.location.href = &#039;/login&#039;;
+    }
+  } catch (err) {
+    console.error(&#039;Token refresh error:&#039;, err.message);
+  }
+}
+
+// CORS warning display
+function showCorsWarning() {
+  const warning = document.createElement(&#039;div&#039;);
+  warning.style.cssText = `
+    position: fixed; top: 20px; right: 20px; 
+    background: #ff9800; color: white; padding: 15px;
+    border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    z-index: 10000;
+  `;
+  warning.innerHTML = `
+    &lt;strong&gt;⚠ CORS Error&lt;/strong&gt;&lt;br&gt;
+    Server needs CORS headers configured.&lt;br&gt;
+    &lt;button onclick=&quot;this.parentElement.remove()&quot;&gt;Dismiss&lt;/button&gt;
+  `;
+  document.body.appendChild(warning);
+}
+
+// Error tracking integration
+function logToErrorTracking(errorData) {
+  // Example: Send to monitoring service
+  fetch(&#039;https://monitoring.example.com/errors&#039;, {
+    method: &#039;POST&#039;,
+    headers: { &#039;Content-Type&#039;: &#039;application/json&#039; },
+    body: JSON.stringify({
+      component: &#039;pan-forwarder&#039;,
+      timestamp: Date.now(),
+      ...errorData
+    })
+  }).catch(err =&gt; console.error(&#039;Error tracking failed:&#039;, err.message));
+}
+
+// Example: Robust forwarder with comprehensive error handling
+function setupRobustForwarder() {
+  const container = document.createElement(&#039;div&#039;);
+  container.innerHTML = `
+    &lt;pan-forwarder
+      url=&quot;https://api.example.com/events&quot;
+      topics=&quot;user.*,error.*&quot;
+      method=&quot;POST&quot;
+      debounce=&quot;1000&quot;
+      batch-size=&quot;10&quot;
+      batch-timeout=&quot;5000&quot;
+      credentials=&quot;include&quot;&gt;
+      &lt;script type=&quot;application/json&quot;&gt;
+        {
+          &quot;headers&quot;: {
+            &quot;Authorization&quot;: &quot;Bearer initial-token&quot;,
+            &quot;Content-Type&quot;: &quot;application/json&quot;,
+            &quot;X-Client-Version&quot;: &quot;1.0.0&quot;
+          }
+        }
+      &lt;/script&gt;
+    &lt;/pan-forwarder&gt;
+
+    &lt;div id=&quot;forward-stats&quot; style=&quot;position: fixed; bottom: 10px; right: 10px; background: white; padding: 10px; border: 1px solid #ddd; font-family: monospace; font-size: 12px;&quot;&gt;
+      Forwards: &lt;span id=&quot;success-count&quot;&gt;0&lt;/span&gt; | 
+      Errors: &lt;span id=&quot;error-count&quot;&gt;0&lt;/span&gt; | 
+      Queued: &lt;span id=&quot;queue-count&quot;&gt;0&lt;/span&gt;
+    &lt;/div&gt;
+  `;
+  
+  document.body.appendChild(container);
+
+  // Update stats display
+  let errorCount = 0;
+  pc.subscribe(&#039;forwarder.error&#039;, () =&gt; {
+    errorCount++;
+    document.getElementById(&#039;error-count&#039;).textContent = errorCount;
+    document.getElementById(&#039;queue-count&#039;).textContent = offlineQueue.length + retryQueue.length;
+  });
+
+  pc.subscribe(&#039;forwarder.success&#039;, () =&gt; {
+    document.getElementById(&#039;success-count&#039;).textContent = forwardCount;
+  });
+
+  // Periodic queue check
+  setInterval(() =&gt; {
+    document.getElementById(&#039;queue-count&#039;).textContent = offlineQueue.length + retryQueue.length;
+  }, 1000);
+}
+
+// Initialize when ready
+customElements.whenDefined(&#039;pan-bus&#039;).then(setupRobustForwarder);</code></pre>
+<p>#### Exceptions Thrown</p>
+<p>pan-forwarder does not throw exceptions directly. All errors are published as PAN messages on <code>forwarder.error</code> topic.</p>
+<p>#### HTTP Status Codes</p>
+<p>Common status codes encountered:</p>
+<ul><li><strong>401 Unauthorized</strong>: Missing or invalid authentication token</li>
+<li><strong>403 Forbidden</strong>: Valid token but insufficient permissions</li>
+<li><strong>404 Not Found</strong>: Endpoint URL incorrect</li>
+<li><strong>429 Too Many Requests</strong>: Rate limiting in effect</li>
+<li><strong>500 Internal Server Error</strong>: Server-side processing error</li>
+<li><strong>502 Bad Gateway</strong>: Server unreachable or down</li>
+<li><strong>503 Service Unavailable</strong>: Server temporarily overloaded</li>
+</ul>
+#### Server Requirements
+<p>For successful message forwarding, server must:</p>
+<li>Accept POST requests (or configured method) at the URL</li>
+<li>Support JSON request body (Content-Type: application/json)</li>
+<li>Return JSON response with status field</li>
+<li>Configure CORS headers if cross-origin:</li>
+   <pre><code class="language-plaintext">Access-Control-Allow-Origin: *
+   Access-Control-Allow-Methods: POST, OPTIONS
+   Access-Control-Allow-Headers: Content-Type, Authorization</code></pre>
+<li>Handle batched messages if batch-size > 1</li>
+<li>Respond within reasonable timeout (default: 30s)</li>
 <h3>Common Issues</h3>
 <strong>Messages not forwarded</strong>: Check topic patterns match. Use <code>topics="*"</code> to forward all messages.
 <strong>CORS errors</strong>: Configure CORS headers on server. Use <code>credentials="include"</code> for cookies.

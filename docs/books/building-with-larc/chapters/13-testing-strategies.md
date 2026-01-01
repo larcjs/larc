@@ -7,6 +7,7 @@ Quick reference for testing LARC applications. For detailed tutorials, see *Lear
 Test LARC applications using unit tests for components, integration tests for message flows, and E2E tests for complete workflows. Message-driven architecture simplifies testing through decoupling and observable side effects.
 
 **Key Concepts**:
+
 - Testing pyramid: Many unit tests, some integration tests, few E2E tests
 - Mock PAN bus for isolated component testing
 - Test message flows between components
@@ -516,6 +517,7 @@ npx vitest --coverage
 ```
 
 **Coverage Targets**:
+
 - Overall: 80%+
 - Critical paths (auth, payments): 100%
 - UI glue code: 50-70% acceptable

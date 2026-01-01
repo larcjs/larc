@@ -25,11 +25,6 @@ What happened?
 
 ***Figure 1.1:** Development Workflow - Traditional vs LARC*
 
-
-![**Figure 1.1:** Development Workflow - Traditional vs LARC](../images/12-traditional-vs-larc-1.png)
-***Figure 1.1:** Development Workflow - Traditional vs LARC*
-
-
 The web platform evolved, but it didn't evolve fast enough for ambitious developers. We wanted:
 
 - **Component-based architecture** — but HTML didn't have custom elements yet
@@ -475,3 +470,12 @@ Let's begin.
 - "No build" matters for development speed, debugging simplicity, deployment, and sustainability
 - LARC works best for small-to-medium applications, dashboards, PWAs, and prototypes
 - You'll build real applications throughout this book, culminating in a production-ready project management app
+
+---
+
+## Further Reading
+
+**For comprehensive reference:**
+- *Building with LARC* Chapter 1: Introduction - Reference manual overview and conventions
+- *Building with LARC* Chapter 2: Core Concepts - Deep dive into LARC architecture
+- *Building with LARC* Appendix D: Migration Guide - Migrating from React, Vue, Angular

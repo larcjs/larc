@@ -825,6 +825,1247 @@ class EventBridge extends HTMLElement {
 customElements.define('event-bridge', EventBridge);
 ```
 
+## Recipe 11: File Upload with Progress
+
+Multi-file upload with progress tracking and validation.
+
+```javascript
+class FileUpload extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.maxSize = parseInt(this.getAttribute('max-size')) || 5 * 1024 * 1024; // 5MB
+    this.accept = this.getAttribute('accept') || '*/*';
+    this.multiple = this.hasAttribute('multiple');
+
+    this.shadowRoot.innerHTML = `
+      <style>
+        .upload-area {
+          border: 2px dashed #ccc;
+          border-radius: 0.5rem;
+          padding: 2rem;
+          text-align: center;
+          cursor: pointer;
+          transition: border-color 0.3s;
+        }
+        .upload-area:hover { border-color: #2196f3; }
+        .upload-area.dragover { border-color: #4caf50; background: #f0f8f0; }
+        .file-list { margin-top: 1rem; }
+        .file-item {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem;
+          border: 1px solid #ddd;
+          border-radius: 0.25rem;
+          margin-bottom: 0.5rem;
+        }
+        .progress-bar {
+          flex: 1;
+          height: 8px;
+          background: #e0e0e0;
+          border-radius: 4px;
+          overflow: hidden;
+        }
+        .progress-fill {
+          height: 100%;
+          background: #4caf50;
+          transition: width 0.3s;
+        }
+        .remove-btn {
+          background: #f44336;
+          color: white;
+          border: none;
+          padding: 0.25rem 0.5rem;
+          border-radius: 0.25rem;
+          cursor: pointer;
+        }
+        .error { color: #f44336; font-size: 0.875rem; }
+      </style>
+      <div class="upload-area">
+        <input type="file" style="display: none" accept="${this.accept}" ${this.multiple ? 'multiple' : ''}>
+        <p>📁 Drag files here or click to browse</p>
+      </div>
+      <div class="file-list"></div>
+    `;
+
+    this.uploadArea = this.shadowRoot.querySelector('.upload-area');
+    this.fileInput = this.shadowRoot.querySelector('input[type="file"]');
+    this.fileList = this.shadowRoot.querySelector('.file-list');
+
+    this.setupEvents();
+  }
+
+  setupEvents() {
+    this.uploadArea.addEventListener('click', () => this.fileInput.click());
+    this.fileInput.addEventListener('change', (e) => this.handleFiles(e.target.files));
+
+    this.uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      this.uploadArea.classList.add('dragover');
+    });
+
+    this.uploadArea.addEventListener('dragleave', () => {
+      this.uploadArea.classList.remove('dragover');
+    });
+
+    this.uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      this.uploadArea.classList.remove('dragover');
+      this.handleFiles(e.dataTransfer.files);
+    });
+  }
+
+  handleFiles(files) {
+    Array.from(files).forEach(file => {
+      if (file.size > this.maxSize) {
+        this.showError(`${file.name} exceeds ${this.maxSize / 1024 / 1024}MB limit`);
+        return;
+      }
+      this.uploadFile(file);
+    });
+  }
+
+  async uploadFile(file) {
+    const fileId = Date.now() + Math.random();
+    const fileItem = this.createFileItem(file, fileId);
+    this.fileList.appendChild(fileItem);
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch(this.getAttribute('upload-url') || '/api/upload', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-File-Name': file.name
+        }
+      });
+
+      if (!response.ok) throw new Error('Upload failed');
+
+      const result = await response.json();
+      this.updateProgress(fileId, 100);
+      this.pan.dispatch('file:uploaded', { file: file.name, result });
+    } catch (error) {
+      this.showError(`Failed to upload ${file.name}`);
+      fileItem.querySelector('.progress-bar').style.display = 'none';
+      fileItem.querySelector('.error').textContent = error.message;
+    }
+  }
+
+  createFileItem(file, id) {
+    const div = document.createElement('div');
+    div.className = 'file-item';
+    div.dataset.id = id;
+    div.innerHTML = `
+      <span>${file.name} (${(file.size / 1024).toFixed(1)}KB)</span>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: 0%"></div>
+      </div>
+      <button class="remove-btn">Remove</button>
+      <div class="error"></div>
+    `;
+
+    div.querySelector('.remove-btn').addEventListener('click', () => {
+      div.remove();
+      this.pan.dispatch('file:removed', { file: file.name });
+    });
+
+    return div;
+  }
+
+  updateProgress(fileId, percent) {
+    const item = this.fileList.querySelector(`[data-id="${fileId}"]`);
+    if (item) {
+      const fill = item.querySelector('.progress-fill');
+      fill.style.width = `${percent}%`;
+    }
+  }
+
+  showError(message) {
+    const error = document.createElement('div');
+    error.className = 'error';
+    error.textContent = message;
+    this.fileList.appendChild(error);
+    setTimeout(() => error.remove(), 5000);
+  }
+}
+
+customElements.define('file-upload', FileUpload);
+```
+
+## Recipe 12: Autocomplete Input
+
+Dropdown suggestions with keyboard navigation.
+
+```javascript
+class AutocompleteInput extends HTMLElement {
+  constructor() {
+    super();
+    this.selectedIndex = -1;
+    this.suggestions = [];
+  }
+
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <style>
+        .wrapper { position: relative; }
+        input {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #ccc;
+          border-radius: 0.25rem;
+        }
+        .suggestions {
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: white;
+          border: 1px solid #ccc;
+          border-top: none;
+          max-height: 200px;
+          overflow-y: auto;
+          z-index: 1000;
+          display: none;
+        }
+        .suggestions.open { display: block; }
+        .suggestion {
+          padding: 0.5rem;
+          cursor: pointer;
+        }
+        .suggestion:hover, .suggestion.selected {
+          background: #f0f0f0;
+        }
+      </style>
+      <div class="wrapper">
+        <input type="text" placeholder="${this.getAttribute('placeholder') || 'Search...'}">
+        <div class="suggestions"></div>
+      </div>
+    `;
+
+    this.input = this.shadowRoot.querySelector('input');
+    this.dropdown = this.shadowRoot.querySelector('.suggestions');
+
+    this.setupEvents();
+  }
+
+  setupEvents() {
+    this.input.addEventListener('input', (e) => this.handleInput(e.target.value));
+    this.input.addEventListener('keydown', (e) => this.handleKeydown(e));
+    this.input.addEventListener('blur', () => setTimeout(() => this.hideDropdown(), 200));
+
+    this.dropdown.addEventListener('click', (e) => {
+      if (e.target.classList.contains('suggestion')) {
+        this.selectSuggestion(e.target.textContent);
+      }
+    });
+  }
+
+  async handleInput(value) {
+    if (value.length < 2) {
+      this.hideDropdown();
+      return;
+    }
+
+    try {
+      const apiUrl = this.getAttribute('api');
+      const response = await fetch(`${apiUrl}?q=${encodeURIComponent(value)}`);
+      this.suggestions = await response.json();
+      this.renderSuggestions();
+    } catch (error) {
+      console.error('Autocomplete failed:', error);
+    }
+  }
+
+  renderSuggestions() {
+    if (this.suggestions.length === 0) {
+      this.hideDropdown();
+      return;
+    }
+
+    this.dropdown.innerHTML = this.suggestions
+      .map(s => `<div class="suggestion">${s}</div>`)
+      .join('');
+    this.dropdown.classList.add('open');
+    this.selectedIndex = -1;
+  }
+
+  handleKeydown(e) {
+    const items = this.dropdown.querySelectorAll('.suggestion');
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        this.selectedIndex = Math.min(this.selectedIndex + 1, items.length - 1);
+        this.updateSelection(items);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        this.selectedIndex = Math.max(this.selectedIndex - 1, -1);
+        this.updateSelection(items);
+        break;
+      case 'Enter':
+        e.preventDefault();
+        if (this.selectedIndex >= 0) {
+          this.selectSuggestion(items[this.selectedIndex].textContent);
+        }
+        break;
+      case 'Escape':
+        this.hideDropdown();
+        break;
+    }
+  }
+
+  updateSelection(items) {
+    items.forEach((item, i) => {
+      item.classList.toggle('selected', i === this.selectedIndex);
+    });
+  }
+
+  selectSuggestion(value) {
+    this.input.value = value;
+    this.hideDropdown();
+    this.pan.dispatch('autocomplete:selected', { value });
+  }
+
+  hideDropdown() {
+    this.dropdown.classList.remove('open');
+    this.selectedIndex = -1;
+  }
+}
+
+customElements.define('autocomplete-input', AutocompleteInput);
+```
+
+## Recipe 13: Sortable Data Table
+
+Table with sortable columns and highlighting.
+
+```javascript
+class SortableTable extends HTMLElement {
+  constructor() {
+    super();
+    this.sortColumn = null;
+    this.sortDirection = 'asc';
+  }
+
+  connectedCallback() {
+    this.data = JSON.parse(this.getAttribute('data') || '[]');
+    this.columns = JSON.parse(this.getAttribute('columns') || '[]');
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      <style>
+        table { width: 100%; border-collapse: collapse; }
+        th {
+          background: #f5f5f5;
+          padding: 0.75rem;
+          text-align: left;
+          cursor: pointer;
+          user-select: none;
+        }
+        th:hover { background: #e0e0e0; }
+        th.sorted::after {
+          content: '↑';
+          margin-left: 0.5rem;
+        }
+        th.sorted.desc::after { content: '↓'; }
+        td { padding: 0.75rem; border-top: 1px solid #ddd; }
+        tr:hover { background: #f9f9f9; }
+      </style>
+      <table>
+        <thead>
+          <tr>
+            ${this.columns.map(col => `
+              <th data-key="${col.key}">${col.label}</th>
+            `).join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${this.renderRows()}
+        </tbody>
+      </table>
+    `;
+
+    this.querySelectorAll('th').forEach(th => {
+      th.addEventListener('click', () => this.handleSort(th.dataset.key));
+    });
+  }
+
+  renderRows() {
+    return this.data.map(row => `
+      <tr>
+        ${this.columns.map(col => `<td>${row[col.key] || ''}</td>`).join('')}
+      </tr>
+    `).join('');
+  }
+
+  handleSort(key) {
+    if (this.sortColumn === key) {
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortColumn = key;
+      this.sortDirection = 'asc';
+    }
+
+    this.data.sort((a, b) => {
+      const aVal = a[key];
+      const bVal = b[key];
+      const modifier = this.sortDirection === 'asc' ? 1 : -1;
+
+      if (typeof aVal === 'number') {
+        return (aVal - bVal) * modifier;
+      }
+      return String(aVal).localeCompare(String(bVal)) * modifier;
+    });
+
+    this.render();
+    this.updateSortIndicator();
+  }
+
+  updateSortIndicator() {
+    this.querySelectorAll('th').forEach(th => {
+      th.classList.remove('sorted', 'desc');
+      if (th.dataset.key === this.sortColumn) {
+        th.classList.add('sorted');
+        if (this.sortDirection === 'desc') {
+          th.classList.add('desc');
+        }
+      }
+    });
+  }
+}
+
+customElements.define('sortable-table', SortableTable);
+```
+
+## Recipe 14: Tabs Component
+
+Accessible tabs with keyboard support.
+
+```javascript
+class TabsComponent extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.currentTab = 0;
+    this.render();
+    this.setupKeyboardNav();
+  }
+
+  render() {
+    const tabs = Array.from(this.querySelectorAll('[slot^="tab-"]'));
+    const panels = Array.from(this.querySelectorAll('[slot^="panel-"]'));
+
+    this.shadowRoot.innerHTML = `
+      <style>
+        .tabs {
+          display: flex;
+          border-bottom: 2px solid #ddd;
+          gap: 0.5rem;
+        }
+        .tab {
+          padding: 0.75rem 1.5rem;
+          background: none;
+          border: none;
+          border-bottom: 2px solid transparent;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: all 0.3s;
+        }
+        .tab:hover { background: #f5f5f5; }
+        .tab[aria-selected="true"] {
+          border-bottom-color: #2196f3;
+          color: #2196f3;
+        }
+        .panel {
+          padding: 1.5rem 0;
+          display: none;
+        }
+        .panel[aria-hidden="false"] { display: block; }
+      </style>
+      <div class="tabs" role="tablist">
+        ${tabs.map((tab, i) => `
+          <button
+            class="tab"
+            role="tab"
+            aria-selected="${i === 0}"
+            aria-controls="panel-${i}"
+            id="tab-${i}"
+            tabindex="${i === 0 ? 0 : -1}">
+            ${tab.textContent}
+          </button>
+        `).join('')}
+      </div>
+      ${panels.map((panel, i) => `
+        <div
+          class="panel"
+          role="tabpanel"
+          id="panel-${i}"
+          aria-labelledby="tab-${i}"
+          aria-hidden="${i !== 0}">
+          <slot name="panel-${i}"></slot>
+        </div>
+      `).join('')}
+    `;
+
+    this.shadowRoot.querySelectorAll('.tab').forEach((tab, i) => {
+      tab.addEventListener('click', () => this.selectTab(i));
+    });
+  }
+
+  selectTab(index) {
+    this.currentTab = index;
+
+    this.shadowRoot.querySelectorAll('.tab').forEach((tab, i) => {
+      tab.setAttribute('aria-selected', i === index);
+      tab.setAttribute('tabindex', i === index ? 0 : -1);
+    });
+
+    this.shadowRoot.querySelectorAll('.panel').forEach((panel, i) => {
+      panel.setAttribute('aria-hidden', i !== index);
+    });
+
+    this.pan.dispatch('tab:changed', { index });
+  }
+
+  setupKeyboardNav() {
+    this.shadowRoot.querySelector('.tabs').addEventListener('keydown', (e) => {
+      const tabs = this.shadowRoot.querySelectorAll('.tab');
+      let newIndex = this.currentTab;
+
+      switch (e.key) {
+        case 'ArrowLeft':
+          newIndex = Math.max(0, this.currentTab - 1);
+          break;
+        case 'ArrowRight':
+          newIndex = Math.min(tabs.length - 1, this.currentTab + 1);
+          break;
+        case 'Home':
+          newIndex = 0;
+          break;
+        case 'End':
+          newIndex = tabs.length - 1;
+          break;
+        default:
+          return;
+      }
+
+      e.preventDefault();
+      this.selectTab(newIndex);
+      tabs[newIndex].focus();
+    });
+  }
+}
+
+customElements.define('tabs-component', TabsComponent);
+```
+
+**Usage:**
+```html
+<tabs-component>
+  <span slot="tab-0">Overview</span>
+  <span slot="tab-1">Details</span>
+  <span slot="tab-2">Reviews</span>
+  
+  <div slot="panel-0"><p>Overview content...</p></div>
+  <div slot="panel-1"><p>Details content...</p></div>
+  <div slot="panel-2"><p>Reviews content...</p></div>
+</tabs-component>
+```
+
+## Recipe 15: Accordion Component
+
+Expandable sections with smooth animations.
+
+```javascript
+class AccordionComponent extends HTMLElement {
+  connectedCallback() {
+    this.allowMultiple = this.hasAttribute('allow-multiple');
+    this.render();
+  }
+
+  render() {
+    const items = Array.from(this.querySelectorAll('[slot^="item-"]'));
+    
+    this.innerHTML = `
+      <style>
+        .accordion-item {
+          border: 1px solid #ddd;
+          margin-bottom: 0.5rem;
+          border-radius: 0.25rem;
+        }
+        .accordion-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem;
+          background: #f5f5f5;
+          cursor: pointer;
+          user-select: none;
+        }
+        .accordion-header:hover { background: #e0e0e0; }
+        .accordion-icon {
+          transition: transform 0.3s;
+        }
+        .accordion-item.open .accordion-icon {
+          transform: rotate(180deg);
+        }
+        .accordion-content {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.3s ease;
+        }
+        .accordion-item.open .accordion-content {
+          max-height: 500px;
+        }
+        .accordion-body {
+          padding: 1rem;
+        }
+      </style>
+      ${items.map((item, i) => {
+        const title = item.querySelector('[slot="title"]')?.textContent || `Section ${i + 1}`;
+        const content = item.querySelector('[slot="content"]')?.innerHTML || '';
+        
+        return `
+          <div class="accordion-item" data-index="${i}">
+            <div class="accordion-header">
+              <span>${title}</span>
+              <span class="accordion-icon">▼</span>
+            </div>
+            <div class="accordion-content">
+              <div class="accordion-body">${content}</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    `;
+
+    this.querySelectorAll('.accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const item = header.parentElement;
+        this.toggleItem(item);
+      });
+    });
+  }
+
+  toggleItem(item) {
+    const isOpen = item.classList.contains('open');
+
+    if (!this.allowMultiple) {
+      this.querySelectorAll('.accordion-item').forEach(i => {
+        i.classList.remove('open');
+      });
+    }
+
+    if (!isOpen) {
+      item.classList.add('open');
+      this.pan.dispatch('accordion:opened', { index: item.dataset.index });
+    } else {
+      item.classList.remove('open');
+      this.pan.dispatch('accordion:closed', { index: item.dataset.index });
+    }
+  }
+}
+
+customElements.define('accordion-component', AccordionComponent);
+```
+
+## Recipe 16: Context Menu
+
+Right-click custom menu.
+
+```javascript
+class ContextMenu extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.items = JSON.parse(this.getAttribute('items') || '[]');
+    this.render();
+    this.setupTriggers();
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host {
+          position: fixed;
+          z-index: 10000;
+          display: none;
+        }
+        :host(.visible) { display: block; }
+        .menu {
+          background: white;
+          border: 1px solid #ddd;
+          border-radius: 0.25rem;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          min-width: 150px;
+        }
+        .menu-item {
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+        .menu-item:hover { background: #f5f5f5; }
+        .menu-separator {
+          height: 1px;
+          background: #ddd;
+          margin: 0.25rem 0;
+        }
+      </style>
+      <div class="menu">
+        ${this.items.map(item => 
+          item.separator 
+            ? '<div class="menu-separator"></div>'
+            : `<div class="menu-item" data-action="${item.action}">
+                 ${item.icon || ''} ${item.label}
+               </div>`
+        ).join('')}
+      </div>
+    `;
+
+    this.shadowRoot.querySelectorAll('.menu-item').forEach(item => {
+      item.addEventListener('click', () => {
+        this.handleAction(item.dataset.action);
+        this.hide();
+      });
+    });
+  }
+
+  setupTriggers() {
+    const target = this.getAttribute('target');
+    const elements = target ? document.querySelectorAll(target) : [document];
+
+    elements.forEach(el => {
+      el.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        this.show(e.clientX, e.clientY, el);
+      });
+    });
+
+    document.addEventListener('click', () => this.hide());
+  }
+
+  show(x, y, target) {
+    this.style.left = `${x}px`;
+    this.style.top = `${y}px`;
+    this.classList.add('visible');
+    this.currentTarget = target;
+  }
+
+  hide() {
+    this.classList.remove('visible');
+  }
+
+  handleAction(action) {
+    this.pan.dispatch('context-menu:action', {
+      action,
+      target: this.currentTarget
+    });
+  }
+}
+
+customElements.define('context-menu', ContextMenu);
+```
+
+**Usage:**
+```html
+<context-menu
+  target=".list-item"
+  items='[
+    {"label": "Edit", "action": "edit", "icon": "✏️"},
+    {"label": "Delete", "action": "delete", "icon": "🗑️"},
+    {"separator": true},
+    {"label": "Share", "action": "share", "icon": "🔗"}
+  ]'>
+</context-menu>
+```
+
+## Recipe 17: Copy to Clipboard
+
+One-click copy with visual feedback.
+
+```javascript
+class CopyButton extends HTMLElement {
+  connectedCallback() {
+    this.text = this.getAttribute('text') || this.textContent;
+    this.render();
+  }
+
+  render() {
+    this.innerHTML = `
+      <button class="copy-btn">
+        <span class="icon">📋</span>
+        <span class="label">Copy</span>
+      </button>
+      <style>
+        .copy-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border: 1px solid #ddd;
+          border-radius: 0.25rem;
+          background: white;
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+        .copy-btn:hover {
+          background: #f5f5f5;
+          border-color: #2196f3;
+        }
+        .copy-btn.success {
+          background: #4caf50;
+          color: white;
+          border-color: #4caf50;
+        }
+      </style>
+    `;
+
+    this.button = this.querySelector('.copy-btn');
+    this.button.addEventListener('click', () => this.copyToClipboard());
+  }
+
+  async copyToClipboard() {
+    try {
+      await navigator.clipboard.writeText(this.text);
+      this.showSuccess();
+      this.pan.dispatch('clipboard:copied', { text: this.text });
+    } catch (error) {
+      console.error('Copy failed:', error);
+      this.showError();
+    }
+  }
+
+  showSuccess() {
+    const icon = this.querySelector('.icon');
+    const label = this.querySelector('.label');
+    
+    icon.textContent = '✓';
+    label.textContent = 'Copied!';
+    this.button.classList.add('success');
+
+    setTimeout(() => {
+      icon.textContent = '📋';
+      label.textContent = 'Copy';
+      this.button.classList.remove('success');
+    }, 2000);
+  }
+
+  showError() {
+    const label = this.querySelector('.label');
+    label.textContent = 'Failed';
+    setTimeout(() => {
+      label.textContent = 'Copy';
+    }, 2000);
+  }
+}
+
+customElements.define('copy-button', CopyButton);
+```
+
+## Recipe 18: Dark Mode Toggle
+
+Theme switching with system preference detection and persistence.
+
+```javascript
+class DarkModeToggle extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.initTheme();
+    this.render();
+  }
+
+  initTheme() {
+    const saved = localStorage.getItem('theme');
+    const systemPrefers = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.theme = saved || (systemPrefers ? 'dark' : 'light');
+    this.applyTheme();
+
+    // Listen for system theme changes
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+      if (!localStorage.getItem('theme')) {
+        this.theme = e.matches ? 'dark' : 'light';
+        this.applyTheme();
+      }
+    });
+  }
+
+  render() {
+    this.shadowRoot.innerHTML = `
+      <style>
+        button {
+          background: none;
+          border: 1px solid var(--border-color, #ddd);
+          border-radius: 2rem;
+          padding: 0.5rem 1rem;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 1rem;
+          transition: all 0.3s;
+        }
+        button:hover {
+          background: var(--hover-bg, #f5f5f5);
+        }
+      </style>
+      <button>
+        <span class="icon">${this.theme === 'dark' ? '🌙' : '☀️'}</span>
+        <span>${this.theme === 'dark' ? 'Dark' : 'Light'}</span>
+      </button>
+    `;
+
+    this.shadowRoot.querySelector('button').addEventListener('click', () => this.toggle());
+  }
+
+  toggle() {
+    this.theme = this.theme === 'light' ? 'dark' : 'light';
+    this.applyTheme();
+    this.saveTheme();
+    this.render();
+  }
+
+  applyTheme() {
+    document.documentElement.setAttribute('data-theme', this.theme);
+    document.documentElement.style.colorScheme = this.theme;
+    this.pan.dispatch('theme:changed', { theme: this.theme });
+  }
+
+  saveTheme() {
+    localStorage.setItem('theme', this.theme);
+  }
+}
+
+customElements.define('dark-mode-toggle', DarkModeToggle);
+```
+
+**CSS Variables:**
+```css
+:root {
+  --bg-color: white;
+  --text-color: #333;
+  --border-color: #ddd;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+  --border-color: #444;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s, color 0.3s;
+}
+```
+
+## Recipe 19: Skeleton Loader
+
+Loading placeholders for better perceived performance.
+
+```javascript
+class SkeletonLoader extends HTMLElement {
+  connectedCallback() {
+    this.type = this.getAttribute('type') || 'text';
+    this.lines = parseInt(this.getAttribute('lines')) || 3;
+    this.render();
+  }
+
+  render() {
+    const templates = {
+      text: this.renderTextSkeleton(),
+      card: this.renderCardSkeleton(),
+      list: this.renderListSkeleton(),
+      profile: this.renderProfileSkeleton()
+    };
+
+    this.innerHTML = `
+      <style>
+        .skeleton {
+          animation: pulse 1.5s ease-in-out infinite;
+        }
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.4; }
+        }
+        .skeleton-line {
+          height: 1rem;
+          background: #e0e0e0;
+          border-radius: 0.25rem;
+          margin-bottom: 0.5rem;
+        }
+        .skeleton-circle {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          background: #e0e0e0;
+        }
+        .skeleton-rect {
+          height: 200px;
+          background: #e0e0e0;
+          border-radius: 0.5rem;
+          margin-bottom: 1rem;
+        }
+      </style>
+      ${templates[this.type] || templates.text}
+    `;
+  }
+
+  renderTextSkeleton() {
+    return Array(this.lines)
+      .fill(0)
+      .map((_, i) => {
+        const width = i === this.lines - 1 ? '60%' : '100%';
+        return `<div class="skeleton skeleton-line" style="width: ${width}"></div>`;
+      })
+      .join('');
+  }
+
+  renderCardSkeleton() {
+    return `
+      <div class="skeleton skeleton-rect"></div>
+      ${this.renderTextSkeleton()}
+    `;
+  }
+
+  renderListSkeleton() {
+    return Array(this.lines)
+      .fill(0)
+      .map(() => `
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="skeleton skeleton-circle"></div>
+          <div style="flex: 1;">
+            <div class="skeleton skeleton-line"></div>
+            <div class="skeleton skeleton-line" style="width: 70%"></div>
+          </div>
+        </div>
+      `)
+      .join('');
+  }
+
+  renderProfileSkeleton() {
+    return `
+      <div style="display: flex; gap: 1rem; align-items: center;">
+        <div class="skeleton skeleton-circle" style="width: 80px; height: 80px;"></div>
+        <div style="flex: 1;">
+          <div class="skeleton skeleton-line" style="width: 200px;"></div>
+          <div class="skeleton skeleton-line" style="width: 150px;"></div>
+        </div>
+      </div>
+    `;
+  }
+}
+
+customElements.define('skeleton-loader', SkeletonLoader);
+```
+
+**Usage:**
+```html
+<skeleton-loader type="card" lines="3"></skeleton-loader>
+<skeleton-loader type="list" lines="5"></skeleton-loader>
+<skeleton-loader type="profile"></skeleton-loader>
+```
+
+## Recipe 20: Countdown Timer
+
+Countdown timer with custom formatting.
+
+```javascript
+class CountdownTimer extends HTMLElement {
+  connectedCallback() {
+    this.targetDate = new Date(this.getAttribute('target')).getTime();
+    this.format = this.getAttribute('format') || 'dhms'; // days, hours, minutes, seconds
+    this.render();
+    this.startCountdown();
+  }
+
+  render() {
+    this.innerHTML = `
+      <style>
+        .countdown {
+          display: flex;
+          gap: 1rem;
+          font-family: monospace;
+        }
+        .time-unit {
+          text-align: center;
+        }
+        .value {
+          display: block;
+          font-size: 2rem;
+          font-weight: bold;
+        }
+        .label {
+          display: block;
+          font-size: 0.875rem;
+          color: #666;
+          text-transform: uppercase;
+        }
+        .expired {
+          color: #f44336;
+          font-size: 1.5rem;
+        }
+      </style>
+      <div class="countdown"></div>
+    `;
+
+    this.container = this.querySelector('.countdown');
+  }
+
+  startCountdown() {
+    this.updateDisplay();
+    this.interval = setInterval(() => this.updateDisplay(), 1000);
+  }
+
+  updateDisplay() {
+    const now = Date.now();
+    const distance = this.targetDate - now;
+
+    if (distance < 0) {
+      this.container.innerHTML = '<div class="expired">Time expired!</div>';
+      clearInterval(this.interval);
+      this.pan.dispatch('countdown:expired', { target: this.targetDate });
+      return;
+    }
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    const parts = [];
+    if (this.format.includes('d')) parts.push({ value: days, label: 'Days' });
+    if (this.format.includes('h')) parts.push({ value: hours, label: 'Hours' });
+    if (this.format.includes('m')) parts.push({ value: minutes, label: 'Minutes' });
+    if (this.format.includes('s')) parts.push({ value: seconds, label: 'Seconds' });
+
+    this.container.innerHTML = parts
+      .map(p => `
+        <div class="time-unit">
+          <span class="value">${String(p.value).padStart(2, '0')}</span>
+          <span class="label">${p.label}</span>
+        </div>
+      `)
+      .join('');
+  }
+
+  disconnectedCallback() {
+    if (this.interval) {
+      clearInterval(this.interval);
+    }
+  }
+}
+
+customElements.define('countdown-timer', CountdownTimer);
+```
+
+**Usage:**
+```html
+<countdown-timer target="2024-12-31T23:59:59" format="dhms"></countdown-timer>
+```
+
+## Recipe 21: Progress Bar
+
+Visual progress indicator with customization.
+
+```javascript
+class ProgressBar extends HTMLElement {
+  connectedCallback() {
+    this.attachShadow({ mode: 'open' });
+    this.value = parseFloat(this.getAttribute('value')) || 0;
+    this.max = parseFloat(this.getAttribute('max')) || 100;
+    this.showLabel = this.hasAttribute('show-label');
+    this.render();
+
+    this.pan.subscribe('progress:update', (event) => {
+      if (event.detail.id === this.id) {
+        this.updateProgress(event.detail.value);
+      }
+    });
+  }
+
+  render() {
+    const percent = (this.value / this.max) * 100;
+
+    this.shadowRoot.innerHTML = `
+      <style>
+        .progress-container {
+          width: 100%;
+          background: #e0e0e0;
+          border-radius: 1rem;
+          overflow: hidden;
+          position: relative;
+        }
+        .progress-bar {
+          height: 2rem;
+          background: linear-gradient(90deg, #4caf50, #8bc34a);
+          border-radius: 1rem;
+          transition: width 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: bold;
+        }
+        .label {
+          position: absolute;
+          width: 100%;
+          text-align: center;
+          line-height: 2rem;
+          color: ${percent > 50 ? 'white' : '#333'};
+          z-index: 1;
+        }
+      </style>
+      <div class="progress-container">
+        ${this.showLabel ? `<div class="label">${percent.toFixed(0)}%</div>` : ''}
+        <div class="progress-bar" style="width: ${percent}%">
+        </div>
+      </div>
+    `;
+  }
+
+  updateProgress(value) {
+    this.value = value;
+    this.setAttribute('value', value);
+    this.render();
+
+    if (this.value >= this.max) {
+      this.pan.dispatch('progress:complete', { id: this.id });
+    }
+  }
+
+  static get observedAttributes() {
+    return ['value'];
+  }
+
+  attributeChangedCallback(name, oldValue, newValue) {
+    if (name === 'value' && oldValue !== newValue) {
+      this.value = parseFloat(newValue);
+      this.render();
+    }
+  }
+}
+
+customElements.define('progress-bar', ProgressBar);
+```
+
+**Usage:**
+```html
+<progress-bar id="upload-progress" value="45" max="100" show-label></progress-bar>
+
+<script>
+// Update progress
+pc.publish('progress:update', { id: 'upload-progress', value: 75 });
+</script>
+```
+
 ## Common Patterns
 
 ### Pattern: Component Composition

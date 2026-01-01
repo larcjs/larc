@@ -1322,3 +1322,12 @@ This separation of concerns makes your application:
 - **More reusable** - logic can be shared across components
 
 In the next chapter, we'll explore routing and navigation, building on these patterns to create complete single-page applications.
+
+---
+
+## Further Reading
+
+**For business logic and architecture patterns:**
+- *Building with LARC* Chapter 15: Advanced Patterns - Architecture patterns and middleware
+- *Building with LARC* Chapter 4: State Management - State management strategies
+- *Building with LARC* Appendix E: Recipes and Patterns - Design patterns and anti-patterns

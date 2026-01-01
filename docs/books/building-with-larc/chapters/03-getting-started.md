@@ -184,6 +184,7 @@ Check support: `caniuse.com/custom-elementsv1`
 ### VS Code (Recommended)
 
 Install extensions:
+
 - **LARC Extension** — Snippets, IntelliSense
 - **ESLint** — Code linting
 - **Prettier** — Code formatting

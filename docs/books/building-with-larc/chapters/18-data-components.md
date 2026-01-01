@@ -157,6 +157,68 @@ console.log(cart.state.tax);      // 3.6
 console.log(cart.state.total);    // 48.6
 ```
 
+### Errors
+
+pan-store emits errors through the `error` event for error conditions:
+
+| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| Circular dependency | Derived value depends on itself | Review `derive()` dependency chains |
+| Invalid path | `select()` with non-string path | Use valid dot-notation string (e.g., `'user.name'`) |
+| Middleware error | Middleware function throws exception | Wrap middleware in try-catch or fix thrown error |
+| Frozen state | Attempting to modify frozen object | Unfreeze object or create new reference |
+| Type error | Non-object passed to `patch()` | Pass plain object to `patch()` |
+
+**Error handling example**:
+```javascript
+const store = createStore({ count: 0 });
+
+// Listen for errors
+store.addEventListener('error', (e) => {
+  const { error, operation, key } = e.detail;
+  console.error(`Store error in ${operation}:`, error.message);
+
+  // Handle specific errors
+  if (error.message.includes('Circular')) {
+    // Remove circular dependencies
+    console.warn(`Circular dependency detected for key: ${key}`);
+  } else if (operation === 'middleware') {
+    // Middleware failed
+    console.error('Middleware error:', error);
+  }
+});
+
+// Safe derived value with error handling
+try {
+  store.derive('computed', ['dep1'], (dep) => {
+    if (!dep) throw new Error('Invalid dependency');
+    return dep * 2;
+  });
+} catch (err) {
+  console.error('Failed to create derived value:', err);
+}
+
+// Safe middleware usage
+store.use((state, changes) => {
+  try {
+    // Validate changes
+    if (changes.price && changes.price < 0) {
+      throw new Error('Price cannot be negative');
+    }
+    return changes;
+  } catch (err) {
+    console.error('Middleware validation failed:', err);
+    return null; // Reject changes
+  }
+});
+```
+
+**Exceptions thrown**:
+
+- `TypeError`: Invalid parameters (e.g., non-string path, non-function callback)
+- `RangeError`: Invalid computed dependency (circular reference)
+- `Error`: Middleware exceptions (propagated from user code)
+
 ### Common Issues
 
 **Nested changes not detected**
@@ -418,6 +480,104 @@ await idb.delete(id);
 </html>
 ```
 
+### Errors
+
+pan-idb publishes error messages to `{storeName}.idb.error` topic:
+
+| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| `DB_OPEN_FAILED` | Cannot open IndexedDB | Check browser support, quota, or permissions |
+| `STORE_NOT_FOUND` | Object store doesn't exist | Set correct `store` attribute or upgrade database version |
+| `VERSION_ERROR` | Version downgrade attempted | Remove old database or increment version number |
+| `QUOTA_EXCEEDED` | Storage limit reached | Clear old data or request persistent storage |
+| `TRANSACTION_FAILED` | Transaction aborted | Check data validity, reduce transaction size |
+| `INDEX_ERROR` | Index operation failed | Verify index exists and data matches index keyPath |
+| `KEY_ERROR` | Invalid key provided | Use valid key type (number, string, date, array) |
+| `DATA_ERROR` | Data cannot be cloned | Remove non-cloneable values (functions, DOM nodes) |
+| `READ_ONLY_ERROR` | Write on readonly transaction | Use correct transaction mode |
+| `NOT_SUPPORTED` | Browser doesn't support IndexedDB | Provide fallback (localStorage, memory store) |
+
+**Error handling example**:
+```javascript
+const bus = document.querySelector('pan-bus');
+const idb = document.querySelector('pan-idb');
+
+// Subscribe to errors
+bus.subscribe('documents.idb.error', (msg) => {
+  const { code, error, operation } = msg.data;
+  console.error(`IDB error [${code}]:`, error.message);
+
+  // Handle specific errors
+  switch (code) {
+    case 'QUOTA_EXCEEDED':
+      // Prompt user to clear data
+      if (confirm('Storage full. Clear old data?')) {
+        bus.publish({ topic: 'documents.idb.clear' });
+      }
+      break;
+
+    case 'VERSION_ERROR':
+      // Database needs upgrade
+      console.warn('Please reload to upgrade database');
+      location.reload();
+      break;
+
+    case 'NOT_SUPPORTED':
+      // Fallback to alternative storage
+      console.warn('IndexedDB not available, using localStorage');
+      initLocalStorageFallback();
+      break;
+
+    case 'DB_OPEN_FAILED':
+      // Retry with exponential backoff
+      setTimeout(() => {
+        idb.setAttribute('database', idb.getAttribute('database'));
+      }, 1000 * Math.pow(2, retryCount++));
+      break;
+
+    default:
+      // Generic error handling
+      showErrorNotification(`Database error: ${error.message}`);
+  }
+});
+
+// Graceful degradation
+bus.subscribe('documents.idb.error', async (msg) => {
+  if (msg.data.code === 'NOT_SUPPORTED' || msg.data.code === 'DB_OPEN_FAILED') {
+    // Switch to memory-only mode
+    window.inMemoryStore = new Map();
+    console.warn('Using in-memory storage (data will not persist)');
+  }
+});
+
+// Quota management
+async function checkQuota() {
+  if (navigator.storage && navigator.storage.estimate) {
+    const estimate = await navigator.storage.estimate();
+    const percentUsed = (estimate.usage / estimate.quota) * 100;
+
+    if (percentUsed > 90) {
+      console.warn(`Storage ${percentUsed.toFixed(1)}% full`);
+      // Trigger cleanup
+      bus.publish({ topic: 'documents.idb.cleanup' });
+    }
+  }
+}
+```
+
+**Exceptions thrown**:
+
+- `DOMException`: IndexedDB-specific errors (InvalidStateError, ConstraintError, etc.)
+- `TypeError`: Invalid parameters (e.g., non-cloneable data)
+- `QuotaExceededError`: Storage limit reached
+- `Error`: General database operation failures
+
+**Browser Compatibility Notes**:
+
+- IndexedDB supported in all modern browsers (Chrome 24+, Firefox 16+, Safari 10+)
+- Private browsing may disable or limit IndexedDB
+- Check support: `if ('indexedDB' in window)`
+
 ### Common Issues
 
 **Database version conflicts**: Different tabs with different versions
@@ -468,6 +628,7 @@ This chapter documented LARC's data management components:
 Use pan-store for reactive application state, pan-idb for persistent storage.
 
 **See Also**:
+
 - Tutorial: *Learning LARC* Chapter 6
 - Message bus: Chapter 17
 - UI components: Chapter 19

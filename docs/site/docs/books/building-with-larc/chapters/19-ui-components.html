@@ -146,6 +146,79 @@ const allFiles = await files.listFiles();
   &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+<h3>Errors</h3>
+<p>pan-files dispatches custom <code>error</code> events and publishes to <code>file.error</code> topic:</p>
+<p>| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| <code>OPFS_NOT_SUPPORTED</code> | Browser doesn't support OPFS | Use Chrome 102+, Edge 102+, or provide fallback |
+| <code>OPFS_INIT_FAILED</code> | Failed to initialize file system | Check HTTPS connection (or localhost) |
+| <code>FILE_NOT_FOUND</code> | File doesn't exist | Verify path or catch error gracefully |
+| <code>WRITE_FAILED</code> | Cannot write file | Check storage quota or permissions |
+| <code>READ_FAILED</code> | Cannot read file | Verify file exists and is accessible |
+| <code>DELETE_FAILED</code> | Cannot delete file | Check if file is locked or in use |
+| <code>QUOTA_EXCEEDED</code> | Storage quota exceeded | Clear old files or request persistent storage |
+| <code>INVALID_PATH</code> | Path contains invalid characters | Use valid path format (no <code><>:"|?*</code>) |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const files = document.querySelector(&#039;pan-files&#039;);
+const bus = document.querySelector(&#039;pan-bus&#039;);
+
+// Listen for errors via DOM event
+files.addEventListener(&#039;error&#039;, (e) =&gt; {
+  const { code, message, path } = e.detail;
+  console.error(`File error [${code}]:`, message);
+
+  switch (code) {
+    case &#039;OPFS_NOT_SUPPORTED&#039;:
+      showFallbackUI();
+      break;
+    case &#039;QUOTA_EXCEEDED&#039;:
+      promptUserToCleanup();
+      break;
+    case &#039;FILE_NOT_FOUND&#039;:
+      console.warn(`File not found: ${path}`);
+      break;
+  }
+});
+
+// Or subscribe via PAN bus
+bus.subscribe(&#039;file.error&#039;, (msg) =&gt; {
+  const { code, message, path } = msg.data;
+  displayErrorToUser(message);
+});
+
+// Safe file operations with try-catch
+async function safeWriteFile(path, content) {
+  try {
+    await files.writeFile(path, content);
+    await files.refresh();
+  } catch (err) {
+    console.error(&#039;Write failed:&#039;, err.message);
+    // Fallback to localStorage or download
+    localStorage.setItem(`backup_${path}`, content);
+  }
+}
+
+// Check quota before large operations
+if (navigator.storage &amp;&amp; navigator.storage.estimate) {
+  const estimate = await navigator.storage.estimate();
+  const percentUsed = (estimate.usage / estimate.quota) * 100;
+  
+  if (percentUsed &gt; 90) {
+    console.warn(&#039;Storage nearly full, cleanup recommended&#039;);
+  }
+}</code></pre>
+<strong>Exceptions thrown</strong>:
+<ul><li><code>DOMException</code>: OPFS-specific errors (NotFoundError, QuotaExceededError)</li>
+<li><code>TypeError</code>: Invalid parameters (non-string path, invalid content type)</li>
+<li><code>Error</code>: General file operation failures</li>
+</ul>
+<strong>Browser Compatibility Notes</strong>:
+<ul><li>OPFS requires Chrome 102+, Edge 102+, Opera 88+</li>
+<li>Not available in Firefox as of December 2024</li>
+<li>Requires HTTPS or localhost (not available on <code>http://</code>)</li>
+<li>Private/incognito mode may have reduced quota</li>
+<li>Check support: <code>if ('storage' in navigator && 'getDirectory' in navigator.storage)</code></li>
+</ul>
 <h3>Common Issues</h3>
 <strong>Files don't persist</strong>: OPFS storage clears if user clears browser data, uses private mode, or exceeds quota. Provide export functionality for critical data.
 <strong>"Failed to initialize OPFS"</strong>: Requires HTTPS (or localhost). Check browser support: Chrome 102+, Edge 102+, Opera 88+.
@@ -290,6 +363,78 @@ editor.insertText(&#039;\n\n---\n\n&#039;);
   &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+<h3>Errors</h3>
+<p>pan-markdown-editor dispatches <code>error</code> events for error conditions:</p>
+<p>| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| <code>RENDER_FAILED</code> | Preview rendering failed | Check markdown syntax or disable preview |
+| <code>AUTOSAVE_FAILED</code> | Auto-save operation failed | Check storage or disable autosave |
+| <code>INVALID_CONTENT</code> | Non-string content passed to <code>setValue()</code> | Pass valid string to <code>setValue()</code> |
+| <code>TOOLBAR_ACTION_FAILED</code> | Toolbar button action threw error | Check custom toolbar handlers |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const editor = document.querySelector(&#039;pan-markdown-editor&#039;);
+
+// Listen for errors
+editor.addEventListener(&#039;error&#039;, (e) =&gt; {
+  const { code, message, action } = e.detail;
+  console.error(`Editor error [${code}]:`, message);
+
+  switch (code) {
+    case &#039;RENDER_FAILED&#039;:
+      // Disable preview temporarily
+      editor.removeAttribute(&#039;preview&#039;);
+      showNotification(&#039;Preview disabled due to rendering error&#039;);
+      break;
+
+    case &#039;AUTOSAVE_FAILED&#039;:
+      // Manual save prompt
+      if (confirm(&#039;Auto-save failed. Save manually?&#039;)) {
+        const content = editor.getValue();
+        manualSave(content);
+      }
+      break;
+
+    case &#039;INVALID_CONTENT&#039;:
+      console.warn(&#039;Attempted to set invalid content&#039;);
+      break;
+  }
+});
+
+// Safe setValue with validation
+function safeSetValue(content) {
+  if (typeof content !== &#039;string&#039;) {
+    console.error(&#039;Content must be a string&#039;);
+    return;
+  }
+  
+  try {
+    editor.setValue(content);
+  } catch (err) {
+    console.error(&#039;Failed to set editor content:&#039;, err);
+    // Fallback to plain textarea
+    useFallbackEditor(content);
+  }
+}
+
+// Monitor autosave with error handling
+const bus = document.querySelector(&#039;pan-bus&#039;);
+bus.subscribe(&#039;markdown.saved&#039;, (msg) =&gt; {
+  try {
+    localStorage.setItem(&#039;backup&#039;, msg.data.content);
+    console.log(&#039;Content backed up&#039;);
+  } catch (err) {
+    console.error(&#039;Backup failed:&#039;, err);
+  }
+});</code></pre>
+<strong>Exceptions thrown</strong>:
+<ul><li><code>TypeError</code>: Invalid parameters (non-string content, invalid position)</li>
+<li><code>Error</code>: General operation failures (toolbar actions, preview rendering)</li>
+</ul>
+<strong>Performance Notes</strong>:
+<ul><li>Documents over 50KB may cause lag with preview enabled</li>
+<li>Autosave debounces input by 1 second</li>
+<li>Consider disabling preview for large documents: <code>if (content.length > 50000) editor.removeAttribute('preview')</code></li>
+</ul>
 <h3>Common Issues</h3>
 <strong>Toolbar doesn't work on mobile</strong>: Component optimized for desktop. Hide toolbar on mobile.
 <strong>Preview doesn't update</strong>: Ensure <code>pan-markdown-renderer</code> is imported.
@@ -462,13 +607,94 @@ await initialize({ debug: true, theme: &#039;dark&#039; });
   &lt;/main&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-<h3>Common Issues</h3>
-<strong>No syntax highlighting</strong>: Renderer provides structure only. Add Prism.js or similar for color syntax highlighting.
-<strong>Tables render incorrectly</strong>: Ensure separator row with dashes: <code>|---|---|</code>
-<strong>Raw HTML appears</strong>: Sanitization enabled by default. Only set <code>sanitize="false"</code> for trusted content.
-<strong>Content doesn't wrap on mobile</strong>: Add responsive CSS:
-<pre><code class="language-css">pan-markdown-renderer { overflow-x: auto; }
-pan-markdown-renderer pre { max-width: 100%; overflow-x: auto; }</code></pre>
+<h3>Errors</h3>
+<p>pan-markdown-renderer dispatches <code>error</code> events when rendering fails:</p>
+<p>| Error Code | Cause | Resolution |
+|------------|-------|------------|
+| <code>PARSE_ERROR</code> | Invalid markdown syntax | Check markdown format or sanitize input |
+| <code>RENDER_ERROR</code> | HTML generation failed | Simplify content or report bug |
+| <code>SANITIZATION_ERROR</code> | HTML sanitization failed | Check content or disable sanitization |
+| <code>INVALID_CONTENT</code> | Non-string content passed | Pass valid string to <code>setContent()</code> |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">const renderer = document.querySelector(&#039;pan-markdown-renderer&#039;);
+
+// Listen for errors
+renderer.addEventListener(&#039;error&#039;, (e) =&gt; {
+  const { code, message, content } = e.detail;
+  console.error(`Renderer error [${code}]:`, message);
+
+  switch (code) {
+    case &#039;PARSE_ERROR&#039;:
+      // Show raw markdown as fallback
+      renderer.shadowRoot.querySelector(&#039;.content&#039;).textContent = content;
+      showWarning(&#039;Markdown parsing failed, showing raw content&#039;);
+      break;
+
+    case &#039;RENDER_ERROR&#039;:
+      console.error(&#039;Failed to render markdown&#039;);
+      showFallbackRenderer();
+      break;
+
+    case &#039;SANITIZATION_ERROR&#039;:
+      // Retry with stricter sanitization
+      renderer.setAttribute(&#039;sanitize&#039;, &#039;true&#039;);
+      break;
+
+    case &#039;INVALID_CONTENT&#039;:
+      console.warn(&#039;Invalid content type provided&#039;);
+      break;
+  }
+});
+
+// Safe setContent with validation
+function safeSetContent(content) {
+  if (typeof content !== &#039;string&#039;) {
+    console.error(&#039;Content must be a string&#039;);
+    return;
+  }
+
+  try {
+    renderer.setContent(content);
+  } catch (err) {
+    console.error(&#039;Failed to render content:&#039;, err);
+    // Fallback to plain text
+    renderer.shadowRoot.querySelector(&#039;.content&#039;).textContent = content;
+  }
+}
+
+// Validate markdown before rendering
+function validateAndRender(markdown) {
+  // Check for balanced code fences
+  const fenceCount = (markdown.match(/</code></pre>/g) || []).length;
+  if (fenceCount % 2 !== 0) {
+    console.warn('Unbalanced code fences detected');
+    markdown += '\n``<code>'; // Auto-close
+  }
+<p>renderer.setContent(markdown);
+}
+<pre><code class="language-plaintext">**Exceptions thrown**:
+
+- `TypeError`: Invalid parameters (non-string content)
+- `Error`: Parse or render failures
+
+**Performance Notes**:
+
+- Large documents (&gt;100KB) may slow rendering
+- Complex tables with many rows cause layout reflow
+- Consider debouncing content updates for live preview
+
+### Common Issues
+
+**No syntax highlighting**: Renderer provides structure only. Add Prism.js or similar for color syntax highlighting.
+
+**Tables render incorrectly**: Ensure separator row with dashes: `|---|---|`
+
+**Raw HTML appears**: Sanitization enabled by default. Only set `sanitize=&quot;false&quot;` for trusted content.
+
+**Content doesn&#039;t wrap on mobile**: Add responsive CSS:</code></pre>css
+pan-markdown-renderer { overflow-x: auto; }
+pan-markdown-renderer pre { max-width: 100%; overflow-x: auto; }
+</code>``</p>
 <hr>
 <h2>Summary</h2>
 <p>This chapter documented LARC's UI components:</p>

@@ -368,9 +368,9 @@ Item events notify about completed operations:
 
 | Topic | Trigger | Data |
 |-------|---------|------|
-| `${resource}.item.created` | Item created | `{ item: {...} }` |
-| `${resource}.item.updated` | Item updated | `{ item: {...} }` |
-| `${resource}.item.deleted` | Item deleted | `{ id: 123 }` |
+| `\${resource}.item.created` | Item created | `{ item: {...} }` |
+| `\${resource}.item.updated` | Item updated | `{ item: {...} }` |
+| `\${resource}.item.deleted` | Item deleted | `{ id: 123 }` |
 
 **Example:**
 ```javascript
@@ -739,13 +739,13 @@ client.publish({
 
 | Pattern | Example | Use Case |
 |---------|---------|----------|
-| `${resource}.list.state` | `users.list.state` | List data (retained) |
-| `${resource}.list.get` | `users.list.get` | Request list |
-| `${resource}.item.get` | `users.item.get` | Request single item |
-| `${resource}.item.save` | `users.item.save` | Save item |
-| `${resource}.item.delete` | `users.item.delete` | Delete item |
-| `${resource}.item.updated` | `users.item.updated` | Item updated event |
-| `${domain}.state` | `app.theme.state` | Global state (retained) |
-| `${domain}.${action}` | `nav.goto` | Command |
+| `\${resource}.list.state` | `users.list.state` | List data (retained) |
+| `\${resource}.list.get` | `users.list.get` | Request list |
+| `\${resource}.item.get` | `users.item.get` | Request single item |
+| `\${resource}.item.save` | `users.item.save` | Save item |
+| `\${resource}.item.delete` | `users.item.delete` | Delete item |
+| `\${resource}.item.updated` | `users.item.updated` | Item updated event |
+| `\${domain}.state` | `app.theme.state` | Global state (retained) |
+| `\${domain}.\${action}` | `nav.goto` | Command |
 
 For complete API documentation, see the main API Reference.

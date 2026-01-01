@@ -84,8 +84,8 @@ pc.publish(&#039;users.item.save&#039;, {
 | <code>resource</code> | String | "items" | Resource name (topic prefix) |
 | <code>base-url</code> | String | "" | API base URL |
 | <code>key</code> | String | "id" | Unique identifier field |
-| <code>list-path</code> | String | "/${resource}" | List endpoint template |
-| <code>item-path</code> | String | "/${resource}/:id" | Item endpoint template |
+| <code>list-path</code> | String | "/\${resource}" | List endpoint template |
+| <code>item-path</code> | String | "/\${resource}/:id" | Item endpoint template |
 | <code>update-method</code> | String | "PUT" | HTTP method for updates (PUT/PATCH) |
 | <code>credentials</code> | String | "" | Fetch credentials mode |</p>
 <strong>Headers configuration</strong> (via <code><script type="application/json"></code>):
@@ -103,16 +103,16 @@ pc.publish(&#039;users.item.save&#039;, {
 <p>#### Subscribed (Requests)</p>
 <p>| Topic | Data | HTTP Request | Description |
 |-------|------|--------------|-------------|
-| <code>${resource}.list.get</code> | <code>{ ...query }</code> | GET /${resource} | Fetch list |
-| <code>${resource}.item.get</code> | <code>{ id }</code> | GET /${resource}/:id | Fetch single item |
-| <code>${resource}.item.save</code> | <code>{ id?, ...data }</code> | POST or PUT | Create/update item |
-| <code>${resource}.item.delete</code> | <code>{ id }</code> | DELETE /${resource}/:id | Delete item |</p>
+| <code>\${resource}.list.get</code> | <code>{ ...query }</code> | GET /\${resource} | Fetch list |
+| <code>\${resource}.item.get</code> | <code>{ id }</code> | GET /\${resource}/:id | Fetch single item |
+| <code>\${resource}.item.save</code> | <code>{ id?, ...data }</code> | POST or PUT | Create/update item |
+| <code>\${resource}.item.delete</code> | <code>{ id }</code> | DELETE /\${resource}/:id | Delete item |</p>
 <p>#### Published (Responses)</p>
 <p>| Topic | Data | Description |
 |-------|------|-------------|
-| <code>${resource}.list.state</code> | <code>{ items: [...], meta? }</code> | List results (retained) |
-| <code>${resource}.item.state.${id}</code> | <code>{ ...item }</code> | Single item (retained) |
-| <code>${resource}.error</code> | <code>{ operation, error, status }</code> | Error occurred |</p>
+| <code>\${resource}.list.state</code> | <code>{ items: [...], meta? }</code> | List results (retained) |
+| <code>\${resource}.item.state.\${id}</code> | <code>{ ...item }</code> | Single item (retained) |
+| <code>\${resource}.error</code> | <code>{ operation, error, status }</code> | Error occurred |</p>
 <h3>Complete Example</h3>
 <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -190,6 +190,106 @@ pc.publish(&#039;users.item.save&#039;, {
   &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+<h3>Errors</h3>
+<p>pan-data-connector publishes errors to <code>${resource}.error</code> topic:</p>
+<p>| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| <code>NETWORK_ERROR</code> | Fetch failed (offline, DNS, timeout) | Check network connection and API availability |
+| <code>HTTP_4XX</code> | Client error (400-499) | Verify request data and authentication |
+| <code>HTTP_5XX</code> | Server error (500-599) | Check API server logs, retry with backoff |
+| <code>PARSE_ERROR</code> | Response not valid JSON | Check API response format |
+| <code>CORS_ERROR</code> | Cross-origin request blocked | Configure CORS headers on server |
+| <code>INVALID_CONFIG</code> | Missing required attributes | Set <code>resource</code> and <code>base-url</code> attributes |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Subscribe to errors
+pc.subscribe(&#039;users.error&#039;, (msg) =&gt; {
+  const { operation, error, status, response } = msg.data;
+  console.error(`API Error [${operation}]:`, error);
+
+  switch (true) {
+    case status === 401:
+      // Unauthorized - redirect to login
+      window.location.href = &#039;/login&#039;;
+      break;
+
+    case status === 404:
+      // Not found
+      showNotification(&#039;Resource not found&#039;);
+      break;
+
+    case status &gt;= 500:
+      // Server error - retry with exponential backoff
+      retryWithBackoff(() =&gt; {
+        pc.publish(&#039;users.list.get&#039;, {});
+      });
+      break;
+
+    case error.includes(&#039;CORS&#039;):
+      // CORS error
+      console.error(&#039;CORS configuration required on server&#039;);
+      showCORSHelp();
+      break;
+
+    case error.includes(&#039;NETWORK&#039;):
+      // Network error
+      showOfflineMode();
+      break;
+
+    default:
+      showNotification(`Error: ${error}`);
+  }
+});
+
+// Retry with exponential backoff
+let retryCount = 0;
+function retryWithBackoff(fn, maxRetries = 3) {
+  if (retryCount &gt;= maxRetries) {
+    console.error(&#039;Max retries exceeded&#039;);
+    return;
+  }
+  const delay = Math.pow(2, retryCount) * 1000;
+  setTimeout(() =&gt; {
+    retryCount++;
+    fn();
+  }, delay);
+}
+
+// Optimistic updates with rollback on error
+let previousState = null;
+pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+  previousState = msg.data;
+});
+
+function saveUserOptimistically(user) {
+  // Update UI immediately
+  updateUI(user);
+  
+  // Save to API
+  pc.publish(&#039;users.item.save&#039;, user);
+  
+  // Rollback on error
+  const unsubscribe = pc.subscribe(&#039;users.error&#039;, (msg) =&gt; {
+    if (msg.data.operation === &#039;save&#039;) {
+      updateUI(previousState);
+      unsubscribe();
+    }
+  });
+}</code></pre>
+<strong>HTTP Status Codes</strong>:
+All HTTP status codes are passed through in the error message:
+<ul><li>400: Bad Request</li>
+<li>401: Unauthorized</li>
+<li>403: Forbidden</li>
+<li>404: Not Found</li>
+<li>422: Unprocessable Entity</li>
+<li>500: Internal Server Error</li>
+<li>502: Bad Gateway</li>
+<li>503: Service Unavailable</li>
+</ul>
 <h3>Common Issues</h3>
 <strong>401/403 errors</strong>: Configure authentication headers via embedded JSON script.
 <strong>CORS errors</strong>: Ensure API server sets appropriate CORS headers. Use <code>credentials="include"</code> for cookies.
@@ -262,11 +362,11 @@ pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
   &lt;!-- GraphQL scripts... --&gt;
 &lt;/pan-graphql-connector&gt;</code></pre>
 <h3>PAN Topics</h3>
-<p>Same as <code>pan-data-connector</code>:
+<p>Same as <code>pan-data-connector</code>:</p>
 <ul><li>Subscribe: <code>${resource}.list.get</code>, <code>${resource}.item.get</code>, <code>${resource}.item.save</code>, <code>${resource}.item.delete</code></li>
 <li>Publish: <code>${resource}.list.state</code>, <code>${resource}.item.state.${id}</code>, <code>${resource}.error</code></li>
 </ul>
-<h3>Complete Example</h3></p>
+<h3>Complete Example</h3>
 <pre><code class="language-html">&lt;!DOCTYPE html&gt;
 &lt;html&gt;
 &lt;head&gt;
@@ -338,6 +438,86 @@ pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
   &lt;pre id=&quot;output&quot;&gt;&lt;/pre&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+<h3>Errors</h3>
+<p>pan-graphql-connector publishes errors to <code>${resource}.error</code> topic:</p>
+<p>| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| <code>GRAPHQL_ERROR</code> | GraphQL errors in response | Check query syntax and schema |
+| <code>NETWORK_ERROR</code> | Fetch failed | Check network and endpoint URL |
+| <code>PARSE_ERROR</code> | Response not valid JSON | Check GraphQL endpoint response format |
+| <code>MISSING_OPERATION</code> | No query/mutation defined for operation | Add <code><script type="application/graphql" data-operation="..."></code> |
+| <code>VALIDATION_ERROR</code> | GraphQL validation failed | Fix query variables or schema mismatch |
+| <code>AUTH_ERROR</code> | Authentication failed | Check Authorization header |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Subscribe to GraphQL errors
+pc.subscribe(&#039;users.error&#039;, (msg) =&gt; {
+  const { operation, error, graphqlErrors, status } = msg.data;
+  console.error(`GraphQL Error [${operation}]:`, error);
+
+  // Handle GraphQL-specific errors
+  if (graphqlErrors &amp;&amp; graphqlErrors.length &gt; 0) {
+    graphqlErrors.forEach(err =&gt; {
+      console.error(`  - ${err.message}`);
+      
+      // Handle specific error types
+      if (err.extensions?.code === &#039;UNAUTHENTICATED&#039;) {
+        redirectToLogin();
+      } else if (err.extensions?.code === &#039;FORBIDDEN&#039;) {
+        showNotification(&#039;Access denied&#039;);
+      } else if (err.path) {
+        showFieldError(err.path.join(&#039;.&#039;), err.message);
+      }
+    });
+  }
+
+  // Handle network errors
+  if (error.includes(&#039;NETWORK&#039;)) {
+    showOfflineMode();
+  }
+
+  // Handle missing operations
+  if (error.includes(&#039;MISSING_OPERATION&#039;)) {
+    console.error(`Add &lt;script type=&quot;application/graphql&quot; data-operation=&quot;${operation}&quot;&gt; to component`);
+  }
+});
+
+// Retry with different variables on error
+function retryQueryWithFallback() {
+  const unsubscribe = pc.subscribe(&#039;users.error&#039;, (msg) =&gt; {
+    if (msg.data.operation === &#039;list&#039;) {
+      // Try with reduced limit
+      pc.publish(&#039;users.list.get&#039;, { limit: 10 });
+      unsubscribe();
+    }
+  });
+  
+  pc.publish(&#039;users.list.get&#039;, { limit: 100 });
+}
+
+// Handle partial data from GraphQL
+pc.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+  const { items, errors } = msg.data;
+  
+  if (errors) {
+    // GraphQL can return partial data with errors
+    console.warn(&#039;Partial data received with errors:&#039;, errors);
+    showWarning(&#039;Some data may be incomplete&#039;);
+  }
+  
+  displayUsers(items || []);
+});</code></pre>
+<strong>GraphQL Error Extensions</strong>:
+GraphQL servers often include error codes in <code>extensions</code>:
+<ul><li><code>UNAUTHENTICATED</code>: Not logged in</li>
+<li><code>FORBIDDEN</code>: Insufficient permissions</li>
+<li><code>BAD_USER_INPUT</code>: Invalid variables</li>
+<li><code>GRAPHQL_VALIDATION_FAILED</code>: Query validation error</li>
+<li><code>PERSISTED_QUERY_NOT_FOUND</code>: Persisted query ID not found</li>
+</ul>
 <h3>Common Issues</h3>
 <strong>Query not found</strong>: Ensure <code>data-operation</code> attribute matches operation type (list/get/create/update/delete).
 <strong>Variables not passed</strong>: Variable names must match GraphQL schema. Check operation definitions.
@@ -382,11 +562,11 @@ pc.subscribe(&#039;ws.message&#039;, (msg) =&gt; {
 | <code>reconnect-delay</code> | Number | 1000 | Reconnect delay (ms) |
 | <code>max-reconnect-attempts</code> | Number | Infinity | Max reconnection attempts |</p>
 <h3>Methods</h3>
-<p>| Method | Parameters | Description |
-|--------|-----------|-------------|
-| <code>connect()</code> | - | Open WebSocket connection |
-| <code>disconnect()</code> | - | Close connection |
-| <code>send(data)</code> | data: Any | Send message (auto-serializes JSON) |</p>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>connect()</code> | - | Promise\<void\> | Open WebSocket connection |
+| <code>disconnect()</code> | - | void | Close connection |
+| <code>send(data)</code> | data: Any | void | Send message (auto-serializes JSON) |</p>
 <h3>PAN Topics</h3>
 <p>#### Published</p>
 <p>| Topic | Data | Description |
@@ -469,6 +649,129 @@ pc.subscribe(&#039;ws.message&#039;, (msg) =&gt; {
   &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+<h3>Errors</h3>
+<p>pan-websocket publishes errors to <code>ws.error</code> topic:</p>
+<p>| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| <code>CONNECTION_FAILED</code> | Cannot connect to WebSocket server | Check URL and server availability |
+| <code>CONNECTION_CLOSED</code> | Connection closed unexpectedly | Check server logs, will auto-reconnect if enabled |
+| <code>SEND_FAILED</code> | Message send failed | Check connection status before sending |
+| <code>INVALID_URL</code> | WebSocket URL is invalid | Use valid ws:// or wss:// URL |
+| <code>MAX_RECONNECT_EXCEEDED</code> | Max reconnection attempts reached | Check server, increase max attempts, or fix issue |
+| <code>MESSAGE_PARSE_ERROR</code> | Cannot parse received message | Check message format from server |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Subscribe to errors
+pc.subscribe(&#039;ws.error&#039;, (msg) =&gt; {
+  const { error, code, url } = msg.data;
+  console.error(&#039;WebSocket Error:&#039;, error);
+
+  switch (code) {
+    case 1006: // Abnormal closure
+      console.warn(&#039;Connection lost abnormally&#039;);
+      showNotification(&#039;Connection lost, reconnecting...&#039;);
+      break;
+
+    case 1008: // Policy violation
+      console.error(&#039;Connection rejected by server&#039;);
+      showNotification(&#039;Access denied&#039;);
+      break;
+
+    case 1011: // Server error
+      console.error(&#039;Server error occurred&#039;);
+      retryAfterDelay(5000);
+      break;
+
+    default:
+      if (error.includes(&#039;MAX_RECONNECT_EXCEEDED&#039;)) {
+        showNotification(&#039;Cannot connect to server&#039;);
+        showOfflineMode();
+      }
+  }
+});
+
+// Monitor connection lifecycle
+let connectionAttempts = 0;
+
+pc.subscribe(&#039;ws.connected&#039;, (msg) =&gt; {
+  connectionAttempts = 0;
+  console.log(&#039;WebSocket connected&#039;);
+  showOnlineStatus();
+});
+
+pc.subscribe(&#039;ws.disconnected&#039;, (msg) =&gt; {
+  const { code, reason } = msg.data;
+  console.log(`Disconnected: ${code} - ${reason}`);
+  
+  connectionAttempts++;
+  if (connectionAttempts &gt; 3) {
+    showPersistentConnectionIssueWarning();
+  }
+});
+
+// Heartbeat to detect connection issues
+let heartbeatInterval;
+let lastHeartbeat = Date.now();
+
+pc.subscribe(&#039;ws.connected&#039;, () =&gt; {
+  heartbeatInterval = setInterval(() =&gt; {
+    pc.publish(&#039;ws.send&#039;, { type: &#039;ping&#039;, timestamp: Date.now() });
+    
+    // Check if we&#039;ve received pong
+    if (Date.now() - lastHeartbeat &gt; 30000) {
+      console.warn(&#039;Heartbeat timeout, reconnecting...&#039;);
+      pc.publish(&#039;ws.disconnect&#039;, {});
+      setTimeout(() =&gt; pc.publish(&#039;ws.connect&#039;, {}), 1000);
+    }
+  }, 10000);
+});
+
+pc.subscribe(&#039;ws.message&#039;, (msg) =&gt; {
+  if (msg.data.type === &#039;pong&#039;) {
+    lastHeartbeat = Date.now();
+  }
+});
+
+pc.subscribe(&#039;ws.disconnected&#039;, () =&gt; {
+  clearInterval(heartbeatInterval);
+});
+
+// Message queuing when offline
+const messageQueue = [];
+
+function sendMessage(data) {
+  // Check if connected
+  if (document.querySelector(&#039;pan-websocket&#039;).readyState === WebSocket.OPEN) {
+    pc.publish(&#039;ws.send&#039;, data);
+  } else {
+    // Queue message
+    messageQueue.push(data);
+    console.log(&#039;Message queued (offline)&#039;);
+  }
+}
+
+// Send queued messages on reconnect
+pc.subscribe(&#039;ws.connected&#039;, () =&gt; {
+  while (messageQueue.length &gt; 0) {
+    const data = messageQueue.shift();
+    pc.publish(&#039;ws.send&#039;, data);
+  }
+});</code></pre>
+<strong>WebSocket Close Codes</strong>:
+Standard close codes passed in <code>ws.disconnected</code>:
+<ul><li>1000: Normal closure</li>
+<li>1001: Going away (page unload)</li>
+<li>1002: Protocol error</li>
+<li>1003: Unsupported data</li>
+<li>1006: Abnormal closure (no close frame)</li>
+<li>1007: Invalid data</li>
+<li>1008: Policy violation</li>
+<li>1009: Message too big</li>
+<li>1011: Server error</li>
+</ul>
 <h3>Common Issues</h3>
 <strong>Connection fails</strong>: Check URL scheme (ws:// for HTTP, wss:// for HTTPS). Ensure server is running.
 <strong>Auto-reconnect loops</strong>: Increase <code>reconnect-delay</code> or set <code>max-reconnect-attempts</code> to prevent rapid retries.
@@ -511,10 +814,10 @@ pc.subscribe(&#039;sse.event.notification&#039;, (msg) =&gt; {
 | <code>auto-connect</code> | Boolean | false | Connect on mount |
 | <code>with-credentials</code> | Boolean | false | Include credentials in request |</p>
 <h3>Methods</h3>
-<p>| Method | Parameters | Description |
-|--------|-----------|-------------|
-| <code>connect()</code> | - | Open SSE connection |
-| <code>disconnect()</code> | - | Close connection |</p>
+<p>| Method | Parameters | Returns | Description |
+|--------|-----------|---------|-------------|
+| <code>connect()</code> | - | void | Open SSE connection |
+| <code>disconnect()</code> | - | void | Close connection |</p>
 <h3>PAN Topics</h3>
 <p>#### Published</p>
 <p>| Topic | Data | Description |
@@ -522,7 +825,7 @@ pc.subscribe(&#039;sse.event.notification&#039;, (msg) =&gt; {
 | <code>sse.connected</code> | <code>{ url }</code> | Connection opened |
 | <code>sse.disconnected</code> | <code>{}</code> | Connection closed |
 | <code>sse.message</code> | <code>{ data, id?, type? }</code> | Default message event |
-| <code>sse.event.${type}</code> | <code>{ data, id? }</code> | Custom event type |
+| <code>sse.event.\${type}</code> | <code>{ data, id? }</code> | Custom event type |
 | <code>sse.error</code> | <code>{ error }</code> | Error occurred |</p>
 <p>#### Subscribed</p>
 <p>| Topic | Data | Description |
@@ -593,6 +896,111 @@ pc.subscribe(&#039;sse.event.notification&#039;, (msg) =&gt; {
   &lt;/div&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre>
+<h3>Errors</h3>
+<p>pan-sse publishes errors to <code>sse.error</code> topic:</p>
+<p>| Error Condition | Cause | Resolution |
+|-----------------|-------|------------|
+| <code>CONNECTION_FAILED</code> | Cannot connect to SSE endpoint | Check URL and server availability |
+| <code>CONNECTION_CLOSED</code> | Stream closed unexpectedly | Check server logs, SSE auto-reconnects |
+| <code>PARSE_ERROR</code> | Cannot parse event data | Check server event format |
+| <code>INVALID_URL</code> | SSE URL is invalid | Use valid HTTP/HTTPS URL |
+| <code>NOT_SUPPORTED</code> | Browser doesn't support SSE | Use modern browser or provide fallback |</p>
+<strong>Error handling example</strong>:
+<pre><code class="language-javascript">import { PanClient } from &#039;./pan-client.mjs&#039;;
+
+const pc = new PanClient();
+
+// Subscribe to errors
+pc.subscribe(&#039;sse.error&#039;, (msg) =&gt; {
+  const { error, readyState, url } = msg.data;
+  console.error(&#039;SSE Error:&#039;, error);
+
+  if (error.includes(&#039;CONNECTION_FAILED&#039;)) {
+    // Retry with exponential backoff
+    setTimeout(() =&gt; {
+      pc.publish(&#039;sse.connect&#039;, { url });
+    }, 5000);
+  }
+
+  if (error.includes(&#039;NOT_SUPPORTED&#039;)) {
+    // Fall back to polling
+    console.warn(&#039;SSE not supported, using polling fallback&#039;);
+    startPolling();
+  }
+
+  if (error.includes(&#039;PARSE_ERROR&#039;)) {
+    // Log parse errors but continue streaming
+    console.error(&#039;Invalid event format, skipping&#039;);
+  }
+});
+
+// Monitor connection lifecycle
+pc.subscribe(&#039;sse.connected&#039;, (msg) =&gt; {
+  console.log(&#039;SSE streaming from:&#039;, msg.data.url);
+  showStreamingStatus(true);
+});
+
+pc.subscribe(&#039;sse.disconnected&#039;, () =&gt; {
+  console.log(&#039;SSE stream stopped&#039;);
+  showStreamingStatus(false);
+});
+
+// Handle connection drops gracefully
+let eventCount = 0;
+let lastEventTime = Date.now();
+
+pc.subscribe(&#039;sse.message&#039;, (msg) =&gt; {
+  eventCount++;
+  lastEventTime = Date.now();
+});
+
+// Check for stale connection
+setInterval(() =&gt; {
+  const timeSinceLastEvent = Date.now() - lastEventTime;
+  
+  if (timeSinceLastEvent &gt; 60000) { // 60 seconds
+    console.warn(&#039;No events received recently, reconnecting...&#039;);
+    pc.publish(&#039;sse.disconnect&#039;, {});
+    setTimeout(() =&gt; pc.publish(&#039;sse.connect&#039;, {}), 1000);
+  }
+}, 30000);
+
+// Fallback to polling if SSE unavailable
+function startPolling() {
+  setInterval(async () =&gt; {
+    try {
+      const res = await fetch(&#039;/api/events?since=&#039; + lastEventTime);
+      const events = await res.json();
+      events.forEach(event =&gt; {
+        pc.publish(&#039;sse.message&#039;, event);
+      });
+    } catch (err) {
+      console.error(&#039;Polling failed:&#039;, err);
+    }
+  }, 5000);
+}
+
+// Graceful degradation for older browsers
+if (!(&#039;EventSource&#039; in window)) {
+  console.warn(&#039;SSE not supported, using polling&#039;);
+  startPolling();
+} else {
+  pc.publish(&#039;sse.connect&#039;, { url: &#039;/api/events&#039; });
+}</code></pre>
+<strong>Browser Compatibility</strong>:
+<ul><li>SSE (EventSource API) supported in all modern browsers</li>
+<li>Not available in IE11 (use polyfill or fallback to polling)</li>
+<li>Check support: <code>if ('EventSource' in window)</code></li>
+<li>Automatic reconnection is built into the EventSource API</li>
+<li>Maximum reconnection delay: typically 3 seconds</li>
+</ul>
+<strong>Server Requirements</strong>:
+<ul><li>Must send <code>Content-Type: text/event-stream</code></li>
+<li>Must send <code>Cache-Control: no-cache</code></li>
+<li>Keep connection open (don't close after each event)</li>
+<li>Send <code>:\n\n</code> (comment) every 15-30 seconds to keep alive</li>
+<li>Event format: <code>data: {...}\n\n</code> or <code>event: type\ndata: {...}\n\n</code></li>
+</ul>
 <h3>Common Issues</h3>
 <strong>Connection closes immediately</strong>: Server must keep connection open with proper headers: <code>Content-Type: text/event-stream</code>, <code>Cache-Control: no-cache</code>.
 <strong>Events not received</strong>: Check event format. Default events use <code>data:</code> prefix. Custom events use <code>event: type</code> followed by <code>data:</code>.

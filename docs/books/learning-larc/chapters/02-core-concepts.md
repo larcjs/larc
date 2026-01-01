@@ -53,10 +53,6 @@ Now you can use `<hello-world></hello-world>` in your HTML, and it works like an
 ***Figure 2.3:** Shadow DOM Tree Structure*
 
 
-![**Figure 2.4:** Shadow DOM Tree Structure](../images/02-component-structure-4.png)
-***Figure 2.4:** Shadow DOM Tree Structure*
-
-
 Shadow DOM provides style and markup encapsulation:
 
 ```javascript
@@ -976,3 +972,13 @@ In the next chapter, we'll put these concepts into practice by setting up a deve
 - ES Modules and Import Maps replace build-time bundling
 - Proper lifecycle management prevents bugs and memory leaks
 - Components should be self-contained but composable
+
+---
+
+## Further Reading
+
+**For detailed technical reference:**
+- *Building with LARC* Chapter 2: Core Concepts - Architecture patterns and message flow reference
+- *Building with LARC* Appendix A: Message Topics Reference - Standard topic conventions
+- *Building with LARC* Appendix B: Event Envelope Specification - Message format details
+- *Building with LARC* Appendix F: Glossary - Technical terminology reference

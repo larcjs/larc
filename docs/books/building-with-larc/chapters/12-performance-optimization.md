@@ -7,6 +7,7 @@ Quick reference for performance optimization in LARC applications. For detailed 
 Optimize LARC applications through efficient message patterns, lazy loading, virtual scrolling, and memory management. Performance optimization focuses on user-perceived speed: initial load time, interaction responsiveness, and smooth animations.
 
 **Key Concepts**:
+
 - Message filtering and throttling to reduce bus overhead
 - Lazy loading components and routes for faster initial load
 - Virtual scrolling to handle large data sets efficiently
@@ -52,6 +53,7 @@ class OptimizedSearch extends HTMLElement {
 | Batch messages | Publish array not individual items | Bulk updates |
 
 **Throttle vs Debounce**:
+
 - **Throttle**: Guarantees function runs at most once per interval (good for scroll)
 - **Debounce**: Waits for pause before running (good for search input)
 
@@ -336,6 +338,7 @@ class PerformanceMonitor extends HTMLElement {
 ## Component Reference
 
 See Chapter 19 for performance-optimized UI components:
+
 - **pan-virtual-list**: Production virtual scrolling
 - **pan-lazy-image**: Lazy image loading with IntersectionObserver
 - **pan-suspense**: Loading states and code splitting

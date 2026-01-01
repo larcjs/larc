@@ -1,6 +1,5 @@
 # Build artifacts
 build/
-output/
 
 # Generated CSS (if you want to track custom CSS, remove these lines)
 book-style.css

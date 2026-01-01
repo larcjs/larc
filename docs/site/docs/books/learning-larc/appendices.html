@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Appendices · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Appendices">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <span>appendices</span>
+      </div>
+      <article class="docs-content">
+        <h1>Appendices</h1>
+<h2>Appendix A: Web Components API Reference</h2>
+<h3>Custom Elements</h3>
+<strong>Defining elements:</strong>
+<pre><code class="language-javascript">customElements.define(&#039;my-element&#039;, MyElement);
+customElements.define(&#039;my-element&#039;, MyElement, { extends: &#039;button&#039; });</code></pre>
+<strong>Retrieving definitions:</strong>
+<pre><code class="language-javascript">customElements.get(&#039;my-element&#039;);  // Returns constructor or undefined
+await customElements.whenDefined(&#039;my-element&#039;);  // Resolves when defined
+customElements.upgrade(element);  // Upgrade an element</code></pre>
+<h3>Lifecycle Callbacks</h3>
+<p>| Callback | When Called |
+|----------|-------------|
+| <code>constructor()</code> | Element created |
+| <code>connectedCallback()</code> | Element added to DOM |
+| <code>disconnectedCallback()</code> | Element removed from DOM |
+| <code>attributeChangedCallback(name, oldVal, newVal)</code> | Observed attribute changed |
+| <code>adoptedCallback()</code> | Element moved to new document |</p>
+<h3>Shadow DOM</h3>
+<pre><code class="language-javascript">// Attach shadow root
+const shadow = element.attachShadow({ mode: &#039;open&#039; });
+
+// Access shadow root
+element.shadowRoot  // null if mode is &#039;closed&#039;
+
+// Slots
+const slot = shadow.querySelector(&#039;slot&#039;);
+slot.assignedNodes();  // All assigned nodes
+slot.assignedElements();  // Only element nodes</code></pre>
+<h2>Appendix B: PAN Bus API Reference</h2>
+<h3>Publishing</h3>
+<pre><code class="language-javascript">// Simple publish
+pan.publish(&#039;topic&#039;, data);
+
+// With options
+pan.publish(&#039;topic&#039;, data, { retained: true });</code></pre>
+<h3>Subscribing</h3>
+<pre><code class="language-javascript">// Subscribe
+const unsubscribe = pan.subscribe(&#039;topic&#039;, (data) =&gt; {
+  console.log(data);
+});
+
+// Wildcard subscribe
+pan.subscribe(&#039;user.*&#039;, (data, topic) =&gt; {
+  console.log(topic, data);
+});
+
+// Unsubscribe
+unsubscribe();</code></pre>
+<h3>Request/Response</h3>
+<pre><code class="language-javascript">// Request with timeout
+const result = await pan.request(&#039;service.getData&#039;, { id: 1 }, 5000);
+
+// Respond to requests
+pan.respond(&#039;service.getData&#039;, async ({ id }) =&gt; {
+  return await fetchData(id);
+});</code></pre>
+<h2>Appendix C: Component Quick Reference</h2>
+<p>| Component | Purpose | Key Attributes |
+|-----------|---------|----------------|
+| <code>pan-router</code> | Client-side routing | <code>base</code> |
+| <code>pan-route</code> | Route definition | <code>path</code>, <code>component</code> |
+| <code>pan-store</code> | State management | <code>persist</code>, <code>namespace</code> |
+| <code>pan-fetch</code> | Data fetching | <code>url</code>, <code>method</code>, <code>auto</code> |</p>
+<h2>Appendix D: Migration Cheat Sheet</h2>
+<h3>React → LARC</h3>
+<p>| React | LARC |
+|-------|------|
+| JSX | Template literals |
+| <code>props</code> | Attributes/properties |
+| <code>useState</code> | Instance properties |
+| <code>useEffect</code> | <code>connectedCallback</code> |
+| Context | PAN bus |
+| Redux | <code>pan-store</code> |</p>
+<h3>Vue → LARC</h3>
+<p>| Vue | LARC |
+|-----|------|
+| Templates | Template literals |
+| <code>v-if</code> | Ternary in template |
+| <code>v-for</code> | <code>array.map()</code> |
+| <code>computed</code> | Getters |
+| Vuex | <code>pan-store</code> |</p>
+<h2>Appendix E: Resources</h2>
+<h3>Official</h3>
+<ul><li>Documentation: https://larcjs.com/docs</li>
+<li>GitHub: https://github.com/larcjs/larc</li>
+<li>Examples: https://github.com/larcjs/larc/tree/main/packages/examples</li>
+</ul>
+<h3>Web Standards</h3>
+<ul><li>MDN Web Components: https://developer.mozilla.org/en-US/docs/Web/Web_Components</li>
+<li>Custom Elements Spec: https://html.spec.whatwg.org/multipage/custom-elements.html</li>
+<li>Shadow DOM Spec: https://dom.spec.whatwg.org/#shadow-trees</li>
+</ul>
+<h3>Community</h3>
+<ul><li>Discord: https://discord.gg/larc</li>
+<li>Forum: https://forum.larcjs.com</li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/appendices.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

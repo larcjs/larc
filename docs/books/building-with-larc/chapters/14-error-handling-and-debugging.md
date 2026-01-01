@@ -7,6 +7,7 @@ Quick reference for error handling and debugging in LARC applications. For detai
 Handle errors gracefully through component-level error boundaries, centralized error monitoring, and message tracing. LARC's isolated component architecture naturally contains errors, preventing cascading failures.
 
 **Key Concepts**:
+
 - Error boundaries contain failures within components
 - Global error handlers monitor application health
 - Message tracing tracks pub/sub flows

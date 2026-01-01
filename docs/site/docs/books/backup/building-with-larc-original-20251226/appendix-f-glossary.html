@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glossary · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Glossary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">backup</a> / <a href="#">building-with-larc-original-20251226</a> / <span>appendix-f-glossary</span>
+      </div>
+      <article class="docs-content">
+        <h1>Glossary</h1>
+<p>This glossary defines technical terms, LARC-specific concepts, and web standards references used throughout this manual. Terms are presented in alphabetical order with clear definitions and, where relevant, cross-references to related concepts.</p>
+<h2>A</h2>
+<strong>Adapter</strong>
+A design pattern that converts one interface to another. In LARC contexts, adapters bridge LARC components with external libraries or non-standard APIs.
+<strong>Attribute</strong>
+An HTML element property set via markup (e.g., <code><my-component data-id="123"></code>). LARC components observe attributes through <code>observedAttributes</code> and respond to changes via <code>attributeChangedCallback()</code>.
+<strong>Autonomous Custom Element</strong>
+A Web Component that extends <code>HTMLElement</code> directly rather than extending built-in HTML elements. LARC components are autonomous custom elements. Compare with <em>Customized Built-in Element</em>.
+<h2>B</h2>
+<strong>Batch Update</strong>
+An optimization technique that groups multiple state changes into a single render cycle, reducing unnecessary DOM operations and improving performance.
+<strong>Binding</strong>
+The connection between a data source and its visual representation. LARC uses event-driven updates rather than automatic data binding, giving developers explicit control over rendering.
+<strong>Browser Event</strong>
+Standard DOM events like <code>click</code>, <code>input</code>, or <code>submit</code>. LARC components listen to browser events and can translate them into PAN bus events for application-wide communication.
+<strong>Bubble</strong>
+Event propagation through the DOM tree from child to parent elements. Browser events bubble by default; custom events must explicitly enable bubbling via <code>bubbles: true</code>.
+<h2>C</h2>
+<strong>Callback</strong>
+A function passed as an argument to another function, executed after a specific event or operation completes. LARC lifecycle methods (<code>connectedCallback</code>, <code>disconnectedCallback</code>) are callbacks invoked by the browser at specific times.
+<strong>Composed</strong>
+An event property that determines whether the event crosses Shadow DOM boundaries. Set via <code>composed: true</code> in event initialization. Essential for events that need to traverse shadow roots.
+<strong>Component</strong>
+A self-contained, reusable user interface element. In LARC, components are Web Components registered via <code>customElements.define()</code> and implementing standard lifecycle callbacks.
+<strong>Custom Element</strong>
+The Web Components standard for creating new HTML elements with custom behavior. LARC applications are built from custom elements. See also <em>Autonomous Custom Element</em>.
+<strong>Customized Built-in Element</strong>
+A Web Component that extends an existing HTML element (e.g., <code><button is="fancy-button"></code>). LARC primarily uses autonomous custom elements rather than customized built-ins.
+<h2>D</h2>
+<strong>Declarative</strong>
+A programming style that describes <em>what</em> should happen rather than <em>how</em>. HTML templates are declarative. Contrast with <em>Imperative</em>.
+<strong>Dependency Injection</strong>
+A pattern where dependencies are provided to a component rather than created internally. LARC components receive the PAN bus reference rather than accessing a global singleton.
+<strong>Dispatch</strong>
+Sending an event to the PAN bus for other components to receive. Called via <code>this.pan.dispatch(eventType, detail)</code>.
+<strong>DOM (Document Object Model)</strong>
+The browser's representation of an HTML document as a tree of objects. LARC components manipulate the DOM through standard APIs.
+<h2>E</h2>
+<strong>Element</strong>
+A node in the DOM tree representing an HTML tag. Custom elements are specialized elements with developer-defined behavior.
+<strong>Emit</strong>
+Synonym for <em>dispatch</em>. Some frameworks use "emit" for event publication. LARC prefers "dispatch" to align with standard DOM terminology.
+<strong>Encapsulation</strong>
+Hiding internal implementation details from external code. Shadow DOM provides style encapsulation; JavaScript class private fields provide data encapsulation.
+<strong>Event</strong>
+A signal indicating something happened. Browser events (clicks, inputs) and custom events (PAN bus messages) both use the Event API.
+<strong>Event Target</strong>
+Any object that can receive events and have listeners registered on it. All DOM nodes are event targets; the PAN bus is also an event target.
+<h2>F</h2>
+<strong>Fragment</strong>
+A <code>DocumentFragment</code> is a lightweight container for DOM nodes that can be manipulated off-screen and inserted into the document in one operation, reducing reflows.
+<strong>Framework</strong>
+A comprehensive library providing structure and conventions for application development. LARC is a lightweight component architecture rather than a full framework, emphasizing web standards.
+<h2>H</h2>
+<strong>HTML Template</strong>
+The <code><template></code> element stores client-side content that won't render until explicitly instantiated. Useful for defining reusable markup structures.
+<strong>Hydration</strong>
+The process of attaching event listeners and state to server-rendered HTML. LARC components hydrate automatically when defined via <code>customElements.define()</code>.
+<h2>I</h2>
+<strong>Imperative</strong>
+A programming style describing <em>how</em> to accomplish a task through explicit instructions. JavaScript is imperative. Contrast with <em>Declarative</em>.
+<strong>Intersection Observer</strong>
+A browser API for efficiently detecting when elements enter or leave the viewport. Used for lazy loading, infinite scroll, and visibility tracking.
+<h2>L</h2>
+<strong>LARC (Lightweight Asynchronous Reactive Components)</strong>
+The component architecture described in this manual, emphasizing web standards, minimal abstraction, and explicit communication patterns.
+<strong>Lifecycle</strong>
+The sequence of states a component passes through: creation, attachment to DOM, updates, and removal. LARC components implement standard Web Components lifecycle callbacks.
+<strong>Lifecycle Callback</strong>
+Methods invoked by the browser at specific points in a component's lifecycle: <code>constructor()</code>, <code>connectedCallback()</code>, <code>disconnectedCallback()</code>, <code>attributeChangedCallback()</code>, <code>adoptedCallback()</code>.
+<strong>Light DOM</strong>
+Regular DOM content, as opposed to Shadow DOM. Content placed inside a custom element's tags lives in the light DOM and can be redistributed via <code><slot></code>.
+<h2>M</h2>
+<strong>Microtask</strong>
+A JavaScript task scheduled via <code>Promise.then()</code> or <code>queueMicrotask()</code>. Microtasks run before the browser's next rendering cycle, useful for batching updates.
+<strong>Module</strong>
+An ES6 module (<code>import</code>/<code>export</code>) that encapsulates code. LARC components are typically defined as modules, one component per file.
+<strong>Mutation Observer</strong>
+A browser API for watching DOM changes. Less commonly needed in LARC since components manage their own rendering.
+<h2>N</h2>
+<strong>Namespace</strong>
+A prefix used to group related events or APIs. LARC encourages namespacing PAN bus events (e.g., <code>user:login</code>, <code>user:logout</code>) for better organization.
+<strong>Node</strong>
+A basic DOM building block. Elements, text, and comments are all nodes. Components manipulate nodes through standard DOM APIs.
+<h2>O</h2>
+<strong>Observer Pattern</strong>
+A design pattern where objects (observers) subscribe to state changes in another object (subject). The PAN bus implements the observer pattern.
+<strong>observedAttributes</strong>
+A static getter on custom element classes listing attributes the component wants to monitor. Changes trigger <code>attributeChangedCallback()</code>.
+<h2>P</h2>
+<strong>PAN Bus (Publish-and-subscribe Asynchronous Notification Bus)</strong>
+LARC's event system for component communication. Components dispatch events to the bus and subscribe to events they care about, enabling loose coupling.
+<strong>Polyfill</strong>
+JavaScript code that implements modern features in older browsers. Web Components polyfills enable LARC applications to run in browsers without native support.
+<strong>Prop (Property)</strong>
+Short for "property," data passed to a component. In LARC, complex data typically flows through PAN bus events rather than attributes, since attributes are limited to strings.
+<strong>Publish-Subscribe</strong>
+A messaging pattern where publishers send messages to topics/channels, and subscribers receive messages from those topics. The PAN bus is a pub-sub system.
+<h2>R</h2>
+<strong>Reactive</strong>
+A programming model where the UI automatically updates in response to data changes. LARC components implement reactivity explicitly through PAN bus subscriptions rather than automatic binding.
+<strong>Reconciliation</strong>
+The process of determining minimal DOM changes needed to reflect new state. LARC leaves reconciliation to developers or optional libraries rather than providing built-in virtual DOM diffing.
+<strong>Render</strong>
+Convert data into visual representation. In LARC, rendering is explicit—components call their own <code>render()</code> methods when appropriate.
+<strong>Reflow</strong>
+The browser's process of recalculating element positions and dimensions. Excessive reflows hurt performance. LARC's batch updates minimize reflows.
+<h2>S</h2>
+<strong>Scoped Styles</strong>
+CSS that applies only to a specific component without affecting other elements. Shadow DOM provides automatic style scoping.
+<strong>Shadow DOM</strong>
+A web standard for attaching encapsulated DOM trees to elements. Shadow DOM provides style and markup encapsulation, preventing styles from leaking in or out.
+<strong>Shadow Host</strong>
+The element to which a shadow root is attached. When you call <code>this.attachShadow()</code> on a custom element, that element becomes the shadow host.
+<strong>Shadow Root</strong>
+The root of a shadow DOM tree, created via <code>element.attachShadow()</code>. Content inside the shadow root is isolated from the main document.
+<strong>Slot</strong>
+A Shadow DOM feature for distributing light DOM content into shadow DOM. Defined with <code><slot></code> elements and allowing flexible content composition.
+<strong>State</strong>
+Data that determines component appearance and behavior. LARC encourages explicit state management through component properties and PAN bus events.
+<strong>Subscribe</strong>
+Registering a listener for events on the PAN bus. Called via <code>this.pan.subscribe(eventType, handler)</code>, returns an unsubscribe function.
+<h2>T</h2>
+<strong>Template</strong>
+Reusable markup structure. Can refer to HTML <code><template></code> elements or template literals (backtick strings) used for generating HTML.
+<strong>Template Literal</strong>
+JavaScript's backtick string syntax supporting multiline strings and interpolation. Commonly used for component templates: `<code> </code><div>${value}</div><code> </code><code>.
+<strong>Throttle</strong>
+Limiting function execution frequency. Unlike debouncing (which delays until activity stops), throttling ensures a function runs at most once per time interval.
+<h2>U</h2>
+<strong>Unsubscribe</strong>
+Removing a listener from the PAN bus. The function returned by </code>subscribe()<code> acts as an unsubscribe callback, essential for preventing memory leaks.
+<strong>User Agent</strong>
+The browser or other software accessing a web application. User agent strings identify the browser type and version.
+<h2>V</h2>
+<strong>Virtual DOM</strong>
+An in-memory representation of the DOM used to calculate minimal changes before applying them. LARC doesn't include built-in virtual DOM, preferring explicit control or optional libraries.
+<h2>W</h2>
+<strong>Web Component</strong>
+An umbrella term for three standards: Custom Elements, Shadow DOM, and HTML Templates. LARC applications are built on Web Components.
+<strong>Web Standards</strong>
+Specifications maintained by standards bodies (W3C, WHATWG) defining how web technologies work. LARC prioritizes web standards over proprietary abstractions.
+<h2>LARC-Specific Terms</h2>
+<strong>Component Bus</strong>
+A dedicated PAN bus instance for a specific component subtree. Allows isolated event scopes within larger applications. Most applications use a single global bus.
+<strong>Component Tree</strong>
+The hierarchical structure of custom elements in an application. Events and data flow through this tree via the PAN bus.
+<strong>Event Detail</strong>
+The </code>detail<code> property of a custom event, containing application-specific data. PAN bus events place their payload in the detail object.
+<strong>Event Type</strong>
+A string identifying an event category (e.g., </code>'user:login'<code>, </code>'data:loaded'<code>). LARC encourages namespaced, descriptive event types.
+<strong>Pan Property</strong>
+The </code>pan<code> property on custom elements, providing access to the PAN bus. Automatically injected by LARC's component initialization.
+<strong>Reactive Primitive</strong>
+Basic reactive building blocks like reactive objects, computed values, and watchers. LARC's optional reactivity system provides these as lightweight utilities.
+<strong>Unidirectional Data Flow</strong>
+An architecture where data flows in one direction through an application. LARC encourages this through PAN bus events: components dispatch actions upward and listen for state changes downward.
+<h2>Web Standards References</h2>
+<strong>CustomElementRegistry</strong>
+The browser's registry of defined custom elements, accessed via </code>window.customElements<code>. Provides </code>define()<code>, </code>get()<code>, </code>whenDefined()<code>, and </code>upgrade()<code> methods.
+<strong>Event.prototype.composed</strong>
+Boolean property indicating whether an event crosses shadow DOM boundaries during event propagation.
+<strong>Event.prototype.bubbles</strong>
+Boolean property indicating whether an event propagates up the DOM tree from its target.
+<strong>HTMLElement</strong>
+The base interface for HTML elements. All LARC components extend </code>HTMLElement<code> or its subclasses.
+<strong>MutationObserver API</strong>
+Interface for observing DOM mutations. Occasionally useful for LARC components that need to react to external DOM changes.
+<strong>ShadowRoot</strong>
+Interface representing the root of a shadow DOM tree, providing methods like </code>querySelector()<code> that operate within the shadow scope.
+<strong>shadowRoot.mode</strong>
+The encapsulation mode of a shadow root: </code>'open'<code> (accessible via </code>element.shadowRoot<code>) or </code>'closed'<code> (inaccessible from outside). LARC recommends open mode for testability.
+<h2>Acronyms and Abbreviations</h2>
+<strong>API</strong> - Application Programming Interface
+<strong>CDN</strong> - Content Delivery Network
+<strong>CSS</strong> - Cascading Style Sheets
+<strong>DOM</strong> - Document Object Model
+<strong>ES6</strong> - ECMAScript 2015 (JavaScript version)
+<strong>HTML</strong> - HyperText Markup Language
+<strong>HTTP</strong> - HyperText Transfer Protocol
+<strong>JSX</strong> - JavaScript XML (React's template syntax, not part of LARC)
+<strong>LARC</strong> - Lightweight Asynchronous Reactive Components
+<strong>MVC</strong> - Model-View-Controller
+<strong>NPM</strong> - Node Package Manager
+<strong>PAN</strong> - Publish-and-subscribe Asynchronous Notification
+<strong>REST</strong> - Representational State Transfer
+<strong>SPA</strong> - Single-Page Application
+<strong>SSR</strong> - Server-Side Rendering
+<strong>UI</strong> - User Interface
+<strong>URL</strong> - Uniform Resource Locator
+<strong>VDOM</strong> - Virtual DOM
+<strong>W3C</strong> - World Wide Web Consortium
+<strong>WHATWG</strong> - Web Hypertext Application Technology Working Group
+<h2>Related Concepts</h2>
+<strong>Component Lifecycle</strong>
+See <em>Lifecycle</em> and <em>Lifecycle Callback</em>.
+<strong>Custom Events</strong>
+Events created via </code>new CustomEvent()` rather than browser-generated events. PAN bus events are custom events.
+<strong>Event-Driven Architecture</strong>
+An architectural pattern where components communicate through events rather than direct method calls. LARC's PAN bus enables event-driven architecture.
+<strong>Loose Coupling</strong>
+Design principle where components depend on abstractions (event types) rather than concrete implementations (specific components), making systems more flexible and maintainable.
+<strong>Separation of Concerns</strong>
+Design principle where different aspects of functionality are handled by different components. LARC components encapsulate specific UI concerns, communicating via well-defined events.
+<strong>Single Responsibility Principle</strong>
+Each component should have one clear purpose. LARC encourages focused components that do one thing well.
+<h2>Further Reading</h2>
+<strong>MDN Web Docs (developer.mozilla.org)</strong>
+Comprehensive reference for Web APIs, including Web Components, DOM manipulation, and JavaScript features.
+<strong>Web Components Specifications</strong>
+Official standards documents at w3.org and whatwg.org defining Custom Elements, Shadow DOM, and HTML Templates.
+<strong>LARC Documentation</strong>
+Complete API reference and guides at larc.dev.
+<strong>ECMAScript Specifications</strong>
+JavaScript language specifications at tc39.es.
+<hr>
+<p>This glossary covers core concepts needed to work effectively with LARC. For deeper exploration of specific topics, consult the main chapters of this manual and the reference materials listed above. Understanding these terms and their relationships helps you write clearer code, communicate more effectively with other developers, and leverage the full power of web standards in your applications.</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/backup/building-with-larc-original-20251226/appendix-f-glossary.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

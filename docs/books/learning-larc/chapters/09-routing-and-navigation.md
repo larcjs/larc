@@ -431,3 +431,12 @@ LARC routing provides:
 3. **Handle 404s gracefully** - Always include catch-all route
 4. **Preserve scroll position** - Restore scroll on back navigation
 5. **Use query params for filters** - Makes URLs shareable
+
+---
+
+## Further Reading
+
+**For complete routing reference:**
+- *Building with LARC* Chapter 5: Routing and Navigation - All routing patterns and guards
+- *Building with LARC* Chapter 17: Core Components - pan-routes API reference
+- *Building with LARC* Appendix E: Recipes and Patterns - Routing recipes and examples

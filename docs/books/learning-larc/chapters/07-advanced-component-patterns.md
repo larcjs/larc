@@ -1155,3 +1155,12 @@ These patterns enable you to build sophisticated, performant applications while 
    - Profile before optimizing
    - Measure impact of changes
    - Don't over-optimize prematurely
+
+---
+
+## Further Reading
+
+**For advanced patterns and optimization:**
+- *Building with LARC* Chapter 15: Advanced Patterns - Micro-frontends, plugin systems, middleware
+- *Building with LARC* Chapter 12: Performance Optimization - Virtual scrolling, lazy loading, profiling
+- *Building with LARC* Appendix E: Recipes and Patterns - Advanced component patterns

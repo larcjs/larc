@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learning LARC: Expansion Plan for Chapters 11-19 · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Learning LARC: Expansion Plan for Chapters 11-19">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <span>EXPANSION-PLAN</span>
+      </div>
+      <article class="docs-content">
+        <h1>Learning LARC: Expansion Plan for Chapters 11-19</h1>
+<h2>Current Status</h2>
+<p>✅ <strong>Chapters 1-10</strong>: Fully written, narrative tutorial style (18K-34K each, ~25-50 pages)
+⚠️ <strong>Chapters 11-19</strong>: Partially written or summaries (3K-10K each, ~10-25 pages)</p>
+<h2>Target: O'Reilly "Learning" Book Style</h2>
+<ul><li>Narrative, conversational tone</li>
+<li>Progressive examples (build something real)</li>
+<li>"Try it yourself" exercises</li>
+<li>Troubleshooting sections</li>
+<li>Best practices from experience</li>
+<li>Cross-references to Building with LARC for API details</li>
+</ul>
+<h2>Chapter-by-Chapter Assessment</h2>
+<h3>Chapter 11: Data Fetching and APIs (10K, 387 lines)</h3>
+<strong>Current</strong>: 40-50% complete - Has good foundation with API client and PAN bus integration
+<strong>Needs</strong>:
+<ul><li>[ ] Expand caching strategies section with examples</li>
+<li>[ ] Add complete real-world example (building a user dashboard with API data)</li>
+<li>[ ] Add error handling patterns (retry logic, circuit breakers, fallbacks)</li>
+<li>[ ] Add WebSocket section with chat example</li>
+<li>[ ] Add GraphQL integration example</li>
+<li>[ ] Add exercises (build a weather app, implement infinite scroll, etc.)</li>
+<li>[ ] Add troubleshooting section</li>
+<li>[ ] Add summary and cross-references</li>
+</ul><strong>Estimated work</strong>: 400-500 additional lines (~2-3 hours)
+<h3>Chapter 12: Authentication and Security (6.7K, ~200 lines)</h3>
+<strong>Current</strong>: 25-30% complete - Has JWT basics
+<strong>Needs</strong>:
+<ul><li>[ ] Expand JWT implementation with complete auth flow</li>
+<li>[ ] Add session management patterns</li>
+<li>[ ] Add OAuth integration example (GitHub login)</li>
+<li>[ ] Add protected routes integration</li>
+<li>[ ] Add refresh token patterns</li>
+<li>[ ] Add security best practices (XSS, CSRF, storage)</li>
+<li>[ ] Add complete login/signup flow example</li>
+<li>[ ] Add exercises</li>
+<li>[ ] Add troubleshooting section</li>
+</ul><strong>Estimated work</strong>: 600-700 additional lines (~3-4 hours)
+<h3>Chapter 13: Server Integration (6.4K, ~200 lines)</h3>
+<strong>Current</strong>: 25% complete - Basic patterns only
+<strong>Needs</strong>:
+<ul><li>[ ] Add Node.js/Express backend example</li>
+<li>[ ] Add Python/Flask backend example</li>
+<li>[ ] Add PHP backend integration</li>
+<li>[ ] Add database integration patterns</li>
+<li>[ ] Add file upload/download examples</li>
+<li>[ ] Add CORS configuration examples</li>
+<li>[ ] Add WebSocket server setup</li>
+<li>[ ] Build complete TODO app with backend</li>
+<li>[ ] Add exercises</li>
+<li>[ ] Add troubleshooting section</li>
+</ul><strong>Estimated work</strong>: 700-800 additional lines (~4-5 hours)
+<h3>Chapter 14: Testing (5.6K, ~216 lines)</h3>
+<strong>Current</strong>: 30% complete - Good unit test examples
+<strong>Needs</strong>:
+<ul><li>[ ] Expand integration testing section</li>
+<li>[ ] Add E2E testing with complete examples</li>
+<li>[ ] Add visual regression testing</li>
+<li>[ ] Add CI/CD integration examples</li>
+<li>[ ] Add test coverage strategies</li>
+<li>[ ] Add mocking strategies for complex scenarios</li>
+<li>[ ] Build testable component example end-to-end</li>
+<li>[ ] Add exercises (TDD kata)</li>
+<li>[ ] Add troubleshooting section</li>
+</ul><strong>Estimated work</strong>: 500-600 additional lines (~3-4 hours)
+<h3>Chapter 15: Performance and Optimization (5K, ~150 lines)</h3>
+<strong>Current</strong>: 20% complete - Outline only
+<strong>Needs</strong>:
+<ul><li>[ ] Add lazy loading implementation examples</li>
+<li>[ ] Add code splitting strategies</li>
+<li>[ ] Add virtual scrolling example</li>
+<li>[ ] Add service worker caching patterns</li>
+<li>[ ] Add performance measurement (Web Vitals)</li>
+<li>[ ] Add image optimization strategies</li>
+<li>[ ] Add bundle size optimization</li>
+<li>[ ] Build performance-optimized dashboard</li>
+<li>[ ] Add exercises (profile and optimize)</li>
+<li>[ ] Add troubleshooting section</li>
+</ul><strong>Estimated work</strong>: 700-800 additional lines (~4-5 hours)
+<h3>Chapter 16: Deployment (3.6K, ~100 lines)</h3>
+<strong>Current</strong>: 15% complete - Brief overview
+<strong>Needs</strong>:
+<ul><li>[ ] Add Netlify deployment walkthrough</li>
+<li>[ ] Add Vercel deployment walkthrough</li>
+<li>[ ] Add GitHub Pages setup</li>
+<li>[ ] Add CDN configuration</li>
+<li>[ ] Add environment variables management</li>
+<li>[ ] Add CI/CD pipeline examples (GitHub Actions)</li>
+<li>[ ] Add monitoring setup (analytics, errors)</li>
+<li>[ ] Complete deployment checklist</li>
+<li>[ ] Add exercises (deploy your app)</li>
+<li>[ ] Add troubleshooting section</li>
+</ul><strong>Estimated work</strong>: 600-700 additional lines (~3-4 hours)
+<h3>Chapter 17: Component Library (3.5K, ~100 lines)</h3>
+<strong>Current</strong>: 15% complete - Brief overview
+<strong>Needs</strong>:
+<ul><li>[ ] Add using LARC component registry</li>
+<li>[ ] Add building custom component library</li>
+<li>[ ] Add component documentation patterns</li>
+<li>[ ] Add versioning and release process</li>
+<li>[ ] Add package publishing (npm)</li>
+<li>[ ] Build complete reusable component</li>
+<li>[ ] Add exercises (publish a component)</li>
+<li>[ ] Add troubleshooting section</li>
+</ul><strong>Estimated work</strong>: 600-700 additional lines (~3-4 hours)
+<h3>Chapter 18: Tooling (3.4K, ~100 lines)</h3>
+<strong>Current</strong>: 15% complete - Brief overview
+<strong>Needs</strong>:
+<ul><li>[ ] Add LARC CLI deep dive</li>
+<li>[ ] Add VS Code extension guide</li>
+<li>[ ] Add DevTools usage patterns</li>
+<li>[ ] Add linting and formatting setup</li>
+<li>[ ] Add hot module reload setup</li>
+<li>[ ] Add build tools (optional builds)</li>
+<li>[ ] Add debugging techniques</li>
+<li>[ ] Add exercises (configure your env)</li>
+<li>[ ] Add troubleshooting section</li>
+</ul><strong>Estimated work</strong>: 600-700 additional lines (~3-4 hours)
+<h3>Chapter 19: Real-World Applications</h3>
+<strong>Current</strong>: Not yet created
+<strong>Needs</strong>:
+<ul><li>[ ] Case Study: E-Commerce Platform</li>
+</ul>  - Product catalog
+  - Shopping cart
+  - Checkout flow
+  - Admin panel
+<ul><li>[ ] Case Study: Dashboard Application</li>
+</ul>  - Data visualization
+  - Real-time updates
+  - User management
+<ul><li>[ ] Case Study: Blog/CMS</li>
+</ul>  - Content editing
+  - Publishing workflow
+  - SEO optimization
+<ul><li>[ ] Architecture decisions and tradeoffs</li>
+<li>[ ] Lessons learned</li>
+</ul><strong>Estimated work</strong>: 1000-1200 lines (~6-8 hours)
+<h2>Total Expansion Estimate</h2>
+<ul><li><strong>Total lines to add</strong>: ~5,500-6,400 lines</li>
+<li><strong>Estimated time</strong>: 30-40 hours of focused writing</li>
+<li><strong>Page equivalent</strong>: ~140-160 additional pages</li>
+</ul>
+<h2>Recommended Approach</h2>
+<h3>Phase 1: Complete Partially-Written Chapters (Priority 1)</h3>
+<li>Chapter 11 (Data Fetching) - 40% done, easiest to complete</li>
+<li>Chapter 14 (Testing) - 30% done</li>
+<li>Chapter 12 (Authentication) - 25% done</li>
+<h3>Phase 2: Expand Summary Chapters (Priority 2)</h3>
+<li>Chapter 15 (Performance)</li>
+<li>Chapter 13 (Server Integration)</li>
+<li>Chapter 16 (Deployment)</li>
+<h3>Phase 3: Build New Ecosystem Chapters (Priority 3)</h3>
+<li>Chapter 17 (Component Library)</li>
+<li>Chapter 18 (Tooling)</li>
+<li>Chapter 19 (Real-World Applications) - NEW</li>
+<h2>Writing Guidelines</h2>
+<p>For each chapter expansion:</p>
+<li><strong>Start with a problem/scenario</strong> - "Imagine you're building..."</li>
+<li><strong>Build progressively</strong> - Start simple, add complexity</li>
+<li><strong>Include complete code examples</strong> - Not snippets, but working code</li>
+<li><strong>Add "Try it yourself"</strong> - Exercises that reinforce learning</li>
+<li><strong>Include troubleshooting</strong> - Common errors and solutions</li>
+<li><strong>End with summary</strong> - Key takeaways</li>
+<li><strong>Add cross-references</strong> - Point to Building with LARC for API details</li>
+<h2>Success Criteria</h2>
+<p>Each completed chapter should have:
+<ul><li>✅ 18K-30K characters (similar to chapters 1-10)</li>
+<li>✅ 700-1200 lines</li>
+<li>✅ Narrative voice (not reference style)</li>
+<li>✅ At least one complete, working example</li>
+<li>✅ 3-5 exercises</li>
+<li>✅ Troubleshooting section</li>
+<li>✅ Summary section</li>
+<li>✅ Cross-references to Building with LARC</li>
+</ul>
+<h2>Alternative: "Good Enough" Version</h2></p>
+<p>If full expansion is too much work, focus on:
+<ul><li>✅ Chapters 1-14: Complete these (11-14 need expansion)</li>
+<li>⚠️ Chapters 15-19: Keep as summaries but improve them</li>
+<li>✅ Add exercises and troubleshooting to all chapters</li>
+<li>✅ Add cross-references to all chapters (DONE)</li>
+</ul>
+This gives a solid 14-chapter book (~300 pages) that covers the essentials.</p>
+<hr>
+<strong>Last Updated</strong>: 2024-12-28
+<strong>Status</strong>: Assessment complete, ready for expansion work
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/learning-larc/EXPANSION-PLAN.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
