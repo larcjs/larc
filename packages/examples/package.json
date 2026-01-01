@@ -31,9 +31,9 @@
   },
   "homepage": "https://larcjs.com",
   "dependencies": {
-    "mysql2": "^3.6.5",
-    "better-sqlite3": "^9.2.2",
-    "bcryptjs": "^2.4.3"
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.6.0",
+    "mysql2": "^3.16.0"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
