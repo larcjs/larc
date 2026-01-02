@@ -13,8 +13,8 @@
     }
   },
   "peerDependencies": {
-    "@larcjs/ui": "^3.0.0",
-    "@larcjs/core-types": "^3.0.0"
+    "@larcjs/core-types": "^3.0.0",
+    "@larcjs/ui": "^3.0.0"
   },
   "peerDependenciesMeta": {
     "@larcjs/ui": {

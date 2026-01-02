@@ -1,188 +1,4 @@
-// Enhanced PAN Inspector with state tree, filtering, and performance metrics
-
-import { PanClient } from '../core/pan-client.mjs';
-
-class PanInspector extends HTMLElement {
-  constructor() {
-    super();
-    this.attachShadow({ mode: 'open' });
-    this.pc = new PanClient(this);
-    this.events = []; // { ts, topic, msg, size, duration }
-    this.retainedMessages = new Map(); // topic -> latest retained message
-    this.subscriptions = new Map(); // topic -> subscriber count
-    this.paused = false;
-    this.filter = '';
-    this.viewMode = 'messages'; // 'messages' | 'state' | 'metrics'
-    this.messageTypeFilter = 'all'; // 'all' | 'retained' | 'transient'
-    this.stats = {
-      totalMessages: 0,
-      messagesByTopic: new Map(),
-      averageSize: 0,
-      totalSize: 0
-    };
-  }
-
-  connectedCallback() {
-    this.render();
-
-    // Subscribe to all messages
-    this.off = this.pc.subscribe('*', (m) => {
-      const startTime = performance.now();
-
-      if (!this.paused) {
-        const rec = {
-          ts: Date.now(),
-          topic: m.topic,
-          msg: m,
-          size: JSON.stringify(m).length,
-          retained: m.retained || false,
-          duration: 0
-        };
-
-        this.events.push(rec);
-        if (this.events.length > 1000) this.events.shift();
-
-        // Track retained messages for state tree
-        if (m.retained) {
-          this.retainedMessages.set(m.topic, rec);
-        }
-
-        // Update statistics
-        this.stats.totalMessages++;
-        const topicCount = this.stats.messagesByTopic.get(m.topic) || 0;
-        this.stats.messagesByTopic.set(m.topic, topicCount + 1);
-        this.stats.totalSize += rec.size;
-        this.stats.averageSize = this.stats.totalSize / this.stats.totalMessages;
-
-        rec.duration = performance.now() - startTime;
-
-        if (this.viewMode === 'messages') {
-          this.renderRows();
-        } else if (this.viewMode === 'state') {
-          this.renderStateTree();
-        } else if (this.viewMode === 'metrics') {
-          this.renderMetrics();
-        }
-      }
-    });
-
-    // Track subscriptions (approximate)
-    this._trackSubscriptions();
-
-    // Event listeners
-    this.shadowRoot.addEventListener('input', (e) => {
-      const t = e.target;
-      if (t && t.id === 'filter') {
-        this.filter = t.value;
-        this._updateView();
-      }
-      if (t && t.id === 'messageTypeFilter') {
-        this.messageTypeFilter = t.value;
-        this._updateView();
-      }
-    });
-
-    this.shadowRoot.addEventListener('click', (e) => {
-      const el = e.target;
-
-      if (el && el.id === 'pause') {
-        this.paused = !this.paused;
-        this.renderControls();
-      }
-
-      if (el && el.id === 'clear') {
-        this.events = [];
-        this.stats = {
-          totalMessages: 0,
-          messagesByTopic: new Map(),
-          averageSize: 0,
-          totalSize: 0
-        };
-        this._updateView();
-      }
-
-      if (el && el.id === 'clearState') {
-        this.retainedMessages.clear();
-        this.renderStateTree();
-      }
-
-      if (el && el.id === 'export') {
-        this._exportState();
-      }
-
-      if (el && el.id === 'import') {
-        this._importState();
-      }
-
-      if (el && el.classList && el.classList.contains('replay')) {
-        const i = Number(el.getAttribute('data-i'));
-        const rec = this.events[i];
-        if (rec) this.pc.publish(rec.topic, rec.msg.data, { retain: rec.retained });
-      }
-
-      if (el && el.classList && el.classList.contains('inspect-msg')) {
-        const i = Number(el.getAttribute('data-i'));
-        const rec = this.events[i];
-        if (rec) this._showMessageDetails(rec);
-      }
-
-      if (el && el.classList && el.classList.contains('inspect-state')) {
-        const topic = el.getAttribute('data-topic');
-        const rec = this.retainedMessages.get(topic);
-        if (rec) this._showMessageDetails(rec);
-      }
-
-      if (el && el.classList && el.classList.contains('tab-btn')) {
-        const mode = el.getAttribute('data-mode');
-        this.viewMode = mode;
-        this._updateView();
-      }
-
-      if (el && el.id === 'closeDetails') {
-        this._hideMessageDetails();
-      }
-
-      // State tree expand/collapse
-      if (el && el.classList && el.classList.contains('tree-toggle')) {
-        const row = el.closest('tr');
-        if (row) {
-          row.classList.toggle('expanded');
-          this.renderStateTree();
-        }
-      }
-    });
-  }
-
-  disconnectedCallback() {
-    this.off && this.off();
-  }
-
-  _trackSubscriptions() {
-    // This is approximate - we track based on message patterns
-    // In a real implementation, we'd need pan-bus to expose subscription info
-    setInterval(() => {
-      // Update subscription counts based on message activity
-      const recentTopics = new Set(
-        this.events
-          .slice(-100)
-          .map(e => e.topic)
-      );
-
-      for (const topic of recentTopics) {
-        if (!this.subscriptions.has(topic)) {
-          this.subscriptions.set(topic, 1);
-        }
-      }
-    }, 5000);
-  }
-
-  _updateView() {
-    this.render();
-  }
-
-  render() {
-    const h = String.raw;
-    this.shadowRoot.innerHTML = h`
+import{PanClient as l}from"../core/pan-client.mjs";class n extends HTMLElement{constructor(){super(),this.attachShadow({mode:"open"}),this.pc=new l(this),this.events=[],this.retainedMessages=new Map,this.subscriptions=new Map,this.paused=!1,this.filter="",this.viewMode="messages",this.messageTypeFilter="all",this.stats={totalMessages:0,messagesByTopic:new Map,averageSize:0,totalSize:0}}escapeHTML(e){if(!e||typeof e!="string")return"";const t={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"};return e.replace(/[&<>"']/g,i=>t[i])}connectedCallback(){this.render(),this.off=this.pc.subscribe("*",e=>{const t=performance.now();if(!this.paused){const i={ts:Date.now(),topic:e.topic,msg:e,size:JSON.stringify(e).length,retained:e.retained||!1,duration:0};this.events.push(i),this.events.length>1e3&&this.events.shift(),e.retained&&this.retainedMessages.set(e.topic,i),this.stats.totalMessages++;const s=this.stats.messagesByTopic.get(e.topic)||0;this.stats.messagesByTopic.set(e.topic,s+1),this.stats.totalSize+=i.size,this.stats.averageSize=this.stats.totalSize/this.stats.totalMessages,i.duration=performance.now()-t,this.viewMode==="messages"?this.renderRows():this.viewMode==="state"?this.renderStateTree():this.viewMode==="metrics"&&this.renderMetrics()}}),this._trackSubscriptions(),this.shadowRoot.addEventListener("input",e=>{const t=e.target;t&&t.id==="filter"&&(this.filter=t.value,this._updateView()),t&&t.id==="messageTypeFilter"&&(this.messageTypeFilter=t.value,this._updateView())}),this.shadowRoot.addEventListener("click",e=>{const t=e.target;if(t&&t.id==="pause"&&(this.paused=!this.paused,this.renderControls()),t&&t.id==="clear"&&(this.events=[],this.stats={totalMessages:0,messagesByTopic:new Map,averageSize:0,totalSize:0},this._updateView()),t&&t.id==="clearState"&&(this.retainedMessages.clear(),this.renderStateTree()),t&&t.id==="export"&&this._exportState(),t&&t.id==="import"&&this._importState(),t&&t.classList&&t.classList.contains("replay")){const i=Number(t.getAttribute("data-i")),s=this.events[i];s&&this.pc.publish(s.topic,s.msg.data,{retain:s.retained})}if(t&&t.classList&&t.classList.contains("inspect-msg")){const i=Number(t.getAttribute("data-i")),s=this.events[i];s&&this._showMessageDetails(s)}if(t&&t.classList&&t.classList.contains("inspect-state")){const i=t.getAttribute("data-topic"),s=this.retainedMessages.get(i);s&&this._showMessageDetails(s)}if(t&&t.classList&&t.classList.contains("tab-btn")){const i=t.getAttribute("data-mode");this.viewMode=i,this._updateView()}if(t&&t.id==="closeDetails"&&this._hideMessageDetails(),t&&t.classList&&t.classList.contains("tree-toggle")){const i=t.closest("tr");i&&(i.classList.toggle("expanded"),this.renderStateTree())}})}disconnectedCallback(){this.off&&this.off()}_trackSubscriptions(){setInterval(()=>{const e=new Set(this.events.slice(-100).map(t=>t.topic));for(const t of e)this.subscriptions.has(t)||this.subscriptions.set(t,1)},5e3)}_updateView(){this.render()}render(){const e=String.raw;this.shadowRoot.innerHTML=e`
       <style>
         :host{display:block; font:12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; height: 100%; display: flex; flex-direction: column; color: var(--color-text, #1e293b);}
         header{display:flex; gap:8px; align-items:center; padding: 8px; background: var(--color-surface-alt, #f8f8f8); border-bottom: 1px solid var(--color-border, #ddd);}
@@ -228,25 +44,25 @@ class PanInspector extends HTMLElement {
       </style>
       <header>
         <div class="tabs">
-          <button class="tab-btn ${this.viewMode === 'messages' ? 'active' : ''}" data-mode="messages">Messages</button>
-          <button class="tab-btn ${this.viewMode === 'state' ? 'active' : ''}" data-mode="state">State Tree</button>
-          <button class="tab-btn ${this.viewMode === 'metrics' ? 'active' : ''}" data-mode="metrics">Metrics</button>
+          <button class="tab-btn ${this.viewMode==="messages"?"active":""}" data-mode="messages">Messages</button>
+          <button class="tab-btn ${this.viewMode==="state"?"active":""}" data-mode="state">State Tree</button>
+          <button class="tab-btn ${this.viewMode==="metrics"?"active":""}" data-mode="metrics">Metrics</button>
         </div>
-        ${this.viewMode === 'messages' ? h`
+        ${this.viewMode==="messages"?e`
           <input id="filter" type="text" placeholder="Filter by topic…" value="${this.filter}" />
           <select id="messageTypeFilter">
-            <option value="all" ${this.messageTypeFilter === 'all' ? 'selected' : ''}>All</option>
-            <option value="retained" ${this.messageTypeFilter === 'retained' ? 'selected' : ''}>Retained</option>
-            <option value="transient" ${this.messageTypeFilter === 'transient' ? 'selected' : ''}>Transient</option>
+            <option value="all" ${this.messageTypeFilter==="all"?"selected":""}>All</option>
+            <option value="retained" ${this.messageTypeFilter==="retained"?"selected":""}>Retained</option>
+            <option value="transient" ${this.messageTypeFilter==="transient"?"selected":""}>Transient</option>
           </select>
-        ` : ''}
-        ${this.viewMode === 'state' ? h`
+        `:""}
+        ${this.viewMode==="state"?e`
           <input id="filter" type="text" placeholder="Filter topics…" value="${this.filter}" />
           <button id="export">Export</button>
           <button id="import">Import</button>
           <button id="clearState">Clear</button>
-        ` : ''}
-        <button id="pause">${this.paused ? 'Resume' : 'Pause'}</button>
+        `:""}
+        <button id="pause">${this.paused?"Resume":"Pause"}</button>
         <button id="clear">Clear</button>
       </header>
       <div class="content" id="content"></div>
@@ -258,37 +74,7 @@ class PanInspector extends HTMLElement {
         </div>
         <div id="detailsContent"></div>
       </div>
-    `;
-
-    if (this.viewMode === 'messages') {
-      this.renderRows();
-    } else if (this.viewMode === 'state') {
-      this.renderStateTree();
-    } else if (this.viewMode === 'metrics') {
-      this.renderMetrics();
-    }
-  }
-
-  renderControls() {
-    const btn = this.shadowRoot.getElementById('pause');
-    if (btn) btn.textContent = this.paused ? 'Resume' : 'Pause';
-  }
-
-  renderRows() {
-    const content = this.shadowRoot.getElementById('content');
-    if (!content) return;
-
-    const f = (this.filter || '').toLowerCase();
-    let visible = this.events.filter((r) => !f || r.topic.toLowerCase().includes(f));
-
-    // Apply message type filter
-    if (this.messageTypeFilter === 'retained') {
-      visible = visible.filter(r => r.retained);
-    } else if (this.messageTypeFilter === 'transient') {
-      visible = visible.filter(r => !r.retained);
-    }
-
-    content.innerHTML = `
+    `,this.viewMode==="messages"?this.renderRows():this.viewMode==="state"?this.renderStateTree():this.viewMode==="metrics"&&this.renderMetrics()}renderControls(){const e=this.shadowRoot.getElementById("pause");e&&(e.textContent=this.paused?"Resume":"Pause")}renderRows(){const e=this.shadowRoot.getElementById("content");if(!e)return;const t=(this.filter||"").toLowerCase();let i=this.events.filter(s=>!t||s.topic.toLowerCase().includes(t));this.messageTypeFilter==="retained"?i=i.filter(s=>s.retained):this.messageTypeFilter==="transient"&&(i=i.filter(s=>!s.retained)),e.innerHTML=`
       <table>
         <thead>
           <tr>
@@ -301,39 +87,22 @@ class PanInspector extends HTMLElement {
           </tr>
         </thead>
         <tbody>
-          ${visible.slice(-500).map((r, i) => `
-            <tr class="${r.retained ? 'retained' : ''}">
-              <td class="muted">${new Date(r.ts).toLocaleTimeString()}</td>
-              <td>${r.topic}</td>
-              <td class="muted">${r.retained ? 'Retained' : 'Transient'}</td>
-              <td class="muted">${this._formatBytes(r.size)}</td>
-              <td class="muted">${r.duration ? r.duration.toFixed(2) + 'ms' : '-'}</td>
+          ${i.slice(-500).map((s,a)=>`
+            <tr class="${s.retained?"retained":""}">
+              <td class="muted">${new Date(s.ts).toLocaleTimeString()}</td>
+              <td>${this.escapeHTML(s.topic)}</td>
+              <td class="muted">${s.retained?"Retained":"Transient"}</td>
+              <td class="muted">${this._formatBytes(s.size)}</td>
+              <td class="muted">${s.duration?s.duration.toFixed(2)+"ms":"-"}</td>
               <td>
-                <button class="action-btn replay" data-i="${i}">Replay</button>
-                <button class="action-btn inspect-msg" data-i="${i}">Inspect</button>
+                <button class="action-btn replay" data-i="${a}">Replay</button>
+                <button class="action-btn inspect-msg" data-i="${a}">Inspect</button>
               </td>
             </tr>
-          `).join('')}
+          `).join("")}
         </tbody>
       </table>
-    `;
-  }
-
-  renderStateTree() {
-    const content = this.shadowRoot.getElementById('content');
-    if (!content) return;
-
-    const f = (this.filter || '').toLowerCase();
-    const filtered = Array.from(this.retainedMessages.entries())
-      .filter(([topic]) => !f || topic.toLowerCase().includes(f))
-      .sort(([a], [b]) => a.localeCompare(b));
-
-    if (filtered.length === 0) {
-      content.innerHTML = '<div style="padding: 20px; text-align: center; color: #999;">No retained state available</div>';
-      return;
-    }
-
-    content.innerHTML = `
+    `}renderStateTree(){const e=this.shadowRoot.getElementById("content");if(!e)return;const t=(this.filter||"").toLowerCase(),i=Array.from(this.retainedMessages.entries()).filter(([s])=>!t||s.toLowerCase().includes(t)).sort(([s],[a])=>s.localeCompare(a));if(i.length===0){e.innerHTML='<div style="padding: 20px; text-align: center; color: #999;">No retained state available</div>';return}e.innerHTML=`
       <table class="state-tree">
         <thead>
           <tr>
@@ -344,54 +113,27 @@ class PanInspector extends HTMLElement {
           </tr>
         </thead>
         <tbody>
-          ${filtered.map(([topic, rec]) => `
+          ${i.map(([s,a])=>`
             <tr class="tree-node">
               <td>
                 <span class="tree-toggle">▶</span>
-                <span class="tree-topic">${topic}</span>
+                <span class="tree-topic">${s}</span>
               </td>
-              <td class="muted">${this._formatBytes(rec.size)}</td>
-              <td class="muted">${new Date(rec.ts).toLocaleTimeString()}</td>
+              <td class="muted">${this._formatBytes(a.size)}</td>
+              <td class="muted">${new Date(a.ts).toLocaleTimeString()}</td>
               <td>
-                <button class="action-btn inspect-state" data-topic="${topic}">Inspect</button>
+                <button class="action-btn inspect-state" data-topic="${s}">Inspect</button>
               </td>
             </tr>
             <tr class="tree-data">
               <td colspan="4">
-                <pre>${JSON.stringify(rec.msg.data, null, 2)}</pre>
+                <pre>${JSON.stringify(a.msg.data,null,2)}</pre>
               </td>
             </tr>
-          `).join('')}
+          `).join("")}
         </tbody>
       </table>
-    `;
-
-    // Add click handlers for tree toggles
-    content.querySelectorAll('.tree-toggle, .tree-topic').forEach(el => {
-      el.addEventListener('click', (e) => {
-        const row = e.target.closest('tr');
-        if (row) {
-          row.classList.toggle('expanded');
-          const toggle = row.querySelector('.tree-toggle');
-          if (toggle) {
-            toggle.textContent = row.classList.contains('expanded') ? '▼' : '▶';
-          }
-        }
-      });
-    });
-  }
-
-  renderMetrics() {
-    const content = this.shadowRoot.getElementById('content');
-    if (!content) return;
-
-    const topTopics = Array.from(this.stats.messagesByTopic.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
-
-    const avgMessageRate = this.stats.totalMessages / ((Date.now() - (this.events[0]?.ts || Date.now())) / 1000);
-
-    content.innerHTML = `
+    `,e.querySelectorAll(".tree-toggle, .tree-topic").forEach(s=>{s.addEventListener("click",a=>{const o=a.target.closest("tr");if(o){o.classList.toggle("expanded");const r=o.querySelector(".tree-toggle");r&&(r.textContent=o.classList.contains("expanded")?"▼":"▶")}})})}renderMetrics(){const e=this.shadowRoot.getElementById("content");if(!e)return;const t=Array.from(this.stats.messagesByTopic.entries()).sort((s,a)=>a[1]-s[1]).slice(0,10),i=this.stats.totalMessages/((Date.now()-(this.events[0]?.ts||Date.now()))/1e3);e.innerHTML=`
       <div class="metrics-grid">
         <div class="metric-card">
           <div class="metric-value">${this.stats.totalMessages}</div>
@@ -406,18 +148,18 @@ class PanInspector extends HTMLElement {
           <div class="metric-label">Avg Message Size</div>
         </div>
         <div class="metric-card">
-          <div class="metric-value">${avgMessageRate.toFixed(1)}/s</div>
+          <div class="metric-value">${i.toFixed(1)}/s</div>
           <div class="metric-label">Message Rate</div>
         </div>
         <div class="metric-card">
           <div class="metric-label" style="margin-bottom: 8px;">Top Topics by Volume</div>
           <div class="metric-list">
-            ${topTopics.map(([topic, count]) => `
+            ${t.map(([s,a])=>`
               <div class="metric-list-item">
-                <span>${topic}</span>
-                <span>${count}</span>
+                <span>${s}</span>
+                <span>${a}</span>
               </div>
-            `).join('')}
+            `).join("")}
           </div>
         </div>
         <div class="metric-card">
@@ -425,112 +167,28 @@ class PanInspector extends HTMLElement {
           <div class="metric-label">Unique Topics</div>
         </div>
       </div>
-    `;
-  }
-
-  _showMessageDetails(rec) {
-    const modal = this.shadowRoot.getElementById('detailsModal');
-    const overlay = this.shadowRoot.getElementById('detailsOverlay');
-    const detailsContent = this.shadowRoot.getElementById('detailsContent');
-
-    if (!modal || !overlay || !detailsContent) return;
-
-    detailsContent.innerHTML = `
+    `}_showMessageDetails(e){const t=this.shadowRoot.getElementById("detailsModal"),i=this.shadowRoot.getElementById("detailsOverlay"),s=this.shadowRoot.getElementById("detailsContent");!t||!i||!s||(s.innerHTML=`
       <div style="margin-bottom: 12px;">
-        <strong>Topic:</strong> ${rec.topic}
+        <strong>Topic:</strong> ${this.escapeHTML(e.topic)}
       </div>
       <div style="margin-bottom: 12px;">
-        <strong>Timestamp:</strong> ${new Date(rec.ts).toLocaleString()}
+        <strong>Timestamp:</strong> ${new Date(e.ts).toLocaleString()}
       </div>
       <div style="margin-bottom: 12px;">
-        <strong>Size:</strong> ${this._formatBytes(rec.size)}
+        <strong>Size:</strong> ${this._formatBytes(e.size)}
       </div>
       <div style="margin-bottom: 12px;">
-        <strong>Type:</strong> ${rec.retained ? 'Retained' : 'Transient'}
+        <strong>Type:</strong> ${e.retained?"Retained":"Transient"}
       </div>
-      ${rec.duration ? `<div style="margin-bottom: 12px;"><strong>Duration:</strong> ${rec.duration.toFixed(2)}ms</div>` : ''}
+      ${e.duration?`<div style="margin-bottom: 12px;"><strong>Duration:</strong> ${e.duration.toFixed(2)}ms</div>`:""}
       <div style="margin-bottom: 8px;">
         <strong>Data:</strong>
       </div>
-      <pre>${JSON.stringify(rec.msg.data, null, 2)}</pre>
-      ${rec.msg.meta ? `
+      <pre>${JSON.stringify(e.msg.data,null,2)}</pre>
+      ${e.msg.meta?`
         <div style="margin-top: 12px; margin-bottom: 8px;">
           <strong>Metadata:</strong>
         </div>
-        <pre>${JSON.stringify(rec.msg.meta, null, 2)}</pre>
-      ` : ''}
-    `;
-
-    modal.classList.add('show');
-    overlay.classList.add('show');
-
-    // Close on overlay click
-    overlay.onclick = () => this._hideMessageDetails();
-  }
-
-  _hideMessageDetails() {
-    const modal = this.shadowRoot.getElementById('detailsModal');
-    const overlay = this.shadowRoot.getElementById('detailsOverlay');
-
-    if (modal) modal.classList.remove('show');
-    if (overlay) overlay.classList.remove('show');
-  }
-
-  _exportState() {
-    const state = {};
-    for (const [topic, rec] of this.retainedMessages.entries()) {
-      state[topic] = rec.msg.data;
-    }
-
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `pan-state-${Date.now()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  _importState() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json';
-
-    input.onchange = (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        try {
-          const state = JSON.parse(event.target.result);
-
-          // Publish all state to PAN
-          for (const [topic, data] of Object.entries(state)) {
-            this.pc.publish(topic, data, { retain: true });
-          }
-
-          alert(`Imported ${Object.keys(state).length} state entries`);
-        } catch (error) {
-          alert('Failed to import state: ' + error.message);
-        }
-      };
-
-      reader.readAsText(file);
-    };
-
-    input.click();
-  }
-
-  _formatBytes(bytes) {
-    if (bytes === 0) return '0 B';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  }
-}
-
-customElements.define('pan-inspector', PanInspector);
-export { PanInspector };
-export default PanInspector;
+        <pre>${JSON.stringify(e.msg.meta,null,2)}</pre>
+      `:""}
+    `,t.classList.add("show"),i.classList.add("show"),i.onclick=()=>this._hideMessageDetails())}_hideMessageDetails(){const e=this.shadowRoot.getElementById("detailsModal"),t=this.shadowRoot.getElementById("detailsOverlay");e&&e.classList.remove("show"),t&&t.classList.remove("show")}_exportState(){const e={};for(const[a,o]of this.retainedMessages.entries())e[a]=o.msg.data;const t=new Blob([JSON.stringify(e,null,2)],{type:"application/json"}),i=URL.createObjectURL(t),s=document.createElement("a");s.href=i,s.download=`pan-state-${Date.now()}.json`,s.click(),URL.revokeObjectURL(i)}_importState(){const e=document.createElement("input");e.type="file",e.accept="application/json",e.onchange=t=>{const i=t.target.files[0];if(!i)return;const s=new FileReader;s.onload=a=>{try{const o=JSON.parse(a.target.result);for(const[r,d]of Object.entries(o))this.pc.publish(r,d,{retain:!0});alert(`Imported ${Object.keys(o).length} state entries`)}catch(o){alert("Failed to import state: "+o.message)}},s.readAsText(i)},e.click()}_formatBytes(e){if(e===0)return"0 B";const t=1024,i=["B","KB","MB"],s=Math.floor(Math.log(e)/Math.log(t));return parseFloat((e/Math.pow(t,s)).toFixed(1))+" "+i[s]}}customElements.define("pan-inspector",n);var h=n;export{n as PanInspector,h as default};

@@ -1,27 +1,4 @@
-// Todo list component - subscribes to todo state and publishes user actions
-import { PanClient } from '../core/pan-client.mjs';
-
-// Helper: UUID fallback
-const uid = () => (globalThis.crypto && typeof crypto.randomUUID === 'function')
-  ? crypto.randomUUID()
-  : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
-
-class TodoList extends HTMLElement {
-  pc = new PanClient(this);
-  items = [];
-
-  connectedCallback() {
-    this.attachShadow({ mode: 'open' });
-    this.#render();
-    this.pc.subscribe('todos.state', (m) => {
-      this.items = m.data.items;
-      this.#render();
-    }, { retained: true });
-  }
-
-  #render() {
-    const h = String.raw;
-    this.shadowRoot.innerHTML = h`
+import{PanClient as l}from"../core/pan-client.mjs";const n=()=>globalThis.crypto&&typeof crypto.randomUUID=="function"?crypto.randomUUID():`${Date.now().toString(36)}-${Math.random().toString(36).slice(2,10)}`;class s extends HTMLElement{pc=new l(this);items=[];connectedCallback(){this.attachShadow({mode:"open"}),this.#t(),this.pc.subscribe("todos.state",o=>{this.items=o.data.items,this.#t()},{retained:!0})}#t(){const o=String.raw;this.shadowRoot.innerHTML=o`
       <style>
         :host{display:block;font:15px/1.5 var(--font, "Lexend", sans-serif);color:var(--color-text,inherit);}
         form{display:flex;gap:0.65rem;margin-bottom:0.9rem;}
@@ -39,68 +16,15 @@ class TodoList extends HTMLElement {
         <input id="title" placeholder="Add a task…" />
         <button type="submit">Add</button>
       </form>
-      ${this.items.length ? '' : '<div class="muted">No tasks yet.</div>'}
+      ${this.items.length?"":'<div class="muted">No tasks yet.</div>'}
       <ul>
-        ${this.items.map((t) => `
-          <li class="${t.done ? 'done' : ''}" data-id="${t.id}">
-            <input type="checkbox" ${t.done ? 'checked' : ''} aria-label="toggle" />
-            <span class="t">${this.#escape(t.title)}</span>
+        ${this.items.map(t=>`
+          <li class="${t.done?"done":""}" data-id="${t.id}">
+            <input type="checkbox" ${t.done?"checked":""} aria-label="toggle" />
+            <span class="t">${this.#e(t.title)}</span>
             <span class="spacer"></span>
             <button class="del" title="Remove">✕</button>
           </li>
-        `).join('')}
+        `).join("")}
       </ul>
-    `;
-
-    const form = this.shadowRoot.querySelector('#f');
-    const title = this.shadowRoot.querySelector('#title');
-    form?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const value = title.value.trim();
-      if (!value) return;
-      title.value = '';
-      this.pc.publish({
-        topic: 'todos.change',
-        data: { item: { id: uid(), title: value, done: false } },
-        retain: true
-      });
-    });
-
-    this.shadowRoot.querySelectorAll('li input[type=checkbox]').forEach((cb) => {
-      cb.addEventListener('change', (e) => {
-        const li = e.target.closest('li');
-        const id = li?.dataset.id;
-        this.pc.publish({
-          topic: 'todos.toggle',
-          data: { id, done: e.target.checked },
-          retain: true
-        });
-      });
-    });
-
-    this.shadowRoot.querySelectorAll('li .del').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const li = e.target.closest('li');
-        const id = li?.dataset.id;
-        this.pc.publish({
-          topic: 'todos.remove',
-          data: { id },
-          retain: true
-        });
-      });
-    });
-  }
-
-  #escape(s) {
-    return String(s).replace(/[&<>"']/g, (c) => ({
-      '&': '&amp;',
-      '<': '&lt;',
-      '>': '&gt;',
-      '"': '&quot;',
-      "'": '&#39;'
-    }[c]));
-  }
-}
-
-customElements.define('todo-list', TodoList);
-export default TodoList;
+    `;const r=this.shadowRoot.querySelector("#f"),a=this.shadowRoot.querySelector("#title");r?.addEventListener("submit",t=>{t.preventDefault();const e=a.value.trim();e&&(a.value="",this.pc.publish({topic:"todos.change",data:{item:{id:n(),title:e,done:!1}},retain:!0}))}),this.shadowRoot.querySelectorAll("li input[type=checkbox]").forEach(t=>{t.addEventListener("change",e=>{const i=e.target.closest("li")?.dataset.id;this.pc.publish({topic:"todos.toggle",data:{id:i,done:e.target.checked},retain:!0})})}),this.shadowRoot.querySelectorAll("li .del").forEach(t=>{t.addEventListener("click",e=>{const i=e.target.closest("li")?.dataset.id;this.pc.publish({topic:"todos.remove",data:{id:i},retain:!0})})})}#e(o){return String(o).replace(/[&<>"']/g,r=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[r])}}customElements.define("todo-list",s);var u=s;export{u as default};

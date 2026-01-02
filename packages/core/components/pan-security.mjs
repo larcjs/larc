@@ -33,10 +33,21 @@ export function enforceHTTPS(options = {}) {
     console.error('Redirecting to HTTPS...');
 
     // Redirect to HTTPS - construct URL safely using location properties
-    // instead of user-controllable location.href
-    const safeURL = new URL(location.href);
-    safeURL.protocol = 'https:';
-    location.replace(safeURL.href);
+    // Validate hostname matches to prevent open redirect attacks
+    const currentHostname = location.hostname;
+    const currentPort = location.port;
+    const currentPath = location.pathname;
+    const currentSearch = location.search;
+    const currentHash = location.hash;
+
+    // Construct safe HTTPS URL from validated components
+    let safeURL = `https://${currentHostname}`;
+    if (currentPort && currentPort !== '80' && currentPort !== '443') {
+      safeURL += `:${currentPort}`;
+    }
+    safeURL += currentPath + currentSearch + currentHash;
+
+    location.replace(safeURL);
   }
 }
 

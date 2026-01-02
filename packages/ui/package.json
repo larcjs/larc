@@ -225,7 +225,7 @@
     "@larcjs/core": "^2.1.0"
   },
   "devDependencies": {
-    "@playwright/test": "^1.55.1",
+    "@playwright/test": "^1.57.0",
     "esbuild": "^0.27.1"
   }
 }
