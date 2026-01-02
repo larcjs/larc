@@ -700,6 +700,33 @@
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, 'text/html');
 
+        // Load book's CSS files
+        const bookUrl = new URL(book.url, window.location.href);
+        const bookDir = bookUrl.href.substring(0, bookUrl.href.lastIndexOf('/') + 1);
+
+        doc.querySelectorAll('link[rel="stylesheet"]').forEach(linkEl => {
+          const href = linkEl.getAttribute('href');
+          if (href && !href.startsWith('http')) {
+            // Create absolute URL for the CSS file
+            const cssUrl = new URL(href, bookDir).href;
+            // Check if we haven't already loaded this CSS
+            if (!document.querySelector(`link[href="${cssUrl}"]`)) {
+              const newLink = document.createElement('link');
+              newLink.rel = 'stylesheet';
+              newLink.href = cssUrl;
+              document.head.appendChild(newLink);
+            }
+          }
+        });
+
+        // Fix relative image paths in the document
+        doc.querySelectorAll('img[src]').forEach(img => {
+          const src = img.getAttribute('src');
+          if (src && !src.startsWith('http') && !src.startsWith('/')) {
+            img.setAttribute('src', new URL(src, bookDir).href);
+          }
+        });
+
         // Extract TOC
         const toc = doc.querySelector('#TOC, nav[role="doc-toc"]');
         if (toc) {

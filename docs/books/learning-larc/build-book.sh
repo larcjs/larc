@@ -225,14 +225,14 @@ create_combined_markdown() {
     fi
 
     # Fix image paths in combined markdown
-    # The chapters reference ../images/ but we need to point to the actual build/images/ location
+    # The chapters reference ../images/ but we need to point to images/ for web viewing
     echo -e "${BLUE}Fixing image paths...${NC}"
     if [[ "$OSTYPE" == "darwin"* ]]; then
         # macOS sed requires empty string for -i
-        sed -i '' "s|\.\./images/|${IMAGES_DIR}/|g" "$COMBINED_MD"
+        sed -i '' "s|\.\./images/|images/|g" "$COMBINED_MD"
     else
         # Linux sed
-        sed -i "s|\.\./images/|${IMAGES_DIR}/|g" "$COMBINED_MD"
+        sed -i "s|\.\./images/|images/|g" "$COMBINED_MD"
     fi
 
     # Clean up duplicate images and caption lines
@@ -530,6 +530,8 @@ build_html() {
         --from markdown+smart \
         --to html5 \
         --standalone \
+        --toc \
+        --toc-depth=3 \
         --number-sections \
         --css="book-style.css" \
         --highlight-style=tango \
@@ -540,8 +542,12 @@ build_html() {
     # Copy CSS to output
     cp "${TEMP_DIR}/book-style.css" "${OUTPUT_DIR}/html/"
 
-    # Fix image paths if needed
-    sed -i '' 's|src="../images/|src="images/|g' "${OUTPUT_DIR}/html/learning-larc.html" 2>/dev/null || true
+    # Fix any absolute filesystem paths that may have snuck in
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        sed -i '' "s|src=\"${IMAGES_DIR}/|src=\"images/|g" "${OUTPUT_DIR}/html/learning-larc.html" 2>/dev/null || true
+    else
+        sed -i "s|src=\"${IMAGES_DIR}/|src=\"images/|g" "${OUTPUT_DIR}/html/learning-larc.html" 2>/dev/null || true
+    fi
 
     echo -e "${GREEN}✓ HTML version complete: ${OUTPUT_DIR}/html/learning-larc.html${NC}"
 }

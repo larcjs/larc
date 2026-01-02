@@ -248,14 +248,14 @@ COVEREOF
         rm "${BUILD_DIR}/temp.html"
         [ -f "${BUILD_DIR}/cover.html" ] && rm "${BUILD_DIR}/cover.html"
     else
-        echo -e "${YELLOW}Using pdflatex for PDF generation...${NC}"
+        echo -e "${YELLOW}Using xelatex for PDF generation...${NC}"
 
         pandoc \
             "${BUILD_DIR}/metadata.yaml" \
             $(cat "${BUILD_DIR}/book-order.txt" | sed "s|^|${BOOK_DIR}/|") \
             --from markdown+smart \
             --to pdf \
-            --pdf-engine=pdflatex \
+            --pdf-engine=xelatex \
             --toc \
             --toc-depth=3 \
             --number-sections \
@@ -267,6 +267,8 @@ COVEREOF
             --variable linkcolor=blue \
             --variable urlcolor=blue \
             --variable toccolor=black \
+            --variable mainfont="DejaVu Sans" \
+            --variable monofont="DejaVu Sans Mono" \
             --output="${OUTPUT_DIR}/pdf/building-with-larc.pdf"
     fi
 
