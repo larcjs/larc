@@ -141,6 +141,7 @@ jobs:
              grep -v "pan-debug" | \
              grep -v "pan-inspector" | \
              grep -v "\[PAN Bus\]" | \
+             grep -v "\[PAN Routes\]" | \
              grep -v "\[pan-" | \
              grep -v "\[drag-drop-list\]" | \
              grep -v "console.log('✓" | \
@@ -154,6 +155,7 @@ jobs:
              grep -v "console.log('📁" | \
              grep -v "console.log('📄" | \
              grep -v "console.log('Navigate to:" | \
+             grep -v 'console.log(`\[PAN' | \
              grep -v "console.error" | \
              grep -v "console.warn" | \
              grep -v " \* .*console\.log"; then
