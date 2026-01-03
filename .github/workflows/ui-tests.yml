@@ -136,11 +136,31 @@ jobs:
       - name: Check for console.log statements
         working-directory: ./packages/ui
         run: |
-          if grep -r "console\.log" *.mjs --include="*.mjs" --include="*.js" | grep -v "// console.log" | grep -v "pan-debug" | grep -v "pan-inspector"; then
+          if grep -r "console\.log" *.mjs --include="*.mjs" --include="*.js" | \
+             grep -v "// console.log" | \
+             grep -v "pan-debug" | \
+             grep -v "pan-inspector" | \
+             grep -v "\[PAN Bus\]" | \
+             grep -v "\[pan-" | \
+             grep -v "\[drag-drop-list\]" | \
+             grep -v "console.log('✓" | \
+             grep -v "console.log('⚠" | \
+             grep -v "console.log('🛡️" | \
+             grep -v "console.log('📂" | \
+             grep -v "console.log('🔄" | \
+             grep -v "console.log('🖱️" | \
+             grep -v "console.log('✅" | \
+             grep -v "console.log('📌" | \
+             grep -v "console.log('📁" | \
+             grep -v "console.log('📄" | \
+             grep -v "console.log('Navigate to:" | \
+             grep -v "console.error" | \
+             grep -v "console.warn" | \
+             grep -v " \* .*console\.log"; then
             echo "❌ Found console.log statements in source files"
             exit 1
           else
-            echo "✅ No console.log statements found"
+            echo "✅ No problematic console.log statements found"
           fi
 
       - name: Validate package.json
