@@ -330,7 +330,7 @@ python3 -m http.server 8000
    Archive these:
    - `larcjs/core-types` → "Moved to larcjs/larc/packages/core-types"
    - `larcjs/components-types` → "Moved to larcjs/larc/packages/ui-types"
-   - `larcjs/devtools` → "Moved to larcjs/larc/packages/devtools"
+   - `larcjs/devtools` → "Moved to larcjs/larc/devtools"
    - `larcjs/site` → "Moved to larcjs/larc/docs/site"
 
 4. **Update Documentation:**
@@ -366,7 +366,7 @@ ls -la node_modules/@larcjs/
 # Expected output:
 # lrwxrwxrwx ... components-types -> ../../packages/ui-types
 # lrwxrwxrwx ... core-types -> ../../packages/core-types
-# lrwxrwxrwx ... devtools -> ../../packages/devtools
+# lrwxrwxrwx ... devtools -> ../../devtools
 ```
 
 ### Full Test

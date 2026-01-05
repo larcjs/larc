@@ -70,7 +70,7 @@ Professional network for LARC developers. Good for job postings, industry discus
 ### Example Applications
 
 **Official Examples Repository**
-https://github.com/larcjs/larc/tree/main/packages/examples
+https://github.com/larcjs/larc/tree/main/examples
 Curated collection of example applications demonstrating LARC patterns and components. Each example is self-contained, documented, and includes setup instructions.
 
 Notable examples include:
@@ -240,15 +240,15 @@ Cross-tab communication API used by LARC for multi-window synchronization.
 ### LARC-Compatible Backends
 
 **Node.js Backend Examples**
-https://github.com/larcjs/larc/tree/main/packages/examples/backends/nodejs
+https://github.com/larcjs/larc/tree/main/examples/backends/nodejs
 Reference implementations showing REST and WebSocket backends for LARC applications. Includes authentication, file uploads, and real-time features.
 
 **Python/Flask Backend Examples**
-https://github.com/larcjs/larc/tree/main/packages/examples/backends/python
+https://github.com/larcjs/larc/tree/main/examples/backends/python
 Python backend examples demonstrating API design patterns that work well with LARC frontend applications.
 
 **Deno Backend Examples**
-https://github.com/larcjs/larc/tree/main/packages/examples/backends/deno
+https://github.com/larcjs/larc/tree/main/examples/backends/deno
 Modern JavaScript runtime examples showing how to build backends without Node.js dependencies.
 
 ### API Design Guides

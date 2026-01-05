@@ -32,7 +32,7 @@
     "lint": "npm run lint --workspaces --if-present",
     "format": "npm run format --workspaces --if-present",
     "serve": "python3 -m http.server 8000",
-    "serve:examples": "cd packages/examples && python3 -m http.server 8888",
+    "serve:examples": "cd examples && python3 -m http.server 8888",
     "version:check": "npm run version --workspaces",
     "changeset": "changeset",
     "changeset:version": "changeset version",

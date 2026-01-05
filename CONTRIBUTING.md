@@ -76,10 +76,10 @@ larc/
 │   ├── core-routing/              # @larcjs/core-routing
 │   ├── core-debug/                # @larcjs/core-debug
 │   ├── core-types/                # @larcjs/core-types
-│   ├── components-types/          # @larcjs/ui-types
-│   ├── apps/                      # Demo applications
-│   ├── examples/                  # Code examples
-│   └── devtools/                  # Chrome DevTools extension
+│   └── components-types/          # @larcjs/ui-types
+├── apps/                          # Demo applications
+├── examples/                      # Code examples
+├── devtools/                      # Chrome DevTools extension
 ├── cli/                           # create-larc-app CLI
 ├── react-adapter/                 # React integration
 ├── registry/                      # Component registry
@@ -98,9 +98,9 @@ All packages are in this monorepo. Choose the appropriate directory based on you
 | TypeScript types for core | `packages/core-types/` |
 | UI components | `packages/ui/` |
 | TypeScript types for components | `packages/ui-types/` |
-| Example applications | `packages/examples/` |
+| Example applications | `examples/` |
 | Documentation website | `docs/site/` |
-| DevTools extension | `packages/devtools/` |
+| DevTools extension | `devtools/` |
 | CLI tool | `cli/` |
 | React adapter | `react-adapter/` |
 | Playground, config, docs | Root directory |

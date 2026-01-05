@@ -3127,20 +3127,20 @@
                   "id": "node-474",
                   "name": "apps",
                   "type": "folder",
-                  "path": "site/docs/packages/apps",
+                  "path": "site/docs/apps",
                   "children": [
                     {
                       "id": "node-461",
                       "name": "contact-manager",
                       "type": "folder",
-                      "path": "site/docs/packages/apps/contact-manager",
+                      "path": "site/docs/apps/contact-manager",
                       "children": [
                         {
                           "id": "node-460",
                           "name": "README.html",
                           "type": "file",
                           "extension": ".html",
-                          "path": "site/docs/packages/apps/contact-manager/README.html",
+                          "path": "site/docs/apps/contact-manager/README.html",
                           "size": 13930,
                           "modified": "2025-12-18T14:09:18.846Z"
                         }
@@ -3150,14 +3150,14 @@
                       "id": "node-463",
                       "name": "invoice",
                       "type": "folder",
-                      "path": "site/docs/packages/apps/invoice",
+                      "path": "site/docs/apps/invoice",
                       "children": [
                         {
                           "id": "node-462",
                           "name": "README.html",
                           "type": "file",
                           "extension": ".html",
-                          "path": "site/docs/packages/apps/invoice/README.html",
+                          "path": "site/docs/apps/invoice/README.html",
                           "size": 13893,
                           "modified": "2025-12-18T14:09:18.846Z"
                         }
@@ -3167,14 +3167,14 @@
                       "id": "node-465",
                       "name": "invoice-studio",
                       "type": "folder",
-                      "path": "site/docs/packages/apps/invoice-studio",
+                      "path": "site/docs/apps/invoice-studio",
                       "children": [
                         {
                           "id": "node-464",
                           "name": "README.html",
                           "type": "file",
                           "extension": ".html",
-                          "path": "site/docs/packages/apps/invoice-studio/README.html",
+                          "path": "site/docs/apps/invoice-studio/README.html",
                           "size": 11743,
                           "modified": "2025-12-18T14:09:18.846Z"
                         }
@@ -3184,26 +3184,26 @@
                       "id": "node-473",
                       "name": "src",
                       "type": "folder",
-                      "path": "site/docs/packages/apps/src",
+                      "path": "site/docs/apps/src",
                       "children": [
                         {
                           "id": "node-472",
                           "name": "ui",
                           "type": "folder",
-                          "path": "site/docs/packages/apps/src/ui",
+                          "path": "site/docs/apps/src/ui",
                           "children": [
                             {
                               "id": "node-471",
                               "name": "docs",
                               "type": "folder",
-                              "path": "site/docs/packages/apps/src/ui/docs",
+                              "path": "site/docs/apps/src/ui/docs",
                               "children": [
                                 {
                                   "id": "node-469",
                                   "name": "COMPONENT_SECURITY_AUDIT.html",
                                   "type": "file",
                                   "extension": ".html",
-                                  "path": "site/docs/packages/apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+                                  "path": "site/docs/apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
                                   "size": 26441,
                                   "modified": "2025-12-18T14:09:18.848Z"
                                 },
@@ -3212,7 +3212,7 @@
                                   "name": "THEME_SYSTEM.html",
                                   "type": "file",
                                   "extension": ".html",
-                                  "path": "site/docs/packages/apps/src/ui/docs/THEME_SYSTEM.html",
+                                  "path": "site/docs/apps/src/ui/docs/THEME_SYSTEM.html",
                                   "size": 14049,
                                   "modified": "2025-12-18T14:09:18.848Z"
                                 }
@@ -3223,7 +3223,7 @@
                               "name": "CHANGELOG.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/apps/src/ui/CHANGELOG.html",
+                              "path": "site/docs/apps/src/ui/CHANGELOG.html",
                               "size": 20205,
                               "modified": "2025-12-18T14:09:18.847Z"
                             },
@@ -3232,7 +3232,7 @@
                               "name": "COMPONENT_TEMPLATE.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/apps/src/ui/COMPONENT_TEMPLATE.html",
+                              "path": "site/docs/apps/src/ui/COMPONENT_TEMPLATE.html",
                               "size": 9463,
                               "modified": "2025-12-18T14:09:18.847Z"
                             },
@@ -3241,7 +3241,7 @@
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/apps/src/ui/README.html",
+                              "path": "site/docs/apps/src/ui/README.html",
                               "size": 19576,
                               "modified": "2025-12-18T14:09:18.848Z"
                             }
@@ -3254,7 +3254,7 @@
                       "name": "README.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/apps/README.html",
+                      "path": "site/docs/apps/README.html",
                       "size": 10497,
                       "modified": "2025-12-18T14:09:18.845Z"
                     }
@@ -3462,14 +3462,14 @@
                   "id": "node-508",
                   "name": "devtools",
                   "type": "folder",
-                  "path": "site/docs/packages/devtools",
+                  "path": "site/docs/devtools",
                   "children": [
                     {
                       "id": "node-498",
                       "name": "BUILD_ICONS.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/BUILD_ICONS.html",
+                      "path": "site/docs/devtools/BUILD_ICONS.html",
                       "size": 5125,
                       "modified": "2025-12-18T14:09:18.852Z"
                     },
@@ -3478,7 +3478,7 @@
                       "name": "CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
+                      "path": "site/docs/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
                       "size": 9253,
                       "modified": "2025-12-18T14:09:18.852Z"
                     },
@@ -3487,7 +3487,7 @@
                       "name": "EXTENSION_ENABLED.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/EXTENSION_ENABLED.html",
+                      "path": "site/docs/devtools/EXTENSION_ENABLED.html",
                       "size": 12733,
                       "modified": "2025-12-18T14:09:18.852Z"
                     },
@@ -3496,7 +3496,7 @@
                       "name": "EXTENSION_TEST_PLAN.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/EXTENSION_TEST_PLAN.html",
+                      "path": "site/docs/devtools/EXTENSION_TEST_PLAN.html",
                       "size": 16018,
                       "modified": "2025-12-18T14:09:18.853Z"
                     },
@@ -3505,7 +3505,7 @@
                       "name": "EXTENSION_TEST_RESULTS.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/EXTENSION_TEST_RESULTS.html",
+                      "path": "site/docs/devtools/EXTENSION_TEST_RESULTS.html",
                       "size": 12599,
                       "modified": "2025-12-18T14:09:18.854Z"
                     },
@@ -3514,7 +3514,7 @@
                       "name": "QUICK_START.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/QUICK_START.html",
+                      "path": "site/docs/devtools/QUICK_START.html",
                       "size": 5741,
                       "modified": "2025-12-18T14:09:18.854Z"
                     },
@@ -3523,7 +3523,7 @@
                       "name": "QUICKSTART.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/QUICKSTART.html",
+                      "path": "site/docs/devtools/QUICKSTART.html",
                       "size": 7660,
                       "modified": "2025-12-18T14:09:18.854Z"
                     },
@@ -3532,7 +3532,7 @@
                       "name": "README.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/README.html",
+                      "path": "site/docs/devtools/README.html",
                       "size": 14352,
                       "modified": "2025-12-18T14:09:18.854Z"
                     },
@@ -3541,7 +3541,7 @@
                       "name": "RESTART_REQUIRED.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/RESTART_REQUIRED.html",
+                      "path": "site/docs/devtools/RESTART_REQUIRED.html",
                       "size": 7344,
                       "modified": "2025-12-18T14:09:18.855Z"
                     },
@@ -3550,7 +3550,7 @@
                       "name": "ROOT_CAUSE_FOUND.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/devtools/ROOT_CAUSE_FOUND.html",
+                      "path": "site/docs/devtools/ROOT_CAUSE_FOUND.html",
                       "size": 8334,
                       "modified": "2025-12-18T14:09:18.855Z"
                     }
@@ -3560,26 +3560,26 @@
                   "id": "node-537",
                   "name": "examples",
                   "type": "folder",
-                  "path": "site/docs/packages/examples",
+                  "path": "site/docs/examples",
                   "children": [
                     {
                       "id": "node-518",
                       "name": "apps",
                       "type": "folder",
-                      "path": "site/docs/packages/examples/apps",
+                      "path": "site/docs/examples/apps",
                       "children": [
                         {
                           "id": "node-513",
                           "name": "contact-manager",
                           "type": "folder",
-                          "path": "site/docs/packages/examples/apps/contact-manager",
+                          "path": "site/docs/examples/apps/contact-manager",
                           "children": [
                             {
                               "id": "node-512",
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/apps/contact-manager/README.html",
+                              "path": "site/docs/examples/apps/contact-manager/README.html",
                               "size": 13966,
                               "modified": "2025-12-18T14:09:18.856Z"
                             }
@@ -3589,14 +3589,14 @@
                           "id": "node-515",
                           "name": "invoice",
                           "type": "folder",
-                          "path": "site/docs/packages/examples/apps/invoice",
+                          "path": "site/docs/examples/apps/invoice",
                           "children": [
                             {
                               "id": "node-514",
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/apps/invoice/README.html",
+                              "path": "site/docs/examples/apps/invoice/README.html",
                               "size": 13929,
                               "modified": "2025-12-18T14:09:18.857Z"
                             }
@@ -3606,14 +3606,14 @@
                           "id": "node-517",
                           "name": "invoice-studio",
                           "type": "folder",
-                          "path": "site/docs/packages/examples/apps/invoice-studio",
+                          "path": "site/docs/examples/apps/invoice-studio",
                           "children": [
                             {
                               "id": "node-516",
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/apps/invoice-studio/README.html",
+                              "path": "site/docs/examples/apps/invoice-studio/README.html",
                               "size": 11779,
                               "modified": "2025-12-18T14:09:18.857Z"
                             }
@@ -3624,7 +3624,7 @@
                           "name": "README.html",
                           "type": "file",
                           "extension": ".html",
-                          "path": "site/docs/packages/examples/apps/README.html",
+                          "path": "site/docs/examples/apps/README.html",
                           "size": 9479,
                           "modified": "2025-12-18T14:09:18.856Z"
                         }
@@ -3634,20 +3634,20 @@
                       "id": "node-526",
                       "name": "backends",
                       "type": "folder",
-                      "path": "site/docs/packages/examples/backends",
+                      "path": "site/docs/examples/backends",
                       "children": [
                         {
                           "id": "node-521",
                           "name": "nodejs",
                           "type": "folder",
-                          "path": "site/docs/packages/examples/backends/nodejs",
+                          "path": "site/docs/examples/backends/nodejs",
                           "children": [
                             {
                               "id": "node-520",
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/backends/nodejs/README.html",
+                              "path": "site/docs/examples/backends/nodejs/README.html",
                               "size": 9493,
                               "modified": "2025-12-18T14:09:18.858Z"
                             }
@@ -3657,14 +3657,14 @@
                           "id": "node-523",
                           "name": "php",
                           "type": "folder",
-                          "path": "site/docs/packages/examples/backends/php",
+                          "path": "site/docs/examples/backends/php",
                           "children": [
                             {
                               "id": "node-522",
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/backends/php/README.html",
+                              "path": "site/docs/examples/backends/php/README.html",
                               "size": 5663,
                               "modified": "2025-12-18T14:09:18.858Z"
                             }
@@ -3674,14 +3674,14 @@
                           "id": "node-525",
                           "name": "python",
                           "type": "folder",
-                          "path": "site/docs/packages/examples/backends/python",
+                          "path": "site/docs/examples/backends/python",
                           "children": [
                             {
                               "id": "node-524",
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/backends/python/README.html",
+                              "path": "site/docs/examples/backends/python/README.html",
                               "size": 10971,
                               "modified": "2025-12-18T14:09:18.858Z"
                             }
@@ -3692,7 +3692,7 @@
                           "name": "README.html",
                           "type": "file",
                           "extension": ".html",
-                          "path": "site/docs/packages/examples/backends/README.html",
+                          "path": "site/docs/examples/backends/README.html",
                           "size": 8980,
                           "modified": "2025-12-18T14:09:18.858Z"
                         }
@@ -3702,14 +3702,14 @@
                       "id": "node-528",
                       "name": "hybrid-dashboard",
                       "type": "folder",
-                      "path": "site/docs/packages/examples/hybrid-dashboard",
+                      "path": "site/docs/examples/hybrid-dashboard",
                       "children": [
                         {
                           "id": "node-527",
                           "name": "README.html",
                           "type": "file",
                           "extension": ".html",
-                          "path": "site/docs/packages/examples/hybrid-dashboard/README.html",
+                          "path": "site/docs/examples/hybrid-dashboard/README.html",
                           "size": 10773,
                           "modified": "2025-12-18T14:09:18.858Z"
                         }
@@ -3719,26 +3719,26 @@
                       "id": "node-536",
                       "name": "src",
                       "type": "folder",
-                      "path": "site/docs/packages/examples/src",
+                      "path": "site/docs/examples/src",
                       "children": [
                         {
                           "id": "node-535",
                           "name": "ui",
                           "type": "folder",
-                          "path": "site/docs/packages/examples/src/ui",
+                          "path": "site/docs/examples/src/ui",
                           "children": [
                             {
                               "id": "node-534",
                               "name": "docs",
                               "type": "folder",
-                              "path": "site/docs/packages/examples/src/ui/docs",
+                              "path": "site/docs/examples/src/ui/docs",
                               "children": [
                                 {
                                   "id": "node-532",
                                   "name": "COMPONENT_SECURITY_AUDIT.html",
                                   "type": "file",
                                   "extension": ".html",
-                                  "path": "site/docs/packages/examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+                                  "path": "site/docs/examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
                                   "size": 26449,
                                   "modified": "2025-12-18T14:09:18.859Z"
                                 },
@@ -3747,7 +3747,7 @@
                                   "name": "THEME_SYSTEM.html",
                                   "type": "file",
                                   "extension": ".html",
-                                  "path": "site/docs/packages/examples/src/ui/docs/THEME_SYSTEM.html",
+                                  "path": "site/docs/examples/src/ui/docs/THEME_SYSTEM.html",
                                   "size": 14057,
                                   "modified": "2025-12-18T14:09:18.860Z"
                                 }
@@ -3758,7 +3758,7 @@
                               "name": "CHANGELOG.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/src/ui/CHANGELOG.html",
+                              "path": "site/docs/examples/src/ui/CHANGELOG.html",
                               "size": 20213,
                               "modified": "2025-12-18T14:09:18.859Z"
                             },
@@ -3767,7 +3767,7 @@
                               "name": "COMPONENT_TEMPLATE.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/src/ui/COMPONENT_TEMPLATE.html",
+                              "path": "site/docs/examples/src/ui/COMPONENT_TEMPLATE.html",
                               "size": 9471,
                               "modified": "2025-12-18T14:09:18.859Z"
                             },
@@ -3776,7 +3776,7 @@
                               "name": "README.html",
                               "type": "file",
                               "extension": ".html",
-                              "path": "site/docs/packages/examples/src/ui/README.html",
+                              "path": "site/docs/examples/src/ui/README.html",
                               "size": 19584,
                               "modified": "2025-12-18T14:09:18.859Z"
                             }
@@ -3789,7 +3789,7 @@
                       "name": "CHANGELOG.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/examples/CHANGELOG.html",
+                      "path": "site/docs/examples/CHANGELOG.html",
                       "size": 15570,
                       "modified": "2025-12-18T14:09:18.855Z"
                     },
@@ -3798,7 +3798,7 @@
                       "name": "README.html",
                       "type": "file",
                       "extension": ".html",
-                      "path": "site/docs/packages/examples/README.html",
+                      "path": "site/docs/examples/README.html",
                       "size": 16130,
                       "modified": "2025-12-18T14:09:18.856Z"
                     }

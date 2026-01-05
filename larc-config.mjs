@@ -33,7 +33,7 @@ const isDevelopment = window.location.hostname === 'localhost' ||
  *   ln -s packages/core/pan.mjs pan.mjs
  *
  * This allows absolute paths like /core/ and /ui/ to work when serving from root.
- * Alternatively, serve from packages/examples/ and use relative paths (../core/, ../ui/)
+ * Alternatively, serve from examples/ and use relative paths (../core/, ../ui/)
  */
 export const aliases = {
   '@larc/core': isDevelopment

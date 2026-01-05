@@ -26,7 +26,7 @@ All issues are **minor and easily fixable**.
 
 ## Tutorial Examples (00-18) ✅
 
-**Location:** `/packages/examples/tutorials/`
+**Location:** `/examples/tutorials/`
 
 ### Status: Working
 All 18 numbered tutorials use consistent import patterns:
@@ -68,8 +68,8 @@ All 18 numbered tutorials use consistent import patterns:
 | 18 | jwt-auth.html | Standard | ✅ |
 
 **Symlink structure:**
-- `/packages/examples/src/pan.mjs` → `../../core/pan.mjs`
-- `/packages/examples/src/ui` → `../../ui`
+- `/examples/src/pan.mjs` → `../../core/pan.mjs`
+- `/examples/src/ui` → `../../ui`
 
 ---
 
@@ -209,7 +209,7 @@ pan.mjs -> packages/core/pan.mjs
 
 ### Tutorial Symlinks ✅
 
-Located at `/packages/examples/src/`:
+Located at `/examples/src/`:
 
 ```bash
 pan.mjs -> ../../core/pan.mjs
@@ -273,7 +273,7 @@ All present in registry:
 
 ### Tutorial Examples (18)
 ```bash
-cd /packages/examples/tutorials
+cd /examples/tutorials
 
 # Test each numbered example
 for i in {0..18}; do
@@ -317,7 +317,7 @@ done
 
 ### 1. earthquake-map.html
 
-**Location:** `/packages/examples/tutorials/earthquake-map.html`
+**Location:** `/examples/tutorials/earthquake-map.html`
 
 **Current line ~293:**
 ```html
@@ -339,13 +339,13 @@ done
 
 ### 2. open-data-connectors.html
 
-**Location:** `/packages/examples/tutorials/open-data-connectors.html`
+**Location:** `/examples/tutorials/open-data-connectors.html`
 
 **Apply same fix as earthquake-map.html**
 
 ### 3. auth-demo.html (optional enhancement)
 
-**Location:** `/packages/examples/tutorials/auth-demo.html`
+**Location:** `/examples/tutorials/auth-demo.html`
 
 **Add before existing imports:**
 ```html

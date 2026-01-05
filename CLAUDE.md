@@ -13,9 +13,9 @@ This ensures files are readable by the web server but not executable.
 
 - `/packages/core/` - Core PAN bus and client
 - `/packages/ui/` - UI components (connectors, tables, forms, etc.)
-- `/packages/apps/` - Showcase applications
-- `/packages/examples/tutorials/` - Demo pages and tutorials
-- `/packages/devtools/` - Browser extension for PAN debugging
+- `/apps/` - Showcase applications
+- `/examples/tutorials/` - Demo pages and tutorials
+- `/devtools/` - Browser extension for PAN debugging
 
 ## Component Conventions
 

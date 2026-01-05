@@ -25,7 +25,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/larcjs/larc.git",
-    "directory": "packages/apps"
+    "directory": "apps"
   },
   "bugs": {
     "url": "https://github.com/larcjs/larc/issues"

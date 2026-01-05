@@ -121,7 +121,7 @@ pan.respond('service.getData', async ({ id }) => {
 
 - Documentation: https://larcjs.com/docs
 - GitHub: https://github.com/larcjs/larc
-- Examples: https://github.com/larcjs/larc/tree/main/packages/examples
+- Examples: https://github.com/larcjs/larc/tree/main/examples
 
 ### Web Standards
 

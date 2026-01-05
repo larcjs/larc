@@ -125,10 +125,10 @@ larc/
 │   ├── core-routing/           → @larcjs/core-routing
 │   ├── core-debug/             → @larcjs/core-debug
 │   ├── core-types/             → TypeScript types
-│   ├── components-types/       → TypeScript types
-│   ├── apps/                   → Demo applications
-│   ├── examples/               → Code examples
-│   └── devtools/               → Chrome DevTools extension
+│   └── components-types/       → TypeScript types
+├── apps/                       → Demo applications
+├── examples/                   → Code examples
+├── devtools/                   → Chrome DevTools extension
 ├── cli/                        → create-larc-app
 ├── react-adapter/              → React integration
 ├── registry/                   → Component registry
@@ -223,7 +223,7 @@ npm publish
 
 ```bash
 # Serve examples locally
-cd packages/examples
+cd examples
 python3 -m http.server 8888
 # Visit http://localhost:8888
 ```

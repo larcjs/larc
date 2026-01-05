@@ -1050,61 +1050,61 @@
       "category": "specs"
     }
   ],
-  "packages/apps": [
+  "apps": [
     {
       "title": "LARC.js Demo Applications",
-      "path": "packages/apps/README.html",
-      "category": "packages/apps"
+      "path": "apps/README.html",
+      "category": "apps"
     }
   ],
-  "packages/apps/contact-manager": [
+  "apps/contact-manager": [
     {
       "title": "Contact Manager Demo",
-      "path": "packages/apps/contact-manager/README.html",
-      "category": "packages/apps/contact-manager"
+      "path": "apps/contact-manager/README.html",
+      "category": "apps/contact-manager"
     }
   ],
-  "packages/apps/invoice": [
+  "apps/invoice": [
     {
       "title": "Invoice Creator Demo App",
-      "path": "packages/apps/invoice/README.html",
-      "category": "packages/apps/invoice"
+      "path": "apps/invoice/README.html",
+      "category": "apps/invoice"
     }
   ],
-  "packages/apps/invoice-studio": [
+  "apps/invoice-studio": [
     {
       "title": "📄 PAN Invoice Studio",
-      "path": "packages/apps/invoice-studio/README.html",
-      "category": "packages/apps/invoice-studio"
+      "path": "apps/invoice-studio/README.html",
+      "category": "apps/invoice-studio"
     }
   ],
-  "packages/apps/src/ui": [
+  "apps/src/ui": [
     {
       "title": "Changelog",
-      "path": "packages/apps/src/ui/CHANGELOG.html",
-      "category": "packages/apps/src/ui"
+      "path": "apps/src/ui/CHANGELOG.html",
+      "category": "apps/src/ui"
     },
     {
       "title": "LARC Component Header Template",
-      "path": "packages/apps/src/ui/COMPONENT_TEMPLATE.html",
-      "category": "packages/apps/src/ui"
+      "path": "apps/src/ui/COMPONENT_TEMPLATE.html",
+      "category": "apps/src/ui"
     },
     {
       "title": "LARC Components",
-      "path": "packages/apps/src/ui/README.html",
-      "category": "packages/apps/src/ui"
+      "path": "apps/src/ui/README.html",
+      "category": "apps/src/ui"
     }
   ],
-  "packages/apps/src/ui/docs": [
+  "apps/src/ui/docs": [
     {
       "title": "Component Security Audit Report",
-      "path": "packages/apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
-      "category": "packages/apps/src/ui/docs"
+      "path": "apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": "apps/src/ui/docs"
     },
     {
       "title": "PAN Theme System",
-      "path": "packages/apps/src/ui/docs/THEME_SYSTEM.html",
-      "category": "packages/apps/src/ui/docs"
+      "path": "apps/src/ui/docs/THEME_SYSTEM.html",
+      "category": "apps/src/ui/docs"
     }
   ],
   "packages/components-types": [
@@ -1198,160 +1198,160 @@
       "category": "packages/core-types"
     }
   ],
-  "packages/devtools": [
+  "devtools": [
     {
       "title": "Building Icons",
-      "path": "packages/devtools/BUILD_ICONS.html",
-      "category": "packages/devtools"
+      "path": "devtools/BUILD_ICONS.html",
+      "category": "devtools"
     },
     {
       "title": "Chrome DevTools MCP Extension Setup",
-      "path": "packages/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
-      "category": "packages/devtools"
+      "path": "devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
+      "category": "devtools"
     },
     {
       "title": "PAN DevTools Extension - Now Enabled! ✅",
-      "path": "packages/devtools/EXTENSION_ENABLED.html",
-      "category": "packages/devtools"
+      "path": "devtools/EXTENSION_ENABLED.html",
+      "category": "devtools"
     },
     {
       "title": "PAN DevTools Extension - Quick Start",
-      "path": "packages/devtools/QUICK_START.html",
-      "category": "packages/devtools"
+      "path": "devtools/QUICK_START.html",
+      "category": "devtools"
     },
     {
       "title": "PAN DevTools Extension - Restart Required",
-      "path": "packages/devtools/RESTART_REQUIRED.html",
-      "category": "packages/devtools"
+      "path": "devtools/RESTART_REQUIRED.html",
+      "category": "devtools"
     },
     {
       "title": "PAN Inspector - Chrome DevTools Extension",
-      "path": "packages/devtools/README.html",
-      "category": "packages/devtools"
+      "path": "devtools/README.html",
+      "category": "devtools"
     },
     {
       "title": "PAN Inspector - Quick Start Guide",
-      "path": "packages/devtools/QUICKSTART.html",
-      "category": "packages/devtools"
+      "path": "devtools/QUICKSTART.html",
+      "category": "devtools"
     },
     {
       "title": "PAN Inspector Extension - Test Plan",
-      "path": "packages/devtools/EXTENSION_TEST_PLAN.html",
-      "category": "packages/devtools"
+      "path": "devtools/EXTENSION_TEST_PLAN.html",
+      "category": "devtools"
     },
     {
       "title": "PAN Inspector Extension - Test Results",
-      "path": "packages/devtools/EXTENSION_TEST_RESULTS.html",
-      "category": "packages/devtools"
+      "path": "devtools/EXTENSION_TEST_RESULTS.html",
+      "category": "devtools"
     },
     {
       "title": "Root Cause Found! ✅",
-      "path": "packages/devtools/ROOT_CAUSE_FOUND.html",
-      "category": "packages/devtools"
+      "path": "devtools/ROOT_CAUSE_FOUND.html",
+      "category": "devtools"
     }
   ],
-  "packages/examples": [
+  "examples": [
     {
       "title": "Changelog",
-      "path": "packages/examples/CHANGELOG.html",
-      "category": "packages/examples"
+      "path": "examples/CHANGELOG.html",
+      "category": "examples"
     },
     {
       "title": "LARC Examples",
-      "path": "packages/examples/README.html",
-      "category": "packages/examples"
+      "path": "examples/README.html",
+      "category": "examples"
     }
   ],
-  "packages/examples/apps": [
+  "examples/apps": [
     {
       "title": "Demo Applications",
-      "path": "packages/examples/apps/README.html",
-      "category": "packages/examples/apps"
+      "path": "examples/apps/README.html",
+      "category": "examples/apps"
     }
   ],
-  "packages/examples/apps/contact-manager": [
+  "examples/apps/contact-manager": [
     {
       "title": "Contact Manager Demo",
-      "path": "packages/examples/apps/contact-manager/README.html",
-      "category": "packages/examples/apps/contact-manager"
+      "path": "examples/apps/contact-manager/README.html",
+      "category": "examples/apps/contact-manager"
     }
   ],
-  "packages/examples/apps/invoice": [
+  "examples/apps/invoice": [
     {
       "title": "Invoice Creator Demo App",
-      "path": "packages/examples/apps/invoice/README.html",
-      "category": "packages/examples/apps/invoice"
+      "path": "examples/apps/invoice/README.html",
+      "category": "examples/apps/invoice"
     }
   ],
-  "packages/examples/apps/invoice-studio": [
+  "examples/apps/invoice-studio": [
     {
       "title": "📄 PAN Invoice Studio",
-      "path": "packages/examples/apps/invoice-studio/README.html",
-      "category": "packages/examples/apps/invoice-studio"
+      "path": "examples/apps/invoice-studio/README.html",
+      "category": "examples/apps/invoice-studio"
     }
   ],
-  "packages/examples/backends": [
+  "examples/backends": [
     {
       "title": "LARC/PAN Backend Examples",
-      "path": "packages/examples/backends/README.html",
-      "category": "packages/examples/backends"
+      "path": "examples/backends/README.html",
+      "category": "examples/backends"
     }
   ],
-  "packages/examples/backends/nodejs": [
+  "examples/backends/nodejs": [
     {
       "title": "Node.js Backend Examples for LARC/PAN",
-      "path": "packages/examples/backends/nodejs/README.html",
-      "category": "packages/examples/backends/nodejs"
+      "path": "examples/backends/nodejs/README.html",
+      "category": "examples/backends/nodejs"
     }
   ],
-  "packages/examples/backends/php": [
+  "examples/backends/php": [
     {
       "title": "PHP Backend Examples for LARC/PAN",
-      "path": "packages/examples/backends/php/README.html",
-      "category": "packages/examples/backends/php"
+      "path": "examples/backends/php/README.html",
+      "category": "examples/backends/php"
     }
   ],
-  "packages/examples/backends/python": [
+  "examples/backends/python": [
     {
       "title": "Python Backend Examples for LARC/PAN",
-      "path": "packages/examples/backends/python/README.html",
-      "category": "packages/examples/backends/python"
+      "path": "examples/backends/python/README.html",
+      "category": "examples/backends/python"
     }
   ],
-  "packages/examples/hybrid-dashboard": [
+  "examples/hybrid-dashboard": [
     {
       "title": "Hybrid Dashboard Demo",
-      "path": "packages/examples/hybrid-dashboard/README.html",
-      "category": "packages/examples/hybrid-dashboard"
+      "path": "examples/hybrid-dashboard/README.html",
+      "category": "examples/hybrid-dashboard"
     }
   ],
-  "packages/examples/src/ui": [
+  "examples/src/ui": [
     {
       "title": "Changelog",
-      "path": "packages/examples/src/ui/CHANGELOG.html",
-      "category": "packages/examples/src/ui"
+      "path": "examples/src/ui/CHANGELOG.html",
+      "category": "examples/src/ui"
     },
     {
       "title": "LARC Component Header Template",
-      "path": "packages/examples/src/ui/COMPONENT_TEMPLATE.html",
-      "category": "packages/examples/src/ui"
+      "path": "examples/src/ui/COMPONENT_TEMPLATE.html",
+      "category": "examples/src/ui"
     },
     {
       "title": "LARC Components",
-      "path": "packages/examples/src/ui/README.html",
-      "category": "packages/examples/src/ui"
+      "path": "examples/src/ui/README.html",
+      "category": "examples/src/ui"
     }
   ],
-  "packages/examples/src/ui/docs": [
+  "examples/src/ui/docs": [
     {
       "title": "Component Security Audit Report",
-      "path": "packages/examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
-      "category": "packages/examples/src/ui/docs"
+      "path": "examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": "examples/src/ui/docs"
     },
     {
       "title": "PAN Theme System",
-      "path": "packages/examples/src/ui/docs/THEME_SYSTEM.html",
-      "category": "packages/examples/src/ui/docs"
+      "path": "examples/src/ui/docs/THEME_SYSTEM.html",
+      "category": "examples/src/ui/docs"
     }
   ],
   "packages/ui": [

@@ -8,12 +8,12 @@
 
 ## 🎯 What Was Done
 
-DevTools was initially migrated into the monorepo workspace as `packages/devtools/` but has now been restored as an independent repository to maintain architectural consistency with `@larcjs/core` and `@larcjs/ui`.
+DevTools was initially migrated into the monorepo workspace as `devtools/` but has now been restored as an independent repository to maintain architectural consistency with `@larcjs/core` and `@larcjs/ui`.
 
 ### Changes Made
 
 1. **Removed from workspace:**
-   - Deleted `packages/devtools/` directory
+   - Deleted `devtools/` directory
    - Removed from npm workspaces
 
 2. **Restored as submodule:**
@@ -111,7 +111,7 @@ Only type definitions remain in the monorepo workspace (as they should be):
 
 ```bash
 # Remove from packages
-rm -rf packages/devtools
+rm -rf devtools
 
 # Add as submodule
 git submodule add https://github.com/larcjs/devtools.git devtools

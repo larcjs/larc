@@ -31,7 +31,7 @@ while preserving architectural integrity.
   ✓ Created comprehensive backups
   ✓ Moved core-types → packages/core-types/
   ✓ Moved components-types → packages/components-types/
-  ✓ Moved devtools → packages/devtools/
+  ✓ Moved devtools → devtools/
   ✓ Moved site → docs/site/
   ✓ Set up npm workspaces
   ✓ Updated all package.json files

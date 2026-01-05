@@ -8,7 +8,7 @@ on:
       - 'playground/**'
       - 'packages/core/**'
       - 'packages/ui/**'
-      - 'packages/apps/**'
+      - 'apps/**'
       - '.github/workflows/deploy-playground.yml'
   workflow_dispatch:
 
@@ -48,7 +48,7 @@ jobs:
           rsync -av --exclude='.git' --exclude='.github' playground/ _site/playground/
           rsync -av --exclude='.git' --exclude='node_modules' packages/core/ _site/packages/core/
           rsync -av --exclude='.git' --exclude='node_modules' packages/ui/ _site/packages/ui/
-          rsync -av --exclude='.git' --exclude='node_modules' packages/apps/ _site/packages/apps/
+          rsync -av --exclude='.git' --exclude='node_modules' apps/ _site/apps/
           # Copy config if it exists
           [ -f larc-config.mjs ] && cp larc-config.mjs _site/ || echo "No larc-config.mjs found"
 

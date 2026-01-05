@@ -97,7 +97,7 @@ This is architecturally correct. The problem is the **10 OTHER repos** around th
 | `@larcjs/ui` | `components` | UI component library |
 | `@larcjs/core-types` | `larc/packages/core-types` | TypeScript types for core |
 | `@larcjs/ui-types` | `larc/packages/ui-types` | TypeScript types for components |
-| `@larcjs/devtools` | `larc/packages/devtools` | Chrome extension (maybe) |
+| `@larcjs/devtools` | `larc/devtools` | Chrome extension (maybe) |
 
 ### Not Published (Development Assets)
 
@@ -497,7 +497,7 @@ Everything else → Archive or move to wiki
 2. **Consolidate into `larc`** (Do this):
    - `core-types` → `larc/packages/core-types`
    - `components-types` → `larc/packages/ui-types`
-   - `devtools` → `larc/packages/devtools`
+   - `devtools` → `larc/devtools`
    - `site` → `larc/docs/site`
    - `examples` + `apps` → `larc/examples`
    - `.github` → `larc/.github`
