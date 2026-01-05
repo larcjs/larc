@@ -23,7 +23,7 @@ test.describe('Configuration', () => {
 
         expect(config.extension).toBe('.mjs');
         expect(config.rootMargin).toBe(600);
-        expect(config.componentsPath).toBe('./components/');
+        expect(config.paths).toEqual(expect.arrayContaining(['./components/']));
       } finally {
         await testPage.close();
       }
@@ -37,7 +37,7 @@ test.describe('Configuration', () => {
           window.panAutoload = {
             extension: '.js',
             rootMargin: 1000,
-            componentsPath: './custom/'
+            paths: ['./custom/']
           };
         });
 
@@ -50,7 +50,7 @@ test.describe('Configuration', () => {
 
         expect(config.extension).toBe('.js');
         expect(config.rootMargin).toBe(1000);
-        expect(config.componentsPath).toBe('./custom/');
+        expect(config.paths).toEqual(['./custom/']);
       } finally {
         await testPage.close();
       }
@@ -77,14 +77,13 @@ test.describe('Configuration', () => {
       }
     });
 
-    test('should resolve baseUrl with componentsPath', async ({ page, context }) => {
+    test('should support multiple component paths', async ({ page, context }) => {
       const testPage = await context.newPage();
 
       try {
         await testPage.addInitScript(() => {
           window.panAutoload = {
-            baseUrl: 'https://cdn.example.com/larc',
-            componentsPath: './components/'
+            paths: ['./components/', './ui/', 'https://cdn.example.com/larc/']
           };
         });
 
@@ -95,8 +94,8 @@ test.describe('Configuration', () => {
           return panAutoload.config;
         });
 
-        expect(config.resolvedComponentsPath).toContain('cdn.example.com');
-        expect(config.resolvedComponentsPath).toContain('components');
+        expect(config.paths).toEqual(['./components/', './ui/', 'https://cdn.example.com/larc/']);
+        expect(config.paths.length).toBe(3);
       } finally {
         await testPage.close();
       }
