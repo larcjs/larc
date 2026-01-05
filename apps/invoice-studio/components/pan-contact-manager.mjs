@@ -5,7 +5,7 @@
  * Can be used to select a contact for billing or manage the contact list.
  */
 
-import { PanClient } from '../../../core/pan-client.mjs';
+import { PanClient } from '../../../packages/core/pan-client.mjs';
 import db from '../lib/invoice-db.mjs';
 
 class PanContactManager extends HTMLElement {

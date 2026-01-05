@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blog Editor - LARC Demo</title>
   <script type="module">window.panAutoload = { paths: ['/ui/', '/core/'] };</script>
-  <script type="module" src="/core/pan.mjs"></script>
+  <script type="module" src="/packages/core/pan.mjs"></script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -43,10 +43,10 @@
   <pan-theme-provider theme="auto"></pan-theme-provider>
 
   <!-- Core Components -->
-  <script type="module" src="/core/pan-bus.mjs"></script>
-  <script type="module" src="/ui/pan-theme-provider.mjs"></script>
-  <script type="module" src="/ui/pan-theme-toggle.mjs"></script>
-  <script type="module" src="/ui/pan-markdown-renderer.mjs"></script>
+  <script type="module" src="/packages/core/pan-bus.mjs"></script>
+  <script type="module" src="/packages/ui/pan-theme-provider.mjs"></script>
+  <script type="module" src="/packages/ui/pan-theme-toggle.mjs"></script>
+  <script type="module" src="/packages/ui/pan-markdown-renderer.mjs"></script>
 
   <!-- Blog Editor Components -->
   <script type="module" src="./components/blog-editor.mjs"></script>

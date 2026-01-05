@@ -24,11 +24,11 @@
   <script type="module">
     // Load pan-bus if not already registered
     if (!customElements.get('pan-bus')) {
-      await import('../core/pan-bus.mjs');
+      await import('../packages/core/pan-bus.mjs');
     }
   </script>
   <script type="module">
-    import { PanClient } from '../core/pan-client.mjs';
+    import { PanClient } from '../packages/core/pan-client.mjs';
     
     const output = document.getElementById('output');
     function log(msg) {

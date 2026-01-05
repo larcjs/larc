@@ -144,17 +144,17 @@
   </div>
 
   <!-- Load component modules -->
-  <script type="module" src="../../ui/pan-invoice-toolbar.mjs"></script>
-  <script type="module" src="../../ui/pan-invoice-editor.mjs"></script>
-  <script type="module" src="../../ui/pan-invoice-line-items.mjs"></script>
-  <script type="module" src="../../ui/pan-contact-manager.mjs"></script>
-  <script type="module" src="../../ui/pan-invoice-browser.mjs"></script>
-  <script type="module" src="../../ui/pan-toast.mjs"></script>
+  <script type="module" src="./components/pan-invoice-toolbar.mjs"></script>
+  <script type="module" src="./components/pan-invoice-editor.mjs"></script>
+  <script type="module" src="./components/pan-invoice-line-items.mjs"></script>
+  <script type="module" src="./components/pan-contact-manager.mjs"></script>
+  <script type="module" src="./components/pan-invoice-browser.mjs"></script>
+  <script type="module" src="./components/pan-toast.mjs"></script>
   <script type="module" src="./lib/invoice-db.mjs"></script>
   <script type="module" src="./lib/data-handler.mjs"></script>
 
   <script type="module">
-    import { PanClient } from '../../core/pan-client.mjs';
+    import { PanClient } from '../../packages/core/pan-client.mjs';
 
     const client = new PanClient();
 
@@ -178,9 +178,9 @@
 
   <!-- Load PAN Autoload -->
   <script type="module">
-    window.panAutoload = { paths: ['../../ui/', '../../core/'] };
+    window.panAutoload = { paths: ['../../packages/ui/', '../../packages/core/'] };
   </script>
-  <script type="module" src="../../core/pan.mjs"></script>
+  <script type="module" src="../../packages/core/pan.mjs"></script>
 
   <pan-bus debug="true"></pan-bus>
 </body>

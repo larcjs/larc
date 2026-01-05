@@ -213,14 +213,14 @@
   <script type="module" src="./mock-auth-api.mjs"></script>
 
   <!-- PAN Core -->
-  <script type="module" src="/ui/pan-bus.mjs"></script>
+  <script type="module" src="/packages/ui/pan-bus.mjs"></script>
   <script type="module">
     // Load autoloader for component discovery
     await import('../src/pan.mjs');
   </script>
-  <script type="module" src="/ui/pan-client.mjs"></script>
-  <script type="module" src="/ui/pan-auth.mjs"></script>
-  <script type="module" src="/ui/pan-data-connector.mjs"></script>
+  <script type="module" src="/packages/ui/pan-client.mjs"></script>
+  <script type="module" src="/packages/ui/pan-auth.mjs"></script>
+  <script type="module" src="/packages/ui/pan-data-connector.mjs"></script>
 
   <!-- Auth Manager (no build, no config needed) -->
   <pan-auth
@@ -240,7 +240,7 @@
 
   <!-- Components -->
   <script type="module">
-    import { PanClient } from '../../core/pan-client.mjs';
+    import { PanClient } from '../../packages/core/pan-client.mjs';
 
     // Auth Status Component
     customElements.define('auth-status', class extends HTMLElement {

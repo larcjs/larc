@@ -291,7 +291,7 @@ Click the buttons above to see programmatic control in action!" preview="false">
 
   <script type="module">
     if (!customElements.get('pan-bus')) {
-      await import('../../core/pan-bus.mjs');
+      await import('../../packages/core/pan-bus.mjs');
     // Load autoload system to discover and load custom elements on demand
     await import('../src/pan.mjs');
     }

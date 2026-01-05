@@ -5,7 +5,7 @@
  * Calculates subtotal, tax, and total automatically.
  */
 
-import { PanClient } from '../../../core/pan-client.mjs';
+import { PanClient } from '../../../packages/core/pan-client.mjs';
 
 class PanInvoiceLineItems extends HTMLElement {
   constructor() {

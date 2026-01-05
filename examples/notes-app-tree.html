@@ -250,7 +250,7 @@
 
   <script type="module">window.panAutoload = { paths: ['/ui/', '/core/'] };</script>
   <script type="module" src="/pan.mjs"></script>
-  <script type="module" src="/ui/pan-tree.mjs"></script>
+  <script type="module" src="/packages/ui/pan-tree.mjs"></script>
 
   <div class="app-container">
     <!-- Header -->
@@ -346,7 +346,7 @@
   </div>
 
   <script type="module">
-    import { PanClient } from '../core/pan-client.mjs';
+    import { PanClient } from '../packages/core/pan-client.mjs';
 
     const pc = new PanClient();
 

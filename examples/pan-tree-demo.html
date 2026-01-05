@@ -170,7 +170,7 @@
   <script type="module" src="/pan.mjs"></script>
 
   <!-- Load pan-tree component -->
-  <script type="module" src="/ui/pan-tree.mjs"></script>
+  <script type="module" src="/packages/ui/pan-tree.mjs"></script>
 
   <div class="container">
     <h1>🌳 PAN Tree Component Demo</h1>
@@ -324,7 +324,7 @@ pc.subscribe('documents.node.move', (msg) => {
   </div>
 
   <script type="module">
-    import { PanClient } from '../core/pan-client.mjs';
+    import { PanClient } from '../packages/core/pan-client.mjs';
 
     const pc = new PanClient();
     const eventList = document.getElementById('event-list');

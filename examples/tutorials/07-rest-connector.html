@@ -71,13 +71,13 @@
 
   <script type="module">
     if (!customElements.get('pan-bus')) {
-      await import('../../core/pan-bus.mjs');
+      await import('../../packages/core/pan-bus.mjs');
     // Load autoload system to discover and load custom elements on demand
     await import('../src/pan.mjs');
     }
   </script>
   <script type="module">
-    import { PanClient } from '../../core/pan-client.mjs';
+    import { PanClient } from '../../packages/core/pan-client.mjs';
     const pc = new PanClient();
     document.getElementById('refresh')?.addEventListener('click', () => {
       pc.publish({ topic: 'users.list.get', data: {} });

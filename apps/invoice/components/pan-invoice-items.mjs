@@ -7,7 +7,7 @@
  * - Subscribes: invoice.load, invoice.clear
  */
 
-import { PanClient } from '../../core/pan-client.mjs';
+import { PanClient } from '../../../packages/core/pan-client.mjs';
 
 class PanInvoiceItems extends HTMLElement {
   constructor() {
