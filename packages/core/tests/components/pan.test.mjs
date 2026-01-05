@@ -17,7 +17,7 @@ test.describe('Configuration', () => {
 
         const config = await testPage.evaluate(async () => {
           // Import autoloader
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
           return panAutoload.config;
         });
 
@@ -44,7 +44,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const config = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
           return panAutoload.config;
         });
 
@@ -67,7 +67,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const config = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
           return panAutoload.config;
         });
 
@@ -91,7 +91,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const config = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
           return panAutoload.config;
         });
 
@@ -200,7 +200,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Wait for pan-bus element to exist in DOM
           await new Promise(resolve => {
@@ -246,7 +246,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Define a custom element first
           class TestElement extends HTMLElement {}
@@ -283,7 +283,7 @@ test.describe('Configuration', () => {
         });
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Try to load non-existent component
           const el = document.createElement('non-existent-component');
@@ -315,7 +315,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Wait for pan-bus element to exist in DOM
           await new Promise(resolve => {
@@ -367,7 +367,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Create element with custom module path
           const el = document.createElement('custom-path');
@@ -403,7 +403,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Create a container with custom elements
           const container = document.createElement('div');
@@ -434,7 +434,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Observe entire document
           panAutoload.observeTree(document);
@@ -455,7 +455,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           const container = document.createElement('div');
           document.body.appendChild(container);
@@ -627,7 +627,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Create element but don't attach to document
           const el = document.createElement('detached-widget');
@@ -651,7 +651,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Try to load text node
           const textNode = document.createTextNode('text');
@@ -679,7 +679,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Create document fragment (no tagName)
           const fragment = document.createDocumentFragment();
