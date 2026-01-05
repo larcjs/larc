@@ -111,7 +111,7 @@ test.describe('Configuration', () => {
 
         const result = await testPage.evaluate(async () => {
           // Import autoloader which will define pan-bus
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
 
           // Wait for pan-bus element to exist in DOM (created by ensurePanBus)
           await new Promise(resolve => {
@@ -484,7 +484,7 @@ test.describe('Configuration', () => {
 
         const result = await testPage.evaluate(async () => {
           // Import pan.mjs (which auto-initializes and creates pan-bus)
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
 
           // Wait a bit for initialization
           await new Promise(resolve => setTimeout(resolve, 200));
@@ -517,7 +517,7 @@ test.describe('Configuration', () => {
           document.body.appendChild(manualBus);
 
           // Now import pan.mjs
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
 
           // Wait for initialization
           await new Promise(resolve => setTimeout(resolve, 200));
@@ -545,7 +545,7 @@ test.describe('Configuration', () => {
 
         const result = await testPage.evaluate(async () => {
           // Import autoloader
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
 
           // Wait for pan-bus to be defined
           await customElements.whenDefined('pan-bus');
@@ -572,7 +572,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
 
           return {
             exists: typeof window.panAutoload !== 'undefined',
@@ -598,7 +598,7 @@ test.describe('Configuration', () => {
         await testPage.goto(fileUrl('tests/fixtures/pan-autoload-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const autoload = await import('../../src/pan.mjs');
+          const autoload = await import('../../pan.mjs');
 
           return {
             hasDefault: typeof autoload.default === 'object',
