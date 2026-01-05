@@ -46,7 +46,7 @@ export async function setupPanPage(page) {
         <title>Test Page</title>
       </head>
       <body>
-        <script type="module" src="${fileUrl('../src/pan.mjs')}"></script>
+        <script type="module" src="${fileUrl('pan.mjs')}"></script>
       </body>
     </html>
   `);

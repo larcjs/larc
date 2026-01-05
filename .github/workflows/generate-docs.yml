@@ -56,13 +56,12 @@ jobs:
             echo "✓ Documentation changes detected"
           fi
 
-      - name: Commit Documentation Updates
-        if: steps.check_changes.outputs.changes == 'true'
+      - name: Report Documentation Status
+        if: steps.check_changes.outputs.changes == 'true' && github.ref == 'refs/heads/main'
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git commit -m "docs: auto-generate API and markdown documentation [skip ci]"
-          git push
+          echo "⚠️  Documentation changes detected but not committed on main branch."
+          echo "📝 Changes would need to be committed via a pull request due to branch protection."
+          echo "✅ Documentation generation successful - files are ready for manual PR if needed."
 
       - name: Summary
         run: |

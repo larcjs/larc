@@ -17,7 +17,7 @@ test.describe('Complete Initialization Flow', () => {
 
         const result = await testPage.evaluate(async () => {
           // Step 1: Import autoloader
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           window.testLog('Autoloader imported');
 
           // Step 2: Wait for pan-bus to be defined
@@ -79,7 +79,7 @@ test.describe('Complete Initialization Flow', () => {
           const client = new PanClient();
 
           // Now import autoloader
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
 
           // Wait for ready
           await client.ready();
@@ -112,7 +112,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           // Create three clients representing different components
@@ -175,7 +175,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           const serviceComponent = new PanClient();
@@ -221,7 +221,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Wait for pan-bus to load
           await customElements.whenDefined('pan-bus');
@@ -253,7 +253,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          const { panAutoload } = await import('../../src/pan.mjs');
+          const { panAutoload } = await import('../../pan.mjs');
 
           // Wait for initial setup
           await customElements.whenDefined('pan-bus');
@@ -284,7 +284,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           const stateProvider = new PanClient();
@@ -331,7 +331,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           // State manager component
@@ -398,7 +398,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           const client1 = new PanClient();
@@ -446,7 +446,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           const client = new PanClient();
@@ -487,7 +487,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           // Event store
@@ -541,7 +541,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           const publisher = new PanClient();
@@ -599,7 +599,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           // Command handler
@@ -663,7 +663,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           const publisher = new PanClient();
@@ -722,7 +722,7 @@ test.describe('Complete Initialization Flow', () => {
         await testPage.goto(fileUrl('tests/fixtures/integration-test.html'));
 
         const result = await testPage.evaluate(async () => {
-          await import('../../src/pan.mjs');
+          await import('../../pan.mjs');
           const { PanClient } = await import('../../pan-client.mjs');
 
           const publisher = new PanClient();
