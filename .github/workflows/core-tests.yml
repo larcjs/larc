@@ -25,6 +25,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # NOTE: Windows tests removed due to platform-specific HTTP server and module loading issues
+        # The browser-based tests timeout waiting for modules to load (http://localhost:8080/core/pan.mjs)
+        # Since LARC code is platform-agnostic (runs in browsers), Linux and macOS coverage is sufficient
+        # Contributions welcome to fix Windows test infrastructure! See: packages/core/tests/lib/test-utils.mjs
         os: [ubuntu-latest, macos-latest]
         node-version: [22.x]
 
