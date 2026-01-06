@@ -38,12 +38,14 @@ jobs:
 
       - name: Create deployment directory
         run: |
-          mkdir -p _site/packages
+          mkdir -p _site/packages _site/apps
           # Debug: List directory structure
           echo "=== Directory structure ==="
           ls -la
-          echo "=== Checking packages ==="
-          ls -la packages/
+          echo "=== Checking directories ==="
+          echo "Packages:" && ls -la packages/ || echo "No packages dir"
+          echo "Apps:" && ls -la apps/ || echo "No apps dir"
+          echo "Examples:" && ls -la examples/ || echo "No examples dir"
           # Copy directories using rsync to handle symlinks and nested structures
           rsync -av --exclude='.git' --exclude='.github' playground/ _site/playground/
           rsync -av --exclude='.git' --exclude='node_modules' packages/core/ _site/packages/core/
@@ -51,6 +53,9 @@ jobs:
           rsync -av --exclude='.git' --exclude='node_modules' apps/ _site/apps/
           # Copy config if it exists
           [ -f larc-config.mjs ] && cp larc-config.mjs _site/ || echo "No larc-config.mjs found"
+          # Verify the _site directory was created correctly
+          echo "=== Verifying _site directory ==="
+          du -sh _site/*
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
