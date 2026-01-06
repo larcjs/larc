@@ -233,7 +233,7 @@ export class BlogMetadata extends HTMLElement {
             placeholder="Post Title..."
             value="${this._escapeAttr(this._title)}"
           >
-          <span class="status-badge ${this._status}" id="status-badge">${this._status}</span>
+          <span class="status-badge ${this._escapeAttr(this._status)}" id="status-badge">${this._escapeHtml(this._status)}</span>
         </div>
 
         <div class="metadata-details ${this._expanded ? 'expanded' : ''}" id="metadata-details">
