@@ -1,6 +1,6 @@
 {
   "name": "larc",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "description": "LARC (Lightweight Asynchronous Relay Core) - Zero-dependency web component framework with message-based architecture",
   "type": "module",

@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core-lite",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "LARC Core Lite - Lightweight PAN messaging bus (9KB minified, no routing/debug)",
   "type": "module",
   "main": "./src/pan.mjs",

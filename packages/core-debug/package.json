@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core-debug",
-  "version": "3.0.0",
+  "version": "2.1.0",
   "description": "Debug and tracing tools for LARC Core (3KB add-on)",
   "type": "module",
   "main": "./src/pan-debug.mjs",

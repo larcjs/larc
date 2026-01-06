@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core-types",
-  "version": "3.0.0",
+  "version": "2.1.0",
   "description": "TypeScript type definitions for @larcjs/core",
   "types": "index.d.ts",
   "type": "module",
