@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core-types",
-  "version": "2.1.0",
+  "version": "3.0.1",
   "description": "TypeScript type definitions for @larcjs/core",
   "types": "index.d.ts",
   "type": "module",
@@ -34,7 +34,7 @@
     }
   },
   "peerDependencies": {
-    "@larcjs/core": "^2.1.0"
+    "@larcjs/core": "^3.0.1"
   },
   "peerDependenciesMeta": {
     "@larcjs/core": {

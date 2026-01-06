@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core-debug",
-  "version": "2.1.0",
+  "version": "3.0.1",
   "description": "Debug and tracing tools for LARC Core (3KB add-on)",
   "type": "module",
   "main": "./src/pan-debug.mjs",
@@ -33,7 +33,7 @@
     "url": "https://github.com/larcjs/larc/issues"
   },
   "peerDependencies": {
-    "@larcjs/core": "^2.1.0"
+    "@larcjs/core": "^3.0.1"
   },
   "peerDependenciesMeta": {
     "@larcjs/core": {

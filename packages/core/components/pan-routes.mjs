@@ -105,10 +105,6 @@ function deepClone(obj) {
   if (obj instanceof Array) return obj.map(item => deepClone(item));
   const cloned = {};
   for (const key in obj) {
-    // Guard against prototype pollution
-    if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
-      continue;
-    }
     if (obj.hasOwnProperty(key)) {
       cloned[key] = deepClone(obj[key]);
     }
