@@ -258,10 +258,16 @@ async function handleLogin(req, res, session) {
 			type: 'refresh'
 		}, JWT_SECRET, 604800); // 7 days
 
-		// Set tokens as HttpOnly cookies
+		// Store tokens server-side, expose only opaque IDs in HttpOnly cookies
+		const accessTokenId = crypto.randomBytes(16).toString('hex');
+		const refreshTokenId = crypto.randomBytes(16).toString('hex');
+
+		accessTokens.set(accessTokenId, token);
+		accessTokens.set(refreshTokenId, refreshToken);
+
 		res.setHeader('Set-Cookie', [
-			`jwt=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=900; Path=/`,
-			`refresh_jwt=${refreshToken}; HttpOnly; Secure; SameSite=Strict; Max-Age=604800; Path=/`
+			`jwt_id=${accessTokenId}; HttpOnly; Secure; SameSite=Strict; Max-Age=900; Path=/`,
+			`refresh_jwt_id=${refreshTokenId}; HttpOnly; Secure; SameSite=Strict; Max-Age=604800; Path=/`
 		]);
 
 		// Tokens are sent via HttpOnly cookies for security
