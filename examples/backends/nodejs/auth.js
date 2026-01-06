@@ -28,6 +28,9 @@ const PORT = process.argv[2] || 3002;
 const sessions = new Map();
 const SESSION_TIMEOUT = 3600000; // 1 hour
 
+// Server-side access token store (in-memory, keyed by opaque ID)
+const accessTokens = new Map();
+
 // Rate limiting store
 const rateLimits = new Map();
 
@@ -313,7 +316,11 @@ function handleRefresh(req, res) {
 		sub: payload.sub
 	}, JWT_SECRET, 900); // 15 minutes
 
-	res.setHeader('Set-Cookie', `jwt=${token}; HttpOnly; Secure; SameSite=Strict; Max-Age=900; Path=/`);
+	// Store the JWT server-side and send only an opaque identifier in the cookie
+	const sessionId = crypto.randomBytes(32).toString('hex');
+	accessTokens.set(sessionId, token);
+
+	res.setHeader('Set-Cookie', `jwt=${sessionId}; HttpOnly; Secure; SameSite=Strict; Max-Age=900; Path=/`);
 
 	// Token is sent via HttpOnly cookie, not in response body
 	sendJSON(res, {
