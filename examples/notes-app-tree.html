@@ -425,7 +425,11 @@
 
       const content = noteContents.get(node.id) || '';
 
-      editorContainer.innerHTML = `<textarea id="note-editor">${content}</textarea>`;
+      editorContainer.textContent = '';
+      const textarea = document.createElement('textarea');
+      textarea.id = 'note-editor';
+      textarea.value = content;
+      editorContainer.appendChild(textarea);
 
       btnSave.style.display = 'block';
       btnDelete.style.display = 'block';
