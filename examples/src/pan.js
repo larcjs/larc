@@ -1,1 +1,1 @@
-../../core/pan.js
+../../packages/core/pan.js

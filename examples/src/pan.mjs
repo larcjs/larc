@@ -1,1 +1,1 @@
-../../core/pan.mjs
+../../packages/core/pan.mjs
