@@ -46,8 +46,8 @@
 - [x] Git history: Clean, professional commits
 
 #### NPM Packages ✅
-- [x] @larcjs/core@2.0.0 - Published
-- [x] @larcjs/ui@2.0.0 - Published
+- [x] @larcjs/core@3.0.1 - Published
+- [x] @larcjs/ui@3.0.1 - Published
 - [x] @larcjs/core-types - Published
 - [x] @larcjs/ui-types - Published
 
@@ -241,7 +241,7 @@ Technical highlights:
 • Works with React, Vue, Svelte—mix and match
 • Zero-build dev, optional build prod
 • TypeScript support
-• Published on npm (@larcjs/core@2.0.0)
+• Published on npm (@larcjs/core@3.0.1)
 
 Live playground: https://larcjs.github.io/larc/playground/
 

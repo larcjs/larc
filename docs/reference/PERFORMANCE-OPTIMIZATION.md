@@ -332,8 +332,8 @@ if ('requestIdleCallback' in window) {
 **Using modulepreload:**
 ```html
 <!-- Preload critical modules -->
-<link rel="modulepreload" href="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs">
-<link rel="modulepreload" href="https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs">
+<link rel="modulepreload" href="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs">
+<link rel="modulepreload" href="https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs">
 <link rel="modulepreload" href="./components/app-header.mjs">
 <link rel="modulepreload" href="./components/app-nav.mjs">
 ```
@@ -391,15 +391,15 @@ document.addEventListener('mouseenter', (e) => {
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
   <!-- Preload critical resources -->
-  <link rel="modulepreload" href="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs">
+  <link rel="modulepreload" href="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs">
 </head>
 ```
 
 **Multi-CDN failover:**
 ```javascript
 const CDN_SOURCES = [
-  'https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs',
-  'https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/src/pan.mjs',
+  'https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs',
+  'https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/src/pan.mjs',
   '/static/larc/pan.mjs' // Local fallback
 ];
 
@@ -422,7 +422,7 @@ loadWithFailover(CDN_SOURCES);
 **Custom component resolver for CDN optimization:**
 ```javascript
 window.panAutoload = {
-  baseUrl: 'https://unpkg.com/@larcjs/core@2.0.0/',
+  baseUrl: 'https://unpkg.com/@larcjs/core@3.0.1/',
 
   // Custom resolver for optimized paths
   resolveComponent(tag) {
@@ -1225,8 +1225,8 @@ server {
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
 
   <!-- 3. Modulepreload (fetch and compile modules) -->
-  <link rel="modulepreload" href="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs">
-  <link rel="modulepreload" href="https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs">
+  <link rel="modulepreload" href="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs">
+  <link rel="modulepreload" href="https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs">
 
   <!-- 4. Preload critical app modules -->
   <link rel="modulepreload" href="./components/app-header.mjs">
@@ -1237,7 +1237,7 @@ server {
   <link rel="prefetch" href="./components/product-filter.mjs">
 
   <!-- Load LARC -->
-  <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 </head>
 <body>
   <app-header></app-header>
@@ -1340,7 +1340,7 @@ async function detectRegion() {
 detectRegion().then(region => {
   const cdnBase = CDN_REGIONS[region] || CDN_REGIONS.default;
   window.panAutoload = {
-    baseUrl: `${cdnBase}/@larcjs/core@2.0.0/`
+    baseUrl: `${cdnBase}/@larcjs/core@3.0.1/`
   };
 });
 ```
@@ -1350,8 +1350,8 @@ detectRegion().then(region => {
 // Pre-warm CDN cache after deployment
 async function warmCDNCache() {
   const criticalUrls = [
-    'https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs',
-    'https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs',
+    'https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs',
+    'https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs',
     './components/app-header.mjs',
     './components/app-nav.mjs'
   ];
@@ -1394,12 +1394,12 @@ server {
 
 // Strategy: Use HTTP/2 and single domain
 // ✅ GOOD
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs"></script>
 
 // ❌ Avoid multiple domains (uses separate connections)
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-bus.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-bus.mjs"></script>
 ```
 
 ---
@@ -1669,9 +1669,9 @@ const RUNTIME_CACHE = 'larc-runtime';
 const PRECACHE_URLS = [
   '/',
   '/index.html',
-  'https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs',
-  'https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs',
-  'https://unpkg.com/@larcjs/core@2.0.0/pan-client.mjs'
+  'https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs',
+  'https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs',
+  'https://unpkg.com/@larcjs/core@3.0.1/pan-client.mjs'
 ];
 
 self.addEventListener('install', event => {

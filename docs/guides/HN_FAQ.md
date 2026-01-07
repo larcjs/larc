@@ -82,7 +82,7 @@ No. IE doesn't support Custom Elements or ES Modules. Use polyfills if you must 
 **Production-ready:**
 - ✅ 261 tests passing (Chromium, Firefox, WebKit)
 - ✅ Zero security vulnerabilities (npm audit)
-- ✅ Published to npm (@larcjs/core@2.0.0)
+- ✅ Published to npm (@larcjs/core@3.0.1)
 - ✅ Used in real applications
 - ✅ TypeScript support
 - ✅ Semantic versioning

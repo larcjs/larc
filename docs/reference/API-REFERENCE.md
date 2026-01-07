@@ -190,12 +190,12 @@ interface AutoloadConfig {
 ```html
 <script type="module">
   window.panAutoload = {
-    baseUrl: 'https://unpkg.com/@larcjs/core@2.0.0/',
+    baseUrl: 'https://unpkg.com/@larcjs/core@3.0.1/',
     componentsPath: 'src/components/',
     extension: '.js'
   };
 </script>
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 ```
 
 **Custom Component Resolver**

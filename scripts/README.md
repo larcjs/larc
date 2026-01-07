@@ -74,9 +74,9 @@ Both packages published with identical components:
 Users can use either:
 ```html
 <!-- One-liner: core with everything -->
-<script src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"></script>
 
 <!-- Minimal: bus only, explicit component imports -->
-<script src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-bus.mjs"></script>
-<script src="https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.0/pan-card.mjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-bus.mjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/@larcjs/ui@3.0.1/pan-card.mjs"></script>
 ```

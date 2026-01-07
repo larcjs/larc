@@ -67,14 +67,14 @@ All 130 component files from `@larcjs/ui`:
 
 **Pattern 1: One-liner (most users)**
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"></script>
 <pan-card>Hello!</pan-card>
 ```
 
 **Pattern 2: Minimal (advanced users)**
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-bus.mjs"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.0/pan-card.mjs"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-bus.mjs"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/ui@3.0.1/pan-card.mjs"></script>
 ```
 
 ### No Duplication Concerns

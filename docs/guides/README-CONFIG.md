@@ -102,11 +102,11 @@ Aliases map short names to actual paths, automatically switching between dev and
 export const aliases = {
   '@larc/core': isDevelopment
     ? './core/src'                                    // Local dev
-    : 'https://unpkg.com/@larcjs/core@2.0.0/src',    // Production CDN
+    : 'https://unpkg.com/@larcjs/core@3.0.1/src',    // Production CDN
 
   '@larc/components': isDevelopment
     ? './components/src'
-    : 'https://unpkg.com/@larcjs/ui@2.0.0/src',
+    : 'https://unpkg.com/@larcjs/ui@3.0.1/src',
 };
 ```
 
@@ -131,7 +131,7 @@ The `paths` utility provides methods for resolving paths:
 // Resolve an alias
 paths.resolve('@larc/core', 'components/pan-bus.mjs');
 // Dev:  => './core/pan-bus.mjs'
-// Prod: => 'https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs'
+// Prod: => 'https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs'
 
 // Get a component path
 paths.component('pan-card');

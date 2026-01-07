@@ -394,9 +394,9 @@ On 3G connection (750KB/s):
 
 1. Test all packages manually
 2. Publish to npm:
-   - `@larcjs/core@2.0.0`
-   - `@larcjs/core@2.0.0`
-   - `@larcjs/core@2.0.0`
+   - `@larcjs/core@3.0.1`
+   - `@larcjs/core@3.0.1`
+   - `@larcjs/core@3.0.1`
 3. Update examples to use core-lite
 4. Update website/playground
 

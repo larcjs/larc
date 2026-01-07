@@ -25,9 +25,9 @@
 ### 3. CDN Links ✅
 
 All unpkg.com URLs tested and working:
-- [x] https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs ✅
-- [x] https://unpkg.com/@larcjs/ui@2.0.0/package.json ✅
-- [x] https://unpkg.com/@larcjs/core@2.0.0/package.json ✅
+- [x] https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs ✅
+- [x] https://unpkg.com/@larcjs/ui@3.0.1/package.json ✅
+- [x] https://unpkg.com/@larcjs/core@3.0.1/package.json ✅
 
 ### 4. Documentation ✅
 

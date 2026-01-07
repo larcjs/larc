@@ -72,7 +72,7 @@ git push --follow-tags
 
 ### What Gets Published
 
-**@larcjs/core@2.1.0:**
+**@larcjs/core@3.0.1:**
 - pan.mjs (autoloader)
 - pan-bus.mjs (messaging)
 - pan-client.mjs (client API)
@@ -82,7 +82,7 @@ git push --follow-tags
 **Result:**
 ```html
 <!-- This now works with zero config! -->
-<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"></script>
 <pan-card>Hello!</pan-card>
 ```
 
@@ -91,7 +91,7 @@ git push --follow-tags
 If something goes wrong:
 ```bash
 # Unpublish within 72 hours
-npm unpublish @larcjs/core@2.1.0
+npm unpublish @larcjs/core@3.0.1
 
 # Or publish a patch
 npm version patch
@@ -102,11 +102,11 @@ npm publish
 
 ```bash
 # Test from CDN
-curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs
-curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/components/pan-card.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/components/pan-card.mjs
 
 # Test in browser
-open https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/
+open https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/
 ```
 
 - [ ] CDN serves files correctly

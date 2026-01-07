@@ -48,9 +48,9 @@ const resolved = window.larcResolve('@larc/core', 'components/pan-bus.mjs');
 
 | Alias | Development | Production |
 |-------|------------|------------|
-| `@larc/core` | `./core/src` | `https://unpkg.com/@larcjs/core@2.0.0/src` |
-| `@larc/components` | `./components/src` | `https://unpkg.com/@larcjs/ui@2.0.0/src` |
-| `@larc/examples` | `./examples` | `https://unpkg.com/@larcjs/examples@2.0.0` |
+| `@larc/core` | `./core/src` | `https://unpkg.com/@larcjs/core@3.0.1/src` |
+| `@larc/components` | `./components/src` | `https://unpkg.com/@larcjs/ui@3.0.1/src` |
+| `@larc/examples` | `./examples` | `https://unpkg.com/@larcjs/examples@3.0.1` |
 | `@larc/site` | `./site` | `https://larcjs.github.io/site` |
 
 ---

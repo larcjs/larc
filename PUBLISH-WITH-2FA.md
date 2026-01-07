@@ -34,7 +34,7 @@ For automated publishing, create a token with 2FA bypass:
 
 ## What Gets Published
 
-**@larcjs/core@2.1.0** including:
+**@larcjs/core@3.0.1** including:
 - pan.mjs (autoloader)
 - pan-bus.mjs, pan-client.mjs, pan-storage.mjs
 - components/ (130 component files - 2.5MB)
@@ -45,17 +45,17 @@ Wait ~5 minutes for CDN sync, then test:
 
 ```bash
 # Verify on npm
-npm view @larcjs/core@2.1.0
+npm view @larcjs/core@3.0.1
 
 # Test CDN
-curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs
-curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/components/pan-card.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/components/pan-card.mjs
 ```
 
 ## Push to GitHub
 
 ```bash
 git push origin main
-git tag @larcjs/core@2.1.0
+git tag @larcjs/core@3.0.1
 git push --tags
 ```

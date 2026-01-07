@@ -245,7 +245,7 @@ Use triple backticks with language:
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.js"></script>
+    <script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.js"></script>
   </head>
   <body>
     <pan-bus></pan-bus>

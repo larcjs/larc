@@ -65,13 +65,13 @@ npm install @larcjs/core-lite
 ### Package Overview
 
 **Core Packages:**
-- **`@larcjs/core`** (v2.0.0) - Full-featured messaging bus with routing and debug tools
-- **`@larcjs/core-lite`** (v2.0.0) - Lightweight 9KB version (perfect for production) ⭐
-- **`@larcjs/ui`** (v2.0.0) - UI component library
+- **`@larcjs/core`** (v3.0.1) - Full-featured messaging bus with routing and debug tools
+- **`@larcjs/core-lite`** (v3.0.1) - Lightweight 9KB version (perfect for production) ⭐
+- **`@larcjs/ui`** (v3.0.1) - UI component library
 
 **Add-ons:**
-- **`@larcjs/core-routing`** (v2.0.0) - Dynamic message routing (8KB)
-- **`@larcjs/core-debug`** (v2.0.0) - Debug and tracing tools (3KB)
+- **`@larcjs/core-routing`** (v3.0.1) - Dynamic message routing (8KB)
+- **`@larcjs/core-debug`** (v3.0.1) - Debug and tracing tools (3KB)
 
 **Framework Integrations:**
 - **`@larcjs/react-adapter`** - React hooks for PAN bus
@@ -300,15 +300,15 @@ These packages are published to npm:
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| [@larcjs/core](https://npmjs.com/package/@larcjs/core) | 2.0.0 | Full-featured messaging bus |
-| [@larcjs/core-lite](https://npmjs.com/package/@larcjs/core-lite) | 2.0.0 | Lightweight 9KB version ⭐ |
-| [@larcjs/ui](https://npmjs.com/package/@larcjs/ui) | 2.0.0 | UI component library |
-| [@larcjs/core-routing](https://npmjs.com/package/@larcjs/core-routing) | 2.0.0 | Message routing add-on |
-| [@larcjs/core-debug](https://npmjs.com/package/@larcjs/core-debug) | 2.0.0 | Debug tools add-on |
-| [@larcjs/core-types](https://npmjs.com/package/@larcjs/core-types) | 2.0.0 | TypeScript types |
-| [@larcjs/ui-types](https://npmjs.com/package/@larcjs/ui-types) | 2.0.0 | TypeScript types |
-| [@larcjs/react-adapter](https://npmjs.com/package/@larcjs/react-adapter) | 2.0.0 | React integration |
-| [create-larc-app](https://npmjs.com/package/create-larc-app) | 2.0.0 | Project scaffolding CLI |
+| [@larcjs/core](https://npmjs.com/package/@larcjs/core) | 3.0.1 | Full-featured messaging bus |
+| [@larcjs/core-lite](https://npmjs.com/package/@larcjs/core-lite) | 3.0.1 | Lightweight 9KB version ⭐ |
+| [@larcjs/ui](https://npmjs.com/package/@larcjs/ui) | 3.0.1 | UI component library |
+| [@larcjs/core-routing](https://npmjs.com/package/@larcjs/core-routing) | 3.0.1 | Message routing add-on |
+| [@larcjs/core-debug](https://npmjs.com/package/@larcjs/core-debug) | 3.0.1 | Debug tools add-on |
+| [@larcjs/core-types](https://npmjs.com/package/@larcjs/core-types) | 3.0.1 | TypeScript types |
+| [@larcjs/ui-types](https://npmjs.com/package/@larcjs/ui-types) | 3.0.1 | TypeScript types |
+| [@larcjs/react-adapter](https://npmjs.com/package/@larcjs/react-adapter) | 3.0.1 | React integration |
+| [create-larc-app](https://npmjs.com/package/create-larc-app) | 3.0.1 | Project scaffolding CLI |
 
 ## 🔗 Links
 

@@ -303,8 +303,8 @@ if (&#039;requestIdleCallback&#039; in window) {
 <h3>2.3 Module Preloading Techniques</h3>
 <strong>Using modulepreload:</strong>
 <pre><code class="language-html">&lt;!-- Preload critical modules --&gt;
-&lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;&gt;
-&lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs&quot;&gt;
+&lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&quot;&gt;
+&lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs&quot;&gt;
 &lt;link rel=&quot;modulepreload&quot; href=&quot;./components/app-header.mjs&quot;&gt;
 &lt;link rel=&quot;modulepreload&quot; href=&quot;./components/app-nav.mjs&quot;&gt;</code></pre>
 <strong>Dynamic modulepreload based on route:</strong>
@@ -349,12 +349,12 @@ document.addEventListener(&#039;mouseenter&#039;, (e) =&gt; {
   &lt;link rel=&quot;preconnect&quot; href=&quot;https://unpkg.com&quot; crossorigin&gt;
 
   &lt;!-- Preload critical resources --&gt;
-  &lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;&gt;
+  &lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&quot;&gt;
 &lt;/head&gt;</code></pre>
 <strong>Multi-CDN failover:</strong>
 <pre><code class="language-javascript">const CDN_SOURCES = [
-  &#039;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&#039;,
-  &#039;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/src/pan.mjs&#039;,
+  &#039;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&#039;,
+  &#039;https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/src/pan.mjs&#039;,
   &#039;/static/larc/pan.mjs&#039; // Local fallback
 ];
 
@@ -374,7 +374,7 @@ async function loadWithFailover(sources) {
 loadWithFailover(CDN_SOURCES);</code></pre>
 <strong>Custom component resolver for CDN optimization:</strong>
 <pre><code class="language-javascript">window.panAutoload = {
-  baseUrl: &#039;https://unpkg.com/@larcjs/core@2.0.0/&#039;,
+  baseUrl: &#039;https://unpkg.com/@larcjs/core@3.0.1/&#039;,
 
   // Custom resolver for optimized paths
   resolveComponent(tag) {
@@ -1047,8 +1047,8 @@ class CleanComponent extends HTMLElement {
   &lt;link rel=&quot;preconnect&quot; href=&quot;https://unpkg.com&quot; crossorigin&gt;
 
   &lt;!-- 3. Modulepreload (fetch and compile modules) --&gt;
-  &lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;&gt;
-  &lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs&quot;&gt;
+  &lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&quot;&gt;
+  &lt;link rel=&quot;modulepreload&quot; href=&quot;https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs&quot;&gt;
 
   &lt;!-- 4. Preload critical app modules --&gt;
   &lt;link rel=&quot;modulepreload&quot; href=&quot;./components/app-header.mjs&quot;&gt;
@@ -1059,7 +1059,7 @@ class CleanComponent extends HTMLElement {
   &lt;link rel=&quot;prefetch&quot; href=&quot;./components/product-filter.mjs&quot;&gt;
 
   &lt;!-- Load LARC --&gt;
-  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;&gt;&lt;/script&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&quot;&gt;&lt;/script&gt;
 &lt;/head&gt;
 &lt;body&gt;
   &lt;app-header&gt;&lt;/app-header&gt;
@@ -1145,15 +1145,15 @@ async function detectRegion() {
 detectRegion().then(region =&gt; {
   const cdnBase = CDN_REGIONS[region] || CDN_REGIONS.default;
   window.panAutoload = {
-    baseUrl: `${cdnBase}/@larcjs/core@2.0.0/`
+    baseUrl: `${cdnBase}/@larcjs/core@3.0.1/`
   };
 });</code></pre>
 <strong>CDN cache warming:</strong>
 <pre><code class="language-javascript">// Pre-warm CDN cache after deployment
 async function warmCDNCache() {
   const criticalUrls = [
-    &#039;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&#039;,
-    &#039;https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs&#039;,
+    &#039;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&#039;,
+    &#039;https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs&#039;,
     &#039;./components/app-header.mjs&#039;,
     &#039;./components/app-nav.mjs&#039;
   ];
@@ -1189,12 +1189,12 @@ server {
 
 // Strategy: Use HTTP/2 and single domain
 // ✅ GOOD
-&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs&quot;&gt;&lt;/script&gt;
 
 // ❌ Avoid multiple domains (uses separate connections)
-&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&quot;&gt;&lt;/script&gt;
-&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-bus.mjs&quot;&gt;&lt;/script&gt;</code></pre>
+&lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-bus.mjs&quot;&gt;&lt;/script&gt;</code></pre>
 <hr>
 <h2>6. Runtime Performance</h2>
 <h3>6.1 JavaScript Execution Optimization</h3>
@@ -1424,9 +1424,9 @@ const RUNTIME_CACHE = &#039;larc-runtime&#039;;
 const PRECACHE_URLS = [
   &#039;/&#039;,
   &#039;/index.html&#039;,
-  &#039;https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs&#039;,
-  &#039;https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs&#039;,
-  &#039;https://unpkg.com/@larcjs/core@2.0.0/pan-client.mjs&#039;
+  &#039;https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs&#039;,
+  &#039;https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs&#039;,
+  &#039;https://unpkg.com/@larcjs/core@3.0.1/pan-client.mjs&#039;
 ];
 
 self.addEventListener(&#039;install&#039;, event =&gt; {

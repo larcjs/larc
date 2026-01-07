@@ -169,7 +169,7 @@ If you encounter issues (unlikely), rolling back is simple:
 npm install @larcjs/core@0.1.0
 
 # Or pin to last working version
-npm install @larcjs/core@2.0.0
+npm install @larcjs/core@3.0.1
 ```
 
 No code changes needed for rollback - APIs are fully compatible.
@@ -250,11 +250,11 @@ No APIs are currently deprecated. When APIs are deprecated:
 2. **Update One Package at a Time**
    ```bash
    # Update core first
-   npm install @larcjs/core@2.0.0
+   npm install @larcjs/core@3.0.1
    npm test
 
    # Then update UI
-   npm install @larcjs/ui@2.0.0
+   npm install @larcjs/ui@3.0.1
    npm test
    ```
 
@@ -391,7 +391,7 @@ When an API is deprecated, this section will show:
 
 | API | Deprecated In | Removed In | Replacement | Migration Guide |
 |-----|---------------|------------|-------------|-----------------|
-| `subscribe()` | 1.5.0 | 2.0.0 | `on()` | [Link](#example-change) |
+| `subscribe()` | 1.5.0 | 3.0.1 | `on()` | [Link](#example-change) |
 
 ---
 

@@ -20,7 +20,7 @@ npm run changeset:publish
 
 This will:
 - ✅ Sync components (already done, but will verify)
-- ✅ Publish @larcjs/core@2.1.0 to npm
+- ✅ Publish @larcjs/core@3.0.1 to npm
 - ✅ Create git tags
 - ✅ Push tags to GitHub (you'll need to run `git push --follow-tags` after)
 
@@ -36,7 +36,7 @@ This pushes the commit and version tags to GitHub.
 
 ## What's Being Published
 
-**@larcjs/core@2.1.0** (from 2.0.0)
+**@larcjs/core@3.0.1** (from 2.0.0)
 
 **New Features:**
 - 130 UI components bundled in `/components/`
@@ -56,11 +56,11 @@ This pushes the commit and version tags to GitHub.
 
 ```bash
 # Check package exists
-npm view @larcjs/core@2.1.0
+npm view @larcjs/core@3.0.1
 
 # Test CDN (wait ~5 min for CDN sync)
-curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs
-curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/components/pan-card.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/components/pan-card.mjs
 ```
 
 ### Test the One-Liner
@@ -71,7 +71,7 @@ Create a test HTML file:
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"></script>
 </head>
 <body>
   <pan-card>
@@ -91,7 +91,7 @@ Open in browser - pan-card should render!
 Within 72 hours of publishing:
 
 ```bash
-npm unpublish @larcjs/core@2.1.0
+npm unpublish @larcjs/core@3.0.1
 ```
 
 Or publish a patch fix:

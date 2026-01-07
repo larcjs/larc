@@ -194,7 +194,7 @@ import { PanClient } from './pan-client';
 import { PanClient } from './pan-client.mjs';
 
 // ✅ ALSO CORRECT: Absolute or CDN URL
-import { PanClient } from 'https://unpkg.com/@larcjs/core@2.0.0/pan-client.mjs';
+import { PanClient } from 'https://unpkg.com/@larcjs/core@3.0.1/pan-client.mjs';
 ```
 
 ### 2.3 Autoloader Not Running
@@ -722,12 +722,12 @@ import { PanBus } from 'larc/components/pan-bus.mjs';
 <script type="module">
   // Configure autoloader for CDN
   window.panAutoload = {
-    baseUrl: 'https://unpkg.com/@larcjs/core@2.0.0/',
+    baseUrl: 'https://unpkg.com/@larcjs/core@3.0.1/',
     componentsPath: './',
     extension: '.mjs'
   };
 </script>
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 ```
 
 ### 5.3 Path Resolution with data-module
@@ -982,7 +982,7 @@ Access to script at 'https://unpkg.com/...' from origin 'http://localhost' has b
 <script type="module" src="https://unpkg.com/@larcjs/core/pan.mjs"></script>
 
 <!-- ✅ CORRECT: Pinned version -->
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 ```
 
 #### 7.1.2 CDN Failover
@@ -990,8 +990,8 @@ Access to script at 'https://unpkg.com/...' from origin 'http://localhost' has b
 ```javascript
 // Implement automatic failover
 const CDN_SOURCES = [
-  'https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs',
-  'https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/src/pan.mjs',
+  'https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs',
+  'https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/src/pan.mjs',
   '/static/larc/pan.mjs' // Local fallback
 ];
 
@@ -1024,7 +1024,7 @@ async function testCDN(url) {
   }
 }
 
-const cdnAvailable = await testCDN('https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs');
+const cdnAvailable = await testCDN('https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs');
 console.log('CDN available:', cdnAvailable);
 ```
 
@@ -1041,13 +1041,13 @@ Mixed Content: The page at 'https://example.com' was loaded over HTTPS, but requ
 
 ```html
 <!-- ❌ WRONG: HTTP URL -->
-<script type="module" src="http://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+<script type="module" src="http://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 
 <!-- ✅ CORRECT: HTTPS URL -->
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 
 <!-- ✅ BETTER: Protocol-relative (not recommended for modules) -->
-<script type="module" src="//unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+<script type="module" src="//unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 ```
 
 ### 7.3 CDN Cache Issues
@@ -1590,7 +1590,7 @@ class MyComponent extends HTMLElement {
 <script type="module" src="./pan.mjs"></script>
 
 // Production - ensure version matches!
-<script type="module" src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"></script>
+<script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"></script>
 ```
 
 #### 13.1.2 Path Resolution
@@ -1760,7 +1760,7 @@ To report a bug, create minimal reproduction:
   <pan-bus debug="true"></pan-bus>
 
   <script type="module">
-    import { PanClient } from 'https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs';
+    import { PanClient } from 'https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs';
 
     const client = new PanClient();
     await client.ready();

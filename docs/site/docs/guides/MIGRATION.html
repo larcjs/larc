@@ -169,7 +169,7 @@ document.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
 npm install @larcjs/core@0.1.0
 
 # Or pin to last working version
-npm install @larcjs/core@2.0.0</code></pre>
+npm install @larcjs/core@3.0.1</code></pre>
 <p>No code changes needed for rollback - APIs are fully compatible.</p>
 <hr>
 <h2>Migrating from 1.x to 2.0</h2>
@@ -226,11 +226,11 @@ No APIs are currently deprecated. When APIs are deprecated:
    <pre><code class="language-bash">git checkout -b upgrade-larc-2.0</code></pre>
 <li><strong>Update One Package at a Time</strong></li>
    <pre><code class="language-bash"># Update core first
-   npm install @larcjs/core@2.0.0
+   npm install @larcjs/core@3.0.1
    npm test
 
    # Then update UI
-   npm install @larcjs/ui@2.0.0
+   npm install @larcjs/ui@3.0.1
    npm test</code></pre>
 <li><strong>Run Your Test Suite</strong></li>
    <pre><code class="language-bash">npm test
@@ -320,7 +320,7 @@ npx @larcjs/migrate 1.x-to-2.x</code></pre>
 <strong>Example (for future deprecations):</strong>
 <p>| API | Deprecated In | Removed In | Replacement | Migration Guide |
 |-----|---------------|------------|-------------|-----------------|
-| <code>subscribe()</code> | 1.5.0 | 2.0.0 | <code>on()</code> | <a href="#example-change">Link</a> |</p>
+| <code>subscribe()</code> | 1.5.0 | 3.0.1 | <code>on()</code> | <a href="#example-change">Link</a> |</p>
 <hr>
 <h2>Automated Migration Tools</h2>
 <h3>Current Tools</h3>

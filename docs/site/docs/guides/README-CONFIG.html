@@ -118,11 +118,11 @@ const PanClient = await import(paths.resolve(&#039;@larc/core&#039;, &#039;compo
 <pre><code class="language-javascript">export const aliases = {
   &#039;@larc/core&#039;: isDevelopment
     ? &#039;./core/src&#039;                                    // Local dev
-    : &#039;https://unpkg.com/@larcjs/core@2.0.0/src&#039;,    // Production CDN
+    : &#039;https://unpkg.com/@larcjs/core@3.0.1/src&#039;,    // Production CDN
 
   &#039;@larc/components&#039;: isDevelopment
     ? &#039;./components/src&#039;
-    : &#039;https://unpkg.com/@larcjs/ui@2.0.0/src&#039;,
+    : &#039;https://unpkg.com/@larcjs/ui@3.0.1/src&#039;,
 };</code></pre>
 <h3><strong>Component Mappings</strong></h3>
 <p>Explicit mappings for components used by the autoloader:</p>
@@ -137,7 +137,7 @@ const PanClient = await import(paths.resolve(&#039;@larc/core&#039;, &#039;compo
 <pre><code class="language-javascript">// Resolve an alias
 paths.resolve(&#039;@larc/core&#039;, &#039;components/pan-bus.mjs&#039;);
 // Dev:  =&gt; &#039;./core/pan-bus.mjs&#039;
-// Prod: =&gt; &#039;https://unpkg.com/@larcjs/core@2.0.0/pan-bus.mjs&#039;
+// Prod: =&gt; &#039;https://unpkg.com/@larcjs/core@3.0.1/pan-bus.mjs&#039;
 
 // Get a component path
 paths.component(&#039;pan-card&#039;);

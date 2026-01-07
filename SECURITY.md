@@ -120,7 +120,7 @@ LARC runs in the browser and relies on browser security features:
 **Subresource Integrity (SRI):**
 ```html
 <script type="module"
-        src="https://unpkg.com/@larcjs/core@2.0.0/src/pan.mjs"
+        src="https://unpkg.com/@larcjs/core@3.0.1/src/pan.mjs"
         integrity="sha384-..."
         crossorigin="anonymous"></script>
 ```

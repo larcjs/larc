@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"></script>
+  <script type="module" src="https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"></script>
 </head>
 <body>
   <pan-card>
@@ -40,7 +40,7 @@ All components auto-load from `@larcjs/core/components/`:
 
 ```html
 <script type="module">
-  import { PanClient } from 'https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan-client.mjs';
+  import { PanClient } from 'https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-client.mjs';
 
   const client = new PanClient();
 
