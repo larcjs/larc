@@ -6,12 +6,14 @@ on:
     paths:
       - 'packages/ui/**'
       - 'packages/core/**'
+      - 'package-lock.json'
       - '.github/workflows/ui-tests.yml'
   pull_request:
     branches: [ main, develop ]
     paths:
       - 'packages/ui/**'
       - 'packages/core/**'
+      - 'package-lock.json'
   workflow_dispatch:
 
 # Restrict workflow permissions to minimum required
