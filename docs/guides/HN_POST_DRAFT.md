@@ -154,7 +154,7 @@ Keep these ready for comments:
 
 1. **vs React/Vue:** Complement, not replace. Keep React for complex UIs.
 2. **Why Web Components:** Only true framework-agnostic solution.
-3. **Production ready:** 261 tests, 0 vulnerabilities, v1.1 on npm.
+3. **Production ready:** 261 tests, 0 vulnerabilities, v3.0.1 on npm.
 4. **Bundle size:** 5KB vs 140KB (React) or 90KB (Vue).
 5. **PAN bus:** Like MQTT for browser—pub/sub messaging.
 6. **Zero build:** Write .mjs files, refresh browser. No webpack required.
