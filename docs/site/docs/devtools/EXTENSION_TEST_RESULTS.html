@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Inspector Extension - Test Results · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Inspector Extension - Test Results">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">devtools</a> / <span>EXTENSION_TEST_RESULTS</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Inspector Extension - Test Results</h1>
+<strong>Date:</strong> 2025-12-03
+<strong>Chrome DevTools MCP Version:</strong> 0.11.0
+<strong>Extension Version:</strong> 1.0.0
+<h2>Executive Summary</h2>
+<p>❌ <strong>FAILED</strong> - Extension cannot be tested via chrome-devtools MCP due to architecture limitations.</p>
+<h3>Root Cause</h3>
+The chrome-devtools MCP server (v0.11.0) launches Chrome with Playwright's automation flags, which include <code>--disable-extensions</code>. This flag <strong>cannot be overridden</strong> by custom arguments passed through the MCP configuration, preventing any Chrome extensions from loading.
+<h2>Test Results</h2>
+<h3>Test 1: Extension Loading ❌ FAILED</h3>
+<strong>Status:</strong> Extension not loaded
+<strong>Expected:</strong> Extension appears in <code>chrome://extensions/</code>
+<strong>Actual:</strong> No extensions shown - page displays "Find extensions and themes in the Chrome Web Store"
+<strong>Evidence:</strong> See screenshot - extensions page is empty despite correct config
+<h3>Test 2: Chrome Process Flags ❌ FAILED</h3>
+<strong>Command:</strong>
+<pre><code class="language-bash">ps aux | grep &quot;Google Chrome&quot; | grep -v &quot;Helper\|Renderer\|GPU&quot;</code></pre>
+<strong>Expected Flags:</strong>
+<ul><li><code>--enable-extensions</code></li>
+<li><code>--load-extension=/Users/cdr/Projects/larc-repos/devtools</code></li>
+<li><code>--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools</code></li>
+</ul>
+<strong>Actual Flags:</strong>
+<pre><code class="language-plaintext">--disable-extensions
+--disable-background-networking
+--disable-component-extensions-with-background-pages
+--disable-default-apps
+--enable-automation</code></pre>
+<strong>Analysis:</strong> The <code>--disable-extensions</code> flag is hardcoded by Playwright and overrides our custom flags.
+<h3>Test 3: Extension API Injection ❌ FAILED</h3>
+<strong>Status:</strong> API not available
+<strong>Check:</strong> <code>window.__panDevTools</code>
+<strong>Result:</strong> <code>undefined</code>
+<strong>Expected:</strong> Object with extension API methods
+<h3>Test 4: PAN Bus Verification ✅ PASSED</h3>
+<strong>Status:</strong> PAN Bus present on page
+<strong>Check:</strong> <code>document.querySelector('pan-bus')</code>
+<strong>Result:</strong> <code>true</code>
+<strong>Console Output:</strong> <code>[PAN Bus] PAN Bus Enhanced ready</code>
+<h3>Test 5: Playground Loading ⚠️ PARTIAL</h3>
+<strong>Status:</strong> HTML loaded, JavaScript modules failed
+<strong>Errors:</strong>
+<ul><li><code>Failed to load resource: net::ERR_EMPTY_RESPONSE</code></li>
+<li><code>Failed to fetch dynamically imported module: http://localhost:8000/playground/playground.mjs</code></li>
+</ul>
+<strong>Note:</strong> These errors are unrelated to the extension issue and may indicate separate module loading problems.
+<h2>Configuration Review</h2>
+<h3>Claude Desktop Config ✅ CORRECT</h3>
+File: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;chrome-devtools&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [
+        &quot;chrome-devtools-mcp&quot;,
+        &quot;--chrome-arg=--enable-extensions&quot;,
+        &quot;--chrome-arg=--load-extension=/Users/cdr/Projects/larc-repos/devtools&quot;,
+        &quot;--chrome-arg=--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools&quot;
+      ]
+    }
+  }
+}</code></pre>
+<strong>Status:</strong> Configuration is correct but ineffective due to MCP server limitations.
+<h3>Extension Manifest ✅ CORRECT</h3>
+File: <code>/Users/cdr/Projects/larc-repos/devtools/manifest.json</code>
+<pre><code class="language-json">{
+  &quot;manifest_version&quot;: 3,
+  &quot;name&quot;: &quot;PAN Inspector&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;devtools_page&quot;: &quot;devtools.html&quot;,
+  &quot;permissions&quot;: [&quot;tabs&quot;, &quot;storage&quot;],
+  &quot;host_permissions&quot;: [&quot;&lt;all_urls&gt;&quot;]
+}</code></pre>
+<strong>Status:</strong> Valid Manifest V3 extension configuration.
+<h2>Technical Analysis</h2>
+<h3>Why Extensions Don't Load</h3>
+<p>The chrome-devtools MCP server uses Playwright to launch Chrome:</p>
+<pre><code class="language-javascript">// Playwright&#039;s default automation launch
+const browser = await chromium.launch({
+  headless: false,
+  args: [/* automation flags */]
+});</code></pre>
+<p>Playwright's <code>launch()</code> method includes these default flags:
+<ul><li><code>--disable-extensions</code> - Prevents ALL extensions</li>
+<li><code>--enable-automation</code> - Marks browser as automated</li>
+<li><code>--disable-component-extensions-with-background-pages</code></li>
+</ul>
+<h3>What's Needed</h3></p>
+<p>To support extensions, the MCP server needs to use Playwright's <strong>persistent context</strong> mode:</p>
+<pre><code class="language-javascript">// Required for extensions
+const context = await chromium.launchPersistentContext(userDataDir, {
+  headless: false,
+  args: [
+    &#039;--load-extension=/path/to/extension&#039;,
+    &#039;--disable-extensions-except=/path/to/extension&#039;
+  ]
+});</code></pre>
+<strong>Key Difference:</strong>
+<ul><li><code>launch()</code> - Creates isolated browser instance (no extensions)</li>
+<li><code>launchPersistentContext()</code> - Uses profile directory (supports extensions)</li>
+</ul>
+<h2>Workarounds</h2>
+<h3>Option 1: Manual Chrome Launch (Recommended for Testing)</h3>
+<pre><code class="language-bash"># Kill any running Chrome instances
+killall &quot;Google Chrome&quot;
+
+# Launch Chrome with extension
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \\
+  --load-extension=/Users/cdr/Projects/larc-repos/devtools \\
+  --disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools \\
+  --user-data-dir=/tmp/chrome-test-profile \\
+  http://localhost:8000/playground/index.html
+
+# Open DevTools (F12)
+# Look for &quot;PAN&quot; tab</code></pre>
+<h3>Option 2: Use Built-in PAN Bus Monitor</h3>
+The playground already has a built-in monitor component:
+<pre><code class="language-html">&lt;pg-bus-monitor&gt;&lt;/pg-bus-monitor&gt;</code></pre>
+<p>This component provides PAN message monitoring without requiring a browser extension.</p>
+<strong>To test:</strong>
+<li>Click "PAN Monitor" button in playground header</li>
+<li>Monitor panel opens showing real-time messages</li>
+<li>All PAN events are captured and displayed</li>
+<h3>Option 3: Fork chrome-devtools MCP Server</h3>
+<li>Fork the repository</li>
+<li>Modify launch code to use <code>launchPersistentContext</code></li>
+<li>Add environment variable support for extension path</li>
+<li>Update Claude Desktop config to use forked version</li>
+<h2>Recommendations</h2>
+<h3>Immediate Actions</h3>
+<li><strong>Use Manual Chrome Launch</strong> for extension testing</li>
+   - Fully functional
+   - Tests all extension features
+   - No MCP server modifications needed
+<li><strong>Use Playground PAN Monitor</strong> for development</li>
+   - Already integrated
+   - Works via chrome-devtools MCP
+   - Sufficient for most debugging needs
+<h3>Long-term Solutions</h3>
+<li><strong>Request Feature from chrome-devtools MCP maintainers</strong></li>
+   - File issue requesting extension support
+   - Suggest environment variables: <code>CHROME_EXTENSION_PATH</code>
+   - Propose using <code>launchPersistentContext</code>
+<li><strong>Create Wrapper MCP Server</strong></li>
+   - Build custom MCP server that wraps chrome-devtools MCP
+   - Add extension loading support
+   - Publish as separate package
+<li><strong>Document Alternative Testing Methods</strong></li>
+   - Update extension README with manual testing instructions
+   - Create automated testing with Playwright directly
+   - Add E2E tests that don't rely on MCP
+<h2>Test Completion Status</h2>
+<p>| Test Category | Status | Notes |
+|--------------|--------|-------|
+| Extension Loading | ❌ Failed | Blocked by MCP server architecture |
+| Extension Injection | ❌ Failed | Cannot test - extension not loaded |
+| DevTools Panel | ❌ Failed | Cannot test - extension not loaded |
+| Message Capture | ❌ Failed | Cannot test - extension not loaded |
+| Filtering | ❌ Failed | Cannot test - extension not loaded |
+| Message Replay | ❌ Failed | Cannot test - extension not loaded |
+| Export/Import | ❌ Failed | Cannot test - extension not loaded |
+| PAN Bus Presence | ✅ Passed | Verified on page |
+| Playground Loading | ⚠️ Partial | HTML loads, JS modules fail |</p>
+<strong>Tests Passed:</strong> 1 / 9
+<strong>Tests Failed:</strong> 7 / 9
+<strong>Partially Passed:</strong> 1 / 9
+<h2>Conclusion</h2>
+<p>The PAN Inspector extension <strong>cannot be tested using chrome-devtools MCP</strong> in its current form (v0.11.0) due to fundamental architecture limitations. The MCP server's use of Playwright's standard browser launch mode with <code>--disable-extensions</code> prevents any Chrome extensions from loading.</p>
+<strong>Extension Status:</strong> ✅ Correctly configured and ready to use
+<strong>Testing Mechanism:</strong> ❌ chrome-devtools MCP incompatible with extensions
+<strong>Recommended Action:</strong> Use manual Chrome launch or built-in PAN Monitor for testing
+<h2>Next Steps</h2>
+<li><strong>For immediate testing:</strong> Use manual Chrome launch method (see Option 1)</li>
+<li><strong>For development:</strong> Use built-in <code><pg-bus-monitor></code> component</li>
+<li><strong>For long-term:</strong> File feature request with chrome-devtools MCP project</li>
+<li><strong>Alternative:</strong> Create standalone Playwright test suite for extension</li>
+<h2>Related Documentation</h2>
+<ul><li><code>CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.md</code> - Detailed technical explanation</li>
+<li>Extension README - Full extension documentation</li>
+<li><code>EXTENSION_TEST_PLAN.md</code> - Original test plan (cannot be completed via MCP)</li>
+</ul>
+<hr>
+<strong>Overall Status:</strong> 🔴 <strong>Cannot Test via MCP</strong> - Alternative testing methods required
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/devtools/EXTENSION_TEST_RESULTS.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

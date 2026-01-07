@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ready to Publish! 🚀 · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Ready to Publish! 🚀">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>PUBLISH-NOW</span>
+      </div>
+      <article class="docs-content">
+        <h1>Ready to Publish! 🚀</h1>
+<h2>Status: ✅ Ready</h2>
+<p>Everything is prepared and committed. Now you just need to:</p>
+<h3>1. Login to npm (if not already)</h3>
+<pre><code class="language-bash">npm login</code></pre>
+<p>Enter your npm credentials when prompted.</p>
+<h3>2. Publish to npm</h3>
+<pre><code class="language-bash">npm run changeset:publish</code></pre>
+<p>This will:
+<ul><li>✅ Sync components (already done, but will verify)</li>
+<li>✅ Publish @larcjs/core@3.0.1 to npm</li>
+<li>✅ Create git tags</li>
+<li>✅ Push tags to GitHub (you'll need to run <code>git push --follow-tags</code> after)</li>
+</ul>
+<h3>3. Push to GitHub</h3></p>
+<pre><code class="language-bash">git push --follow-tags</code></pre>
+<p>This pushes the commit and version tags to GitHub.</p>
+<hr>
+<h2>What's Being Published</h2>
+<strong>@larcjs/core@3.0.1</strong> (from 2.0.0)
+<strong>New Features:</strong>
+<ul><li>130 UI components bundled in <code>/components/</code></li>
+<li>Zero-config setup with one script tag</li>
+<li>Components auto-load without configuration</li>
+</ul>
+<strong>Files:</strong>
+<ul><li>pan.mjs (autoloader - updated)</li>
+<li>pan-bus.mjs, pan-client.mjs, pan-storage.mjs</li>
+<li>components/ (NEW! 130 component files)</li>
+</ul>
+<hr>
+<h2>After Publishing</h2>
+<h3>Verify on npm</h3>
+<pre><code class="language-bash"># Check package exists
+npm view @larcjs/core@3.0.1
+
+# Test CDN (wait ~5 min for CDN sync)
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/components/pan-card.mjs</code></pre>
+<h3>Test the One-Liner</h3>
+<p>Create a test HTML file:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-card&gt;
+    &lt;h1&gt;Success! 🎉&lt;/h1&gt;
+    &lt;p&gt;Zero config, one line, it just works!&lt;/p&gt;
+  &lt;/pan-card&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Open in browser - pan-card should render!</p>
+<hr>
+<h2>Rollback (if needed)</h2>
+<p>Within 72 hours of publishing:</p>
+<pre><code class="language-bash">npm unpublish @larcjs/core@3.0.1</code></pre>
+<p>Or publish a patch fix:</p>
+<pre><code class="language-bash">cd packages/core
+npm version patch
+npm publish</code></pre>
+<hr>
+<h2>Summary</h2>
+<strong>Current Status:</strong>
+<ul><li>✅ Version bumped (2.0.0 → 2.1.0)</li>
+<li>✅ CHANGELOG generated</li>
+<li>✅ Components synced (130 files)</li>
+<li>✅ Changes committed to git</li>
+<li>⏳ Waiting: npm login + publish</li>
+</ul>
+<strong>Commands to run:</strong>
+<pre><code class="language-bash">npm login                      # Login to npm
+npm run changeset:publish      # Publish packages
+git push --follow-tags         # Push to GitHub</code></pre>
+<p>That's it! 🚀</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/PUBLISH-NOW.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

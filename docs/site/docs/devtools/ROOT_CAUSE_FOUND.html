@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Root Cause Found! ✅ · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Root Cause Found! ✅">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">devtools</a> / <span>ROOT_CAUSE_FOUND</span>
+      </div>
+      <article class="docs-content">
+        <h1>Root Cause Found! ✅</h1>
+<h2>The Problem</h2>
+<p>Looking at the Chrome process launched by chrome-devtools MCP:
+<pre><code class="language-bash">PID 99148:
+--user-data-dir=/Users/cdr/.cache/chrome-devtools-mcp/chrome-profile
+--disable-extensions    &lt;-- THIS IS THE PROBLEM!</code></pre></p>
+<p>Puppeteer adds <code>--disable-extensions</code> by default as an automation flag.</p>
+<p>Our <code>--load-extension</code> flag was being passed, but <strong>overridden</strong> by the earlier <code>--disable-extensions</code>.</p>
+<h2>The Solution</h2>
+<p>Added <code>--enable-extensions</code> to explicitly override Puppeteer's default:</p>
+<pre><code class="language-json">{
+  &quot;chrome-devtools&quot;: {
+    &quot;command&quot;: &quot;npx&quot;,
+    &quot;args&quot;: [
+      &quot;chrome-devtools-mcp&quot;,
+      &quot;--chrome-arg=--enable-extensions&quot;,              // NEW - Override default
+      &quot;--chrome-arg=--load-extension=/Users/cdr/Projects/larc-repos/devtools&quot;,
+      &quot;--chrome-arg=--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools&quot;
+    ]
+  }
+}</code></pre>
+<h2>Chrome Flag Order Matters</h2>
+<p>Chrome processes flags left-to-right, with later flags overriding earlier ones:</p>
+<pre><code class="language-bash"># ❌ WRONG - Extensions disabled
+--disable-extensions --load-extension=/path
+
+# ✅ CORRECT - Extensions enabled
+--enable-extensions --load-extension=/path</code></pre>
+<p>Or:</p>
+<pre><code class="language-bash"># ✅ ALSO CORRECT - Last flag wins
+--disable-extensions --enable-extensions --load-extension=/path</code></pre>
+<h2>Next Steps</h2>
+<h3>Option 1: Restart Claude Desktop (Recommended)</h3>
+<pre><code class="language-plaintext">Cmd+Q → Reopen</code></pre>
+<h3>Option 2: Kill MCP Server Process</h3>
+<pre><code class="language-bash"># Find the process
+ps aux | grep chrome-devtools-mcp | grep -v grep
+
+# Kill it (it will auto-restart on next use)
+kill 98033</code></pre>
+<h2>Expected Result</h2>
+<p>After restart, Chrome will launch with:
+<pre><code class="language-bash">--enable-extensions
+--load-extension=/Users/cdr/Projects/larc-repos/devtools
+--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools</code></pre></p>
+<p>And you'll see:
+<ul><li>✅ Extension in chrome://extensions/</li>
+<li>✅ Console: <code>[PAN DevTools] Injected and monitoring PAN messages</code></li>
+<li>✅ API: <code>window.__panDevTools</code> present</li>
+<li>✅ DevTools: "PAN" tab available</li>
+</ul>
+<h2>Why We Missed This Initially</h2></p>
+<li><strong>Configuration looked correct</strong> - We had the right <code>--load-extension</code> flag</li>
+<li><strong>Puppeteer's default was hidden</strong> - <code>--disable-extensions</code> is added automatically</li>
+<li><strong>Extension path was valid</strong> - No error about missing files</li>
+<li><strong>Silent failure</strong> - Chrome just ignored the extension</li>
+<p>The <code>ps aux</code> output revealed the actual Chrome launch arguments, showing the conflicting <code>--disable-extensions</code> flag.</p>
+<h2>Technical Details</h2>
+<h3>Puppeteer Default Arguments</h3>
+<p>When Puppeteer launches Chrome for automation, it adds these defaults:
+<pre><code class="language-javascript">[
+  &#039;--disable-extensions&#039;,
+  &#039;--disable-default-apps&#039;,
+  &#039;--disable-component-extensions-with-background-pages&#039;,
+  // ... and more
+]</code></pre></p>
+<h3>How to Override</h3>
+<p>The chrome-devtools-mcp passes custom args via:
+<pre><code class="language-javascript">const args = [
+  ...(options.args ?? []),  // Our custom --chrome-arg flags go here
+  &#039;--hide-crash-restore-bubble&#039;,
+];
+
+await puppeteer.launch({ args });</code></pre></p>
+<p>Since our args come first, we need to ensure they override Puppeteer's defaults.</p>
+<h3>Flag Precedence</h3>
+<p>Chrome processes command-line flags in order:
+<ul><li>Later flags can override earlier flags</li>
+<li><code>--enable-extensions</code> overrides <code>--disable-extensions</code></li>
+<li><code>--disable-extensions-except</code> whitelists specific extensions</li>
+</ul>
+<h2>Lessons Learned</h2></p>
+<li><strong>Always check actual process arguments</strong> - <code>ps aux</code> reveals the truth</li>
+<li><strong>Automation tools have hidden defaults</strong> - Puppeteer, Playwright, etc.</li>
+<li><strong>Flag order matters</strong> - Later flags can override earlier ones</li>
+<li><strong>Test incrementally</strong> - Load extension first, then check if it worked</li>
+<h2>Files Updated</h2>
+<ul><li><code>/Users/cdr/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+</ul>  - Added <code>--chrome-arg=--enable-extensions</code> before <code>--load-extension</code>
+<h2>Verification Commands</h2>
+<p>After restart:
+<pre><code class="language-bash"># Check Chrome process args
+ps aux | grep chrome-devtools-mcp -A 5
+
+# Should now see:
+# --enable-extensions
+# --load-extension=/Users/cdr/Projects/larc-repos/devtools
+# --disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools</code></pre></p>
+<h2>Timeline</h2>
+<li>✅ Added <code>--load-extension</code> flags (first attempt)</li>
+<li>❌ Extension didn't load (silent failure)</li>
+<li>🔍 Checked chrome://extensions/ - empty</li>
+<li>🔍 Checked ps aux - found <code>--disable-extensions</code></li>
+<li>✅ Added <code>--enable-extensions</code> flag (second attempt)</li>
+<li>⏳ Waiting for MCP server restart</li>
+<h2>Success Criteria</h2>
+<p>Extension working when:
+<ul><li>[ ] Extension appears in chrome://extensions/ with "PAN Inspector" name</li>
+<li>[ ] Console shows <code>[PAN DevTools] Injected and monitoring PAN messages</code></li>
+<li>[ ] <code>window.__panDevTools</code> API exists</li>
+<li>[ ] DevTools has "PAN" tab between other tabs</li>
+<li>[ ] PAN messages appear when interacting with playground components</li>
+</ul></p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/devtools/ROOT_CAUSE_FOUND.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

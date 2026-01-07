@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Changelog · PAN Documentation</title>
-  <meta name="description" content="PAN (Page Area Network) Documentation - Changelog">
+  <title>Publish with 2FA · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Publish with 2FA">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,26 +40,48 @@
 
     <main class="docs-main">
       <div class="docs-breadcrumb">
-        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core</a> / <span>CHANGELOG</span>
+        <a href="../index.html">Home</a> / <span>PUBLISH-WITH-2FA</span>
       </div>
       <article class="docs-content">
-        <h1>Changelog</h1>
-<h2>2.1.0 (2024-12-31)</h2>
-<h3>Minor Changes</h3>
-<ul><li><strong>Bundle UI components for zero-config setup</strong></li>
-</ul>  - Added all 130 UI components to @larcjs/core/components/ directory
-  - Updated autoloader to check ./components/ first for component resolution
-  - Created automatic sync script to keep components in sync with @larcjs/ui
-  - Enables one-line setup: <code><script src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs"></script></code>
-  - Components now auto-load without configuration
-  - Maintains backward compatibility - existing code continues to work
-  - Sync happens automatically during build and publish workflows
-<p>All notable changes to this project will be documented in this file.</p>
-<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
-and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+        <h1>Publish with 2FA</h1>
+<h2>Option 1: Publish with OTP (Recommended)</h2>
+<p>Get your 2FA code from your authenticator app, then:</p>
+<pre><code class="language-bash">cd packages/core
+npm publish --otp=123456</code></pre>
+<p>Replace <code>123456</code> with your actual 6-digit code.</p>
+<strong>Note:</strong> The code expires quickly (30 seconds), so have it ready before running the command!
+<h2>Option 2: Use npm Token (Automation)</h2>
+<p>For automated publishing, create a token with 2FA bypass:</p>
+<li>Go to https://www.npmjs.com/settings/YOUR_USERNAME/tokens</li>
+<li>Click "Generate New Token" → "Automation"</li>
+<li>Copy the token</li>
+<li>Set it locally:</li>
+   <pre><code class="language-bash">npm config set //registry.npmjs.org/:_authToken YOUR_TOKEN</code></pre>
+<li>Then publish normally:</li>
+   <pre><code class="language-bash">cd packages/core
+   npm publish</code></pre>
+<hr>
+<h2>What Gets Published</h2>
+<strong>@larcjs/core@3.0.1</strong> including:
+<ul><li>pan.mjs (autoloader)</li>
+<li>pan-bus.mjs, pan-client.mjs, pan-storage.mjs</li>
+<li>components/ (130 component files - 2.5MB)</li>
+</ul>
+<h2>After Publishing</h2>
+<p>Wait ~5 minutes for CDN sync, then test:</p>
+<pre><code class="language-bash"># Verify on npm
+npm view @larcjs/core@3.0.1
+
+# Test CDN
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/components/pan-card.mjs</code></pre>
+<h2>Push to GitHub</h2>
+<pre><code class="language-bash">git push origin main
+git tag @larcjs/core@3.0.1
+git push --tags</code></pre>
       </article>
       <footer class="docs-footer">
-        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core/CHANGELOG.md" target="_blank">
+        <a href="https://github.com/chrisrobison/pan/edit/main/PUBLISH-WITH-2FA.md" target="_blank">
           Edit this page on GitHub
         </a>
       </footer>

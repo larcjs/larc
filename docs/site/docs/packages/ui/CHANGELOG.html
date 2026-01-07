@@ -44,6 +44,10 @@
       </div>
       <article class="docs-content">
         <h1>Changelog</h1>
+<h2>3.0.0</h2>
+<h3>Patch Changes</h3>
+<ul><li>Updated dependencies</li>
+</ul>  - @larcjs/core@2.1.0
 <p>All notable changes to this project will be documented in this file.</p>
 <p>This project adheres to Keep a Changelog, and aims to follow Semantic Versioning.</p>
 <h2>[Unreleased]</h2>
@@ -61,35 +65,41 @@
 <p>#### ✨ New Components</p>
 <strong>State Management:</strong>
 <ul><li><strong>pan-state-sync</strong> - Cross-tab state synchronization using BroadcastChannel API</li>
-</ul>  - Leader election with automatic failover
+</ul>
+  - Leader election with automatic failover
   - Conflict resolution strategies (last-write-wins, merge, custom)
   - Tab visibility handling and automatic reconnection
   - Heartbeat monitoring for leader health checks
 <ul><li><strong>pan-computed-state</strong> - Derived/computed state with automatic dependency tracking</li>
-</ul>  - Multi-source dependencies with wildcard support
+</ul>
+  - Multi-source dependencies with wildcard support
   - Async computation support
   - Memoization strategies (none, shallow, deep)
   - Debouncing for performance optimization
 <ul><li><strong>pan-offline-sync</strong> - Offline-first support with automatic queue management</li>
-</ul>  - IndexedDB-based mutation queue with persistence
+</ul>
+  - IndexedDB-based mutation queue with persistence
   - Exponential backoff retry logic
   - Network status monitoring with automatic sync
   - Conflict detection and resolution
   - Configurable endpoints for API synchronization
 <ul><li><strong>pan-persistence-strategy</strong> - Declarative persistence routing</li>
-</ul>  - Multiple storage backends (memory, localStorage, sessionStorage, IndexedDB)
+</ul>
+  - Multiple storage backends (memory, localStorage, sessionStorage, IndexedDB)
   - TTL (time-to-live) support for cache expiration
   - Automatic state hydration on page load
   - Size limits per topic with overflow handling
   - Topic-based routing rules
 <ul><li><strong>pan-schema-validator</strong> - Runtime JSON Schema validation (no build tools required)</li>
-</ul>  - Subset of JSON Schema Draft-07
+</ul>
+  - Subset of JSON Schema Draft-07
   - Strict and warning modes
   - Built-in format validators (email, uri, date-time, uuid, ipv4, ipv6)
   - Detailed error messages with paths
   - Zero dependencies, browser-native
 <ul><li><strong>pan-undo-redo</strong> - Time-travel debugging with history management</li>
-</ul>  - Configurable history stack size
+</ul>
+  - Configurable history stack size
   - Automatic change batching (100ms window)
   - Jump to specific timestamp
   - Auto-snapshot on interval
@@ -122,13 +132,13 @@
 <li>Component count: 50+ → 57+</li>
 </ul>
 #### 🎯 Use Cases Enabled
-<p>This release enables:
+<p>This release enables:</p>
 <ul><li><strong>Offline-first PWAs</strong> - Work without network, sync when available</li>
 <li><strong>Collaborative apps</strong> - Multi-tab state synchronization</li>
 <li><strong>Complex state management</strong> - Derived state, validation, undo/redo</li>
 <li><strong>Enterprise applications</strong> - Robust persistence, debugging, monitoring</li>
 </ul>
-<h3>🔒 Security</h3></p>
+<h3>🔒 Security</h3>
 <ul><li><strong>Security audit completed</strong> - Comprehensive audit of all high-risk UI components</li>
 </ul>  - ✅ pan-markdown-renderer (XSS reviewed)
   - ✅ pan-files (path traversal immune via OPFS)
@@ -150,14 +160,16 @@
 <p>#### ✅ Core Infrastructure (Production-Ready)</p>
 <strong>Core Modules:</strong>
 <ul><li><strong>pan-bus.mjs</strong> - DOM-native event bus with pub/sub messaging</li>
-</ul>  - Exact and wildcard topic matching (<code>users.<em></code>, <code>users.</em>*</code>)
+</ul>
+  - Exact and wildcard topic matching (<code>users.<em></code>, <code>users.</em>*</code>)
   - Retained message support for state management
   - Request/reply pattern with automatic cleanup
   - Shadow DOM traversal for component isolation
   - Automatic message ID and timestamp generation
   - Zero memory leaks validated
 <ul><li><strong>pan-client.mjs</strong> - High-level client API</li>
-</ul>  - <code>publish()</code>, <code>subscribe()</code>, <code>request()</code>, <code>retained()</code> methods
+</ul>
+  - <code>publish()</code>, <code>subscribe()</code>, <code>request()</code>, <code>retained()</code> methods
   - AbortSignal support for subscription cleanup
   - Configurable host and bus element
   - Request timeout and cleanup handling
@@ -261,11 +273,13 @@ See docs/PERFORMANCE.md for detailed benchmarks.
 </ul>
 <h3>Added</h3>
 <ul><li><strong>Component Autoload System</strong> (<code>pan-autoload.mjs</code>): Automatic on-demand loading of components from the <code>components/</code> directory. No manual imports required—just use custom elements and they load automatically when approaching the viewport.</li>
-</ul>  - Configurable components path and root margin
+</ul>
+  - Configurable components path and root margin
   - Per-element module override with <code>data-module</code> attribute
   - Automatic registration of default exports
 <ul><li><strong>Router & Navigation</strong>:</li>
-</ul>  - <code><pan-router></code>: URL routing with <code>nav.state</code> topic synchronization
+</ul>
+  - <code><pan-router></code>: URL routing with <code>nav.state</code> topic synchronization
     - History and hash mode support
     - Route guards with auth integration
     - Path parameters and query string parsing
@@ -274,23 +288,27 @@ See docs/PERFORMANCE.md for detailed benchmarks.
     - Exact matching support
     - Intercepts clicks for SPA navigation
 <ul><li><strong>WebSocket Bridge</strong> (<code><pan-websocket></code>): Bidirectional WebSocket ↔ PAN communication</li>
-</ul>  - Automatic reconnection with exponential backoff
+</ul>
+  - Automatic reconnection with exponential backoff
   - Heartbeat/ping support
   - Topic filtering for inbound and outbound messages
   - Connection status events (<code>ws.connected</code>, <code>ws.disconnected</code>, <code>ws.error</code>)
 <ul><li><strong>IndexedDB Bridge</strong> (<code><pan-idb></code>): Client-side database operations via PAN topics</li>
-</ul>  - Full CRUD operations through topic-based API
+</ul>
+  - Full CRUD operations through topic-based API
   - Index support with queries
   - Multiple stores and databases
   - Automatic schema migration
   - Operations: <code>get</code>, <code>put</code>, <code>add</code>, <code>delete</code>, <code>clear</code>, <code>list</code>, <code>query</code>, <code>count</code>
 <ul><li><strong>Component Gallery</strong> (<code>gallery.html</code>): Interactive component showcase</li>
-</ul>  - Live playground with code editor and preview
+</ul>
+  - Live playground with code editor and preview
   - Search and category filtering
   - Direct links to component source code
   - Real-time examples for all components
 <ul><li><strong>New Examples</strong>:</li>
-</ul>  - <code>15-router.html</code>: SPA routing with navigation and route parameters
+</ul>
+  - <code>15-router.html</code>: SPA routing with navigation and route parameters
   - <code>16-websocket.html</code>: Real-time chat demo with WebSocket bridge
   - <code>17-indexeddb.html</code>: Contact manager with IndexedDB persistence
 <ul><li><strong>Component Migration</strong>: All components moved from <code>dist/</code> to <code>components/</code> with <code>.mjs</code> extension for better ES module support and consistency</li>

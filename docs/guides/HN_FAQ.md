@@ -88,7 +88,7 @@ No. IE doesn't support Custom Elements or ES Modules. Use polyfills if you must 
 - ✅ Semantic versioning
 
 **Consider:**
-- 🟡 Young ecosystem (v1.1, launched Nov 2024)
+- 🟡 Young ecosystem (v3.0.1, launched 2024)
 - 🟡 Small community (growing)
 - 🟡 Component library still expanding
 - 🟡 Best practices still emerging
@@ -111,7 +111,7 @@ Currently used by:
 - Micro-frontend architectures
 - Progressive web apps
 
-We're a young project (v1.1). If you adopt LARC, you're an early pioneer. We'd love to feature your project!
+We're a young project (v3.0.1). If you adopt LARC, you're an early pioneer. We'd love to feature your project!
 
 ---
 
@@ -425,7 +425,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 > Web Components are the only way to build truly framework-agnostic components. LARC solves the coordination problem that makes them practical for real applications.
 
 ### For "Production ready?"
-> Yes: 335 tests passing, 0 vulnerabilities, v1.1 on npm. Young ecosystem (Nov 2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
+> Yes: 261 tests passing, 0 vulnerabilities, v3.0.1 on npm. Young ecosystem (2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
 
 ### For "Performance?"
 > 9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.github.io/larc/playground/

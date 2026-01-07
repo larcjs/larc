@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Inspector Extension - Test Plan · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Inspector Extension - Test Plan">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">devtools</a> / <span>EXTENSION_TEST_PLAN</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Inspector Extension - Test Plan</h1>
+<h2>Prerequisites</h2>
+<ul><li>✅ Claude Desktop config updated with extension flags</li>
+<li>⏳ Claude Desktop restarted (Cmd+Q and reopen)</li>
+</ul>
+<h2>Test 1: Verify Extension is Loaded</h2>
+<h3>Step 1.1: Check Chrome Process Arguments</h3>
+<pre><code class="language-bash"># In terminal, run:
+ps aux | grep &quot;Google Chrome.app&quot; | grep -v &quot;Helper\|Renderer\|GPU&quot; | head -1</code></pre>
+<strong>Expected:</strong> Should see these flags in the output:
+<ul><li><code>--enable-extensions</code></li>
+<li><code>--load-extension=/Users/cdr/Projects/larc-repos/devtools</code></li>
+<li><code>--disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools</code></li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 1.2: Check Chrome Extensions Page</h3>
+<pre><code class="language-plaintext">1. Use chrome-devtools MCP to navigate to: chrome://extensions/
+2. Look for &quot;PAN Inspector&quot; extension</code></pre>
+<strong>Expected:</strong>
+<ul><li>Extension name: "PAN Inspector"</li>
+<li>Version: "1.0.0"</li>
+<li>Status: Enabled</li>
+<li>ID: (any valid extension ID)</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 2: Verify Extension Injection</h2>
+<h3>Step 2.1: Load Playground</h3>
+<pre><code class="language-plaintext">1. Start local HTTP server:
+   cd /Users/cdr/Projects/larc-repos
+   python3 -m http.server 8000 &amp;
+
+2. Navigate to: http://localhost:8000/playground/index.html</code></pre>
+<strong>Expected:</strong> Playground loads without CORS errors
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 2.2: Check Console for Extension Messages</h3>
+<pre><code class="language-javascript">// Check browser console for:
+[PAN DevTools] Injected and monitoring PAN messages
+[PAN DevTools] Found PAN bus</code></pre>
+<strong>Expected:</strong> Extension injection messages appear in console
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 2.3: Verify Extension API</h3>
+<pre><code class="language-javascript">// Run in browser console:
+console.log(window.__panDevTools);</code></pre>
+<strong>Expected:</strong> Should return an object with methods like:
+<pre><code class="language-javascript">{
+  version: &quot;1.0.0&quot;,
+  getMessages: function,
+  clearMessages: function,
+  // ... other API methods
+}</code></pre>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 3: Verify DevTools Panel</h2>
+<h3>Step 3.1: Open Chrome DevTools</h3>
+<pre><code class="language-plaintext">1. With playground loaded, press F12 or right-click → Inspect
+2. Look for &quot;PAN&quot; tab in DevTools tabs row</code></pre>
+<strong>Expected:</strong> "PAN" tab appears between existing DevTools tabs
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 3.2: Open PAN Panel</h3>
+<pre><code class="language-plaintext">1. Click the &quot;PAN&quot; tab
+2. Observe the panel interface</code></pre>
+<strong>Expected:</strong> Panel shows:
+<ul><li>Message counter (0 messages initially)</li>
+<li>Filter controls (text input, type checkboxes)</li>
+<li>Message table (empty initially)</li>
+<li>Control buttons (Pause/Resume, Clear, Export, Import)</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 4: Capture PAN Messages</h2>
+<h3>Step 4.1: Add Component to Playground</h3>
+<pre><code class="language-plaintext">1. In playground, click a component from sidebar (e.g., &quot;Link&quot;)
+2. Component should appear in canvas
+3. Check PAN Inspector panel</code></pre>
+<strong>Expected:</strong>
+<ul><li>Message counter increases</li>
+<li>Messages appear in table showing:</li>
+</ul>  - Type (publish/subscribe/deliver)
+  - Topic
+  - Timestamp
+  - Data preview
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 4.2: Inspect Message Details</h3>
+<pre><code class="language-plaintext">1. Click on a message row in the table
+2. Details panel should open on the right</code></pre>
+<strong>Expected:</strong>
+<ul><li>Full message payload displayed</li>
+<li>JSON formatted with syntax highlighting</li>
+<li>"Replay Message" button visible</li>
+<li>"Copy as JSON" button visible</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 4.3: Filter Messages</h3>
+<pre><code class="language-plaintext">1. Type &quot;component&quot; in filter input
+2. Observe message list updates</code></pre>
+<strong>Expected:</strong> Only messages containing "component" are visible
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 4.4: Toggle Message Types</h3>
+<pre><code class="language-plaintext">1. Uncheck &quot;Publish&quot; checkbox
+2. Observe message list updates</code></pre>
+<strong>Expected:</strong> Publish messages are hidden, only subscribe/deliver visible
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 5: Message Replay</h2>
+<h3>Step 5.1: Replay a Message</h3>
+<pre><code class="language-plaintext">1. Select a publish message in the table
+2. Click &quot;Replay&quot; button (or in details panel)
+3. Check console and PAN monitor</code></pre>
+<strong>Expected:</strong>
+<ul><li>Console shows: [PAN DevTools] Replaying message: {topic}</li>
+<li>Message is re-dispatched to PAN bus</li>
+<li>New delivery message appears in inspector</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 6: Export/Import</h2>
+<h3>Step 6.1: Export Messages</h3>
+<pre><code class="language-plaintext">1. Capture several messages by interacting with playground
+2. Click &quot;Export&quot; button
+3. Save JSON file</code></pre>
+<strong>Expected:</strong>
+<ul><li>File download triggers</li>
+<li>Filename: pan-messages-{timestamp}.json</li>
+<li>File contains array of message objects</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 6.2: Clear and Import</h3>
+<pre><code class="language-plaintext">1. Click &quot;Clear&quot; button to remove all messages
+2. Click &quot;Import&quot; button
+3. Select the previously exported JSON file</code></pre>
+<strong>Expected:</strong>
+<ul><li>Messages are restored from file</li>
+<li>Message count matches exported count</li>
+<li>All message details are preserved</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 7: Recording Controls</h2>
+<h3>Step 7.1: Pause Recording</h3>
+<pre><code class="language-plaintext">1. Click &quot;Pause&quot; button
+2. Interact with playground (add/remove components)
+3. Check message counter</code></pre>
+<strong>Expected:</strong>
+<ul><li>Button changes to "Resume"</li>
+<li>No new messages appear while paused</li>
+<li>Message counter stays constant</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 7.2: Resume Recording</h3>
+<pre><code class="language-plaintext">1. Click &quot;Resume&quot; button
+2. Interact with playground</code></pre>
+<strong>Expected:</strong>
+<ul><li>Button changes back to "Pause"</li>
+<li>New messages start appearing again</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 8: Load Example Project</h2>
+<h3>Step 8.1: Load Example with Rich Message Flow</h3>
+<pre><code class="language-plaintext">1. In playground dropdown, select &quot;Simple Store - Basic state management with pan-store&quot;
+2. Example loads in canvas
+3. Interact with example (if it has buttons/inputs)</code></pre>
+<strong>Expected:</strong>
+<ul><li>Multiple PAN messages captured:</li>
+</ul>  - store.state.changed
+  - store.action.dispatch
+  - Component subscriptions
+<ul><li>Messages show proper data structure</li>
+<li>Message flow is sequential and logical</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 9: Performance Test</h2>
+<h3>Step 9.1: High Message Volume</h3>
+<pre><code class="language-plaintext">1. Load &quot;Dashboard Layout&quot; example (has chart updates)
+2. Let it run for ~30 seconds
+3. Check PAN Inspector performance</code></pre>
+<strong>Expected:</strong>
+<ul><li>Panel remains responsive</li>
+<li>Messages are captured correctly</li>
+<li>UI doesn't freeze or lag</li>
+<li>Message limit enforced (last 1000 messages)</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Test 10: Edge Cases</h2>
+<h3>Step 10.1: Large Payload</h3>
+<pre><code class="language-plaintext">1. Use console to publish large message:
+   const bus = document.querySelector(&#039;pan-bus&#039;);
+   const largeData = Array(1000).fill({ test: &#039;data&#039; });
+   bus.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+     detail: { topic: &#039;test.large&#039;, data: largeData }
+   }));</code></pre>
+<strong>Expected:</strong>
+<ul><li>Message is captured</li>
+<li>Payload is displayed correctly</li>
+<li>Data truncated in table view if too large</li>
+<li>Full data available in details panel</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<h3>Step 10.2: Rapid Messages</h3>
+<pre><code class="language-plaintext">1. Use console to publish many rapid messages:
+   for(let i = 0; i &lt; 100; i++) {
+     const bus = document.querySelector(&#039;pan-bus&#039;);
+     bus.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+       detail: { topic: `test.rapid.${i}`, data: { index: i } }
+     }));
+   }</code></pre>
+<strong>Expected:</strong>
+<ul><li>All messages captured</li>
+<li>No messages lost</li>
+<li>Counter shows correct count</li>
+<li>Performance remains acceptable</li>
+</ul>
+<strong>Status:</strong> [ ] PASS [ ] FAIL
+<hr>
+<h2>Troubleshooting</h2>
+<h3>Extension Not Showing in chrome://extensions/</h3>
+<strong>Check:</strong>
+<li>Chrome process has correct launch arguments</li>
+<li>Extension path exists: <code>/Users/cdr/Projects/larc-repos/devtools/</code></li>
+<li>manifest.json is valid</li>
+<li>Claude Desktop was fully restarted</li>
+<strong>Solution:</strong>
+<pre><code class="language-bash"># Kill any Chrome processes
+killall &quot;Google Chrome&quot;
+
+# Restart Claude Desktop
+# Extension should load on next chrome-devtools MCP use</code></pre>
+<h3>PAN Tab Not in DevTools</h3>
+<strong>Check:</strong>
+<li>Extension is loaded in chrome://extensions/</li>
+<li>devtools.html and devtools.js exist</li>
+<li>manifest.json has "devtools_page": "devtools.html"</li>
+<strong>Solution:</strong>
+<pre><code class="language-bash"># Reload extension
+1. Go to chrome://extensions/
+2. Find &quot;PAN Inspector&quot;
+3. Click reload icon
+4. Close and reopen DevTools</code></pre>
+<h3>No Messages Captured</h3>
+<strong>Check:</strong>
+<li>Page has PAN bus: <code>document.querySelector('pan-bus')</code></li>
+<li>Extension injected: <code>window.__panDevTools</code> exists</li>
+<li>Console shows extension messages</li>
+<li>Recording not paused</li>
+<strong>Solution:</strong>
+<pre><code class="language-javascript">// Test message manually
+const bus = document.querySelector(&#039;pan-bus&#039;);
+bus.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+  detail: { topic: &#039;test&#039;, data: { hello: &#039;world&#039; } }
+}));
+// Should appear in PAN Inspector</code></pre>
+<hr>
+<h2>Success Criteria Summary</h2>
+<p>All tests pass when:
+<ul><li>[ ] Extension loads on Chrome startup</li>
+<li>[ ] PAN tab appears in DevTools</li>
+<li>[ ] Messages are captured in real-time</li>
+<li>[ ] Filtering works correctly</li>
+<li>[ ] Replay functionality works</li>
+<li>[ ] Export/Import works</li>
+<li>[ ] Recording controls work</li>
+<li>[ ] Performance is acceptable with many messages</li>
+<li>[ ] Edge cases handled gracefully</li>
+</ul>
+<hr></p>
+<h2>Quick Verification Script</h2>
+<p>Run this after restart to quickly verify extension is working:</p>
+<pre><code class="language-javascript">// Copy-paste into browser console after loading playground
+
+console.log(&#039;=== PAN Inspector Quick Verification ===&#039;);
+
+// Test 1: Check API
+if (window.__panDevTools) {
+  console.log(&#039;✅ Extension API found&#039;);
+  console.log(&#039;   Version:&#039;, window.__panDevTools.version);
+} else {
+  console.log(&#039;❌ Extension API NOT found&#039;);
+}
+
+// Test 2: Check PAN Bus
+const bus = document.querySelector(&#039;pan-bus&#039;);
+if (bus) {
+  console.log(&#039;✅ PAN Bus found&#039;);
+} else {
+  console.log(&#039;❌ PAN Bus NOT found&#039;);
+}
+
+// Test 3: Send test message
+if (bus &amp;&amp; window.__panDevTools) {
+  console.log(&#039;📤 Sending test message...&#039;);
+  bus.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+    detail: { topic: &#039;devtools.test&#039;, data: { test: true, timestamp: Date.now() } }
+  }));
+  console.log(&#039;✅ Test message sent - check PAN Inspector panel&#039;);
+} else {
+  console.log(&#039;❌ Cannot send test message&#039;);
+}
+
+console.log(&#039;=== Check DevTools for &quot;PAN&quot; tab ===&#039;);</code></pre>
+<p>Expected output:
+<pre><code class="language-plaintext">=== PAN Inspector Quick Verification ===
+✅ Extension API found
+   Version: 1.0.0
+✅ PAN Bus found
+📤 Sending test message...
+✅ Test message sent - check PAN Inspector panel
+=== Check DevTools for &quot;PAN&quot; tab ===</code></pre></p>
+<hr>
+<h2>Report Template</h2>
+<p>After completing tests, fill out:</p>
+<pre><code class="language-plaintext">Date: _______________
+Tester: _______________
+
+Tests Passed: ___ / 10
+Tests Failed: ___ / 10
+
+Critical Issues:
+1.
+2.
+3.
+
+Minor Issues:
+1.
+2.
+3.
+
+Notes:
+
+
+
+
+Overall Status: [ ] Ready for Use [ ] Needs Fixes</code></pre>
+<hr>
+<h2>Next Steps After Testing</h2>
+<p>If all tests pass:
+<ul><li>✅ Extension is ready for use</li>
+<li>✅ Can test with real applications</li>
+<li>✅ Can share with team</li>
+</ul>
+If tests fail:
+<ul><li>Review console errors</li>
+<li>Check extension logs in chrome://extensions/</li>
+<li>Review background service worker logs</li>
+<li>Create issue with reproduction steps</li>
+</ul></p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/devtools/EXTENSION_TEST_PLAN.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

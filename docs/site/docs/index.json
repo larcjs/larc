@@ -32,6 +32,11 @@
       "category": "Root"
     },
     {
+      "title": "Add Authenticator App to npm 2FA",
+      "path": "ADD-AUTHENTICATOR-TO-2FA.html",
+      "category": "Root"
+    },
+    {
       "title": "Changelog",
       "path": "CHANGELOG.html",
       "category": "Root"
@@ -57,6 +62,11 @@
       "category": "Root"
     },
     {
+      "title": "Fix Token Issue",
+      "path": "FIX-TOKEN.html",
+      "category": "Root"
+    },
+    {
       "title": "LARC",
       "path": "README.html",
       "category": "Root"
@@ -67,8 +77,43 @@
       "category": "Root"
     },
     {
+      "title": "LARC Examples Review & Status Report",
+      "path": "EXAMPLES_REVIEW.html",
+      "category": "Root"
+    },
+    {
       "title": "LARC Project Instructions",
       "path": "CLAUDE.html",
+      "category": "Root"
+    },
+    {
+      "title": "LARC Release Readiness Report",
+      "path": "RELEASE_READINESS_REPORT.html",
+      "category": "Root"
+    },
+    {
+      "title": "npm Publishing Options (2024+)",
+      "path": "NPM-PUBLISHING-OPTIONS.html",
+      "category": "Root"
+    },
+    {
+      "title": "Pre-Publish Checklist",
+      "path": "PRE-PUBLISH-CHECKLIST.html",
+      "category": "Root"
+    },
+    {
+      "title": "Publish with 2FA",
+      "path": "PUBLISH-WITH-2FA.html",
+      "category": "Root"
+    },
+    {
+      "title": "Publishing with 2FA (Simplest Method)",
+      "path": "PUBLISH-WITH-2FA-OTP.html",
+      "category": "Root"
+    },
+    {
+      "title": "Ready to Publish! 🚀",
+      "path": "PUBLISH-NOW.html",
       "category": "Root"
     },
     {
@@ -77,9 +122,76 @@
       "category": "Root"
     },
     {
+      "title": "Setting Up npm 2FA via Web Browser",
+      "path": "SETUP-2FA-WEB.html",
+      "category": "Root"
+    },
+    {
+      "title": "Setting Up npm 2FA with Authenticator App",
+      "path": "NPM-2FA-SETUP.html",
+      "category": "Root"
+    },
+    {
       "title": "Workspace Build Workflow",
       "path": "WORKSPACE-WORKFLOW.html",
       "category": "Root"
+    }
+  ],
+  "apps": [
+    {
+      "title": "LARC.js Demo Applications",
+      "path": "apps/README.html",
+      "category": "apps"
+    }
+  ],
+  "apps/contact-manager": [
+    {
+      "title": "Contact Manager Demo",
+      "path": "apps/contact-manager/README.html",
+      "category": "apps/contact-manager"
+    }
+  ],
+  "apps/invoice": [
+    {
+      "title": "Invoice Creator Demo App",
+      "path": "apps/invoice/README.html",
+      "category": "apps/invoice"
+    }
+  ],
+  "apps/invoice-studio": [
+    {
+      "title": "📄 PAN Invoice Studio",
+      "path": "apps/invoice-studio/README.html",
+      "category": "apps/invoice-studio"
+    }
+  ],
+  "apps/src/ui": [
+    {
+      "title": "Changelog",
+      "path": "apps/src/ui/CHANGELOG.html",
+      "category": "apps/src/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": "apps/src/ui/COMPONENT_TEMPLATE.html",
+      "category": "apps/src/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": "apps/src/ui/README.html",
+      "category": "apps/src/ui"
+    }
+  ],
+  "apps/src/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": "apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": "apps/src/ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": "apps/src/ui/docs/THEME_SYSTEM.html",
+      "category": "apps/src/ui/docs"
     }
   ],
   "cli": [
@@ -138,6 +250,58 @@
       "title": "PAN Routing Examples",
       "path": "core/examples/routing/README.html",
       "category": "core/examples/routing"
+    }
+  ],
+  "devtools": [
+    {
+      "title": "Building Icons",
+      "path": "devtools/BUILD_ICONS.html",
+      "category": "devtools"
+    },
+    {
+      "title": "Chrome DevTools MCP Extension Setup",
+      "path": "devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
+      "category": "devtools"
+    },
+    {
+      "title": "PAN DevTools Extension - Now Enabled! ✅",
+      "path": "devtools/EXTENSION_ENABLED.html",
+      "category": "devtools"
+    },
+    {
+      "title": "PAN DevTools Extension - Quick Start",
+      "path": "devtools/QUICK_START.html",
+      "category": "devtools"
+    },
+    {
+      "title": "PAN DevTools Extension - Restart Required",
+      "path": "devtools/RESTART_REQUIRED.html",
+      "category": "devtools"
+    },
+    {
+      "title": "PAN Inspector - Chrome DevTools Extension",
+      "path": "devtools/README.html",
+      "category": "devtools"
+    },
+    {
+      "title": "PAN Inspector - Quick Start Guide",
+      "path": "devtools/QUICKSTART.html",
+      "category": "devtools"
+    },
+    {
+      "title": "PAN Inspector Extension - Test Plan",
+      "path": "devtools/EXTENSION_TEST_PLAN.html",
+      "category": "devtools"
+    },
+    {
+      "title": "PAN Inspector Extension - Test Results",
+      "path": "devtools/EXTENSION_TEST_RESULTS.html",
+      "category": "devtools"
+    },
+    {
+      "title": "Root Cause Found! ✅",
+      "path": "devtools/ROOT_CAUSE_FOUND.html",
+      "category": "devtools"
     }
   ],
   "archive/2024": [
@@ -1050,206 +1214,6 @@
       "category": "specs"
     }
   ],
-  "apps": [
-    {
-      "title": "LARC.js Demo Applications",
-      "path": "apps/README.html",
-      "category": "apps"
-    }
-  ],
-  "apps/contact-manager": [
-    {
-      "title": "Contact Manager Demo",
-      "path": "apps/contact-manager/README.html",
-      "category": "apps/contact-manager"
-    }
-  ],
-  "apps/invoice": [
-    {
-      "title": "Invoice Creator Demo App",
-      "path": "apps/invoice/README.html",
-      "category": "apps/invoice"
-    }
-  ],
-  "apps/invoice-studio": [
-    {
-      "title": "📄 PAN Invoice Studio",
-      "path": "apps/invoice-studio/README.html",
-      "category": "apps/invoice-studio"
-    }
-  ],
-  "apps/src/ui": [
-    {
-      "title": "Changelog",
-      "path": "apps/src/ui/CHANGELOG.html",
-      "category": "apps/src/ui"
-    },
-    {
-      "title": "LARC Component Header Template",
-      "path": "apps/src/ui/COMPONENT_TEMPLATE.html",
-      "category": "apps/src/ui"
-    },
-    {
-      "title": "LARC Components",
-      "path": "apps/src/ui/README.html",
-      "category": "apps/src/ui"
-    }
-  ],
-  "apps/src/ui/docs": [
-    {
-      "title": "Component Security Audit Report",
-      "path": "apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
-      "category": "apps/src/ui/docs"
-    },
-    {
-      "title": "PAN Theme System",
-      "path": "apps/src/ui/docs/THEME_SYSTEM.html",
-      "category": "apps/src/ui/docs"
-    }
-  ],
-  "packages/components-types": [
-    {
-      "title": "@larcjs/ui-types",
-      "path": "packages/components-types/README.html",
-      "category": "packages/components-types"
-    }
-  ],
-  "packages/core": [
-    {
-      "title": "Changelog",
-      "path": "packages/core/CHANGELOG.html",
-      "category": "packages/core"
-    },
-    {
-      "title": "LARC Core",
-      "path": "packages/core/README.html",
-      "category": "packages/core"
-    },
-    {
-      "title": "LARC Quickstart - Zero Config Setup",
-      "path": "packages/core/QUICKSTART.html",
-      "category": "packages/core"
-    }
-  ],
-  "packages/core/docs": [
-    {
-      "title": "LARC — Page Area Network (PAN)",
-      "path": "packages/core/docs/LARC_SPEC.v0.html",
-      "category": "packages/core/docs"
-    },
-    {
-      "title": "LARC Roadmap (PAN)",
-      "path": "packages/core/docs/LARC_ROADMAP.html",
-      "category": "packages/core/docs"
-    },
-    {
-      "title": "PAN Routes - Dynamic Message Routing",
-      "path": "packages/core/docs/ROUTING.html",
-      "category": "packages/core/docs"
-    },
-    {
-      "title": "PAN v1.0 API Reference",
-      "path": "packages/core/docs/API_REFERENCE.html",
-      "category": "packages/core/docs"
-    }
-  ],
-  "packages/core/examples/routing": [
-    {
-      "title": "PAN Routing Examples",
-      "path": "packages/core/examples/routing/README.html",
-      "category": "packages/core/examples/routing"
-    }
-  ],
-  "packages/core-debug": [
-    {
-      "title": "@larcjs/core-debug",
-      "path": "packages/core-debug/README.html",
-      "category": "packages/core-debug"
-    }
-  ],
-  "packages/core-lite": [
-    {
-      "title": "@larcjs/core-lite",
-      "path": "packages/core-lite/README.html",
-      "category": "packages/core-lite"
-    },
-    {
-      "title": "Migration Guide: @larcjs/core → @larcjs/core-lite",
-      "path": "packages/core-lite/MIGRATION.html",
-      "category": "packages/core-lite"
-    }
-  ],
-  "packages/core-routing": [
-    {
-      "title": "@larcjs/core-routing",
-      "path": "packages/core-routing/README.html",
-      "category": "packages/core-routing"
-    }
-  ],
-  "packages/core-types": [
-    {
-      "title": "@larcjs/core-types",
-      "path": "packages/core-types/README.html",
-      "category": "packages/core-types"
-    },
-    {
-      "title": "NPM Organization Setup Required",
-      "path": "packages/core-types/NPM-ORG-SETUP.html",
-      "category": "packages/core-types"
-    }
-  ],
-  "devtools": [
-    {
-      "title": "Building Icons",
-      "path": "devtools/BUILD_ICONS.html",
-      "category": "devtools"
-    },
-    {
-      "title": "Chrome DevTools MCP Extension Setup",
-      "path": "devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
-      "category": "devtools"
-    },
-    {
-      "title": "PAN DevTools Extension - Now Enabled! ✅",
-      "path": "devtools/EXTENSION_ENABLED.html",
-      "category": "devtools"
-    },
-    {
-      "title": "PAN DevTools Extension - Quick Start",
-      "path": "devtools/QUICK_START.html",
-      "category": "devtools"
-    },
-    {
-      "title": "PAN DevTools Extension - Restart Required",
-      "path": "devtools/RESTART_REQUIRED.html",
-      "category": "devtools"
-    },
-    {
-      "title": "PAN Inspector - Chrome DevTools Extension",
-      "path": "devtools/README.html",
-      "category": "devtools"
-    },
-    {
-      "title": "PAN Inspector - Quick Start Guide",
-      "path": "devtools/QUICKSTART.html",
-      "category": "devtools"
-    },
-    {
-      "title": "PAN Inspector Extension - Test Plan",
-      "path": "devtools/EXTENSION_TEST_PLAN.html",
-      "category": "devtools"
-    },
-    {
-      "title": "PAN Inspector Extension - Test Results",
-      "path": "devtools/EXTENSION_TEST_RESULTS.html",
-      "category": "devtools"
-    },
-    {
-      "title": "Root Cause Found! ✅",
-      "path": "devtools/ROOT_CAUSE_FOUND.html",
-      "category": "devtools"
-    }
-  ],
   "examples": [
     {
       "title": "Changelog",
@@ -1352,6 +1316,117 @@
       "title": "PAN Theme System",
       "path": "examples/src/ui/docs/THEME_SYSTEM.html",
       "category": "examples/src/ui/docs"
+    }
+  ],
+  "packages/components-types": [
+    {
+      "title": "@larcjs/ui-types",
+      "path": "packages/components-types/CHANGELOG.html",
+      "category": "packages/components-types"
+    },
+    {
+      "title": "@larcjs/ui-types",
+      "path": "packages/components-types/README.html",
+      "category": "packages/components-types"
+    }
+  ],
+  "packages/core": [
+    {
+      "title": "Changelog",
+      "path": "packages/core/CHANGELOG.html",
+      "category": "packages/core"
+    },
+    {
+      "title": "LARC Core",
+      "path": "packages/core/README.html",
+      "category": "packages/core"
+    },
+    {
+      "title": "LARC Quickstart - Zero Config Setup",
+      "path": "packages/core/QUICKSTART.html",
+      "category": "packages/core"
+    }
+  ],
+  "packages/core/docs": [
+    {
+      "title": "LARC — Page Area Network (PAN)",
+      "path": "packages/core/docs/LARC_SPEC.v0.html",
+      "category": "packages/core/docs"
+    },
+    {
+      "title": "LARC Roadmap (PAN)",
+      "path": "packages/core/docs/LARC_ROADMAP.html",
+      "category": "packages/core/docs"
+    },
+    {
+      "title": "PAN Routes - Dynamic Message Routing",
+      "path": "packages/core/docs/ROUTING.html",
+      "category": "packages/core/docs"
+    },
+    {
+      "title": "PAN v1.0 API Reference",
+      "path": "packages/core/docs/API_REFERENCE.html",
+      "category": "packages/core/docs"
+    }
+  ],
+  "packages/core/examples/routing": [
+    {
+      "title": "PAN Routing Examples",
+      "path": "packages/core/examples/routing/README.html",
+      "category": "packages/core/examples/routing"
+    }
+  ],
+  "packages/core-debug": [
+    {
+      "title": "@larcjs/core-debug",
+      "path": "packages/core-debug/CHANGELOG.html",
+      "category": "packages/core-debug"
+    },
+    {
+      "title": "@larcjs/core-debug",
+      "path": "packages/core-debug/README.html",
+      "category": "packages/core-debug"
+    }
+  ],
+  "packages/core-lite": [
+    {
+      "title": "@larcjs/core-lite",
+      "path": "packages/core-lite/README.html",
+      "category": "packages/core-lite"
+    },
+    {
+      "title": "Migration Guide: @larcjs/core → @larcjs/core-lite",
+      "path": "packages/core-lite/MIGRATION.html",
+      "category": "packages/core-lite"
+    }
+  ],
+  "packages/core-routing": [
+    {
+      "title": "@larcjs/core-routing",
+      "path": "packages/core-routing/CHANGELOG.html",
+      "category": "packages/core-routing"
+    },
+    {
+      "title": "@larcjs/core-routing",
+      "path": "packages/core-routing/README.html",
+      "category": "packages/core-routing"
+    }
+  ],
+  "packages/core-types": [
+    {
+      "title": "@larcjs/core-types",
+      "path": "packages/core-types/CHANGELOG.html",
+      "category": "packages/core-types"
+    },
+    {
+      "title": "@larcjs/core-types",
+      "path": "packages/core-types/README.html",
+      "category": "packages/core-types"
+    },
+    {
+      "title": "NPM Organization Setup Required",
+      "path": "packages/core-types/NPM-ORG-SETUP.html",
+      "category": "packages/core-types"
     }
   ],
   "packages/ui": [
@@ -1473,6 +1548,13 @@
       "title": "Toolbar Badges for Non-UI Components",
       "path": "playground/TOOLBAR_BADGES_FIX.html",
       "category": "playground"
+    }
+  ],
+  "react-adapter": [
+    {
+      "title": "@larcjs/react-adapter",
+      "path": "react-adapter/CHANGELOG.html",
+      "category": "react-adapter"
     }
   ],
   "registry": [

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LARC.js Demo Applications · PAN Documentation</title>
-  <meta name="description" content="PAN (Page Area Network) Documentation - LARC.js Demo Applications">
+  <title>Demo Applications · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Demo Applications">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,35 +40,11 @@
 
     <main class="docs-main">
       <div class="docs-breadcrumb">
-        <a href="../index.html">Home</a> / <a href="#">apps</a> / <span>README</span>
+        <a href="../index.html">Home</a> / <a href="#">examples</a> / <a href="#">apps</a> / <span>README</span>
       </div>
       <article class="docs-content">
-        <h1>LARC.js Demo Applications</h1>
-<p>Complete, working applications built with LARC components. These demos showcase real-world usage and serve as templates for building your own apps.</p>
-<h2>Repository Structure</h2>
-<p>This repository uses git submodules to reference the core LARC components:</p>
-<pre><code class="language-plaintext">apps/
-├── core/              # LARC core (submodule)
-├── components/        # LARC components (submodule)
-├── src/               # Autoload system and utilities
-│   ├── pan.mjs        # Component autoloader
-│   └── components/    # Symlink to components
-├── contact-manager/   # Contact management app
-├── data-browser/      # Data visualization app
-├── invoice/           # Simple invoice creator
-├── invoice-studio/    # Advanced invoice studio
-└── markdown-notes/    # Markdown editor with file management</code></pre>
-<h2>Quick Start</h2>
-<pre><code class="language-bash"># Clone with submodules
-git clone --recurse-submodules git@github.com:larcjs/apps.git
-
-# Or if already cloned
-git submodule update --init --recursive
-
-# Serve locally
-python -m http.server 8000
-
-# Visit http://localhost:8000/</code></pre>
+        <h1>Demo Applications</h1>
+<p>Complete, working applications built with PAN components. These demos showcase real-world usage and serve as templates for building your own apps.</p>
 <h2>Applications</h2>
 <h3>invoice.html</h3>
 <strong>Invoice Creator</strong> - Professional invoice creation tool for independent contractors.
@@ -266,7 +242,7 @@ python -m http.server 8000
 </ul></p>
       </article>
       <footer class="docs-footer">
-        <a href="https://github.com/chrisrobison/pan/edit/main/apps/README.md" target="_blank">
+        <a href="https://github.com/chrisrobison/pan/edit/main/examples/apps/README.md" target="_blank">
           Edit this page on GitHub
         </a>
       </footer>

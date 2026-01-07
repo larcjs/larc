@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Publishing with 2FA (Simplest Method) · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Publishing with 2FA (Simplest Method)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>PUBLISH-WITH-2FA-OTP</span>
+      </div>
+      <article class="docs-content">
+        <h1>Publishing with 2FA (Simplest Method)</h1>
+<p>Since npm deprecated classic tokens, the <strong>easiest way</strong> is to use 2FA with <code>--otp</code> flag.</p>
+<h2>Quick Setup (if 2FA not enabled)</h2>
+<pre><code class="language-bash">npm profile enable-2fa auth-and-writes</code></pre>
+<p>Follow the prompts:
+<li>Scan QR code with authenticator app (Google Authenticator, Authy, etc.)</li>
+<li>Enter the 6-digit code</li>
+<li>Save recovery codes somewhere safe</li></p>
+<h2>Publishing with OTP</h2>
+<pre><code class="language-bash">cd packages/core
+
+# Get 6-digit code from authenticator app, then:
+npm publish --otp=123456</code></pre>
+<p>Replace <code>123456</code> with your actual code from the app.</p>
+<strong>The code changes every 30 seconds</strong>, so have your phone ready!
+<hr>
+<h2>Alternative: Granular Access Token (More Complex)</h2>
+<p>If you don't want to enter OTP every time:</p>
+<li>Go to https://www.npmjs.com/settings/cdr420/tokens</li>
+<li>Click "Generate New Token"</li>
+<li>Choose <strong>"Granular Access Token"</strong></li>
+<li>Set permissions:</li>
+   - <strong>Packages and scopes</strong>: Select @larcjs/core
+   - <strong>Permissions</strong>: Read and write
+   - <strong>Organizations</strong>: (leave default)
+<li>Click "Generate Token"</li>
+<li>Copy token and save to <code>.tmp</code></li>
+<p>Then I'll configure it.</p>
+<hr>
+<h2>Which Is Easier?</h2>
+<strong>For one-time publishing: Use <code>--otp</code> (simpler!)</strong>
+<ul><li>Just need authenticator app</li>
+<li>Run <code>npm publish --otp=CODE</code></li>
+<li>Done!</li>
+</ul>
+<strong>For frequent publishing: Use Granular Token</strong>
+<ul><li>More setup upfront</li>
+<li>No OTP needed each time</li>
+<li>Better for automation</li>
+</ul>
+<hr>
+<h2>Ready to Publish?</h2>
+<p>If you have 2FA enabled, just run:</p>
+<pre><code class="language-bash">cd packages/core
+npm publish --otp=YOUR_CODE</code></pre>
+<p>Get the code from your authenticator app!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/PUBLISH-WITH-2FA-OTP.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

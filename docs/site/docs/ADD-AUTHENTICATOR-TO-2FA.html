@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Add Authenticator App to npm 2FA · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Add Authenticator App to npm 2FA">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>ADD-AUTHENTICATOR-TO-2FA</span>
+      </div>
+      <article class="docs-content">
+        <h1>Add Authenticator App to npm 2FA</h1>
+<p>You have passkey enabled, but for publishing you need <strong>TOTP (authenticator app)</strong>.</p>
+<h2>Option 1: Add Authenticator as Additional Method</h2>
+<li>Go to: https://www.npmjs.com/settings/cdr420/account</li>
+<li>Scroll to "Two-Factor Authentication" section</li>
+<li>Look for "Add authentication method" or "Manage 2FA methods"</li>
+<li>Choose <strong>"Authenticator app"</strong> or <strong>"TOTP"</strong></li>
+<li>It will show QR code</li>
+<li>Scan with your phone authenticator app</li>
+<li>Enter verification code</li>
+<p>Now you'll have <strong>BOTH</strong>:
+<ul><li>Passkey (for logging in)</li>
+<li>Authenticator app (for publishing)</li>
+</ul>
+<h2>Option 2: Try Publishing with Passkey</h2></p>
+<p>Some newer npm versions accept passkey for OTP. Try:</p>
+<pre><code class="language-bash">cd packages/core
+npm publish</code></pre>
+<p>If it prompts for biometric/passkey instead of code, use that!</p>
+<h2>Option 3: Disable Passkey, Use Authenticator Only</h2>
+<p>If you can't add authenticator alongside passkey:</p>
+<li>Go to: https://www.npmjs.com/settings/cdr420/account</li>
+<li>Disable/remove passkey 2FA</li>
+<li>Re-enable 2FA but choose <strong>"Authenticator app"</strong></li>
+<li>Scan QR code with phone</li>
+<li>Now use authenticator codes for publishing</li>
+<hr>
+<h2>Quick Test</h2>
+<p>In your terminal, try publishing:</p>
+<pre><code class="language-bash">cd packages/core
+npm publish</code></pre>
+<p>See what it prompts for:
+<ul><li>If it asks for passkey → use fingerprint/Face ID</li>
+<li>If it asks for OTP → you need authenticator app</li>
+</ul>
+Let me know what happens!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/ADD-AUTHENTICATOR-TO-2FA.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

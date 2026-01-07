@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Python Backend Examples for LARC/PAN · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Python Backend Examples for LARC/PAN">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">examples</a> / <a href="#">backends</a> / <a href="#">python</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>Python Backend Examples for LARC/PAN</h1>
+<p>Flask-based backend implementations for LARC/PAN examples, providing an alternative to PHP for Python developers.</p>
+<h2>Available Backends</h2>
+<h3>1. Legacy API (<code>api-legacy.py</code>)</h3>
+Simple database API with basic CRUD operations. No authentication required.
+<strong>Port:</strong> 3000
+<strong>Endpoints:</strong>
+<ul><li><code>GET /?x=list_resources</code> - List available database tables</li>
+<li><code>GET /?x=get&rsc=tablename</code> - Get records from a table (with pagination)</li>
+<li><code>GET /?x=list_fields&rsc=tablename</code> - Get table schema</li>
+</ul>
+<h3>2. Secure API (<code>apps/api.py</code>)</h3>
+Production-ready API with security features.
+<strong>Port:</strong> 3001
+<strong>Features:</strong>
+<ul><li>Session-based authentication</li>
+<li>CSRF protection</li>
+<li>Rate limiting</li>
+<li>Resource whitelisting</li>
+<li>SQL injection protection</li>
+<li>Security headers</li>
+</ul>
+<strong>Endpoints:</strong> Same as Legacy API, but requires authentication
+<h3>3. Authentication (<code>auth.py</code>)</h3>
+Handles user authentication with JWT tokens.
+<strong>Port:</strong> 3002
+<strong>Endpoints:</strong>
+<ul><li><code>GET /?action=login</code> - User login (returns JWT)</li>
+<li><code>GET /?action=logout</code> - User logout</li>
+<li><code>GET /?action=refresh</code> - Refresh JWT token</li>
+<li><code>GET /?action=check</code> - Check authentication status</li>
+<li><code>GET /?action=csrf</code> - Get CSRF token</li>
+</ul>
+<strong>Demo Credentials:</strong>
+<ul><li>Email: <code>demo@example.com</code></li>
+<li>Password: <code>demo123</code></li>
+</ul>
+<h3>4. SSE Server (<code>sse.py</code>)</h3>
+Server-Sent Events hub for real-time PAN messaging.
+<strong>Port:</strong> 3003
+<strong>Endpoints:</strong>
+<ul><li><code>GET /?topics=topic1,topic2&lastEventId=123</code> - Subscribe to event stream</li>
+<li><code>POST /</code> with <code>{"topic": "demo.ping", "data": {...}, "retain": false}</code> - Publish event</li>
+</ul>
+<h2>Installation</h2>
+<h3>Using pip</h3>
+<pre><code class="language-bash"># Install dependencies
+pip install -r requirements.txt
+
+# Or with specific Python version
+python3 -m pip install -r requirements.txt</code></pre>
+<h3>Using virtual environment (recommended)</h3>
+<pre><code class="language-bash"># Create virtual environment
+python3 -m venv venv
+
+# Activate it
+source venv/bin/activate  # On macOS/Linux
+# OR
+venv\Scripts\activate  # On Windows
+
+# Install dependencies
+pip install -r requirements.txt</code></pre>
+<h2>Usage</h2>
+<h3>Run Individual Servers</h3>
+<pre><code class="language-bash"># Legacy API
+python3 api-legacy.py
+
+# Secure API
+python3 apps/api.py
+
+# Authentication
+python3 auth.py
+
+# SSE Server
+python3 sse.py</code></pre>
+<h3>Make Files Executable (Optional)</h3>
+<pre><code class="language-bash">chmod +x api-legacy.py auth.py sse.py apps/api.py
+
+# Then run directly
+./api-legacy.py</code></pre>
+<h3>Custom Ports</h3>
+<pre><code class="language-bash"># Pass port as argument
+python3 api-legacy.py 8000
+python3 auth.py 8002</code></pre>
+<h2>Configuration</h2>
+<p>Create a <code>.env</code> file in this directory with your database settings:</p>
+<pre><code class="language-ini">[db]
+type=mysql
+host=localhost
+user=root
+pass=
+db=test
+
+# For SQLite (optional)
+# type=sqlite
+# file=pan_demo.db
+
+[demo]
+mode=true
+
+[security]
+jwt_secret=change-this-secret-in-production</code></pre>
+<h2>Database Support</h2>
+<p>Both <strong>MySQL</strong> and <strong>SQLite</strong> are supported:</p>
+<ul><li><strong>MySQL</strong>: Uses <code>mysql-connector-python</code> package</li>
+<li><strong>SQLite</strong>: Uses built-in <code>sqlite3</code> module (no extra package needed!)</li>
+</ul>
+Set the database type in your <code>.env</code> file.
+<h2>Dependencies</h2>
+<ul><li><strong>Flask</strong> (3.0.0+) - Lightweight web framework</li>
+<li><strong>Flask-CORS</strong> (4.0.0+) - CORS support</li>
+<li><strong>PyJWT</strong> (2.8.0+) - JWT token encoding/decoding</li>
+<li><strong>bcrypt</strong> (4.1.2+) - Password hashing</li>
+<li><strong>mysql-connector-python</strong> (8.2.0+) - MySQL database driver</li>
+</ul>
+<h2>Security Notes</h2>
+<h3>Development vs Production</h3>
+<p>The examples are configured for <strong>development</strong> use. For production:</p>
+<li><strong>Change the JWT secret</strong> in <code>.env</code></li>
+<li><strong>Use a proper secret key</strong> for Flask (<code>app.secret_key</code>)</li>
+<li><strong>Disable demo mode</strong> (<code>demo.mode=false</code>)</li>
+<li><strong>Use HTTPS</strong> for all endpoints</li>
+<li><strong>Configure proper CORS</strong> origins in each file</li>
+<li><strong>Set up proper database authentication</strong></li>
+<li><strong>Use environment variables</strong> instead of <code>.env</code> file</li>
+<li><strong>Enable proper logging</strong> and monitoring</li>
+<li><strong>Use a production WSGI server</strong> (Gunicorn, uWSGI, etc.)</li>
+<h3>Running in Production</h3>
+<pre><code class="language-bash"># Install Gunicorn
+pip install gunicorn
+
+# Run with Gunicorn (example)
+gunicorn -w 4 -b 0.0.0.0:3000 api-legacy:app</code></pre>
+<h2>Examples</h2>
+<h3>Fetch Resources</h3>
+<pre><code class="language-python">import requests
+
+# Get list of available resources
+response = requests.get(&#039;http://localhost:3000/?x=list_resources&#039;)
+data = response.json()
+print(data[&#039;Resources&#039;])</code></pre>
+<h3>Get Data with Pagination</h3>
+<pre><code class="language-python">import requests
+
+# Get first 10 products
+response = requests.get(&#039;http://localhost:3000/&#039;, params={
+    &#039;x&#039;: &#039;get&#039;,
+    &#039;rsc&#039;: &#039;products&#039;,
+    &#039;page_size&#039;: 10,
+    &#039;start&#039;: 0
+})
+data = response.json()
+print(data[&#039;results&#039;])</code></pre>
+<h3>Authenticate</h3>
+<pre><code class="language-python">import requests
+
+# Login
+response = requests.post(&#039;http://localhost:3002/?action=login&#039;, json={
+    &#039;email&#039;: &#039;demo@example.com&#039;,
+    &#039;password&#039;: &#039;demo123&#039;
+})
+data = response.json()
+print(data[&#039;token&#039;])</code></pre>
+<h3>Subscribe to SSE</h3>
+<pre><code class="language-python">import requests
+
+url = &#039;http://localhost:3003/?topics=demo.*&#039;
+headers = {&#039;Accept&#039;: &#039;text/event-stream&#039;}
+
+with requests.get(url, headers=headers, stream=True) as response:
+    for line in response.iter_lines():
+        if line:
+            print(line.decode(&#039;utf-8&#039;))</code></pre>
+<h3>Publish SSE Event</h3>
+<pre><code class="language-python">import requests
+
+requests.post(&#039;http://localhost:3003/&#039;, json={
+    &#039;topic&#039;: &#039;demo.ping&#039;,
+    &#039;data&#039;: {&#039;message&#039;: &#039;Hello from Python!&#039;},
+    &#039;retain&#039;: False
+})</code></pre>
+<h2>Troubleshooting</h2>
+<h3>Port Already in Use</h3>
+<p>If you get an "Address already in use" error, either:
+<li>Stop the other process</li>
+<li>Pass a different port: <code>python3 api-legacy.py 3010</code></li></p>
+<h3>Database Connection Errors</h3>
+<ul><li>Check your <code>.env</code> configuration</li>
+<li>Ensure MySQL is running (if using MySQL)</li>
+<li>Verify database credentials</li>
+<li>Create the database if it doesn't exist</li>
+</ul>
+<h3>Module Not Found</h3>
+<p>Run <code>pip install -r requirements.txt</code> to install all dependencies.</p>
+<h3>Permission Denied (Executable)</h3>
+<pre><code class="language-bash">chmod +x api-legacy.py auth.py sse.py apps/api.py</code></pre>
+<h2>Comparison with Node.js/PHP Versions</h2>
+<p>| Feature | PHP | Node.js | Python |
+|---------|-----|---------|--------|
+| No build step | ✓ | ✓ | ✓ |
+| Built-in server | ✓ (with PHP-FPM) | ✓ | ✓ (Flask dev server) |
+| MySQL support | ✓ | ✓ | ✓ |
+| SQLite support | ✓ | ✓ | ✓ (built-in) |
+| Production WSGI | ✓ (PHP-FPM) | ✓ (PM2/cluster) | ✓ (Gunicorn/uWSGI) |
+| Package manager | Composer | npm | pip |</p>
+<h2>Why Python?</h2>
+<ul><li><strong>Beginner-friendly</strong> - Often the first language people learn</li>
+<li><strong>Excellent web frameworks</strong> - Flask, FastAPI, Django</li>
+<li><strong>Strong in data science</strong> - Natural fit for data-driven apps</li>
+<li><strong>Built-in SQLite</strong> - No extra database driver needed</li>
+<li><strong>Rich ecosystem</strong> - Extensive library support</li>
+</ul>
+<h2>License</h2>
+<p>MIT © LARC Contributors</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/examples/backends/python/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

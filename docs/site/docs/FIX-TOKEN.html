@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Changelog · PAN Documentation</title>
-  <meta name="description" content="PAN (Page Area Network) Documentation - Changelog">
+  <title>Fix Token Issue · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Fix Token Issue">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,26 +40,36 @@
 
     <main class="docs-main">
       <div class="docs-breadcrumb">
-        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core</a> / <span>CHANGELOG</span>
+        <a href="../index.html">Home</a> / <span>FIX-TOKEN</span>
       </div>
       <article class="docs-content">
-        <h1>Changelog</h1>
-<h2>2.1.0 (2024-12-31)</h2>
-<h3>Minor Changes</h3>
-<ul><li><strong>Bundle UI components for zero-config setup</strong></li>
-</ul>  - Added all 130 UI components to @larcjs/core/components/ directory
-  - Updated autoloader to check ./components/ first for component resolution
-  - Created automatic sync script to keep components in sync with @larcjs/ui
-  - Enables one-line setup: <code><script src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs"></script></code>
-  - Components now auto-load without configuration
-  - Maintains backward compatibility - existing code continues to work
-  - Sync happens automatically during build and publish workflows
-<p>All notable changes to this project will be documented in this file.</p>
-<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
-and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+        <h1>Fix Token Issue</h1>
+<p>Your current token doesn't have "2FA bypass" enabled. You need an <strong>Automation</strong> token.</p>
+<h2>Option 1: Create Automation Token (Recommended)</h2>
+<li>Go to: https://www.npmjs.com/settings/cdr420/tokens</li>
+<li>Click <strong>"Generate New Token"</strong></li>
+<li>Select <strong>"Automation"</strong> (NOT "Publish")</li>
+<li>Copy the token (starts with <code>npm_...</code>)</li>
+<li>Save it to <code>.tmp</code> file:</li>
+   <pre><code class="language-bash">echo &quot;npm_YOUR_TOKEN_HERE&quot; &gt; .tmp</code></pre>
+<li>Then I'll set it up and publish!</li>
+<h2>Option 2: Use Current Token with OTP</h2>
+<p>If your token is a "Publish" token, you need to pass OTP:</p>
+<pre><code class="language-bash">cd packages/core
+npm publish --otp=123456  # Get code from authenticator app</code></pre>
+<hr>
+<h2>How to Check Token Type</h2>
+<p>The error says you need an automation token. Here's the difference:</p>
+<ul><li><strong>Publish token</strong>: Requires 2FA code with <code>--otp</code> flag</li>
+<li><strong>Automation token</strong>: Bypasses 2FA (for CI/CD)</li>
+</ul>
+You probably created a "Publish" token, but need "Automation".
+<hr>
+<h2>Quick Fix</h2>
+<p>Just create a new "Automation" token and put it in <code>.tmp</code>, then let me know!</p>
       </article>
       <footer class="docs-footer">
-        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core/CHANGELOG.md" target="_blank">
+        <a href="https://github.com/chrisrobison/pan/edit/main/FIX-TOKEN.md" target="_blank">
           Edit this page on GitHub
         </a>
       </footer>

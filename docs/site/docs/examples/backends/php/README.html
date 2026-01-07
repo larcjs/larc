@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PHP Backend Examples for LARC/PAN · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PHP Backend Examples for LARC/PAN">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">examples</a> / <a href="#">backends</a> / <a href="#">php</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>PHP Backend Examples for LARC/PAN</h1>
+<p>PHP backend implementations for LARC/PAN examples. These are the <strong>recommended backends for the examples</strong> because they run directly with PHP's built-in server without requiring a separate process.</p>
+<h2>Why PHP for Examples?</h2>
+<ul><li>✅ <strong>No separate server needed</strong> - Runs with <code>php -S</code></li>
+<li>✅ <strong>Widely available</strong> - Pre-installed on many systems</li>
+<li>✅ <strong>Simple deployment</strong> - Works on shared hosting</li>
+<li>✅ <strong>No build step</strong> - Just edit and refresh</li>
+</ul>
+<h2>Available Backends</h2>
+<p>All backends are identical in functionality to the Node.js and Python versions.</p>
+<h3>1. Legacy API (<code>api-legacy.php</code>)</h3>
+Simple database API with basic CRUD operations.
+<h3>2. Secure API (<code>apps/api.php</code>)</h3>
+Production-ready API with authentication, CSRF, rate limiting.
+<h3>3. Authentication (<code>auth.php</code>)</h3>
+JWT-based authentication endpoint.
+<h3>4. SSE Server (<code>sse.php</code>)</h3>
+Server-Sent Events hub for real-time messaging.
+<h2>Quick Start</h2>
+<pre><code class="language-bash"># Run legacy API
+php -S localhost:3000 api-legacy.php
+
+# Run secure API
+php -S localhost:3001 apps/api.php
+
+# Run authentication
+php -S localhost:3002 auth.php
+
+# Run SSE server
+php -S localhost:3003 sse.php</code></pre>
+<h2>Configuration</h2>
+<p>Create a <code>.env</code> file:</p>
+<pre><code class="language-ini">[db]
+type=mysql
+host=localhost
+user=root
+pass=
+db=test
+
+[demo]
+mode=true
+
+[security]
+jwt_secret=change-this-secret-in-production</code></pre>
+<h2>Database Support</h2>
+<ul><li><strong>MySQL</strong> via <code>mysqli</code></li>
+<li><strong>SQLite</strong> via PDO</li>
+</ul>
+<h2>Requirements</h2>
+<ul><li>PHP 7.4+ (8.0+ recommended)</li>
+<li>mysqli extension (for MySQL)</li>
+<li>PDO extension (for SQLite)</li>
+</ul>
+<h2>Production Deployment</h2>
+<p>For production, use Apache or Nginx with PHP-FPM instead of the built-in server:</p>
+<h3>Apache</h3>
+<pre><code class="language-apache">&lt;VirtualHost *:80&gt;
+    ServerName api.example.com
+    DocumentRoot /path/to/backends/php
+
+    &lt;Directory /path/to/backends/php&gt;
+        AllowOverride All
+        Require all granted
+    &lt;/Directory&gt;
+&lt;/VirtualHost&gt;</code></pre>
+<h3>Nginx</h3>
+<pre><code class="language-nginx">server {
+    listen 80;
+    server_name api.example.com;
+    root /path/to/backends/php;
+
+    location / {
+        try_files $uri $uri/ /api.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.1-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+}</code></pre>
+<h2>Security</h2>
+<p>The provided examples include security features but are configured for development. For production:</p>
+<ul><li>Change JWT secret</li>
+<li>Disable demo mode</li>
+<li>Use HTTPS</li>
+<li>Configure proper CORS</li>
+<li>Set up database authentication</li>
+<li>Enable error logging</li>
+<li>Review security headers</li>
+</ul>
+<h2>License</h2>
+<p>MIT © LARC Contributors</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/examples/backends/php/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pre-Publish Checklist · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Pre-Publish Checklist">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>PRE-PUBLISH-CHECKLIST</span>
+      </div>
+      <article class="docs-content">
+        <h1>Pre-Publish Checklist</h1>
+<h2>Current Change: Bundle UI Components in Core</h2>
+<h3>What's Changed</h3>
+<ul><li>✅ All 130 UI components copied to <code>@larcjs/core/components/</code></li>
+<li>✅ Autoloader updated to check <code>./components/</code> first</li>
+<li>✅ Sync script created (<code>scripts/sync-components.js</code>)</li>
+<li>✅ Build process updated to auto-sync</li>
+<li>✅ Publish hooks added (prepublishOnly)</li>
+</ul>
+<h3>Version Bump</h3>
+<ul><li><strong>@larcjs/core</strong>: <code>2.0.0</code> → <code>2.1.0</code> (minor)</li>
+</ul>  - Feature: Bundled components for zero-config setup
+  - Non-breaking: Existing code continues to work
+<h3>Pre-Publish Steps</h3>
+<p>#### 1. Verify Build
+<pre><code class="language-bash">npm run build:all</code></pre>
+<ul><li>[ ] Build completes successfully</li>
+<li>[ ] No errors in sync process</li>
+<li>[ ] Components copied (130 files)</li>
+</ul>
+#### 2. Run Tests
+<pre><code class="language-bash">npm run test:core
+npm run test:ui</code></pre>
+<ul><li>[ ] Core tests pass (153 tests)</li>
+<li>[ ] UI tests pass (if any)</li>
+</ul>
+#### 3. Test Locally
+<pre><code class="language-bash">cd packages/core
+python3 -m http.server 8000
+# Open http://localhost:8000/test-local.html</code></pre>
+<ul><li>[ ] Components load from ./components/</li>
+<li>[ ] pan-card renders correctly</li>
+<li>[ ] Autoloader works</li>
+</ul>
+#### 4. Review Changes
+<pre><code class="language-bash">git status
+git diff packages/core/package.json
+git diff packages/core/pan.mjs</code></pre>
+<ul><li>[ ] Only intended files modified</li>
+<li>[ ] No accidental changes</li>
+</ul>
+#### 5. Version & Publish
+<pre><code class="language-bash"># Apply version bumps
+npm run changeset:version
+
+# Review version changes
+git diff
+
+# Commit version changes
+git add .
+git commit -m &quot;chore: version packages&quot;
+
+# Publish to npm (will auto-sync components)
+npm run changeset:publish
+
+# Push tags
+git push --follow-tags</code></pre></p>
+<h3>What Gets Published</h3>
+<strong>@larcjs/core@3.0.1:</strong>
+<ul><li>pan.mjs (autoloader)</li>
+<li>pan-bus.mjs (messaging)</li>
+<li>pan-client.mjs (client API)</li>
+<li>pan-storage.mjs (storage)</li>
+<li>components/ (130 UI components)</li>
+</ul>
+<strong>Result:</strong>
+<pre><code class="language-html">&lt;!-- This now works with zero config! --&gt;
+&lt;script type=&quot;module&quot; src=&quot;https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs&quot;&gt;&lt;/script&gt;
+&lt;pan-card&gt;Hello!&lt;/pan-card&gt;</code></pre>
+<h3>Rollback Plan</h3>
+<p>If something goes wrong:
+<pre><code class="language-bash"># Unpublish within 72 hours
+npm unpublish @larcjs/core@3.0.1
+
+# Or publish a patch
+npm version patch
+npm publish</code></pre></p>
+<h3>Post-Publish Verification</h3>
+<pre><code class="language-bash"># Test from CDN
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs
+curl -I https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/components/pan-card.mjs
+
+# Test in browser
+open https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/</code></pre>
+<ul><li>[ ] CDN serves files correctly</li>
+<li>[ ] Components accessible</li>
+<li>[ ] No 404 errors</li>
+</ul>
+<h3>Documentation Updates Needed</h3>
+<ul><li>[ ] Update README with one-liner example</li>
+<li>[ ] Update quickstart guide</li>
+<li>[ ] Announce change (changelog, blog, etc.)</li>
+</ul>
+<hr>
+<h2>Ready to Publish?</h2>
+<p>All checkboxes above should be ✅ before running:</p>
+<pre><code class="language-bash">npm run changeset:version &amp;&amp; npm run changeset:publish</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/PRE-PUBLISH-CHECKLIST.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

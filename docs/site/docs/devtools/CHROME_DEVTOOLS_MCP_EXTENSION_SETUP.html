@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chrome DevTools MCP Extension Setup · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Chrome DevTools MCP Extension Setup">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">devtools</a> / <span>CHROME_DEVTOOLS_MCP_EXTENSION_SETUP</span>
+      </div>
+      <article class="docs-content">
+        <h1>Chrome DevTools MCP Extension Setup</h1>
+<h2>Problem</h2>
+<p>The chrome-devtools MCP server launches Chrome via Playwright, which <strong>does not load extensions by default</strong>. This is why the PAN DevTools extension doesn't appear when using the MCP tools.</p>
+<h2>Solution</h2>
+<p>To enable extension support, the chrome-devtools MCP server needs to be configured with specific Playwright launch arguments.</p>
+<h2>Required Changes</h2>
+<h3>1. Playwright Launch Method</h3>
+<p>Change from <code>browser.launch()</code> to <code>browser.launchPersistentContext()</code>:</p>
+<pre><code class="language-javascript">// ❌ WRONG - Default launch (no extensions)
+const browser = await chromium.launch({
+  headless: false
+});
+
+// ✅ CORRECT - Persistent context (supports extensions)
+const context = await chromium.launchPersistentContext(userDataDir, {
+  headless: false,
+  args: [
+    `--load-extension=${extensionPath}`,
+    &#039;--disable-extensions-except=&#039; + extensionPath
+  ]
+});</code></pre>
+<h3>2. Extension Path Configuration</h3>
+<p>The chrome-devtools MCP server needs to know where your PAN DevTools extension is located:</p>
+<pre><code class="language-javascript">const extensionPath = &#039;/Users/cdr/Projects/larc-repos/devtools&#039;;</code></pre>
+<h3>3. User Data Directory</h3>
+<code>launchPersistentContext</code> requires a user data directory for Chrome profile storage:
+<pre><code class="language-javascript">const userDataDir = path.join(os.tmpdir(), &#039;chrome-devtools-mcp-profile&#039;);</code></pre>
+<h2>MCP Server Configuration</h2>
+<p>If you control the chrome-devtools MCP server configuration, add these options:</p>
+<h3>Option 1: Environment Variables</h3>
+<pre><code class="language-bash">export CHROME_EXTENSION_PATH=&quot;/Users/cdr/Projects/larc-repos/devtools&quot;
+export CHROME_USER_DATA_DIR=&quot;/tmp/chrome-devtools-mcp-profile&quot;</code></pre>
+<h3>Option 2: MCP Server Config</h3>
+<p>Update your MCP server configuration (typically in <code>~/.claude/claude_desktop_config.json</code> or similar):</p>
+<pre><code class="language-json">{
+  &quot;mcpServers&quot;: {
+    &quot;chrome-devtools&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;@executeautomation/chrome-devtools-mcp&quot;],
+      &quot;env&quot;: {
+        &quot;CHROME_EXTENSION_PATH&quot;: &quot;/Users/cdr/Projects/larc-repos/devtools&quot;,
+        &quot;CHROME_USER_DATA_DIR&quot;: &quot;/tmp/chrome-devtools-mcp-profile&quot;
+      }
+    }
+  }
+}</code></pre>
+<h3>Option 3: Fork and Modify</h3>
+<p>If the MCP server doesn't support extension configuration:</p>
+<li>Fork the chrome-devtools MCP server repository</li>
+<li>Modify the Playwright launch code</li>
+<li>Use your forked version</li>
+<h2>Code Changes Needed</h2>
+<p>In the chrome-devtools MCP server source (typically <code>src/index.ts</code> or similar):</p>
+<pre><code class="language-typescript">// Before:
+async function launchBrowser() {
+  const browser = await chromium.launch({
+    headless: false,
+    args: [&#039;--disable-blink-features=AutomationControlled&#039;]
+  });
+  return browser;
+}
+
+// After:
+async function launchBrowser(extensionPath?: string) {
+  const userDataDir = path.join(os.tmpdir(), &#039;chrome-devtools-mcp-profile&#039;);
+
+  const launchArgs = [
+    &#039;--disable-blink-features=AutomationControlled&#039;
+  ];
+
+  if (extensionPath &amp;&amp; fs.existsSync(extensionPath)) {
+    launchArgs.push(
+      `--load-extension=${extensionPath}`,
+      `--disable-extensions-except=${extensionPath}`
+    );
+  }
+
+  const context = await chromium.launchPersistentContext(userDataDir, {
+    headless: false,
+    args: launchArgs
+  });
+
+  return context;
+}</code></pre>
+<h2>Alternative: Manual Chrome Instance</h2>
+<p>If modifying the MCP server isn't feasible, you can test extensions manually:</p>
+<pre><code class="language-bash"># Launch Chrome with extension loaded
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome \
+  --load-extension=/Users/cdr/Projects/larc-repos/devtools \
+  --disable-extensions-except=/Users/cdr/Projects/larc-repos/devtools \
+  --user-data-dir=/tmp/chrome-test-profile \
+  http://localhost:8080/playground/</code></pre>
+<h2>Testing Extension Loading</h2>
+<p>After configuration, verify the extension loads:</p>
+<li>Open DevTools Console</li>
+<li>Check for: <code>[PAN DevTools] Injected and monitoring PAN messages</code></li>
+<li>Check <code>window.__panDevTools</code> exists:</li>
+   <pre><code class="language-javascript">console.log(window.__panDevTools);
+   // Should show: {getHistory: ƒ, clearHistory: ƒ, getComponents: ƒ, ...}</code></pre>
+<h2>Current Workaround</h2>
+<p>Until the MCP server is configured for extensions, use the <strong>in-page PAN Bus Monitor</strong>:</p>
+<pre><code class="language-html">&lt;pg-bus-monitor&gt;&lt;/pg-bus-monitor&gt;</code></pre>
+<p>This component works independently and doesn't require Chrome extensions.</p>
+<h2>References</h2>
+<ul><li><a href="https://playwright.dev/docs/chrome-extensions">Playwright Extensions Documentation</a></li>
+<li><a href="https://developer.chrome.com/docs/extensions/mv3/getstarted/">Chrome Extension Development</a></li>
+<li>PAN DevTools Extension: <code>/Users/cdr/Projects/larc-repos/devtools/</code></li>
+</ul>
+<h2>Files Involved</h2>
+<ul><li><strong>Extension Source</strong>: <code>/Users/cdr/Projects/larc-repos/devtools/</code></li>
+</ul>  - <code>manifest.json</code> - Extension manifest
+  - <code>src/injected.js</code> - Injected script for intercepting PAN events
+  - <code>src/content-script.js</code> - Content script bridge
+  - <code>src/devtools.js</code> - DevTools panel
+  - <code>src/panel.html</code> - DevTools UI
+<ul><li><strong>MCP Server</strong>: chrome-devtools MCP (external package)</li>
+</ul>  - Needs modification to support <code>--load-extension</code> flag
+  - Needs to use <code>launchPersistentContext</code> instead of <code>launch</code>
+<h2>Next Steps</h2>
+<li><strong>Identify chrome-devtools MCP server location</strong></li>
+   <pre><code class="language-bash">npm list -g @executeautomation/chrome-devtools-mcp
+   # or
+   which chrome-devtools-mcp</code></pre>
+<li><strong>Check if it supports extension configuration</strong></li>
+   - Look for environment variables
+   - Check documentation
+   - Review source code
+<li><strong>Either</strong>:</li>
+   - Add environment variables for extension path
+   - Fork and modify the server
+   - Use manual Chrome launch for testing
+<li><strong>Verify</strong>:</li>
+   - Extension appears in <code>chrome://extensions/</code>
+   - Console shows <code>[PAN DevTools] Injected...</code>
+   - DevTools panel shows "PAN" tab
+   - Messages appear when interacting with components
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

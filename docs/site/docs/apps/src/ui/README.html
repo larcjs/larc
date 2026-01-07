@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Components · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Components">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">apps</a> / <a href="#">src</a> / <a href="#">ui</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Components</h1>
+<a href="https://img.shields.io/npm/v/@larcjs/ui.svg">![Version</a>](https://www.npmjs.com/package/@larcjs/ui)
+<a href="https://github.com/larcjs/larc/actions/workflows/ui-tests.yml/badge.svg">![UI Tests</a>](https://github.com/larcjs/larc/actions/workflows/ui-tests.yml)
+<a href="https://img.shields.io/badge/license-MIT-green.svg">![License</a>](LICENSE)
+<a href="https://img.shields.io/badge/security-audited-brightgreen.svg">![Security</a>](docs/COMPONENT_SECURITY_AUDIT.md)
+<blockquote><strong>Production-ready UI web components</strong> built on the PAN messaging bus</blockquote>
+<p>A comprehensive library of framework-agnostic UI components that communicate via the PAN (Page Area Network) messaging system. Build complex UIs with zero coupling between components.</p>
+<h2>Features</h2>
+<ul><li>🎨 <strong>57+ Production Components</strong> — Tables, forms, grids, charts, modals, and more</li>
+<li>🔌 <strong>Zero Coupling</strong> — Components communicate only through PAN messages</li>
+<li>🎯 <strong>Framework Complement</strong> — Use with React/Vue/Angular to reduce bundle size by 60%+</li>
+<li>🚀 <strong>Advanced State Management</strong> — Cross-tab sync, offline-first, persistence, undo/redo</li>
+<li>🔒 <strong>Security Audited</strong> — 0 critical vulnerabilities (<a href="docs/COMPONENT_SECURITY_AUDIT.md">full audit</a>)</li>
+<li>🎨 <strong>Themeable</strong> — CSS custom properties for complete styling control</li>
+<li>♿ <strong>Accessible</strong> — ARIA attributes and keyboard navigation</li>
+<li>📦 <strong>No Build Required</strong> — Load components on demand via CDN</li>
+</ul>
+<h2>📊 Bundle Size Comparison</h2>
+<strong>Typical React Dashboard:</strong>
+<pre><code class="language-plaintext">React + ReactDOM:           172 KB
+Material-UI or Ant Design:  300-500 KB
+State Management:           20-50 KB
+Router:                     20 KB
+────────────────────────────────────
+Total (before your code):   512-742 KB</code></pre>
+<strong>LARC Approach:</strong>
+<pre><code class="language-plaintext">PAN Core Lite:              9 KB minified (3 KB gzipped) ⭐
+Components (on-demand):     ~7 KB each minified (~2 KB gzipped)
+57 components total:        396 KB minified (110 KB gzipped)
+Only load what you use:     9-100 KB typical (core-lite + components needed)
+────────────────────────────────────
+Savings:                    80-95% smaller</code></pre>
+<strong>Note:</strong> Using <a href="../../packages/core-lite">@larcjs/core-lite</a> instead of full @larcjs/core saves an additional 31KB!
+<strong>Real Example:</strong>
+A dashboard with sidebar, header, data table, charts, and modals:
+<ul><li>React + MUI: ~650 KB</li>
+<li>LARC Components: ~65 KB (core-lite + 8 components)</li>
+<li><strong>Result: 90% smaller bundle</strong></li>
+</ul>
+<h2>Installation</h2>
+<pre><code class="language-bash">npm install @larcjs/ui @larcjs/core</code></pre>
+<h2>Quick Start</h2>
+<h3>CDN Usage (Recommended)</h3>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+  &lt;meta charset=&quot;utf-8&quot;&gt;
+  &lt;!-- Load LARC Core autoloader --&gt;
+  &lt;script type=&quot;module&quot; src=&quot;https://unpkg.com/@larcjs/core@3.0.1/src/pan.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Components load automatically on demand --&gt;
+  &lt;pan-data-table
+    resource=&quot;users&quot;
+    columns=&#039;[&quot;id&quot;, &quot;name&quot;, &quot;email&quot;]&#039;&gt;
+  &lt;/pan-data-table&gt;
+
+  &lt;!-- Inspector for debugging --&gt;
+  &lt;pan-inspector&gt;&lt;/pan-inspector&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<h3>Module Usage</h3>
+<pre><code class="language-javascript">import &#039;@larcjs/core&#039;;
+import &#039;@larcjs/ui/pan-data-table&#039;;
+import &#039;@larcjs/ui/pan-form&#039;;
+
+// Components are now registered and ready to use</code></pre>
+<h2>Core Components</h2>
+<h3>Data Display</h3>
+<p>#### <code><pan-data-table></code>
+Enterprise-grade data grid with sorting, filtering, pagination, and inline editing.</p>
+<pre><code class="language-html">&lt;pan-data-table
+  resource=&quot;products&quot;
+  columns=&#039;[&quot;id&quot;, &quot;name&quot;, &quot;price&quot;, &quot;stock&quot;]&#039;
+  sortable=&quot;true&quot;
+  filterable=&quot;true&quot;
+  editable=&quot;true&quot;&gt;
+&lt;/pan-data-table&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Virtual scrolling for large datasets</li>
+<li>Inline editing with validation</li>
+<li>Multi-column sorting</li>
+<li>Advanced filtering</li>
+<li>Export to CSV/Excel</li>
+<li>Responsive design</li>
+</ul>
+#### <code><pan-grid></code>
+Flexible data grid with drag-and-drop reordering and customizable layouts.
+<pre><code class="language-html">&lt;pan-grid
+  resource=&quot;cards&quot;
+  layout=&quot;masonry&quot;
+  columns=&quot;3&quot;&gt;
+&lt;/pan-grid&gt;</code></pre>
+<p>#### <code><pan-chart></code>
+Interactive charts powered by Chart.js integration.</p>
+<pre><code class="language-html">&lt;pan-chart
+  type=&quot;line&quot;
+  topic=&quot;analytics.data&quot;
+  x-axis=&quot;date&quot;
+  y-axis=&quot;sales&quot;&gt;
+&lt;/pan-chart&gt;</code></pre>
+<h3>Forms & Input</h3>
+<p>#### <code><pan-form></code>
+Schema-driven form generator with validation and error handling.</p>
+<pre><code class="language-html">&lt;pan-form
+  resource=&quot;user&quot;
+  schema-topic=&quot;user.schema&quot;
+  submit-topic=&quot;user.save&quot;&gt;
+&lt;/pan-form&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>JSON Schema validation</li>
+<li>Auto-generated fields from schema</li>
+<li>Real-time validation</li>
+<li>File upload support</li>
+<li>Custom field templates</li>
+</ul>
+#### <code><pan-dropdown></code>
+Searchable dropdown with keyboard navigation.
+<pre><code class="language-html">&lt;pan-dropdown
+  topic=&quot;country.select&quot;
+  options-topic=&quot;countries.list.state&quot;
+  placeholder=&quot;Select country&quot;&gt;
+&lt;/pan-dropdown&gt;</code></pre>
+<p>#### <code><pan-date-picker></code>
+Accessible date/time picker with localization.</p>
+<pre><code class="language-html">&lt;pan-date-picker
+  topic=&quot;booking.date&quot;
+  min=&quot;2024-01-01&quot;
+  format=&quot;YYYY-MM-DD&quot;&gt;
+&lt;/pan-date-picker&gt;</code></pre>
+<h3>Data Providers</h3>
+<p>#### <code><pan-data-provider></code>
+Connects to REST APIs and manages data state.</p>
+<pre><code class="language-html">&lt;pan-data-provider
+  resource=&quot;users&quot;
+  endpoint=&quot;/api/users&quot;
+  auto-load=&quot;true&quot;&gt;
+&lt;/pan-data-provider&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Automatic CRUD operations</li>
+<li>Request caching</li>
+<li>Optimistic updates</li>
+<li>Error handling</li>
+<li>Retry logic</li>
+</ul>
+#### <code><pan-data-connector></code>
+Generic connector for any data source.
+<pre><code class="language-html">&lt;pan-data-connector
+  resource=&quot;products&quot;
+  adapter=&quot;graphql&quot;
+  endpoint=&quot;https://api.example.com/graphql&quot;&gt;
+&lt;/pan-data-connector&gt;</code></pre>
+<h3>UI Controls</h3>
+<p>#### <code><pan-modal></code>
+Accessible modal dialogs with backdrop.</p>
+<pre><code class="language-html">&lt;pan-modal id=&quot;confirmDialog&quot; title=&quot;Confirm Action&quot;&gt;
+  &lt;p&gt;Are you sure you want to proceed?&lt;/p&gt;
+  &lt;button slot=&quot;footer&quot;&gt;Confirm&lt;/button&gt;
+&lt;/pan-modal&gt;</code></pre>
+<p>#### <code><pan-tabs></code>
+Tab navigation with lazy loading.</p>
+<pre><code class="language-html">&lt;pan-tabs&gt;
+  &lt;pan-tab label=&quot;Overview&quot; active&gt;Content 1&lt;/pan-tab&gt;
+  &lt;pan-tab label=&quot;Details&quot;&gt;Content 2&lt;/pan-tab&gt;
+  &lt;pan-tab label=&quot;Settings&quot;&gt;Content 3&lt;/pan-tab&gt;
+&lt;/pan-tabs&gt;</code></pre>
+<p>#### <code><pan-toolbar></code>
+Action toolbar with responsive overflow menu.</p>
+<pre><code class="language-html">&lt;pan-toolbar&gt;
+  &lt;button data-action=&quot;save&quot;&gt;Save&lt;/button&gt;
+  &lt;button data-action=&quot;delete&quot;&gt;Delete&lt;/button&gt;
+  &lt;button data-action=&quot;export&quot;&gt;Export&lt;/button&gt;
+&lt;/pan-toolbar&gt;</code></pre>
+<h3>State Management</h3>
+<strong>NEW:</strong> Advanced state management components for building offline-first, cross-tab synchronized applications with persistent state.
+<p>#### <code><pan-state-sync></code>
+Cross-tab state synchronization using BroadcastChannel API.</p>
+<pre><code class="language-html">&lt;pan-state-sync
+  channel=&quot;myapp-sync&quot;
+  topics=&quot;users.*,todos.*&quot;
+  strategy=&quot;last-write-wins&quot;
+  leader=&quot;auto&quot;&gt;
+&lt;/pan-state-sync&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Leader election for conflict prevention</li>
+<li>Automatic state sync across tabs</li>
+<li>Conflict resolution strategies</li>
+<li>Tab visibility handling</li>
+</ul>
+#### <code><pan-computed-state></code>
+Derived/computed state with automatic dependency tracking.
+<pre><code class="language-html">&lt;pan-computed-state
+  sources=&quot;cart.items,user.discount&quot;
+  output=&quot;cart.total&quot;
+  debounce=&quot;100&quot;
+  retain&gt;
+  &lt;script&gt;
+    (items, discount) =&gt; {
+      return items.reduce((sum, item) =&gt; sum + item.price, 0) - (discount || 0);
+    }
+  &lt;/script&gt;
+&lt;/pan-computed-state&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Multi-source dependencies</li>
+<li>Async computation support</li>
+<li>Memoization strategies</li>
+<li>Debouncing for performance</li>
+</ul>
+#### <code><pan-offline-sync></code>
+Offline-first support with automatic queue management and sync.
+<pre><code class="language-html">&lt;pan-offline-sync
+  storage=&quot;offline-queue&quot;
+  retry-max=&quot;3&quot;
+  topics=&quot;todos.*,notes.*&quot;
+  endpoints=&#039;{&quot;todos.*&quot;: &quot;/api/todos&quot;}&#039;&gt;
+&lt;/pan-offline-sync&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>IndexedDB-based mutation queue</li>
+<li>Automatic retry with exponential backoff</li>
+<li>Network status monitoring</li>
+<li>Conflict resolution</li>
+</ul>
+#### <code><pan-persistence-strategy></code>
+Declarative persistence routing to different storage backends.
+<pre><code class="language-html">&lt;pan-persistence-strategy auto-hydrate&gt;
+  &lt;strategy topics=&quot;session.*&quot; storage=&quot;memory&quot; ttl=&quot;1800000&quot;&gt;&lt;/strategy&gt;
+  &lt;strategy topics=&quot;user.preferences.*&quot; storage=&quot;localStorage&quot;&gt;&lt;/strategy&gt;
+  &lt;strategy topics=&quot;*.list.*&quot; storage=&quot;indexedDB&quot; database=&quot;app-data&quot;&gt;&lt;/strategy&gt;
+&lt;/pan-persistence-strategy&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Multiple storage backends (memory, localStorage, sessionStorage, IndexedDB)</li>
+<li>TTL support for cache expiration</li>
+<li>Automatic hydration on page load</li>
+<li>Size limits per topic</li>
+</ul>
+#### <code><pan-schema-validator></code>
+Runtime JSON Schema validation without build tools.
+<pre><code class="language-html">&lt;pan-schema-validator topic=&quot;users.item.*&quot; strict&gt;
+  &lt;script type=&quot;application/json&quot;&gt;
+  {
+    &quot;type&quot;: &quot;object&quot;,
+    &quot;properties&quot;: {
+      &quot;email&quot;: { &quot;type&quot;: &quot;string&quot;, &quot;format&quot;: &quot;email&quot; },
+      &quot;age&quot;: { &quot;type&quot;: &quot;number&quot;, &quot;minimum&quot;: 0 }
+    },
+    &quot;required&quot;: [&quot;email&quot;]
+  }
+  &lt;/script&gt;
+&lt;/pan-schema-validator&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Subset of JSON Schema Draft-07</li>
+<li>Strict and warning modes</li>
+<li>Built-in format validators</li>
+<li>Detailed error messages</li>
+</ul>
+#### <code><pan-undo-redo></code>
+Time-travel debugging with undo/redo support.
+<pre><code class="language-html">&lt;pan-undo-redo
+  topics=&quot;editor.*&quot;
+  max-history=&quot;50&quot;
+  channel=&quot;history&quot;
+  auto-snapshot&gt;
+&lt;/pan-undo-redo&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li>Configurable history stack</li>
+<li>Automatic change batching</li>
+<li>Jump to timestamp</li>
+<li>Auto-snapshot support</li>
+</ul>
+See <a href="../STATE_MANAGEMENT_README.md">State Management Patterns Guide</a> for complete documentation and examples.
+<h3>Developer Tools</h3>
+<p>#### <code><pan-inspector></code>
+Enhanced real-time message inspector with state tree, metrics, and debugging tools.</p>
+<pre><code class="language-html">&lt;pan-inspector&gt;&lt;/pan-inspector&gt;</code></pre>
+<strong>Features:</strong>
+<ul><li><strong>State Tree View</strong> — Visualize all retained state</li>
+<li><strong>Metrics Dashboard</strong> — Message rates, top topics, performance</li>
+<li><strong>Advanced Filtering</strong> — Filter by topic patterns and type</li>
+<li><strong>Message Details</strong> — Inspect full payloads and metadata</li>
+<li><strong>Export/Import</strong> — Save and restore state snapshots</li>
+<li><strong>Performance Tracking</strong> — Handler duration and message sizes</li>
+</ul>
+<h2>Message Contracts</h2>
+<p>Components communicate via standardized topic patterns:</p>
+<h3>List Operations</h3>
+<pre><code class="language-javascript">// Request list
+bus.publish(&#039;users.list.get&#039;, {});
+
+// Receive list state
+bus.subscribe(&#039;users.list.state&#039;, (msg) =&gt; {
+  console.log(&#039;Users:&#039;, msg.payload.items);
+});</code></pre>
+<h3>Item Operations</h3>
+<pre><code class="language-javascript">// Select an item
+bus.publish(&#039;users.item.select&#039;, { id: 123 });
+
+// Request item details
+await bus.request(&#039;users.item.get&#039;, { id: 123 });
+
+// Save item
+await bus.request(&#039;users.item.save&#039;, {
+  item: { id: 123, name: &#039;Alice&#039; }
+});
+
+// Delete item
+await bus.request(&#039;users.item.delete&#039;, { id: 123 });</code></pre>
+<h2>Theming</h2>
+<p>Customize appearance using CSS custom properties:</p>
+<pre><code class="language-css">:root {
+  /* Colors */
+  --pan-primary-color: #007bff;
+  --pan-secondary-color: #6c757d;
+  --pan-success-color: #28a745;
+  --pan-danger-color: #dc3545;
+
+  /* Typography */
+  --pan-font-family: system-ui, sans-serif;
+  --pan-font-size: 14px;
+
+  /* Spacing */
+  --pan-spacing-sm: 8px;
+  --pan-spacing-md: 16px;
+  --pan-spacing-lg: 24px;
+
+  /* Borders */
+  --pan-border-radius: 4px;
+  --pan-border-color: #dee2e6;
+}</code></pre>
+<p>See <a href="docs/THEME_SYSTEM.md">Theme System Documentation</a> for complete customization guide.</p>
+<h2>Security</h2>
+<p>All components have been security audited:
+<ul><li>✅ <strong>0 critical vulnerabilities</strong></li>
+<li>✅ <strong>XSS protection</strong> — Input sanitization on all user-editable fields</li>
+<li>✅ <strong>CSP compliant</strong> — No inline scripts or styles</li>
+<li>✅ <strong>Safe defaults</strong> — Secure configuration out of the box</li>
+</ul>
+See <a href="docs/COMPONENT_SECURITY_AUDIT.md">Security Audit Report</a> for details.</p>
+<h2>Browser Support</h2>
+<ul><li>✅ Chrome/Edge 90+</li>
+<li>✅ Firefox 88+</li>
+<li>✅ Safari 14+</li>
+<li>✅ Opera 76+</li>
+</ul>
+<h2>Component Catalog</h2>
+<p>View all components with live examples:
+<ul><li><a href="https://larcjs.github.io/site/gallery.html">Gallery</a></li>
+<li><a href="https://larcjs.github.io/site/docs/">Component Documentation</a></li>
+<li><a href="https://larcjs.github.io/examples/">Interactive Demos</a></li>
+</ul>
+<h2>🎯 When to Use What</h2></p>
+<h3>Use LARC for:</h3>
+<ul><li>✅ Cards, modals, dropdowns, tabs</li>
+<li>✅ Data tables with sorting/filtering</li>
+<li>✅ Forms (unless extremely complex)</li>
+<li>✅ Navigation, breadcrumbs, pagination</li>
+<li>✅ Theme switching, toasts, tooltips</li>
+<li>✅ Authentication UI</li>
+</ul>
+<h3>Keep React/Vue for:</h3>
+<ul><li>🔧 Complex multi-step wizards</li>
+<li>🔧 Rich text editors with live preview</li>
+<li>🔧 Real-time collaborative features</li>
+<li>🔧 Heavy client-side business logic</li>
+</ul>
+<strong>Best practice:</strong> Mix them! Use LARC for 80% of your UI, React/Vue for the 20% that needs framework power.
+<h2>Related Packages</h2>
+<ul><li><strong><a href="https://github.com/larcjs/core">@larcjs/core</a></strong> — Core PAN messaging bus</li>
+<li><strong><a href="https://github.com/larcjs/react-adapter">@larcjs/react-adapter</a></strong> — React hooks for PAN</li>
+<li><strong><a href="https://github.com/larcjs/vue-adapter">@larcjs/vue-adapter</a></strong> — Vue composables for PAN</li>
+<li><strong><a href="https://github.com/larcjs/devtools">@larcjs/devtools</a></strong> — Chrome DevTools extension</li>
+<li><strong><a href="https://github.com/larcjs/examples">@larcjs/examples</a></strong> — Demo applications including hybrid examples</li>
+</ul>
+<h2>Testing</h2>
+<strong>Test Coverage:</strong> ✅ <strong>165 tests passing</strong> (55 component specs × 3 browsers: Chromium, Firefox, WebKit)
+<p>Playwright exercises all major components end-to-end using the real PAN bus:</p>
+<pre><code class="language-bash"># Run all component specs headlessly
+npm run test --workspace @larcjs/ui
+
+# Watch mode with the Playwright UI
+npm run test:ui --workspace @larcjs/ui</code></pre>
+<p>The tests load HTML fixtures from <code>tests/fixtures/</code> so you can iterate on components without any bundling step. Each component is tested for:
+<ul><li>Custom element registration</li>
+<li>Shadow DOM rendering</li>
+<li>Attribute reactivity</li>
+<li>PAN bus message handling</li>
+<li>Cross-browser compatibility</li>
+</ul>
+<h2>Contributing</h2></p>
+<p>Contributions are welcome! Please see our <a href="CONTRIBUTING.md">Contributing Guide</a>.</p>
+<h2>License</h2>
+<p>MIT © Chris Robison</p>
+<h2>Support</h2>
+<ul><li>📖 <a href="https://larcjs.github.io/site/">Documentation</a></li>
+<li>💬 <a href="https://github.com/larcjs/components/discussions">Discussions</a></li>
+<li>🐛 <a href="https://github.com/larcjs/components/issues">Issue Tracker</a></li>
+</ul>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/apps/src/ui/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

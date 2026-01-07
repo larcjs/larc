@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Changelog · PAN Documentation</title>
-  <meta name="description" content="PAN (Page Area Network) Documentation - Changelog">
+  <title>Setting Up npm 2FA via Web Browser · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Setting Up npm 2FA via Web Browser">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,26 +40,49 @@
 
     <main class="docs-main">
       <div class="docs-breadcrumb">
-        <a href="../index.html">Home</a> / <a href="#">packages</a> / <a href="#">core</a> / <span>CHANGELOG</span>
+        <a href="../index.html">Home</a> / <span>SETUP-2FA-WEB</span>
       </div>
       <article class="docs-content">
-        <h1>Changelog</h1>
-<h2>2.1.0 (2024-12-31)</h2>
-<h3>Minor Changes</h3>
-<ul><li><strong>Bundle UI components for zero-config setup</strong></li>
-</ul>  - Added all 130 UI components to @larcjs/core/components/ directory
-  - Updated autoloader to check ./components/ first for component resolution
-  - Created automatic sync script to keep components in sync with @larcjs/ui
-  - Enables one-line setup: <code><script src="https://cdn.jsdelivr.net/npm/@larcjs/core@2.1.0/pan.mjs"></script></code>
-  - Components now auto-load without configuration
-  - Maintains backward compatibility - existing code continues to work
-  - Sync happens automatically during build and publish workflows
-<p>All notable changes to this project will be documented in this file.</p>
-<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
-and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+        <h1>Setting Up npm 2FA via Web Browser</h1>
+<p>Since the terminal isn't showing a QR code, let's do this via the web:</p>
+<h2>Step 1: Go to npm Account Settings</h2>
+<strong>Correct URL:</strong> https://www.npmjs.com/settings/cdr420/account
+<h2>Step 2: Find Two-Factor Authentication Section</h2>
+<p>Look for:
+<ul><li>"Two-Factor Authentication"</li>
+<li>Or "Security" section</li>
+<li>Should show current status (enabled/disabled)</li>
+</ul>
+<h2>Step 3: Enable 2FA</h2></p>
+<p>Click "Enable 2FA" or "Manage 2FA"</p>
+<p>You'll see:
+<li><strong>QR Code</strong> - Scan with authenticator app</li>
+<li><strong>Secret Key</strong> - Type manually if camera doesn't work</li></p>
+<h2>Step 4: Add to Authenticator App</h2>
+<p>On your phone:
+<li>Open authenticator app</li>
+<li>Tap "+" or "Add"</li>
+<li>Either:</li>
+   - <strong>Scan QR code</strong> (point camera at screen)
+   - <strong>Enter key manually</strong> (type the secret shown)
+<li>It should create "npm" or "npmjs" entry</li></p>
+<h2>Step 5: Verify</h2>
+<li>Get 6-digit code from app</li>
+<li>Enter it on the npm website to confirm</li>
+<li><strong>Save recovery codes!</strong></li>
+<h2>Step 6: Publish</h2>
+<p>Once set up, tell me the 6-digit code and I'll publish:</p>
+<pre><code class="language-bash">npm publish --otp=123456</code></pre>
+<hr>
+<h2>Alternative URLs to Try:</h2>
+<ul><li>https://www.npmjs.com/settings/cdr420/account</li>
+<li>https://www.npmjs.com/settings/cdr420/security</li>
+<li>https://www.npmjs.com/settings/cdr420</li>
+</ul>
+One of these should have the 2FA settings!
       </article>
       <footer class="docs-footer">
-        <a href="https://github.com/chrisrobison/pan/edit/main/packages/core/CHANGELOG.md" target="_blank">
+        <a href="https://github.com/chrisrobison/pan/edit/main/SETUP-2FA-WEB.md" target="_blank">
           Edit this page on GitHub
         </a>
       </footer>

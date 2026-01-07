@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>npm Publishing Options (2024+) · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - npm Publishing Options (2024+)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>NPM-PUBLISHING-OPTIONS</span>
+      </div>
+      <article class="docs-content">
+        <h1>npm Publishing Options (2024+)</h1>
+<p>npm changed their token system. Here are your options:</p>
+<h2>Option 1: Classic Token (For Local Publishing) ✅ EASIEST</h2>
+<p>This is what you need for publishing from your computer:</p>
+<li>Go to https://www.npmjs.com/settings/cdr420/tokens</li>
+<li>Click <strong>"Generate New Token"</strong></li>
+<li>Choose <strong>"Classic Token"</strong></li>
+<li>Select <strong>"Automation"</strong> (NOT "Publish")</li>
+<li>Copy the token</li>
+<li>Save it to <code>.tmp</code>:</li>
+   <pre><code class="language-bash">echo &quot;npm_XXXXXXXX&quot; &gt; .tmp</code></pre>
+<p>Then I'll set it up and publish!</p>
+<hr>
+<h2>Option 2: Use 2FA (No Token Needed)</h2>
+<p>Just enable 2FA and use it when publishing:</p>
+<pre><code class="language-bash"># Enable 2FA (one-time setup)
+npm profile enable-2fa auth-and-writes
+
+# Publish with OTP code
+cd packages/core
+npm publish --otp=123456  # Get from authenticator app</code></pre>
+<hr>
+<h2>Option 3: Trusted Publishing (For CI/CD Only)</h2>
+<strong>This is NOT for local publishing!</strong>
+<p>Trusted Publishing uses GitHub Actions/GitLab CI. It's for automated publishing when you push to GitHub, not for manual publishing from your computer.</p>
+<p>If you want this later, we can set it up in GitHub Actions.</p>
+<hr>
+<h2>What I Recommend</h2>
+<strong>For now: Use a Classic Automation Token</strong>
+<li>Create "Classic Token" → "Automation" type</li>
+<li>Put it in <code>.tmp</code> file</li>
+<li>Let me know - I'll publish immediately!</li>
+<p>Later we can set up Trusted Publishing for automated releases via GitHub Actions.</p>
+<hr>
+<h2>Can You See "Classic Token"?</h2>
+<p>When you click "Generate New Token", do you see:
+<ul><li>✅ <strong>Classic Token</strong> (choose this!)</li>
+<li>❌ <strong>Granular Access Token</strong> (more complex)</li>
+<li>❌ <strong>Trusted Publishing</strong> (CI/CD only)</li>
+</ul>
+Choose "Classic Token" → "Automation"</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/NPM-PUBLISHING-OPTIONS.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

@@ -6,14 +6,14 @@ We actively support the following versions of LARC with security updates:
 
 | Package | Version | Supported |
 |---------|---------|-----------|
-| @larcjs/core | 1.1.x | ✅ Yes |
-| @larcjs/core | 1.0.x | ✅ Yes |
-| @larcjs/core | < 1.0 | ❌ No |
-| @larcjs/ui | 1.1.x | ✅ Yes |
-| @larcjs/ui | 1.0.x | ✅ Yes |
-| @larcjs/ui | < 1.0 | ❌ No |
+| @larcjs/core | 3.x | ✅ Yes |
+| @larcjs/core | 2.x | ⚠️ Limited |
+| @larcjs/core | < 2.0 | ❌ No |
+| @larcjs/ui | 3.x | ✅ Yes |
+| @larcjs/ui | 2.x | ⚠️ Limited |
+| @larcjs/ui | < 2.0 | ❌ No |
 
-**Security support window:** We provide security updates for the current major version (1.x) and the previous minor versions within that major version.
+**Security support window:** We provide security updates for the current major version (3.x) and limited support for the previous major version (2.x).
 
 ---
 

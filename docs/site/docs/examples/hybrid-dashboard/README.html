@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid Dashboard Demo · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Hybrid Dashboard Demo">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">examples</a> / <a href="#">hybrid-dashboard</a> / <span>README</span>
+      </div>
+      <article class="docs-content">
+        <h1>Hybrid Dashboard Demo</h1>
+<strong>React + Vue + LARC Components - All Working Together</strong>
+<p>This demo proves LARC's core value proposition: <strong>reduce framework overhead by mixing Web Components with React/Vue for a 60%+ smaller bundle.</strong></p>
+<h2>🎯 What This Demonstrates</h2>
+<h3>The Problem</h3>
+Traditional React dashboards bundle everything:
+<ul><li>React + ReactDOM: 172 KB</li>
+<li>Material-UI or Ant Design: 300-500 KB</li>
+<li>Chart library: 100-180 KB</li>
+<li>State management: 20-50 KB</li>
+<li><strong>Total: 600-900 KB before your code</strong></li>
+</ul>
+<h3>The Solution</h3>
+Use LARC + selective framework usage:
+<ul><li>PAN Core: 5 KB</li>
+<li>React (chart only): 172 KB</li>
+<li>Vue (filters only): 100 KB</li>
+<li>LARC components (on-demand): 45 KB</li>
+<li><strong>Total: ~320 KB (60% savings)</strong></li>
+</ul>
+<h2>🏗️ Architecture</h2>
+<pre><code class="language-plaintext">┌─────────────────────────────────────────────┐
+│           PAN Message Bus (5 KB)            │
+├─────────────┬──────────────┬────────────────┤
+│   React     │     Vue      │     LARC       │
+│  Component  │  Component   │   Components   │
+├─────────────┼──────────────┼────────────────┤
+│ Analytics   │   Filters    │ • Header       │
+│   Chart     │    Panel     │ • Sidebar      │
+│ (172 KB)    │  (100 KB)    │ • Stats Cards  │
+│             │              │ • Data Table   │
+│             │              │  (45 KB total) │
+└─────────────┴──────────────┴────────────────┘</code></pre>
+<h3>Components Breakdown</h3>
+<p>| Component | Technology | Why? |
+|-----------|-----------|------|
+| <strong>Header</strong> | LARC | Simple, doesn't need framework overhead |
+| <strong>Sidebar</strong> | LARC | Static navigation, no complex state |
+| <strong>Stats Cards</strong> | LARC | Display-only components |
+| <strong>Filters Panel</strong> | <strong>Vue</strong> | Complex reactive forms (Vue's strength) |
+| <strong>Analytics Chart</strong> | <strong>React</strong> | Rich interactivity (React's strength) |
+| <strong>Data Table</strong> | LARC | Standard CRUD operations |</p>
+<strong>Key Insight:</strong> Use frameworks only where they add value. For 80% of UI (cards, tables, modals), LARC is enough.
+<h2>🔌 PAN Message Bus Coordination</h2>
+<p>All three technologies communicate via PAN messages:</p>
+<pre><code class="language-javascript">// Vue publishes filter changes
+filters:changed → { dateRange: &#039;7d&#039;, metric: &#039;users&#039; }
+
+// React chart receives and updates
+// LARC table receives and re-filters
+// No tight coupling between components!</code></pre>
+<strong>Without PAN:</strong> Each component would need custom integration code, negating reusability.
+<strong>With PAN:</strong> Components are truly independent and composable.
+<h2>🚀 Running the Demo</h2>
+<h3>Option 1: Local Development</h3>
+<pre><code class="language-bash"># From repo root
+python3 -m http.server 8000
+
+# Open browser
+open http://localhost:8000/examples/hybrid-dashboard/</code></pre>
+<h3>Option 2: GitHub Pages</h3>
+<p>Once deployed: <code>https://larcjs.github.io/larc/examples/hybrid-dashboard/</code></p>
+<h2>📊 Bundle Size Comparison</h2>
+<p>The demo shows a real-time comparison banner at the top:</p>
+<h3>Traditional React Approach</h3>
+<pre><code class="language-plaintext">React + ReactDOM:     172 KB
+Material-UI:          450 KB
+Chart.js + wrapper:   180 KB
+State Management:      35 KB
+────────────────────────────
+Total:                837 KB ❌</code></pre>
+<h3>Hybrid LARC Approach</h3>
+<pre><code class="language-plaintext">PAN Core Bus:           5 KB
+React (chart only):   172 KB
+Vue (filters only):   100 KB
+LARC Components:       45 KB
+────────────────────────────
+Total:                322 KB ✅
+
+Savings: 515 KB (61% smaller)</code></pre>
+<h2>🎨 Features Demonstrated</h2>
+<h3>1. Framework Interoperability</h3>
+<ul><li>React component renders chart</li>
+<li>Vue component renders filters</li>
+<li>LARC components render everything else</li>
+<li>All coordinate via PAN messages</li>
+</ul>
+<h3>2. Loose Coupling</h3>
+<ul><li>No component imports another</li>
+<li>No prop drilling</li>
+<li>No shared state managers</li>
+<li>Just topic-based messaging</li>
+</ul>
+<h3>3. Theme Coordination</h3>
+<ul><li>Click "Toggle Theme" in header</li>
+<li>All components update (React, Vue, LARC)</li>
+<li>Demonstrates cross-framework state sync</li>
+</ul>
+<h3>4. Data Flow</h3>
+<ul><li>Vue filters publish changes</li>
+<li>React chart receives and updates</li>
+<li>LARC table receives and re-filters</li>
+<li>Click chart datapoints → publishes event</li>
+</ul>
+<h2>💡 Key Takeaways</h2>
+<h3>When to Use Each Technology</h3>
+<strong>Use LARC for:</strong>
+<ul><li>✅ Cards, modals, dropdowns, tabs</li>
+<li>✅ Data tables (sorting, filtering, pagination)</li>
+<li>✅ Navigation, sidebars, headers</li>
+<li>✅ Forms (unless extremely complex)</li>
+<li>✅ Static display components</li>
+</ul>
+<strong>Use React for:</strong>
+<ul><li>🔧 Rich interactive charts/visualizations</li>
+<li>🔧 Complex multi-step wizards</li>
+<li>🔧 Real-time collaborative features</li>
+<li>🔧 Heavy client-side business logic</li>
+</ul>
+<strong>Use Vue for:</strong>
+<ul><li>🔧 Complex reactive forms</li>
+<li>🔧 Admin panels with lots of inputs</li>
+<li>🔧 Dynamic filter/search UIs</li>
+</ul>
+<strong>Best Practice:</strong>
+Mix them! Use frameworks for 20% of UI that needs framework power, LARC for the other 80%.
+<h2>🧪 Testing PAN Coordination</h2>
+<h3>Experiment 1: Filter Changes</h3>
+<li>Change any filter in Vue panel (top)</li>
+<li>Watch console: <code>📊 React Chart received filter change</code></li>
+<li>Chart updates metric (Users → Revenue)</li>
+<li>Table could re-filter (LARC component)</li>
+<h3>Experiment 2: Chart Interaction</h3>
+<li>Click any data point on React chart</li>
+<li>Watch console: <code>📈 Chart datapoint clicked</code></li>
+<li>Other components could respond (show modal, filter table, etc.)</li>
+<h3>Experiment 3: Theme Toggle</h3>
+<li>Click "Toggle Theme" button (header)</li>
+<li>Watch all components update simultaneously</li>
+<li>React chart, Vue filters, LARC components all change</li>
+<strong>No tight coupling. No prop drilling. Just messages.</strong>
+<h2>📁 File Structure</h2>
+<pre><code class="language-plaintext">hybrid-dashboard/
+├── index.html           # Main page with dashboard layout
+├── react-chart.js       # React component (analytics chart)
+├── vue-filters.js       # Vue component (filters panel)
+└── README.md           # This file</code></pre>
+<h2>🎓 Learning Goals</h2>
+<p>After exploring this demo, you should understand:</p>
+<li><strong>How to mix frameworks</strong> without conflicts</li>
+<li><strong>How PAN messaging coordinates</strong> disparate technologies</li>
+<li><strong>Why Web Components failed</strong> without coordination (silo problem)</li>
+<li><strong>How LARC solves it</strong> with standardized messaging</li>
+<li><strong>Bundle size benefits</strong> of selective framework usage</li>
+<h2>🔗 Related Demos</h2>
+<ul><li><strong>Pure LARC Dashboard</strong> - Compare bundle size with no frameworks</li>
+<li><strong>React Integration Example</strong> - Deep dive on React + PAN</li>
+<li><strong>Vue Integration Example</strong> - Deep dive on Vue + PAN</li>
+</ul>
+<h2>🤝 Contributing</h2>
+<p>Want to add more framework examples?
+<ul><li>Angular integration</li>
+<li>Svelte integration</li>
+<li>Solid integration</li>
+</ul>
+See <a href="../../CONTRIBUTING.md">CONTRIBUTING.md</a></p>
+<hr>
+<strong>Built to prove a point:</strong> Web Components + PAN messaging can reduce real-world bundle sizes by 60%+, while keeping the power of React/Vue where you need it.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/examples/hybrid-dashboard/README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

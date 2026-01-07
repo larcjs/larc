@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Setting Up npm 2FA with Authenticator App · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Setting Up npm 2FA with Authenticator App">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>NPM-2FA-SETUP</span>
+      </div>
+      <article class="docs-content">
+        <h1>Setting Up npm 2FA with Authenticator App</h1>
+<h2>Step 1: Enable 2FA on npm</h2>
+<pre><code class="language-bash">npm profile enable-2fa auth-and-writes</code></pre>
+<p>This will:
+<li>Generate a QR code in your terminal</li>
+<li>Ask you to scan it with your authenticator app</li></p>
+<h2>Step 2: Scan QR Code</h2>
+<p>Use any authenticator app:
+<ul><li><strong>Google Authenticator</strong> (iOS/Android)</li>
+<li><strong>Authy</strong> (iOS/Android/Desktop)</li>
+<li><strong>1Password</strong> (has built-in authenticator)</li>
+<li><strong>Microsoft Authenticator</strong></li>
+<li><strong>Any TOTP app</strong></li>
+</ul>
+<li>Open your authenticator app</li>
+<li>Click "Add account" or "+"</li>
+<li>Scan the QR code shown in terminal</li>
+<li>The app will show a 6-digit code</li></p>
+<h2>Step 3: Enter Confirmation Code</h2>
+<pre><code class="language-bash"># npm will ask for a code - enter it from your app
+Enter OTP: [type 6-digit code]</code></pre>
+<h2>Step 4: Save Recovery Codes</h2>
+<p>npm will show you recovery codes - <strong>SAVE THESE!</strong></p>
+<pre><code class="language-plaintext">Recovery codes:
+  xxxx-xxxx-xxxx
+  xxxx-xxxx-xxxx
+  (save somewhere safe!)</code></pre>
+<h2>Done! Now Publishing Works</h2>
+<h3>Publishing with 2FA:</h3>
+<pre><code class="language-bash">cd packages/core
+npm publish --otp=123456  # Get code from app</code></pre>
+<p>The code changes every 30 seconds, so:
+<li>Open authenticator app</li>
+<li>Copy the 6-digit code for "npm"</li>
+<li>Run publish command with --otp flag</li>
+<li>Done!</li></p>
+<hr>
+<h2>Alternative: Use Automation Token (No 2FA Needed)</h2>
+<p>If you want to skip entering OTP every time:</p>
+<h3>Create an Automation Token:</h3>
+<li>Go to https://www.npmjs.com/settings/YOUR_USERNAME/tokens</li>
+<li>Click "Generate New Token"</li>
+<li>Select <strong>"Automation"</strong> (bypasses 2FA)</li>
+<li>Copy the token (starts with <code>npm_...</code>)</li>
+<h3>Use the Token:</h3>
+<pre><code class="language-bash"># Set the token (one-time setup)
+npm set //registry.npmjs.org/:_authToken npm_XXXXXXXXXXXXXXXX
+
+# Now publish without OTP
+cd packages/core
+npm publish  # No --otp needed!</code></pre>
+<strong>Security Note:</strong> Automation tokens are more convenient but less secure. Use them for CI/CD, not personal computers.
+<hr>
+<h2>Troubleshooting</h2>
+<h3>"Invalid OTP"</h3>
+<ul><li>Code expires every 30 seconds - try a fresh one</li>
+<li>Make sure you're using the code for "npm" (not another service)</li>
+<li>Time on your computer and phone must be synchronized</li>
+</ul>
+<h3>"Already enabled"</h3>
+Check your current 2FA status:
+<pre><code class="language-bash">npm profile get</code></pre>
+<h3>Disable 2FA (if needed):</h3>
+<pre><code class="language-bash">npm profile disable-2fa</code></pre>
+<hr>
+<h2>Quick Reference</h2>
+<pre><code class="language-bash"># Enable 2FA
+npm profile enable-2fa auth-and-writes
+
+# Check 2FA status
+npm profile get
+
+# Publish with OTP
+npm publish --otp=123456
+
+# Use automation token instead
+npm set //registry.npmjs.org/:_authToken npm_XXXXX</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/NPM-2FA-SETUP.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
