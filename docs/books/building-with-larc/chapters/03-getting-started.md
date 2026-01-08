@@ -13,8 +13,8 @@ Quick installation and setup reference. For detailed tutorials, see *Learning LA
   <script type="importmap">
   {
     "imports": {
-      "@larc/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2/pan-client.mjs",
-      "@larc/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2/"
+      "@larc/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-client.mjs",
+      "@larc/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@3.0.1/"
     }
   }
   </script>
@@ -90,7 +90,7 @@ php -S localhost:8000
   <script type="importmap">
   {
     "imports": {
-      "@larc/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2/pan-client.mjs"
+      "@larc/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-client.mjs"
     }
   }
   </script>
@@ -144,8 +144,8 @@ Define module aliases for cleaner imports:
 <script type="importmap">
 {
   "imports": {
-    "@larc/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2/pan-client.mjs",
-    "@larc/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2/",
+    "@larc/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan-client.mjs",
+    "@larc/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@3.0.1/",
     "@/": "./src/",
     "components/": "./components/"
   }

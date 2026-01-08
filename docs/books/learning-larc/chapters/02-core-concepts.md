@@ -606,7 +606,7 @@ Import Maps let you define aliases for module paths:
 <script type="importmap">
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs",
     "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/components@2.0.0/pan-card.mjs",
     "app/": "/src/",
     "components/": "/"

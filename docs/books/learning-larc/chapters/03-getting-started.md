@@ -66,7 +66,7 @@ mkdir public
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
+      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"
     }
   }
   </script>
@@ -230,7 +230,7 @@ We'll create:
   <script type="importmap">
   {
     "imports": {
-      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
+      "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"
     }
   }
   </script>
@@ -631,7 +631,7 @@ Create shortcuts for your own modules:
     "@/": "/src/",
     "components/": "/",
     "lib/": "/src/lib/",
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs"
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs"
   }
 }
 </script>
@@ -655,8 +655,8 @@ Pin dependencies to specific versions:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js",
-    "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2.0.1/dist/index.js"
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/dist/index.js",
+    "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@3.0.1/dist/index.js"
   }
 }
 ```
@@ -666,8 +666,8 @@ Or use version ranges for automatic updates:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/pan.mjs",
-    "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@2/dist/index.js"
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/pan.mjs",
+    "@larcjs/ui": "https://cdn.jsdelivr.net/npm/@larcjs/ui@3.0.1/dist/index.js"
   }
 }
 ```
@@ -714,7 +714,7 @@ Use different import maps for different environments:
 ```json
 {
   "imports": {
-    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@2.0.0/dist/index.js",
+    "@larcjs/core": "https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/dist/index.js",
     "app/": "/assets/js/"
   }
 }
