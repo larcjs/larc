@@ -58,7 +58,7 @@ export class PanThemeToggle extends HTMLElement {
         }
 
         button {
-          background: var(--color-surface, #ffffff);
+          background: var(--color-surface, var(--color-bg, #ffffff));
           border: 1px solid var(--color-border, #e2e8f0);
           border-radius: 0.5rem;
           padding: 0.5rem 0.75rem;
@@ -74,7 +74,7 @@ export class PanThemeToggle extends HTMLElement {
 
         button:hover {
           background: var(--color-bg-alt, #f8fafc);
-          border-color: var(--color-border-strong, #cbd5e1);
+          border-color: var(--color-border-strong, var(--color-border, #cbd5e1));
         }
 
         button:active {
@@ -108,7 +108,7 @@ export class PanThemeToggle extends HTMLElement {
           top: 100%;
           right: 0;
           margin-top: 0.5rem;
-          background: var(--color-surface, #ffffff);
+          background: var(--color-surface, var(--color-bg, #ffffff));
           border: 1px solid var(--color-border, #e2e8f0);
           border-radius: 0.5rem;
           box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
@@ -259,6 +259,10 @@ export class PanThemeToggle extends HTMLElement {
     } else {
       // Fallback: set directly on document
       document.documentElement.setAttribute('data-theme', theme);
+      // Update internal state since we won't get a PAN event
+      this._currentTheme = theme;
+      this._effectiveTheme = theme;
+      this.render();
     }
   }
 
