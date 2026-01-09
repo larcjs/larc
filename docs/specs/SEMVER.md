@@ -526,7 +526,7 @@ If you believe a release violates SemVer:
 
 ## Questions?
 
-- 📖 **Documentation:** https://larcjs.github.io/site/
+- 📖 **Documentation:** https://larcjs.com/
 - 💬 **Discussions:** https://github.com/larcjs/core/discussions
 - 🐛 **Issues:** https://github.com/larcjs/core/issues
 

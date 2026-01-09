@@ -83,7 +83,7 @@ open http://localhost:8000/examples/hybrid-dashboard/
 
 ### Option 2: GitHub Pages
 
-Once deployed: `https://larcjs.github.io/larc/examples/hybrid-dashboard/`
+Once deployed: `https://larcjs.com/examples/hybrid-dashboard/`
 
 ## 📊 Bundle Size Comparison
 

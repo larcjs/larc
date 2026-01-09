@@ -468,9 +468,9 @@ See [Security Audit Report](docs/COMPONENT_SECURITY_AUDIT.md) for details.
 ## Component Catalog
 
 View all components with live examples:
-- [Gallery](https://larcjs.github.io/site/gallery.html)
-- [Component Documentation](https://larcjs.github.io/site/docs/)
-- [Interactive Demos](https://larcjs.github.io/examples/)
+- [Gallery](https://larcjs.com/gallery.html)
+- [Component Documentation](https://larcjs.com/docs/)
+- [Interactive Demos](https://larcjs.com/examples/)
 
 ## 🎯 When to Use What
 
@@ -529,6 +529,6 @@ MIT © Chris Robison
 
 ## Support
 
-- 📖 [Documentation](https://larcjs.github.io/site/)
+- 📖 [Documentation](https://larcjs.com/)
 - 💬 [Discussions](https://github.com/larcjs/components/discussions)
 - 🐛 [Issue Tracker](https://github.com/larcjs/components/issues)

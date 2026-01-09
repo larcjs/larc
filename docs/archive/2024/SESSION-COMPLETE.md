@@ -145,7 +145,7 @@ kill $(lsof -ti :8080)
 ```
 
 ### Future Production URL
-**GitHub Pages:** https://larcjs.github.io/larc/playground/
+**GitHub Pages:** https://larcjs.com/playground/
 **Status:** Not yet deployed
 
 ## Testing Checklist Summary

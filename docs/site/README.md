@@ -1,13 +1,13 @@
 # LARC Site
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Website](https://img.shields.io/badge/website-live-brightgreen.svg)](https://larcjs.github.io/site/)
+[![Website](https://img.shields.io/badge/website-live-brightgreen.svg)](https://larcjs.com/)
 
 > **Official documentation website** and showcase for the LARC/PAN ecosystem
 
 The central hub for LARC documentation, guides, API references, and interactive demos.
 
-🌐 **Live Site:** [https://larcjs.github.io/site/](https://larcjs.github.io/site/)
+🌐 **Live Site:** [https://larcjs.com/](https://larcjs.com/)
 
 ---
 

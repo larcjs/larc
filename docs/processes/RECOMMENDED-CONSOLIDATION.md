@@ -424,12 +424,12 @@ npm install -D @larcjs/ui-types
 - https://github.com/larcjs/larc
 
 **Documentation:**
-- https://larcjs.github.io/larc/docs/
-- https://larcjs.github.io/larc/examples/
+- https://larcjs.com/docs/
+- https://larcjs.com/examples/
 
 **Examples:**
-- https://larcjs.github.io/larc/examples/basic/
-- https://larcjs.github.io/larc/examples/advanced/contact-manager/
+- https://larcjs.com/examples/basic/
+- https://larcjs.com/examples/advanced/contact-manager/
 
 ---
 

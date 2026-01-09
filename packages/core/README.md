@@ -591,7 +591,7 @@ const { publish } = usePanPublish();
 - [API Reference](docs/API_REFERENCE.md)
 - [LARC Specification](docs/LARC_SPEC.v0.md)
 - [Roadmap](docs/LARC_ROADMAP.md)
-- [Full Documentation](https://larcjs.github.io/site/)
+- [Full Documentation](https://larcjs.com/)
 
 ## Browser Support
 
@@ -623,6 +623,6 @@ MIT © Chris Robison
 
 ## Support
 
-- 📖 [Documentation](https://larcjs.github.io/site/)
+- 📖 [Documentation](https://larcjs.com/)
 - 💬 [Discussions](https://github.com/larcjs/core/discussions)
 - 🐛 [Issue Tracker](https://github.com/larcjs/core/issues)

@@ -37,7 +37,7 @@ Interactive component explorer and testing tool for the LARC framework.
 
 ### Online Demo
 
-Visit the live playground at: https://larcjs.github.io/larc/playground/
+Visit the live playground at: https://larcjs.com/playground/
 
 ## Usage
 

@@ -123,8 +123,8 @@ See `HN_POST_DRAFT.md` for full text. Key points:
 |----------|-----|--------|
 | Main Repo | https://github.com/larcjs/larc | ✅ |
 | Core Repo | https://github.com/larcjs/core | ✅ |
-| Playground | https://larcjs.github.io/larc/playground/ | ⚠️ Test before launch |
-| Docs | https://larcjs.github.io/site/ | ⚠️ Test before launch |
+| Playground | https://larcjs.com/playground/ | ⚠️ Test before launch |
+| Docs | https://larcjs.com/ | ⚠️ Test before launch |
 | npm Core | https://npmjs.com/package/@larcjs/core | ✅ |
 | HN Submit | https://news.ycombinator.com/submit | ✅ |
 
@@ -179,13 +179,13 @@ See `HN_POST_DRAFT.md` for full text. Key points:
 
 ### Before Launch Day:
 
-1. **Test playground** at https://larcjs.github.io/larc/playground/
+1. **Test playground** at https://larcjs.com/playground/
    - Verify loads in <3 seconds
    - No console errors
    - Mobile responsive
    - All components work
 
-2. **Test documentation site** at https://larcjs.github.io/site/
+2. **Test documentation site** at https://larcjs.com/
    - All links working
    - Mobile responsive
    - Examples load correctly

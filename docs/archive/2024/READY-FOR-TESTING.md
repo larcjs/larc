@@ -213,7 +213,7 @@ Requires ES Modules and Custom Elements support.
 ### Deployment
 ```bash
 # GitHub Pages will be configured to serve from:
-https://larcjs.github.io/larc/playground/
+https://larcjs.com/playground/
 ```
 
 ## Help & Documentation

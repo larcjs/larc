@@ -76,8 +76,8 @@
 
 ```bash
 # Test these URLs in multiple browsers:
-# - https://larcjs.github.io/larc/playground/
-# - https://larcjs.github.io/site/
+# - https://larcjs.com/playground/
+# - https://larcjs.com/
 
 # Check for:
 [ ] Playground loads in <3 seconds
@@ -243,7 +243,7 @@ Technical highlights:
 • TypeScript support
 • Published on npm (@larcjs/core@3.0.1)
 
-Live playground: https://larcjs.github.io/larc/playground/
+Live playground: https://larcjs.com/playground/
 
 The killer demo: React + Vue + LARC components on the same page,
 coordinating via PAN messages. No framework knows about the others.

@@ -1843,7 +1843,7 @@ When reporting an issue, include:
 
 ### 15.3 Resources
 
-- **Documentation:** [https://larcjs.github.io/site/](https://larcjs.github.io/site/)
+- **Documentation:** [https://larcjs.com/](https://larcjs.com/)
 - **GitHub:** [https://github.com/larcjs/core](https://github.com/larcjs/core)
 - **Issues:** [https://github.com/larcjs/core/issues](https://github.com/larcjs/core/issues)
 - **Discussions:** [https://github.com/larcjs/core/discussions](https://github.com/larcjs/core/discussions)
@@ -1987,4 +1987,4 @@ setInterval(() => {
 **Last Updated:** November 2024
 **Version:** 1.0
 
-For the latest documentation, visit: [https://larcjs.github.io/site/](https://larcjs.github.io/site/)
+For the latest documentation, visit: [https://larcjs.com/](https://larcjs.com/)

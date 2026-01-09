@@ -216,8 +216,8 @@ npm install @larcjs/ui-types
 
 ### "Where are the docs?"
 
-- 📚 **Main docs:** https://larcjs.github.io/site/
-- 🎮 **Interactive playground:** https://larcjs.github.io/larc/playground/
+- 📚 **Main docs:** https://larcjs.com/
+- 🎮 **Interactive playground:** https://larcjs.com/playground/
 - 📖 **Guides:** https://github.com/larcjs/larc/tree/main/docs
 - 💬 **Discussions:** https://github.com/larcjs/core/discussions
 - 📹 **Tutorial:** (Coming soon - video walkthrough)
@@ -318,7 +318,7 @@ Email: (use GitHub Security Advisories)
 Components load as they enter viewport (IntersectionObserver). Only pay for what you use.
 
 **Test yourself:**
-Run Lighthouse on our playground: https://larcjs.github.io/larc/playground/
+Run Lighthouse on our playground: https://larcjs.com/playground/
 
 ---
 
@@ -428,7 +428,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 > Yes: 261 tests passing, 0 vulnerabilities, v3.0.1 on npm. Young ecosystem (2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
 
 ### For "Performance?"
-> 9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.github.io/larc/playground/
+> 9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.com/playground/
 
 ### For "Learning curve?"
 > If you know HTML + vanilla JS, you're ready. No JSX, no new syntax. 5 min to use components, 1 hour to build custom ones.

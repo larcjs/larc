@@ -87,7 +87,7 @@ larc/
 - ✅ `site/` → `docs/site/`
   - 143 files migrated
   - Documentation website
-  - Hosted at https://larcjs.github.io/larc/docs/site/
+  - Hosted at https://larcjs.com/
 
 ### Preserved/Restored as Submodules
 - ✅ `core/` - Remains submodule to @larcjs/core

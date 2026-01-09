@@ -366,7 +366,7 @@ MIT © Chris Robison
 
 ## 🆘 Support
 
-- 📖 [Documentation](https://larcjs.github.io/site/)
+- 📖 [Documentation](https://larcjs.com/)
 - 💬 [Discussions](https://github.com/larcjs/examples/discussions)
 - 🐛 [Issue Tracker](https://github.com/larcjs/examples/issues)
 

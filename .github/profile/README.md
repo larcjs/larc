@@ -25,11 +25,11 @@ LARC implements the PAN (Page Area Network) messaging protocol — a framework-a
 
 | Package | Description | Version | Links |
 |---------|-------------|---------|-------|
-| **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | 1.1.1 | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.github.io/site/) |
-| **[@larcjs/ui](https://github.com/larcjs/components)** | UI components library | 1.1.0 | [NPM](https://npmjs.com/package/@larcjs/ui) · [Gallery](https://larcjs.github.io/site/gallery.html) |
+| **[@larcjs/core](https://github.com/larcjs/core)** | Core PAN messaging bus | 1.1.1 | [NPM](https://npmjs.com/package/@larcjs/core) · [Docs](https://larcjs.com/) |
+| **[@larcjs/ui](https://github.com/larcjs/components)** | UI components library | 1.1.0 | [NPM](https://npmjs.com/package/@larcjs/ui) · [Gallery](https://larcjs.com/gallery.html) |
 | **[@larcjs/devtools](https://github.com/larcjs/devtools)** | Chrome DevTools extension | 1.0.0 | [Chrome Store](https://chrome.google.com/webstore) · [Docs](https://github.com/larcjs/devtools) |
-| **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | 1.0.1 | [Examples](https://larcjs.github.io/examples/) · [Apps](https://github.com/larcjs/examples/tree/main/apps) |
-| **[@larcjs/site](https://github.com/larcjs/site)** | Documentation website | 1.0.0 | [Live Site](https://larcjs.github.io/site/) |
+| **[@larcjs/examples](https://github.com/larcjs/examples)** | Examples & demo apps | 1.0.1 | [Examples](https://larcjs.com/examples/) · [Apps](https://github.com/larcjs/examples/tree/main/apps) |
+| **[@larcjs/site](https://github.com/larcjs/site)** | Documentation website | 1.0.0 | [Live Site](https://larcjs.com/) |
 
 ---
 
@@ -85,11 +85,11 @@ Add interactive components to existing pages without framework rewrites.
 
 ## 📚 Documentation
 
-- **[Getting Started](https://larcjs.github.io/site/)** — Quick introduction
-- **[API Reference](https://larcjs.github.io/site/docs/API_REFERENCE.html)** — Complete API docs
-- **[Examples](https://larcjs.github.io/examples/)** — 30+ progressive examples
-- **[Component Gallery](https://larcjs.github.io/site/gallery.html)** — Visual showcase
-- **[Architecture Guide](https://larcjs.github.io/site/docs/LARC_SPEC.v0.html)** — System design
+- **[Getting Started](https://larcjs.com/)** — Quick introduction
+- **[API Reference](https://larcjs.com/docs/API_REFERENCE.html)** — Complete API docs
+- **[Examples](https://larcjs.com/examples/)** — 30+ progressive examples
+- **[Component Gallery](https://larcjs.com/gallery.html)** — Visual showcase
+- **[Architecture Guide](https://larcjs.com/docs/LARC_SPEC.v0.html)** — System design
 
 ---
 
@@ -193,7 +193,7 @@ All packages are licensed under the MIT License. See individual repositories for
 
 ## 🆘 Support
 
-- 📖 [Documentation](https://larcjs.github.io/site/)
+- 📖 [Documentation](https://larcjs.com/)
 - 💬 [Discussions](https://github.com/orgs/larcjs/discussions)
 - 🐛 [Issue Tracker](https://github.com/larcjs/core/issues)
 

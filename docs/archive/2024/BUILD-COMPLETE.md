@@ -518,7 +518,7 @@ Status: Running ✅
 
 ### Production (Pending)
 ```
-URL:    https://larcjs.github.io/larc/playground/
+URL:    https://larcjs.com/playground/
 Repo:   https://github.com/larcjs/larc
 Status: Not yet deployed ⏳
 ```

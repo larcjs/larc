@@ -2818,7 +2818,7 @@ LARC's zero-build architecture provides a solid foundation for high-performance 
 - Set up [performance budgets](#85-performance-budgets)
 
 For questions or feedback:
-- [LARC Documentation](https://larcjs.github.io/site/)
+- [LARC Documentation](https://larcjs.com/)
 - [API Reference](/docs/API_REFERENCE.md)
 - [GitHub Issues](https://github.com/larcjs/core/issues)
 

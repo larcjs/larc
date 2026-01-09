@@ -99,7 +99,7 @@ None currently. All core functionality implemented.
 1. Push to GitHub (✅ done)
 2. Enable GitHub Pages
 3. Configure Pages to serve from `/playground` directory
-4. Test live at `https://larcjs.github.io/larc/playground/`
+4. Test live at `https://larcjs.com/playground/`
 
 ### Optional Enhancements
 - Drag-and-drop component reordering
@@ -112,7 +112,7 @@ None currently. All core functionality implemented.
 
 **Local:** http://localhost:8080/playground/  
 **GitHub Repo:** https://github.com/larcjs/larc/tree/main/playground  
-**GitHub Pages:** https://larcjs.github.io/larc/playground/ (pending setup)
+**GitHub Pages:** https://larcjs.com/playground/ (pending setup)
 
 ## Components by Category
 

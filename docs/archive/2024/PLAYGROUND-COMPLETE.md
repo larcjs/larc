@@ -277,7 +277,7 @@ b058749 Build LARC Playground core components
 
 ## Demo URL
 
-**Coming soon:** https://larcjs.github.io/larc/playground/
+**Coming soon:** https://larcjs.com/playground/
 
 ---
 

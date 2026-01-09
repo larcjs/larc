@@ -41,7 +41,7 @@ Technical highlights:
 • TypeScript support
 • Published on npm (@larcjs/core@3.0.1)
 
-Live playground: https://larcjs.github.io/larc/playground/
+Live playground: https://larcjs.com/playground/
 
 The "killer" demo is the hybrid dashboard—React, Vue, and LARC components
 on the same page, coordinating via PAN messages. No framework knows
@@ -55,7 +55,7 @@ for optimization. Framework complement, not replacement.
 Happy to answer questions!
 
 GitHub: https://github.com/larcjs/larc
-Docs: https://larcjs.github.io/site/
+Docs: https://larcjs.com/
 ```
 
 ---
@@ -71,7 +71,7 @@ provides lightweight pub/sub messaging so components communicate without couplin
 
 Tech: 5KB core, 261 tests, works with React/Vue/Svelte, TypeScript support.
 
-Playground: https://larcjs.github.io/larc/playground/
+Playground: https://larcjs.com/playground/
 Hybrid demo: React + Vue + LARC components coordinating via PAN messages.
 
 Just shipped: CLI tool (create-larc-app), component registry, VS Code extension.
@@ -113,8 +113,8 @@ and update automatically. No coupling, no imports, no framework required.
 • Published to npm (@larcjs/core@3.0.1)
 
 **Try it:**
-Playground: https://larcjs.github.io/larc/playground/
-Hybrid demo: https://larcjs.github.io/examples/hybrid-dashboard.html
+Playground: https://larcjs.com/playground/
+Hybrid demo: https://larcjs.com/examples/hybrid-dashboard.html
 
 **Get started:**
 ```bash
@@ -126,7 +126,7 @@ optimized builds for production. Fast iteration + optimal delivery.
 
 I'm here all day to answer questions!
 
-Docs: https://larcjs.github.io/site/
+Docs: https://larcjs.com/
 GitHub: https://github.com/larcjs/larc
 ```
 
@@ -184,9 +184,9 @@ Keep these ready for comments:
 
 - Main repo: https://github.com/larcjs/larc
 - Core repo: https://github.com/larcjs/core
-- Playground: https://larcjs.github.io/larc/playground/
-- Docs site: https://larcjs.github.io/site/
-- Examples: https://larcjs.github.io/examples/
+- Playground: https://larcjs.com/playground/
+- Docs site: https://larcjs.com/
+- Examples: https://larcjs.com/examples/
 - npm: https://npmjs.com/package/@larcjs/core
 - Discussions: https://github.com/larcjs/core/discussions
 

@@ -239,7 +239,7 @@ SESSION-SUMMARY.md (this file)
 - **@larcjs/ui-types:** https://www.npmjs.com/package/@larcjs/ui-types
 
 ### Pending Deployment
-- **GitHub Pages:** https://larcjs.github.io/larc/playground/ (pending setup)
+- **GitHub Pages:** https://larcjs.com/playground/ (pending setup)
 
 ---
 

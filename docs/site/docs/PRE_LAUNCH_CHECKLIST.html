@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pre-Launch Checklist for HN & Reddit Announcement · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Pre-Launch Checklist for HN & Reddit Announcement">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <span>PRE_LAUNCH_CHECKLIST</span>
+      </div>
+      <article class="docs-content">
+        <h1>Pre-Launch Checklist for HN & Reddit Announcement</h1>
+<strong>Last Updated:</strong> January 7, 2026
+<strong>Current Version:</strong> 3.0.1
+<hr>
+<h2>✅ COMPLETED TASKS</h2>
+<h3>Critical Items (DONE)</h3>
+<ul><li>✅ <strong>Version consistency</strong> - All docs updated to v3.0.1</li>
+</ul>  - ✅ README.md
+  - ✅ SECURITY.md
+  - ✅ HN_FAQ.md
+  - ✅ HN_POST_DRAFT.md
+  - ✅ All book chapters
+  - ✅ HTML documentation
+<ul><li>✅ <strong>Playground exists</strong> - https://larcjs.com/playground/ returns HTTP 200</li>
+<li>✅ <strong>Main website works</strong> - https://larcjs.com returns HTTP 200</li>
+<li>✅ <strong>CI/CD passing</strong> - All tests green</li>
+<li>✅ <strong>Security audit</strong> - 0 vulnerabilities</li>
+<li>✅ <strong>npm packages published</strong> - v3.0.1 live</li>
+</ul>
+<hr>
+<h2>🔴 CRITICAL (Must Do Before Launch)</h2>
+<h3>1. Verify All Demo URLs Work</h3>
+<strong>Time Required:</strong> 15-30 minutes
+<p>Test each URL manually in a browser (incognito mode):</p>
+<ul><li>[ ] <strong>Playground:</strong> https://larcjs.com/playground/</li>
+</ul>  - Can load page?
+  - Components render?
+  - Examples work?
+  - No console errors?
+<ul><li>[ ] <strong>Examples:</strong> https://larcjs.com/examples/</li>
+</ul>  - Page loads?
+  - Example list displays?
+  - Links work?
+<ul><li>[ ] <strong>Docs Site:</strong> https://larcjs.com/</li>
+</ul>  - Navigation works?
+  - API reference loads?
+  - Search works?
+<ul><li>[ ] <strong>Hybrid Dashboard:</strong> https://larcjs.com/examples/hybrid-dashboard.html</li>
+</ul>  - Exists?
+  - Demo works?
+  - Shows React + Vue + LARC integration?
+<strong>If any URL is broken:</strong>
+<ul><li>Fix it immediately, OR</li>
+<li>Remove references from HN post</li>
+</ul>
+<hr>
+<h3>2. Test Key User Flows</h3>
+<strong>Time Required:</strong> 20 minutes
+<p>#### Quick Start Flow
+<ul><li>[ ] Visit main GitHub repo</li>
+<li>[ ] Click "Quick Start" in README</li>
+<li>[ ] Follow installation instructions</li>
+<li>[ ] Verify code examples work</li>
+</ul>
+#### NPM Install Flow
+<pre><code class="language-bash"># Test these commands work:
+npm view @larcjs/core version
+npm view @larcjs/ui version
+npm install @larcjs/core@3.0.1
+npm install @larcjs/ui@3.0.1</code></pre></p>
+<ul><li>[ ] Packages download successfully</li>
+<li>[ ] No installation errors</li>
+<li>[ ] Files are present after install</li>
+</ul>
+<hr>
+<h3>3. Prepare Community Infrastructure</h3>
+<strong>Time Required:</strong> 15 minutes
+<p>#### Discord Server
+<ul><li>[ ] Visit: https://discord.gg/zjUPsWTu</li>
+<li>[ ] Invite link works</li>
+<li>[ ] Server has clear channels:</li>
+</ul>  - [ ] #welcome / #introductions
+  - [ ] #help / #support
+  - [ ] #showcase
+  - [ ] #general
+<ul><li>[ ] Rules/guidelines posted</li>
+<li>[ ] You're ready to be active for 2-3 hours</li>
+</ul>
+#### GitHub
+<ul><li>[ ] Issues enabled</li>
+<li>[ ] Discussions enabled</li>
+<li>[ ] Templates in place (bug, feature)</li>
+<li>[ ] CONTRIBUTING.md visible</li>
+<li>[ ] GitHub Actions badges showing green</li>
+</ul>
+<hr></p>
+<h3>4. Polish First Impressions</h3>
+<strong>Time Required:</strong> 30 minutes
+<p>#### README.md Review
+<ul><li>[ ] Hero section is clear (first 3 lines)</li>
+<li>[ ] Installation command prominent</li>
+<li>[ ] Key benefits visible above fold</li>
+<li>[ ] Badges showing (tests, version, license)</li>
+<li>[ ] No typos or broken formatting</li>
+</ul>
+#### HN Post Draft Review
+<ul><li>[ ] Title under 80 characters</li>
+<li>[ ] First comment ready to paste</li>
+<li>[ ] Links are correct</li>
+<li>[ ] Statistics are accurate (261 tests, v3.0.1, etc.)</li>
+<li>[ ] No typos</li>
+</ul>
+<hr></p>
+<h2>🟡 HIGHLY RECOMMENDED (Should Do)</h2>
+<h3>5. Create Demo Assets</h3>
+<strong>Time Required:</strong> 1-2 hours
+<ul><li>[ ] <strong>Screenshot of playground</strong> (for social sharing)</li>
+</ul>  - Save as <code>docs/images/playground-screenshot.png</code>
+  - Add to README
+<ul><li>[ ] <strong>GIF/Video demo</strong> (30-60 seconds)</li>
+</ul>  - Show component loading
+  - Show PAN messaging
+  - Show hybrid dashboard
+  - Upload to GitHub or YouTube
+<ul><li>[ ] <strong>Code examples prepared</strong></li>
+</ul>  - 3-5 copy-paste examples ready
+  - Different complexity levels
+  - Clear comments
+<hr>
+<h3>6. Optimize Social Sharing</h3>
+<strong>Time Required:</strong> 30 minutes
+<p>#### Add Meta Tags to Main Site
+<pre><code class="language-html">&lt;!-- In main landing page --&gt;
+&lt;meta property=&quot;og:title&quot; content=&quot;LARC - Zero-dependency web component framework&quot;&gt;
+&lt;meta property=&quot;og:description&quot; content=&quot;Build framework-agnostic components with PAN messaging. 9KB core, 261 tests passing.&quot;&gt;
+&lt;meta property=&quot;og:image&quot; content=&quot;https://larcjs.com/images/social-card.png&quot;&gt;
+&lt;meta property=&quot;og:url&quot; content=&quot;https://github.com/larcjs/larc&quot;&gt;
+&lt;meta name=&quot;twitter:card&quot; content=&quot;summary_large_image&quot;&gt;</code></pre></p>
+<ul><li>[ ] Create social card image (1200x630px)</li>
+<li>[ ] Add meta tags to main pages</li>
+<li>[ ] Test with: https://cards-dev.twitter.com/validator</li>
+</ul>
+<hr>
+<h3>7. Prepare Response Templates</h3>
+<strong>Time Required:</strong> 30 minutes
+<p>Create quick-response docs for common questions:</p>
+<ul><li>[ ] <strong>"How is this different from Lit/Stencil?"</strong></li>
+</ul>  - Answer ready in <code>HN_FAQ.md</code> ✓
+<ul><li>[ ] <strong>"Production ready?"</strong></li>
+</ul>  - Answer ready in <code>HN_FAQ.md</code> ✓
+<ul><li>[ ] <strong>"Bundle size?"</strong></li>
+</ul>  - Clear stats in multiple docs ✓
+<ul><li>[ ] <strong>"Browser support?"</strong></li>
+</ul>  - Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ ✓
+<hr>
+<h2>🟢 NICE TO HAVE (Optional)</h2>
+<h3>8. Advanced Preparation</h3>
+<strong>Time Required:</strong> 2-4 hours
+<ul><li>[ ] <strong>Analytics setup</strong></li>
+</ul>  - Google Analytics on docs site
+  - npm download tracking setup
+  - GitHub star notifications
+<ul><li>[ ] <strong>Monitoring</strong></li>
+</ul>  - Uptime monitor for larcjs.com
+  - Error tracking (Sentry?)
+  - CDN performance monitoring
+<ul><li>[ ] <strong>Backup plans</strong></li>
+</ul>  - CodeSandbox demos ready (if GitHub Pages fails)
+  - Local video recording (if demos break)
+  - Alternative community channel (if Discord breaks)
+<ul><li>[ ] <strong>Press kit</strong></li>
+</ul>  - Logo files (SVG, PNG)
+  - Project description (50, 100, 200 words)
+  - Screenshots
+  - Quotes
+<hr>
+<h2>📋 Launch Day Checklist</h2>
+<h3>T-Minus 1 Hour</h3>
+<ul><li>[ ] Run final URL verification (all links work)</li>
+<li>[ ] Test playground in 3 browsers (Chrome, Firefox, Safari)</li>
+<li>[ ] Check Discord is ready</li>
+<li>[ ] Review HN post one more time</li>
+<li>[ ] Have FAQ.md open for quick copy-paste</li>
+<li>[ ] Clear your schedule for 2 hours</li>
+<li>[ ] Get team on standby (if applicable)</li>
+</ul>
+<h3>Launch Time (7:30-9:00 AM PT recommended)</h3>
+<ul><li>[ ] Post to HN</li>
+<li>[ ] Post first comment within 2 minutes</li>
+<li>[ ] Share HN link with team</li>
+<li>[ ] Begin monitoring every 5 minutes</li>
+<li>[ ] Respond to EVERY comment within 10 minutes (first 2 hours)</li>
+</ul>
+<h3>First 2 Hours (Critical Window)</h3>
+<ul><li>[ ] Stay online and engaged</li>
+<li>[ ] Be humble, helpful, technical</li>
+<li>[ ] Share code samples generously</li>
+<li>[ ] Acknowledge criticisms gracefully</li>
+<li>[ ] Fix broken links immediately if reported</li>
+<li>[ ] Track metrics (upvotes, comments, stars)</li>
+</ul>
+<h3>After 2 Hours</h3>
+<ul><li>[ ] Continue monitoring every 30 minutes</li>
+<li>[ ] Respond to all new comments within 1 hour</li>
+<li>[ ] Thank people who try it out</li>
+<li>[ ] Welcome new Discord members</li>
+<li>[ ] Track GitHub stars/forks</li>
+</ul>
+<hr>
+<h2>🎯 Success Metrics</h2>
+<h3>Optimistic Goals</h3>
+<ul><li>100+ points on HN</li>
+<li>50+ GitHub stars</li>
+<li>10+ npm downloads</li>
+<li>5+ Discord joins</li>
+</ul>
+<h3>Realistic Goals</h3>
+<ul><li>50+ points on HN (front page)</li>
+<li>25+ GitHub stars</li>
+<li>5+ npm downloads</li>
+<li>2-3 Discord joins</li>
+<li>Quality technical discussions</li>
+</ul>
+<h3>Success Indicators</h3>
+<ul><li>Positive technical feedback</li>
+<li>Feature requests (not just bug reports)</li>
+<li>"I'll try this" comments</li>
+<li>Shared to Twitter/Reddit</li>
+<li>Zero broken demo links!</li>
+</ul>
+<hr>
+<h2>⚠️ Red Flags to Avoid</h2>
+<strong>DON'T launch if:</strong>
+<ul><li>[ ] ❌ Playground is down/broken</li>
+<li>[ ] ❌ Main GitHub repo has failing tests</li>
+<li>[ ] ❌ Discord invite doesn't work</li>
+<li>[ ] ❌ npm packages aren't installable</li>
+<li>[ ] ❌ You can't commit to 2 hours of responses</li>
+<li>[ ] ❌ Multiple URLs are returning 404s</li>
+</ul>
+<strong>DELAY launch if:</strong>
+<ul><li>[ ] ⚠️ You're tired or distracted</li>
+<li>[ ] ⚠️ It's Friday afternoon (bad timing)</li>
+<li>[ ] ⚠️ Major bugs discovered in last 24 hours</li>
+<li>[ ] ⚠️ Someone else just launched similar project</li>
+</ul>
+<hr>
+<h2>🚀 Quick Verification Script</h2>
+<p>Run this before launch:</p>
+<pre><code class="language-bash"># 1. Check versions are consistent
+grep -r &quot;v3.0.1&quot; README.md docs/guides/HN_FAQ.md docs/guides/HN_POST_DRAFT.md
+
+# 2. Test npm packages
+npm view @larcjs/core@3.0.1 version
+npm view @larcjs/ui@3.0.1 version
+
+# 3. Verify tests pass
+npm run test --workspace @larcjs/core
+
+# 4. Check for vulnerabilities
+npm audit
+
+# 5. Verify URLs (manually in browser)
+# - https://larcjs.com/playground/
+# - https://larcjs.com/examples/
+# - https://larcjs.com/
+# - https://larcjs.com
+# - https://discord.gg/zjUPsWTu</code></pre>
+<hr>
+<h2>📞 Emergency Contacts</h2>
+<strong>If things go wrong during launch:</strong>
+<ul><li><strong>Playground down:</strong> Share CodeSandbox alternative</li>
+<li><strong>GitHub Actions failing:</strong> Acknowledge, say fixing</li>
+<li><strong>Discord broken:</strong> Create GitHub Discussions thread</li>
+<li><strong>Getting ratio'd:</strong> Stay positive, focus on helpers</li>
+<li><strong>Server overload:</strong> Have backup hosting ready</li>
+</ul>
+<hr>
+<h2>✅ Final Go/No-Go Decision</h2>
+<strong>You're ready to launch when:</strong>
+<p>✅ All CRITICAL items completed
+✅ At least 2/3 HIGHLY RECOMMENDED items done
+✅ All demo URLs tested and working
+✅ 2-hour time block available
+✅ Feel confident and excited</p>
+<strong>Current Status:</strong>
+<ul><li>Critical items: <strong>5/6 complete</strong> (need URL verification)</li>
+<li>Highly recommended: <strong>3/7 complete</strong></li>
+<li>Nice to have: <strong>0/4 complete</strong></li>
+</ul>
+<strong>Estimated time to launch-ready:</strong> 1-2 hours
+(Complete critical items + 2-3 highly recommended)
+<hr>
+<h2>📅 Recommended Launch Timeline</h2>
+<strong>Today (Day 0):</strong>
+<ul><li>Complete all CRITICAL items</li>
+<li>Do URL verification</li>
+<li>Test user flows</li>
+<li>Prepare Discord</li>
+</ul>
+<strong>Tomorrow Morning (Day 1):</strong>
+<ul><li>Final verification (30 min)</li>
+<li>Launch at 7:30-9:00 AM PT</li>
+<li>Stay engaged for 2-3 hours</li>
+</ul>
+<strong>Good luck! 🚀</strong>
+<em>Remember: Better to delay 24 hours and launch strong than rush and have broken demos.</em>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/PRE_LAUNCH_CHECKLIST.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

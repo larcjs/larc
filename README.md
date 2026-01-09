@@ -86,7 +86,7 @@ npm install @larcjs/core-lite
 - 📖 [Full Documentation](https://larcjs.com)
 - 🚀 [Getting Started Guide](./docs/guides/QUICK-START-GUIDE.md)
 - 📚 [API Reference](./docs/API-REFERENCE.md)
-- 💡 [Examples](https://larcjs.github.io/larc/examples/)
+- 💡 [Examples](https://larcjs.com/examples/)
 - ❓ [FAQ](./docs/guides/HN_FAQ.md)
 
 ---
@@ -313,8 +313,8 @@ These packages are published to npm:
 ## 🔗 Links
 
 - **Website**: [larcjs.com](https://larcjs.com)
-- **Documentation**: [larcjs.github.io/larc](https://larcjs.github.io/larc/docs/site/)
-- **Examples**: [larcjs.github.io/larc/examples](https://larcjs.github.io/larc/examples/)
+- **Documentation**: [larcjs.com](https://larcjs.com/)
+- **Examples**: [larcjs.com/examples](https://larcjs.com/examples/)
 - **npm Organization**: [@larcjs](https://www.npmjs.com/org/larcjs)
 - **GitHub**: [github.com/larcjs](https://github.com/larcjs)
 - **Discord**: [Join our Discord](https://discord.gg/zjUPsWTu)

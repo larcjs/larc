@@ -475,7 +475,7 @@ Every component should have:
 - 💬 [Discord](https://discord.gg/zjUPsWTu) - Chat with the community
 - 💬 [GitHub Discussions](https://github.com/larcjs/core/discussions) - Ask questions, share ideas
 - 🐛 [GitHub Issues](https://github.com/larcjs/core/issues) - Report bugs
-- 📖 [Documentation](https://larcjs.github.io/site/) - Read the docs
+- 📖 [Documentation](https://larcjs.com/) - Read the docs
 
 ### Reporting Bugs
 

@@ -14,7 +14,7 @@
   - ✅ HN_POST_DRAFT.md
   - ✅ All book chapters
   - ✅ HTML documentation
-- ✅ **Playground exists** - https://larcjs.github.io/larc/playground/ returns HTTP 200
+- ✅ **Playground exists** - https://larcjs.com/playground/ returns HTTP 200
 - ✅ **Main website works** - https://larcjs.com returns HTTP 200
 - ✅ **CI/CD passing** - All tests green
 - ✅ **Security audit** - 0 vulnerabilities
@@ -29,23 +29,23 @@
 
 Test each URL manually in a browser (incognito mode):
 
-- [ ] **Playground:** https://larcjs.github.io/larc/playground/
+- [ ] **Playground:** https://larcjs.com/playground/
   - Can load page?
   - Components render?
   - Examples work?
   - No console errors?
 
-- [ ] **Examples:** https://larcjs.github.io/larc/examples/
+- [ ] **Examples:** https://larcjs.com/examples/
   - Page loads?
   - Example list displays?
   - Links work?
 
-- [ ] **Docs Site:** https://larcjs.github.io/site/
+- [ ] **Docs Site:** https://larcjs.com/
   - Navigation works?
   - API reference loads?
   - Search works?
 
-- [ ] **Hybrid Dashboard:** https://larcjs.github.io/larc/examples/hybrid-dashboard.html
+- [ ] **Hybrid Dashboard:** https://larcjs.com/examples/hybrid-dashboard.html
   - Exists?
   - Demo works?
   - Shows React + Vue + LARC integration?
@@ -152,7 +152,7 @@ npm install @larcjs/ui@3.0.1
 <!-- In main landing page -->
 <meta property="og:title" content="LARC - Zero-dependency web component framework">
 <meta property="og:description" content="Build framework-agnostic components with PAN messaging. 9KB core, 261 tests passing.">
-<meta property="og:image" content="https://larcjs.github.io/larc/images/social-card.png">
+<meta property="og:image" content="https://larcjs.com/images/social-card.png">
 <meta property="og:url" content="https://github.com/larcjs/larc">
 <meta name="twitter:card" content="summary_large_image">
 ```
@@ -310,9 +310,9 @@ npm run test --workspace @larcjs/core
 npm audit
 
 # 5. Verify URLs (manually in browser)
-# - https://larcjs.github.io/larc/playground/
-# - https://larcjs.github.io/larc/examples/
-# - https://larcjs.github.io/site/
+# - https://larcjs.com/playground/
+# - https://larcjs.com/examples/
+# - https://larcjs.com/
 # - https://larcjs.com
 # - https://discord.gg/zjUPsWTu
 ```

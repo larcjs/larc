@@ -394,7 +394,7 @@ Inspired by:
 
 ## Support
 
-- 📖 [Documentation](https://larcjs.github.io/site/)
+- 📖 [Documentation](https://larcjs.com/)
 - 🐛 [Report Issue](https://github.com/larcjs/devtools/issues)
 - 💬 [Discussions](https://github.com/larcjs/devtools/discussions)
 

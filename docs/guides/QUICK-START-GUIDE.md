@@ -187,7 +187,7 @@ npm install @larcjs/core-debug    # +3KB
 
 - **[Package Selection Guide](./PACKAGES.md)** - Detailed comparison
 - **[Migration Guide](./packages/core-lite/MIGRATION.md)** - From full to lite
-- **[Full Docs](https://larcjs.github.io/site/)** - Complete documentation
+- **[Full Docs](https://larcjs.com/)** - Complete documentation
 
 ---
 

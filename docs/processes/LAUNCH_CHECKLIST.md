@@ -43,7 +43,7 @@
 
 ### Examples & Demos
 
-- [ ] Playground working and up-to-date (https://larcjs.github.io/larc/playground/)
+- [ ] Playground working and up-to-date (https://larcjs.com/playground/)
 - [ ] Hybrid dashboard demo working
 - [ ] All examples/ demos tested and working
 - [ ] Mobile responsiveness verified
@@ -190,7 +190,7 @@
   components coordinate without knowing about each other. Mix React, Vue,
   and LARC components on the same page.
 
-  Try it: https://larcjs.github.io/larc/playground/
+  Try it: https://larcjs.com/playground/
 
   Tech: 261 passing tests, TypeScript support, 5KB core, zero dependencies.
 

@@ -118,7 +118,7 @@ Once testing reveals issues, fix them immediately.
 4. Select folder: "/ (root)"
 5. Click "Save"
 6. Wait 2-3 minutes for deployment
-7. Test at https://larcjs.github.io/larc/playground/
+7. Test at https://larcjs.com/playground/
 
 **Note:** Because we need to serve from root (for relative paths), we deploy the whole repo. The playground will be at `/playground/` subdirectory.
 
@@ -281,7 +281,7 @@ Once testing reveals issues, fix them immediately.
 - **components-types:** https://www.npmjs.com/package/@larcjs/ui-types
 
 ### Pending
-- **GitHub Pages:** https://larcjs.github.io/larc/playground/ (not live yet)
+- **GitHub Pages:** https://larcjs.com/playground/ (not live yet)
 
 ---
 
