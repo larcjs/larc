@@ -20,7 +20,8 @@ export class PanThemeProvider extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
-    this._theme = 'auto'; // 'light', 'dark', or 'auto'
+    this._storageKey = 'larc-theme-preference';
+    this._theme = this._loadThemeFromStorage() || 'auto'; // 'light', 'dark', or 'auto'
     this._systemTheme = this._getSystemTheme();
     this._mediaQuery = null;
   }
@@ -32,6 +33,23 @@ export class PanThemeProvider extends HTMLElement {
     this._broadcastThemeChange();
   }
 
+  _loadThemeFromStorage() {
+    try {
+      return localStorage.getItem(this._storageKey) || null;
+    } catch (err) {
+      console.warn('[pan-theme-provider] localStorage not available:', err);
+      return null;
+    }
+  }
+
+  _saveThemeToStorage(theme) {
+    try {
+      localStorage.setItem(this._storageKey, theme);
+    } catch (err) {
+      console.warn('[pan-theme-provider] Could not save theme to localStorage:', err);
+    }
+  }
+
   disconnectedCallback() {
     if (this._mediaQuery) {
       this._mediaQuery.removeEventListener('change', this._handleSystemThemeChange);
@@ -41,6 +59,7 @@ export class PanThemeProvider extends HTMLElement {
   attributeChangedCallback(name, oldValue, newValue) {
     if (name === 'theme' && oldValue !== newValue) {
       this._theme = newValue || 'auto';
+      this._saveThemeToStorage(this._theme);
       this._applyTheme();
       this._broadcastThemeChange();
     }

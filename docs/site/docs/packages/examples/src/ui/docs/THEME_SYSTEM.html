@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../../../../../../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PAN Theme System · PAN Documentation</title>
   <meta name="description" content="PAN (Page Area Network) Documentation - PAN Theme System">
@@ -246,7 +249,7 @@ provider.addEventListener(&#039;theme-change&#039;, (e) =&gt; {
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-primary: #00aaff;
   }
 }</code></pre>

@@ -2,9 +2,107 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>📚 LARC Wiki Explorer</title>
   <style>
+    /* CSS Custom Properties for Theming */
+    :root {
+      /* Light mode (default) */
+      --color-bg: #f8f9fa;
+      --color-bg-alt: #ffffff;
+      --color-bg-header: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      --color-text: #111827;
+      --color-text-muted: #6b7280;
+      --color-border: #e5e7eb;
+      --color-surface: #f9fafb;
+      --color-surface-alt: #ffffff;
+      --color-scrollbar-track: #f1f1f1;
+      --color-scrollbar-thumb: #c0c0c0;
+      --color-scrollbar-thumb-hover: #a0a0a0;
+      --color-error-bg: #fee;
+      --color-error-border: #fcc;
+      --color-error-text: #c33;
+      --color-selected-bg: #ede9fe;
+      --color-selected-text: #5b21b6;
+      --color-hover-bg: #f3f4f6;
+      --color-primary: #667eea;
+      --color-primary-focus: rgba(102, 126, 234, 0.1);
+    }
+
+    /* Dark mode - System preference */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-bg: #0f172a;
+        --color-bg-alt: #1e293b;
+        --color-bg-header: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        --color-text: #f1f5f9;
+        --color-text-muted: #94a3b8;
+        --color-border: #334155;
+        --color-surface: #1e293b;
+        --color-surface-alt: #0f172a;
+        --color-scrollbar-track: #1e293b;
+        --color-scrollbar-thumb: #475569;
+        --color-scrollbar-thumb-hover: #64748b;
+        --color-error-bg: #450a0a;
+        --color-error-border: #7f1d1d;
+        --color-error-text: #fca5a5;
+        --color-selected-bg: #4c1d95;
+        --color-selected-text: #e9d5ff;
+        --color-hover-bg: #334155;
+        --color-primary: #818cf8;
+        --color-primary-focus: rgba(129, 140, 248, 0.1);
+      }
+    }
+
+    /* Dark mode - Manual override */
+    [data-theme="dark"] {
+      --color-bg: #0f172a;
+      --color-bg-alt: #1e293b;
+      --color-bg-header: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --color-text: #f1f5f9;
+      --color-text-muted: #94a3b8;
+      --color-border: #334155;
+      --color-surface: #1e293b;
+      --color-surface-alt: #0f172a;
+      --color-scrollbar-track: #1e293b;
+      --color-scrollbar-thumb: #475569;
+      --color-scrollbar-thumb-hover: #64748b;
+      --color-error-bg: #450a0a;
+      --color-error-border: #7f1d1d;
+      --color-error-text: #fca5a5;
+      --color-selected-bg: #4c1d95;
+      --color-selected-text: #e9d5ff;
+      --color-hover-bg: #334155;
+      --color-primary: #818cf8;
+      --color-primary-focus: rgba(129, 140, 248, 0.1);
+    }
+
+    /* Light mode - Manual override */
+    [data-theme="light"] {
+      --color-bg: #f8f9fa;
+      --color-bg-alt: #ffffff;
+      --color-bg-header: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+      --color-text: #111827;
+      --color-text-muted: #6b7280;
+      --color-border: #e5e7eb;
+      --color-surface: #f9fafb;
+      --color-surface-alt: #ffffff;
+      --color-scrollbar-track: #f1f1f1;
+      --color-scrollbar-thumb: #c0c0c0;
+      --color-scrollbar-thumb-hover: #a0a0a0;
+      --color-error-bg: #fee;
+      --color-error-border: #fcc;
+      --color-error-text: #c33;
+      --color-selected-bg: #ede9fe;
+      --color-selected-text: #5b21b6;
+      --color-hover-bg: #f3f4f6;
+      --color-primary: #667eea;
+      --color-primary-focus: rgba(102, 126, 234, 0.1);
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -15,11 +113,11 @@
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
       height: 100vh;
       overflow: hidden;
-      background: #f8f9fa;
+      background: var(--color-bg);
     }
 
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--color-bg-header);
       color: white;
       padding: 1rem 1.5rem;
       box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -67,8 +165,8 @@
     }
 
     .sidebar {
-      background: white;
-      border-right: 1px solid #e5e7eb;
+      background: var(--color-bg-alt);
+      border-right: 1px solid var(--color-border);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -76,14 +174,14 @@
 
     .sidebar-header {
       padding: 1rem 1.5rem;
-      border-bottom: 1px solid #e5e7eb;
-      background: #f9fafb;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface);
     }
 
     .sidebar-header h2 {
       font-size: 0.875rem;
       font-weight: 600;
-      color: #374151;
+      color: var(--color-text);
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -95,16 +193,18 @@
     .sidebar-search input {
       width: 100%;
       padding: 0.5rem 0.75rem;
-      border: 1px solid #d1d5db;
+      border: 1px solid var(--color-border);
       border-radius: 0.375rem;
       font-size: 0.875rem;
       outline: none;
       transition: all 0.2s;
+      background: var(--color-surface-alt);
+      color: var(--color-text);
     }
 
     .sidebar-search input:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-focus);
     }
 
     .tree-container {
@@ -114,7 +214,7 @@
     }
 
     .main-content {
-      background: white;
+      background: var(--color-bg-alt);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -122,19 +222,19 @@
 
     .content-header {
       padding: 1.5rem 2rem;
-      border-bottom: 1px solid #e5e7eb;
-      background: #f9fafb;
+      border-bottom: 1px solid var(--color-border);
+      background: var(--color-surface);
     }
 
     .content-header h2 {
       font-size: 1.25rem;
-      color: #111827;
+      color: var(--color-text);
       margin-bottom: 0.25rem;
     }
 
     .content-path {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: var(--color-text-muted);
       font-family: 'Courier New', monospace;
     }
 
@@ -158,13 +258,13 @@
 
     .welcome h2 {
       font-size: 2rem;
-      color: #111827;
+      color: var(--color-text);
       margin-bottom: 1rem;
     }
 
     .welcome p {
       font-size: 1.125rem;
-      color: #6b7280;
+      color: var(--color-text-muted);
       margin-bottom: 2rem;
       line-height: 1.75;
     }
@@ -179,9 +279,9 @@
 
     .feature {
       padding: 1.5rem;
-      background: #f9fafb;
+      background: var(--color-surface);
       border-radius: 0.5rem;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--color-border);
     }
 
     .feature-icon {
@@ -191,20 +291,20 @@
 
     .feature h3 {
       font-size: 1rem;
-      color: #111827;
+      color: var(--color-text);
       margin-bottom: 0.5rem;
     }
 
     .feature p {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: var(--color-text-muted);
       margin: 0;
     }
 
     .loading {
       text-align: center;
       padding: 4rem 2rem;
-      color: #6b7280;
+      color: var(--color-text-muted);
     }
 
     .loading-spinner {
@@ -237,12 +337,12 @@
     }
 
     pan-tree::part(node):hover {
-      background: #f3f4f6;
+      background: var(--color-hover-bg);
     }
 
     pan-tree::part(selected) {
-      background: #ede9fe;
-      color: #5b21b6;
+      background: var(--color-selected-bg);
+      color: var(--color-selected-text);
       font-weight: 500;
     }
 
@@ -253,25 +353,25 @@
     }
 
     ::-webkit-scrollbar-track {
-      background: #f1f1f1;
+      background: var(--color-scrollbar-track);
     }
 
     ::-webkit-scrollbar-thumb {
-      background: #c0c0c0;
+      background: var(--color-scrollbar-thumb);
       border-radius: 4px;
     }
 
     ::-webkit-scrollbar-thumb:hover {
-      background: #a0a0a0;
+      background: var(--color-scrollbar-thumb-hover);
     }
 
     .error-message {
       padding: 1rem;
       margin: 1rem 0;
-      background: #fee;
-      border: 1px solid #fcc;
+      background: var(--color-error-bg);
+      border: 1px solid var(--color-error-border);
       border-radius: 0.375rem;
-      color: #c33;
+      color: var(--color-error-text);
     }
   </style>
 </head>
@@ -601,5 +701,6 @@
     console.log('📡 PanClient ready:', pc);
     loadFileTree();
   </script>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

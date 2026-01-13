@@ -3,63 +3,163 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LARC Playground</title>
-  <link rel="stylesheet" href="./styles/playground.css">
-  
+  <title>LARC Playground - Interactive Component Explorer</title>
+
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="./theme-init.js"></script>
+
+  <link rel="stylesheet" href="./styles/playground-unified.css">
+
   <!-- Configure autoloader paths -->
   <script type="module">
     window.panAutoload = {
-      // Using root-relative paths for reliability
-      // Playground components first for faster resolution
-      paths: ['/larc/playground/components/', '/larc/packages/ui/', '/larc/packages/core/']
+      paths: ['/packages/ui/', '/packages/core/']
     };
   </script>
 
   <!-- Load PAN autoloader -->
-  <script type="module" src="/larc/packages/core/pan.mjs"></script>
-  
-  <!-- Load playground app -->
-  <script type="module" src="./playground.mjs"></script>
+  <script type="module" src="/packages/core/pan.mjs"></script>
+
+  <!-- Load unified playground app -->
+  <script type="module" src="./playground-unified.mjs"></script>
 </head>
 <body>
-  <div class="playground">
-    <!-- Header -->
+  <div class="playground-container">
+    <!-- Header with Mode Switcher -->
     <header class="pg-header">
-      <h1>🎨 LARC Playground</h1>
+      <div class="pg-logo">
+        <h1>🎨 LARC Playground</h1>
+        <p>Interactive Component Explorer</p>
+      </div>
+
+      <nav class="pg-mode-tabs">
+        <button class="mode-tab active" data-mode="gallery">
+          📚 Gallery
+        </button>
+        <button class="mode-tab" data-mode="builder">
+          🔨 Builder
+        </button>
+        <button class="mode-tab" data-mode="editor">
+          💻 Editor
+        </button>
+      </nav>
+
       <div class="pg-actions">
-        <select id="load-example" aria-label="Load example">
-          <option value="">Load Example...</option>
-        </select>
-        <button id="toggle-bus-monitor">PAN Monitor</button>
-        <button id="toggle-code">View Code</button>
+        <pan-theme-toggle variant="icon"></pan-theme-toggle>
+        <button id="toggle-bus-monitor" class="btn-monitor">PAN Monitor</button>
       </div>
     </header>
 
-    <!-- Main Layout -->
-    <div class="pg-main">
-      <!-- Left: Component Palette -->
-      <aside class="pg-sidebar">
-        <pg-palette></pg-palette>
-      </aside>
+    <!-- Main Content Area -->
+    <main class="pg-content">
+      <!-- GALLERY MODE -->
+      <div id="gallery-mode" class="pg-mode active">
+        <div class="gallery-header">
+          <h2>Component Examples</h2>
+          <div class="gallery-controls">
+            <input type="search" id="gallery-search" placeholder="Search examples..." class="search-input">
+            <select id="gallery-filter" class="filter-select">
+              <option value="">All Categories</option>
+              <option value="layout">Layout</option>
+              <option value="forms">Forms</option>
+              <option value="data">Data</option>
+              <option value="state">State</option>
+              <option value="routing">Routing</option>
+            </select>
+          </div>
+        </div>
 
-      <!-- Center: Canvas -->
-      <main class="pg-canvas-area">
-        <pg-canvas></pg-canvas>
-      </main>
+        <div class="gallery-grid" id="gallery-grid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
 
-      <!-- Right: Properties Panel -->
-      <aside class="pg-properties-area">
-        <pg-properties></pg-properties>
-      </aside>
-    </div>
+      <!-- BUILDER MODE -->
+      <div id="builder-mode" class="pg-mode">
+        <div class="builder-layout">
+          <!-- Left: Component Palette -->
+          <aside class="builder-sidebar">
+            <pg-palette></pg-palette>
+          </aside>
 
-    <!-- Bottom: Code Export / Bus Monitor (toggleable) -->
-    <div class="pg-bottom" id="bottom-panel" hidden>
-      <pg-exporter id="code-panel"></pg-exporter>
-      <pg-bus-monitor id="bus-panel" hidden></pg-bus-monitor>
+          <!-- Center: Canvas -->
+          <div class="builder-canvas-area">
+            <pg-canvas></pg-canvas>
+          </div>
+
+          <!-- Right: Properties Panel -->
+          <aside class="builder-properties">
+            <pg-properties></pg-properties>
+          </aside>
+        </div>
+
+        <!-- Bottom: Code Export -->
+        <div class="builder-code-panel" id="builder-code-panel">
+          <pg-exporter></pg-exporter>
+        </div>
+      </div>
+
+      <!-- EDITOR MODE -->
+      <div id="editor-mode" class="pg-mode">
+        <div class="editor-layout">
+          <div class="editor-panes">
+            <!-- Left: Code Editors -->
+            <div class="editor-code-pane">
+              <div class="editor-tabs">
+                <button class="editor-tab active" data-tab="html">HTML</button>
+                <button class="editor-tab" data-tab="css">CSS</button>
+                <button class="editor-tab" data-tab="js">JavaScript</button>
+              </div>
+
+              <div class="editor-content">
+                <div class="editor-area active" data-editor="html">
+                  <textarea id="html-editor" class="code-editor" spellcheck="false"></textarea>
+                </div>
+                <div class="editor-area" data-editor="css">
+                  <textarea id="css-editor" class="code-editor" spellcheck="false"></textarea>
+                </div>
+                <div class="editor-area" data-editor="js">
+                  <textarea id="js-editor" class="code-editor" spellcheck="false"></textarea>
+                </div>
+              </div>
+
+              <div class="editor-toolbar">
+                <button id="run-code" class="btn-primary">▶ Run</button>
+                <button id="clear-code" class="btn-secondary">Clear</button>
+                <button id="format-code" class="btn-secondary">Format</button>
+                <button id="export-code" class="btn-secondary">Export</button>
+              </div>
+            </div>
+
+            <!-- Right: Live Preview -->
+            <div class="editor-preview-pane">
+              <div class="preview-toolbar">
+                <span class="preview-label">Live Preview</span>
+                <div class="preview-actions">
+                  <button id="refresh-preview" class="btn-icon" title="Refresh">🔄</button>
+                  <button id="fullscreen-preview" class="btn-icon" title="Fullscreen">⛶</button>
+                </div>
+              </div>
+              <iframe id="preview-frame" class="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- PAN Bus Monitor (Overlay) -->
+    <div id="bus-monitor-overlay" class="monitor-overlay" hidden>
+      <div class="monitor-panel">
+        <div class="monitor-header">
+          <h3>PAN Bus Monitor</h3>
+          <button id="close-monitor" class="btn-close">✕</button>
+        </div>
+        <pg-bus-monitor></pg-bus-monitor>
+      </div>
     </div>
   </div>
 
   <pan-bus debug="true"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

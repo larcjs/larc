@@ -7,7 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added - Ecosystem Expansion (December 2024)
+## [3.0.1] - 2025-01-05
+
+### Changed
+- **Version Synchronization:** All packages now at v3.0.1 for consistency
+  - Previously: @larcjs/core at 2.1.0, others at 3.0.0
+  - Now: All @larcjs/* packages synchronized to 3.0.1
+  - **No breaking changes** - purely organizational release
+
+### Security
+- Fixed 4 CodeQL security alerts
+  - Incomplete multi-character sanitization in pan-jwt.mjs
+  - DOM text reinterpreted as HTML in pan-json-form.mjs and pan-inspector.mjs
+
+### Testing
+- All 426 tests passing (261 core + 165 UI) across Chromium, Firefox, WebKit
+- GitHub Actions CI/CD workflows operational
+
+## [3.0.0] - 2024-12-01
+
+### Added - Ecosystem Expansion
 
 #### CLI Tooling
 - **create-larc-app** - Project scaffolding tool for creating new LARC applications

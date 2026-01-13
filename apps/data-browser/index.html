@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <title>PAN Data Browser</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -11,7 +14,7 @@
       --bg: #fff; --fg: #111; --muted: #666; --card: #fafafa; --border: #e6e6e6; --accent: #5b8cff;
       --sidebar: #f4f6fb; --shadow: 0 1px 0 rgba(0,0,0,.04);
     }
-    @media (prefers-color-scheme: dark){ :root{ --bg:#0f1115; --fg:#e8e8e8; --muted:#a8a8a8; --card:#151823; --border:#262a36; --accent:#7da2ff; --sidebar:#131827; } }
+    @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) { --bg:#0f1115; --fg:#e8e8e8; --muted:#a8a8a8; --card:#151823; --border:#262a36; --accent:#7da2ff; --sidebar:#131827; } }
     html,body{ margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--fg); font-family: "Lexend", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial }
 
     /* App shell: no page scroll; inner areas scroll */

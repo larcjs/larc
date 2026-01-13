@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LARC · PAN Demo Browser</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -67,5 +70,6 @@
     import './components/pan-demo-viewer.mjs';
     import '../components/pan-inspector.mjs';
   </script>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

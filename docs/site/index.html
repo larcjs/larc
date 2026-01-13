@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LARC — Lightweight Asynchronous Relay Core</title>
   <meta name="description" content="A lightweight DOM-native message bus for building loosely-coupled web UIs. Zero build, framework-agnostic, batteries included.">
+
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="/playground/theme-init.js"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -26,9 +30,9 @@
       --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
     }
 
-    /* Dark mode - OS preference */
+    /* Dark mode - OS preference (only if not explicitly set to light) */
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme="light"]) {
         --color-bg: #0f172a;
         --color-bg-alt: #1e293b;
         --color-text: #f1f5f9;
@@ -901,8 +905,8 @@
         <a href="#philosophy">Why LARC</a>
         <a href="/examples/tutorials/">Examples</a>
         <a href="/apps/">Apps</a>
-        <a href="/site/docs/index.html">Docs</a>
-        <a href="/site/wiki-explorer.html">Wiki</a>
+        <a href="/docs/">Docs</a>
+        <a href="https://github.com/larcjs/larc/wiki" target="_blank">Wiki</a>
         <a href="/site/books.html">Books</a>
         <a href="https://github.com/larcjs" target="_blank">GitHub</a>
         <pan-theme-toggle variant="icon"></pan-theme-toggle>
@@ -1206,8 +1210,8 @@ pan.on('cart.*', (msg) => {
           <li><a href="/site/docs/TYPESCRIPT_IMPLEMENTATION.html">TypeScript Guide</a></li>
           <li><a href="/site/docs/AUTHENTICATION_SUMMARY.html">Authentication</a></li>
           <li><a href="/site/docs/SECURITY_IMPROVEMENTS.html">Security</a></li>
-          <li><a href="/site/wiki-explorer.html">Wiki Explorer</a></li>
-          <li><a href="/site/docs/index.html">All Docs →</a></li>
+          <li><a href="/docs/">Documentation Explorer</a></li>
+          <li><a href="https://github.com/larcjs/larc/wiki" target="_blank">GitHub Wiki →</a></li>
         </ul>
       </div>
       <div class="footer-section">
@@ -1237,7 +1241,7 @@ pan.on('cart.*', (msg) => {
           <li><a href="/docs/books/book-viewer.html?book=learning-larc">Learning LARC</a></li>
           <li><a href="/docs/books/book-viewer.html?book=building-with-larc">Building with LARC</a></li>
           <li><a href="/docs/books/book-viewer.html?book=building-with-larc#chapter-2-the-philosophy-of-larc">Philosophy</a></li>
-          <li><a href="/larc/docs/books/learning-larc/build/output/learning-larc.pdf">PDF Download</a></li>
+          <li><a href="/docs/books/learning-larc/output/pdf/learning-larc.pdf">PDF Download</a></li>
         </ul>
       </div>
       <div class="footer-section">
@@ -1256,12 +1260,11 @@ pan.on('cart.*', (msg) => {
     </div>
   </footer>
 
-  <!-- Theme System -->
-  <pan-theme-provider theme="auto"></pan-theme-provider>
+  <!-- PAN Bus & Theme System -->
+  <pan-bus debug="false"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 
-  <script type="module">
-    import '/ui/pan-theme-provider.mjs';
-    import '/ui/pan-theme-toggle.mjs';
-  </script>
+  <!-- Load PAN core and theme components -->
+  <script type="module" src="/packages/core/pan.mjs"></script>
 </body>
 </html>

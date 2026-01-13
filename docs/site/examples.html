@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Examples · PAN</title>
   <link rel="stylesheet" href="/site/assets/docs.css">
@@ -33,7 +36,7 @@
     }
 
     .example-card {
-      background: white;
+      background: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: 0.5rem;
       padding: 2rem;
@@ -276,5 +279,7 @@
       grid.appendChild(card);
     });
   </script>
+  <pan-bus debug="false"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

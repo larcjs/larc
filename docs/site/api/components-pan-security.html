@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>pan-security - PAN Documentation</title>
   <link rel="stylesheet" href="../styles/docs.css">
@@ -357,5 +360,7 @@
     </section>
 
   </main>
+  <pan-bus debug="false"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

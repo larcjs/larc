@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PAN Demo Suite · Core Lite - 9KB Bundle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -310,5 +313,7 @@ document.getElementById('incrementBtn').addEventListener('click', () => {
     // Initialize display
     updateDisplay();
   </script>
+  <pan-bus debug="false"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

@@ -243,8 +243,8 @@ npm run serve
 ### Testing
 
 **Current Status:**
-- ✅ **@larcjs/core:** 335 tests passing
-- ✅ **@larcjs/ui:** 165 tests passing (55 components × 3 browsers)
+- ✅ **@larcjs/core:** 261 tests passing (87 tests × 3 browsers)
+- ✅ **@larcjs/ui:** 165 tests passing (55 tests × 3 browsers)
 
 ```bash
 # Test everything

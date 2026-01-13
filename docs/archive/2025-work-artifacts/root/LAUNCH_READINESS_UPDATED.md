@@ -10,7 +10,7 @@
 
 ### ✅ Testing Infrastructure (100% Complete)
 - **UI Component Tests:** 165 tests passing (55 components × 3 browsers)
-- **Core Tests:** 335 tests passing
+- **Core Tests:** 261 tests passing
 - **Total Test Coverage:** 500 tests across Chromium, Firefox, WebKit
 - **Pass Rate:** 100% (165/165 UI, 335/335 core)
 - **GitHub Actions CI/CD:** Configured and running
@@ -39,7 +39,7 @@
 ### ✅ Core Requirements (Complete)
 
 #### Repository & Code ✅
-- [x] All tests passing: **500/500** (165 UI + 335 core)
+- [x] All tests passing: **426/426** (165 UI + 335 core)
 - [x] CI/CD workflows: Both core and UI tests automated
 - [x] Security: 0 vulnerabilities, 4 CodeQL alerts resolved
 - [x] Code quality: Only 1 minor TODO comment (non-critical)
@@ -236,7 +236,7 @@ LARC solves the Web Component coordination problem with PAN (Page Area Network) 
 a lightweight message bus for the browser.
 
 Technical highlights:
-• 500 tests passing (335 core + 165 UI) across Chromium, Firefox, WebKit
+• 426 tests passing (261 core + 165 UI) across Chromium, Firefox, WebKit
 • 5KB core (gzipped), zero dependencies
 • Works with React, Vue, Svelte—mix and match
 • Zero-build dev, optional build prod
@@ -337,7 +337,7 @@ Day 2-7: Daily monitoring and responses
 
 | Category | Status | Confidence |
 |----------|--------|------------|
-| **Code Quality** | 500/500 tests passing | 🟢 HIGH |
+| **Code Quality** | 426/426 tests passing | 🟢 HIGH |
 | **Security** | 0 vulnerabilities, 4 fixes done | 🟢 HIGH |
 | **Documentation** | Complete, up-to-date | 🟢 HIGH |
 | **NPM Packages** | All published, v2.0.0 | 🟢 HIGH |

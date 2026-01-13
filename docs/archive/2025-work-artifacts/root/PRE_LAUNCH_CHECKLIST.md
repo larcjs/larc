@@ -45,7 +45,7 @@ Test each URL manually in a browser (incognito mode):
   - API reference loads?
   - Search works?
 
-- [ ] **Hybrid Dashboard:** https://larcjs.com/examples/hybrid-dashboard.html
+- [ ] **Hybrid Dashboard:** https://larcjs.com/examples/hybrid-dashboard/
   - Exists?
   - Demo works?
   - Shows React + Vue + LARC integration?

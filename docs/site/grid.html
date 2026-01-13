@@ -3,6 +3,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <title>DB Browser</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;600&display=swap" rel="stylesheet" />
@@ -17,7 +20,7 @@
       --accent: #5b8cff;
     }
     @media (prefers-color-scheme: dark){
-      :root{
+      :root:not([data-theme="light"]) {
         --bg: #0f1115;
         --fg: #e8e8e8;
         --muted: #a8a8a8;
@@ -803,5 +806,6 @@
     import '../pan-theme-provider.mjs';
     import '../pan-theme-toggle.mjs';
   </script>
+  <pan-bus debug="false"></pan-bus>
 </body>
 </html>

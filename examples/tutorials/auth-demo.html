@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PAN Authentication Demo</title>
   <style>
@@ -423,5 +426,6 @@
   </script>
 
   <pan-bus debug="true"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

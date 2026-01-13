@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>v0.1.0 — SSE bridge, reactive stores, and live updates · PAN Documentation</title>
   <meta name="description" content="PAN (Page Area Network) Documentation - v0.1.0 — SSE bridge, reactive stores, and live updates">
@@ -79,5 +82,7 @@ This release introduces realtime updates and store helpers to streamline buildin
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
   <script src="../assets/docs.js"></script>
+  <pan-bus debug="false"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

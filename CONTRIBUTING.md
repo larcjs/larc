@@ -410,8 +410,8 @@ Example component test structure:
 ### Test Coverage
 
 **Project Standards:**
-- ✅ Core package: 335 tests passing, 80%+ code coverage
-- ✅ UI package: 165 tests passing across 3 browsers
+- ✅ Core package: 261 tests passing (87 tests × 3 browsers), 80%+ code coverage
+- ✅ UI package: 165 tests passing (55 tests × 3 browsers)
 - 100% coverage for critical paths
 - All public APIs must be tested
 - Edge cases and error handling must be tested

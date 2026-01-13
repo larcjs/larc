@@ -23,7 +23,7 @@
 
 /* Dark mode - OS preference */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-bg: #0f172a;
     --color-bg-alt: #1e293b;
     --color-text: #f1f5f9;

@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../../../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Utility Components · PAN Documentation</title>
   <meta name="description" content="PAN (Page Area Network) Documentation - Utility Components">
@@ -1152,5 +1155,6 @@ fwd.setAttribute(&#039;headers&#039;, JSON.stringify({
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
   <script src="../assets/docs.js"></script>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

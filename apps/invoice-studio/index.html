@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Invoice Studio — LARC PAN Demo</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -183,5 +186,6 @@
   <script type="module" src="../../packages/core/pan.mjs"></script>
 
   <pan-bus debug="true"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

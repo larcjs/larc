@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="../../playground/theme-init.js"></script>
+
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LARC Books — Learning LARC & Building with LARC</title>
   <meta name="description" content="Comprehensive books on building modern web applications with LARC. From beginner tutorials to advanced reference material.">
@@ -26,7 +29,7 @@
     }
 
     @media (prefers-color-scheme: dark) {
-      :root {
+      :root:not([data-theme="light"]) {
         --color-bg: #0f172a;
         --color-bg-alt: #1e293b;
         --color-text: #f1f5f9;
