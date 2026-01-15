@@ -18,6 +18,7 @@ class PlaygroundUnified {
     this.currentMode = 'gallery';
     this.examples = getAllExamples();
     this.currentExample = null;
+    this.editorInitialized = false;
   }
 
   async init() {
@@ -81,8 +82,17 @@ class PlaygroundUnified {
     });
 
     // Mode-specific logic
-    if (mode === 'editor' && this.currentExample) {
-      this.loadExampleInEditor(this.currentExample);
+    if (mode === 'editor') {
+      // Initialize editor content on first switch
+      if (!this.editorInitialized) {
+        if (this.currentExample) {
+          this.loadExampleInEditor(this.currentExample);
+        } else {
+          this.loadDefaultEditorTemplate();
+        }
+        this.editorInitialized = true;
+      }
+      // Note: If already initialized, the gallery button handler will call loadExampleInEditor if needed
     }
   }
 
@@ -340,8 +350,7 @@ class PlaygroundUnified {
       });
     });
 
-    // Load default template
-    this.loadDefaultEditorTemplate();
+    // Note: Default template is now loaded when user first switches to editor mode
   }
 
   switchEditorTab(tabName) {
@@ -495,16 +504,25 @@ ${componentsHTML}
   }
 
   runEditorCode() {
+    console.log('[Editor] Running code...');
+
     const htmlEditor = document.getElementById('html-editor');
     const cssEditor = document.getElementById('css-editor');
     const jsEditor = document.getElementById('js-editor');
     const preview = document.getElementById('preview-frame');
 
-    if (!preview) return;
+    if (!preview) {
+      console.error('[Editor] Preview frame not found!');
+      return;
+    }
 
     const html = htmlEditor?.value || '';
     const css = cssEditor?.value || '';
     const js = jsEditor?.value || '';
+
+    console.log('[Editor] HTML length:', html.length);
+    console.log('[Editor] CSS length:', css.length);
+    console.log('[Editor] JS length:', js.length);
 
     const fullHTML = `<!DOCTYPE html>
 <html lang="en">
@@ -534,11 +552,16 @@ ${componentsHTML}
 </body>
 </html>`;
 
-    // Update preview iframe
-    const previewDoc = preview.contentDocument || preview.contentWindow.document;
-    previewDoc.open();
-    previewDoc.write(fullHTML);
-    previewDoc.close();
+    try {
+      // Update preview iframe
+      const previewDoc = preview.contentDocument || preview.contentWindow.document;
+      previewDoc.open();
+      previewDoc.write(fullHTML);
+      previewDoc.close();
+      console.log('[Editor] Preview updated successfully');
+    } catch (err) {
+      console.error('[Editor] Failed to update preview:', err);
+    }
   }
 
   clearEditor() {
@@ -652,10 +675,10 @@ ${componentsHTML}
 // Initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', async () => {
-    const playground = new PlaygroundUnified();
-    await playground.init();
+    window.playground = new PlaygroundUnified();
+    await window.playground.init();
   });
 } else {
-  const playground = new PlaygroundUnified();
-  playground.init();
+  window.playground = new PlaygroundUnified();
+  window.playground.init();
 }

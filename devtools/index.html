@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Inspector - Chrome DevTools Extension | LARC</title>
+  <meta name="description" content="Professional debugging and inspection tool for Page Area Network (PAN) message bus. Real-time monitoring, powerful filtering, and message replay.">
+
+  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
+  <script src="/playground/theme-init.js"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Base theme variables - Light mode default */
+    :root {
+      --color-bg: #ffffff;
+      --color-bg-alt: #f8fafc;
+      --color-surface: #ffffff;
+      --color-text: #1e293b;
+      --color-text-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-primary: #0f766e;
+      --color-primary-dark: #0d9488;
+      --color-code-bg: #1e293b;
+      --border-radius: 0.75rem;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Dark mode - OS preference (only if not explicitly set to light) */
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --color-bg: #0f172a;
+        --color-bg-alt: #1e293b;
+        --color-surface: #1e293b;
+        --color-text: #f1f5f9;
+        --color-text-muted: #94a3b8;
+        --color-border: #334155;
+        --color-primary: #5eead4;
+        --color-primary-dark: #2dd4bf;
+        --color-code-bg: #020617;
+      }
+    }
+
+    /* Manual theme override via data attribute */
+    [data-theme="dark"] {
+      --color-bg: #0f172a;
+      --color-bg-alt: #1e293b;
+      --color-surface: #1e293b;
+      --color-text: #f1f5f9;
+      --color-text-muted: #94a3b8;
+      --color-border: #334155;
+      --color-primary: #5eead4;
+      --color-primary-dark: #2dd4bf;
+      --color-code-bg: #020617;
+    }
+
+    [data-theme="light"] {
+      --color-bg: #ffffff;
+      --color-bg-alt: #f8fafc;
+      --color-surface: #ffffff;
+      --color-text: #1e293b;
+      --color-text-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-primary: #0f766e;
+      --color-primary-dark: #0d9488;
+      --color-code-bg: #1e293b;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      color: var(--color-text);
+      background: var(--color-bg);
+      overflow-x: hidden;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    @supports not (color: color-mix(in srgb, white, black)) {
+      .header {
+        background: var(--color-bg);
+        opacity: 0.95;
+      }
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--color-text);
+      text-decoration: none;
+    }
+
+    .nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    .nav a:hover {
+      color: var(--color-primary);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+      background: var(--color-primary-dark);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: var(--color-bg-alt);
+      color: var(--color-text);
+      border: 1px solid var(--color-border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-bg);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+
+    /* Hero Section */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 0.375rem 0.875rem;
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+      color: white;
+      border-radius: 2rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--color-text) 0%, var(--color-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-subtitle {
+      font-size: 1.5rem;
+      color: var(--color-text-muted);
+      margin-bottom: 3rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .screenshot {
+      max-width: 100%;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--color-border);
+    }
+
+    /* Features Grid */
+    .features {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .features h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 3rem;
+      color: var(--color-text);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+
+    .feature-card {
+      padding: 2rem;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: var(--border-radius);
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--color-primary);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .feature-card p {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .feature-list li {
+      padding: 0.5rem 0;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      color: var(--color-primary);
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Installation Section */
+    .installation {
+      background: var(--color-bg-alt);
+      padding: 4rem 2rem;
+      margin: 4rem 0;
+    }
+
+    .installation-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .installation h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .installation-subtitle {
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 1.125rem;
+      margin-bottom: 3rem;
+    }
+
+    .install-steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+
+    .install-step {
+      background: var(--color-bg);
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      border: 1px solid var(--color-border);
+      border-left: 4px solid var(--color-primary);
+    }
+
+    .step-number {
+      display: inline-block;
+      width: 2rem;
+      height: 2rem;
+      background: var(--color-primary);
+      color: white;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 2rem;
+      font-weight: 700;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    .install-step h3 {
+      font-size: 1.125rem;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .install-step p {
+      color: var(--color-text-muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .install-step code {
+      background: var(--color-code-bg);
+      color: #e2e8f0;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+    }
+
+    /* Code Section */
+    .code-section {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .code-section h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .code-section-subtitle {
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 1.125rem;
+      margin-bottom: 3rem;
+    }
+
+    .code-example {
+      background: var(--color-code-bg);
+      border-radius: var(--border-radius);
+      padding: 2rem;
+      overflow-x: auto;
+      box-shadow: var(--shadow-xl);
+      margin-bottom: 2rem;
+    }
+
+    .code-example pre {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+    }
+
+    .code-comment {
+      color: #64748b;
+    }
+
+    .code-keyword {
+      color: #f472b6;
+    }
+
+    .code-string {
+      color: #34d399;
+    }
+
+    /* Keyboard Shortcuts */
+    .shortcuts {
+      max-width: 1200px;
+      margin: 4rem auto;
+      padding: 0 2rem;
+    }
+
+    .shortcuts h2 {
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .shortcuts-table {
+      background: var(--color-bg-alt);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+
+    .shortcuts-table table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .shortcuts-table th,
+    .shortcuts-table td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .shortcuts-table th {
+      background: var(--color-bg);
+      font-weight: 600;
+      color: var(--color-text);
+    }
+
+    .shortcuts-table td {
+      color: var(--color-text-muted);
+    }
+
+    .shortcuts-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .shortcuts-table kbd {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 0.25rem;
+      padding: 0.125rem 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--color-text);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* CTA Section */
+    .cta-section {
+      background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+      color: white;
+      padding: 4rem 2rem;
+      text-align: center;
+      margin: 4rem 0 0;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      font-size: 1.25rem;
+      margin-bottom: 2rem;
+      opacity: 0.95;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-light {
+      background: white;
+      color: var(--color-primary);
+    }
+
+    .btn-light:hover {
+      background: var(--color-bg-alt);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--color-bg-alt);
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--color-border);
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .footer-section h4 {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      color: var(--color-text);
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section a {
+      color: var(--color-text-muted);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .footer-section a:hover {
+      color: var(--color-primary);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 2rem auto 0;
+      padding-top: 2rem;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-muted);
+      font-size: 0.875rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.125rem;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .features h2,
+      .installation h2,
+      .code-section h2,
+      .shortcuts h2,
+      .cta-section h2 {
+        font-size: 2rem;
+      }
+
+      .hero {
+        padding: 4rem 1.5rem 2rem;
+      }
+
+      .install-steps {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero,
+    .features-grid,
+    .code-example {
+      animation: fadeInUp 0.6s ease-out;
+    }
+
+    /* Browser Support Badges */
+    .browser-support {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+
+    .browser-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+    }
+
+    .browser-badge.supported {
+      border-color: #22c55e;
+      color: #22c55e;
+    }
+
+    .browser-badge.coming-soon {
+      border-color: #eab308;
+      color: #eab308;
+    }
+
+    .browser-badge.not-supported {
+      border-color: #ef4444;
+      color: #ef4444;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="/" class="logo">
+        <span>LARC</span>
+      </a>
+      <nav class="nav">
+        <a href="/">Home</a>
+        <a href="/examples/tutorials/">Examples</a>
+        <a href="/apps/">Apps</a>
+        <a href="/docs/">Docs</a>
+        <a href="https://github.com/larcjs" target="_blank">GitHub</a>
+        <pan-theme-toggle variant="icon"></pan-theme-toggle>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-badge">Chrome DevTools Extension · Manifest V3</div>
+    <h1>PAN Inspector</h1>
+    <p class="hero-subtitle">
+      Professional debugging and inspection tool for Page Area Network (PAN) message bus.<br>
+      Real-time monitoring, powerful filtering, and message replay for LARC applications.
+    </p>
+    <div class="hero-cta">
+      <a href="https://github.com/larcjs/devtools" class="btn btn-primary" target="_blank">View on GitHub</a>
+      <a href="#installation" class="btn btn-secondary">Install Now</a>
+      <a href="README.md" class="btn btn-secondary">Documentation</a>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features" id="features">
+    <h2>Features</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3>Real-Time Message Monitoring</h3>
+        <ul class="feature-list">
+          <li>Captures all PAN messages (publish, deliver, subscribe)</li>
+          <li>Shows message details: topic, data, timestamp, target, size</li>
+          <li>Color-coded message types for quick identification</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Powerful Filtering</h3>
+        <ul class="feature-list">
+          <li>Filter by topic, type, or data content</li>
+          <li>Toggle message types on/off</li>
+          <li>Search across all message properties</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Message Inspector</h3>
+        <ul class="feature-list">
+          <li>Detailed view of message payload</li>
+          <li>JSON formatting with syntax highlighting</li>
+          <li>Copy message as JSON</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔄</div>
+        <h3>Message Replay</h3>
+        <ul class="feature-list">
+          <li>Replay any captured message</li>
+          <li>Perfect for debugging and testing</li>
+          <li>Works with live applications</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">💾</div>
+        <h3>Export/Import</h3>
+        <ul class="feature-list">
+          <li>Export message logs as JSON</li>
+          <li>Import logs for analysis</li>
+          <li>Share debugging sessions with team</li>
+        </ul>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">⏸️</div>
+        <h3>Recording Control</h3>
+        <ul class="feature-list">
+          <li>Pause/resume message capture</li>
+          <li>Clear message history</li>
+          <li>Real-time message counter</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Installation Section -->
+  <section class="installation" id="installation">
+    <div class="installation-inner">
+      <h2>Installation</h2>
+      <p class="installation-subtitle">Get started in minutes with the PAN Inspector DevTools extension</p>
+
+      <div class="install-steps">
+        <div class="install-step">
+          <span class="step-number">1</span>
+          <h3>Clone Repository</h3>
+          <p>Clone the devtools repository to your local machine:</p>
+          <p><code>git clone https://github.com/larcjs/devtools.git</code></p>
+        </div>
+
+        <div class="install-step">
+          <span class="step-number">2</span>
+          <h3>Open Chrome Extensions</h3>
+          <p>Navigate to <code>chrome://extensions/</code> and enable "Developer mode" in the top right corner.</p>
+        </div>
+
+        <div class="install-step">
+          <span class="step-number">3</span>
+          <h3>Load Extension</h3>
+          <p>Click "Load unpacked" and select the <code>devtools-extension/</code> folder from the cloned repository.</p>
+        </div>
+
+        <div class="install-step">
+          <span class="step-number">4</span>
+          <h3>Verify Installation</h3>
+          <p>Open Chrome DevTools (F12) on any page. Look for the "PAN" tab to confirm successful installation.</p>
+        </div>
+      </div>
+
+      <div class="browser-support">
+        <div class="browser-badge supported">✅ Chrome 88+</div>
+        <div class="browser-badge supported">✅ Edge 88+</div>
+        <div class="browser-badge coming-soon">⏳ Firefox (Coming Soon)</div>
+        <div class="browser-badge not-supported">❌ Safari</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Usage Examples -->
+  <section class="code-section" id="usage">
+    <h2>Quick Start Example</h2>
+    <p class="code-section-subtitle">Test the PAN Inspector with this simple example</p>
+
+    <div class="code-example">
+<pre><code><span class="code-comment">&lt;!DOCTYPE html&gt;</span>
+<span class="code-comment">&lt;!-- Save as test.html and open in Chrome --&gt;</span>
+&lt;html&gt;
+&lt;head&gt;
+  &lt;script type="module" src="../pan-bus.mjs"&gt;&lt;/script&gt;
+  &lt;script type="module" src="../pan-client.mjs"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;pan-bus&gt;&lt;/pan-bus&gt;
+  &lt;button id="test-btn"&gt;Send Test Message&lt;/button&gt;
+
+  &lt;script type="module"&gt;
+    <span class="code-keyword">import</span> { PanClient } <span class="code-keyword">from</span> <span class="code-string">'../pan-client.mjs'</span>;
+
+    <span class="code-keyword">const</span> client = <span class="code-keyword">new</span> PanClient();
+    <span class="code-keyword">await</span> client.ready();
+
+    document.getElementById(<span class="code-string">'test-btn'</span>).onclick = () =&gt; {
+      client.publish({
+        topic: <span class="code-string">'test.click'</span>,
+        data: { timestamp: Date.now() }
+      });
+    };
+
+    <span class="code-comment">// Subscribe to see it work</span>
+    client.subscribe(<span class="code-string">'test.*'</span>, (msg) =&gt; {
+      console.log(<span class="code-string">'Received:'</span>, msg);
+    });
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+    </div>
+
+    <p class="code-section-subtitle">
+      1. Save the code above as <code>test.html</code><br>
+      2. Open it in Chrome<br>
+      3. Open DevTools → PAN tab<br>
+      4. Click "Send Test Message"<br>
+      5. See messages appear in the inspector!
+    </p>
+  </section>
+
+  <!-- Keyboard Shortcuts -->
+  <section class="shortcuts" id="shortcuts">
+    <h2>Keyboard Shortcuts</h2>
+    <div class="shortcuts-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Key</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>K</kbd></td>
+            <td>Focus filter input</td>
+          </tr>
+          <tr>
+            <td><kbd>Ctrl</kbd>/<kbd>Cmd</kbd> + <kbd>L</kbd></td>
+            <td>Clear messages</td>
+          </tr>
+          <tr>
+            <td><kbd>Esc</kbd></td>
+            <td>Close details panel</td>
+          </tr>
+          <tr>
+            <td><kbd>Space</kbd></td>
+            <td>Pause/Resume recording</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <h2>Ready to Debug?</h2>
+    <p>Install the PAN Inspector and start debugging your LARC applications today</p>
+    <div class="cta-buttons">
+      <a href="https://github.com/larcjs/devtools" class="btn btn-light" target="_blank">Install from GitHub</a>
+      <a href="README.md" class="btn btn-outline">Read Full Documentation</a>
+      <a href="https://github.com/larcjs/devtools/issues" class="btn btn-outline" target="_blank">Report an Issue</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>Documentation</h4>
+        <ul>
+          <li><a href="/">LARC Home</a></li>
+          <li><a href="/site/docs/README.html">Getting Started</a></li>
+          <li><a href="/site/docs/PAN_SPEC.v1.html">PAN v1 Spec</a></li>
+          <li><a href="/docs/">Documentation Explorer</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>DevTools</h4>
+        <ul>
+          <li><a href="#installation">Installation</a></li>
+          <li><a href="#usage">Quick Start</a></li>
+          <li><a href="#shortcuts">Keyboard Shortcuts</a></li>
+          <li><a href="README.md">Full Documentation</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Examples</h4>
+        <ul>
+          <li><a href="/examples/tutorials/">All Examples</a></li>
+          <li><a href="/apps/">Demo Apps</a></li>
+          <li><a href="/examples/tutorials/17-enhanced-security.html">Security Example</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="https://github.com/larcjs" target="_blank">GitHub Organization</a></li>
+          <li><a href="https://github.com/larcjs/devtools" target="_blank">DevTools Repository</a></li>
+          <li><a href="https://github.com/larcjs/devtools/issues" target="_blank">Report Issues</a></li>
+          <li><a href="https://github.com/larcjs/devtools/discussions" target="_blank">Discussions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>PAN Inspector · Part of the LARC Framework · MIT License</p>
+    </div>
+  </footer>
+
+  <!-- PAN Bus & Theme System -->
+  <pan-bus debug="false"></pan-bus>
+  <pan-theme-provider></pan-theme-provider>
+
+  <!-- Load PAN core and theme components -->
+  <script type="module" src="/packages/core/pan.mjs"></script>
+</body>
+</html>

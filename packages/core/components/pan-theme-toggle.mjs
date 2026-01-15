@@ -25,8 +25,14 @@ export class PanThemeToggle extends HTMLElement {
     this._effectiveTheme = 'light';
   }
 
-  connectedCallback() {
+  async connectedCallback() {
+    // Initialize from document/localStorage first
+    this._initializeThemeState();
     this.render();
+
+    // Wait for provider to be available
+    await this._waitForProvider();
+
     this._setupPanListeners();
     this._requestCurrentTheme();
   }
@@ -57,8 +63,9 @@ export class PanThemeToggle extends HTMLElement {
           gap: 0.5rem;
         }
 
+        /* Default light mode colors */
         button {
-          background: var(--color-surface, #ffffff);
+          background: var(--color-surface, var(--color-bg, #ffffff));
           border: 1px solid var(--color-border, #e2e8f0);
           border-radius: 0.5rem;
           padding: 0.5rem 0.75rem;
@@ -74,7 +81,45 @@ export class PanThemeToggle extends HTMLElement {
 
         button:hover {
           background: var(--color-bg-alt, #f8fafc);
-          border-color: var(--color-border-strong, #cbd5e1);
+          border-color: var(--color-border-strong, var(--color-border, #cbd5e1));
+        }
+
+        /* Dark mode defaults - system preference or manual override */
+        @media (prefers-color-scheme: dark) {
+          button {
+            background: var(--color-surface, var(--color-bg, #1e293b));
+            border-color: var(--color-border, #334155);
+            color: var(--color-text, #f1f5f9);
+          }
+
+          button:hover {
+            background: var(--color-bg-alt, #334155);
+            border-color: var(--color-border-strong, #475569);
+          }
+        }
+
+        /* Dark mode - manual override via data-theme attribute */
+        :host-context([data-theme="dark"]) button {
+          background: var(--color-surface, var(--color-bg, #1e293b));
+          border-color: var(--color-border, #334155);
+          color: var(--color-text, #f1f5f9);
+        }
+
+        :host-context([data-theme="dark"]) button:hover {
+          background: var(--color-bg-alt, #334155);
+          border-color: var(--color-border-strong, #475569);
+        }
+
+        /* Light mode - manual override via data-theme attribute (to override system dark) */
+        :host-context([data-theme="light"]) button {
+          background: var(--color-surface, var(--color-bg, #ffffff));
+          border-color: var(--color-border, #e2e8f0);
+          color: var(--color-text, #1e293b);
+        }
+
+        :host-context([data-theme="light"]) button:hover {
+          background: var(--color-bg-alt, #f8fafc);
+          border-color: var(--color-border-strong, var(--color-border, #cbd5e1));
         }
 
         button:active {
@@ -108,7 +153,7 @@ export class PanThemeToggle extends HTMLElement {
           top: 100%;
           right: 0;
           margin-top: 0.5rem;
-          background: var(--color-surface, #ffffff);
+          background: var(--color-surface, var(--color-bg, #ffffff));
           border: 1px solid var(--color-border, #e2e8f0);
           border-radius: 0.5rem;
           box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
@@ -116,6 +161,26 @@ export class PanThemeToggle extends HTMLElement {
           min-width: 150px;
           z-index: 1000;
           display: none;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .dropdown-menu {
+            background: var(--color-surface, var(--color-bg, #1e293b));
+            border-color: var(--color-border, #334155);
+            box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.5));
+          }
+        }
+
+        :host-context([data-theme="dark"]) .dropdown-menu {
+          background: var(--color-surface, var(--color-bg, #1e293b));
+          border-color: var(--color-border, #334155);
+          box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.5));
+        }
+
+        :host-context([data-theme="light"]) .dropdown-menu {
+          background: var(--color-surface, var(--color-bg, #ffffff));
+          border-color: var(--color-border, #e2e8f0);
+          box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
         }
 
         .dropdown-menu.open {
@@ -133,7 +198,35 @@ export class PanThemeToggle extends HTMLElement {
           color: var(--color-text, #1e293b);
         }
 
+        @media (prefers-color-scheme: dark) {
+          .dropdown-item {
+            color: var(--color-text, #f1f5f9);
+          }
+        }
+
+        :host-context([data-theme="dark"]) .dropdown-item {
+          color: var(--color-text, #f1f5f9);
+        }
+
+        :host-context([data-theme="light"]) .dropdown-item {
+          color: var(--color-text, #1e293b);
+        }
+
         .dropdown-item:hover {
+          background: var(--color-bg-alt, #f8fafc);
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .dropdown-item:hover {
+            background: var(--color-bg-alt, #334155);
+          }
+        }
+
+        :host-context([data-theme="dark"]) .dropdown-item:hover {
+          background: var(--color-bg-alt, #334155);
+        }
+
+        :host-context([data-theme="light"]) .dropdown-item:hover {
           background: var(--color-bg-alt, #f8fafc);
         }
 
@@ -141,6 +234,23 @@ export class PanThemeToggle extends HTMLElement {
           background: var(--color-primary-soft, #cce6f5);
           color: var(--color-primary, #006699);
           font-weight: 500;
+        }
+
+        @media (prefers-color-scheme: dark) {
+          .dropdown-item.active {
+            background: var(--color-primary-soft, rgba(94, 234, 212, 0.2));
+            color: var(--color-primary, #5eead4);
+          }
+        }
+
+        :host-context([data-theme="dark"]) .dropdown-item.active {
+          background: var(--color-primary-soft, rgba(94, 234, 212, 0.2));
+          color: var(--color-primary, #5eead4);
+        }
+
+        :host-context([data-theme="light"]) .dropdown-item.active {
+          background: var(--color-primary-soft, #cce6f5);
+          color: var(--color-primary, #006699);
         }
 
         /* Theme icons */
@@ -257,8 +367,17 @@ export class PanThemeToggle extends HTMLElement {
     if (provider) {
       provider.setTheme(theme);
     } else {
-      // Fallback: set directly on document
-      document.documentElement.setAttribute('data-theme', theme);
+      // Fallback: set directly on document and localStorage
+      this._saveThemeToStorage(theme);
+
+      // Determine effective theme
+      const effectiveTheme = theme === 'auto' ? this._getSystemTheme() : theme;
+      document.documentElement.setAttribute('data-theme', effectiveTheme);
+
+      // Update internal state since we won't get a PAN event
+      this._currentTheme = theme;
+      this._effectiveTheme = effectiveTheme;
+      this.render();
     }
   }
 
@@ -304,6 +423,67 @@ export class PanThemeToggle extends HTMLElement {
         item.classList.remove('active');
       }
     });
+  }
+
+  // New helper methods for improved initialization
+
+  _initializeThemeState() {
+    const STORAGE_KEY = 'larc-theme-preference';
+
+    // Try to get theme from localStorage
+    const savedTheme = this._loadThemeFromStorage();
+
+    // Get current theme from document
+    const documentTheme = document.documentElement.getAttribute('data-theme');
+
+    if (savedTheme && ['light', 'dark', 'auto'].includes(savedTheme)) {
+      // Use saved preference
+      this._currentTheme = savedTheme;
+      this._effectiveTheme = savedTheme === 'auto' ? this._getSystemTheme() : savedTheme;
+    } else if (documentTheme) {
+      // Use document theme as fallback
+      this._currentTheme = documentTheme;
+      this._effectiveTheme = documentTheme;
+    } else {
+      // Default to auto
+      this._currentTheme = 'auto';
+      this._effectiveTheme = this._getSystemTheme();
+    }
+  }
+
+  _loadThemeFromStorage() {
+    const STORAGE_KEY = 'larc-theme-preference';
+    try {
+      return localStorage.getItem(STORAGE_KEY);
+    } catch (err) {
+      return null;
+    }
+  }
+
+  _saveThemeToStorage(theme) {
+    const STORAGE_KEY = 'larc-theme-preference';
+    try {
+      localStorage.setItem(STORAGE_KEY, theme);
+    } catch (err) {
+      console.warn('[pan-theme-toggle] Could not save theme to localStorage:', err);
+    }
+  }
+
+  _getSystemTheme() {
+    if (typeof window === 'undefined') return 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+
+  async _waitForProvider() {
+    // Wait for pan-theme-provider to be defined (max 2 seconds)
+    try {
+      await Promise.race([
+        customElements.whenDefined('pan-theme-provider'),
+        new Promise(resolve => setTimeout(resolve, 2000))
+      ]);
+    } catch (err) {
+      console.warn('[pan-theme-toggle] Provider not available, using fallback mode');
+    }
   }
 }
 
