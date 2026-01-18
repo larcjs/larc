@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 
   <!-- jsPDF for PDF export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk" crossorigin="anonymous"></script>
@@ -46,34 +47,6 @@
       flex-direction: column;
     }
 
-    /* Header */
-    .app-header {
-      background: var(--color-surface);
-      border-bottom: 1px solid var(--color-border);
-      padding: 1rem 2rem;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-
-    .header-content {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .app-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--color-primary);
-    }
-
-    .app-subtitle {
-      font-size: 0.875rem;
-      color: var(--color-text-muted);
-      margin-top: 0.25rem;
-    }
-
     /* Main Content */
     .app-main {
       flex: 1;
@@ -86,14 +59,6 @@
     @media (max-width: 768px) {
       .app-main {
         padding: 1rem;
-      }
-
-      .app-header {
-        padding: 1rem;
-      }
-
-      .app-title {
-        font-size: 1.25rem;
       }
     }
 
@@ -121,15 +86,6 @@
 </head>
 <body>
   <div class="app-container">
-    <header class="app-header">
-      <div class="header-content">
-        <div>
-          <h1 class="app-title">📄 Invoice Studio</h1>
-          <p class="app-subtitle">Professional invoicing • Local-first • Privacy-focused</p>
-        </div>
-      </div>
-    </header>
-
     <main class="app-main">
       <!-- Toolbar for actions -->
       <pan-invoice-toolbar></pan-invoice-toolbar>
