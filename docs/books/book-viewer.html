@@ -537,12 +537,14 @@
       'learning-larc': {
         title: 'Learning LARC',
         url: '/docs/books/learning-larc/output/html/learning-larc.html',
-        pdf: '/docs/books/learning-larc/output/pdf/learning-larc.pdf'
+        pdf: '/docs/books/learning-larc/output/pdf/learning-larc.pdf',
+        cover: '/docs/books/learning-larc/cover.jpg'
       },
       'building-with-larc': {
         title: 'Building with LARC',
         url: '/docs/books/building-with-larc/output/html/building-with-larc.html',
-        pdf: '/docs/books/building-with-larc/output/pdf/building-with-larc.pdf'
+        pdf: '/docs/books/building-with-larc/output/pdf/building-with-larc.pdf',
+        cover: '/docs/books/building-with-larc/cover.jpg'
       }
     };
 
@@ -640,7 +642,6 @@
         // Extract TOC before moving content to shadow DOM
         const toc = doc.querySelector('#TOC, nav[role="doc-toc"]');
         if (toc) {
-          tocContainer.innerHTML = '';
           const tocHtml = buildTOC(toc);
           tocContainer.innerHTML = tocHtml;
 
@@ -666,6 +667,9 @@
           });
         }
 
+        // Clear loading state in shadow DOM
+        shadowRoot.innerHTML = '';
+
         // Create shadow DOM content wrapper
         shadowContent = document.createElement('div');
         shadowContent.style.cssText = 'width: 100%; max-width: 1400px; margin: 0 auto; padding: 3rem 4rem;';
@@ -688,8 +692,19 @@
         const tocToRemove = body.querySelector('#TOC, nav[role="doc-toc"]');
         if (tocToRemove) tocToRemove.remove();
 
+        // Add book cover if available
+        let contentHtml = '';
+        if (book.cover) {
+          contentHtml = `
+            <div style="text-align: center; margin-bottom: 3rem;">
+              <img src="${book.cover}" alt="${book.title} Cover" style="max-width: 100%; height: auto; max-height: 600px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);" />
+            </div>
+          `;
+        }
+        contentHtml += body.innerHTML;
+
         // Move content to shadow DOM
-        shadowContent.innerHTML = body.innerHTML;
+        shadowContent.innerHTML = contentHtml;
         shadowRoot.appendChild(shadowContent);
 
         // Fix internal links in shadow DOM
