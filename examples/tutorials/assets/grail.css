@@ -1,33 +1,13 @@
+/* Import centralized PAN theme variables */
+@import url('/packages/ui/theme.css');
+
 :root {
-  color-scheme: light dark;
-  --color-bg: #f6f7fb;
-  --color-surface: #ffffff;
-  --color-border: #e0e5f0;
-  --color-border-strong: #c6cede;
-  --color-text: #0f172a;
-  --color-muted: #5f6b84;
-  --color-accent: #2563eb;
-  --color-accent-soft: #e0e7ff;
-  --color-inspector-bg: #101828;
+  /* Font settings (not part of theme variables) */
   font-family: "Lexend", "Inter", "Helvetica Neue", Arial, sans-serif;
   line-height: 1.45;
   font-size: 16px;
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg: #0f1115;
-    --color-surface: #151823;
-    --color-border: #262a36;
-    --color-border-strong: #3a4054;
-    --color-text: #e8e8e8;
-    --color-muted: #a8a8a8;
-    --color-accent: #7da2ff;
-    --color-accent-soft: rgba(125, 162, 255, 0.18);
-    --color-inspector-bg: #0b1220;
-  }
 }
 
 *,

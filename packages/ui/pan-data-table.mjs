@@ -61,12 +61,33 @@ export class PanDataTable extends HTMLElement {
     const h = String.raw; const cols = this.columns || (this.items[0] ? Object.keys(this.items[0]) : []);
     this.shadowRoot.innerHTML = h`
       <style>
-        :host{display:block; border:1px solid #ddd; border-radius:8px; overflow:hidden; font:13px/1.4 system-ui, sans-serif}
+        :host{
+          display:block;
+          border:1px solid var(--color-border, #ddd);
+          border-radius:8px;
+          overflow:hidden;
+          font:13px/1.4 system-ui, sans-serif;
+          background: var(--color-surface, white);
+          color: var(--color-text, #333);
+        }
         table{width:100%; border-collapse:collapse}
-        th,td{padding:8px 10px; border-bottom:1px solid #eee; text-align:left}
-        tr:hover{ background:#fafafa; cursor:pointer }
-        thead th{ background:#f6f6f6; font-weight:600 }
-        .empty{ padding:10px; color:#888 }
+        th,td{
+          padding:8px 10px;
+          border-bottom:1px solid var(--color-border, #eee);
+          text-align:left;
+          color: var(--color-text, #333);
+        }
+        tbody tr:hover{
+          background: var(--color-accent, #5b8cff);
+          color: white;
+          cursor:pointer;
+        }
+        thead th{
+          background: var(--color-bg, #f6f6f6);
+          font-weight:600;
+          color: var(--color-text, #333);
+        }
+        .empty{ padding:10px; color: var(--color-muted, #888) }
       </style>
       <table>
         <thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead>
