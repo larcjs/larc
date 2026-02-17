@@ -605,6 +605,23 @@
   ></pan-idb>
 
   <script type="module">
+    /**
+     * Contact Manager Application
+     * 
+     * Central contact store for LARC demo apps.
+     * Contacts are synced to other apps via PAN messaging.
+     * 
+     * @topic contacts.idb.ready - (event) IndexedDB store is ready
+     * @topic contacts.idb.result - (event) IndexedDB operation completed
+     * @topic contacts.idb.error - (event) IndexedDB operation failed
+     * @topic contacts.idb.list - (command) Request list of all contacts
+     * @topic contacts.idb.add - (command) Add a new contact
+     * @topic contacts.idb.put - (command) Update a contact
+     * @topic contacts.idb.delete - (command) Delete a contact
+     * @topic contacts.list - (state) Current list of contacts (retained, broadcast to other apps)
+     * @topic contacts.updated - (event) Contacts were modified
+     * @topic contacts.search.search - (event) Search query changed
+     */
     import { PanClient } from '../../packages/core/pan-client.mjs';
 
     const pc = new PanClient();
@@ -628,11 +645,20 @@
         case 'put':
           loadContacts();
           showList();
+          // 🔗 Notify other apps that contacts changed
+          pc.publish({ topic: 'contacts.updated', data: { action: operation } });
           break;
 
         case 'list':
           contacts = items || [];
           filterAndRenderContacts();
+          // 🔗 Broadcast contacts to other apps via PAN
+          pc.publish({
+            topic: 'contacts.list',
+            data: contacts,
+            retain: true  // New subscribers get the latest list immediately
+          });
+          console.log('📢 Broadcast contacts.list to other apps:', contacts.length);
           break;
 
         case 'delete':
@@ -996,5 +1022,14 @@
 
   <pan-bus debug="true"></pan-bus>
   <pan-theme-provider></pan-theme-provider>
+  
+  <!-- Cross-app contact sync via BroadcastChannel -->
+  <pan-state-sync
+    channel="larc-apps"
+    topics="contacts.list,contacts.updated,invoice.created"
+    strategy="last-write-wins"
+    leader="auto"
+    debug>
+  </pan-state-sync>
 </body>
 </html>

@@ -143,5 +143,14 @@
 
   <pan-bus debug="true"></pan-bus>
   <pan-theme-provider></pan-theme-provider>
+  
+  <!-- Cross-app contact sync via BroadcastChannel -->
+  <pan-state-sync
+    channel="larc-apps"
+    topics="contacts.list,contacts.updated,invoice.created"
+    strategy="last-write-wins"
+    leader="auto"
+    debug>
+  </pan-state-sync>
 </body>
 </html>

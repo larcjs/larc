@@ -1,22 +1,29 @@
-// <pan-idb> — IndexedDB bridge to PAN topics
-// Attributes:
-//   - database: database name (required)
-//   - version: database version (default: 1)
-//   - store: object store name (required)
-//   - key-path: key path for objects (default: "id")
-//   - auto-increment: use auto-incrementing keys (default: false)
-//   - indexes: JSON array of index configs: [{name, keyPath, unique?, multiEntry?}]
-//
-// Topics (where resource = store name):
-//   - Subscribes: ${resource}.idb.get { key }
-//   - Subscribes: ${resource}.idb.put { item }
-//   - Subscribes: ${resource}.idb.add { item }
-//   - Subscribes: ${resource}.idb.delete { key }
-//   - Subscribes: ${resource}.idb.clear {}
-//   - Subscribes: ${resource}.idb.list { index?, range?, direction?, limit? }
-//   - Subscribes: ${resource}.idb.query { index, value }
-//   - Publishes: ${resource}.idb.result { success, data?, error? }
-//   - Publishes: ${resource}.idb.ready {}
+/**
+ * pan-idb - IndexedDB bridge to PAN topics
+ * 
+ * Provides IndexedDB persistence with automatic PAN topic integration.
+ * Each store gets its own topic namespace for CRUD operations.
+ * 
+ * @attribute {string} database - Database name (required)
+ * @attribute {number} version - Database version (default: 1)
+ * @attribute {string} store - Object store name (required)
+ * @attribute {string} key-path - Key path for objects (default: "id")
+ * @attribute {boolean} auto-increment - Use auto-incrementing keys (default: false)
+ * @attribute {string} indexes - JSON array of index configs: [{name, keyPath, unique?, multiEntry?}]
+ * 
+ * Topics (where {store} is the store name attribute):
+ * 
+ * @topic {store}.idb.get - (command) Get an item by key
+ * @topic {store}.idb.put - (command) Update or insert an item
+ * @topic {store}.idb.add - (command) Add a new item
+ * @topic {store}.idb.delete - (command) Delete an item by key
+ * @topic {store}.idb.clear - (command) Clear all items from store
+ * @topic {store}.idb.list - (command) List items with optional filters
+ * @topic {store}.idb.query - (command) Query items by index
+ * @topic {store}.idb.result - (event) Operation completed with result
+ * @topic {store}.idb.error - (event) Operation failed with error
+ * @topic {store}.idb.ready - (event) IndexedDB store is ready
+ */
 
 import { PanClient } from '../core/pan-client.mjs';
 

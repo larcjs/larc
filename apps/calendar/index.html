@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar — LARC PAN Demo</title>
+  
+  <!-- Theme initialization -->
+  <script src="../../playground/theme-init.js"></script>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- PAN Core -->
+  <script type="module">window.panAutoload = { paths: ['../../packages/ui/', '../../packages/core/'] };</script>
+  <script type="module" src="../../packages/core/pan.mjs"></script>
+  
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <h1 class="app-title">📅 Calendar</h1>
+        <span class="app-subtitle">Event Management</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary" id="btn-new-event">
+          <span class="icon">+</span> New Event
+        </button>
+        <pan-theme-toggle variant="icon"></pan-theme-toggle>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Sidebar: Mini Calendar + Upcoming -->
+      <aside class="sidebar">
+        <div class="mini-calendar" id="mini-calendar"></div>
+        
+        <div class="upcoming-events">
+          <h3>Upcoming Events</h3>
+          <div class="event-list" id="upcoming-list">
+            <!-- Events populated by JS -->
+          </div>
+        </div>
+        
+        <div class="calendar-legend">
+          <h4>Categories</h4>
+          <div class="legend-item">
+            <span class="legend-color" style="background: #3b82f6"></span>
+            <span>Meetings</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background: #10b981"></span>
+            <span>Personal</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background: #f59e0b"></span>
+            <span>Invoice Due</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color" style="background: #ef4444"></span>
+            <span>Deadlines</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Calendar View -->
+      <section class="calendar-main">
+        <!-- Calendar Navigation -->
+        <div class="calendar-nav">
+          <button class="btn btn-icon" id="btn-prev">◀</button>
+          <h2 class="current-month" id="current-month">February 2026</h2>
+          <button class="btn btn-icon" id="btn-next">▶</button>
+          <div class="view-toggle">
+            <button class="view-btn active" data-view="month">Month</button>
+            <button class="view-btn" data-view="week">Week</button>
+            <button class="view-btn" data-view="day">Day</button>
+          </div>
+          <button class="btn btn-secondary" id="btn-today">Today</button>
+        </div>
+
+        <!-- Calendar Grid -->
+        <div class="calendar-grid" id="calendar-grid">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- Event Modal -->
+    <div class="modal-overlay" id="event-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <h3 id="modal-title">New Event</h3>
+          <button class="btn-close" id="btn-close-modal">×</button>
+        </div>
+        <form class="modal-body" id="event-form">
+          <div class="form-group">
+            <label for="event-title">Title</label>
+            <input type="text" id="event-title" required placeholder="Event title">
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="event-date">Date</label>
+              <input type="date" id="event-date" required>
+            </div>
+            <div class="form-group">
+              <label for="event-time">Time</label>
+              <input type="time" id="event-time">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-category">Category</label>
+            <select id="event-category">
+              <option value="meeting">🤝 Meeting</option>
+              <option value="personal">🏠 Personal</option>
+              <option value="invoice">💰 Invoice Due</option>
+              <option value="deadline">⏰ Deadline</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-attendees">Attendees (from Contacts)</label>
+            <div class="attendees-picker" id="attendees-picker">
+              <input type="text" id="attendee-search" placeholder="Search contacts...">
+              <div class="attendees-list" id="attendees-list"></div>
+              <div class="selected-attendees" id="selected-attendees"></div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="event-notes">Notes</label>
+            <textarea id="event-notes" rows="3" placeholder="Additional details..."></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn btn-secondary" id="btn-cancel">Cancel</button>
+            <button type="button" class="btn btn-danger" id="btn-delete" style="display:none">Delete</button>
+            <button type="submit" class="btn btn-primary">Save Event</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- PAN Bus -->
+    <pan-bus debug="true"></pan-bus>
+    
+    <!-- Cross-app sync via BroadcastChannel -->
+    <pan-state-sync
+      channel="larc-apps"
+      topics="contacts.list,contacts.updated,invoice.created"
+      strategy="last-write-wins"
+      leader="auto"
+      debug>
+    </pan-state-sync>
+    
+    <!-- IndexedDB for events -->
+    <pan-idb 
+      store-name="calendar_events"
+      topic="calendar.events"
+      key-path="id"
+      indexes='[{"name": "date", "keyPath": "date"}, {"name": "category", "keyPath": "category"}]'>
+    </pan-idb>
+  </div>
+
+  <script type="module">
+    /**
+     * Calendar Application
+     * 
+     * Event scheduling with contact integration.
+     * Receives contacts from Contact Manager and invoice due dates from Invoice Studio.
+     * 
+     * @topic calendar.events.result - (event) IndexedDB operation completed
+     * @topic calendar.events.ready - (event) IndexedDB store is ready
+     * @topic calendar.events.list - (command) Request list of all events
+     * @topic calendar.events.add - (command) Add a new event
+     * @topic calendar.events.put - (command) Update an event
+     * @topic calendar.events.delete - (command) Delete an event
+     * @topic calendar.event.saved - (event) Event was saved
+     * @topic contacts.list - (state) Receive contacts from Contact Manager (subscribed)
+     * @topic contacts.updated - (event) Contacts were modified (subscribed)
+     * @topic invoice.created - (event) Invoice created, may have due date (subscribed)
+     */
+    import { PanClient } from '../../packages/core/pan-client.mjs';
+    
+    const pc = new PanClient();
+    await pc.ready();
+    
+    // State
+    let currentDate = new Date();
+    let currentView = 'month';
+    let events = [];
+    let contacts = [];
+    let editingEventId = null;
+    
+    // Category colors
+    const categoryColors = {
+      meeting: '#3b82f6',
+      personal: '#10b981',
+      invoice: '#f59e0b',
+      deadline: '#ef4444'
+    };
+    
+    // DOM Elements
+    const calendarGrid = document.getElementById('calendar-grid');
+    const currentMonthEl = document.getElementById('current-month');
+    const eventModal = document.getElementById('event-modal');
+    const eventForm = document.getElementById('event-form');
+    const upcomingList = document.getElementById('upcoming-list');
+    const miniCalendar = document.getElementById('mini-calendar');
+    const attendeesList = document.getElementById('attendees-list');
+    const selectedAttendeesEl = document.getElementById('selected-attendees');
+    let selectedAttendees = [];
+    
+    // =========================================
+    // PAN Subscriptions
+    // =========================================
+    
+    // Listen for events from IndexedDB
+    pc.subscribe('calendar.events.result', (msg) => {
+      if (msg.data.action === 'list' || msg.data.action === 'getAll') {
+        events = msg.data.data || [];
+        renderCalendar();
+        renderUpcoming();
+      }
+    });
+    
+    // Listen for contacts from Contact Manager
+    pc.subscribe('contacts.list', (msg) => {
+      contacts = msg.data || [];
+      console.log('📇 Received contacts:', contacts.length);
+    });
+    
+    pc.subscribe('contacts.updated', (msg) => {
+      // Request fresh contact list
+      pc.publish({ topic: 'contacts.idb.list', data: {} });
+    });
+    
+    // Listen for invoice events (auto-create due date events)
+    pc.subscribe('invoice.created', (msg) => {
+      const invoice = msg.data;
+      if (invoice.dueDate) {
+        const event = {
+          id: `inv-${invoice.id}`,
+          title: `💰 Invoice #${invoice.number} Due`,
+          date: invoice.dueDate,
+          category: 'invoice',
+          notes: `Amount: ${invoice.total}`,
+          linkedInvoice: invoice.id
+        };
+        pc.publish({ topic: 'calendar.events.add', data: event });
+      }
+    });
+    
+    // =========================================
+    // Calendar Rendering
+    // =========================================
+    
+    function renderCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      
+      currentMonthEl.textContent = currentDate.toLocaleDateString('en-US', { 
+        month: 'long', 
+        year: 'numeric' 
+      });
+      
+      // Build calendar grid
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startPadding = firstDay.getDay();
+      const totalDays = lastDay.getDate();
+      
+      let html = `
+        <div class="calendar-header">
+          <div class="day-name">Sun</div>
+          <div class="day-name">Mon</div>
+          <div class="day-name">Tue</div>
+          <div class="day-name">Wed</div>
+          <div class="day-name">Thu</div>
+          <div class="day-name">Fri</div>
+          <div class="day-name">Sat</div>
+        </div>
+        <div class="calendar-body">
+      `;
+      
+      // Previous month padding
+      const prevMonth = new Date(year, month, 0);
+      for (let i = startPadding - 1; i >= 0; i--) {
+        const day = prevMonth.getDate() - i;
+        html += `<div class="calendar-day other-month"><span class="day-number">${day}</span></div>`;
+      }
+      
+      // Current month days
+      const today = new Date();
+      for (let day = 1; day <= totalDays; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+        const dayEvents = events.filter(e => e.date === dateStr);
+        
+        html += `
+          <div class="calendar-day ${isToday ? 'today' : ''}" data-date="${dateStr}">
+            <span class="day-number">${day}</span>
+            <div class="day-events">
+              ${dayEvents.slice(0, 3).map(e => `
+                <div class="event-chip" style="background: ${categoryColors[e.category] || '#6b7280'}" 
+                     data-event-id="${e.id}" title="${e.title}">
+                  ${e.title}
+                </div>
+              `).join('')}
+              ${dayEvents.length > 3 ? `<div class="more-events">+${dayEvents.length - 3} more</div>` : ''}
+            </div>
+          </div>
+        `;
+      }
+      
+      // Next month padding
+      const totalCells = startPadding + totalDays;
+      const remaining = totalCells % 7 === 0 ? 0 : 7 - (totalCells % 7);
+      for (let i = 1; i <= remaining; i++) {
+        html += `<div class="calendar-day other-month"><span class="day-number">${i}</span></div>`;
+      }
+      
+      html += '</div>';
+      calendarGrid.innerHTML = html;
+      
+      // Add click handlers
+      calendarGrid.querySelectorAll('.calendar-day:not(.other-month)').forEach(day => {
+        day.addEventListener('click', (e) => {
+          if (e.target.classList.contains('event-chip')) {
+            const eventId = e.target.dataset.eventId;
+            openEventModal(eventId);
+          } else {
+            const date = day.dataset.date;
+            openEventModal(null, date);
+          }
+        });
+      });
+      
+      renderMiniCalendar();
+    }
+    
+    function renderMiniCalendar() {
+      const year = currentDate.getFullYear();
+      const month = currentDate.getMonth();
+      const firstDay = new Date(year, month, 1);
+      const lastDay = new Date(year, month + 1, 0);
+      const startPadding = firstDay.getDay();
+      const totalDays = lastDay.getDate();
+      const today = new Date();
+      
+      let html = `
+        <div class="mini-header">${currentDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</div>
+        <div class="mini-grid">
+          <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+      `;
+      
+      for (let i = 0; i < startPadding; i++) html += '<span class="other"></span>';
+      
+      for (let day = 1; day <= totalDays; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const hasEvents = events.some(e => e.date === dateStr);
+        const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+        html += `<span class="${isToday ? 'today' : ''} ${hasEvents ? 'has-events' : ''}">${day}</span>`;
+      }
+      
+      html += '</div>';
+      miniCalendar.innerHTML = html;
+    }
+    
+    function renderUpcoming() {
+      const today = new Date().toISOString().split('T')[0];
+      const upcoming = events
+        .filter(e => e.date >= today)
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .slice(0, 5);
+      
+      if (upcoming.length === 0) {
+        upcomingList.innerHTML = '<div class="no-events">No upcoming events</div>';
+        return;
+      }
+      
+      upcomingList.innerHTML = upcoming.map(e => `
+        <div class="upcoming-event" data-event-id="${e.id}">
+          <div class="event-color" style="background: ${categoryColors[e.category] || '#6b7280'}"></div>
+          <div class="event-info">
+            <div class="event-title">${e.title}</div>
+            <div class="event-date">${formatDate(e.date)}${e.time ? ' at ' + e.time : ''}</div>
+          </div>
+        </div>
+      `).join('');
+      
+      upcomingList.querySelectorAll('.upcoming-event').forEach(el => {
+        el.addEventListener('click', () => openEventModal(el.dataset.eventId));
+      });
+    }
+    
+    function formatDate(dateStr) {
+      const date = new Date(dateStr + 'T00:00:00');
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      
+      if (dateStr === today.toISOString().split('T')[0]) return 'Today';
+      if (dateStr === tomorrow.toISOString().split('T')[0]) return 'Tomorrow';
+      return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+    
+    // =========================================
+    // Event Modal
+    // =========================================
+    
+    function openEventModal(eventId = null, date = null) {
+      editingEventId = eventId;
+      const event = eventId ? events.find(e => e.id === eventId) : null;
+      
+      document.getElementById('modal-title').textContent = event ? 'Edit Event' : 'New Event';
+      document.getElementById('event-title').value = event?.title || '';
+      document.getElementById('event-date').value = event?.date || date || new Date().toISOString().split('T')[0];
+      document.getElementById('event-time').value = event?.time || '';
+      document.getElementById('event-category').value = event?.category || 'meeting';
+      document.getElementById('event-notes').value = event?.notes || '';
+      document.getElementById('btn-delete').style.display = event ? 'inline-block' : 'none';
+      
+      selectedAttendees = event?.attendees || [];
+      renderSelectedAttendees();
+      renderAttendeesList();
+      
+      eventModal.classList.add('open');
+    }
+    
+    function closeEventModal() {
+      eventModal.classList.remove('open');
+      eventForm.reset();
+      editingEventId = null;
+      selectedAttendees = [];
+    }
+    
+    function renderAttendeesList(filter = '') {
+      const filtered = contacts.filter(c => 
+        c.name?.toLowerCase().includes(filter.toLowerCase()) ||
+        c.email?.toLowerCase().includes(filter.toLowerCase())
+      ).slice(0, 5);
+      
+      if (filtered.length === 0) {
+        attendeesList.innerHTML = '<div class="no-contacts">No contacts found</div>';
+        return;
+      }
+      
+      attendeesList.innerHTML = filtered.map(c => `
+        <div class="attendee-option" data-id="${c.id}">
+          <span class="attendee-avatar">${(c.name || c.email || '?')[0].toUpperCase()}</span>
+          <span class="attendee-name">${c.name || c.email}</span>
+        </div>
+      `).join('');
+      
+      attendeesList.querySelectorAll('.attendee-option').forEach(el => {
+        el.addEventListener('click', () => {
+          const contact = contacts.find(c => c.id === el.dataset.id);
+          if (contact && !selectedAttendees.find(a => a.id === contact.id)) {
+            selectedAttendees.push(contact);
+            renderSelectedAttendees();
+          }
+        });
+      });
+    }
+    
+    function renderSelectedAttendees() {
+      selectedAttendeesEl.innerHTML = selectedAttendees.map(a => `
+        <span class="attendee-tag" data-id="${a.id}">
+          ${a.name || a.email}
+          <button type="button" class="remove-attendee">×</button>
+        </span>
+      `).join('');
+      
+      selectedAttendeesEl.querySelectorAll('.remove-attendee').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = e.target.closest('.attendee-tag').dataset.id;
+          selectedAttendees = selectedAttendees.filter(a => a.id !== id);
+          renderSelectedAttendees();
+        });
+      });
+    }
+    
+    // =========================================
+    // Event Handlers
+    // =========================================
+    
+    document.getElementById('btn-new-event').addEventListener('click', () => openEventModal());
+    document.getElementById('btn-close-modal').addEventListener('click', closeEventModal);
+    document.getElementById('btn-cancel').addEventListener('click', closeEventModal);
+    eventModal.addEventListener('click', (e) => { if (e.target === eventModal) closeEventModal(); });
+    
+    document.getElementById('btn-prev').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar();
+    });
+    
+    document.getElementById('btn-next').addEventListener('click', () => {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar();
+    });
+    
+    document.getElementById('btn-today').addEventListener('click', () => {
+      currentDate = new Date();
+      renderCalendar();
+    });
+    
+    document.getElementById('attendee-search').addEventListener('input', (e) => {
+      renderAttendeesList(e.target.value);
+    });
+    
+    document.getElementById('btn-delete').addEventListener('click', () => {
+      if (editingEventId && confirm('Delete this event?')) {
+        pc.publish({ topic: 'calendar.events.delete', data: { id: editingEventId } });
+        closeEventModal();
+        setTimeout(() => pc.publish({ topic: 'calendar.events.list', data: {} }), 100);
+      }
+    });
+    
+    eventForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const event = {
+        id: editingEventId || `evt-${Date.now()}`,
+        title: document.getElementById('event-title').value,
+        date: document.getElementById('event-date').value,
+        time: document.getElementById('event-time').value,
+        category: document.getElementById('event-category').value,
+        notes: document.getElementById('event-notes').value,
+        attendees: selectedAttendees
+      };
+      
+      const topic = editingEventId ? 'calendar.events.put' : 'calendar.events.add';
+      pc.publish({ topic, data: event });
+      
+      // Publish event for other apps
+      pc.publish({ topic: 'calendar.event.saved', data: event });
+      
+      closeEventModal();
+      setTimeout(() => pc.publish({ topic: 'calendar.events.list', data: {} }), 100);
+    });
+    
+    // View toggle
+    document.querySelectorAll('.view-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentView = btn.dataset.view;
+        renderCalendar();
+      });
+    });
+    
+    // =========================================
+    // Initialize
+    // =========================================
+    
+    // Request contacts on load
+    pc.subscribe('calendar.events.ready', () => {
+      pc.publish({ topic: 'calendar.events.list', data: {} });
+    });
+    
+    // Also request contacts from Contact Manager
+    setTimeout(() => {
+      pc.publish({ topic: 'contacts.idb.list', data: {} });
+    }, 500);
+    
+    renderCalendar();
+    console.log('📅 Calendar app initialized');
+  </script>
+</body>
+</html>

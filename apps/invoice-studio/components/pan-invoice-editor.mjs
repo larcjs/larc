@@ -4,6 +4,20 @@
  * Main invoice layout with contenteditable fields.
  * Features dotted borders to indicate editable areas.
  * All edits auto-save to current invoice state.
+ * 
+ * @topic invoice.load - (command) Load an invoice into the editor
+ * @topic invoice.load.latest - (command) Load the most recent invoice
+ * @topic invoice.load-by-id - (command) Load a specific invoice by ID
+ * @topic invoice.save - (command) Save the current invoice
+ * @topic invoice.saved - (event) Invoice was saved successfully
+ * @topic invoice.created - (event) New invoice was created (broadcast to Calendar)
+ * @topic invoice.new - (command) Create a new blank invoice
+ * @topic invoice.header.changed - (event) Invoice header field changed
+ * @topic invoice.items.changed - (event) Line items changed
+ * @topic invoice.totals.updated - (event) Invoice totals recalculated
+ * @topic invoice.state - (state) Current invoice data
+ * @topic contacts.selected - (event) Contact was selected for invoice
+ * @topic contacts.picker.show - (command) Show the contact picker modal
  */
 
 import { PanClient } from '../../../packages/core/pan-client.mjs';
@@ -449,6 +463,19 @@ class PanInvoiceEditor extends HTMLElement {
         topic: 'invoice.saved',
         data: { invoice: this.currentInvoice }
       });
+
+      // 🔗 Publish for other apps (e.g., Calendar auto-creates due date event)
+      this.client.publish({
+        topic: 'invoice.created',
+        data: {
+          id: this.currentInvoice.id,
+          number: this.currentInvoice.number,
+          dueDate: this.currentInvoice.dueDate,
+          total: this.currentInvoice.total || 0,
+          client: this.currentInvoice.billTo?.name || 'Unknown Client'
+        }
+      });
+      console.log('📢 Published invoice.created for Calendar integration');
     } catch (err) {
       this.client.publish({
         topic: 'invoice.error',

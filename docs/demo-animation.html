@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LARC PAN Messaging Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    h1 {
+      color: #fff;
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    
+    .subtitle {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      margin-bottom: 30px;
+    }
+    
+    .demo-container {
+      position: relative;
+      width: 600px;
+      height: 400px;
+      background: rgba(255,255,255,0.03);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow: hidden;
+    }
+    
+    /* Components */
+    .component {
+      position: absolute;
+      width: 120px;
+      height: 80px;
+      background: linear-gradient(145deg, #2d3748, #1a202c);
+      border-radius: 12px;
+      border: 2px solid #4a5568;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    
+    .component-icon {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+    
+    .component-label {
+      color: #e2e8f0;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .component.publisher {
+      left: 40px;
+      top: 160px;
+      border-color: #f59e0b;
+    }
+    
+    .component.subscriber1 {
+      right: 40px;
+      top: 60px;
+      border-color: #10b981;
+    }
+    
+    .component.subscriber2 {
+      right: 40px;
+      top: 180px;
+      border-color: #10b981;
+    }
+    
+    .component.subscriber3 {
+      right: 40px;
+      bottom: 60px;
+      border-color: #6366f1;
+    }
+    
+    /* PAN Bus */
+    .pan-bus {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(145deg, #3730a3, #1e1b4b);
+      border-radius: 50%;
+      border: 3px solid #6366f1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 40px rgba(99, 102, 241, 0.3);
+      z-index: 10;
+    }
+    
+    .pan-bus-label {
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+    }
+    
+    .pan-bus-sublabel {
+      font-size: 9px;
+      color: #a5b4fc;
+      font-weight: 400;
+    }
+    
+    /* Message particle */
+    .message {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: #f59e0b;
+      border-radius: 50%;
+      opacity: 0;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      box-shadow: 0 0 20px rgba(245, 158, 11, 0.6);
+    }
+    
+    .message::after {
+      content: '📨';
+      font-size: 12px;
+    }
+    
+    /* Connection lines (SVG) */
+    .connections {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    
+    .connection-line {
+      stroke: #4a5568;
+      stroke-width: 2;
+      stroke-dasharray: 8 4;
+      fill: none;
+      opacity: 0.5;
+    }
+    
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(99, 102, 241, 0.3); }
+      50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(99, 102, 241, 0.5); }
+    }
+    
+    @keyframes glow-publisher {
+      0%, 100% { border-color: #f59e0b; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+      50% { border-color: #fbbf24; box-shadow: 0 4px 30px rgba(245, 158, 11, 0.4); }
+    }
+    
+    @keyframes glow-subscriber {
+      0%, 100% { border-color: #10b981; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+      50% { border-color: #34d399; box-shadow: 0 4px 30px rgba(16, 185, 129, 0.4); }
+    }
+    
+    @keyframes message-to-bus {
+      0% { 
+        left: 160px; 
+        top: 188px; 
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% { 
+        left: 288px; 
+        top: 188px; 
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    @keyframes message-to-sub1 {
+      0% { 
+        left: 312px; 
+        top: 188px; 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+      100% { 
+        left: 430px; 
+        top: 88px; 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+    }
+    
+    @keyframes message-to-sub2 {
+      0% { 
+        left: 312px; 
+        top: 188px; 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+      100% { 
+        left: 430px; 
+        top: 208px; 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+    }
+    
+    @keyframes message-to-sub3 {
+      0% { 
+        left: 312px; 
+        top: 188px; 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+      100% { 
+        left: 430px; 
+        top: 308px; 
+        opacity: 1;
+        transform: scale(0.8);
+      }
+    }
+    
+    @keyframes fadeOut {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(0.5); }
+    }
+    
+    .pan-bus {
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    /* Message flow animation sequence */
+    .message.msg-to-bus {
+      animation: message-to-bus 0.6s ease-out forwards;
+      animation-delay: 0s;
+    }
+    
+    .message.msg-to-sub1 {
+      animation: message-to-sub1 0.5s ease-out forwards, fadeOut 0.3s ease-out 0.5s forwards;
+    }
+    
+    .message.msg-to-sub2 {
+      animation: message-to-sub2 0.5s ease-out forwards, fadeOut 0.3s ease-out 0.5s forwards;
+    }
+    
+    .message.msg-to-sub3 {
+      animation: message-to-sub3 0.5s ease-out forwards, fadeOut 0.3s ease-out 0.5s forwards;
+    }
+    
+    /* Topic label */
+    .topic-label {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.6);
+      color: #f59e0b;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-family: 'Monaco', 'Menlo', monospace;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .topic-label.visible {
+      opacity: 1;
+    }
+    
+    /* Step indicator */
+    .steps {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    
+    .step {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4a5568;
+      transition: all 0.3s;
+    }
+    
+    .step.active {
+      background: #6366f1;
+      transform: scale(1.3);
+    }
+    
+    /* Legend */
+    .legend {
+      display: flex;
+      gap: 24px;
+      margin-top: 20px;
+      color: #94a3b8;
+      font-size: 12px;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    
+    .legend-dot.publisher { background: #f59e0b; }
+    .legend-dot.subscriber { background: #10b981; }
+    .legend-dot.bus { background: #6366f1; }
+  </style>
+</head>
+<body>
+  <h1>🔄 LARC PAN Messaging</h1>
+  <p class="subtitle">Components communicate through publish/subscribe</p>
+  
+  <div class="demo-container">
+    <!-- Connection lines -->
+    <svg class="connections" viewBox="0 0 600 400">
+      <!-- Publisher to Bus -->
+      <path class="connection-line" d="M 160 200 Q 220 200 300 200" />
+      <!-- Bus to Subscribers -->
+      <path class="connection-line" d="M 300 200 Q 380 140 440 100" />
+      <path class="connection-line" d="M 300 200 Q 380 200 440 220" />
+      <path class="connection-line" d="M 300 200 Q 380 260 440 300" />
+    </svg>
+    
+    <!-- Publisher Component -->
+    <div class="component publisher" id="publisher">
+      <span class="component-icon">📤</span>
+      <span class="component-label">Publisher</span>
+    </div>
+    
+    <!-- PAN Bus -->
+    <div class="pan-bus">
+      <div class="pan-bus-label">
+        PAN<br>
+        <span class="pan-bus-sublabel">Message Bus</span>
+      </div>
+    </div>
+    
+    <!-- Subscriber Components -->
+    <div class="component subscriber1" id="sub1">
+      <span class="component-icon">🛒</span>
+      <span class="component-label">Cart</span>
+    </div>
+    
+    <div class="component subscriber2" id="sub2">
+      <span class="component-icon">📊</span>
+      <span class="component-label">Analytics</span>
+    </div>
+    
+    <div class="component subscriber3" id="sub3">
+      <span class="component-icon">🔔</span>
+      <span class="component-label">Notifications</span>
+    </div>
+    
+    <!-- Topic label -->
+    <div class="topic-label" id="topic">topic: "user.login"</div>
+    
+    <!-- Messages (created by JS) -->
+    <div id="messages"></div>
+  </div>
+  
+  <div class="steps">
+    <div class="step" id="step1"></div>
+    <div class="step" id="step2"></div>
+    <div class="step" id="step3"></div>
+  </div>
+  
+  <div class="legend">
+    <div class="legend-item">
+      <div class="legend-dot publisher"></div>
+      <span>Publisher</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot subscriber"></div>
+      <span>Subscribers</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot bus"></div>
+      <span>PAN Bus</span>
+    </div>
+  </div>
+  
+  <script>
+    const topics = [
+      { topic: 'user.login', icon: '👤' },
+      { topic: 'cart.update', icon: '🛒' },
+      { topic: 'order.placed', icon: '📦' }
+    ];
+    
+    let currentTopic = 0;
+    
+    function createMessage(className) {
+      const msg = document.createElement('div');
+      msg.className = 'message ' + className;
+      return msg;
+    }
+    
+    function runAnimation() {
+      const messagesContainer = document.getElementById('messages');
+      const topicLabel = document.getElementById('topic');
+      const publisher = document.getElementById('publisher');
+      const sub1 = document.getElementById('sub1');
+      const sub2 = document.getElementById('sub2');
+      const sub3 = document.getElementById('sub3');
+      
+      // Clear previous messages
+      messagesContainer.innerHTML = '';
+      
+      // Update topic
+      const topic = topics[currentTopic % topics.length];
+      topicLabel.textContent = `topic: "${topic.topic}"`;
+      topicLabel.classList.add('visible');
+      
+      // Update step indicators
+      document.querySelectorAll('.step').forEach((s, i) => {
+        s.classList.toggle('active', i === 0);
+      });
+      
+      // Step 1: Publisher glows and sends message to bus
+      publisher.style.animation = 'glow-publisher 0.5s ease-in-out';
+      
+      const msgToBus = createMessage('msg-to-bus');
+      messagesContainer.appendChild(msgToBus);
+      
+      // Step 2: Bus receives and distributes
+      setTimeout(() => {
+        document.querySelectorAll('.step').forEach((s, i) => {
+          s.classList.toggle('active', i === 1);
+        });
+        
+        // Create messages to each subscriber
+        const msg1 = createMessage('msg-to-sub1');
+        const msg2 = createMessage('msg-to-sub2');
+        const msg3 = createMessage('msg-to-sub3');
+        
+        messagesContainer.appendChild(msg1);
+        messagesContainer.appendChild(msg2);
+        messagesContainer.appendChild(msg3);
+        
+        // Remove the bus message
+        msgToBus.style.opacity = '0';
+      }, 700);
+      
+      // Step 3: Subscribers receive
+      setTimeout(() => {
+        document.querySelectorAll('.step').forEach((s, i) => {
+          s.classList.toggle('active', i === 2);
+        });
+        
+        sub1.style.animation = 'glow-subscriber 0.5s ease-in-out';
+        sub2.style.animation = 'glow-subscriber 0.5s ease-in-out';
+        sub3.style.animation = 'glow-subscriber 0.5s ease-in-out';
+      }, 1200);
+      
+      // Reset for next cycle
+      setTimeout(() => {
+        publisher.style.animation = '';
+        sub1.style.animation = '';
+        sub2.style.animation = '';
+        sub3.style.animation = '';
+        topicLabel.classList.remove('visible');
+        currentTopic++;
+      }, 2500);
+    }
+    
+    // Run animation loop
+    runAnimation();
+    setInterval(runAnimation, 3500);
+  </script>
+</body>
+</html>

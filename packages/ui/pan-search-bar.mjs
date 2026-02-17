@@ -1,15 +1,19 @@
-// <pan-search-bar> — Search input with filters and PAN topic integration
-// Attributes:
-//   - placeholder: Input placeholder text
-//   - topic: Topic prefix for events
-//   - debounce: Debounce delay in ms (default: 300)
-//   - filters: JSON array of filter options [{label, value, icon?}]
-//   - show-filters: Show filter dropdown (default: true if filters provided)
-//
-// Topics:
-//   - Publishes: {topic}.search { query, filter }
-//   - Publishes: {topic}.clear
-//   - Subscribes: {topic}.set { query?, filter? }
+/**
+ * pan-search-bar - Search input with filters and PAN topic integration
+ * 
+ * Provides a search input with optional filter dropdown.
+ * Publishes search events on a configurable topic prefix.
+ * 
+ * @attribute {string} placeholder - Input placeholder text
+ * @attribute {string} topic - Topic prefix for events
+ * @attribute {number} debounce - Debounce delay in ms (default: 300)
+ * @attribute {string} filters - JSON array of filter options [{label, value, icon?}]
+ * @attribute {boolean} show-filters - Show filter dropdown (default: true if filters provided)
+ * 
+ * @topic {topic}.search - (event) Search query changed with {query, filter}
+ * @topic {topic}.clear - (event) Search was cleared
+ * @topic {topic}.set - (command) Set search query and/or filter programmatically
+ */
 
 import { PanClient } from '../core/pan-client.mjs';
 

@@ -1,0 +1,2559 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-02-06T05:43:25.583Z",
+  "stats": {
+    "total": 183,
+    "byType": {
+      "state": 9,
+      "command": 22,
+      "event": 26,
+      "request": 14,
+      "internal": 0,
+      "unknown": 112
+    }
+  },
+  "namespaces": {
+    "data:updated": [
+      "data:updated"
+    ],
+    "auth": [
+      "auth.login.success",
+      "auth.login.error",
+      "auth.logout.success",
+      "auth.refresh.success",
+      "auth.refresh.error",
+      "auth.state",
+      "auth.internal.state",
+      "auth.refresh",
+      "auth.login",
+      "auth.logout",
+      "auth.setToken",
+      "auth.check",
+      "auth.token.refreshed",
+      "auth.token.expired",
+      "auth.login.request",
+      "auth.logout.request",
+      "auth.token.refresh",
+      "auth.state.get"
+    ],
+    "users": [
+      "users.list.state",
+      "users.*",
+      "users.updated"
+    ],
+    "app": [
+      "app.started",
+      "app.state"
+    ],
+    "user": [
+      "user.updated",
+      "user.login",
+      "user.*"
+    ],
+    "events": [
+      "events.*"
+    ],
+    "file": [
+      "file.content-loaded",
+      "file.created",
+      "file.selected",
+      "file.renamed",
+      "file.deleted",
+      "file.save",
+      "file.load",
+      "file.delete",
+      "file.create"
+    ],
+    "*": [
+      "*",
+      "*.list.state",
+      "*.item.select",
+      "*.item.get",
+      "*.item.save",
+      "*.item.delete"
+    ],
+    "invoice": [
+      "invoice.load",
+      "invoice.header.changed",
+      "invoice.items.changed",
+      "invoice.total.calculated",
+      "invoice.save",
+      "invoice.load-by-id",
+      "invoice.new",
+      "invoice.delete",
+      "invoice.export",
+      "invoice.import",
+      "invoice.export-all",
+      "invoice.clear",
+      "invoice.created",
+      "invoice.totals.changed",
+      "invoice.list-updated",
+      "invoice.current-changed",
+      "invoice.saved",
+      "invoice.browser.show",
+      "invoice.load.latest",
+      "invoice.totals.updated",
+      "invoice.state",
+      "invoice.error",
+      "invoice.items.clear",
+      "invoice.items.load",
+      "invoice.export.pdf",
+      "invoice.data.export",
+      "invoice.data.import"
+    ],
+    "contact": [
+      "contact.schema.set",
+      "contact.data.get",
+      "contact.submit",
+      "contact.data",
+      "contact.selected"
+    ],
+    "nav": [
+      "nav.state",
+      "nav.blocked",
+      "nav.goto",
+      "nav.back",
+      "nav.forward",
+      "nav.replace"
+    ],
+    "markdown": [
+      "markdown.content-response",
+      "markdown.changed",
+      "markdown.saved",
+      "markdown.set-content",
+      "markdown.get-content",
+      "markdown.render"
+    ],
+    "{storage}": [
+      "{storage}.queue.add",
+      "{storage}.queue.sync",
+      "{storage}.queue.success",
+      "{storage}.queue.error",
+      "{storage}.queue.conflict",
+      "{storage}.network.online",
+      "{storage}.network.offline"
+    ],
+    "persist": [
+      "persist.hydrated",
+      "persist.saved",
+      "persist.error"
+    ],
+    "{topic}": [
+      "{topic}.valid",
+      "{topic}.invalid",
+      "{topic}.search",
+      "{topic}.clear",
+      "{topic}.set"
+    ],
+    "{channel}": [
+      "{channel}.sync.message",
+      "{channel}.sync.request-state",
+      "{channel}.sync.leader-elected",
+      "{channel}.sync.conflict",
+      "{channel}.undo",
+      "{channel}.redo",
+      "{channel}.clear",
+      "{channel}.snapshot",
+      "{channel}.state"
+    ],
+    "theme": [
+      "theme.changed"
+    ],
+    "history": [
+      "history.undo",
+      "history.redo",
+      "history.clear"
+    ],
+    "ws": [
+      "ws.connected",
+      "ws.message",
+      "ws.disconnected",
+      "ws.error"
+    ],
+    "pan:sys": [
+      "pan:sys.error"
+    ],
+    "todos": [
+      "todos.change",
+      "todos.toggle",
+      "todos.remove",
+      "todos.state"
+    ],
+    "demo:click": [
+      "demo:click"
+    ],
+    "temp": [
+      "temp.*"
+    ],
+    "test": [
+      "test.message"
+    ],
+    "{store}": [
+      "{store}.idb.get",
+      "{store}.idb.put",
+      "{store}.idb.add",
+      "{store}.idb.delete",
+      "{store}.idb.clear",
+      "{store}.idb.list",
+      "{store}.idb.query",
+      "{store}.idb.result",
+      "{store}.idb.error",
+      "{store}.idb.ready"
+    ],
+    "topic": [
+      "topic.validation.error",
+      "topic.validation.warning",
+      "topic.validation.loaded"
+    ],
+    "modal": [
+      "modal.demo.show",
+      "modal.demo.hide",
+      "modal.demo.toggle"
+    ],
+    "blog": [
+      "blog.wysiwyg.setContent",
+      "blog.source.setContent",
+      "blog.preview.update",
+      "blog.storage.save",
+      "blog.storage.load",
+      "blog.mode.switch",
+      "blog.preview.toggle",
+      "blog.source.changed",
+      "blog.wysiwyg.changed",
+      "blog.save.request",
+      "blog.draft.loaded",
+      "blog.meta.changed",
+      "blog.meta.set",
+      "blog.mode.changed"
+    ],
+    "features": [
+      "features.toggle",
+      "features.available",
+      "features.action",
+      "features.register"
+    ],
+    "calendar": [
+      "calendar.events.result",
+      "calendar.events.ready",
+      "calendar.events.list",
+      "calendar.events.add",
+      "calendar.events.put",
+      "calendar.events.delete",
+      "calendar.event.saved"
+    ],
+    "contacts": [
+      "contacts.list",
+      "contacts.updated",
+      "contacts.idb.list",
+      "contacts.idb.ready",
+      "contacts.idb.result",
+      "contacts.idb.error",
+      "contacts.idb.add",
+      "contacts.idb.put",
+      "contacts.idb.delete",
+      "contacts.search.search",
+      "contacts.manager.show",
+      "contacts.picker.show",
+      "contacts.selected"
+    ],
+    "resource": [
+      "resource.select"
+    ],
+    "ui": [
+      "ui.toast.show"
+    ]
+  },
+  "topics": {
+    "data:updated": {
+      "topic": "data:updated",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/larc-element.mjs",
+        "packages/core/larc-element.mjs",
+        "packages/ui/larc-element.mjs"
+      ]
+    },
+    "auth.login.success": {
+      "topic": "auth.login.success",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-auth.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.login.error": {
+      "topic": "auth.login.error",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-auth.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.logout.success": {
+      "topic": "auth.logout.success",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "auth.refresh.success": {
+      "topic": "auth.refresh.success",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "auth.refresh.error": {
+      "topic": "auth.refresh.error",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "auth.state": {
+      "topic": "auth.state",
+      "type": "state",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-auth.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.internal.state": {
+      "topic": "auth.internal.state",
+      "type": "state",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/core/components/pan-data-connector.mjs",
+        "packages/core/components/pan-fetch.mjs",
+        "packages/core/components/pan-graphql-connector.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "auth.refresh": {
+      "topic": "auth.refresh",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "auth.login": {
+      "topic": "auth.login",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "auth.logout": {
+      "topic": "auth.logout",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-auth.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.setToken": {
+      "topic": "auth.setToken",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "auth.check": {
+      "topic": "auth.check",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-auth.mjs",
+        "packages/ui/pan-auth.mjs"
+      ]
+    },
+    "users.list.state": {
+      "topic": "users.list.state",
+      "type": "state",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-client.mjs",
+        "packages/core/pan-client.mjs",
+        "packages/core-lite/src/components/pan-client.mjs",
+        "packages/ui/pan-client.mjs"
+      ]
+    },
+    "app.started": {
+      "topic": "app.started",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-client.mjs",
+        "packages/core/pan-client.mjs",
+        "packages/core-lite/src/components/pan-client.mjs",
+        "packages/ui/pan-client.mjs"
+      ]
+    },
+    "user.updated": {
+      "topic": "user.updated",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-client.mjs",
+        "packages/core/pan-client.mjs",
+        "packages/core-lite/src/components/pan-client.mjs",
+        "packages/ui/pan-client.mjs"
+      ]
+    },
+    "users.*": {
+      "topic": "users.*",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-client.mjs",
+        "packages/core/pan-client.mjs",
+        "packages/core-lite/src/components/pan-client.mjs",
+        "packages/ui/pan-client.mjs"
+      ]
+    },
+    "users.updated": {
+      "topic": "users.updated",
+      "type": "event",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-client.mjs",
+        "packages/core/pan-client.mjs",
+        "packages/core-lite/src/components/pan-client.mjs",
+        "packages/ui/pan-client.mjs"
+      ]
+    },
+    "app.state": {
+      "topic": "app.state",
+      "type": "state",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-client.mjs",
+        "packages/core/index.js",
+        "packages/core/pan-client.mjs",
+        "packages/core-lite/src/components/pan-client.mjs",
+        "packages/ui/pan-client.mjs"
+      ]
+    },
+    "events.*": {
+      "topic": "events.*",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-client.mjs",
+        "packages/core/pan-client.mjs",
+        "packages/core-lite/src/components/pan-client.mjs",
+        "packages/ui/pan-client.mjs"
+      ]
+    },
+    "file.content-loaded": {
+      "topic": "file.content-loaded",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs"
+      ]
+    },
+    "file.created": {
+      "topic": "file.created",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs",
+        "apps/markdown-notes/index.html"
+      ]
+    },
+    "file.selected": {
+      "topic": "file.selected",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs",
+        "apps/markdown-notes/index.html"
+      ]
+    },
+    "file.renamed": {
+      "topic": "file.renamed",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs"
+      ]
+    },
+    "file.deleted": {
+      "topic": "file.deleted",
+      "type": "command",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs",
+        "apps/markdown-notes/index.html"
+      ]
+    },
+    "file.save": {
+      "topic": "file.save",
+      "type": "command",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs"
+      ]
+    },
+    "file.load": {
+      "topic": "file.load",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs"
+      ]
+    },
+    "file.delete": {
+      "topic": "file.delete",
+      "type": "command",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs"
+      ]
+    },
+    "file.create": {
+      "topic": "file.create",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-files.mjs",
+        "packages/ui/pan-files.mjs"
+      ]
+    },
+    "*": {
+      "topic": "*",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-inspector.mjs",
+        "packages/ui/pan-inspector.mjs"
+      ]
+    },
+    "invoice.load": {
+      "topic": "invoice.load",
+      "type": "unknown",
+      "description": "(command) Load an invoice into the editor",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/components/pan-invoice-header.mjs",
+        "apps/invoice/components/pan-invoice-items.mjs",
+        "apps/invoice/components/pan-invoice-totals.mjs"
+      ]
+    },
+    "invoice.header.changed": {
+      "topic": "invoice.header.changed",
+      "type": "unknown",
+      "description": "(event) Invoice header field changed",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/components/pan-invoice-header.mjs",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs"
+      ]
+    },
+    "invoice.items.changed": {
+      "topic": "invoice.items.changed",
+      "type": "unknown",
+      "description": "(event) Line items changed",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/components/pan-invoice-items.mjs",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs"
+      ]
+    },
+    "invoice.total.calculated": {
+      "topic": "invoice.total.calculated",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/components/pan-invoice-totals.mjs"
+      ]
+    },
+    "invoice.save": {
+      "topic": "invoice.save",
+      "type": "command",
+      "description": "(command) Save the current invoice",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/index.html",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs"
+      ]
+    },
+    "invoice.load-by-id": {
+      "topic": "invoice.load-by-id",
+      "type": "unknown",
+      "description": "(command) Load a specific invoice by ID",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/index.html",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs"
+      ]
+    },
+    "invoice.new": {
+      "topic": "invoice.new",
+      "type": "unknown",
+      "description": "(command) Create a new blank invoice",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/index.html",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs"
+      ]
+    },
+    "invoice.delete": {
+      "topic": "invoice.delete",
+      "type": "command",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/index.html"
+      ]
+    },
+    "invoice.export": {
+      "topic": "invoice.export",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/index.html"
+      ]
+    },
+    "invoice.import": {
+      "topic": "invoice.import",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/index.html"
+      ]
+    },
+    "invoice.export-all": {
+      "topic": "invoice.export-all",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs"
+      ]
+    },
+    "invoice.clear": {
+      "topic": "invoice.clear",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-invoice-store.mjs",
+        "packages/ui/pan-invoice-store.mjs",
+        "apps/invoice/components/pan-invoice-header.mjs",
+        "apps/invoice/components/pan-invoice-items.mjs",
+        "apps/invoice/components/pan-invoice-totals.mjs"
+      ]
+    },
+    "contact.schema.set": {
+      "topic": "contact.schema.set",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-json-form.mjs",
+        "packages/ui/pan-json-form.mjs"
+      ]
+    },
+    "contact.data.get": {
+      "topic": "contact.data.get",
+      "type": "request",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-json-form.mjs",
+        "packages/ui/pan-json-form.mjs"
+      ]
+    },
+    "contact.submit": {
+      "topic": "contact.submit",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-json-form.mjs",
+        "packages/ui/pan-json-form.mjs"
+      ]
+    },
+    "contact.data": {
+      "topic": "contact.data",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-json-form.mjs",
+        "packages/ui/pan-json-form.mjs"
+      ]
+    },
+    "auth.token.refreshed": {
+      "topic": "auth.token.refreshed",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.token.expired": {
+      "topic": "auth.token.expired",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.login.request": {
+      "topic": "auth.login.request",
+      "type": "request",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.logout.request": {
+      "topic": "auth.logout.request",
+      "type": "request",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.token.refresh": {
+      "topic": "auth.token.refresh",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "auth.state.get": {
+      "topic": "auth.state.get",
+      "type": "request",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-jwt.mjs",
+        "packages/ui/pan-jwt.mjs"
+      ]
+    },
+    "nav.state": {
+      "topic": "nav.state",
+      "type": "state",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-link.mjs",
+        "packages/core/components/pan-router.mjs",
+        "packages/ui/pan-link.mjs",
+        "packages/ui/pan-router.mjs"
+      ]
+    },
+    "markdown.content-response": {
+      "topic": "markdown.content-response",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-markdown-editor.mjs",
+        "packages/ui/pan-markdown-editor.mjs"
+      ]
+    },
+    "markdown.changed": {
+      "topic": "markdown.changed",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-markdown-editor.mjs",
+        "packages/ui/pan-markdown-editor.mjs",
+        "apps/markdown-notes/index.html"
+      ]
+    },
+    "markdown.saved": {
+      "topic": "markdown.saved",
+      "type": "command",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-markdown-editor.mjs",
+        "packages/ui/pan-markdown-editor.mjs"
+      ]
+    },
+    "markdown.set-content": {
+      "topic": "markdown.set-content",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-markdown-editor.mjs",
+        "packages/ui/pan-markdown-editor.mjs"
+      ]
+    },
+    "markdown.get-content": {
+      "topic": "markdown.get-content",
+      "type": "request",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-markdown-editor.mjs",
+        "packages/ui/pan-markdown-editor.mjs"
+      ]
+    },
+    "markdown.render": {
+      "topic": "markdown.render",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-markdown-renderer.mjs",
+        "packages/ui/pan-markdown-renderer.mjs"
+      ]
+    },
+    "{storage}.queue.add": {
+      "topic": "{storage}.queue.add",
+      "type": "command",
+      "description": "Queued a mutation",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "storage"
+      ],
+      "sources": [
+        "packages/core/components/pan-offline-sync.mjs",
+        "packages/ui/pan-offline-sync.mjs"
+      ]
+    },
+    "{storage}.queue.sync": {
+      "topic": "{storage}.queue.sync",
+      "type": "unknown",
+      "description": "Sync started",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "storage"
+      ],
+      "sources": [
+        "packages/core/components/pan-offline-sync.mjs",
+        "packages/ui/pan-offline-sync.mjs"
+      ]
+    },
+    "{storage}.queue.success": {
+      "topic": "{storage}.queue.success",
+      "type": "event",
+      "description": "Mutation synced successfully",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "storage"
+      ],
+      "sources": [
+        "packages/core/components/pan-offline-sync.mjs",
+        "packages/ui/pan-offline-sync.mjs"
+      ]
+    },
+    "{storage}.queue.error": {
+      "topic": "{storage}.queue.error",
+      "type": "event",
+      "description": "Sync error occurred",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "storage"
+      ],
+      "sources": [
+        "packages/core/components/pan-offline-sync.mjs",
+        "packages/ui/pan-offline-sync.mjs"
+      ]
+    },
+    "{storage}.queue.conflict": {
+      "topic": "{storage}.queue.conflict",
+      "type": "unknown",
+      "description": "Conflict detected",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "storage"
+      ],
+      "sources": [
+        "packages/core/components/pan-offline-sync.mjs",
+        "packages/ui/pan-offline-sync.mjs"
+      ]
+    },
+    "{storage}.network.online": {
+      "topic": "{storage}.network.online",
+      "type": "unknown",
+      "description": "Network came online",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "storage"
+      ],
+      "sources": [
+        "packages/core/components/pan-offline-sync.mjs",
+        "packages/ui/pan-offline-sync.mjs"
+      ]
+    },
+    "{storage}.network.offline": {
+      "topic": "{storage}.network.offline",
+      "type": "unknown",
+      "description": "Network went offline",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "storage"
+      ],
+      "sources": [
+        "packages/core/components/pan-offline-sync.mjs",
+        "packages/ui/pan-offline-sync.mjs"
+      ]
+    },
+    "persist.hydrated": {
+      "topic": "persist.hydrated",
+      "type": "unknown",
+      "description": "All state has been hydrated",
+      "published": false,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-persistence-strategy.mjs",
+        "packages/ui/pan-persistence-strategy.mjs"
+      ]
+    },
+    "persist.saved": {
+      "topic": "persist.saved",
+      "type": "command",
+      "description": "State was persisted",
+      "published": false,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-persistence-strategy.mjs",
+        "packages/ui/pan-persistence-strategy.mjs"
+      ]
+    },
+    "persist.error": {
+      "topic": "persist.error",
+      "type": "event",
+      "description": "Persistence error occurred",
+      "published": false,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-persistence-strategy.mjs",
+        "packages/ui/pan-persistence-strategy.mjs"
+      ]
+    },
+    "nav.blocked": {
+      "topic": "nav.blocked",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-router.mjs",
+        "packages/ui/pan-router.mjs"
+      ]
+    },
+    "nav.goto": {
+      "topic": "nav.goto",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-router.mjs",
+        "packages/ui/pan-router.mjs"
+      ]
+    },
+    "nav.back": {
+      "topic": "nav.back",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-router.mjs",
+        "packages/ui/pan-router.mjs"
+      ]
+    },
+    "nav.forward": {
+      "topic": "nav.forward",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-router.mjs",
+        "packages/ui/pan-router.mjs"
+      ]
+    },
+    "nav.replace": {
+      "topic": "nav.replace",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-router.mjs",
+        "packages/ui/pan-router.mjs"
+      ]
+    },
+    "{topic}.valid": {
+      "topic": "{topic}.valid",
+      "type": "unknown",
+      "description": "Message passed validation",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "topic"
+      ],
+      "sources": [
+        "packages/core/components/pan-schema-validator.mjs",
+        "packages/ui/pan-schema-validator.mjs"
+      ]
+    },
+    "{topic}.invalid": {
+      "topic": "{topic}.invalid",
+      "type": "unknown",
+      "description": "Message failed validation",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "topic"
+      ],
+      "sources": [
+        "packages/core/components/pan-schema-validator.mjs",
+        "packages/ui/pan-schema-validator.mjs"
+      ]
+    },
+    "{channel}.sync.message": {
+      "topic": "{channel}.sync.message",
+      "type": "unknown",
+      "description": "Broadcast state changes to other tabs",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-state-sync.mjs",
+        "packages/ui/pan-state-sync.mjs"
+      ]
+    },
+    "{channel}.sync.request-state": {
+      "topic": "{channel}.sync.request-state",
+      "type": "request",
+      "description": "Request full state from leader",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-state-sync.mjs",
+        "packages/ui/pan-state-sync.mjs"
+      ]
+    },
+    "{channel}.sync.leader-elected": {
+      "topic": "{channel}.sync.leader-elected",
+      "type": "unknown",
+      "description": "Notify when new leader elected",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-state-sync.mjs",
+        "packages/ui/pan-state-sync.mjs"
+      ]
+    },
+    "{channel}.sync.conflict": {
+      "topic": "{channel}.sync.conflict",
+      "type": "unknown",
+      "description": "Conflict detected, resolution needed",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-state-sync.mjs",
+        "packages/ui/pan-state-sync.mjs"
+      ]
+    },
+    "theme.changed": {
+      "topic": "theme.changed",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-theme-toggle.mjs",
+        "packages/ui/pan-theme-toggle.mjs"
+      ]
+    },
+    "{channel}.undo": {
+      "topic": "{channel}.undo",
+      "type": "unknown",
+      "description": "Trigger undo",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "{channel}.redo": {
+      "topic": "{channel}.redo",
+      "type": "unknown",
+      "description": "Trigger redo",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "{channel}.clear": {
+      "topic": "{channel}.clear",
+      "type": "unknown",
+      "description": "Clear history",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "{channel}.snapshot": {
+      "topic": "{channel}.snapshot",
+      "type": "unknown",
+      "description": "Take manual snapshot",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "{channel}.state": {
+      "topic": "{channel}.state",
+      "type": "state",
+      "description": "History state changes",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "channel"
+      ],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "history.undo": {
+      "topic": "history.undo",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "history.redo": {
+      "topic": "history.redo",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "history.clear": {
+      "topic": "history.clear",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-undo-redo.mjs",
+        "packages/ui/pan-undo-redo.mjs"
+      ]
+    },
+    "ws.connected": {
+      "topic": "ws.connected",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-websocket.mjs",
+        "packages/ui/pan-websocket.mjs"
+      ]
+    },
+    "ws.message": {
+      "topic": "ws.message",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-websocket.mjs",
+        "packages/ui/pan-websocket.mjs"
+      ]
+    },
+    "ws.disconnected": {
+      "topic": "ws.disconnected",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-websocket.mjs",
+        "packages/ui/pan-websocket.mjs"
+      ]
+    },
+    "ws.error": {
+      "topic": "ws.error",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-websocket.mjs",
+        "packages/ui/pan-websocket.mjs"
+      ]
+    },
+    "pan:sys.error": {
+      "topic": "pan:sys.error",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/pan-worker.mjs",
+        "packages/ui/pan-worker.mjs"
+      ]
+    },
+    "todos.change": {
+      "topic": "todos.change",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/todo-list.mjs",
+        "packages/core/components/todo-provider.mjs",
+        "packages/ui/todo-list.mjs",
+        "packages/ui/todo-provider.mjs"
+      ]
+    },
+    "todos.toggle": {
+      "topic": "todos.toggle",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/todo-list.mjs",
+        "packages/core/components/todo-provider.mjs",
+        "packages/ui/todo-list.mjs",
+        "packages/ui/todo-provider.mjs"
+      ]
+    },
+    "todos.remove": {
+      "topic": "todos.remove",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/todo-list.mjs",
+        "packages/core/components/todo-provider.mjs",
+        "packages/ui/todo-list.mjs",
+        "packages/ui/todo-provider.mjs"
+      ]
+    },
+    "todos.state": {
+      "topic": "todos.state",
+      "type": "state",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/todo-list.mjs",
+        "packages/core/components/todo-provider.mjs",
+        "packages/ui/todo-list.mjs",
+        "packages/ui/todo-provider.mjs"
+      ]
+    },
+    "demo:click": {
+      "topic": "demo:click",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/components/x-counter.mjs",
+        "packages/ui/x-counter.mjs"
+      ]
+    },
+    "user.login": {
+      "topic": "user.login",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/index.js"
+      ]
+    },
+    "temp.*": {
+      "topic": "temp.*",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/index.js"
+      ]
+    },
+    "user.*": {
+      "topic": "user.*",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/index.js"
+      ]
+    },
+    "test.message": {
+      "topic": "test.message",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "packages/core/test-local.html"
+      ]
+    },
+    "{store}.idb.get": {
+      "topic": "{store}.idb.get",
+      "type": "request",
+      "description": "(command) Get an item by key",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.put": {
+      "topic": "{store}.idb.put",
+      "type": "command",
+      "description": "(command) Update or insert an item",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.add": {
+      "topic": "{store}.idb.add",
+      "type": "command",
+      "description": "(command) Add a new item",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.delete": {
+      "topic": "{store}.idb.delete",
+      "type": "command",
+      "description": "(command) Delete an item by key",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.clear": {
+      "topic": "{store}.idb.clear",
+      "type": "unknown",
+      "description": "(command) Clear all items from store",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.list": {
+      "topic": "{store}.idb.list",
+      "type": "request",
+      "description": "(command) List items with optional filters",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.query": {
+      "topic": "{store}.idb.query",
+      "type": "unknown",
+      "description": "(command) Query items by index",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.result": {
+      "topic": "{store}.idb.result",
+      "type": "event",
+      "description": "(event) Operation completed with result",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.error": {
+      "topic": "{store}.idb.error",
+      "type": "event",
+      "description": "(event) Operation failed with error",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{store}.idb.ready": {
+      "topic": "{store}.idb.ready",
+      "type": "event",
+      "description": "(event) IndexedDB store is ready",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "store"
+      ],
+      "sources": [
+        "packages/ui/pan-idb.mjs"
+      ]
+    },
+    "{topic}.search": {
+      "topic": "{topic}.search",
+      "type": "unknown",
+      "description": "(event) Search query changed with {query, filter}",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "topic"
+      ],
+      "sources": [
+        "packages/ui/pan-search-bar.mjs"
+      ]
+    },
+    "{topic}.clear": {
+      "topic": "{topic}.clear",
+      "type": "unknown",
+      "description": "(event) Search was cleared",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "topic"
+      ],
+      "sources": [
+        "packages/ui/pan-search-bar.mjs"
+      ]
+    },
+    "{topic}.set": {
+      "topic": "{topic}.set",
+      "type": "unknown",
+      "description": "(command) Set search query and/or filter programmatically",
+      "published": false,
+      "subscribed": false,
+      "parameters": [
+        "topic"
+      ],
+      "sources": [
+        "packages/ui/pan-search-bar.mjs"
+      ]
+    },
+    "topic.validation.error": {
+      "topic": "topic.validation.error",
+      "type": "event",
+      "description": "Topic validation failed",
+      "published": false,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/ui/pan-topic-validator.mjs"
+      ]
+    },
+    "topic.validation.warning": {
+      "topic": "topic.validation.warning",
+      "type": "unknown",
+      "description": "Topic validation warning (unknown topic)",
+      "published": false,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/ui/pan-topic-validator.mjs"
+      ]
+    },
+    "topic.validation.loaded": {
+      "topic": "topic.validation.loaded",
+      "type": "unknown",
+      "description": "Dictionary loaded successfully",
+      "published": false,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/ui/pan-topic-validator.mjs"
+      ]
+    },
+    "modal.demo.show": {
+      "topic": "modal.demo.show",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/ui/tests/playwright/pan-modal.spec.mjs"
+      ]
+    },
+    "modal.demo.hide": {
+      "topic": "modal.demo.hide",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/ui/tests/playwright/pan-modal.spec.mjs"
+      ]
+    },
+    "modal.demo.toggle": {
+      "topic": "modal.demo.toggle",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "packages/ui/tests/playwright/pan-modal.spec.mjs"
+      ]
+    },
+    "blog.wysiwyg.setContent": {
+      "topic": "blog.wysiwyg.setContent",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-wysiwyg-editor.mjs"
+      ]
+    },
+    "blog.source.setContent": {
+      "topic": "blog.source.setContent",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-source-editor.mjs"
+      ]
+    },
+    "blog.preview.update": {
+      "topic": "blog.preview.update",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-preview.mjs"
+      ]
+    },
+    "blog.storage.save": {
+      "topic": "blog.storage.save",
+      "type": "command",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-storage.mjs"
+      ]
+    },
+    "blog.storage.load": {
+      "topic": "blog.storage.load",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-storage.mjs"
+      ]
+    },
+    "blog.mode.switch": {
+      "topic": "blog.mode.switch",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-toolbar.mjs"
+      ]
+    },
+    "blog.preview.toggle": {
+      "topic": "blog.preview.toggle",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-toolbar.mjs"
+      ]
+    },
+    "blog.source.changed": {
+      "topic": "blog.source.changed",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-source-editor.mjs"
+      ]
+    },
+    "blog.wysiwyg.changed": {
+      "topic": "blog.wysiwyg.changed",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-wysiwyg-editor.mjs"
+      ]
+    },
+    "blog.save.request": {
+      "topic": "blog.save.request",
+      "type": "request",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs"
+      ]
+    },
+    "blog.draft.loaded": {
+      "topic": "blog.draft.loaded",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-editor.mjs",
+        "apps/blog-editor/components/blog-metadata.mjs",
+        "apps/blog-editor/components/blog-storage.mjs"
+      ]
+    },
+    "features.toggle": {
+      "topic": "features.toggle",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-feature-panel.mjs",
+        "apps/blog-editor/components/blog-toolbar.mjs"
+      ]
+    },
+    "features.available": {
+      "topic": "features.available",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-feature-panel.mjs",
+        "apps/blog-editor/features/feature-code.mjs",
+        "apps/blog-editor/features/feature-lists.mjs",
+        "apps/blog-editor/features/feature-media.mjs",
+        "apps/blog-editor/features/feature-tables.mjs"
+      ]
+    },
+    "blog.meta.changed": {
+      "topic": "blog.meta.changed",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-metadata.mjs",
+        "apps/blog-editor/components/blog-storage.mjs"
+      ]
+    },
+    "blog.meta.set": {
+      "topic": "blog.meta.set",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-metadata.mjs"
+      ]
+    },
+    "features.action": {
+      "topic": "features.action",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-source-editor.mjs",
+        "apps/blog-editor/components/blog-toolbar.mjs",
+        "apps/blog-editor/components/blog-wysiwyg-editor.mjs"
+      ]
+    },
+    "features.register": {
+      "topic": "features.register",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-toolbar.mjs",
+        "apps/blog-editor/features/feature-code.mjs",
+        "apps/blog-editor/features/feature-formatting.mjs",
+        "apps/blog-editor/features/feature-lists.mjs",
+        "apps/blog-editor/features/feature-media.mjs"
+      ]
+    },
+    "blog.mode.changed": {
+      "topic": "blog.mode.changed",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/blog-editor/components/blog-toolbar.mjs"
+      ]
+    },
+    "calendar.events.result": {
+      "topic": "calendar.events.result",
+      "type": "event",
+      "description": "(event) IndexedDB operation completed",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html"
+      ]
+    },
+    "calendar.events.ready": {
+      "topic": "calendar.events.ready",
+      "type": "event",
+      "description": "(event) IndexedDB store is ready",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html"
+      ]
+    },
+    "calendar.events.list": {
+      "topic": "calendar.events.list",
+      "type": "request",
+      "description": "(command) Request list of all events",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html"
+      ]
+    },
+    "calendar.events.add": {
+      "topic": "calendar.events.add",
+      "type": "command",
+      "description": "(command) Add a new event",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html"
+      ]
+    },
+    "calendar.events.put": {
+      "topic": "calendar.events.put",
+      "type": "command",
+      "description": "(command) Update an event",
+      "published": false,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html"
+      ]
+    },
+    "calendar.events.delete": {
+      "topic": "calendar.events.delete",
+      "type": "command",
+      "description": "(command) Delete an event",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html"
+      ]
+    },
+    "calendar.event.saved": {
+      "topic": "calendar.event.saved",
+      "type": "command",
+      "description": "(event) Event was saved",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html"
+      ]
+    },
+    "contacts.list": {
+      "topic": "contacts.list",
+      "type": "request",
+      "description": "(state) Receive contacts from Contact Manager (subscribed)",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html",
+        "apps/contact-manager/index.html",
+        "apps/invoice-studio/components/pan-contact-manager.mjs"
+      ]
+    },
+    "contacts.updated": {
+      "topic": "contacts.updated",
+      "type": "event",
+      "description": "(event) Contacts were modified (subscribed)",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html",
+        "apps/contact-manager/index.html",
+        "apps/invoice-studio/components/pan-contact-manager.mjs"
+      ]
+    },
+    "invoice.created": {
+      "topic": "invoice.created",
+      "type": "event",
+      "description": "(event) Invoice created, may have due date (subscribed)",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs"
+      ]
+    },
+    "contacts.idb.list": {
+      "topic": "contacts.idb.list",
+      "type": "request",
+      "description": "(command) Request list of all contacts",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/calendar/index.html",
+        "apps/contact-manager/index.html",
+        "apps/invoice-studio/components/pan-contact-manager.mjs"
+      ]
+    },
+    "contacts.idb.ready": {
+      "topic": "contacts.idb.ready",
+      "type": "event",
+      "description": "(event) IndexedDB store is ready",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/contact-manager/index.html"
+      ]
+    },
+    "contacts.idb.result": {
+      "topic": "contacts.idb.result",
+      "type": "event",
+      "description": "(event) IndexedDB operation completed",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/contact-manager/index.html"
+      ]
+    },
+    "contacts.idb.error": {
+      "topic": "contacts.idb.error",
+      "type": "event",
+      "description": "(event) IndexedDB operation failed",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/contact-manager/index.html"
+      ]
+    },
+    "contacts.idb.add": {
+      "topic": "contacts.idb.add",
+      "type": "command",
+      "description": "(command) Add a new contact",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/contact-manager/index.html"
+      ]
+    },
+    "contacts.idb.put": {
+      "topic": "contacts.idb.put",
+      "type": "command",
+      "description": "(command) Update a contact",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/contact-manager/index.html"
+      ]
+    },
+    "contacts.idb.delete": {
+      "topic": "contacts.idb.delete",
+      "type": "command",
+      "description": "(command) Delete a contact",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/contact-manager/index.html"
+      ]
+    },
+    "contacts.search.search": {
+      "topic": "contacts.search.search",
+      "type": "unknown",
+      "description": "(event) Search query changed",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/contact-manager/index.html"
+      ]
+    },
+    "resource.select": {
+      "topic": "resource.select",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/data-browser/index.html"
+      ]
+    },
+    "*.list.state": {
+      "topic": "*.list.state",
+      "type": "state",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/data-browser/index.html"
+      ]
+    },
+    "*.item.select": {
+      "topic": "*.item.select",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/data-browser/index.html"
+      ]
+    },
+    "*.item.get": {
+      "topic": "*.item.get",
+      "type": "request",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/data-browser/index.html"
+      ]
+    },
+    "*.item.save": {
+      "topic": "*.item.save",
+      "type": "command",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/data-browser/index.html"
+      ]
+    },
+    "*.item.delete": {
+      "topic": "*.item.delete",
+      "type": "command",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/data-browser/index.html"
+      ]
+    },
+    "contact.selected": {
+      "topic": "contact.selected",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice/components/pan-invoice-header.mjs"
+      ]
+    },
+    "invoice.totals.changed": {
+      "topic": "invoice.totals.changed",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice/components/pan-invoice-items.mjs",
+        "apps/invoice/components/pan-invoice-totals.mjs"
+      ]
+    },
+    "invoice.list-updated": {
+      "topic": "invoice.list-updated",
+      "type": "request",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice/index.html"
+      ]
+    },
+    "invoice.current-changed": {
+      "topic": "invoice.current-changed",
+      "type": "unknown",
+      "description": "",
+      "published": false,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice/index.html"
+      ]
+    },
+    "invoice.saved": {
+      "topic": "invoice.saved",
+      "type": "command",
+      "description": "(event) Invoice was saved successfully",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice/index.html",
+        "apps/invoice-studio/components/pan-invoice-browser.mjs",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs"
+      ]
+    },
+    "contacts.manager.show": {
+      "topic": "contacts.manager.show",
+      "type": "unknown",
+      "description": "(command) Show the contact manager modal",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-contact-manager.mjs",
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs"
+      ]
+    },
+    "contacts.picker.show": {
+      "topic": "contacts.picker.show",
+      "type": "unknown",
+      "description": "(command) Show the contact picker (alias)",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-contact-manager.mjs",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs"
+      ]
+    },
+    "contacts.selected": {
+      "topic": "contacts.selected",
+      "type": "unknown",
+      "description": "(event) User selected a contact",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-contact-manager.mjs",
+        "apps/invoice-studio/components/pan-invoice-editor.mjs"
+      ]
+    },
+    "ui.toast.show": {
+      "topic": "ui.toast.show",
+      "type": "unknown",
+      "description": "(command) Show a toast notification",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-contact-manager.mjs",
+        "apps/invoice-studio/components/pan-invoice-browser.mjs",
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs",
+        "apps/invoice-studio/components/pan-toast.mjs",
+        "apps/invoice-studio/lib/data-handler.mjs"
+      ]
+    },
+    "invoice.browser.show": {
+      "topic": "invoice.browser.show",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-browser.mjs",
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs"
+      ]
+    },
+    "invoice.load.latest": {
+      "topic": "invoice.load.latest",
+      "type": "unknown",
+      "description": "(command) Load the most recent invoice",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/index.html",
+        "apps/invoice-studio/lib/data-handler.mjs"
+      ]
+    },
+    "invoice.totals.updated": {
+      "topic": "invoice.totals.updated",
+      "type": "event",
+      "description": "(event) Invoice totals recalculated",
+      "published": true,
+      "subscribed": false,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-line-items.mjs"
+      ]
+    },
+    "invoice.state": {
+      "topic": "invoice.state",
+      "type": "state",
+      "description": "(state) Current invoice data",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-line-items.mjs",
+        "apps/invoice-studio/lib/data-handler.mjs"
+      ]
+    },
+    "invoice.error": {
+      "topic": "invoice.error",
+      "type": "event",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs",
+        "apps/invoice-studio/index.html"
+      ]
+    },
+    "invoice.items.clear": {
+      "topic": "invoice.items.clear",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-line-items.mjs"
+      ]
+    },
+    "invoice.items.load": {
+      "topic": "invoice.items.load",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-editor.mjs",
+        "apps/invoice-studio/components/pan-invoice-line-items.mjs"
+      ]
+    },
+    "invoice.export.pdf": {
+      "topic": "invoice.export.pdf",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs",
+        "apps/invoice-studio/lib/data-handler.mjs"
+      ]
+    },
+    "invoice.data.export": {
+      "topic": "invoice.data.export",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs",
+        "apps/invoice-studio/lib/data-handler.mjs"
+      ]
+    },
+    "invoice.data.import": {
+      "topic": "invoice.data.import",
+      "type": "unknown",
+      "description": "",
+      "published": true,
+      "subscribed": true,
+      "parameters": [],
+      "sources": [
+        "apps/invoice-studio/components/pan-invoice-toolbar.mjs",
+        "apps/invoice-studio/lib/data-handler.mjs"
+      ]
+    }
+  }
+}

@@ -391,23 +391,52 @@
   <script>
     const apps = [
       {
+        icon: '👥',
+        name: 'Contact Manager',
+        path: 'contact-manager/index.html',
+        description: 'Central contact store. Contacts sync to all apps via PAN messaging.',
+        features: [
+          'Add/edit/delete contacts',
+          'Real-time search & filtering',
+          'Publishes contacts.* events',
+          'IndexedDB persistence',
+          'Import/Export CSV'
+        ],
+        highlight: true
+      },
+      {
+        icon: '📅',
+        name: 'Calendar',
+        path: 'calendar/index.html',
+        description: 'Event scheduling with contact integration. Receives invoice due dates automatically.',
+        features: [
+          'Month/Week/Day views',
+          'Contacts as attendees (via PAN)',
+          'Auto-creates invoice due dates',
+          'Event categories & colors',
+          'IndexedDB persistence'
+        ],
+        highlight: true
+      },
+      {
         icon: '📄',
         name: 'Invoice Studio',
         path: 'invoice-studio/index.html',
-        description: 'Professional invoice management system with advanced features.',
+        description: 'Professional invoicing. Select clients from Contact Manager, due dates sync to Calendar.',
         features: [
-          'ContentEditable invoice fields',
+          'Client picker (from Contacts)',
           'Auto-calculating line items',
-          'Contact management system',
-          'IndexedDB persistence',
-          'PDF export with jsPDF'
-        ]
+          'Publishes invoice.created events',
+          'PDF export with jsPDF',
+          'IndexedDB persistence'
+        ],
+        highlight: true
       },
       {
         icon: '📝',
-        name: 'Markdown Notes',
+        name: 'Notes',
         path: 'markdown-notes/index.html',
-        description: 'Full-featured markdown editor with live preview and file management.',
+        description: 'Quick notes with markdown support. Link to contacts and events.',
         features: [
           'Rich markdown editor',
           'Live preview toggle',
@@ -417,55 +446,16 @@
         ]
       },
       {
-        icon: '👥',
-        name: 'Contact Manager',
-        path: 'contact-manager/index.html',
-        description: 'Modern contact management with search and filtering.',
-        features: [
-          'Add/edit/delete contacts',
-          'Real-time search',
-          'Tag management',
-          'IndexedDB persistence',
-          'Import/Export CSV'
-        ]
-      },
-      {
-        icon: '🧾',
-        name: 'Invoice Creator',
-        path: 'invoice/index.html',
-        description: 'Streamlined invoice creation for independent contractors.',
-        features: [
-          'ContentEditable fields',
-          'Auto-calculating items',
-          'Multiple invoices',
-          'Auto-save',
-          'Print-optimized'
-        ]
-      },
-      {
         icon: '📊',
         name: 'Data Browser',
         path: 'data-browser/index.html',
-        description: 'Browse and visualize data with interactive tables.',
+        description: 'Debug utility. Browse IndexedDB data and monitor PAN messages.',
         features: [
-          'Sortable data tables',
-          'Interactive charts',
+          'View all stored data',
+          'Monitor PAN bus traffic',
           'Export to CSV/JSON',
           'Real-time updates',
-          'Responsive design'
-        ]
-      },
-      {
-        icon: '✍️',
-        name: 'Blog Editor',
-        path: 'blog-editor/index.html',
-        description: 'Progressive enhancement demo with dual editing modes.',
-        features: [
-          'Markdown & WYSIWYG modes',
-          'Toggle feature modules',
-          'Live preview panel',
-          'IndexedDB persistence',
-          'No build required'
+          'Developer tool'
         ]
       }
     ];
@@ -636,5 +626,24 @@
   </script>
   <pan-bus debug="false"></pan-bus>
   <pan-theme-provider></pan-theme-provider>
+  
+  <!-- Topic validation in development mode -->
+  <pan-topic-validator 
+    dictionary="../packages/core/topic-dictionary.json"
+    mode="warn"
+    debug>
+  </pan-topic-validator>
+  
+  <!-- Cross-app sync for demo apps in iframes -->
+  <pan-state-sync
+    channel="larc-apps"
+    topics="contacts.list,contacts.updated,invoice.created"
+    strategy="last-write-wins"
+    leader="auto">
+  </pan-state-sync>
+  
+  <!-- Load PAN UI components -->
+  <script type="module">window.panAutoload = { paths: ['../packages/ui/', '../packages/core/'] };</script>
+  <script type="module" src="../packages/core/pan.mjs"></script>
 </body>
 </html>

@@ -1,8 +1,17 @@
 /**
  * Contact Manager Component
  *
- * Modal dialog for managing contacts.
+ * Modal dialog for managing contacts within Invoice Studio.
  * Can be used to select a contact for billing or manage the contact list.
+ * Receives contacts from the Contact Manager app via PAN messaging.
+ * 
+ * @topic contacts.manager.show - (command) Show the contact manager modal
+ * @topic contacts.picker.show - (command) Show the contact picker (alias)
+ * @topic contacts.list - (state) Receive contacts from Contact Manager app (subscribed, retained)
+ * @topic contacts.updated - (event) Contacts were modified (subscribed)
+ * @topic contacts.selected - (event) User selected a contact
+ * @topic contacts.idb.list - (command) Request contacts from local IDB (deprecated, use contacts.list)
+ * @topic ui.toast.show - (command) Show a toast notification
  */
 
 import { PanClient } from '../../../packages/core/pan-client.mjs';
@@ -13,6 +22,7 @@ class PanContactManager extends HTMLElement {
     super();
     this.client = new PanClient(this);
     this.contacts = [];
+    this.globalContacts = []; // Contacts from Contact Manager app
     this.mode = 'select'; // 'select' or 'manage'
   }
 
@@ -209,6 +219,18 @@ class PanContactManager extends HTMLElement {
           font-weight: 600;
           color: #333;
           margin-bottom: 0.25rem;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .source-badge {
+          font-size: 0.8rem;
+          opacity: 0.8;
+        }
+
+        .contact-item.from-app {
+          border-left: 3px solid #10b981;
         }
 
         .contact-company {
@@ -388,6 +410,35 @@ class PanContactManager extends HTMLElement {
       this.mode = 'select';
       this.show();
     });
+
+    // 🔗 Listen for contacts from the global Contact Manager app
+    this.client.subscribe('contacts.list', (msg) => {
+      const globalContacts = msg.data || [];
+      if (globalContacts.length > 0) {
+        console.log('📇 Received contacts from Contact Manager:', globalContacts.length);
+        // Transform to match our format if needed
+        this.globalContacts = globalContacts.map(c => ({
+          id: c.id,
+          name: c.fullName || c.name || `${c.firstName || ''} ${c.lastName || ''}`.trim(),
+          company: c.company || c.organization || '',
+          email: c.email || '',
+          phone: c.phone || c.mobile || '',
+          address: c.address || '',
+          city: c.city || '',
+          source: 'contact-manager' // Mark as from external app
+        }));
+        // Re-render if modal is open
+        if (this.querySelector('.modal-overlay').style.display === 'flex') {
+          this.renderContacts();
+        }
+      }
+    }, { retained: true }); // Get retained message immediately
+
+    // Listen for contact updates
+    this.client.subscribe('contacts.updated', () => {
+      // Request fresh contact list
+      this.client.publish({ topic: 'contacts.idb.list', data: {} });
+    });
   }
 
   async show() {
@@ -402,7 +453,18 @@ class PanContactManager extends HTMLElement {
 
   async loadContacts() {
     try {
-      this.contacts = await db.getAllContacts();
+      const localContacts = await db.getAllContacts();
+      // Merge local contacts with global contacts (from Contact Manager app)
+      // Global contacts take priority (they're the "source of truth")
+      const globalIds = new Set(this.globalContacts.map(c => c.id));
+      const uniqueLocal = localContacts.filter(c => !globalIds.has(c.id));
+      this.contacts = [...this.globalContacts, ...uniqueLocal];
+      
+      // Log merge for debugging
+      if (this.globalContacts.length > 0) {
+        console.log(`📇 Merged ${this.globalContacts.length} global + ${uniqueLocal.length} local = ${this.contacts.length} contacts`);
+      }
+      
       this.renderContacts();
     } catch (err) {
       this.showError('Failed to load contacts: ' + err.message);
@@ -419,14 +481,17 @@ class PanContactManager extends HTMLElement {
     }
 
     list.innerHTML = contacts.map(contact => `
-      <div class="contact-item" data-contact-id="${contact.id}">
+      <div class="contact-item ${contact.source === 'contact-manager' ? 'from-app' : ''}" data-contact-id="${contact.id}">
         <div class="contact-info">
-          <div class="contact-name">${this.escapeHtml(contact.name)}</div>
+          <div class="contact-name">
+            ${this.escapeHtml(contact.name)}
+            ${contact.source === 'contact-manager' ? '<span class="source-badge" title="From Contact Manager app">📇</span>' : ''}
+          </div>
           ${contact.company ? `<div class="contact-company">${this.escapeHtml(contact.company)}</div>` : ''}
           <div class="contact-email">${this.escapeHtml(contact.email)}</div>
         </div>
         <div class="contact-actions">
-          <button class="btn-icon-sm delete" data-action="delete" title="Delete">🗑️</button>
+          ${contact.source !== 'contact-manager' ? `<button class="btn-icon-sm delete" data-action="delete" title="Delete">🗑️</button>` : ''}
         </div>
       </div>
     `).join('');

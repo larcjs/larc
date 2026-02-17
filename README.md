@@ -36,20 +36,23 @@ npm install @larcjs/core-lite
   <title>My LARC App</title>
 </head>
 <body>
-  <!-- Include the PAN bus -->
-  <pan-bus debug="true"></pan-bus>
-
   <!-- Your content here -->
   <div id="app"></div>
 
   <script type="module">
-    import { PanClient } from '@larcjs/core';
-
+    // Import from CDN - includes bus and client
+    import { PanClient, ensureBus } from 'https://cdn.jsdelivr.net/npm/@larcjs/core@3.0.1/index.js';
+    
+    // Ensure bus exists
+    ensureBus();
+    
     const client = new PanClient();
+    await client.ready();
 
     // Subscribe to messages
     client.subscribe('user.login', (msg) => {
       console.log('User logged in:', msg.data);
+      document.getElementById('app').innerHTML = `<h1>Welcome, ${msg.data.username}!</h1>`;
     });
 
     // Publish messages
@@ -60,6 +63,18 @@ npm install @larcjs/core-lite
   </script>
 </body>
 </html>
+```
+
+**Or use npm with a bundler:**
+```javascript
+import { PanClient, ensureBus } from '@larcjs/core';
+
+ensureBus();
+const client = new PanClient();
+await client.ready();
+
+client.subscribe('app.*', (msg) => console.log(msg));
+client.publish({ topic: 'app.ready', data: { version: '1.0' } });
 ```
 
 ### Package Overview
@@ -85,7 +100,7 @@ npm install @larcjs/core-lite
 
 - 📖 [Full Documentation](https://larcjs.com)
 - 🚀 [Getting Started Guide](./docs/guides/QUICK-START-GUIDE.md)
-- 📚 [API Reference](./docs/API-REFERENCE.md)
+- 📚 [API Reference](./docs/reference/API-REFERENCE.md)
 - 💡 [Examples](https://larcjs.com/examples/)
 - ❓ [FAQ](./docs/guides/HN_FAQ.md)
 
@@ -97,7 +112,7 @@ This section is for contributors who want to work on LARC itself.
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
+- Node.js >= 22.0.0
 - Git
 
 ### Setup
@@ -120,7 +135,7 @@ pnpm install
 larc/
 ├── packages/                   → Published packages (npm workspaces)
 │   ├── core/                   → @larcjs/core
-│   ├── components/             → @larcjs/ui
+│   ├── ui/                     → @larcjs/ui
 │   ├── core-lite/              → @larcjs/core-lite (9KB)
 │   ├── core-routing/           → @larcjs/core-routing
 │   ├── core-debug/             → @larcjs/core-debug
@@ -252,7 +267,7 @@ npm test
 
 # Test specific packages
 npm run test:core
-npm run test:components
+npm run test:ui
 
 # Test with coverage
 cd packages/core
@@ -287,7 +302,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 | `npm run lint` | Lint all packages |
 | `npm run serve` | Serve examples on port 8000 |
 | `npm run build:core` | Build only @larcjs/core |
-| `npm run build:components` | Build only @larcjs/ui |
+| `npm run build:ui` | Build only @larcjs/ui |
 | `npm run test:core` | Test only @larcjs/core |
 | `npm run dev:site` | Run documentation site |
 
