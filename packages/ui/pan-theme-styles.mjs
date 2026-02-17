@@ -8,12 +8,7 @@
  *   import { themeStyles } from '../packages/ui/pan-theme-styles.mjs';
  *
  *   render() {
- *     this.shadowRoot.innerHTML = `
- *       <style>
- *         ${themeStyles}
- *         /* your component styles here */
- *       </style>
- *     `;
+ *     this.shadowRoot.innerHTML = '<style>' + themeStyles + '</style>';
  *   }
  */
 
