@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Theme System - Complete Solution · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Theme System - Complete Solution">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">ui</a> / <span>THEME-SYSTEM-README</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Theme System - Complete Solution</h1>
+<h2>The Problem You Experienced</h2>
+<p>Every time you added a PAN component to a page, it didn't respect dark mode because:</p>
+<li><strong>Shadow DOM isolation</strong>: Web components use shadow DOM, which isolates their styles</li>
+<li><strong>Inconsistent variable names</strong>: Different components used different CSS variable names (<code>--bg</code> vs <code>--color-bg</code>, <code>--primary</code> vs <code>--color-accent</code>, etc.)</li>
+<li><strong>No central theme source</strong>: Each component had its own theme definitions</li>
+<p>This meant you had to manually add dark mode support to every single component and every single page. <strong>That's terrible DX!</strong></p>
+<h2>The Solution</h2>
+<p>A <strong>centralized theme system</strong> with standardized variable names that automatically works everywhere.</p>
+<h3>How It Works</h3>
+<li><strong>Global theme CSS</strong> (<code>/packages/ui/theme.css</code>) defines all color variables at the <code>:root</code> level</li>
+<li><strong>CSS variables inherit</strong> through shadow DOM automatically</li>
+<li><strong>All components use the same variable names</strong> (enforced by convention and tooling)</li>
+<li><strong>Theme responds to both</strong> <code>@media (prefers-color-scheme)</code> AND <code>[data-theme]</code> attribute</li>
+<h3>What Was Created</h3>
+<p>#### 1. <code>/packages/ui/theme.css</code>
+The centralized theme definition that all pages should include:</p>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/packages/ui/theme.css&quot;&gt;</code></pre>
+<p>This file defines standard variables and responds to:
+<ul><li>System dark mode preference (<code>@media (prefers-color-scheme: dark)</code>)</li>
+<li>Explicit theme setting (<code>[data-theme="dark"]</code> set by <code>pan-theme-provider</code>)</li>
+</ul>
+#### 2. Standard Variable Names
+All PAN components now use these standardized names:</p>
+<p>| Variable | Purpose |
+|----------|---------|
+| <code>--color-bg</code> | Main page background |
+| <code>--color-surface</code> | Component backgrounds |
+| <code>--color-surface-alt</code> | Alternate surfaces (headers, hover) |
+| <code>--color-border</code> | Standard borders |
+| <code>--color-text</code> | Primary text |
+| <code>--color-muted</code> | Secondary text |
+| <code>--color-accent</code> | Interactive elements (buttons, links) |
+| <code>--color-code-bg</code> | Code block backgrounds |</p>
+<p>#### 3. <code>/packages/ui/scripts/fix-theme-vars.mjs</code>
+A script that automatically updates components to use standard variable names:</p>
+<pre><code class="language-bash"># Check what needs updating
+node packages/ui/scripts/fix-theme-vars.mjs --dry-run
+
+# Fix all components
+node packages/ui/scripts/fix-theme-vars.mjs
+
+# Fix specific file
+node packages/ui/scripts/fix-theme-vars.mjs --file=path/to/component.mjs</code></pre>
+<p>#### 4. <code>/packages/ui/THEMING.md</code>
+Complete documentation for developers on how to use the theme system.</p>
+<h3>Updated Files</h3>
+<ul><li>✅ <code>packages/ui/pan-data-table.mjs</code> - Uses standard variables</li>
+<li>✅ <code>packages/ui/pan-form.mjs</code> - Uses standard variables</li>
+<li>✅ <code>packages/ui/pan-inspector.mjs</code> - Uses standard variables</li>
+<li>✅ <code>packages/ui/pan-toast.mjs</code> - Auto-fixed by script</li>
+<li>✅ <code>examples/tutorials/assets/grail.css</code> - Now imports from theme.css</li>
+</ul>
+<h3>What This Means For You</h3>
+<p>#### For Existing Pages
+<strong>Nothing!</strong> They automatically work now because:
+<ul><li><code>grail.css</code> imports from <code>theme.css</code></li>
+<li>All components were updated to use standard variable names</li>
+<li>Variables inherit through shadow DOM automatically</li>
+</ul>
+#### For New Pages
+Just include the theme CSS:</p>
+<pre><code class="language-html">&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+  &lt;link rel=&quot;stylesheet&quot; href=&quot;/packages/ui/theme.css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;!-- Your components will automatically respect dark mode --&gt;
+  &lt;pan-data-table resource=&quot;items&quot;&gt;&lt;/pan-data-table&gt;
+
+  &lt;!-- Optional: enable theme switching --&gt;
+  &lt;pan-theme-provider&gt;&lt;/pan-theme-provider&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>#### For New Components
+Use the standard variable names:</p>
+<pre><code class="language-javascript">class MyComponent extends HTMLElement {
+  render() {
+    this.shadowRoot.innerHTML = `
+      &lt;style&gt;
+        :host {
+          background: var(--color-surface, white);
+          color: var(--color-text, #333);
+          border: 1px solid var(--color-border, #ddd);
+        }
+        button {
+          background: var(--color-accent, #2563eb);
+          color: white;
+        }
+      &lt;/style&gt;
+      &lt;div&gt;Content&lt;/div&gt;
+    `;
+  }
+}</code></pre>
+<strong>That's it!</strong> Dark mode works automatically. No shadow DOM style injection needed. No per-component theme logic. No manual updates.
+<h2>Why This Works</h2>
+<p>CSS custom properties (variables) are <strong>inherited</strong> properties. When you define them at <code>:root</code>, they inherit through shadow boundaries automatically. The key was:</p>
+<li><strong>Define once</strong> - Variables at <code>:root</code> in a global stylesheet</li>
+<li><strong>Use everywhere</strong> - Components reference these variables</li>
+<li><strong>Update once</strong> - Change <code>[data-theme]</code> attribute, all components update</li>
+<p>This is the standard web platform approach. We just needed to standardize the variable names and ensure all components use them consistently.</p>
+<h2>Future-Proofing</h2>
+<p>The <code>fix-theme-vars.mjs</code> script ensures new components follow the standard. Run it periodically:</p>
+<pre><code class="language-bash">npm run fix-theme-vars  # If added to package.json scripts</code></pre>
+<p>Or add a pre-commit hook to check for non-standard variable names.</p>
+<h2>No More Manual Fixes!</h2>
+<p>This was the last time you need to manually add dark mode support to components. The system is now <strong>centralized</strong> and <strong>automatic</strong>. 🎉</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/ui/THEME-SYSTEM-README.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

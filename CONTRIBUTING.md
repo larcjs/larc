@@ -26,7 +26,7 @@ This project and everyone participating in it is governed by our [Code of Conduc
 
 ### Prerequisites
 
-- Node.js 18.x or higher
+- Node.js 22.x or higher
 - Git
 - A modern web browser (Chrome, Firefox, Safari, or Edge)
 

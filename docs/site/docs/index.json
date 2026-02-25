@@ -6,6 +6,1912 @@
       "category": ".changeset"
     }
   ],
+  ".claude/worktrees/epic-ride/.changeset": [
+    {
+      "title": "Changesets",
+      "path": ".claude/worktrees/epic-ride/.changeset/README.html",
+      "category": ".claude/worktrees/epic-ride/.changeset"
+    }
+  ],
+  ".claude/worktrees/epic-ride/.github/ISSUE_TEMPLATE": [
+    {
+      "title": "bug_report",
+      "path": ".claude/worktrees/epic-ride/.github/ISSUE_TEMPLATE/bug_report.html",
+      "category": ".claude/worktrees/epic-ride/.github/ISSUE_TEMPLATE"
+    },
+    {
+      "title": "feature_request",
+      "path": ".claude/worktrees/epic-ride/.github/ISSUE_TEMPLATE/feature_request.html",
+      "category": ".claude/worktrees/epic-ride/.github/ISSUE_TEMPLATE"
+    }
+  ],
+  ".claude/worktrees/epic-ride/.github/profile": [
+    {
+      "title": "LARC — Lightweight Asynchronous Relay Core",
+      "path": ".claude/worktrees/epic-ride/.github/profile/README.html",
+      "category": ".claude/worktrees/epic-ride/.github/profile"
+    }
+  ],
+  ".claude/worktrees/epic-ride": [
+    {
+      "title": "Contributing to LARC",
+      "path": ".claude/worktrees/epic-ride/CONTRIBUTING.html",
+      "category": ".claude/worktrees/epic-ride"
+    },
+    {
+      "title": "Contributor Covenant Code of Conduct",
+      "path": ".claude/worktrees/epic-ride/CODE_OF_CONDUCT.html",
+      "category": ".claude/worktrees/epic-ride"
+    },
+    {
+      "title": "Deployment Process",
+      "path": ".claude/worktrees/epic-ride/DEPLOYMENT.html",
+      "category": ".claude/worktrees/epic-ride"
+    },
+    {
+      "title": "LARC",
+      "path": ".claude/worktrees/epic-ride/README.html",
+      "category": ".claude/worktrees/epic-ride"
+    },
+    {
+      "title": "LARC Project Instructions",
+      "path": ".claude/worktrees/epic-ride/CLAUDE.html",
+      "category": ".claude/worktrees/epic-ride"
+    },
+    {
+      "title": "Security Policy",
+      "path": ".claude/worktrees/epic-ride/SECURITY.html",
+      "category": ".claude/worktrees/epic-ride"
+    }
+  ],
+  ".claude/worktrees/epic-ride/apps": [
+    {
+      "title": "LARC.js Demo Applications",
+      "path": ".claude/worktrees/epic-ride/apps/README.html",
+      "category": ".claude/worktrees/epic-ride/apps"
+    }
+  ],
+  ".claude/worktrees/epic-ride/apps/contact-manager": [
+    {
+      "title": "Contact Manager Demo",
+      "path": ".claude/worktrees/epic-ride/apps/contact-manager/README.html",
+      "category": ".claude/worktrees/epic-ride/apps/contact-manager"
+    }
+  ],
+  ".claude/worktrees/epic-ride/apps/invoice": [
+    {
+      "title": "Invoice Creator Demo App",
+      "path": ".claude/worktrees/epic-ride/apps/invoice/README.html",
+      "category": ".claude/worktrees/epic-ride/apps/invoice"
+    }
+  ],
+  ".claude/worktrees/epic-ride/apps/invoice-studio": [
+    {
+      "title": "📄 PAN Invoice Studio",
+      "path": ".claude/worktrees/epic-ride/apps/invoice-studio/README.html",
+      "category": ".claude/worktrees/epic-ride/apps/invoice-studio"
+    }
+  ],
+  ".claude/worktrees/epic-ride/apps/src/ui": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/apps/src/ui/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/apps/src/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": ".claude/worktrees/epic-ride/apps/src/ui/COMPONENT_TEMPLATE.html",
+      "category": ".claude/worktrees/epic-ride/apps/src/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": ".claude/worktrees/epic-ride/apps/src/ui/README.html",
+      "category": ".claude/worktrees/epic-ride/apps/src/ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": ".claude/worktrees/epic-ride/apps/src/ui/THEME-SYSTEM-README.html",
+      "category": ".claude/worktrees/epic-ride/apps/src/ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": ".claude/worktrees/epic-ride/apps/src/ui/THEMING.html",
+      "category": ".claude/worktrees/epic-ride/apps/src/ui"
+    }
+  ],
+  ".claude/worktrees/epic-ride/apps/src/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": ".claude/worktrees/epic-ride/apps/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": ".claude/worktrees/epic-ride/apps/src/ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": ".claude/worktrees/epic-ride/apps/src/ui/docs/THEME_SYSTEM.html",
+      "category": ".claude/worktrees/epic-ride/apps/src/ui/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/books": [
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc-outline.html",
+      "category": ".claude/worktrees/epic-ride/books"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual - Completion Summary",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc-summary.html",
+      "category": ".claude/worktrees/epic-ride/books"
+    },
+    {
+      "title": "Editorial Review: LARC Book Series",
+      "path": ".claude/worktrees/epic-ride/books/EDITORIAL-REVIEW.html",
+      "category": ".claude/worktrees/epic-ride/books"
+    },
+    {
+      "title": "LARC Books Cross-Reference Guide",
+      "path": ".claude/worktrees/epic-ride/books/CROSS-REFERENCE-GUIDE.html",
+      "category": ".claude/worktrees/epic-ride/books"
+    }
+  ],
+  ".claude/worktrees/epic-ride/books/building-with-larc": [
+    {
+      "title": "Building the Book",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/BUILD.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/README.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/colophon.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Configuration Options",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/appendix-c-configuration-options.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Event Envelope Specification",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/appendix-b-event-envelope.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Glossary",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/appendix-f-glossary.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Index",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/index.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/back-cover.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Message Topics Reference",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/appendix-a-message-topics.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Migration Guide",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/appendix-d-migration-guide.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Quick Start Guide - Book Building",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/QUICKSTART.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Recipes and Patterns",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/appendix-e-recipes-and-patterns.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    },
+    {
+      "title": "Resources",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/appendix-g-resources.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc"
+    }
+  ],
+  ".claude/worktrees/epic-ride/books/building-with-larc/chapters": [
+    {
+      "title": "Advanced Patterns",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/15-advanced-patterns.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/08-authentication-and-authorization.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/17-core-components.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Concepts Quick Reference",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/02-core-concepts.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Components Reference",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/18-data-components.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/07-data-fetching-and-apis.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/16-deployment-and-production.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/14-error-handling-and-debugging.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "File Management",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/10-file-management.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/06-forms-and-user-input.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/03-getting-started.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Integration Components Reference",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/20-integration-components.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Introduction",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/01-introduction.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/12-performance-optimization.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Real-time Features",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/09-realtime-features.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/05-routing-and-navigation.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/04-state-management.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Testing Strategies",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/13-testing-strategies.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Theming and Styling",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/11-theming-and-styling.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "UI Components Reference",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/19-ui-components.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Utility Components Reference",
+      "path": ".claude/worktrees/epic-ride/books/building-with-larc/chapters/21-utility-components.html",
+      "category": ".claude/worktrees/epic-ride/books/building-with-larc/chapters"
+    }
+  ],
+  ".claude/worktrees/epic-ride/books/learning-larc": [
+    {
+      "title": "00-front-matter",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/00-front-matter.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Appendices",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/appendices.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "author-bio",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/author-bio.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "back-cover",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/back-cover.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/colophon.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Foreword {.unnumbered}",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/foreword.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Index",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/index.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/README.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Build System",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/BUILD-SYSTEM.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Final Audit Report",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/AUDIT-REPORT.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    },
+    {
+      "title": "Quick Start Guide - Building \"Learning LARC\"",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/QUICKSTART.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc"
+    }
+  ],
+  ".claude/worktrees/epic-ride/books/learning-larc/chapters": [
+    {
+      "title": "Advanced Component Patterns",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/07-advanced-component-patterns.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Authentication and Security",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/12-authentication-and-security.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Business Logic Patterns",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/08-business-logic-patterns.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Component Library",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/17-component-library.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Core Concepts",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/02-core-concepts.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Creating Web Components",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/04-creating-web-components.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/11-data-fetching-and-apis.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Deployment",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/16-deployment.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Forms and Validation",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/10-forms-and-validation.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/03-getting-started.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Performance and Optimization",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/15-performance-and-optimization.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Philosophy and Background",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Real-World Applications",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/19-real-world-applications.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/09-routing-and-navigation.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Server Integration",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/13-server-integration.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/06-state-management.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Testing",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/14-testing.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "The PAN Bus",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/05-the-pan-bus.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    },
+    {
+      "title": "Tooling",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/chapters/18-tooling.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/chapters"
+    }
+  ],
+  ".claude/worktrees/epic-ride/books/learning-larc/diagrams": [
+    {
+      "title": "Client-Side Routing",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/08-routing.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Application Architecture",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/14-app-architecture.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Diagram Index",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/DIAGRAM-INDEX.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "LARC Architecture Overview",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/01-architecture-overview.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Learning LARC - Diagrams",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/README.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "PAN Bus Communication Patterns",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/05-pan-bus.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "State Management Patterns",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/06-state-management.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Traditional Frameworks vs LARC",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/12-traditional-vs-larc.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Web Component Structure",
+      "path": ".claude/worktrees/epic-ride/books/learning-larc/diagrams/02-component-structure.html",
+      "category": ".claude/worktrees/epic-ride/books/learning-larc/diagrams"
+    }
+  ],
+  ".claude/worktrees/epic-ride/cli": [
+    {
+      "title": "create-larc-app",
+      "path": ".claude/worktrees/epic-ride/cli/README.html",
+      "category": ".claude/worktrees/epic-ride/cli"
+    },
+    {
+      "title": "Publishing create-larc-app to npm",
+      "path": ".claude/worktrees/epic-ride/cli/PUBLISHING.html",
+      "category": ".claude/worktrees/epic-ride/cli"
+    }
+  ],
+  ".claude/worktrees/epic-ride/core": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/core/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/core"
+    },
+    {
+      "title": "LARC Core",
+      "path": ".claude/worktrees/epic-ride/core/README.html",
+      "category": ".claude/worktrees/epic-ride/core"
+    },
+    {
+      "title": "LARC Quickstart - Zero Config Setup",
+      "path": ".claude/worktrees/epic-ride/core/QUICKSTART.html",
+      "category": ".claude/worktrees/epic-ride/core"
+    }
+  ],
+  ".claude/worktrees/epic-ride/core/docs": [
+    {
+      "title": "LARC — Page Area Network (PAN)",
+      "path": ".claude/worktrees/epic-ride/core/docs/LARC_SPEC.v0.html",
+      "category": ".claude/worktrees/epic-ride/core/docs"
+    },
+    {
+      "title": "LARC Roadmap (PAN)",
+      "path": ".claude/worktrees/epic-ride/core/docs/LARC_ROADMAP.html",
+      "category": ".claude/worktrees/epic-ride/core/docs"
+    },
+    {
+      "title": "PAN Routes - Dynamic Message Routing",
+      "path": ".claude/worktrees/epic-ride/core/docs/ROUTING.html",
+      "category": ".claude/worktrees/epic-ride/core/docs"
+    },
+    {
+      "title": "PAN v1.0 API Reference",
+      "path": ".claude/worktrees/epic-ride/core/docs/API_REFERENCE.html",
+      "category": ".claude/worktrees/epic-ride/core/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/core/examples/routing": [
+    {
+      "title": "PAN Routing Examples",
+      "path": ".claude/worktrees/epic-ride/core/examples/routing/README.html",
+      "category": ".claude/worktrees/epic-ride/core/examples/routing"
+    }
+  ],
+  ".claude/worktrees/epic-ride/devtools": [
+    {
+      "title": "Building Icons",
+      "path": ".claude/worktrees/epic-ride/devtools/BUILD_ICONS.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "Chrome DevTools MCP Extension Setup",
+      "path": ".claude/worktrees/epic-ride/devtools/CHROME_DEVTOOLS_MCP_EXTENSION_SETUP.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "PAN DevTools Extension - Now Enabled! ✅",
+      "path": ".claude/worktrees/epic-ride/devtools/EXTENSION_ENABLED.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "PAN DevTools Extension - Quick Start",
+      "path": ".claude/worktrees/epic-ride/devtools/QUICK_START.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "PAN DevTools Extension - Restart Required",
+      "path": ".claude/worktrees/epic-ride/devtools/RESTART_REQUIRED.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "PAN Inspector - Chrome DevTools Extension",
+      "path": ".claude/worktrees/epic-ride/devtools/README.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "PAN Inspector - Quick Start Guide",
+      "path": ".claude/worktrees/epic-ride/devtools/QUICKSTART.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "PAN Inspector Extension - Test Plan",
+      "path": ".claude/worktrees/epic-ride/devtools/EXTENSION_TEST_PLAN.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "PAN Inspector Extension - Test Results",
+      "path": ".claude/worktrees/epic-ride/devtools/EXTENSION_TEST_RESULTS.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    },
+    {
+      "title": "Root Cause Found! ✅",
+      "path": ".claude/worktrees/epic-ride/devtools/ROOT_CAUSE_FOUND.html",
+      "category": ".claude/worktrees/epic-ride/devtools"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/docs/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/docs"
+    },
+    {
+      "title": "LARC Documentation",
+      "path": ".claude/worktrees/epic-ride/docs/README.html",
+      "category": ".claude/worktrees/epic-ride/docs"
+    },
+    {
+      "title": "LARC Topic Dictionary",
+      "path": ".claude/worktrees/epic-ride/docs/TOPICS.html",
+      "category": ".claude/worktrees/epic-ride/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/archive/2024": [
+    {
+      "title": "📚 LARC Wiki Explorer",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/WIKI-EXPLORER-README.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "Diagrams Complete! 🎉",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/learning-larc-DIAGRAMS-COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "Documentation Update - November 25, 2024",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/DOCUMENTATION-UPDATE-2024-11-25.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Development Session Summary",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/SESSION-SUMMARY.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Ecosystem - Implementation Complete ✅",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/IMPLEMENTATION_COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC HTML Files Audit Report",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/HTML-AUDIT-REPORT.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Playground - Build Complete Report 🎉",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/BUILD-COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Playground - COMPLETE! ✅",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/PLAYGROUND-COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Playground - Implementation Plan",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/PLAYGROUND-IMPLEMENTATION.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Playground - Ready for Testing! 🚀",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/READY-FOR-TESTING.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Playground - Status",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/PLAYGROUND-STATUS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Positioning Update - Complete",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/POSITIONING-UPDATE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Production Readiness - Status Update",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/PRODUCTION_STATUS_UPDATE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Production Readiness Progress Report",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/PRODUCTION-READINESS-PROGRESS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Production Readiness Status",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/PRODUCTION-READINESS-STATUS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "LARC Project - Current Status",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/CURRENT-STATUS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "Learning LARC - Writing Progress",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/learning-larc-PROGRESS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "Phase 1: Foundation - COMPLETE! ✅",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/PHASE-1-COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    },
+    {
+      "title": "Session Complete - Playground Build",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2024/SESSION-COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2024"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts": [
+    {
+      "title": "Work Artifacts Archive (2025-2026)",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/README.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs": [
+    {
+      "title": "Book Build System - Complete Summary",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/BUILD-SYSTEM-SUMMARY.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Building with LARC - Restructuring Complete",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/RESTRUCTURING_COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Building with LARC - Restructuring Status",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/RESTRUCTURING_STATUS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Bundle Size Reduction - COMPLETE ✅",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/BUNDLE-REDUCTION-COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Component Registry Plan",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/COMPONENT-REGISTRY-PLAN.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "LARC Development Plan",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/DEVELOPMENT-PLAN.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "LARC Repository Migration - Complete ✅",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/MIGRATION-COMPLETE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Learning LARC: Expansion Plan for Chapters 11-19",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/EXPANSION-PLAN.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Migration Plan: From Git Submodules to Monorepo",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/MONOREPO-MIGRATION-PLAN.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Security Status",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs/SECURITY_STATUS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground": [
+    {
+      "title": "Dark Mode Fix - Complete Solution",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/DARK-MODE-FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Data Flow Example Fix",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/DATA_FLOW_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Date Picker Example Fix",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/DATE_PICKER_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Drag & Drop List Example Fix",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/DRAG_DROP_LIST_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Dropdown Menu Example Fix",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/DROPDOWN_MENU_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "File Upload Duplicate Events Fix",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/FILE_UPLOAD_DUPLICATE_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Help Text Guide",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/HELP_TEXT_GUIDE.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "LARC Playground - Quick Start",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/QUICK-START.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "LARC Playground - Testing Guide",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/TESTING.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "LARC Playground - Unified System",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/README-UNIFIED.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Pagination Example Limitation",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/PAGINATION_LIMITATION.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "PAN Bus Monitor Fix",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/BUS_MONITOR_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Examples - Fixed and Ready",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/EXAMPLES_FIXED.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Examples Test Plan",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/EXAMPLE_TEST_PLAN.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Improvements",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/IMPROVEMENTS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Session Fixes Summary",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/SESSION_FIXES_SUMMARY.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Status Report",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/PLAYGROUND_STATUS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Syntax Highlighting Fix",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/SYNTAX_HIGHLIGHTING_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Toolbar Badges for Non-UI Components",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/TOOLBAR_BADGES_FIX.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root": [
+    {
+      "title": "🚀 LARC Launch Readiness - Updated Report",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/LAUNCH_READINESS_UPDATED.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Add Authenticator App to npm 2FA",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/ADD-AUTHENTICATOR-TO-2FA.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "CodePen Setup for LARC Demo",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/CODEPEN-SETUP.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Dark Mode Site-Wide Fix Summary",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/DARK-MODE-SITE-WIDE-FIX-SUMMARY.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Fix Token Issue",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/FIX-TOKEN.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "LARC - Final Launch Readiness Report",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/FINAL-LAUNCH-READINESS-REPORT.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "LARC Examples Review & Status Report",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/EXAMPLES_REVIEW.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "LARC Release Readiness Report",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/RELEASE_READINESS_REPORT.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "npm Publishing Options (2024+)",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/NPM-PUBLISHING-OPTIONS.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Pre-Launch Checklist for HN & Reddit Announcement",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/PRE_LAUNCH_CHECKLIST.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Pre-Publish Checklist",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/PRE-PUBLISH-CHECKLIST.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Publish with 2FA",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/PUBLISH-WITH-2FA.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Publishing with 2FA (Simplest Method)",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/PUBLISH-WITH-2FA-OTP.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Ready to Publish! 🚀",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/PUBLISH-NOW.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Setting Up npm 2FA via Web Browser",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/SETUP-2FA-WEB.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Setting Up npm 2FA with Authenticator App",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/NPM-2FA-SETUP.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    },
+    {
+      "title": "Workspace Build Workflow",
+      "path": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/WORKSPACE-WORKFLOW.html",
+      "category": ".claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/books": [
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc-outline.html",
+      "category": ".claude/worktrees/epic-ride/docs/books"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual - Completion Summary",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc-summary.html",
+      "category": ".claude/worktrees/epic-ride/docs/books"
+    },
+    {
+      "title": "Editorial Review: LARC Book Series",
+      "path": ".claude/worktrees/epic-ride/docs/books/EDITORIAL-REVIEW.html",
+      "category": ".claude/worktrees/epic-ride/docs/books"
+    },
+    {
+      "title": "LARC Books Cross-Reference Guide",
+      "path": ".claude/worktrees/epic-ride/docs/books/CROSS-REFERENCE-GUIDE.html",
+      "category": ".claude/worktrees/epic-ride/docs/books"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/books/building-with-larc": [
+    {
+      "title": "Building the Book",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/BUILD.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/README.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/colophon.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Configuration Options",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/appendix-c-configuration-options.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Event Envelope Specification",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/appendix-b-event-envelope.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Glossary",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/appendix-f-glossary.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Index",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/index.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/back-cover.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Message Topics Reference",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/appendix-a-message-topics.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Migration Guide",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/appendix-d-migration-guide.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Quick Start Guide - Book Building",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/QUICKSTART.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Recipes and Patterns",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/appendix-e-recipes-and-patterns.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    },
+    {
+      "title": "Resources",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/appendix-g-resources.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters": [
+    {
+      "title": "Advanced Patterns",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/15-advanced-patterns.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/08-authentication-and-authorization.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/17-core-components.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Concepts Quick Reference",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/02-core-concepts.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Components Reference",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/18-data-components.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/07-data-fetching-and-apis.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/16-deployment-and-production.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/14-error-handling-and-debugging.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "File Management",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/10-file-management.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/06-forms-and-user-input.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/03-getting-started.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Integration Components Reference",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/20-integration-components.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Introduction",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/01-introduction.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/12-performance-optimization.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Real-time Features",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/09-realtime-features.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/05-routing-and-navigation.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/04-state-management.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Testing Strategies",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/13-testing-strategies.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Theming and Styling",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/11-theming-and-styling.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "UI Components Reference",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/19-ui-components.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    },
+    {
+      "title": "Utility Components Reference",
+      "path": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters/21-utility-components.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/building-with-larc/chapters"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/books/learning-larc": [
+    {
+      "title": "00-front-matter",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/00-front-matter.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Appendices",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/appendices.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "author-bio",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/author-bio.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "back-cover",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/back-cover.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/colophon.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Foreword {.unnumbered}",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/foreword.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Index",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/index.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/README.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Build System",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/BUILD-SYSTEM.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Final Audit Report",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/AUDIT-REPORT.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    },
+    {
+      "title": "Quick Start Guide - Building \"Learning LARC\"",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/QUICKSTART.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters": [
+    {
+      "title": "Advanced Component Patterns",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/07-advanced-component-patterns.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Authentication and Security",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/12-authentication-and-security.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Business Logic Patterns",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/08-business-logic-patterns.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Component Library",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/17-component-library.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Core Concepts",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/02-core-concepts.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Creating Web Components",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/04-creating-web-components.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/11-data-fetching-and-apis.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Deployment",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/16-deployment.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Forms and Validation",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/10-forms-and-validation.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/03-getting-started.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Performance and Optimization",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/15-performance-and-optimization.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Philosophy and Background",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Real-World Applications",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/19-real-world-applications.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/09-routing-and-navigation.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Server Integration",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/13-server-integration.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/06-state-management.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Testing",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/14-testing.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "The PAN Bus",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/05-the-pan-bus.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    },
+    {
+      "title": "Tooling",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters/18-tooling.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/chapters"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams": [
+    {
+      "title": "Client-Side Routing",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/08-routing.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Application Architecture",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/14-app-architecture.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Diagram Index",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/DIAGRAM-INDEX.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "LARC Architecture Overview",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/01-architecture-overview.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Learning LARC - Diagrams",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/README.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "PAN Bus Communication Patterns",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/05-pan-bus.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "State Management Patterns",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/06-state-management.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Traditional Frameworks vs LARC",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/12-traditional-vs-larc.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    },
+    {
+      "title": "Web Component Structure",
+      "path": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/02-component-structure.html",
+      "category": ".claude/worktrees/epic-ride/docs/books/learning-larc/diagrams"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/guides": [
+    {
+      "title": "🚀 LARC Config Quick Start",
+      "path": ".claude/worktrees/epic-ride/docs/guides/QUICK-START-CONFIG.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "Bundle Size Optimization - Complete",
+      "path": ".claude/worktrees/epic-ride/docs/guides/BUNDLE-SIZE-OPTIMIZATION.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "Hacker News Launch - FAQ Answers",
+      "path": ".claude/worktrees/epic-ride/docs/guides/HN_FAQ.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "Hacker News Post - LARC Launch",
+      "path": ".claude/worktrees/epic-ride/docs/guides/HN_POST_DRAFT.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "LARC Build Process - Minified Production Files",
+      "path": ".claude/worktrees/epic-ride/docs/guides/BUILD-PROCESS.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "LARC Configuration System",
+      "path": ".claude/worktrees/epic-ride/docs/guides/README-CONFIG.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "LARC Migration Guide",
+      "path": ".claude/worktrees/epic-ride/docs/guides/MIGRATION.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "LARC Monorepo Quick Start",
+      "path": ".claude/worktrees/epic-ride/docs/guides/QUICK-START.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "LARC Package Guide",
+      "path": ".claude/worktrees/epic-ride/docs/guides/PACKAGES.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "LARC Quick Start Guide",
+      "path": ".claude/worktrees/epic-ride/docs/guides/QUICK-START-GUIDE.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    },
+    {
+      "title": "LARC Troubleshooting Guide",
+      "path": ".claude/worktrees/epic-ride/docs/guides/TROUBLESHOOTING.html",
+      "category": ".claude/worktrees/epic-ride/docs/guides"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/migration": [
+    {
+      "title": "Archive Old Repositories - Instructions",
+      "path": ".claude/worktrees/epic-ride/docs/migration/ARCHIVE-REPOSITORIES.html",
+      "category": ".claude/worktrees/epic-ride/docs/migration"
+    },
+    {
+      "title": "DevTools Extraction - Complete ✅",
+      "path": ".claude/worktrees/epic-ride/docs/migration/DEVTOOLS-EXTRACTION.html",
+      "category": ".claude/worktrees/epic-ride/docs/migration"
+    },
+    {
+      "title": "Monorepo vs Submodules: Developer Experience Comparison",
+      "path": ".claude/worktrees/epic-ride/docs/migration/MONOREPO-VS-SUBMODULES.html",
+      "category": ".claude/worktrees/epic-ride/docs/migration"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/processes": [
+    {
+      "title": "Git Submodule Helper Scripts",
+      "path": ".claude/worktrees/epic-ride/docs/processes/SCRIPTS-README.html",
+      "category": ".claude/worktrees/epic-ride/docs/processes"
+    },
+    {
+      "title": "Git Submodules Workflow Guide",
+      "path": ".claude/worktrees/epic-ride/docs/processes/SUBMODULE-WORKFLOW.html",
+      "category": ".claude/worktrees/epic-ride/docs/processes"
+    },
+    {
+      "title": "Hacker News Launch Checklist",
+      "path": ".claude/worktrees/epic-ride/docs/processes/LAUNCH_CHECKLIST.html",
+      "category": ".claude/worktrees/epic-ride/docs/processes"
+    },
+    {
+      "title": "LARC Hacker News Launch - Readiness Report",
+      "path": ".claude/worktrees/epic-ride/docs/processes/LAUNCH_READINESS.html",
+      "category": ".claude/worktrees/epic-ride/docs/processes"
+    },
+    {
+      "title": "Recommended Repository Consolidation for LARC",
+      "path": ".claude/worktrees/epic-ride/docs/processes/RECOMMENDED-CONSOLIDATION.html",
+      "category": ".claude/worktrees/epic-ride/docs/processes"
+    },
+    {
+      "title": "Repository Structure Decision Tree",
+      "path": ".claude/worktrees/epic-ride/docs/processes/DECISION-TREE.html",
+      "category": ".claude/worktrees/epic-ride/docs/processes"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/reference": [
+    {
+      "title": "Advanced State Management in LARC",
+      "path": ".claude/worktrees/epic-ride/docs/reference/STATE-MANAGEMENT.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    },
+    {
+      "title": "Browser Compatibility Guide",
+      "path": ".claude/worktrees/epic-ride/docs/reference/BROWSER-COMPATIBILITY.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    },
+    {
+      "title": "Browser Compatibility Implementation Summary",
+      "path": ".claude/worktrees/epic-ride/docs/reference/COMPATIBILITY-IMPLEMENTATION.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    },
+    {
+      "title": "LARC API Reference",
+      "path": ".claude/worktrees/epic-ride/docs/reference/API-REFERENCE.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    },
+    {
+      "title": "LARC Core API Stability Guarantee",
+      "path": ".claude/worktrees/epic-ride/docs/reference/API-STABILITY.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    },
+    {
+      "title": "LARC Development Philosophy",
+      "path": ".claude/worktrees/epic-ride/docs/reference/DEVELOPMENT_PHILOSOPHY.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    },
+    {
+      "title": "LARC Performance Optimization Guide",
+      "path": ".claude/worktrees/epic-ride/docs/reference/PERFORMANCE-OPTIMIZATION.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    },
+    {
+      "title": "PAN Runtime Routes - API Reference",
+      "path": ".claude/worktrees/epic-ride/docs/reference/PAN-ROUTING-API.html",
+      "category": ".claude/worktrees/epic-ride/docs/reference"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/roadmap": [
+    {
+      "title": "LARC Production Readiness Roadmap",
+      "path": ".claude/worktrees/epic-ride/docs/roadmap/PRODUCTION_ROADMAP.html",
+      "category": ".claude/worktrees/epic-ride/docs/roadmap"
+    },
+    {
+      "title": "LARC Project Plan",
+      "path": ".claude/worktrees/epic-ride/docs/roadmap/PLAN.html",
+      "category": ".claude/worktrees/epic-ride/docs/roadmap"
+    }
+  ],
+  ".claude/worktrees/epic-ride/docs/specs": [
+    {
+      "title": "Semantic Versioning Commitment",
+      "path": ".claude/worktrees/epic-ride/docs/specs/SEMVER.html",
+      "category": ".claude/worktrees/epic-ride/docs/specs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/examples/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/examples"
+    },
+    {
+      "title": "LARC Examples",
+      "path": ".claude/worktrees/epic-ride/examples/README.html",
+      "category": ".claude/worktrees/epic-ride/examples"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/apps": [
+    {
+      "title": "Demo Applications",
+      "path": ".claude/worktrees/epic-ride/examples/apps/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/apps"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/apps/contact-manager": [
+    {
+      "title": "Contact Manager Demo",
+      "path": ".claude/worktrees/epic-ride/examples/apps/contact-manager/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/apps/contact-manager"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/apps/invoice": [
+    {
+      "title": "Invoice Creator Demo App",
+      "path": ".claude/worktrees/epic-ride/examples/apps/invoice/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/apps/invoice"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/apps/invoice-studio": [
+    {
+      "title": "📄 PAN Invoice Studio",
+      "path": ".claude/worktrees/epic-ride/examples/apps/invoice-studio/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/apps/invoice-studio"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/backends": [
+    {
+      "title": "LARC/PAN Backend Examples",
+      "path": ".claude/worktrees/epic-ride/examples/backends/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/backends"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/backends/nodejs": [
+    {
+      "title": "Node.js Backend Examples for LARC/PAN",
+      "path": ".claude/worktrees/epic-ride/examples/backends/nodejs/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/backends/nodejs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/backends/php": [
+    {
+      "title": "PHP Backend Examples for LARC/PAN",
+      "path": ".claude/worktrees/epic-ride/examples/backends/php/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/backends/php"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/backends/python": [
+    {
+      "title": "Python Backend Examples for LARC/PAN",
+      "path": ".claude/worktrees/epic-ride/examples/backends/python/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/backends/python"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/hybrid-dashboard": [
+    {
+      "title": "Hybrid Dashboard Demo",
+      "path": ".claude/worktrees/epic-ride/examples/hybrid-dashboard/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/hybrid-dashboard"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/src/ui": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/examples/src/ui/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/examples/src/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": ".claude/worktrees/epic-ride/examples/src/ui/COMPONENT_TEMPLATE.html",
+      "category": ".claude/worktrees/epic-ride/examples/src/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": ".claude/worktrees/epic-ride/examples/src/ui/README.html",
+      "category": ".claude/worktrees/epic-ride/examples/src/ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": ".claude/worktrees/epic-ride/examples/src/ui/THEME-SYSTEM-README.html",
+      "category": ".claude/worktrees/epic-ride/examples/src/ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": ".claude/worktrees/epic-ride/examples/src/ui/THEMING.html",
+      "category": ".claude/worktrees/epic-ride/examples/src/ui"
+    }
+  ],
+  ".claude/worktrees/epic-ride/examples/src/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": ".claude/worktrees/epic-ride/examples/src/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": ".claude/worktrees/epic-ride/examples/src/ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": ".claude/worktrees/epic-ride/examples/src/ui/docs/THEME_SYSTEM.html",
+      "category": ".claude/worktrees/epic-ride/examples/src/ui/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/components-types": [
+    {
+      "title": "@larcjs/ui-types",
+      "path": ".claude/worktrees/epic-ride/packages/components-types/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/packages/components-types"
+    },
+    {
+      "title": "@larcjs/ui-types",
+      "path": ".claude/worktrees/epic-ride/packages/components-types/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/components-types"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/core": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/packages/core/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/packages/core"
+    },
+    {
+      "title": "LARC Core",
+      "path": ".claude/worktrees/epic-ride/packages/core/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/core"
+    },
+    {
+      "title": "LARC Quickstart - Zero Config Setup",
+      "path": ".claude/worktrees/epic-ride/packages/core/QUICKSTART.html",
+      "category": ".claude/worktrees/epic-ride/packages/core"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/core/docs": [
+    {
+      "title": "LARC — Page Area Network (PAN)",
+      "path": ".claude/worktrees/epic-ride/packages/core/docs/LARC_SPEC.v0.html",
+      "category": ".claude/worktrees/epic-ride/packages/core/docs"
+    },
+    {
+      "title": "LARC Roadmap (PAN)",
+      "path": ".claude/worktrees/epic-ride/packages/core/docs/LARC_ROADMAP.html",
+      "category": ".claude/worktrees/epic-ride/packages/core/docs"
+    },
+    {
+      "title": "PAN Routes - Dynamic Message Routing",
+      "path": ".claude/worktrees/epic-ride/packages/core/docs/ROUTING.html",
+      "category": ".claude/worktrees/epic-ride/packages/core/docs"
+    },
+    {
+      "title": "PAN v1.0 API Reference",
+      "path": ".claude/worktrees/epic-ride/packages/core/docs/API_REFERENCE.html",
+      "category": ".claude/worktrees/epic-ride/packages/core/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/core/examples/routing": [
+    {
+      "title": "PAN Routing Examples",
+      "path": ".claude/worktrees/epic-ride/packages/core/examples/routing/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/core/examples/routing"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/core-debug": [
+    {
+      "title": "@larcjs/core-debug",
+      "path": ".claude/worktrees/epic-ride/packages/core-debug/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-debug"
+    },
+    {
+      "title": "@larcjs/core-debug",
+      "path": ".claude/worktrees/epic-ride/packages/core-debug/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-debug"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/core-lite": [
+    {
+      "title": "@larcjs/core-lite",
+      "path": ".claude/worktrees/epic-ride/packages/core-lite/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-lite"
+    },
+    {
+      "title": "Migration Guide: @larcjs/core → @larcjs/core-lite",
+      "path": ".claude/worktrees/epic-ride/packages/core-lite/MIGRATION.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-lite"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/core-routing": [
+    {
+      "title": "@larcjs/core-routing",
+      "path": ".claude/worktrees/epic-ride/packages/core-routing/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-routing"
+    },
+    {
+      "title": "@larcjs/core-routing",
+      "path": ".claude/worktrees/epic-ride/packages/core-routing/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-routing"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/core-types": [
+    {
+      "title": "@larcjs/core-types",
+      "path": ".claude/worktrees/epic-ride/packages/core-types/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-types"
+    },
+    {
+      "title": "@larcjs/core-types",
+      "path": ".claude/worktrees/epic-ride/packages/core-types/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-types"
+    },
+    {
+      "title": "NPM Organization Setup Required",
+      "path": ".claude/worktrees/epic-ride/packages/core-types/NPM-ORG-SETUP.html",
+      "category": ".claude/worktrees/epic-ride/packages/core-types"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/ui": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/packages/ui/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/packages/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": ".claude/worktrees/epic-ride/packages/ui/COMPONENT_TEMPLATE.html",
+      "category": ".claude/worktrees/epic-ride/packages/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": ".claude/worktrees/epic-ride/packages/ui/README.html",
+      "category": ".claude/worktrees/epic-ride/packages/ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": ".claude/worktrees/epic-ride/packages/ui/THEME-SYSTEM-README.html",
+      "category": ".claude/worktrees/epic-ride/packages/ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": ".claude/worktrees/epic-ride/packages/ui/THEMING.html",
+      "category": ".claude/worktrees/epic-ride/packages/ui"
+    }
+  ],
+  ".claude/worktrees/epic-ride/packages/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": ".claude/worktrees/epic-ride/packages/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": ".claude/worktrees/epic-ride/packages/ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": ".claude/worktrees/epic-ride/packages/ui/docs/THEME_SYSTEM.html",
+      "category": ".claude/worktrees/epic-ride/packages/ui/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/playground": [
+    {
+      "title": "LARC Playground",
+      "path": ".claude/worktrees/epic-ride/playground/README.html",
+      "category": ".claude/worktrees/epic-ride/playground"
+    }
+  ],
+  ".claude/worktrees/epic-ride/react-adapter": [
+    {
+      "title": "@larcjs/react-adapter",
+      "path": ".claude/worktrees/epic-ride/react-adapter/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/react-adapter"
+    }
+  ],
+  ".claude/worktrees/epic-ride/registry": [
+    {
+      "title": "Contributing to LARC Component Registry",
+      "path": ".claude/worktrees/epic-ride/registry/CONTRIBUTING.html",
+      "category": ".claude/worktrees/epic-ride/registry"
+    },
+    {
+      "title": "Deploying Registry to GitHub Pages",
+      "path": ".claude/worktrees/epic-ride/registry/DEPLOYING.html",
+      "category": ".claude/worktrees/epic-ride/registry"
+    },
+    {
+      "title": "LARC Component Registry",
+      "path": ".claude/worktrees/epic-ride/registry/README.html",
+      "category": ".claude/worktrees/epic-ride/registry"
+    }
+  ],
+  ".claude/worktrees/epic-ride/scripts": [
+    {
+      "title": "Build Scripts",
+      "path": ".claude/worktrees/epic-ride/scripts/README.html",
+      "category": ".claude/worktrees/epic-ride/scripts"
+    }
+  ],
+  ".claude/worktrees/epic-ride/ui": [
+    {
+      "title": "Changelog",
+      "path": ".claude/worktrees/epic-ride/ui/CHANGELOG.html",
+      "category": ".claude/worktrees/epic-ride/ui"
+    },
+    {
+      "title": "LARC Component Header Template",
+      "path": ".claude/worktrees/epic-ride/ui/COMPONENT_TEMPLATE.html",
+      "category": ".claude/worktrees/epic-ride/ui"
+    },
+    {
+      "title": "LARC Components",
+      "path": ".claude/worktrees/epic-ride/ui/README.html",
+      "category": ".claude/worktrees/epic-ride/ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": ".claude/worktrees/epic-ride/ui/THEME-SYSTEM-README.html",
+      "category": ".claude/worktrees/epic-ride/ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": ".claude/worktrees/epic-ride/ui/THEMING.html",
+      "category": ".claude/worktrees/epic-ride/ui"
+    }
+  ],
+  ".claude/worktrees/epic-ride/ui/docs": [
+    {
+      "title": "Component Security Audit Report",
+      "path": ".claude/worktrees/epic-ride/ui/docs/COMPONENT_SECURITY_AUDIT.html",
+      "category": ".claude/worktrees/epic-ride/ui/docs"
+    },
+    {
+      "title": "PAN Theme System",
+      "path": ".claude/worktrees/epic-ride/ui/docs/THEME_SYSTEM.html",
+      "category": ".claude/worktrees/epic-ride/ui/docs"
+    }
+  ],
+  ".claude/worktrees/epic-ride/vscode-extension": [
+    {
+      "title": "LARC VS Code Extension",
+      "path": ".claude/worktrees/epic-ride/vscode-extension/README.html",
+      "category": ".claude/worktrees/epic-ride/vscode-extension"
+    },
+    {
+      "title": "Publishing LARC VS Code Extension",
+      "path": ".claude/worktrees/epic-ride/vscode-extension/PUBLISHING.html",
+      "category": ".claude/worktrees/epic-ride/vscode-extension"
+    }
+  ],
   ".github/ISSUE_TEMPLATE": [
     {
       "title": "bug_report",
@@ -27,23 +1933,8 @@
   ],
   "Root": [
     {
-      "title": "🚀 LARC Launch Readiness - Updated Report",
-      "path": "LAUNCH_READINESS_UPDATED.html",
-      "category": "Root"
-    },
-    {
-      "title": "Add Authenticator App to npm 2FA",
-      "path": "ADD-AUTHENTICATOR-TO-2FA.html",
-      "category": "Root"
-    },
-    {
       "title": "Changelog",
       "path": "CHANGELOG.html",
-      "category": "Root"
-    },
-    {
-      "title": "CodePen Setup for LARC Demo",
-      "path": "CODEPEN-SETUP.html",
       "category": "Root"
     },
     {
@@ -62,11 +1953,6 @@
       "category": "Root"
     },
     {
-      "title": "Fix Token Issue",
-      "path": "FIX-TOKEN.html",
-      "category": "Root"
-    },
-    {
       "title": "LARC",
       "path": "README.html",
       "category": "Root"
@@ -77,68 +1963,18 @@
       "category": "Root"
     },
     {
-      "title": "LARC Examples Review & Status Report",
-      "path": "EXAMPLES_REVIEW.html",
-      "category": "Root"
-    },
-    {
       "title": "LARC Project Instructions",
       "path": "CLAUDE.html",
       "category": "Root"
     },
     {
-      "title": "LARC Release Readiness Report",
-      "path": "RELEASE_READINESS_REPORT.html",
-      "category": "Root"
-    },
-    {
-      "title": "npm Publishing Options (2024+)",
-      "path": "NPM-PUBLISHING-OPTIONS.html",
-      "category": "Root"
-    },
-    {
-      "title": "Pre-Launch Checklist for HN & Reddit Announcement",
-      "path": "PRE_LAUNCH_CHECKLIST.html",
-      "category": "Root"
-    },
-    {
-      "title": "Pre-Publish Checklist",
-      "path": "PRE-PUBLISH-CHECKLIST.html",
-      "category": "Root"
-    },
-    {
-      "title": "Publish with 2FA",
-      "path": "PUBLISH-WITH-2FA.html",
-      "category": "Root"
-    },
-    {
-      "title": "Publishing with 2FA (Simplest Method)",
-      "path": "PUBLISH-WITH-2FA-OTP.html",
-      "category": "Root"
-    },
-    {
-      "title": "Ready to Publish! 🚀",
-      "path": "PUBLISH-NOW.html",
+      "title": "LARC Topic Dictionary",
+      "path": "TOPICS.html",
       "category": "Root"
     },
     {
       "title": "Security Policy",
       "path": "SECURITY.html",
-      "category": "Root"
-    },
-    {
-      "title": "Setting Up npm 2FA via Web Browser",
-      "path": "SETUP-2FA-WEB.html",
-      "category": "Root"
-    },
-    {
-      "title": "Setting Up npm 2FA with Authenticator App",
-      "path": "NPM-2FA-SETUP.html",
-      "category": "Root"
-    },
-    {
-      "title": "Workspace Build Workflow",
-      "path": "WORKSPACE-WORKFLOW.html",
       "category": "Root"
     }
   ],
@@ -185,6 +2021,16 @@
       "title": "LARC Components",
       "path": "apps/src/ui/README.html",
       "category": "apps/src/ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": "apps/src/ui/THEME-SYSTEM-README.html",
+      "category": "apps/src/ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": "apps/src/ui/THEMING.html",
+      "category": "apps/src/ui"
     }
   ],
   "apps/src/ui/docs": [
@@ -197,6 +2043,1192 @@
       "title": "PAN Theme System",
       "path": "apps/src/ui/docs/THEME_SYSTEM.html",
       "category": "apps/src/ui/docs"
+    }
+  ],
+  "books": [
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": "books/building-with-larc-outline.html",
+      "category": "books"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": "books/building-with-larc-outline.html",
+      "category": "books"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual - Completion Summary",
+      "path": "books/building-with-larc-summary.html",
+      "category": "books"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual - Completion Summary",
+      "path": "books/building-with-larc-summary.html",
+      "category": "books"
+    },
+    {
+      "title": "Editorial Review: LARC Book Series",
+      "path": "books/EDITORIAL-REVIEW.html",
+      "category": "books"
+    },
+    {
+      "title": "Editorial Review: LARC Book Series",
+      "path": "books/EDITORIAL-REVIEW.html",
+      "category": "books"
+    },
+    {
+      "title": "LARC Books Cross-Reference Guide",
+      "path": "books/CROSS-REFERENCE-GUIDE.html",
+      "category": "books"
+    },
+    {
+      "title": "LARC Books Cross-Reference Guide",
+      "path": "books/CROSS-REFERENCE-GUIDE.html",
+      "category": "books"
+    }
+  ],
+  "books/backup/building-with-larc-original-20251226": [
+    {
+      "title": "Advanced Patterns",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-19-advanced-patterns.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Advanced Patterns",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-19-advanced-patterns.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-12-authentication-and-authorization.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-12-authentication-and-authorization.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Basic Message Flow",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-06-basic-message-flow.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Basic Message Flow",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-06-basic-message-flow.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Book Build System - Complete Summary",
+      "path": "books/backup/building-with-larc-original-20251226/BUILD-SYSTEM-SUMMARY.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Book Build System - Complete Summary",
+      "path": "books/backup/building-with-larc-original-20251226/BUILD-SYSTEM-SUMMARY.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Building the Book",
+      "path": "books/backup/building-with-larc-original-20251226/BUILD.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Building the Book",
+      "path": "books/backup/building-with-larc-original-20251226/BUILD.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": "books/backup/building-with-larc-original-20251226/README.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": "books/backup/building-with-larc-original-20251226/README.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Colophon",
+      "path": "books/backup/building-with-larc-original-20251226/colophon.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Colophon",
+      "path": "books/backup/building-with-larc-original-20251226/colophon.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Configuration Options",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-c-configuration-options.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Configuration Options",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-c-configuration-options.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-21-core-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-21-core-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Core Concepts",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-04-core-concepts.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Core Concepts",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-04-core-concepts.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Data Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-22-data-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Data Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-22-data-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-11-data-fetching-and-apis.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-11-data-fetching-and-apis.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-20-deployment-and-production.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-20-deployment-and-production.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-18-error-handling-and-debugging.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-18-error-handling-and-debugging.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Event Envelope Specification",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-b-event-envelope.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Event Envelope Specification",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-b-event-envelope.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "File Management",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-14-file-management.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "File Management",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-14-file-management.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-10-forms-and-user-input.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-10-forms-and-user-input.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Getting Started",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-05-getting-started.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Getting Started",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-05-getting-started.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Glossary",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-f-glossary.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Glossary",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-f-glossary.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Index",
+      "path": "books/backup/building-with-larc-original-20251226/index.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Index",
+      "path": "books/backup/building-with-larc-original-20251226/index.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Integration Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-24-integration-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Integration Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-24-integration-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Introduction",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-01-introduction.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Introduction",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-01-introduction.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "books/backup/building-with-larc-original-20251226/back-cover.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "books/backup/building-with-larc-original-20251226/back-cover.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Message Topics Reference",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-a-message-topics.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Message Topics Reference",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-a-message-topics.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Migration Guide",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-d-migration-guide.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Migration Guide",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-d-migration-guide.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-16-performance-optimization.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-16-performance-optimization.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Quick Start Guide - Book Building",
+      "path": "books/backup/building-with-larc-original-20251226/QUICKSTART.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Quick Start Guide - Book Building",
+      "path": "books/backup/building-with-larc-original-20251226/QUICKSTART.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Real-time Features",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-13-realtime-features.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Real-time Features",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-13-realtime-features.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Recipes and Patterns",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-e-recipes-and-patterns.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Recipes and Patterns",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-e-recipes-and-patterns.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Resources",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-g-resources.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Resources",
+      "path": "books/backup/building-with-larc-original-20251226/appendix-g-resources.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-09-routing-and-navigation.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-09-routing-and-navigation.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "State Management",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-08-state-management.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "State Management",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-08-state-management.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Testing Strategies",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-17-testing-strategies.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Testing Strategies",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-17-testing-strategies.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "The LARC Story",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-03-story.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "The LARC Story",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-03-story.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "The Philosophy of LARC",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-02-philosophy.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "The Philosophy of LARC",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-02-philosophy.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Theming and Styling",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-15-theming-and-styling.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Theming and Styling",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-15-theming-and-styling.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "UI Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-23-ui-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "UI Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-23-ui-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Utility Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-25-utility-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Utility Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-25-utility-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Working with Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-07-working-with-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    },
+    {
+      "title": "Working with Components",
+      "path": "books/backup/building-with-larc-original-20251226/chapter-07-working-with-components.html",
+      "category": "books/backup/building-with-larc-original-20251226"
+    }
+  ],
+  "books/building-with-larc": [
+    {
+      "title": "Building the Book",
+      "path": "books/building-with-larc/BUILD.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Building the Book",
+      "path": "books/building-with-larc/BUILD.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": "books/building-with-larc/README.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Building with LARC: A Reference Manual",
+      "path": "books/building-with-larc/README.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": "books/building-with-larc/colophon.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": "books/building-with-larc/colophon.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Configuration Options",
+      "path": "books/building-with-larc/appendix-c-configuration-options.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Configuration Options",
+      "path": "books/building-with-larc/appendix-c-configuration-options.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Event Envelope Specification",
+      "path": "books/building-with-larc/appendix-b-event-envelope.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Event Envelope Specification",
+      "path": "books/building-with-larc/appendix-b-event-envelope.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Glossary",
+      "path": "books/building-with-larc/appendix-f-glossary.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Glossary",
+      "path": "books/building-with-larc/appendix-f-glossary.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Index",
+      "path": "books/building-with-larc/index.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Index",
+      "path": "books/building-with-larc/index.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "books/building-with-larc/back-cover.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "books/building-with-larc/back-cover.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Message Topics Reference",
+      "path": "books/building-with-larc/appendix-a-message-topics.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Message Topics Reference",
+      "path": "books/building-with-larc/appendix-a-message-topics.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Migration Guide",
+      "path": "books/building-with-larc/appendix-d-migration-guide.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Migration Guide",
+      "path": "books/building-with-larc/appendix-d-migration-guide.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Quick Start Guide - Book Building",
+      "path": "books/building-with-larc/QUICKSTART.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Quick Start Guide - Book Building",
+      "path": "books/building-with-larc/QUICKSTART.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Recipes and Patterns",
+      "path": "books/building-with-larc/appendix-e-recipes-and-patterns.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Recipes and Patterns",
+      "path": "books/building-with-larc/appendix-e-recipes-and-patterns.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Resources",
+      "path": "books/building-with-larc/appendix-g-resources.html",
+      "category": "books/building-with-larc"
+    },
+    {
+      "title": "Resources",
+      "path": "books/building-with-larc/appendix-g-resources.html",
+      "category": "books/building-with-larc"
+    }
+  ],
+  "books/building-with-larc/chapters": [
+    {
+      "title": "Advanced Patterns",
+      "path": "books/building-with-larc/chapters/15-advanced-patterns.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Advanced Patterns",
+      "path": "books/building-with-larc/chapters/15-advanced-patterns.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": "books/building-with-larc/chapters/08-authentication-and-authorization.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Authentication and Authorization",
+      "path": "books/building-with-larc/chapters/08-authentication-and-authorization.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": "books/building-with-larc/chapters/17-core-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Components Reference",
+      "path": "books/building-with-larc/chapters/17-core-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Concepts Quick Reference",
+      "path": "books/building-with-larc/chapters/02-core-concepts.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Core Concepts Quick Reference",
+      "path": "books/building-with-larc/chapters/02-core-concepts.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Components Reference",
+      "path": "books/building-with-larc/chapters/18-data-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Components Reference",
+      "path": "books/building-with-larc/chapters/18-data-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "books/building-with-larc/chapters/07-data-fetching-and-apis.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "books/building-with-larc/chapters/07-data-fetching-and-apis.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": "books/building-with-larc/chapters/16-deployment-and-production.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Deployment and Production",
+      "path": "books/building-with-larc/chapters/16-deployment-and-production.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": "books/building-with-larc/chapters/14-error-handling-and-debugging.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Error Handling and Debugging",
+      "path": "books/building-with-larc/chapters/14-error-handling-and-debugging.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "File Management",
+      "path": "books/building-with-larc/chapters/10-file-management.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "File Management",
+      "path": "books/building-with-larc/chapters/10-file-management.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": "books/building-with-larc/chapters/06-forms-and-user-input.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Forms and User Input",
+      "path": "books/building-with-larc/chapters/06-forms-and-user-input.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": "books/building-with-larc/chapters/03-getting-started.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": "books/building-with-larc/chapters/03-getting-started.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Integration Components Reference",
+      "path": "books/building-with-larc/chapters/20-integration-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Integration Components Reference",
+      "path": "books/building-with-larc/chapters/20-integration-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Introduction",
+      "path": "books/building-with-larc/chapters/01-introduction.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Introduction",
+      "path": "books/building-with-larc/chapters/01-introduction.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": "books/building-with-larc/chapters/12-performance-optimization.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Performance Optimization",
+      "path": "books/building-with-larc/chapters/12-performance-optimization.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Real-time Features",
+      "path": "books/building-with-larc/chapters/09-realtime-features.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Real-time Features",
+      "path": "books/building-with-larc/chapters/09-realtime-features.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "books/building-with-larc/chapters/05-routing-and-navigation.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "books/building-with-larc/chapters/05-routing-and-navigation.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": "books/building-with-larc/chapters/04-state-management.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": "books/building-with-larc/chapters/04-state-management.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Testing Strategies",
+      "path": "books/building-with-larc/chapters/13-testing-strategies.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Testing Strategies",
+      "path": "books/building-with-larc/chapters/13-testing-strategies.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Theming and Styling",
+      "path": "books/building-with-larc/chapters/11-theming-and-styling.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Theming and Styling",
+      "path": "books/building-with-larc/chapters/11-theming-and-styling.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "UI Components Reference",
+      "path": "books/building-with-larc/chapters/19-ui-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "UI Components Reference",
+      "path": "books/building-with-larc/chapters/19-ui-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Utility Components Reference",
+      "path": "books/building-with-larc/chapters/21-utility-components.html",
+      "category": "books/building-with-larc/chapters"
+    },
+    {
+      "title": "Utility Components Reference",
+      "path": "books/building-with-larc/chapters/21-utility-components.html",
+      "category": "books/building-with-larc/chapters"
+    }
+  ],
+  "books/learning-larc": [
+    {
+      "title": "00-front-matter",
+      "path": "books/learning-larc/00-front-matter.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "00-front-matter",
+      "path": "books/learning-larc/00-front-matter.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Appendices",
+      "path": "books/learning-larc/appendices.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Appendices",
+      "path": "books/learning-larc/appendices.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "author-bio",
+      "path": "books/learning-larc/author-bio.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "author-bio",
+      "path": "books/learning-larc/author-bio.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "back-cover",
+      "path": "books/learning-larc/back-cover.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "back-cover",
+      "path": "books/learning-larc/back-cover.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": "books/learning-larc/colophon.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Colophon",
+      "path": "books/learning-larc/colophon.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Foreword {.unnumbered}",
+      "path": "books/learning-larc/foreword.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Foreword {.unnumbered}",
+      "path": "books/learning-larc/foreword.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Index",
+      "path": "books/learning-larc/index.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Index",
+      "path": "books/learning-larc/index.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "books/learning-larc/README.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Learning LARC",
+      "path": "books/learning-larc/README.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Build System",
+      "path": "books/learning-larc/BUILD-SYSTEM.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Build System",
+      "path": "books/learning-larc/BUILD-SYSTEM.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Final Audit Report",
+      "path": "books/learning-larc/AUDIT-REPORT.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Learning LARC - Final Audit Report",
+      "path": "books/learning-larc/AUDIT-REPORT.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Quick Start Guide - Building \"Learning LARC\"",
+      "path": "books/learning-larc/QUICKSTART.html",
+      "category": "books/learning-larc"
+    },
+    {
+      "title": "Quick Start Guide - Building \"Learning LARC\"",
+      "path": "books/learning-larc/QUICKSTART.html",
+      "category": "books/learning-larc"
+    }
+  ],
+  "books/learning-larc/build/temp": [
+    {
+      "title": "Foreword {.unnumbered}",
+      "path": "books/learning-larc/build/temp/learning-larc-complete.html",
+      "category": "books/learning-larc/build/temp"
+    },
+    {
+      "title": "Foreword {.unnumbered}",
+      "path": "books/learning-larc/build/temp/learning-larc-complete.html",
+      "category": "books/learning-larc/build/temp"
+    }
+  ],
+  "books/learning-larc/chapters": [
+    {
+      "title": "Advanced Component Patterns",
+      "path": "books/learning-larc/chapters/07-advanced-component-patterns.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Advanced Component Patterns",
+      "path": "books/learning-larc/chapters/07-advanced-component-patterns.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Authentication and Security",
+      "path": "books/learning-larc/chapters/12-authentication-and-security.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Authentication and Security",
+      "path": "books/learning-larc/chapters/12-authentication-and-security.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Business Logic Patterns",
+      "path": "books/learning-larc/chapters/08-business-logic-patterns.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Business Logic Patterns",
+      "path": "books/learning-larc/chapters/08-business-logic-patterns.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Component Library",
+      "path": "books/learning-larc/chapters/17-component-library.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Component Library",
+      "path": "books/learning-larc/chapters/17-component-library.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Core Concepts",
+      "path": "books/learning-larc/chapters/02-core-concepts.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Core Concepts",
+      "path": "books/learning-larc/chapters/02-core-concepts.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Creating Web Components",
+      "path": "books/learning-larc/chapters/04-creating-web-components.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Creating Web Components",
+      "path": "books/learning-larc/chapters/04-creating-web-components.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "books/learning-larc/chapters/11-data-fetching-and-apis.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Data Fetching and APIs",
+      "path": "books/learning-larc/chapters/11-data-fetching-and-apis.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Deployment",
+      "path": "books/learning-larc/chapters/16-deployment.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Deployment",
+      "path": "books/learning-larc/chapters/16-deployment.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Forms and Validation",
+      "path": "books/learning-larc/chapters/10-forms-and-validation.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Forms and Validation",
+      "path": "books/learning-larc/chapters/10-forms-and-validation.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": "books/learning-larc/chapters/03-getting-started.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Getting Started",
+      "path": "books/learning-larc/chapters/03-getting-started.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Performance and Optimization",
+      "path": "books/learning-larc/chapters/15-performance-and-optimization.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Performance and Optimization",
+      "path": "books/learning-larc/chapters/15-performance-and-optimization.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Philosophy and Background",
+      "path": "books/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Philosophy and Background",
+      "path": "books/learning-larc/chapters/01-philosophy-and-background.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Real-World Applications",
+      "path": "books/learning-larc/chapters/19-real-world-applications.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Real-World Applications",
+      "path": "books/learning-larc/chapters/19-real-world-applications.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "books/learning-larc/chapters/09-routing-and-navigation.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Routing and Navigation",
+      "path": "books/learning-larc/chapters/09-routing-and-navigation.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Server Integration",
+      "path": "books/learning-larc/chapters/13-server-integration.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Server Integration",
+      "path": "books/learning-larc/chapters/13-server-integration.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": "books/learning-larc/chapters/06-state-management.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "State Management",
+      "path": "books/learning-larc/chapters/06-state-management.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Testing",
+      "path": "books/learning-larc/chapters/14-testing.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Testing",
+      "path": "books/learning-larc/chapters/14-testing.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "The PAN Bus",
+      "path": "books/learning-larc/chapters/05-the-pan-bus.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "The PAN Bus",
+      "path": "books/learning-larc/chapters/05-the-pan-bus.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Tooling",
+      "path": "books/learning-larc/chapters/18-tooling.html",
+      "category": "books/learning-larc/chapters"
+    },
+    {
+      "title": "Tooling",
+      "path": "books/learning-larc/chapters/18-tooling.html",
+      "category": "books/learning-larc/chapters"
+    }
+  ],
+  "books/learning-larc/diagrams": [
+    {
+      "title": "Client-Side Routing",
+      "path": "books/learning-larc/diagrams/08-routing.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Client-Side Routing",
+      "path": "books/learning-larc/diagrams/08-routing.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Application Architecture",
+      "path": "books/learning-larc/diagrams/14-app-architecture.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Application Architecture",
+      "path": "books/learning-larc/diagrams/14-app-architecture.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Diagram Index",
+      "path": "books/learning-larc/diagrams/DIAGRAM-INDEX.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Complete Diagram Index",
+      "path": "books/learning-larc/diagrams/DIAGRAM-INDEX.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "LARC Architecture Overview",
+      "path": "books/learning-larc/diagrams/01-architecture-overview.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "LARC Architecture Overview",
+      "path": "books/learning-larc/diagrams/01-architecture-overview.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Learning LARC - Diagrams",
+      "path": "books/learning-larc/diagrams/README.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Learning LARC - Diagrams",
+      "path": "books/learning-larc/diagrams/README.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "PAN Bus Communication Patterns",
+      "path": "books/learning-larc/diagrams/05-pan-bus.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "PAN Bus Communication Patterns",
+      "path": "books/learning-larc/diagrams/05-pan-bus.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "State Management Patterns",
+      "path": "books/learning-larc/diagrams/06-state-management.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "State Management Patterns",
+      "path": "books/learning-larc/diagrams/06-state-management.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Traditional Frameworks vs LARC",
+      "path": "books/learning-larc/diagrams/12-traditional-vs-larc.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Traditional Frameworks vs LARC",
+      "path": "books/learning-larc/diagrams/12-traditional-vs-larc.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Web Component Structure",
+      "path": "books/learning-larc/diagrams/02-component-structure.html",
+      "category": "books/learning-larc/diagrams"
+    },
+    {
+      "title": "Web Component Structure",
+      "path": "books/learning-larc/diagrams/02-component-structure.html",
+      "category": "books/learning-larc/diagrams"
     }
   ],
   "cli": [
@@ -406,625 +3438,247 @@
       "category": "archive/2024"
     }
   ],
-  "books": [
+  "archive/2025-work-artifacts": [
     {
-      "title": "Building with LARC: A Reference Manual",
-      "path": "books/building-with-larc-outline.html",
-      "category": "books"
-    },
-    {
-      "title": "Building with LARC: A Reference Manual - Completion Summary",
-      "path": "books/building-with-larc-summary.html",
-      "category": "books"
-    },
-    {
-      "title": "Editorial Review: LARC Book Series",
-      "path": "books/EDITORIAL-REVIEW.html",
-      "category": "books"
-    },
-    {
-      "title": "LARC Books Cross-Reference Guide",
-      "path": "books/CROSS-REFERENCE-GUIDE.html",
-      "category": "books"
+      "title": "Work Artifacts Archive (2025-2026)",
+      "path": "archive/2025-work-artifacts/README.html",
+      "category": "archive/2025-work-artifacts"
     }
   ],
-  "books/backup/building-with-larc-original-20251226": [
-    {
-      "title": "Advanced Patterns",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-19-advanced-patterns.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Authentication and Authorization",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-12-authentication-and-authorization.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Basic Message Flow",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-06-basic-message-flow.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
+  "archive/2025-work-artifacts/docs": [
     {
       "title": "Book Build System - Complete Summary",
-      "path": "books/backup/building-with-larc-original-20251226/BUILD-SYSTEM-SUMMARY.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Building the Book",
-      "path": "books/backup/building-with-larc-original-20251226/BUILD.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Building with LARC: A Reference Manual",
-      "path": "books/backup/building-with-larc-original-20251226/README.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Colophon",
-      "path": "books/backup/building-with-larc-original-20251226/colophon.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Configuration Options",
-      "path": "books/backup/building-with-larc-original-20251226/appendix-c-configuration-options.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Core Components Reference",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-21-core-components.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Core Concepts",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-04-core-concepts.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Data Components",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-22-data-components.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Data Fetching and APIs",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-11-data-fetching-and-apis.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Deployment and Production",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-20-deployment-and-production.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Error Handling and Debugging",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-18-error-handling-and-debugging.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Event Envelope Specification",
-      "path": "books/backup/building-with-larc-original-20251226/appendix-b-event-envelope.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "File Management",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-14-file-management.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Forms and User Input",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-10-forms-and-user-input.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Getting Started",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-05-getting-started.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Glossary",
-      "path": "books/backup/building-with-larc-original-20251226/appendix-f-glossary.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Index",
-      "path": "books/backup/building-with-larc-original-20251226/index.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Integration Components",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-24-integration-components.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Introduction",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-01-introduction.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Learning LARC",
-      "path": "books/backup/building-with-larc-original-20251226/back-cover.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Message Topics Reference",
-      "path": "books/backup/building-with-larc-original-20251226/appendix-a-message-topics.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Migration Guide",
-      "path": "books/backup/building-with-larc-original-20251226/appendix-d-migration-guide.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Performance Optimization",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-16-performance-optimization.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Quick Start Guide - Book Building",
-      "path": "books/backup/building-with-larc-original-20251226/QUICKSTART.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Real-time Features",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-13-realtime-features.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Recipes and Patterns",
-      "path": "books/backup/building-with-larc-original-20251226/appendix-e-recipes-and-patterns.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Resources",
-      "path": "books/backup/building-with-larc-original-20251226/appendix-g-resources.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Routing and Navigation",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-09-routing-and-navigation.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "State Management",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-08-state-management.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Testing Strategies",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-17-testing-strategies.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "The LARC Story",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-03-story.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "The Philosophy of LARC",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-02-philosophy.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Theming and Styling",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-15-theming-and-styling.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "UI Components",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-23-ui-components.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Utility Components",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-25-utility-components.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    },
-    {
-      "title": "Working with Components",
-      "path": "books/backup/building-with-larc-original-20251226/chapter-07-working-with-components.html",
-      "category": "books/backup/building-with-larc-original-20251226"
-    }
-  ],
-  "books/building-with-larc": [
-    {
-      "title": "Book Build System - Complete Summary",
-      "path": "books/building-with-larc/BUILD-SYSTEM-SUMMARY.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Building the Book",
-      "path": "books/building-with-larc/BUILD.html",
-      "category": "books/building-with-larc"
+      "path": "archive/2025-work-artifacts/docs/BUILD-SYSTEM-SUMMARY.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
       "title": "Building with LARC - Restructuring Complete",
-      "path": "books/building-with-larc/RESTRUCTURING_COMPLETE.html",
-      "category": "books/building-with-larc"
+      "path": "archive/2025-work-artifacts/docs/RESTRUCTURING_COMPLETE.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
       "title": "Building with LARC - Restructuring Status",
-      "path": "books/building-with-larc/RESTRUCTURING_STATUS.html",
-      "category": "books/building-with-larc"
+      "path": "archive/2025-work-artifacts/docs/RESTRUCTURING_STATUS.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
-      "title": "Building with LARC: A Reference Manual",
-      "path": "books/building-with-larc/README.html",
-      "category": "books/building-with-larc"
+      "title": "Bundle Size Reduction - COMPLETE ✅",
+      "path": "archive/2025-work-artifacts/docs/BUNDLE-REDUCTION-COMPLETE.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
-      "title": "Colophon",
-      "path": "books/building-with-larc/colophon.html",
-      "category": "books/building-with-larc"
+      "title": "Component Registry Plan",
+      "path": "archive/2025-work-artifacts/docs/COMPONENT-REGISTRY-PLAN.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
-      "title": "Configuration Options",
-      "path": "books/building-with-larc/appendix-c-configuration-options.html",
-      "category": "books/building-with-larc"
+      "title": "LARC Development Plan",
+      "path": "archive/2025-work-artifacts/docs/DEVELOPMENT-PLAN.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
-      "title": "Event Envelope Specification",
-      "path": "books/building-with-larc/appendix-b-event-envelope.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Glossary",
-      "path": "books/building-with-larc/appendix-f-glossary.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Index",
-      "path": "books/building-with-larc/index.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Learning LARC",
-      "path": "books/building-with-larc/back-cover.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Message Topics Reference",
-      "path": "books/building-with-larc/appendix-a-message-topics.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Migration Guide",
-      "path": "books/building-with-larc/appendix-d-migration-guide.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Quick Start Guide - Book Building",
-      "path": "books/building-with-larc/QUICKSTART.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Recipes and Patterns",
-      "path": "books/building-with-larc/appendix-e-recipes-and-patterns.html",
-      "category": "books/building-with-larc"
-    },
-    {
-      "title": "Resources",
-      "path": "books/building-with-larc/appendix-g-resources.html",
-      "category": "books/building-with-larc"
-    }
-  ],
-  "books/building-with-larc/chapters": [
-    {
-      "title": "Advanced Patterns",
-      "path": "books/building-with-larc/chapters/15-advanced-patterns.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Authentication and Authorization",
-      "path": "books/building-with-larc/chapters/08-authentication-and-authorization.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Core Components Reference",
-      "path": "books/building-with-larc/chapters/17-core-components.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Core Concepts Quick Reference",
-      "path": "books/building-with-larc/chapters/02-core-concepts.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Data Components Reference",
-      "path": "books/building-with-larc/chapters/18-data-components.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Data Fetching and APIs",
-      "path": "books/building-with-larc/chapters/07-data-fetching-and-apis.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Deployment and Production",
-      "path": "books/building-with-larc/chapters/16-deployment-and-production.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Error Handling and Debugging",
-      "path": "books/building-with-larc/chapters/14-error-handling-and-debugging.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "File Management",
-      "path": "books/building-with-larc/chapters/10-file-management.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Forms and User Input",
-      "path": "books/building-with-larc/chapters/06-forms-and-user-input.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Getting Started",
-      "path": "books/building-with-larc/chapters/03-getting-started.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Integration Components Reference",
-      "path": "books/building-with-larc/chapters/20-integration-components.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Introduction",
-      "path": "books/building-with-larc/chapters/01-introduction.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Performance Optimization",
-      "path": "books/building-with-larc/chapters/12-performance-optimization.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Real-time Features",
-      "path": "books/building-with-larc/chapters/09-realtime-features.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Routing and Navigation",
-      "path": "books/building-with-larc/chapters/05-routing-and-navigation.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "State Management",
-      "path": "books/building-with-larc/chapters/04-state-management.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Testing Strategies",
-      "path": "books/building-with-larc/chapters/13-testing-strategies.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Theming and Styling",
-      "path": "books/building-with-larc/chapters/11-theming-and-styling.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "UI Components Reference",
-      "path": "books/building-with-larc/chapters/19-ui-components.html",
-      "category": "books/building-with-larc/chapters"
-    },
-    {
-      "title": "Utility Components Reference",
-      "path": "books/building-with-larc/chapters/21-utility-components.html",
-      "category": "books/building-with-larc/chapters"
-    }
-  ],
-  "books/learning-larc": [
-    {
-      "title": "00-front-matter",
-      "path": "books/learning-larc/00-front-matter.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Appendices",
-      "path": "books/learning-larc/appendices.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "author-bio",
-      "path": "books/learning-larc/author-bio.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "back-cover",
-      "path": "books/learning-larc/back-cover.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Colophon",
-      "path": "books/learning-larc/colophon.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Foreword {.unnumbered}",
-      "path": "books/learning-larc/foreword.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Index",
-      "path": "books/learning-larc/index.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Learning LARC",
-      "path": "books/learning-larc/README.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Learning LARC - Build System",
-      "path": "books/learning-larc/BUILD-SYSTEM.html",
-      "category": "books/learning-larc"
-    },
-    {
-      "title": "Learning LARC - Final Audit Report",
-      "path": "books/learning-larc/AUDIT-REPORT.html",
-      "category": "books/learning-larc"
+      "title": "LARC Repository Migration - Complete ✅",
+      "path": "archive/2025-work-artifacts/docs/MIGRATION-COMPLETE.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
       "title": "Learning LARC: Expansion Plan for Chapters 11-19",
-      "path": "books/learning-larc/EXPANSION-PLAN.html",
-      "category": "books/learning-larc"
+      "path": "archive/2025-work-artifacts/docs/EXPANSION-PLAN.html",
+      "category": "archive/2025-work-artifacts/docs"
     },
     {
-      "title": "Quick Start Guide - Building \"Learning LARC\"",
-      "path": "books/learning-larc/QUICKSTART.html",
-      "category": "books/learning-larc"
+      "title": "Migration Plan: From Git Submodules to Monorepo",
+      "path": "archive/2025-work-artifacts/docs/MONOREPO-MIGRATION-PLAN.html",
+      "category": "archive/2025-work-artifacts/docs"
+    },
+    {
+      "title": "Security Status",
+      "path": "archive/2025-work-artifacts/docs/SECURITY_STATUS.html",
+      "category": "archive/2025-work-artifacts/docs"
     }
   ],
-  "books/learning-larc/build/temp": [
+  "archive/2025-work-artifacts/playground": [
     {
-      "title": "Foreword {.unnumbered}",
-      "path": "books/learning-larc/build/temp/learning-larc-complete.html",
-      "category": "books/learning-larc/build/temp"
+      "title": "Dark Mode Fix - Complete Solution",
+      "path": "archive/2025-work-artifacts/playground/DARK-MODE-FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Data Flow Example Fix",
+      "path": "archive/2025-work-artifacts/playground/DATA_FLOW_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Date Picker Example Fix",
+      "path": "archive/2025-work-artifacts/playground/DATE_PICKER_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Drag & Drop List Example Fix",
+      "path": "archive/2025-work-artifacts/playground/DRAG_DROP_LIST_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Dropdown Menu Example Fix",
+      "path": "archive/2025-work-artifacts/playground/DROPDOWN_MENU_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "File Upload Duplicate Events Fix",
+      "path": "archive/2025-work-artifacts/playground/FILE_UPLOAD_DUPLICATE_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Help Text Guide",
+      "path": "archive/2025-work-artifacts/playground/HELP_TEXT_GUIDE.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "LARC Playground - Quick Start",
+      "path": "archive/2025-work-artifacts/playground/QUICK-START.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "LARC Playground - Testing Guide",
+      "path": "archive/2025-work-artifacts/playground/TESTING.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "LARC Playground - Unified System",
+      "path": "archive/2025-work-artifacts/playground/README-UNIFIED.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Pagination Example Limitation",
+      "path": "archive/2025-work-artifacts/playground/PAGINATION_LIMITATION.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "PAN Bus Monitor Fix",
+      "path": "archive/2025-work-artifacts/playground/BUS_MONITOR_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Examples - Fixed and Ready",
+      "path": "archive/2025-work-artifacts/playground/EXAMPLES_FIXED.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Examples Test Plan",
+      "path": "archive/2025-work-artifacts/playground/EXAMPLE_TEST_PLAN.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Improvements",
+      "path": "archive/2025-work-artifacts/playground/IMPROVEMENTS.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Session Fixes Summary",
+      "path": "archive/2025-work-artifacts/playground/SESSION_FIXES_SUMMARY.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Playground Status Report",
+      "path": "archive/2025-work-artifacts/playground/PLAYGROUND_STATUS.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Syntax Highlighting Fix",
+      "path": "archive/2025-work-artifacts/playground/SYNTAX_HIGHLIGHTING_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
+    },
+    {
+      "title": "Toolbar Badges for Non-UI Components",
+      "path": "archive/2025-work-artifacts/playground/TOOLBAR_BADGES_FIX.html",
+      "category": "archive/2025-work-artifacts/playground"
     }
   ],
-  "books/learning-larc/chapters": [
+  "archive/2025-work-artifacts/root": [
     {
-      "title": "Advanced Component Patterns",
-      "path": "books/learning-larc/chapters/07-advanced-component-patterns.html",
-      "category": "books/learning-larc/chapters"
+      "title": "🚀 LARC Launch Readiness - Updated Report",
+      "path": "archive/2025-work-artifacts/root/LAUNCH_READINESS_UPDATED.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Authentication and Security",
-      "path": "books/learning-larc/chapters/12-authentication-and-security.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Add Authenticator App to npm 2FA",
+      "path": "archive/2025-work-artifacts/root/ADD-AUTHENTICATOR-TO-2FA.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Business Logic Patterns",
-      "path": "books/learning-larc/chapters/08-business-logic-patterns.html",
-      "category": "books/learning-larc/chapters"
+      "title": "CodePen Setup for LARC Demo",
+      "path": "archive/2025-work-artifacts/root/CODEPEN-SETUP.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Component Library",
-      "path": "books/learning-larc/chapters/17-component-library.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Dark Mode Site-Wide Fix Summary",
+      "path": "archive/2025-work-artifacts/root/DARK-MODE-SITE-WIDE-FIX-SUMMARY.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Core Concepts",
-      "path": "books/learning-larc/chapters/02-core-concepts.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Fix Token Issue",
+      "path": "archive/2025-work-artifacts/root/FIX-TOKEN.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Creating Web Components",
-      "path": "books/learning-larc/chapters/04-creating-web-components.html",
-      "category": "books/learning-larc/chapters"
+      "title": "LARC - Final Launch Readiness Report",
+      "path": "archive/2025-work-artifacts/root/FINAL-LAUNCH-READINESS-REPORT.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Data Fetching and APIs",
-      "path": "books/learning-larc/chapters/11-data-fetching-and-apis.html",
-      "category": "books/learning-larc/chapters"
+      "title": "LARC Examples Review & Status Report",
+      "path": "archive/2025-work-artifacts/root/EXAMPLES_REVIEW.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Deployment",
-      "path": "books/learning-larc/chapters/16-deployment.html",
-      "category": "books/learning-larc/chapters"
+      "title": "LARC Release Readiness Report",
+      "path": "archive/2025-work-artifacts/root/RELEASE_READINESS_REPORT.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Forms and Validation",
-      "path": "books/learning-larc/chapters/10-forms-and-validation.html",
-      "category": "books/learning-larc/chapters"
+      "title": "npm Publishing Options (2024+)",
+      "path": "archive/2025-work-artifacts/root/NPM-PUBLISHING-OPTIONS.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Getting Started",
-      "path": "books/learning-larc/chapters/03-getting-started.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Pre-Launch Checklist for HN & Reddit Announcement",
+      "path": "archive/2025-work-artifacts/root/PRE_LAUNCH_CHECKLIST.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Performance and Optimization",
-      "path": "books/learning-larc/chapters/15-performance-and-optimization.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Pre-Publish Checklist",
+      "path": "archive/2025-work-artifacts/root/PRE-PUBLISH-CHECKLIST.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Philosophy and Background",
-      "path": "books/learning-larc/chapters/01-philosophy-and-background.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Publish with 2FA",
+      "path": "archive/2025-work-artifacts/root/PUBLISH-WITH-2FA.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Real-World Applications",
-      "path": "books/learning-larc/chapters/19-real-world-applications.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Publishing with 2FA (Simplest Method)",
+      "path": "archive/2025-work-artifacts/root/PUBLISH-WITH-2FA-OTP.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Routing and Navigation",
-      "path": "books/learning-larc/chapters/09-routing-and-navigation.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Ready to Publish! 🚀",
+      "path": "archive/2025-work-artifacts/root/PUBLISH-NOW.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Server Integration",
-      "path": "books/learning-larc/chapters/13-server-integration.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Setting Up npm 2FA via Web Browser",
+      "path": "archive/2025-work-artifacts/root/SETUP-2FA-WEB.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "State Management",
-      "path": "books/learning-larc/chapters/06-state-management.html",
-      "category": "books/learning-larc/chapters"
+      "title": "Setting Up npm 2FA with Authenticator App",
+      "path": "archive/2025-work-artifacts/root/NPM-2FA-SETUP.html",
+      "category": "archive/2025-work-artifacts/root"
     },
     {
-      "title": "Testing",
-      "path": "books/learning-larc/chapters/14-testing.html",
-      "category": "books/learning-larc/chapters"
-    },
-    {
-      "title": "The PAN Bus",
-      "path": "books/learning-larc/chapters/05-the-pan-bus.html",
-      "category": "books/learning-larc/chapters"
-    },
-    {
-      "title": "Tooling",
-      "path": "books/learning-larc/chapters/18-tooling.html",
-      "category": "books/learning-larc/chapters"
-    }
-  ],
-  "books/learning-larc/diagrams": [
-    {
-      "title": "Client-Side Routing",
-      "path": "books/learning-larc/diagrams/08-routing.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "Complete Application Architecture",
-      "path": "books/learning-larc/diagrams/14-app-architecture.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "Complete Diagram Index",
-      "path": "books/learning-larc/diagrams/DIAGRAM-INDEX.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "LARC Architecture Overview",
-      "path": "books/learning-larc/diagrams/01-architecture-overview.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "Learning LARC - Diagrams",
-      "path": "books/learning-larc/diagrams/README.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "PAN Bus Communication Patterns",
-      "path": "books/learning-larc/diagrams/05-pan-bus.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "State Management Patterns",
-      "path": "books/learning-larc/diagrams/06-state-management.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "Traditional Frameworks vs LARC",
-      "path": "books/learning-larc/diagrams/12-traditional-vs-larc.html",
-      "category": "books/learning-larc/diagrams"
-    },
-    {
-      "title": "Web Component Structure",
-      "path": "books/learning-larc/diagrams/02-component-structure.html",
-      "category": "books/learning-larc/diagrams"
+      "title": "Workspace Build Workflow",
+      "path": "archive/2025-work-artifacts/root/WORKSPACE-WORKFLOW.html",
+      "category": "archive/2025-work-artifacts/root"
     }
   ],
   "guides": [
@@ -1036,11 +3690,6 @@
     {
       "title": "Bundle Size Optimization - Complete",
       "path": "guides/BUNDLE-SIZE-OPTIMIZATION.html",
-      "category": "guides"
-    },
-    {
-      "title": "Bundle Size Reduction - COMPLETE ✅",
-      "path": "guides/BUNDLE-REDUCTION-COMPLETE.html",
       "category": "guides"
     },
     {
@@ -1098,16 +3747,6 @@
     {
       "title": "DevTools Extraction - Complete ✅",
       "path": "migration/DEVTOOLS-EXTRACTION.html",
-      "category": "migration"
-    },
-    {
-      "title": "LARC Repository Migration - Complete ✅",
-      "path": "migration/MIGRATION-COMPLETE.html",
-      "category": "migration"
-    },
-    {
-      "title": "Migration Plan: From Git Submodules to Monorepo",
-      "path": "migration/MONOREPO-MIGRATION-PLAN.html",
       "category": "migration"
     },
     {
@@ -1191,16 +3830,6 @@
     }
   ],
   "roadmap": [
-    {
-      "title": "Component Registry Plan",
-      "path": "roadmap/COMPONENT-REGISTRY-PLAN.html",
-      "category": "roadmap"
-    },
-    {
-      "title": "LARC Development Plan",
-      "path": "roadmap/DEVELOPMENT-PLAN.html",
-      "category": "roadmap"
-    },
     {
       "title": "LARC Production Readiness Roadmap",
       "path": "roadmap/PRODUCTION_ROADMAP.html",
@@ -1308,6 +3937,16 @@
     {
       "title": "LARC Components",
       "path": "examples/src/ui/README.html",
+      "category": "examples/src/ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": "examples/src/ui/THEME-SYSTEM-README.html",
+      "category": "examples/src/ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": "examples/src/ui/THEMING.html",
       "category": "examples/src/ui"
     }
   ],
@@ -1449,6 +4088,16 @@
       "title": "LARC Components",
       "path": "packages/ui/README.html",
       "category": "packages/ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": "packages/ui/THEME-SYSTEM-README.html",
+      "category": "packages/ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": "packages/ui/THEMING.html",
+      "category": "packages/ui"
     }
   ],
   "packages/ui/docs": [
@@ -1465,93 +4114,8 @@
   ],
   "playground": [
     {
-      "title": "Data Flow Example Fix",
-      "path": "playground/DATA_FLOW_FIX.html",
-      "category": "playground"
-    },
-    {
-      "title": "Date Picker Example Fix",
-      "path": "playground/DATE_PICKER_FIX.html",
-      "category": "playground"
-    },
-    {
-      "title": "Drag & Drop List Example Fix",
-      "path": "playground/DRAG_DROP_LIST_FIX.html",
-      "category": "playground"
-    },
-    {
-      "title": "Dropdown Menu Example Fix",
-      "path": "playground/DROPDOWN_MENU_FIX.html",
-      "category": "playground"
-    },
-    {
-      "title": "File Upload Duplicate Events Fix",
-      "path": "playground/FILE_UPLOAD_DUPLICATE_FIX.html",
-      "category": "playground"
-    },
-    {
-      "title": "Help Text Guide",
-      "path": "playground/HELP_TEXT_GUIDE.html",
-      "category": "playground"
-    },
-    {
       "title": "LARC Playground",
       "path": "playground/README.html",
-      "category": "playground"
-    },
-    {
-      "title": "LARC Playground - Quick Start",
-      "path": "playground/QUICK-START.html",
-      "category": "playground"
-    },
-    {
-      "title": "LARC Playground - Testing Guide",
-      "path": "playground/TESTING.html",
-      "category": "playground"
-    },
-    {
-      "title": "Pagination Example Limitation",
-      "path": "playground/PAGINATION_LIMITATION.html",
-      "category": "playground"
-    },
-    {
-      "title": "PAN Bus Monitor Fix",
-      "path": "playground/BUS_MONITOR_FIX.html",
-      "category": "playground"
-    },
-    {
-      "title": "Playground Examples - Fixed and Ready",
-      "path": "playground/EXAMPLES_FIXED.html",
-      "category": "playground"
-    },
-    {
-      "title": "Playground Examples Test Plan",
-      "path": "playground/EXAMPLE_TEST_PLAN.html",
-      "category": "playground"
-    },
-    {
-      "title": "Playground Improvements",
-      "path": "playground/IMPROVEMENTS.html",
-      "category": "playground"
-    },
-    {
-      "title": "Playground Session Fixes Summary",
-      "path": "playground/SESSION_FIXES_SUMMARY.html",
-      "category": "playground"
-    },
-    {
-      "title": "Playground Status Report",
-      "path": "playground/PLAYGROUND_STATUS.html",
-      "category": "playground"
-    },
-    {
-      "title": "Syntax Highlighting Fix",
-      "path": "playground/SYNTAX_HIGHLIGHTING_FIX.html",
-      "category": "playground"
-    },
-    {
-      "title": "Toolbar Badges for Non-UI Components",
-      "path": "playground/TOOLBAR_BADGES_FIX.html",
       "category": "playground"
     }
   ],
@@ -1600,6 +4164,16 @@
     {
       "title": "LARC Components",
       "path": "ui/README.html",
+      "category": "ui"
+    },
+    {
+      "title": "PAN Theme System - Complete Solution",
+      "path": "ui/THEME-SYSTEM-README.html",
+      "category": "ui"
+    },
+    {
+      "title": "PAN Theming System",
+      "path": "ui/THEMING.html",
       "category": "ui"
     }
   ],

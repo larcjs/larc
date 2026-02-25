@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recommended Repository Consolidation for LARC · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Recommended Repository Consolidation for LARC">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">docs</a> / <a href="#">processes</a> / <span>RECOMMENDED-CONSOLIDATION</span>
+      </div>
+      <article class="docs-content">
+        <h1>Recommended Repository Consolidation for LARC</h1>
+<h2>🎯 Goal</h2>
+Simplify the LARC ecosystem while maintaining architectural clarity: keep <code>@larcjs/core</code> and <code>@larcjs/ui</code> as separate, focused packages.
+<h2>✅ Your Reasoning is Sound</h2>
+<strong>Keep <code>core</code> and <code>components</code> separate because:</strong>
+<li>✅ Core is standalone - users shouldn't need components to use the bus</li>
+<li>✅ Different audiences - bus users vs. component library users</li>
+<li>✅ Independent versioning - core is stable, components evolve faster</li>
+<li>✅ Clear value proposition - "Use just the bus, or add components"</li>
+<li>✅ Smaller installs - <code>npm install @larcjs/core</code> stays minimal</li>
+<p>This is architecturally correct. The problem is the <strong>10 OTHER repos</strong> around them.</p>
+<hr>
+<h2>📊 Current State (10 Repos)</h2>
+<p>| Repo | Purpose | Action |
+|------|---------|--------|
+| <code>core</code> | PAN messaging bus | ✅ <strong>Keep separate</strong> |
+| <code>components</code> | 57 UI components | ✅ <strong>Keep separate</strong> |
+| <code>core-types</code> | TS types for core | 🔄 <strong>Consolidate</strong> |
+| <code>components-types</code> | TS types for components | 🔄 <strong>Consolidate</strong> |
+| <code>site</code> | Documentation | 🔄 <strong>Consolidate</strong> |
+| <code>examples</code> | Demo apps | 🔄 <strong>Consolidate</strong> |
+| <code>apps</code> | More demo apps | 🔄 <strong>Consolidate</strong> (merge with examples) |
+| <code>devtools</code> | Chrome extension | 🔄 <strong>Consolidate</strong> |
+| <code>larc</code> | Meta repo | 🔄 <strong>Become monorepo</strong> |
+| <code>.github</code> | Org files | 🔄 <strong>Consolidate</strong> |</p>
+<hr>
+<h2>🎨 Proposed Architecture</h2>
+<h3>Final Structure: <strong>3 Repositories</strong></h3>
+<pre><code class="language-plaintext">┌─────────────────────────────────────────────────────────┐
+│  github.com/larcjs/core                                 │
+│  ├── src/                  (PAN bus implementation)     │
+│  ├── tests/                (261 tests)                  │
+│  ├── package.json          (@larcjs/core v1.1.1)       │
+│  └── README.md             (Core-focused docs)          │
+│                                                          │
+│  Published: @larcjs/core                                │
+│  Size: 40KB minified (128KB unminified), Zero dependencies │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│  github.com/larcjs/components                           │
+│  ├── src/                  (57 components)              │
+│  ├── tests/                                             │
+│  ├── package.json          (@larcjs/ui v1.1.0) │
+│  └── README.md             (Component library docs)     │
+│                                                          │
+│  Published: @larcjs/ui                          │
+│  Peer Dep: @larcjs/core ^1.1.0                         │
+└─────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────┐
+│  github.com/larcjs/larc (Monorepo - Development Hub)    │
+│  ├── packages/                                          │
+│  │   ├── core-types/      (@larcjs/core-types)         │
+│  │   ├── components-types/(@larcjs/ui-types)   │
+│  │   └── devtools/        (@larcjs/devtools)           │
+│  ├── docs/                                              │
+│  │   ├── site/            (Documentation website)       │
+│  │   ├── guides/          (Tutorials, how-tos)          │
+│  │   └── api/             (API reference)               │
+│  ├── examples/                                          │
+│  │   ├── basic/           (Simple examples)             │
+│  │   ├── contact-manager/ (Full app)                    │
+│  │   ├── invoice-studio/  (Full app)                    │
+│  │   ├── hybrid-dashboard/(React+Vue+LARC)             │
+│  │   ├── offline-todo/    (State management)            │
+│  │   └── ...                                            │
+│  ├── .github/             (Workflows, templates)        │
+│  ├── package.json         (Workspace root)              │
+│  └── pnpm-workspace.yaml                                │
+│                                                          │
+│  Not published as a whole, but packages/* are           │
+└─────────────────────────────────────────────────────────┘</code></pre>
+<hr>
+<h2>📦 Package Publishing Strategy</h2>
+<h3>Published to npm</h3>
+<p>| Package | Repo | Purpose |
+|---------|------|---------|
+| <code>@larcjs/core</code> | <code>core</code> | Standalone messaging bus |
+| <code>@larcjs/ui</code> | <code>components</code> | UI component library |
+| <code>@larcjs/core-types</code> | <code>larc/packages/core-types</code> | TypeScript types for core |
+| <code>@larcjs/ui-types</code> | <code>larc/packages/ui-types</code> | TypeScript types for components |
+| <code>@larcjs/devtools</code> | <code>larc/devtools</code> | Chrome extension (maybe) |</p>
+<h3>Not Published (Development Assets)</h3>
+<ul><li>Examples (live on GitHub Pages)</li>
+<li>Docs site (live on GitHub Pages)</li>
+<li>Workspace config</li>
+</ul>
+<hr>
+<h2>🚀 Developer Workflows</h2>
+<h3>For Core Development</h3>
+<pre><code class="language-bash"># Clone core repo
+git clone https://github.com/larcjs/core.git
+cd core
+npm install
+npm test
+npm run build
+
+# Publish
+npm version patch
+npm publish
+
+# Update types
+cd ../larc/packages/core-types
+# Update types to match
+npm version patch
+npm publish</code></pre>
+<h3>For Components Development</h3>
+<pre><code class="language-bash"># Clone components repo
+git clone https://github.com/larcjs/components.git
+cd components
+npm install
+npm link @larcjs/core  # or use published version
+npm test
+npm run build
+
+# Publish
+npm version minor
+npm publish
+
+# Update types
+cd ../larc/packages/ui-types
+# Update types
+npm version minor
+npm publish</code></pre>
+<h3>For Examples/Docs (Most Common)</h3>
+<pre><code class="language-bash"># Clone monorepo
+git clone https://github.com/larcjs/larc.git
+cd larc
+pnpm install  # Installs all packages
+
+# Work on examples
+cd examples/contact-manager
+# edit files...
+# Uses published @larcjs/core and @larcjs/ui
+
+# Work on docs
+cd docs/site
+# edit docs...
+
+# Work on types
+cd packages/core-types
+# edit types...
+
+# Single commit for related changes
+git add .
+git commit -m &quot;Add example and docs for new feature&quot;
+git push</code></pre>
+<hr>
+<h2>🔄 Migration Steps</h2>
+<h3>Phase 1: Consolidate Examples (2 hours)</h3>
+<strong>Merge <code>apps</code> into <code>examples</code>:</strong>
+<pre><code class="language-bash">cd larc
+mkdir -p examples
+
+# Move from apps repo
+git clone https://github.com/larcjs/apps.git temp-apps
+mv temp-apps/contact-manager examples/
+mv temp-apps/invoice-studio examples/
+mv temp-apps/markdown-notes examples/
+mv temp-apps/data-browser examples/
+rm -rf temp-apps
+
+# Merge with existing examples
+git clone https://github.com/larcjs/examples.git temp-examples
+mv temp-examples/* examples/
+rm -rf temp-examples
+
+# Organize
+examples/
+├── README.md
+├── basic/              (Simple, quick demos)
+├── intermediate/       (Real features)
+└── advanced/           (Full applications)
+    ├── contact-manager/
+    ├── invoice-studio/
+    ├── hybrid-dashboard/
+    └── ...
+
+git add examples
+git commit -m &quot;Consolidate all examples&quot;</code></pre>
+<h3>Phase 2: Move Types to Monorepo (1 hour)</h3>
+<pre><code class="language-bash">cd larc
+mkdir -p packages
+
+# Move core-types
+git clone https://github.com/larcjs/core-types.git packages/core-types
+rm -rf packages/core-types/.git
+
+# Move components-types
+git clone https://github.com/larcjs/components-types.git packages/ui-types
+rm -rf packages/ui-types/.git
+
+# Update package.json to reference published packages
+# packages/core-types/package.json
+{
+  &quot;name&quot;: &quot;@larcjs/core-types&quot;,
+  &quot;version&quot;: &quot;1.1.1&quot;,
+  &quot;peerDependencies&quot;: {
+    &quot;@larcjs/core&quot;: &quot;^1.1.0&quot;
+  }
+}
+
+git add packages
+git commit -m &quot;Move TypeScript types to monorepo&quot;</code></pre>
+<h3>Phase 3: Move Documentation (1 hour)</h3>
+<pre><code class="language-bash">cd larc
+mkdir -p docs
+
+# Move site
+git clone https://github.com/larcjs/site.git docs/site
+rm -rf docs/site/.git
+
+git add docs
+git commit -m &quot;Move documentation to monorepo&quot;</code></pre>
+<h3>Phase 4: Move DevTools (30 min)</h3>
+<pre><code class="language-bash">cd larc/packages
+
+git clone https://github.com/larcjs/devtools.git devtools
+rm -rf devtools/.git
+
+git add devtools
+git commit -m &quot;Move DevTools to monorepo&quot;</code></pre>
+<h3>Phase 5: Set Up Workspaces (30 min)</h3>
+<pre><code class="language-bash"># Create pnpm-workspace.yaml
+cat &gt; pnpm-workspace.yaml &lt;&lt; EOF
+packages:
+  - &#039;packages/*&#039;
+EOF
+
+# Create root package.json
+cat &gt; package.json &lt;&lt; EOF
+{
+  &quot;name&quot;: &quot;larc&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;description&quot;: &quot;LARC Development Monorepo&quot;,
+  &quot;workspaces&quot;: [
+    &quot;packages/*&quot;
+  ],
+  &quot;scripts&quot;: {
+    &quot;build&quot;: &quot;pnpm -r build&quot;,
+    &quot;test&quot;: &quot;pnpm -r test&quot;,
+    &quot;dev&quot;: &quot;pnpm -r --parallel dev&quot;,
+    &quot;clean&quot;: &quot;pnpm -r clean&quot;,
+    &quot;publish-types&quot;: &quot;pnpm --filter &#039;@larcjs/core-types&#039; publish &amp;&amp; pnpm --filter &#039;@larcjs/ui-types&#039; publish&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;@changesets/cli&quot;: &quot;^2.27.0&quot;
+  }
+}
+EOF
+
+pnpm install
+git add .
+git commit -m &quot;Set up pnpm workspaces&quot;</code></pre>
+<h3>Phase 6: Archive Old Repos (15 min)</h3>
+<strong>Don't delete! Archive for history:</strong>
+<pre><code class="language-bash"># On GitHub, go to each repo:
+# Settings → Archive this repository
+
+Archive these:
+- larcjs/apps
+- larcjs/examples
+- larcjs/site
+- larcjs/core-types
+- larcjs/components-types
+- larcjs/devtools
+
+Add README to each:
+&quot;This repository has been consolidated into https://github.com/larcjs/larc
+See [path] for the code.&quot;</code></pre>
+<hr>
+<h2>📋 Final Repository Structure</h2>
+<h3><code>github.com/larcjs/core</code> (Active)</h3>
+<pre><code class="language-plaintext">core/
+├── src/
+│   ├── pan.mjs
+│   ├── components/
+│   └── index.js
+├── tests/
+├── package.json        (@larcjs/core)
+└── README.md</code></pre>
+<h3><code>github.com/larcjs/components</code> (Active)</h3>
+<pre><code class="language-plaintext">components/
+├── src/
+│   ├── components/
+│   ├── styles/
+│   └── index.js
+├── tests/
+├── package.json        (@larcjs/ui)
+└── README.md</code></pre>
+<h3><code>github.com/larcjs/larc</code> (Active - Monorepo)</h3>
+<pre><code class="language-plaintext">larc/
+├── packages/
+│   ├── core-types/
+│   │   ├── index.d.ts
+│   │   └── package.json    (@larcjs/core-types)
+│   ├── components-types/
+│   │   ├── index.d.ts
+│   │   └── package.json    (@larcjs/ui-types)
+│   └── devtools/
+│       ├── src/
+│       ├── manifest.json
+│       └── package.json    (@larcjs/devtools)
+├── examples/
+│   ├── README.md
+│   ├── basic/
+│   │   ├── hello-world.html
+│   │   ├── message-passing.html
+│   │   └── ...
+│   ├── intermediate/
+│   │   ├── form-validation.html
+│   │   ├── tabs-routing.html
+│   │   └── ...
+│   └── advanced/
+│       ├── contact-manager/
+│       ├── invoice-studio/
+│       ├── hybrid-dashboard/
+│       └── offline-todo/
+├── docs/
+│   └── site/
+│       ├── index.html
+│       ├── docs/
+│       ├── guides/
+│       └── api/
+├── .github/
+│   ├── workflows/
+│   ├── ISSUE_TEMPLATE/
+│   └── PULL_REQUEST_TEMPLATE.md
+├── package.json
+├── pnpm-workspace.yaml
+├── README.md
+└── CONTRIBUTING.md</code></pre>
+<hr>
+<h2>🌐 URLs After Consolidation</h2>
+<h3>Package Installs (Unchanged)</h3>
+<pre><code class="language-bash">npm install @larcjs/core
+npm install @larcjs/ui
+npm install -D @larcjs/core-types
+npm install -D @larcjs/ui-types</code></pre>
+<h3>GitHub URLs (Simplified)</h3>
+<strong>Source code:</strong>
+<ul><li>https://github.com/larcjs/core</li>
+<li>https://github.com/larcjs/components</li>
+<li>https://github.com/larcjs/larc</li>
+</ul>
+<strong>Documentation:</strong>
+<ul><li>https://larcjs.com/docs/</li>
+<li>https://larcjs.com/examples/</li>
+</ul>
+<strong>Examples:</strong>
+<ul><li>https://larcjs.com/examples/basic/</li>
+<li>https://larcjs.com/examples/advanced/contact-manager/</li>
+</ul>
+<hr>
+<h2>💡 Benefits of This Structure</h2>
+<h3>For Core/Components Users (External)</h3>
+<ul><li>✅ Clear separation: bus vs. components</li>
+<li>✅ Minimal installs</li>
+<li>✅ Independent versioning</li>
+<li>✅ <strong>No change to their workflow</strong></li>
+</ul>
+<h3>For Contributors (Internal)</h3>
+<ul><li>✅ Fewer repos to clone (3 vs 10)</li>
+<li>✅ Examples all in one place</li>
+<li>✅ Types updated alongside features</li>
+<li>✅ Docs co-located with examples</li>
+<li>✅ Single source of truth</li>
+</ul>
+<h3>For Maintainers</h3>
+<ul><li>✅ Fewer repos to manage</li>
+<li>✅ Simpler CI/CD (3 repos vs 10)</li>
+<li>✅ Coordinated releases for types</li>
+<li>✅ Easier to keep docs in sync</li>
+</ul>
+<hr>
+<h2>🔄 Alternative: Keep It Super Simple</h2>
+<p>If you want <strong>even simpler</strong>:</p>
+<h3>Option B: Just 2 Repos</h3>
+<pre><code class="language-plaintext">github.com/larcjs/core        (Stay as-is)
+github.com/larcjs/components  (Stay as-is)
+
+Everything else → Archive or move to wiki</code></pre>
+<strong>Rationale:</strong>
+<ul><li>Types published as patch releases from core</li>
+<li>Examples live in README or GitHub Pages</li>
+<li>Docs on website only</li>
+</ul>
+<strong>Result:</strong> 10 repos → 2 repos (most extreme)
+<hr>
+<h2>📊 Comparison</h2>
+<p>| Approach | Repos | Complexity | npm Packages | Best For |
+|----------|-------|------------|--------------|----------|
+| <strong>Current</strong> | 10 | High 😫 | 5 | Nothing |
+| <strong>Recommended (3)</strong> | 3 | Low 😊 | 5 | Most teams |
+| <strong>Extreme (2)</strong> | 2 | Minimal 🤩 | 2 | Solo maintainer |</p>
+<hr>
+<h2>✅ Recommended Action Plan</h2>
+<li><strong>Keep as separate</strong> (Don't touch):</li>
+   - <code>core</code> - Published package
+   - <code>components</code> - Published package
+<li><strong>Consolidate into <code>larc</code></strong> (Do this):</li>
+   - <code>core-types</code> → <code>larc/packages/core-types</code>
+   - <code>components-types</code> → <code>larc/packages/ui-types</code>
+   - <code>devtools</code> → <code>larc/devtools</code>
+   - <code>site</code> → <code>larc/docs/site</code>
+   - <code>examples</code> + <code>apps</code> → <code>larc/examples</code>
+   - <code>.github</code> → <code>larc/.github</code>
+<li><strong>Archive</strong> (Safe to archive):</li>
+   - Old <code>apps</code> repo (merged into examples)
+   - Old <code>examples</code> repo (merged into larc)
+   - Old <code>site</code> repo (moved to larc)
+   - Old type repos (moved to larc)
+   - Old devtools repo (moved to larc)
+<strong>Timeline:</strong> 5-6 hours one-time effort
+<strong>Benefit:</strong> Simpler forever 🎉
+<hr>
+<h2>🚀 Ready to Execute?</h2>
+<p>I can help create the migration scripts. Just say the word!</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/docs/processes/RECOMMENDED-CONSOLIDATION.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

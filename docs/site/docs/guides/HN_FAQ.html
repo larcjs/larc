@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
-  <script src="../../../../playground/theme-init.js"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hacker News Launch - FAQ Answers · PAN Documentation</title>
   <meta name="description" content="PAN (Page Area Network) Documentation - Hacker News Launch - FAQ Answers">
@@ -62,8 +59,8 @@ LARC complements React/Vue rather than replacing them. Use React for complex UIs
 <strong>Bundle size comparison:</strong>
 <ul><li>React: ~140KB (React + ReactDOM + ecosystem)</li>
 <li>Vue: ~90KB (core + ecosystem)</li>
-<li><strong>LARC Core Lite:</strong> 9KB minified (~3KB gzipped) ✅</li>
-<li><strong>LARC Core (full):</strong> 40KB minified (12KB gzipped)</li>
+<li><strong>LARC Core Lite:</strong> 3.6KB minified (~1.5KB gzipped) ✅</li>
+<li><strong>LARC Core (full):</strong> 40KB minified (~12KB gzipped)</li>
 <li><strong>LARC Components:</strong> ~7KB per component minified</li>
 </ul>
 <h3>"How does PAN compare to Redux/Zustand/other state management?"</h3>
@@ -108,7 +105,7 @@ Works great on iOS Safari 14+, Chrome Android 90+. Tested on real devices.
 <h3>"Is it production-ready?"</h3>
 <strong>Yes, with caveats:</strong>
 <strong>Production-ready:</strong>
-<ul><li>✅ 261 tests passing (Chromium, Firefox, WebKit)</li>
+<ul><li>✅ 426 Playwright executions (Chromium, Firefox, WebKit)</li>
 <li>✅ Zero security vulnerabilities (npm audit)</li>
 <li>✅ Published to npm (@larcjs/core@3.0.1)</li>
 <li>✅ Used in real applications</li>
@@ -177,7 +174,7 @@ npm install @larcjs/ui-types</code></pre>
 <li>esbuild (optional build)</li>
 </ul>
 <strong>Total installed size:</strong>
-<ul><li><strong>@larcjs/core-lite:</strong> 9KB minified (~3KB gzipped) ← Start here!</li>
+<ul><li><strong>@larcjs/core-lite:</strong> 3.6KB minified (~1.5KB gzipped) ← Start here!</li>
 <li>@larcjs/core: 40KB minified (~12KB gzipped) - includes routing & debug</li>
 <li>@larcjs/ui: 396KB minified (~110KB gzipped) - 57 components</li>
 </ul>
@@ -190,7 +187,7 @@ npm install @larcjs/ui-types</code></pre>
 <strong>With LARC:</strong>
 <ul><li>React (complex UI): 350KB</li>
 <li>LARC (core + 8 components): ~100KB minified</li>
-<li>Total: 450KB (-10% from pure React approach)</li>
+<li>Total: 450KB (-10% from pure React approach, plus 3.6KB coordination layer)</li>
 </ul>
 <strong>Real savings come from:</strong>
 <ul><li>Components work in Vue, Svelte, vanilla JS</li>
@@ -288,15 +285,15 @@ Email: (use GitHub Security Advisories)
 <h2>🚀 Performance</h2>
 <h3>"How's the performance?"</h3>
 <strong>Metrics:</strong>
-<ul><li>⚡ <strong>First load:</strong> <50ms (core)</li>
-<li>📦 <strong>Bundle size:</strong> 9KB core-lite minified (~3KB gzipped) ✅</li>
+<ul><li>⚡ <strong>First load:</strong> <50ms (core-lite)</li>
+<li>📦 <strong>Bundle size:</strong> 3.6KB core-lite minified (~1.5KB gzipped) ✅</li>
 <li>🎯 <strong>Per component:</strong> ~7KB each minified (~2KB gzipped)</li>
 <li>🔄 <strong>Autoload time:</strong> <5ms per component</li>
 </ul>
 <strong>Compared to frameworks:</strong>
 <ul><li><strong>React:</strong> ~140KB initial bundle</li>
 <li><strong>Vue:</strong> ~90KB initial bundle</li>
-<li><strong>LARC Core Lite:</strong> 9KB + components used (94% smaller than React!)</li>
+<li><strong>LARC Core Lite:</strong> 3.6KB + components used (97% smaller than React!)</li>
 </ul>
 <strong>Progressive loading:</strong>
 Components load as they enter viewport (IntersectionObserver). Only pay for what you use.
@@ -382,7 +379,7 @@ class MyCard extends LitElement { ... }
 <h3>For "Why Web Components?"</h3>
 <blockquote>Web Components are the only way to build truly framework-agnostic components. LARC solves the coordination problem that makes them practical for real applications.</blockquote>
 <h3>For "Production ready?"</h3>
-<blockquote>Yes: 261 tests passing, 0 vulnerabilities, v3.0.1 on npm. Young ecosystem (2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!</blockquote>
+<blockquote>Yes: 426 browser executions (Playwright), 0 vulnerabilities, v3.0.1 on npm. Young ecosystem (2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!</blockquote>
 <h3>For "Performance?"</h3>
 <blockquote>9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.com/playground/</blockquote>
 <h3>For "Learning curve?"</h3>
@@ -400,7 +397,5 @@ class MyCard extends LitElement { ... }
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
   <script src="../assets/docs.js"></script>
-  <pan-bus debug="false"></pan-bus>
-  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

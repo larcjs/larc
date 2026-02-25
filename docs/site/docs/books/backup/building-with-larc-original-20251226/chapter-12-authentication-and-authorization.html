@@ -1,0 +1,1140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authentication and Authorization · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Authentication and Authorization">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">backup</a> / <a href="#">building-with-larc-original-20251226</a> / <span>chapter-12-authentication-and-authorization</span>
+      </div>
+      <article class="docs-content">
+        <h1>Authentication and Authorization</h1>
+<em>In which we learn to keep the riffraff out, manage who gets to do what, and discover that security is less like a lock and more like an onion—layered, sometimes makes you cry, and absolutely essential.</em>
+<p>Authentication and authorization are the bouncer and the VIP list of your application. Authentication answers "who are you?" while authorization answers "what are you allowed to do?" Get either wrong, and you'll either lock out legitimate users or let chaos agents run wild through your carefully constructed digital empire.</p>
+<p>In this chapter, we'll explore how to implement robust authentication and authorization in LARC applications, from JWT tokens to role-based access control, all while maintaining the framework's philosophy of explicit, testable, and maintainable code.</p>
+<h2>Understanding Authentication vs. Authorization</h2>
+<p>Before we dive into implementation, let's clarify the distinction that trips up even experienced developers:</p>
+<strong>Authentication</strong> is proof of identity. When you show your driver's license at airport security, that's authentication. You're proving you are who you claim to be.
+<strong>Authorization</strong> is proof of permission. When you try to board the plane, the gate agent checks if you have a ticket for <em>this</em> flight. That's authorization—verifying you're allowed to do the specific thing you're attempting.
+<p>In LARC applications, we typically handle authentication through JWT (JSON Web Tokens) and authorization through role-based or permission-based access control. Let's build both systems from the ground up.</p>
+<h2>JWT Authentication: The Token Economy</h2>
+<p>JWT tokens are like those "Hello, My Name Is" stickers, except they're cryptographically signed so people can't just write whatever they want. A JWT contains claims about the user (their ID, username, roles) and a signature that proves the token hasn't been tampered with.</p>
+<h3>Creating an Authentication Service</h3>
+<p>Let's build a comprehensive authentication service that handles login, token generation, and verification:</p>
+<pre><code class="language-typescript">// services/auth.ts
+import { api } from &#039;@larc/lib&#039;;
+
+interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+interface AuthTokens {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+}
+
+interface UserClaims {
+  userId: string;
+  username: string;
+  roles: string[];
+  permissions: string[];
+}
+
+interface AuthState {
+  isAuthenticated: boolean;
+  user: UserClaims | null;
+  tokens: AuthTokens | null;
+}
+
+// Storage keys
+const STORAGE_KEYS = {
+  ACCESS_TOKEN: &#039;auth.accessToken&#039;,
+  REFRESH_TOKEN: &#039;auth.refreshToken&#039;,
+  USER_DATA: &#039;auth.userData&#039;
+} as const;
+
+class AuthenticationService {
+  private state: AuthState = {
+    isAuthenticated: false,
+    user: null,
+    tokens: null
+  };
+
+  // Initialize from stored tokens
+  async initialize(): Promise&lt;boolean&gt; {
+    const accessToken = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    const refreshToken = localStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+    const userData = localStorage.getItem(STORAGE_KEYS.USER_DATA);
+
+    if (!accessToken || !userData) {
+      return false;
+    }
+
+    try {
+      // Verify the token is still valid
+      const user = JSON.parse(userData) as UserClaims;
+      const isValid = await this.verifyToken(accessToken);
+
+      if (isValid) {
+        this.state = {
+          isAuthenticated: true,
+          user,
+          tokens: {
+            accessToken,
+            refreshToken: refreshToken || &#039;&#039;,
+            expiresIn: this.getTokenExpiry(accessToken)
+          }
+        };
+        return true;
+      }
+
+      // Token invalid, try refresh
+      if (refreshToken) {
+        return await this.refreshAccessToken(refreshToken);
+      }
+
+      // Can&#039;t authenticate, clear everything
+      this.clearAuth();
+      return false;
+    } catch (error) {
+      console.error(&#039;Auth initialization failed:&#039;, error);
+      this.clearAuth();
+      return false;
+    }
+  }
+
+  // Login with credentials
+  async login(credentials: LoginCredentials): Promise&lt;boolean&gt; {
+    try {
+      const response = await api.post&lt;AuthTokens &amp; { user: UserClaims }&gt;(
+        &#039;/auth/login&#039;,
+        credentials
+      );
+
+      const { accessToken, refreshToken, expiresIn, user } = response;
+
+      // Store tokens securely
+      localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+      localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+      localStorage.setItem(STORAGE_KEYS.USER_DATA, JSON.stringify(user));
+
+      // Update state
+      this.state = {
+        isAuthenticated: true,
+        user,
+        tokens: { accessToken, refreshToken, expiresIn }
+      };
+
+      // Set up automatic token refresh
+      this.scheduleTokenRefresh(expiresIn);
+
+      return true;
+    } catch (error) {
+      console.error(&#039;Login failed:&#039;, error);
+      return false;
+    }
+  }
+
+  // Logout and clear all auth data
+  logout(): void {
+    this.clearAuth();
+    // Optionally call backend to invalidate tokens
+    api.post(&#039;/auth/logout&#039;, {
+      refreshToken: this.state.tokens?.refreshToken
+    }).catch(err =&gt; console.error(&#039;Logout notification failed:&#039;, err));
+  }
+
+  // Verify token validity
+  private async verifyToken(token: string): Promise&lt;boolean&gt; {
+    try {
+      await api.get(&#039;/auth/verify&#039;, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  // Refresh the access token
+  private async refreshAccessToken(refreshToken: string): Promise&lt;boolean&gt; {
+    try {
+      const response = await api.post&lt;AuthTokens&gt;(&#039;/auth/refresh&#039;, {
+        refreshToken
+      });
+
+      const { accessToken, refreshToken: newRefreshToken, expiresIn } = response;
+
+      // Update stored tokens
+      localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+      localStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, newRefreshToken);
+
+      // Update state
+      if (this.state.tokens) {
+        this.state.tokens = { accessToken, refreshToken: newRefreshToken, expiresIn };
+      }
+
+      this.scheduleTokenRefresh(expiresIn);
+      return true;
+    } catch (error) {
+      console.error(&#039;Token refresh failed:&#039;, error);
+      this.clearAuth();
+      return false;
+    }
+  }
+
+  // Schedule automatic token refresh before expiry
+  private scheduleTokenRefresh(expiresIn: number): void {
+    // Refresh 5 minutes before expiry
+    const refreshTime = (expiresIn - 300) * 1000;
+
+    setTimeout(async () =&gt; {
+      const refreshToken = this.state.tokens?.refreshToken;
+      if (refreshToken) {
+        await this.refreshAccessToken(refreshToken);
+      }
+    }, refreshTime);
+  }
+
+  // Extract expiry time from JWT
+  private getTokenExpiry(token: string): number {
+    try {
+      const payload = JSON.parse(atob(token.split(&#039;.&#039;)[1]));
+      return payload.exp;
+    } catch {
+      return 0;
+    }
+  }
+
+  // Clear all authentication data
+  private clearAuth(): void {
+    localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER_DATA);
+
+    this.state = {
+      isAuthenticated: false,
+      user: null,
+      tokens: null
+    };
+  }
+
+  // Get current authentication state
+  getState(): Readonly&lt;AuthState&gt; {
+    return { ...this.state };
+  }
+
+  // Get access token for API requests
+  getAccessToken(): string | null {
+    return this.state.tokens?.accessToken || null;
+  }
+
+  // Check if user has specific role
+  hasRole(role: string): boolean {
+    return this.state.user?.roles.includes(role) || false;
+  }
+
+  // Check if user has specific permission
+  hasPermission(permission: string): boolean {
+    return this.state.user?.permissions.includes(permission) || false;
+  }
+}
+
+// Export singleton instance
+export const authService = new AuthenticationService();</code></pre>
+<p>This service handles the complete authentication lifecycle: initialization from stored tokens, login with automatic token refresh scheduling, logout with cleanup, and convenient methods for checking authentication state.</p>
+<h3>Securing API Requests</h3>
+<p>Now let's create an API interceptor that automatically adds authentication tokens to requests:</p>
+<pre><code class="language-typescript">// api/auth-interceptor.ts
+import { api } from &#039;@larc/lib&#039;;
+import { authService } from &#039;../services/auth&#039;;
+
+// Add authentication header to all requests
+api.interceptors.request.use(async (config) =&gt; {
+  const token = authService.getAccessToken();
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+// Handle 401 responses by refreshing token
+api.interceptors.response.use(
+  (response) =&gt; response,
+  async (error) =&gt; {
+    const originalRequest = error.config;
+
+    // If 401 and we haven&#039;t already retried
+    if (error.response?.status === 401 &amp;&amp; !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        // Try to refresh the token
+        const state = authService.getState();
+        if (state.tokens?.refreshToken) {
+          await authService.refreshAccessToken(state.tokens.refreshToken);
+
+          // Retry original request with new token
+          const newToken = authService.getAccessToken();
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return api(originalRequest);
+        }
+      } catch (refreshError) {
+        // Refresh failed, logout user
+        authService.logout();
+        window.location.href = &#039;/login&#039;;
+        return Promise.reject(refreshError);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);</code></pre>
+<p>This interceptor automatically adds the Bearer token to outgoing requests and handles 401 Unauthorized responses by attempting to refresh the token and retry the request—a pattern that keeps users logged in seamlessly.</p>
+<h2>Protected Routes and Navigation Guards</h2>
+<p>Authentication means nothing if users can still access protected pages by typing URLs directly. Let's build a routing system that enforces authentication:</p>
+<pre><code class="language-typescript">// components/protected-route.ts
+import { html, define, Component } from &#039;@larc/lib&#039;;
+import { authService } from &#039;../services/auth&#039;;
+
+interface ProtectedRouteProps {
+  requiredRoles?: string[];
+  requiredPermissions?: string[];
+  fallbackPath?: string;
+}
+
+class ProtectedRoute extends Component&lt;ProtectedRouteProps&gt; {
+  static tagName = &#039;protected-route&#039;;
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.checkAccess();
+  }
+
+  private checkAccess() {
+    const state = authService.getState();
+
+    // Check authentication
+    if (!state.isAuthenticated) {
+      this.redirectToLogin();
+      return;
+    }
+
+    // Check roles if specified
+    const { requiredRoles, requiredPermissions } = this.props;
+
+    if (requiredRoles?.length) {
+      const hasRole = requiredRoles.some(role =&gt;
+        authService.hasRole(role)
+      );
+      if (!hasRole) {
+        this.redirectToForbidden();
+        return;
+      }
+    }
+
+    // Check permissions if specified
+    if (requiredPermissions?.length) {
+      const hasPermission = requiredPermissions.every(permission =&gt;
+        authService.hasPermission(permission)
+      );
+      if (!hasPermission) {
+        this.redirectToForbidden();
+        return;
+      }
+    }
+  }
+
+  private redirectToLogin() {
+    const currentPath = window.location.pathname;
+    window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`;
+  }
+
+  private redirectToForbidden() {
+    const { fallbackPath = &#039;/forbidden&#039; } = this.props;
+    window.location.href = fallbackPath;
+  }
+
+  render() {
+    const state = authService.getState();
+
+    if (!state.isAuthenticated) {
+      return html`&lt;div&gt;Redirecting to login...&lt;/div&gt;`;
+    }
+
+    // Render children if authorized
+    return html`&lt;slot&gt;&lt;/slot&gt;`;
+  }
+}
+
+define(ProtectedRoute);</code></pre>
+<p>Use it in your application like this:</p>
+<pre><code class="language-typescript">// app.ts
+import { html, define, Component } from &#039;@larc/lib&#039;;
+import &#039;./components/protected-route&#039;;
+
+class App extends Component {
+  render() {
+    return html`
+      &lt;nav-bar&gt;&lt;/nav-bar&gt;
+
+      &lt;router-outlet&gt;
+        &lt;!-- Public route --&gt;
+        &lt;route-handler path=&quot;/&quot; component=&quot;home-page&quot;&gt;&lt;/route-handler&gt;
+        &lt;route-handler path=&quot;/login&quot; component=&quot;login-page&quot;&gt;&lt;/route-handler&gt;
+
+        &lt;!-- Protected route - requires authentication --&gt;
+        &lt;route-handler path=&quot;/dashboard&quot;&gt;
+          &lt;protected-route&gt;
+            &lt;dashboard-page&gt;&lt;/dashboard-page&gt;
+          &lt;/protected-route&gt;
+        &lt;/route-handler&gt;
+
+        &lt;!-- Protected route - requires admin role --&gt;
+        &lt;route-handler path=&quot;/admin&quot;&gt;
+          &lt;protected-route requiredRoles=&quot;${[&#039;admin&#039;]}&quot;&gt;
+            &lt;admin-panel&gt;&lt;/admin-panel&gt;
+          &lt;/protected-route&gt;
+        &lt;/route-handler&gt;
+
+        &lt;!-- Protected route - requires specific permission --&gt;
+        &lt;route-handler path=&quot;/reports&quot;&gt;
+          &lt;protected-route requiredPermissions=&quot;${[&#039;reports.view&#039;]}&quot;&gt;
+            &lt;reports-page&gt;&lt;/reports-page&gt;
+          &lt;/protected-route&gt;
+        &lt;/route-handler&gt;
+      &lt;/router-outlet&gt;
+    `;
+  }
+}
+
+define(App);</code></pre>
+<h2>Role-Based Access Control (RBAC)</h2>
+<p>RBAC is like organizing your office with different colored keycards. Some doors everyone can open (the break room), some require special access (the server room), and some are only for the CEO (the executive washroom with the good soap).</p>
+<h3>Designing a Flexible RBAC System</h3>
+<p>Here's a comprehensive RBAC implementation that supports hierarchical roles and fine-grained permissions:</p>
+<pre><code class="language-typescript">// services/authorization.ts
+interface Permission {
+  resource: string;  // e.g., &#039;users&#039;, &#039;reports&#039;, &#039;settings&#039;
+  action: string;    // e.g., &#039;create&#039;, &#039;read&#039;, &#039;update&#039;, &#039;delete&#039;
+  scope?: string;    // e.g., &#039;own&#039;, &#039;team&#039;, &#039;all&#039;
+}
+
+interface Role {
+  id: string;
+  name: string;
+  permissions: Permission[];
+  inherits?: string[];  // Inherit permissions from other roles
+}
+
+const ROLES: Record&lt;string, Role&gt; = {
+  guest: {
+    id: &#039;guest&#039;,
+    name: &#039;Guest&#039;,
+    permissions: [
+      { resource: &#039;content&#039;, action: &#039;read&#039;, scope: &#039;public&#039; }
+    ]
+  },
+
+  user: {
+    id: &#039;user&#039;,
+    name: &#039;User&#039;,
+    inherits: [&#039;guest&#039;],
+    permissions: [
+      { resource: &#039;profile&#039;, action: &#039;read&#039;, scope: &#039;own&#039; },
+      { resource: &#039;profile&#039;, action: &#039;update&#039;, scope: &#039;own&#039; },
+      { resource: &#039;content&#039;, action: &#039;create&#039;, scope: &#039;own&#039; },
+      { resource: &#039;content&#039;, action: &#039;update&#039;, scope: &#039;own&#039; },
+      { resource: &#039;content&#039;, action: &#039;delete&#039;, scope: &#039;own&#039; }
+    ]
+  },
+
+  moderator: {
+    id: &#039;moderator&#039;,
+    name: &#039;Moderator&#039;,
+    inherits: [&#039;user&#039;],
+    permissions: [
+      { resource: &#039;content&#039;, action: &#039;update&#039;, scope: &#039;all&#039; },
+      { resource: &#039;content&#039;, action: &#039;delete&#039;, scope: &#039;all&#039; },
+      { resource: &#039;reports&#039;, action: &#039;read&#039;, scope: &#039;all&#039; },
+      { resource: &#039;reports&#039;, action: &#039;update&#039;, scope: &#039;all&#039; }
+    ]
+  },
+
+  admin: {
+    id: &#039;admin&#039;,
+    name: &#039;Administrator&#039;,
+    inherits: [&#039;moderator&#039;],
+    permissions: [
+      { resource: &#039;users&#039;, action: &#039;create&#039; },
+      { resource: &#039;users&#039;, action: &#039;read&#039; },
+      { resource: &#039;users&#039;, action: &#039;update&#039; },
+      { resource: &#039;users&#039;, action: &#039;delete&#039; },
+      { resource: &#039;settings&#039;, action: &#039;read&#039; },
+      { resource: &#039;settings&#039;, action: &#039;update&#039; }
+    ]
+  }
+};
+
+class AuthorizationService {
+  // Get all permissions for a role (including inherited)
+  getPermissions(roleId: string): Permission[] {
+    const role = ROLES[roleId];
+    if (!role) return [];
+
+    const permissions = [...role.permissions];
+
+    // Recursively add inherited permissions
+    if (role.inherits) {
+      for (const inheritedRoleId of role.inherits) {
+        permissions.push(...this.getPermissions(inheritedRoleId));
+      }
+    }
+
+    return permissions;
+  }
+
+  // Check if role has specific permission
+  hasPermission(
+    roleIds: string[],
+    resource: string,
+    action: string,
+    scope?: string
+  ): boolean {
+    // Get all permissions for all user&#039;s roles
+    const allPermissions = roleIds.flatMap(roleId =&gt;
+      this.getPermissions(roleId)
+    );
+
+    // Check if any permission matches
+    return allPermissions.some(permission =&gt;
+      permission.resource === resource &amp;&amp;
+      permission.action === action &amp;&amp;
+      (!scope || !permission.scope || permission.scope === scope)
+    );
+  }
+
+  // Check if user can perform action on specific resource
+  canAccess(
+    roleIds: string[],
+    resource: string,
+    action: string,
+    ownerId?: string,
+    userId?: string
+  ): boolean {
+    // First check for &#039;all&#039; scope
+    if (this.hasPermission(roleIds, resource, action, &#039;all&#039;)) {
+      return true;
+    }
+
+    // Then check for &#039;own&#039; scope if resource belongs to user
+    if (ownerId &amp;&amp; userId &amp;&amp; ownerId === userId) {
+      return this.hasPermission(roleIds, resource, action, &#039;own&#039;);
+    }
+
+    // Finally check for permission without scope
+    return this.hasPermission(roleIds, resource, action);
+  }
+
+  // Get user-friendly permission label
+  getPermissionLabel(permission: Permission): string {
+    const scopeText = permission.scope ? ` (${permission.scope})` : &#039;&#039;;
+    return `${permission.action} ${permission.resource}${scopeText}`;
+  }
+}
+
+export const authz = new AuthorizationService();</code></pre>
+<h3>Using Authorization in Components</h3>
+<p>Let's create a component that conditionally renders content based on permissions:</p>
+<pre><code class="language-typescript">// components/authorized-content.ts
+import { html, define, Component } from &#039;@larc/lib&#039;;
+import { authService } from &#039;../services/auth&#039;;
+import { authz } from &#039;../services/authorization&#039;;
+
+interface AuthorizedContentProps {
+  resource: string;
+  action: string;
+  fallback?: string;
+}
+
+class AuthorizedContent extends Component&lt;AuthorizedContentProps&gt; {
+  static tagName = &#039;authorized-content&#039;;
+
+  private isAuthorized(): boolean {
+    const state = authService.getState();
+    if (!state.user) return false;
+
+    const { resource, action } = this.props;
+    return authz.hasPermission(state.user.roles, resource, action);
+  }
+
+  render() {
+    if (this.isAuthorized()) {
+      return html`&lt;slot&gt;&lt;/slot&gt;`;
+    }
+
+    const { fallback } = this.props;
+    if (fallback) {
+      return html`&lt;div class=&quot;unauthorized&quot;&gt;${fallback}&lt;/div&gt;`;
+    }
+
+    return html``;
+  }
+}
+
+define(AuthorizedContent);
+
+// Usage example:
+// &lt;authorized-content resource=&quot;users&quot; action=&quot;delete&quot;&gt;
+//   &lt;button onclick=&quot;${this.deleteUser}&quot;&gt;Delete User&lt;/button&gt;
+// &lt;/authorized-content&gt;</code></pre>
+<h2>Session Management Best Practices</h2>
+<p>Session management is the art of remembering who users are across requests without making them log in every five seconds or leaving security holes big enough to drive a truck through.</p>
+<h3>Implementing Secure Session Storage</h3>
+<pre><code class="language-typescript">// utils/secure-storage.ts
+class SecureStorage {
+  private readonly prefix = &#039;__secure__&#039;;
+
+  // Store sensitive data with encryption (in production, use Web Crypto API)
+  setSecure(key: string, value: string): void {
+    try {
+      // In production, encrypt the value before storing
+      const encrypted = this.encrypt(value);
+      sessionStorage.setItem(`${this.prefix}${key}`, encrypted);
+    } catch (error) {
+      console.error(&#039;Failed to store secure data:&#039;, error);
+    }
+  }
+
+  getSecure(key: string): string | null {
+    try {
+      const encrypted = sessionStorage.getItem(`${this.prefix}${key}`);
+      if (!encrypted) return null;
+      return this.decrypt(encrypted);
+    } catch (error) {
+      console.error(&#039;Failed to retrieve secure data:&#039;, error);
+      return null;
+    }
+  }
+
+  removeSecure(key: string): void {
+    sessionStorage.removeItem(`${this.prefix}${key}`);
+  }
+
+  clearSecure(): void {
+    const keys = Object.keys(sessionStorage);
+    keys.forEach(key =&gt; {
+      if (key.startsWith(this.prefix)) {
+        sessionStorage.removeItem(key);
+      }
+    });
+  }
+
+  // Simple encryption (use Web Crypto API in production!)
+  private encrypt(value: string): string {
+    // This is a placeholder - use proper encryption in production
+    return btoa(value);
+  }
+
+  private decrypt(value: string): string {
+    // This is a placeholder - use proper decryption in production
+    return atob(value);
+  }
+}
+
+export const secureStorage = new SecureStorage();</code></pre>
+<h3>Session Timeout and Activity Tracking</h3>
+<p>Implement automatic session timeout to protect against abandoned sessions:</p>
+<pre><code class="language-typescript">// services/session-manager.ts
+import { authService } from &#039;./auth&#039;;
+
+interface SessionConfig {
+  timeoutMinutes: number;
+  warningMinutes: number;
+}
+
+class SessionManager {
+  private timeoutId: number | null = null;
+  private warningId: number | null = null;
+  private lastActivity: number = Date.now();
+
+  constructor(private config: SessionConfig) {
+    this.setupActivityListeners();
+  }
+
+  // Start session monitoring
+  start(): void {
+    this.resetTimeout();
+  }
+
+  // Stop session monitoring
+  stop(): void {
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+    if (this.warningId) clearTimeout(this.warningId);
+  }
+
+  // Reset timeout on user activity
+  private resetTimeout(): void {
+    this.lastActivity = Date.now();
+
+    // Clear existing timers
+    if (this.timeoutId) clearTimeout(this.timeoutId);
+    if (this.warningId) clearTimeout(this.warningId);
+
+    // Set warning timer
+    const warningMs = this.config.warningMinutes * 60 * 1000;
+    this.warningId = window.setTimeout(() =&gt; {
+      this.showTimeoutWarning();
+    }, warningMs);
+
+    // Set timeout timer
+    const timeoutMs = this.config.timeoutMinutes * 60 * 1000;
+    this.timeoutId = window.setTimeout(() =&gt; {
+      this.handleTimeout();
+    }, timeoutMs);
+  }
+
+  // Setup listeners for user activity
+  private setupActivityListeners(): void {
+    const events = [&#039;mousedown&#039;, &#039;keydown&#039;, &#039;scroll&#039;, &#039;touchstart&#039;];
+
+    events.forEach(event =&gt; {
+      document.addEventListener(event, () =&gt; {
+        // Only reset if user is authenticated
+        if (authService.getState().isAuthenticated) {
+          this.resetTimeout();
+        }
+      }, { passive: true });
+    });
+  }
+
+  // Show warning before timeout
+  private showTimeoutWarning(): void {
+    const remainingMinutes = this.config.timeoutMinutes - this.config.warningMinutes;
+
+    // Dispatch custom event that UI can listen to
+    window.dispatchEvent(new CustomEvent(&#039;session-warning&#039;, {
+      detail: { remainingMinutes }
+    }));
+  }
+
+  // Handle session timeout
+  private handleTimeout(): void {
+    authService.logout();
+
+    // Dispatch timeout event
+    window.dispatchEvent(new CustomEvent(&#039;session-timeout&#039;));
+
+    // Redirect to login
+    window.location.href = &#039;/login?reason=timeout&#039;;
+  }
+
+  // Get time until timeout
+  getTimeRemaining(): number {
+    const elapsed = Date.now() - this.lastActivity;
+    const timeoutMs = this.config.timeoutMinutes * 60 * 1000;
+    return Math.max(0, timeoutMs - elapsed);
+  }
+}
+
+// Initialize with 30-minute timeout, 5-minute warning
+export const sessionManager = new SessionManager({
+  timeoutMinutes: 30,
+  warningMinutes: 25
+});</code></pre>
+<h2>Security Best Practices</h2>
+<p>Security is like flossing—everyone knows they should do it, but it's easy to skip until problems arise. Let's make sure you're following best practices.</p>
+<h3>Input Validation and Sanitization</h3>
+<p>Never trust user input. Ever. Here's a validation utility:</p>
+<pre><code class="language-typescript">// utils/validation.ts
+export const validators = {
+  email: (value: string): boolean =&gt; {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(value);
+  },
+
+  password: (value: string): { valid: boolean; errors: string[] } =&gt; {
+    const errors: string[] = [];
+
+    if (value.length &lt; 8) {
+      errors.push(&#039;Password must be at least 8 characters&#039;);
+    }
+    if (!/[A-Z]/.test(value)) {
+      errors.push(&#039;Password must contain an uppercase letter&#039;);
+    }
+    if (!/[a-z]/.test(value)) {
+      errors.push(&#039;Password must contain a lowercase letter&#039;);
+    }
+    if (!/[0-9]/.test(value)) {
+      errors.push(&#039;Password must contain a number&#039;);
+    }
+    if (!/[^A-Za-z0-9]/.test(value)) {
+      errors.push(&#039;Password must contain a special character&#039;);
+    }
+
+    return { valid: errors.length === 0, errors };
+  },
+
+  sanitize: (value: string): string =&gt; {
+    return value
+      .replace(/[&lt;&gt;]/g, &#039;&#039;) // Remove angle brackets
+      .replace(/javascript:/gi, &#039;&#039;) // Remove javascript: protocol
+      .trim();
+  }
+};</code></pre>
+<h3>CSRF Protection</h3>
+<p>Protect against Cross-Site Request Forgery:</p>
+<pre><code class="language-typescript">// utils/csrf.ts
+class CSRFProtection {
+  private token: string = &#039;&#039;;
+
+  // Generate CSRF token
+  generateToken(): string {
+    this.token = this.randomString(32);
+    sessionStorage.setItem(&#039;csrf-token&#039;, this.token);
+    return this.token;
+  }
+
+  // Get current token
+  getToken(): string {
+    return this.token || sessionStorage.getItem(&#039;csrf-token&#039;) || &#039;&#039;;
+  }
+
+  // Validate token
+  validateToken(token: string): boolean {
+    return token === this.getToken();
+  }
+
+  // Add token to request headers
+  addToHeaders(headers: Record&lt;string, string&gt;): Record&lt;string, string&gt; {
+    return {
+      ...headers,
+      &#039;X-CSRF-Token&#039;: this.getToken()
+    };
+  }
+
+  private randomString(length: number): string {
+    const chars = &#039;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&#039;;
+    let result = &#039;&#039;;
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+
+    for (let i = 0; i &lt; length; i++) {
+      result += chars[array[i] % chars.length];
+    }
+
+    return result;
+  }
+}
+
+export const csrf = new CSRFProtection();</code></pre>
+<h2>Putting It All Together: A Complete Login Flow</h2>
+<p>Let's build a complete login component that demonstrates everything we've learned:</p>
+<pre><code class="language-typescript">// components/login-form.ts
+import { html, define, Component } from &#039;@larc/lib&#039;;
+import { authService } from &#039;../services/auth&#039;;
+import { validators } from &#039;../utils/validation&#039;;
+import { csrf } from &#039;../utils/csrf&#039;;
+
+interface LoginFormState {
+  username: string;
+  password: string;
+  rememberMe: boolean;
+  isLoading: boolean;
+  error: string | null;
+  fieldErrors: Record&lt;string, string&gt;;
+}
+
+class LoginForm extends Component {
+  static tagName = &#039;login-form&#039;;
+
+  state: LoginFormState = {
+    username: &#039;&#039;,
+    password: &#039;&#039;,
+    rememberMe: false,
+    isLoading: false,
+    error: null,
+    fieldErrors: {}
+  };
+
+  connectedCallback() {
+    super.connectedCallback();
+    csrf.generateToken(); // Generate CSRF token on mount
+  }
+
+  private validate(): boolean {
+    const errors: Record&lt;string, string&gt; = {};
+
+    if (!this.state.username) {
+      errors.username = &#039;Username is required&#039;;
+    }
+
+    if (!this.state.password) {
+      errors.password = &#039;Password is required&#039;;
+    }
+
+    this.setState({ fieldErrors: errors });
+    return Object.keys(errors).length === 0;
+  }
+
+  private async handleSubmit(e: Event) {
+    e.preventDefault();
+
+    if (!this.validate()) return;
+
+    this.setState({ isLoading: true, error: null });
+
+    try {
+      const success = await authService.login({
+        username: this.state.username,
+        password: this.state.password
+      });
+
+      if (success) {
+        // Get redirect URL from query params
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get(&#039;redirect&#039;) || &#039;/dashboard&#039;;
+        window.location.href = redirect;
+      } else {
+        this.setState({
+          error: &#039;Invalid username or password&#039;,
+          isLoading: false
+        });
+      }
+    } catch (error) {
+      this.setState({
+        error: &#039;An error occurred. Please try again.&#039;,
+        isLoading: false
+      });
+    }
+  }
+
+  render() {
+    const { username, password, rememberMe, isLoading, error, fieldErrors } = this.state;
+
+    return html`
+      &lt;div class=&quot;login-container&quot;&gt;
+        &lt;form class=&quot;login-form&quot; onsubmit=&quot;${this.handleSubmit}&quot;&gt;
+          &lt;h2&gt;Sign In&lt;/h2&gt;
+
+          ${error ? html`
+            &lt;div class=&quot;alert alert-error&quot;&gt;
+              ${error}
+            &lt;/div&gt;
+          ` : &#039;&#039;}
+
+          &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;username&quot;&gt;Username&lt;/label&gt;
+            &lt;input
+              type=&quot;text&quot;
+              id=&quot;username&quot;
+              value=&quot;${username}&quot;
+              oninput=&quot;${(e: Event) =&gt; this.setState({
+                username: (e.target as HTMLInputElement).value
+              })}&quot;
+              class=&quot;${fieldErrors.username ? &#039;error&#039; : &#039;&#039;}&quot;
+              disabled=&quot;${isLoading}&quot;
+              autocomplete=&quot;username&quot;
+            /&gt;
+            ${fieldErrors.username ? html`
+              &lt;span class=&quot;error-message&quot;&gt;${fieldErrors.username}&lt;/span&gt;
+            ` : &#039;&#039;}
+          &lt;/div&gt;
+
+          &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;password&quot;&gt;Password&lt;/label&gt;
+            &lt;input
+              type=&quot;password&quot;
+              id=&quot;password&quot;
+              value=&quot;${password}&quot;
+              oninput=&quot;${(e: Event) =&gt; this.setState({
+                password: (e.target as HTMLInputElement).value
+              })}&quot;
+              class=&quot;${fieldErrors.password ? &#039;error&#039; : &#039;&#039;}&quot;
+              disabled=&quot;${isLoading}&quot;
+              autocomplete=&quot;current-password&quot;
+            /&gt;
+            ${fieldErrors.password ? html`
+              &lt;span class=&quot;error-message&quot;&gt;${fieldErrors.password}&lt;/span&gt;
+            ` : &#039;&#039;}
+          &lt;/div&gt;
+
+          &lt;div class=&quot;form-group checkbox&quot;&gt;
+            &lt;label&gt;
+              &lt;input
+                type=&quot;checkbox&quot;
+                checked=&quot;${rememberMe}&quot;
+                onchange=&quot;${(e: Event) =&gt; this.setState({
+                  rememberMe: (e.target as HTMLInputElement).checked
+                })}&quot;
+                disabled=&quot;${isLoading}&quot;
+              /&gt;
+              Remember me
+            &lt;/label&gt;
+          &lt;/div&gt;
+
+          &lt;button
+            type=&quot;submit&quot;
+            class=&quot;btn btn-primary&quot;
+            disabled=&quot;${isLoading}&quot;
+          &gt;
+            ${isLoading ? &#039;Signing in...&#039; : &#039;Sign In&#039;}
+          &lt;/button&gt;
+
+          &lt;div class=&quot;form-footer&quot;&gt;
+            &lt;a href=&quot;/forgot-password&quot;&gt;Forgot password?&lt;/a&gt;
+          &lt;/div&gt;
+        &lt;/form&gt;
+      &lt;/div&gt;
+
+      &lt;style&gt;
+        .login-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 100vh;
+          padding: 1rem;
+        }
+
+        .login-form {
+          width: 100%;
+          max-width: 400px;
+          padding: 2rem;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          background: white;
+        }
+
+        .form-group {
+          margin-bottom: 1rem;
+        }
+
+        .form-group label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+        }
+
+        .form-group input[type=&quot;text&quot;],
+        .form-group input[type=&quot;password&quot;] {
+          width: 100%;
+          padding: 0.5rem;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+
+        .form-group input.error {
+          border-color: #dc3545;
+        }
+
+        .error-message {
+          display: block;
+          color: #dc3545;
+          font-size: 0.875rem;
+          margin-top: 0.25rem;
+        }
+
+        .alert {
+          padding: 0.75rem;
+          margin-bottom: 1rem;
+          border-radius: 4px;
+        }
+
+        .alert-error {
+          background: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+        }
+
+        .btn {
+          width: 100%;
+          padding: 0.75rem;
+          border: none;
+          border-radius: 4px;
+          font-size: 1rem;
+          cursor: pointer;
+        }
+
+        .btn-primary {
+          background: #007bff;
+          color: white;
+        }
+
+        .btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+
+        .form-footer {
+          margin-top: 1rem;
+          text-align: center;
+        }
+      &lt;/style&gt;
+    `;
+  }
+}
+
+define(LoginForm);</code></pre>
+<h2>What We've Learned</h2>
+<p>In this chapter, we've built a complete authentication and authorization system for LARC applications. You now know how to:</p>
+<ul><li>Implement JWT-based authentication with automatic token refresh</li>
+<li>Create protected routes that enforce authentication and authorization</li>
+<li>Build a flexible role-based access control system</li>
+<li>Manage sessions securely with timeout and activity tracking</li>
+<li>Follow security best practices including input validation and CSRF protection</li>
+<li>Create production-ready login flows with proper error handling</li>
+</ul>
+Authentication and authorization are the foundation of application security. Get them right, and you'll sleep better at night knowing your users and their data are protected. Get them wrong, and you'll be explaining to your CEO why the company is on the front page of Hacker News for all the wrong reasons.
+<p>In the next chapter, we'll explore real-time features, where we'll need to authenticate WebSocket connections and authorize real-time events. Because what good is a secure application if it can't securely push updates to users in real-time?</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/backup/building-with-larc-original-20251226/chapter-12-authentication-and-authorization.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

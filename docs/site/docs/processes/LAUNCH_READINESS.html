@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
-  <script src="../../../../playground/theme-init.js"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>LARC Hacker News Launch - Readiness Report · PAN Documentation</title>
   <meta name="description" content="PAN (Page Area Network) Documentation - LARC Hacker News Launch - Readiness Report">
@@ -47,22 +44,23 @@
       </div>
       <article class="docs-content">
         <h1>LARC Hacker News Launch - Readiness Report</h1>
-<strong>Date:</strong> December 3, 2024
-<strong>Status:</strong> ✅ READY TO LAUNCH
+<strong>Date:</strong> February 25, 2026
+<strong>Status:</strong> ✅ READY TO LAUNCH (v3.0.1)
 <hr>
 <h2>✅ Completed Tasks (100%)</h2>
 <h3>1. Repository & Code ✅</h3>
-<ul><li>[x] <strong>All tests passing:</strong> 261/261 tests (Chromium, Firefox, WebKit)</li>
+<ul><li>[x] <strong>All tests passing:</strong> 426 browser executions (Chromium, Firefox, WebKit across core + UI)</li>
 <li>[x] <strong>Security audit:</strong> 0 vulnerabilities (npm audit)</li>
 <li>[x] <strong>CI/CD green:</strong> Latest GitHub Actions runs successful</li>
 <li>[x] <strong>TODO/FIXME:</strong> No critical comments found</li>
-<li>[x] <strong>Bundle size:</strong> Core 12KB (~5KB gzipped) ✅</li>
+<li>[x] <strong>Bundle size:</strong> Core Lite 3.6KB minified (~1.5KB gzipped) ✅</li>
 </ul>
 <h3>2. NPM Packages ✅</h3>
-<ul><li>[x] <strong>@larcjs/core:</strong> v1.1.1 published</li>
-<li>[x] <strong>@larcjs/ui:</strong> v1.1.1 published</li>
-<li>[x] <strong>@larcjs/core-types:</strong> v1.1.1 published</li>
-<li>[x] <strong>@larcjs/ui-types:</strong> v1.0.2 published</li>
+<ul><li>[x] <strong>@larcjs/core:</strong> v3.0.1 published</li>
+<li>[x] <strong>@larcjs/core-lite:</strong> v3.0.1 published</li>
+<li>[x] <strong>@larcjs/ui:</strong> v3.0.1 published</li>
+<li>[x] <strong>@larcjs/core-types:</strong> v3.0.1 published</li>
+<li>[x] <strong>@larcjs/ui-types:</strong> v3.0.1 published</li>
 </ul>
 <h3>3. CDN Links ✅</h3>
 <p>All unpkg.com URLs tested and working:
@@ -93,12 +91,12 @@
 <h2>📊 Technical Metrics</h2>
 <p>| Metric | Target | Actual | Status |
 |--------|--------|--------|--------|
-| Test Coverage | 100% core | 261/261 passing | ✅ |
+| Test Coverage | 100% core + UI | 426 Playwright executions | ✅ |
 | Security Vulnerabilities | 0 | 0 | ✅ |
-| Core Bundle Size (gzipped) | ~5KB | ~5KB | ✅ |
+| Core Bundle Size (gzipped) | ≤4KB | 3.6KB minified (~1.5KB gz) | ✅ |
 | Browser Support | Modern browsers | Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ | ✅ |
 | CI/CD | Green | All passing | ✅ |
-| npm Packages | Published | 4/4 published | ✅ |
+| npm Packages | Published | 5/5 published | ✅ |
 | CDN Availability | Working | All links working | ✅ |</p>
 <hr>
 <h2>🎯 HN Launch Strategy</h2>
@@ -107,7 +105,7 @@
 <h3>Recommended First Comment</h3>
 See <code>HN_POST_DRAFT.md</code> for full text. Key points:
 <ul><li>Solves Web Component coordination problem</li>
-<li>5KB core, 261 tests, works with React/Vue/Svelte</li>
+<li>3.6KB core-lite, 426 tests, works with React/Vue/Svelte</li>
 <li>New: CLI tool, component registry, VS Code extension</li>
 <li>Zero-build dev, optional build prod</li>
 <li>Complement frameworks, don't replace</li>
@@ -160,9 +158,9 @@ See <code>HN_POST_DRAFT.md</code> for full text. Key points:
 <li><strong>What's PAN?</strong></li>
    > Pub/sub message bus (like MQTT for browser). Components coordinate without coupling
 <li><strong>Production ready?</strong></li>
-   > Yes: 261 tests, 0 vulnerabilities, v1.1 on npm. Young but stable.
+   > Yes: 426 Playwright executions, 0 vulnerabilities, v3.0.1 on npm. Young but stable.
 <li><strong>Bundle size?</strong></li>
-   > 5KB core vs 140KB (React) or 90KB (Vue). Per-component 2-5KB.
+   > 3.6KB core-lite vs 140KB (React) or 90KB (Vue). Per-component 2-5KB.
 <li><strong>Browser support?</strong></li>
    > Chrome 90+, Firefox 88+, Safari 14+, Edge 90+. Modern browsers only.
 <li><strong>TypeScript?</strong></li>
@@ -175,10 +173,10 @@ See <code>HN_POST_DRAFT.md</code> for full text. Key points:
 <li><strong>Zero-build development</strong> (write .mjs, refresh browser)</li>
 <li><strong>PAN messaging bus</strong> (Web Component coordination solved)</li>
 <li><strong>Framework complement</strong> (not replacement)</li>
-<li><strong>5KB core</strong> (vs 140KB React)</li>
+<li><strong>3.6KB core</strong> (vs 140KB React)</li>
 <li><strong>True interoperability</strong> (React + Vue + LARC on same page)</li>
 <li><strong>No vendor lock-in</strong> (just Web Components + messaging)</li>
-<li><strong>261 tests</strong> (production-ready)</li>
+<li><strong>426 Playwright executions</strong> (production-ready)</li>
 <li><strong>Complete ecosystem</strong> (CLI + registry + VS Code extension)</li>
 <hr>
 <h2>⚠️ Remaining Tasks</h2>
@@ -282,7 +280,5 @@ See <code>HN_POST_DRAFT.md</code> for full text. Key points:
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
   <script src="../assets/docs.js"></script>
-  <pan-bus debug="false"></pan-bus>
-  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

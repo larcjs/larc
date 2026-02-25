@@ -21,13 +21,14 @@
 ### Repository & Code
 
 - [ ] All submodules updated to latest commits
-- [ ] All tests passing in CI (261/261 core tests)
+- [ ] All tests passing in CI (426 browser executions across core + UI)
 - [ ] No critical or high-severity npm audit issues
 - [ ] Latest versions published to npm:
   - [ ] @larcjs/core@3.0.1 ✅
-  - [ ] @larcjs/core@3.0.1 ✅
+  - [ ] @larcjs/core-lite@3.0.1 ✅
   - [ ] @larcjs/ui@3.0.1 ✅
-  - [ ] @larcjs/core@3.0.1 ✅
+  - [ ] @larcjs/core-types@3.0.1 ✅
+  - [ ] @larcjs/ui-types@3.0.1 ✅
 - [ ] GitHub Actions workflows all green
 - [ ] All TODO/FIXME comments resolved or documented
 
@@ -192,7 +193,7 @@
 
   Try it: https://larcjs.com/playground/
 
-  Tech: 261 passing tests, TypeScript support, 5KB core, zero dependencies.
+  Tech: 426 browser executions, TypeScript support, 3.6KB core-lite, zero dependencies.
 
   Happy to answer questions!
   ```

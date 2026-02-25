@@ -1,0 +1,1432 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Real-time Features · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Real-time Features">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">books</a> / <a href="#">backup</a> / <a href="#">building-with-larc-original-20251226</a> / <span>chapter-13-realtime-features</span>
+      </div>
+      <article class="docs-content">
+        <h1>Real-time Features</h1>
+<em>In which we discover that the web doesn't have to reload every time something changes, explore the art of pushing data instead of polling, and learn that "real-time" doesn't mean "instantly"—it means "fast enough that users stop complaining."</em>
+<p>Real-time features have gone from "nice to have" to "why doesn't this update automatically?" The modern web expects live updates, collaborative editing, instant notifications, and data that refreshes faster than a TikTok feed. In this chapter, we'll build real-time features in LARC that are performant, reliable, and won't melt your servers or your users' browsers.</p>
+<h2>Understanding Real-time Communication</h2>
+<p>Before HTTP came along and ruined everything with its request-response pattern, computers communicated just fine by sending messages whenever they wanted. HTTP made us polite—the client asks nicely, and the server responds. But sometimes we want servers to speak when they have something to say, not just when asked.</p>
+<p>We have three main tools for real-time communication on the web:</p>
+<li><strong>WebSockets</strong>: Full-duplex communication channels—both sides can talk whenever they want</li>
+<li><strong>Server-Sent Events (SSE)</strong>: One-way communication from server to client, simpler than WebSockets</li>
+<li><strong>Polling</strong>: The brute-force approach—asking "got anything new?" every few seconds</li>
+<p>Additionally, we'll cover:</p>
+<li><strong>BroadcastChannel</strong>: Communication between tabs/windows in the same browser</li>
+<li><strong>Web Workers</strong>: Background processing for real-time data without blocking the UI</li>
+<p>Let's build with all of these tools, starting with WebSockets.</p>
+<h2>WebSocket Integration: The Two-Way Street</h2>
+<p>WebSockets are like a phone call, while HTTP is like passing notes. Once the connection is established, both parties can send messages whenever they want without the overhead of setting up a new connection each time.</p>
+<h3>Building a WebSocket Client</h3>
+<p>Let's create a robust WebSocket client that handles connection lifecycle, reconnection, authentication, and message routing:</p>
+<pre><code class="language-typescript">// services/websocket-client.ts
+import { authService } from &#039;./auth&#039;;
+
+interface WebSocketConfig {
+  url: string;
+  reconnectInterval?: number;
+  maxReconnectAttempts?: number;
+  heartbeatInterval?: number;
+}
+
+interface WebSocketMessage {
+  type: string;
+  payload: any;
+  timestamp: number;
+}
+
+type MessageHandler = (payload: any) =&gt; void;
+
+class WebSocketClient {
+  private ws: WebSocket | null = null;
+  private config: Required&lt;WebSocketConfig&gt;;
+  private reconnectAttempts = 0;
+  private reconnectTimeoutId: number | null = null;
+  private heartbeatIntervalId: number | null = null;
+  private messageHandlers = new Map&lt;string, Set&lt;MessageHandler&gt;&gt;();
+  private isConnecting = false;
+
+  constructor(config: WebSocketConfig) {
+    this.config = {
+      reconnectInterval: 5000,
+      maxReconnectAttempts: 10,
+      heartbeatInterval: 30000,
+      ...config
+    };
+  }
+
+  // Connect to WebSocket server
+  async connect(): Promise&lt;void&gt; {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      console.log(&#039;Already connected&#039;);
+      return;
+    }
+
+    if (this.isConnecting) {
+      console.log(&#039;Connection in progress&#039;);
+      return;
+    }
+
+    this.isConnecting = true;
+
+    try {
+      // Get auth token
+      const token = authService.getAccessToken();
+      const url = token
+        ? `${this.config.url}?token=${token}`
+        : this.config.url;
+
+      this.ws = new WebSocket(url);
+
+      // Setup event handlers
+      this.ws.onopen = () =&gt; this.handleOpen();
+      this.ws.onmessage = (event) =&gt; this.handleMessage(event);
+      this.ws.onerror = (error) =&gt; this.handleError(error);
+      this.ws.onclose = (event) =&gt; this.handleClose(event);
+
+      // Wait for connection
+      await this.waitForConnection();
+    } finally {
+      this.isConnecting = false;
+    }
+  }
+
+  // Wait for connection to open
+  private waitForConnection(): Promise&lt;void&gt; {
+    return new Promise((resolve, reject) =&gt; {
+      if (!this.ws) {
+        reject(new Error(&#039;WebSocket not initialized&#039;));
+        return;
+      }
+
+      const timeout = setTimeout(() =&gt; {
+        reject(new Error(&#039;Connection timeout&#039;));
+      }, 10000);
+
+      this.ws.addEventListener(&#039;open&#039;, () =&gt; {
+        clearTimeout(timeout);
+        resolve();
+      }, { once: true });
+
+      this.ws.addEventListener(&#039;error&#039;, () =&gt; {
+        clearTimeout(timeout);
+        reject(new Error(&#039;Connection failed&#039;));
+      }, { once: true });
+    });
+  }
+
+  // Disconnect from WebSocket server
+  disconnect(): void {
+    this.stopHeartbeat();
+    this.stopReconnect();
+
+    if (this.ws) {
+      this.ws.close(1000, &#039;Client disconnect&#039;);
+      this.ws = null;
+    }
+  }
+
+  // Send message to server
+  send(type: string, payload: any): void {
+    if (!this.isConnected()) {
+      console.error(&#039;Cannot send message: not connected&#039;);
+      return;
+    }
+
+    const message: WebSocketMessage = {
+      type,
+      payload,
+      timestamp: Date.now()
+    };
+
+    this.ws!.send(JSON.stringify(message));
+  }
+
+  // Subscribe to messages of specific type
+  on(type: string, handler: MessageHandler): () =&gt; void {
+    if (!this.messageHandlers.has(type)) {
+      this.messageHandlers.set(type, new Set());
+    }
+
+    this.messageHandlers.get(type)!.add(handler);
+
+    // Return unsubscribe function
+    return () =&gt; {
+      const handlers = this.messageHandlers.get(type);
+      if (handlers) {
+        handlers.delete(handler);
+      }
+    };
+  }
+
+  // Check if connected
+  isConnected(): boolean {
+    return this.ws?.readyState === WebSocket.OPEN;
+  }
+
+  // Handle connection open
+  private handleOpen(): void {
+    console.log(&#039;WebSocket connected&#039;);
+    this.reconnectAttempts = 0;
+    this.startHeartbeat();
+
+    // Notify listeners
+    this.notifyHandlers(&#039;connected&#039;, {});
+  }
+
+  // Handle incoming message
+  private handleMessage(event: MessageEvent): void {
+    try {
+      const message = JSON.parse(event.data) as WebSocketMessage;
+
+      // Handle heartbeat response
+      if (message.type === &#039;pong&#039;) {
+        return;
+      }
+
+      // Notify type-specific handlers
+      this.notifyHandlers(message.type, message.payload);
+
+      // Notify global handlers
+      this.notifyHandlers(&#039;*&#039;, message);
+    } catch (error) {
+      console.error(&#039;Failed to parse WebSocket message:&#039;, error);
+    }
+  }
+
+  // Handle connection error
+  private handleError(error: Event): void {
+    console.error(&#039;WebSocket error:&#039;, error);
+    this.notifyHandlers(&#039;error&#039;, { error });
+  }
+
+  // Handle connection close
+  private handleClose(event: CloseEvent): void {
+    console.log(&#039;WebSocket closed:&#039;, event.code, event.reason);
+    this.stopHeartbeat();
+
+    // Notify listeners
+    this.notifyHandlers(&#039;disconnected&#039;, {
+      code: event.code,
+      reason: event.reason
+    });
+
+    // Attempt reconnection if not a normal close
+    if (event.code !== 1000 &amp;&amp; event.code !== 1001) {
+      this.attemptReconnect();
+    }
+  }
+
+  // Notify all handlers for a message type
+  private notifyHandlers(type: string, payload: any): void {
+    const handlers = this.messageHandlers.get(type);
+    if (handlers) {
+      handlers.forEach(handler =&gt; {
+        try {
+          handler(payload);
+        } catch (error) {
+          console.error(`Handler error for type ${type}:`, error);
+        }
+      });
+    }
+  }
+
+  // Start heartbeat to keep connection alive
+  private startHeartbeat(): void {
+    this.stopHeartbeat();
+
+    this.heartbeatIntervalId = window.setInterval(() =&gt; {
+      if (this.isConnected()) {
+        this.send(&#039;ping&#039;, {});
+      }
+    }, this.config.heartbeatInterval);
+  }
+
+  // Stop heartbeat
+  private stopHeartbeat(): void {
+    if (this.heartbeatIntervalId !== null) {
+      clearInterval(this.heartbeatIntervalId);
+      this.heartbeatIntervalId = null;
+    }
+  }
+
+  // Attempt to reconnect
+  private attemptReconnect(): void {
+    if (this.reconnectAttempts &gt;= this.config.maxReconnectAttempts) {
+      console.error(&#039;Max reconnection attempts reached&#039;);
+      this.notifyHandlers(&#039;reconnect-failed&#039;, {});
+      return;
+    }
+
+    this.reconnectAttempts++;
+    const delay = Math.min(
+      this.config.reconnectInterval * this.reconnectAttempts,
+      30000
+    );
+
+    console.log(`Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts})`);
+
+    this.reconnectTimeoutId = window.setTimeout(() =&gt; {
+      console.log(&#039;Attempting to reconnect...&#039;);
+      this.connect().catch(error =&gt; {
+        console.error(&#039;Reconnection failed:&#039;, error);
+      });
+    }, delay);
+  }
+
+  // Stop reconnection attempts
+  private stopReconnect(): void {
+    if (this.reconnectTimeoutId !== null) {
+      clearTimeout(this.reconnectTimeoutId);
+      this.reconnectTimeoutId = null;
+    }
+    this.reconnectAttempts = 0;
+  }
+}
+
+// Create and export singleton instance
+export const wsClient = new WebSocketClient({
+  url: process.env.WS_URL || &#039;ws://localhost:3000/ws&#039;
+});</code></pre>
+<h3>Using WebSockets in Components</h3>
+<p>Now let's create a component that uses our WebSocket client to display real-time notifications:</p>
+<pre><code class="language-typescript">// components/notification-feed.ts
+import { html, define, Component } from &#039;@larc/lib&#039;;
+import { wsClient } from &#039;../services/websocket-client&#039;;
+
+interface Notification {
+  id: string;
+  type: &#039;info&#039; | &#039;success&#039; | &#039;warning&#039; | &#039;error&#039;;
+  title: string;
+  message: string;
+  timestamp: number;
+}
+
+interface NotificationFeedState {
+  notifications: Notification[];
+  isConnected: boolean;
+}
+
+class NotificationFeed extends Component {
+  static tagName = &#039;notification-feed&#039;;
+
+  state: NotificationFeedState = {
+    notifications: [],
+    isConnected: false
+  };
+
+  private unsubscribers: Array&lt;() =&gt; void&gt; = [];
+
+  async connectedCallback() {
+    super.connectedCallback();
+
+    // Connect to WebSocket
+    await wsClient.connect();
+
+    // Subscribe to notification messages
+    this.unsubscribers.push(
+      wsClient.on(&#039;notification&#039;, (notification: Notification) =&gt; {
+        this.addNotification(notification);
+      })
+    );
+
+    // Subscribe to connection status
+    this.unsubscribers.push(
+      wsClient.on(&#039;connected&#039;, () =&gt; {
+        this.setState({ isConnected: true });
+      })
+    );
+
+    this.unsubscribers.push(
+      wsClient.on(&#039;disconnected&#039;, () =&gt; {
+        this.setState({ isConnected: false });
+      })
+    );
+
+    // Update initial connection state
+    this.setState({ isConnected: wsClient.isConnected() });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    // Unsubscribe from all messages
+    this.unsubscribers.forEach(unsub =&gt; unsub());
+    this.unsubscribers = [];
+  }
+
+  private addNotification(notification: Notification): void {
+    this.setState({
+      notifications: [notification, ...this.state.notifications].slice(0, 50)
+    });
+
+    // Auto-dismiss after 5 seconds
+    setTimeout(() =&gt; {
+      this.dismissNotification(notification.id);
+    }, 5000);
+  }
+
+  private dismissNotification(id: string): void {
+    this.setState({
+      notifications: this.state.notifications.filter(n =&gt; n.id !== id)
+    });
+  }
+
+  render() {
+    const { notifications, isConnected } = this.state;
+
+    return html`
+      &lt;div class=&quot;notification-feed&quot;&gt;
+        &lt;div class=&quot;connection-status ${isConnected ? &#039;connected&#039; : &#039;disconnected&#039;}&quot;&gt;
+          ${isConnected ? &#039;* Connected&#039; : &#039;o Disconnected&#039;}
+        &lt;/div&gt;
+
+        &lt;div class=&quot;notifications&quot;&gt;
+          ${notifications.map(notification =&gt; html`
+            &lt;div class=&quot;notification ${notification.type}&quot; key=&quot;${notification.id}&quot;&gt;
+              &lt;div class=&quot;notification-header&quot;&gt;
+                &lt;strong&gt;${notification.title}&lt;/strong&gt;
+                &lt;button
+                  class=&quot;dismiss&quot;
+                  onclick=&quot;${() =&gt; this.dismissNotification(notification.id)}&quot;
+                &gt;
+                  x
+                &lt;/button&gt;
+              &lt;/div&gt;
+              &lt;div class=&quot;notification-body&quot;&gt;
+                ${notification.message}
+              &lt;/div&gt;
+              &lt;div class=&quot;notification-time&quot;&gt;
+                ${this.formatTime(notification.timestamp)}
+              &lt;/div&gt;
+            &lt;/div&gt;
+          `)}
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;style&gt;
+        .notification-feed {
+          position: fixed;
+          top: 1rem;
+          right: 1rem;
+          width: 320px;
+          max-height: 80vh;
+          overflow-y: auto;
+          z-index: 1000;
+        }
+
+        .connection-status {
+          padding: 0.5rem;
+          margin-bottom: 0.5rem;
+          border-radius: 4px;
+          font-size: 0.875rem;
+          text-align: center;
+        }
+
+        .connection-status.connected {
+          background: #d4edda;
+          color: #155724;
+        }
+
+        .connection-status.disconnected {
+          background: #f8d7da;
+          color: #721c24;
+        }
+
+        .notification {
+          background: white;
+          border-left: 4px solid;
+          border-radius: 4px;
+          padding: 1rem;
+          margin-bottom: 0.5rem;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.info { border-color: #17a2b8; }
+        .notification.success { border-color: #28a745; }
+        .notification.warning { border-color: #ffc107; }
+        .notification.error { border-color: #dc3545; }
+
+        .notification-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 0.5rem;
+        }
+
+        .dismiss {
+          background: none;
+          border: none;
+          font-size: 1.5rem;
+          cursor: pointer;
+          color: #999;
+        }
+
+        .notification-time {
+          font-size: 0.75rem;
+          color: #666;
+          margin-top: 0.5rem;
+        }
+
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      &lt;/style&gt;
+    `;
+  }
+
+  private formatTime(timestamp: number): string {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+
+    if (diff &lt; 60000) return &#039;Just now&#039;;
+    if (diff &lt; 3600000) return `${Math.floor(diff / 60000)}m ago`;
+    if (diff &lt; 86400000) return `${Math.floor(diff / 3600000)}h ago`;
+    return date.toLocaleDateString();
+  }
+}
+
+define(NotificationFeed);</code></pre>
+<h2>Server-Sent Events: One-Way Data Flow</h2>
+<p>Server-Sent Events (SSE) are perfect when you only need the server to push updates to the client. They're simpler than WebSockets, work over regular HTTP, and automatically reconnect when disconnected. Think of them as a fire hose of data from server to client.</p>
+<h3>Building an SSE Client</h3>
+<pre><code class="language-typescript">// services/sse-client.ts
+interface SSEConfig {
+  url: string;
+  withCredentials?: boolean;
+  reconnectDelay?: number;
+}
+
+type SSEEventHandler = (data: any) =&gt; void;
+
+class SSEClient {
+  private eventSource: EventSource | null = null;
+  private config: Required&lt;SSEConfig&gt;;
+  private eventHandlers = new Map&lt;string, Set&lt;SSEEventHandler&gt;&gt;();
+  private isConnecting = false;
+
+  constructor(config: SSEConfig) {
+    this.config = {
+      withCredentials: true,
+      reconnectDelay: 3000,
+      ...config
+    };
+  }
+
+  // Connect to SSE endpoint
+  connect(): void {
+    if (this.eventSource?.readyState === EventSource.OPEN) {
+      console.log(&#039;Already connected to SSE&#039;);
+      return;
+    }
+
+    if (this.isConnecting) {
+      console.log(&#039;SSE connection in progress&#039;);
+      return;
+    }
+
+    this.isConnecting = true;
+
+    try {
+      this.eventSource = new EventSource(this.config.url, {
+        withCredentials: this.config.withCredentials
+      });
+
+      this.eventSource.onopen = () =&gt; this.handleOpen();
+      this.eventSource.onerror = (error) =&gt; this.handleError(error);
+
+      // Listen for default message event
+      this.eventSource.onmessage = (event) =&gt; {
+        this.handleEvent(&#039;message&#039;, event.data);
+      };
+    } finally {
+      this.isConnecting = false;
+    }
+  }
+
+  // Disconnect from SSE endpoint
+  disconnect(): void {
+    if (this.eventSource) {
+      this.eventSource.close();
+      this.eventSource = null;
+    }
+  }
+
+  // Subscribe to named events
+  on(eventName: string, handler: SSEEventHandler): () =&gt; void {
+    if (!this.eventHandlers.has(eventName)) {
+      this.eventHandlers.set(eventName, new Set());
+
+      // Register event listener with EventSource
+      if (this.eventSource &amp;&amp; eventName !== &#039;message&#039;) {
+        this.eventSource.addEventListener(eventName, (event: MessageEvent) =&gt; {
+          this.handleEvent(eventName, event.data);
+        });
+      }
+    }
+
+    this.eventHandlers.get(eventName)!.add(handler);
+
+    // Return unsubscribe function
+    return () =&gt; {
+      const handlers = this.eventHandlers.get(eventName);
+      if (handlers) {
+        handlers.delete(handler);
+      }
+    };
+  }
+
+  // Check if connected
+  isConnected(): boolean {
+    return this.eventSource?.readyState === EventSource.OPEN;
+  }
+
+  // Handle connection open
+  private handleOpen(): void {
+    console.log(&#039;SSE connected&#039;);
+    this.notifyHandlers(&#039;connected&#039;, {});
+  }
+
+  // Handle error
+  private handleError(error: Event): void {
+    console.error(&#039;SSE error:&#039;, error);
+
+    if (this.eventSource?.readyState === EventSource.CLOSED) {
+      console.log(&#039;SSE connection closed, reconnecting...&#039;);
+      this.notifyHandlers(&#039;disconnected&#039;, {});
+
+      // Reconnect after delay
+      setTimeout(() =&gt; {
+        this.connect();
+      }, this.config.reconnectDelay);
+    }
+  }
+
+  // Handle incoming event
+  private handleEvent(eventName: string, data: string): void {
+    try {
+      const parsed = JSON.parse(data);
+      this.notifyHandlers(eventName, parsed);
+    } catch {
+      // If not JSON, pass raw data
+      this.notifyHandlers(eventName, data);
+    }
+  }
+
+  // Notify all handlers for an event
+  private notifyHandlers(eventName: string, data: any): void {
+    const handlers = this.eventHandlers.get(eventName);
+    if (handlers) {
+      handlers.forEach(handler =&gt; {
+        try {
+          handler(data);
+        } catch (error) {
+          console.error(`Handler error for event ${eventName}:`, error);
+        }
+      });
+    }
+  }
+}
+
+export const sseClient = new SSEClient({
+  url: &#039;/api/events&#039;
+});</code></pre>
+<h3>Live Activity Feed with SSE</h3>
+<p>Let's build a live activity feed that displays real-time updates using SSE:</p>
+<pre><code class="language-typescript">// components/activity-feed.ts
+import { html, define, Component } from &#039;@larc/lib&#039;;
+import { sseClient } from &#039;../services/sse-client&#039;;
+
+interface Activity {
+  id: string;
+  userId: string;
+  userName: string;
+  action: string;
+  target: string;
+  timestamp: number;
+}
+
+interface ActivityFeedState {
+  activities: Activity[];
+  isConnected: boolean;
+}
+
+class ActivityFeed extends Component {
+  static tagName = &#039;activity-feed&#039;;
+
+  state: ActivityFeedState = {
+    activities: [],
+    isConnected: false
+  };
+
+  private unsubscribers: Array&lt;() =&gt; void&gt; = [];
+
+  connectedCallback() {
+    super.connectedCallback();
+
+    // Connect to SSE
+    sseClient.connect();
+
+    // Subscribe to activity events
+    this.unsubscribers.push(
+      sseClient.on(&#039;activity&#039;, (activity: Activity) =&gt; {
+        this.addActivity(activity);
+      })
+    );
+
+    // Subscribe to connection events
+    this.unsubscribers.push(
+      sseClient.on(&#039;connected&#039;, () =&gt; {
+        this.setState({ isConnected: true });
+      })
+    );
+
+    this.unsubscribers.push(
+      sseClient.on(&#039;disconnected&#039;, () =&gt; {
+        this.setState({ isConnected: false });
+      })
+    );
+
+    // Load initial activities
+    this.loadActivities();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.unsubscribers.forEach(unsub =&gt; unsub());
+  }
+
+  private async loadActivities(): Promise&lt;void&gt; {
+    try {
+      const response = await fetch(&#039;/api/activities?limit=20&#039;);
+      const activities = await response.json();
+      this.setState({ activities });
+    } catch (error) {
+      console.error(&#039;Failed to load activities:&#039;, error);
+    }
+  }
+
+  private addActivity(activity: Activity): void {
+    // Add to beginning and limit to 100 items
+    this.setState({
+      activities: [activity, ...this.state.activities].slice(0, 100)
+    });
+  }
+
+  render() {
+    const { activities, isConnected } = this.state;
+
+    return html`
+      &lt;div class=&quot;activity-feed&quot;&gt;
+        &lt;div class=&quot;feed-header&quot;&gt;
+          &lt;h3&gt;Activity Feed&lt;/h3&gt;
+          &lt;span class=&quot;status ${isConnected ? &#039;live&#039; : &#039;offline&#039;}&quot;&gt;
+            ${isConnected ? &#039;* Live&#039; : &#039;o Offline&#039;}
+          &lt;/span&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;activities&quot;&gt;
+          ${activities.length === 0 ? html`
+            &lt;div class=&quot;empty&quot;&gt;No recent activity&lt;/div&gt;
+          ` : activities.map(activity =&gt; html`
+            &lt;div class=&quot;activity-item&quot; key=&quot;${activity.id}&quot;&gt;
+              &lt;div class=&quot;activity-avatar&quot;&gt;
+                ${activity.userName.charAt(0).toUpperCase()}
+              &lt;/div&gt;
+              &lt;div class=&quot;activity-content&quot;&gt;
+                &lt;div class=&quot;activity-text&quot;&gt;
+                  &lt;strong&gt;${activity.userName}&lt;/strong&gt;
+                  ${activity.action}
+                  &lt;em&gt;${activity.target}&lt;/em&gt;
+                &lt;/div&gt;
+                &lt;div class=&quot;activity-time&quot;&gt;
+                  ${this.formatTime(activity.timestamp)}
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          `)}
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;style&gt;
+        .activity-feed {
+          background: white;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        .feed-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 1rem;
+          border-bottom: 1px solid #ddd;
+          background: #f8f9fa;
+        }
+
+        .feed-header h3 {
+          margin: 0;
+        }
+
+        .status {
+          font-size: 0.875rem;
+          font-weight: 500;
+        }
+
+        .status.live { color: #28a745; }
+        .status.offline { color: #6c757d; }
+
+        .activities {
+          max-height: 500px;
+          overflow-y: auto;
+        }
+
+        .activity-item {
+          display: flex;
+          gap: 1rem;
+          padding: 1rem;
+          border-bottom: 1px solid #eee;
+          animation: fadeIn 0.3s ease-out;
+        }
+
+        .activity-item:last-child {
+          border-bottom: none;
+        }
+
+        .activity-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: #007bff;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          flex-shrink: 0;
+        }
+
+        .activity-content {
+          flex: 1;
+        }
+
+        .activity-text {
+          margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+          font-size: 0.75rem;
+          color: #6c757d;
+        }
+
+        .empty {
+          padding: 2rem;
+          text-align: center;
+          color: #6c757d;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      &lt;/style&gt;
+    `;
+  }
+
+  private formatTime(timestamp: number): string {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+
+    if (diff &lt; 60000) return &#039;Just now&#039;;
+    if (diff &lt; 3600000) return `${Math.floor(diff / 60000)} minutes ago`;
+    if (diff &lt; 86400000) return `${Math.floor(diff / 3600000)} hours ago`;
+    return date.toLocaleDateString();
+  }
+}
+
+define(ActivityFeed);</code></pre>
+<h2>BroadcastChannel: Cross-Tab Communication</h2>
+<p>BroadcastChannel lets different tabs and windows of your application communicate with each other. It's perfect for keeping UI state synchronized across multiple tabs—like ensuring all tabs show "logged out" when a user logs out in one tab.</p>
+<h3>Building a Tab Synchronization Service</h3>
+<pre><code class="language-typescript">// services/tab-sync.ts
+interface SyncMessage {
+  type: string;
+  payload: any;
+  timestamp: number;
+  tabId: string;
+}
+
+type SyncHandler = (payload: any, tabId: string) =&gt; void;
+
+class TabSyncService {
+  private channel: BroadcastChannel;
+  private tabId: string;
+  private handlers = new Map&lt;string, Set&lt;SyncHandler&gt;&gt;();
+
+  constructor(channelName: string = &#039;app-sync&#039;) {
+    this.channel = new BroadcastChannel(channelName);
+    this.tabId = this.generateTabId();
+
+    // Listen for messages
+    this.channel.onmessage = (event) =&gt; {
+      this.handleMessage(event.data);
+    };
+
+    // Announce this tab
+    this.broadcast(&#039;tab-connected&#039;, { tabId: this.tabId });
+
+    // Cleanup on page unload
+    window.addEventListener(&#039;beforeunload&#039;, () =&gt; {
+      this.broadcast(&#039;tab-disconnected&#039;, { tabId: this.tabId });
+      this.channel.close();
+    });
+  }
+
+  // Broadcast message to all tabs
+  broadcast(type: string, payload: any): void {
+    const message: SyncMessage = {
+      type,
+      payload,
+      timestamp: Date.now(),
+      tabId: this.tabId
+    };
+
+    this.channel.postMessage(message);
+  }
+
+  // Subscribe to message type
+  on(type: string, handler: SyncHandler): () =&gt; void {
+    if (!this.handlers.has(type)) {
+      this.handlers.set(type, new Set());
+    }
+
+    this.handlers.get(type)!.add(handler);
+
+    return () =&gt; {
+      const handlers = this.handlers.get(type);
+      if (handlers) {
+        handlers.delete(handler);
+      }
+    };
+  }
+
+  // Handle incoming message
+  private handleMessage(message: SyncMessage): void {
+    // Ignore messages from this tab
+    if (message.tabId === this.tabId) {
+      return;
+    }
+
+    this.notifyHandlers(message.type, message.payload, message.tabId);
+  }
+
+  // Notify handlers
+  private notifyHandlers(type: string, payload: any, tabId: string): void {
+    const handlers = this.handlers.get(type);
+    if (handlers) {
+      handlers.forEach(handler =&gt; {
+        try {
+          handler(payload, tabId);
+        } catch (error) {
+          console.error(`Handler error for type ${type}:`, error);
+        }
+      });
+    }
+  }
+
+  // Generate unique tab ID
+  private generateTabId(): string {
+    return `tab-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  // Get this tab&#039;s ID
+  getTabId(): string {
+    return this.tabId;
+  }
+}
+
+export const tabSync = new TabSyncService();</code></pre>
+<h3>Synchronizing Authentication Across Tabs</h3>
+<p>Let's use BroadcastChannel to keep authentication state synchronized:</p>
+<pre><code class="language-typescript">// services/auth-sync.ts
+import { tabSync } from &#039;./tab-sync&#039;;
+import { authService } from &#039;./auth&#039;;
+
+class AuthSyncService {
+  constructor() {
+    // Listen for logout in other tabs
+    tabSync.on(&#039;auth-logout&#039;, () =&gt; {
+      console.log(&#039;Logout detected in another tab&#039;);
+      authService.logout();
+      window.location.href = &#039;/login?reason=logout-other-tab&#039;;
+    });
+
+    // Listen for login in other tabs
+    tabSync.on(&#039;auth-login&#039;, (user) =&gt; {
+      console.log(&#039;Login detected in another tab&#039;);
+      // Reload to pick up new auth state
+      window.location.reload();
+    });
+
+    // Listen for token refresh in other tabs
+    tabSync.on(&#039;auth-token-refresh&#039;, () =&gt; {
+      console.log(&#039;Token refresh detected in another tab&#039;);
+      // Re-initialize auth from storage
+      authService.initialize();
+    });
+  }
+
+  // Broadcast logout to other tabs
+  broadcastLogout(): void {
+    tabSync.broadcast(&#039;auth-logout&#039;, {});
+  }
+
+  // Broadcast login to other tabs
+  broadcastLogin(user: any): void {
+    tabSync.broadcast(&#039;auth-login&#039;, user);
+  }
+
+  // Broadcast token refresh to other tabs
+  broadcastTokenRefresh(): void {
+    tabSync.broadcast(&#039;auth-token-refresh&#039;, {});
+  }
+}
+
+export const authSync = new AuthSyncService();</code></pre>
+<h2>Web Workers: Background Processing</h2>
+<p>Web Workers let you run JavaScript in background threads, keeping your UI responsive while processing data, crunching numbers, or handling real-time updates. They're like hiring an intern who works in another room and sends you updates via email.</p>
+<h3>Creating a Data Processing Worker</h3>
+<pre><code class="language-typescript">// workers/data-processor.worker.ts
+interface ProcessRequest {
+  id: string;
+  type: &#039;sort&#039; | &#039;filter&#039; | &#039;aggregate&#039;;
+  data: any[];
+  options: any;
+}
+
+interface ProcessResponse {
+  id: string;
+  result: any;
+  error?: string;
+}
+
+// Worker message handler
+self.onmessage = (event: MessageEvent&lt;ProcessRequest&gt;) =&gt; {
+  const { id, type, data, options } = event.data;
+
+  try {
+    let result: any;
+
+    switch (type) {
+      case &#039;sort&#039;:
+        result = sortData(data, options);
+        break;
+      case &#039;filter&#039;:
+        result = filterData(data, options);
+        break;
+      case &#039;aggregate&#039;:
+        result = aggregateData(data, options);
+        break;
+      default:
+        throw new Error(`Unknown operation type: ${type}`);
+    }
+
+    const response: ProcessResponse = { id, result };
+    self.postMessage(response);
+  } catch (error) {
+    const response: ProcessResponse = {
+      id,
+      result: null,
+      error: error instanceof Error ? error.message : &#039;Unknown error&#039;
+    };
+    self.postMessage(response);
+  }
+};
+
+function sortData(data: any[], options: any): any[] {
+  const { field, order = &#039;asc&#039; } = options;
+  return [...data].sort((a, b) =&gt; {
+    const aVal = a[field];
+    const bVal = b[field];
+    const comparison = aVal &lt; bVal ? -1 : aVal &gt; bVal ? 1 : 0;
+    return order === &#039;asc&#039; ? comparison : -comparison;
+  });
+}
+
+function filterData(data: any[], options: any): any[] {
+  const { field, value, operator = &#039;equals&#039; } = options;
+
+  return data.filter(item =&gt; {
+    const itemValue = item[field];
+
+    switch (operator) {
+      case &#039;equals&#039;:
+        return itemValue === value;
+      case &#039;contains&#039;:
+        return String(itemValue).includes(String(value));
+      case &#039;greater&#039;:
+        return itemValue &gt; value;
+      case &#039;less&#039;:
+        return itemValue &lt; value;
+      default:
+        return true;
+    }
+  });
+}
+
+function aggregateData(data: any[], options: any): any {
+  const { operation, field } = options;
+
+  switch (operation) {
+    case &#039;count&#039;:
+      return data.length;
+    case &#039;sum&#039;:
+      return data.reduce((sum, item) =&gt; sum + (item[field] || 0), 0);
+    case &#039;average&#039;:
+      const sum = data.reduce((s, item) =&gt; s + (item[field] || 0), 0);
+      return data.length &gt; 0 ? sum / data.length : 0;
+    case &#039;min&#039;:
+      return Math.min(...data.map(item =&gt; item[field]));
+    case &#039;max&#039;:
+      return Math.max(...data.map(item =&gt; item[field]));
+    default:
+      return null;
+  }
+}</code></pre>
+<h3>Worker Manager</h3>
+<pre><code class="language-typescript">// services/worker-manager.ts
+class WorkerManager {
+  private worker: Worker | null = null;
+  private requestId = 0;
+  private pendingRequests = new Map&lt;string, {
+    resolve: (result: any) =&gt; void;
+    reject: (error: Error) =&gt; void;
+  }&gt;();
+
+  constructor(workerUrl: string) {
+    this.worker = new Worker(workerUrl);
+
+    this.worker.onmessage = (event) =&gt; {
+      const { id, result, error } = event.data;
+      const pending = this.pendingRequests.get(id);
+
+      if (pending) {
+        this.pendingRequests.delete(id);
+
+        if (error) {
+          pending.reject(new Error(error));
+        } else {
+          pending.resolve(result);
+        }
+      }
+    };
+
+    this.worker.onerror = (error) =&gt; {
+      console.error(&#039;Worker error:&#039;, error);
+    };
+  }
+
+  // Send request to worker
+  async process(type: string, data: any[], options: any): Promise&lt;any&gt; {
+    if (!this.worker) {
+      throw new Error(&#039;Worker not initialized&#039;);
+    }
+
+    const id = `req-${++this.requestId}`;
+
+    return new Promise((resolve, reject) =&gt; {
+      this.pendingRequests.set(id, { resolve, reject });
+
+      this.worker!.postMessage({
+        id,
+        type,
+        data,
+        options
+      });
+
+      // Timeout after 30 seconds
+      setTimeout(() =&gt; {
+        if (this.pendingRequests.has(id)) {
+          this.pendingRequests.delete(id);
+          reject(new Error(&#039;Request timeout&#039;));
+        }
+      }, 30000);
+    });
+  }
+
+  // Terminate worker
+  terminate(): void {
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
+
+    // Reject all pending requests
+    this.pendingRequests.forEach(({ reject }) =&gt; {
+      reject(new Error(&#039;Worker terminated&#039;));
+    });
+    this.pendingRequests.clear();
+  }
+}
+
+export const dataWorker = new WorkerManager(
+  new URL(&#039;../workers/data-processor.worker.ts&#039;, import.meta.url).href
+);</code></pre>
+<h2>Real-time Collaboration Patterns</h2>
+<p>Let's build a collaborative document editor that demonstrates real-time collaboration:</p>
+<pre><code class="language-typescript">// components/collaborative-editor.ts
+import { html, define, Component } from &#039;@larc/lib&#039;;
+import { wsClient } from &#039;../services/websocket-client&#039;;
+
+interface EditorState {
+  content: string;
+  collaborators: Map&lt;string, { name: string; cursor: number }&gt;;
+  docId: string;
+}
+
+class CollaborativeEditor extends Component {
+  static tagName = &#039;collaborative-editor&#039;;
+
+  state: EditorState = {
+    content: &#039;&#039;,
+    collaborators: new Map(),
+    docId: this.props.documentId || &#039;default&#039;
+  };
+
+  private editorRef: HTMLTextAreaElement | null = null;
+  private unsubscribers: Array&lt;() =&gt; void&gt; = [];
+  private localChanges = false;
+
+  async connectedCallback() {
+    super.connectedCallback();
+
+    await wsClient.connect();
+
+    // Join document collaboration
+    wsClient.send(&#039;join-document&#039;, { docId: this.state.docId });
+
+    // Subscribe to document updates
+    this.unsubscribers.push(
+      wsClient.on(&#039;document-update&#039;, (update: any) =&gt; {
+        if (!this.localChanges) {
+          this.applyRemoteUpdate(update);
+        }
+      })
+    );
+
+    // Subscribe to collaborator updates
+    this.unsubscribers.push(
+      wsClient.on(&#039;collaborator-joined&#039;, (collaborator: any) =&gt; {
+        const collaborators = new Map(this.state.collaborators);
+        collaborators.set(collaborator.userId, collaborator);
+        this.setState({ collaborators });
+      })
+    );
+
+    this.unsubscribers.push(
+      wsClient.on(&#039;collaborator-left&#039;, (data: any) =&gt; {
+        const collaborators = new Map(this.state.collaborators);
+        collaborators.delete(data.userId);
+        this.setState({ collaborators });
+      })
+    );
+
+    // Load initial document content
+    await this.loadDocument();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+
+    // Leave document
+    wsClient.send(&#039;leave-document&#039;, { docId: this.state.docId });
+
+    this.unsubscribers.forEach(unsub =&gt; unsub());
+  }
+
+  private async loadDocument(): Promise&lt;void&gt; {
+    try {
+      const response = await fetch(`/api/documents/${this.state.docId}`);
+      const data = await response.json();
+      this.setState({ content: data.content });
+    } catch (error) {
+      console.error(&#039;Failed to load document:&#039;, error);
+    }
+  }
+
+  private handleInput(e: Event): void {
+    const textarea = e.target as HTMLTextAreaElement;
+    const newContent = textarea.value;
+    const cursorPosition = textarea.selectionStart;
+
+    this.localChanges = true;
+    this.setState({ content: newContent });
+
+    // Send update to server
+    wsClient.send(&#039;document-update&#039;, {
+      docId: this.state.docId,
+      content: newContent,
+      cursor: cursorPosition
+    });
+
+    // Reset local changes flag after a delay
+    setTimeout(() =&gt; {
+      this.localChanges = false;
+    }, 100);
+  }
+
+  private applyRemoteUpdate(update: any): void {
+    this.setState({ content: update.content });
+  }
+
+  render() {
+    const { content, collaborators } = this.state;
+
+    return html`
+      &lt;div class=&quot;collaborative-editor&quot;&gt;
+        &lt;div class=&quot;editor-header&quot;&gt;
+          &lt;div class=&quot;collaborators&quot;&gt;
+            ${Array.from(collaborators.values()).map(collab =&gt; html`
+              &lt;div class=&quot;collaborator-badge&quot; title=&quot;${collab.name}&quot;&gt;
+                ${collab.name.charAt(0).toUpperCase()}
+              &lt;/div&gt;
+            `)}
+          &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;textarea
+          class=&quot;editor-content&quot;
+          value=&quot;${content}&quot;
+          oninput=&quot;${this.handleInput}&quot;
+          placeholder=&quot;Start typing...&quot;
+          ref=&quot;${(el: HTMLTextAreaElement) =&gt; this.editorRef = el}&quot;
+        &gt;&lt;/textarea&gt;
+      &lt;/div&gt;
+
+      &lt;style&gt;
+        .collaborative-editor {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        .editor-header {
+          padding: 1rem;
+          background: #f8f9fa;
+          border-bottom: 1px solid #ddd;
+        }
+
+        .collaborators {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .collaborator-badge {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          background: #007bff;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+        }
+
+        .editor-content {
+          flex: 1;
+          padding: 1rem;
+          border: none;
+          resize: none;
+          font-family: &#039;Monaco&#039;, &#039;Courier New&#039;, monospace;
+          font-size: 14px;
+          line-height: 1.5;
+        }
+
+        .editor-content:focus {
+          outline: none;
+        }
+      &lt;/style&gt;
+    `;
+  }
+}
+
+define(CollaborativeEditor);</code></pre>
+<h2>What We've Learned</h2>
+<p>In this chapter, we've built comprehensive real-time features for LARC applications:</p>
+<ul><li><strong>WebSocket integration</strong> with automatic reconnection, heartbeat, and message routing</li>
+<li><strong>Server-Sent Events</strong> for one-way server-to-client updates</li>
+<li><strong>BroadcastChannel</strong> for synchronizing state across browser tabs</li>
+<li><strong>Web Workers</strong> for background processing without blocking the UI</li>
+<li><strong>Real-time collaboration</strong> patterns for building multi-user experiences</li>
+</ul>
+Real-time features transform applications from static pages into living, breathing experiences. Users no longer need to refresh to see updates—the updates come to them. Just remember: with great real-time power comes great responsibility to handle connection failures, race conditions, and the inevitable "why isn't it updating?" support tickets.
+<p>In the next chapter, we'll explore file management, where we'll learn to work with the Origin Private File System (OPFS), build file browsers, and handle uploads and downloads—because what's a modern application without the ability to handle files?</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/books/backup/building-with-larc-original-20251226/chapter-13-realtime-features.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

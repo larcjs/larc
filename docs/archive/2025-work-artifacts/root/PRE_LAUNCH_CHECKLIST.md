@@ -117,7 +117,7 @@ npm install @larcjs/ui@3.0.1
 - [ ] Title under 80 characters
 - [ ] First comment ready to paste
 - [ ] Links are correct
-- [ ] Statistics are accurate (261 tests, v3.0.1, etc.)
+- [ ] Statistics are accurate (426 browser executions, v3.0.1, etc.)
 - [ ] No typos
 
 ---
@@ -151,7 +151,7 @@ npm install @larcjs/ui@3.0.1
 ```html
 <!-- In main landing page -->
 <meta property="og:title" content="LARC - Zero-dependency web component framework">
-<meta property="og:description" content="Build framework-agnostic components with PAN messaging. 9KB core, 261 tests passing.">
+<meta property="og:description" content="Build framework-agnostic components with PAN messaging. 3.6KB core-lite, 426 browser tests passing.">
 <meta property="og:image" content="https://larcjs.com/images/social-card.png">
 <meta property="og:url" content="https://github.com/larcjs/larc">
 <meta name="twitter:card" content="summary_large_image">

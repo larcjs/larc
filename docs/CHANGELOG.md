@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> These items are complete on `main` and will ship in **v3.1.0** once the packages are published to npm.
+
+### Added
+- Site-wide **dark mode** with persisted theme preference across docs, playground, and demo apps
+- **Unified playground** experience (Gallery, Builder, Editor modes) so users can try components without cloning the repo
+- **Hybrid dashboard refresh** demonstrating React + Vue + LARC components on one page
+
+### Changed
+- README, launch playbooks, and FAQ now reflect the real **426-browser-test** matrix and the current **3.6KB** core bundle size
+- CI summaries were corrected to match the actual Node/browsers we run today (Linux + macOS, Node 22)
+
+### Fixed
+- Updated links that previously pointed to `hybrid-dashboard.html` so they no longer 404 when shared on HN/Reddit
+
 ## [3.0.1] - 2025-01-05
 
 ### Changed
@@ -152,12 +166,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **Unreleased** - Ecosystem expansion (CLI, Registry, VS Code Extension)
+- **Unreleased / v3.1.0** (2026-02-25) - Unified playground, dark mode, refreshed launch collateral
+- **3.0.1** (2025-01-05) - Version synchronization + CodeQL fixes (this repo)
+- **3.0.0** (2024-12-01) - Ecosystem expansion (CLI, Registry, VS Code extension)
 - **1.1.1** (2024-11-28) - Bug fixes and stability improvements
 - **1.1.0** (2024-11-20) - State management enhancements
 - **1.0.0** (2024-11-01) - Initial release
 
-[Unreleased]: https://github.com/larcjs/larc/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/larcjs/larc/compare/v3.0.1...HEAD
+[3.0.1]: https://github.com/larcjs/larc/compare/v3.0.0...v3.0.1
+[3.0.0]: https://github.com/larcjs/larc/compare/v1.1.1...v3.0.0
 [1.1.1]: https://github.com/larcjs/larc/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/larcjs/larc/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/larcjs/larc/releases/tag/v1.0.0

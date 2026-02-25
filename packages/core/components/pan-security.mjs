@@ -8,6 +8,99 @@
  * - Security best practices
  */
 
+const DEFAULT_ALLOWED_TAGS = new Set([
+  'a',
+  'abbr',
+  'b',
+  'blockquote',
+  'br',
+  'code',
+  'dd',
+  'div',
+  'dl',
+  'dt',
+  'em',
+  'figcaption',
+  'figure',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'hr',
+  'i',
+  'img',
+  'kbd',
+  'li',
+  'mark',
+  'ol',
+  'p',
+  'pre',
+  'q',
+  's',
+  'section',
+  'small',
+  'span',
+  'strong',
+  'sub',
+  'sup',
+  'table',
+  'tbody',
+  'td',
+  'th',
+  'thead',
+  'tr',
+  'u',
+  'ul',
+]);
+
+const DEFAULT_ALLOWED_ATTRS = new Set([
+  'alt',
+  'class',
+  'colspan',
+  'data-theme',
+  'dir',
+  'height',
+  'href',
+  'id',
+  'lang',
+  'name',
+  'ref',
+  'rel',
+  'role',
+  'rowspan',
+  'scope',
+  'src',
+  'tabindex',
+  'target',
+  'title',
+  'type',
+  'value',
+  'width',
+]);
+
+const URI_ATTRS = new Set([
+  'href',
+  'src',
+  'xlink:href',
+  'action',
+  'formaction',
+  'poster',
+]);
+
+const DROP_CONTENT_TAGS = new Set([
+  'base',
+  'iframe',
+  'link',
+  'meta',
+  'noscript',
+  'object',
+  'script',
+  'style',
+  'template',
+]);
+
 /**
  * Check if running in production and enforce HTTPS
  * @param {Object} options - Configuration options
@@ -42,21 +135,28 @@ export function enforceHTTPS(options = {}) {
 
 /**
  * Sanitize HTML to prevent XSS
- * Basic implementation - use DOMPurify for production
  *
  * @param {string} html - HTML string to sanitize
+ * @param {Object} options - Optional configuration
+ * @param {string[]} [options.allowedTags] - Override allowed tag list
+ * @param {string[]} [options.allowedAttributes] - Override allowed attribute list
+ * @param {boolean} [options.allowCustomElements=false] - Allow custom elements (tag-name contains "-")
  * @returns {string} Sanitized HTML
  */
-export function sanitizeHTML(html) {
+export function sanitizeHTML(html, options = {}) {
   if (!html || typeof html !== 'string') return '';
 
-  // Create a temporary div to parse HTML
-  const temp = document.createElement('div');
+  if (typeof document === 'undefined' || typeof document.createElement !== 'function') {
+    return escapeHTML(html);
+  }
 
-  // Use textContent to escape all HTML
-  temp.textContent = html;
+  const template = document.createElement('template');
+  template.innerHTML = html;
 
-  return temp.innerHTML;
+  const config = createSanitizeConfig(options);
+  sanitizeTree(template.content, config);
+
+  return template.innerHTML;
 }
 
 /**
@@ -64,25 +164,17 @@ export function sanitizeHTML(html) {
  *
  * @param {HTMLElement} element - Element to set content on
  * @param {string} html - HTML content (will be sanitized)
+ * @param {Object} options - Optional sanitizer overrides
  */
-export function safeSetHTML(element, html) {
+export function safeSetHTML(element, html, options = {}) {
   if (!element) return;
 
-  // For now, use textContent as safest option
-  // In production, integrate DOMPurify
   if (typeof html !== 'string') {
     element.textContent = '';
     return;
   }
 
-  // Check if DOMPurify is available
-  if (typeof window !== 'undefined' && window.DOMPurify) {
-    element.innerHTML = window.DOMPurify.sanitize(html);
-  } else {
-    // Fallback: escape HTML
-    element.textContent = html;
-    console.warn('DOMPurify not available. Using textContent. Install DOMPurify for proper HTML sanitization.');
-  }
+  element.innerHTML = sanitizeHTML(html, options);
 }
 
 /**
@@ -198,6 +290,115 @@ export function checkCSP() {
     meta: cspMeta ? cspMeta.content : null,
     header: cspHeader ? cspHeader.content : null,
   };
+}
+
+function createSanitizeConfig(options = {}) {
+  const {
+    allowedTags = DEFAULT_ALLOWED_TAGS,
+    allowedAttributes = DEFAULT_ALLOWED_ATTRS,
+    allowCustomElements = false,
+  } = options;
+
+  return {
+    allowedTags: new Set([...allowedTags].map(tag => tag.toLowerCase())),
+    allowedAttributes: new Set([...allowedAttributes].map(attr => attr.toLowerCase())),
+    allowCustomElements,
+  };
+}
+
+function sanitizeTree(root, config) {
+  if (!root || !root.querySelectorAll) return;
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+  const nodes = [];
+
+  // Collect nodes first so we can safely mutate the tree while iterating
+  while (walker.nextNode()) {
+    nodes.push(walker.currentNode);
+  }
+
+  for (const node of nodes) {
+    if (!node.isConnected) continue;
+    const tagName = node.tagName.toLowerCase();
+
+    if (DROP_CONTENT_TAGS.has(tagName)) {
+      node.remove();
+      continue;
+    }
+
+    const isAllowedTag =
+      config.allowedTags.has(tagName) ||
+      (config.allowCustomElements && tagName.includes('-'));
+
+    if (!isAllowedTag) {
+      unwrapElement(node);
+      continue;
+    }
+
+    sanitizeAttributes(node, config);
+  }
+}
+
+function unwrapElement(element) {
+  const parent = element.parentNode;
+  if (!parent) {
+    element.remove();
+    return;
+  }
+
+  while (element.firstChild) {
+    parent.insertBefore(element.firstChild, element);
+  }
+
+  parent.removeChild(element);
+}
+
+function sanitizeAttributes(element, config) {
+  for (const attr of Array.from(element.attributes)) {
+    const name = attr.name.toLowerCase();
+    const value = attr.value;
+
+    if (name.startsWith('on')) {
+      element.removeAttribute(attr.name);
+      continue;
+    }
+
+    if (name === 'style') {
+      element.removeAttribute(attr.name);
+      continue;
+    }
+
+    const isAllowedAttribute =
+      config.allowedAttributes.has(name) ||
+      name.startsWith('data-') ||
+      name.startsWith('aria-');
+
+    if (!isAllowedAttribute) {
+      element.removeAttribute(attr.name);
+      continue;
+    }
+
+    if (URI_ATTRS.has(name) && !isSafeURL(value)) {
+      element.removeAttribute(attr.name);
+      continue;
+    }
+
+    if (name === 'target' && value === '_blank') {
+      ensureRelForBlankTarget(element);
+    }
+  }
+}
+
+function ensureRelForBlankTarget(element) {
+  const rel = element.getAttribute('rel');
+  const values = new Set(
+    (rel ? rel.split(/\s+/) : []).filter(Boolean).map(token => token.toLowerCase()),
+  );
+
+  values.add('noopener');
+  values.add('noreferrer');
+
+  element.setAttribute('rel', Array.from(values).join(' ').trim());
 }
 
 /**

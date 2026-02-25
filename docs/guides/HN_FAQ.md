@@ -20,8 +20,8 @@ LARC complements React/Vue rather than replacing them. Use React for complex UIs
 **Bundle size comparison:**
 - React: ~140KB (React + ReactDOM + ecosystem)
 - Vue: ~90KB (core + ecosystem)
-- **LARC Core Lite:** 9KB minified (~3KB gzipped) ✅
-- **LARC Core (full):** 40KB minified (12KB gzipped)
+- **LARC Core Lite:** 3.6KB minified (~1.5KB gzipped) ✅
+- **LARC Core (full):** 40KB minified (~12KB gzipped)
 - **LARC Components:** ~7KB per component minified
 
 ### "How does PAN compare to Redux/Zustand/other state management?"
@@ -80,7 +80,7 @@ No. IE doesn't support Custom Elements or ES Modules. Use polyfills if you must 
 **Yes, with caveats:**
 
 **Production-ready:**
-- ✅ 261 tests passing (Chromium, Firefox, WebKit)
+- ✅ 426 Playwright executions (Chromium, Firefox, WebKit)
 - ✅ Zero security vulnerabilities (npm audit)
 - ✅ Published to npm (@larcjs/core@3.0.1)
 - ✅ Used in real applications
@@ -165,7 +165,7 @@ npm install @larcjs/ui-types
 - esbuild (optional build)
 
 **Total installed size:**
-- **@larcjs/core-lite:** 9KB minified (~3KB gzipped) ← Start here!
+- **@larcjs/core-lite:** 3.6KB minified (~1.5KB gzipped) ← Start here!
 - @larcjs/core: 40KB minified (~12KB gzipped) - includes routing & debug
 - @larcjs/ui: 396KB minified (~110KB gzipped) - 57 components
 
@@ -180,7 +180,7 @@ npm install @larcjs/ui-types
 **With LARC:**
 - React (complex UI): 350KB
 - LARC (core + 8 components): ~100KB minified
-- Total: 450KB (-10% from pure React approach)
+- Total: 450KB (-10% from pure React approach, plus 3.6KB coordination layer)
 
 **Real savings come from:**
 - Components work in Vue, Svelte, vanilla JS
@@ -304,15 +304,15 @@ Email: (use GitHub Security Advisories)
 ### "How's the performance?"
 
 **Metrics:**
-- ⚡ **First load:** <50ms (core)
-- 📦 **Bundle size:** 9KB core-lite minified (~3KB gzipped) ✅
+- ⚡ **First load:** <50ms (core-lite)
+- 📦 **Bundle size:** 3.6KB core-lite minified (~1.5KB gzipped) ✅
 - 🎯 **Per component:** ~7KB each minified (~2KB gzipped)
 - 🔄 **Autoload time:** <5ms per component
 
 **Compared to frameworks:**
 - **React:** ~140KB initial bundle
 - **Vue:** ~90KB initial bundle
-- **LARC Core Lite:** 9KB + components used (94% smaller than React!)
+- **LARC Core Lite:** 3.6KB + components used (97% smaller than React!)
 
 **Progressive loading:**
 Components load as they enter viewport (IntersectionObserver). Only pay for what you use.
@@ -425,7 +425,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 > Web Components are the only way to build truly framework-agnostic components. LARC solves the coordination problem that makes them practical for real applications.
 
 ### For "Production ready?"
-> Yes: 261 tests passing, 0 vulnerabilities, v3.0.1 on npm. Young ecosystem (2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
+> Yes: 426 browser executions (Playwright), 0 vulnerabilities, v3.0.1 on npm. Young ecosystem (2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
 
 ### For "Performance?"
 > 9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.com/playground/

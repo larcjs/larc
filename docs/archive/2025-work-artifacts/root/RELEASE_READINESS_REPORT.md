@@ -179,7 +179,7 @@ Test every URL mentioned in launch materials:
 ? https://larcjs.com/playground/  # CRITICAL
 ? https://larcjs.com/
 ? https://larcjs.com/examples/
-? https://larcjs.com/examples/hybrid-dashboard.html
+? https://larcjs.com/examples/hybrid-dashboard/
 ✓ https://npmjs.com/package/@larcjs/core
 ✓ https://github.com/larcjs/core/discussions
 ✓ https://discord.gg/zjUPsWTu

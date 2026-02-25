@@ -69,7 +69,7 @@ An attacker could inject malicious scripts into markdown content, potentially
 stealing user credentials or performing actions on behalf of users.
 
 **Suggested Fix:**
-Use DOMPurify or similar library to sanitize HTML output from markdown parser.
+Use the built-in `sanitizeHTML`/`safeSetHTML` helpers (from `pan-security.mjs`) to strip unsafe tags and attributes before injecting HTML output from the markdown parser.
 ```
 
 ### 3. Response Timeline
@@ -157,8 +157,8 @@ LARC runs in the browser and relies on browser security features:
 element.textContent = userInput;
 
 // Good - sanitizing HTML
-import DOMPurify from 'dompurify';
-element.innerHTML = DOMPurify.sanitize(userInput);
+import { safeSetHTML } from '@larcjs/core/components/pan-security.mjs';
+safeSetHTML(element, userInput);
 
 // Bad - direct innerHTML with user input
 element.innerHTML = userInput; // ❌ XSS vulnerability

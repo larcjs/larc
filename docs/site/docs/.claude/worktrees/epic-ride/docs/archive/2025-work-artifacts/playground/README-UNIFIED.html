@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Playground - Unified System · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Playground - Unified System">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">docs</a> / <a href="#">archive</a> / <a href="#">2025-work-artifacts</a> / <a href="#">playground</a> / <span>README-UNIFIED</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Playground - Unified System</h1>
+<h2>Overview</h2>
+<p>The new unified playground combines <strong>three powerful modes</strong> into one cohesive experience:</p>
+<li><strong>📚 Gallery Mode</strong> - Browse and explore pre-built component examples</li>
+<li><strong>🔨 Builder Mode</strong> - Visual drag-and-drop component builder</li>
+<li><strong>💻 Editor Mode</strong> - CodePen-style live code editor</li>
+<h2>What's New?</h2>
+<h3>✅ Issues Fixed</h3>
+<li><strong>Property Changes Now Apply Correctly</strong></li>
+   - Fixed event listeners for attribute updates
+   - Properties update on change (checkboxes/selects) or blur (textareas)
+   - Visual feedback when properties are updated
+<li><strong>CSS Styling Works Properly</strong></li>
+   - Click "Apply Styles" button to apply CSS to components
+   - CSS presets for quick styling (Card, Gradient, Shadow, Bordered)
+   - Clear visual feedback when styles are applied
+   - Styles persist across mode switches
+<li><strong>Actions/Events System Functional</strong></li>
+   - Add custom event handlers to components
+   - Support for click, hover, focus, and other DOM events
+   - Publish to PAN bus directly from UI
+   - Console logging and alerts for debugging
+<li><strong>Clear Mode Separation</strong></li>
+   - Top-level tabs clearly show which mode you're in
+   - Each mode has its own dedicated UI
+   - Easy switching between modes with example preservation
+<h3>🆕 New Features</h3>
+<p>#### Gallery Mode
+<ul><li><strong>Visual Example Browser</strong> - See all 20+ examples in a beautiful grid</li>
+<li><strong>Search & Filter</strong> - Find examples quickly</li>
+<li><strong>Quick Actions</strong> - Open any example in Builder or Editor with one click</li>
+<li><strong>Preview</strong> - Open examples in a new window for fullscreen testing</li>
+</ul>
+#### Builder Mode
+<ul><li><strong>Component Palette</strong> - Drag components from sidebar</li>
+<li><strong>Visual Canvas</strong> - See components render live</li>
+<li><strong>3-Tab Properties Panel</strong>:</li>
+</ul>  - <strong>Properties</strong> - Edit component attributes with type-aware inputs
+  - <strong>CSS</strong> - Style containers with live preview
+  - <strong>Actions</strong> - Bind events and PAN bus messages
+<ul><li><strong>Code Export</strong> - Export your creation as standalone HTML</li>
+</ul>
+#### Editor Mode
+<ul><li><strong>3-Pane Code Editor</strong> - HTML, CSS, JavaScript tabs</li>
+<li><strong>Live Preview</strong> - See changes as you type (1s debounce)</li>
+<li><strong>Auto-run</strong> - Changes apply automatically</li>
+<li><strong>Export</strong> - Download as standalone HTML file</li>
+<li><strong>Format</strong> - Basic code formatting</li>
+<li><strong>Fullscreen Preview</strong> - Test in fullscreen mode</li>
+</ul>
+<h2>File Structure</h2></p>
+<pre><code class="language-plaintext">playground/
+├── index-new.html              # New unified playground entry point
+├── playground-unified.mjs      # Main controller for all three modes
+├── styles/
+│   ├── playground-unified.css  # Unified styles for all modes
+│   └── playground.css          # Original styles (still used by components)
+├── components/                 # Existing components (reused)
+│   ├── pg-palette.mjs
+│   ├── pg-canvas.mjs
+│   ├── pg-properties.mjs
+│   ├── pg-exporter.mjs
+│   └── pg-bus-monitor.mjs
+└── examples.mjs                # 20+ pre-built examples</code></pre>
+<h2>How to Use</h2>
+<h3>Accessing the Playground</h3>
+<strong>Option 1: Direct Access</strong>
+<pre><code class="language-plaintext">https://larcjs.com/playground/index-new.html</code></pre>
+<strong>Option 2: Replace Current Playground</strong>
+<pre><code class="language-bash">cd /home/cdr/domains/larcjs.com/www/larc/playground
+cp index.html index-old.html  # Backup
+cp index-new.html index.html  # Replace</code></pre>
+<h3>Gallery Mode</h3>
+<li>Browse the example cards</li>
+<li>Use search box to find specific examples</li>
+<li>Click action buttons:</li>
+   - <strong>🔨 Open in Builder</strong> - Load in visual builder
+   - <strong>💻 Open in Editor</strong> - Load code in editor
+   - <strong>👁 Preview</strong> - Open in new window
+<h3>Builder Mode</h3>
+<li><strong>Add Components</strong>:</li>
+   - Click component from left sidebar palette
+   - Component appears on canvas
+   - Select component to edit properties
+<li><strong>Edit Properties</strong> (Right Panel):</li>
+   - <strong>Properties Tab</strong> - Edit attributes
+     - Text inputs for strings
+     - Checkboxes for booleans
+     - Textareas for JSON/objects
+     - Changes apply on blur/change
+   - <strong>CSS Tab</strong> - Style the component
+     - Write custom CSS in textarea
+     - Use presets for quick styles
+     - Click "Apply Styles" to see changes
+   - <strong>Actions Tab</strong> - Add event handlers
+     - Choose event (click, hover, etc.)
+     - Choose action (PAN publish, console, alert)
+     - Add value/message
+     - Click "Add Action" to attach
+<li><strong>Export Code</strong>:</li>
+   - View generated HTML in bottom panel
+   - Copy code for your own project
+<h3>Editor Mode</h3>
+<li><strong>Edit Code</strong>:</li>
+   - Switch between HTML/CSS/JS tabs
+   - Write your code in each editor
+   - Changes auto-run after 1 second
+<li><strong>Preview</strong>:</li>
+   - Right pane shows live preview
+   - Click refresh button to force update
+   - Click fullscreen for expanded view
+<li><strong>Controls</strong>:</li>
+   - <strong>▶ Run</strong> - Force immediate preview update
+   - <strong>Clear</strong> - Reset all editors (with confirmation)
+   - <strong>Format</strong> - Basic code formatting
+   - <strong>Export</strong> - Download as standalone HTML
+<h3>PAN Bus Monitor</h3>
+<p>Click "PAN Monitor" button in header to see real-time PAN bus messages:
+<ul><li>Message topic and payload</li>
+<li>Timestamp</li>
+<li>Source component</li>
+<li>Helps debug communication between components</li>
+</ul>
+<h2>Architecture</h2></p>
+<h3>Mode Management</h3>
+<p>The <code>PlaygroundUnified</code> class manages all three modes:</p>
+<pre><code class="language-javascript">class PlaygroundUnified {
+  constructor() {
+    this.currentMode = &#039;gallery&#039;;  // gallery | builder | editor
+    this.examples = getAllExamples();
+    this.currentExample = null;
+  }
+
+  switchMode(mode) {
+    // Update tabs, panels, and load appropriate content
+  }
+}</code></pre>
+<h3>Mode Switching Flow</h3>
+<pre><code class="language-plaintext">Gallery Example Card
+    ↓ &quot;Open in Builder&quot;
+Builder Mode (loads example components)
+    ↓ Edit properties, add styling
+Builder Export
+    ↓ Copy HTML
+Editor Mode (paste and customize)
+    ↓ Add JavaScript, refine CSS
+Export Standalone HTML</code></pre>
+<h3>Component Communication</h3>
+<p>All modes use the existing PAN bus system:</p>
+<pre><code class="language-javascript">// Properties panel publishes changes
+document.dispatchEvent(new CustomEvent(&#039;canvas-changed&#039;, {
+  bubbles: true
+}));
+
+// Canvas listens for component selection
+document.addEventListener(&#039;component-selected&#039;, (e) =&gt; {
+  this.addComponent(e.detail);
+});</code></pre>
+<h2>Key Improvements</h2>
+<h3>1. Property Updates</h3>
+<strong>Old Behavior:</strong>
+<ul><li>Properties sometimes didn't update</li>
+<li>No visual feedback</li>
+<li>Unclear when changes applied</li>
+</ul>
+<strong>New Behavior:</strong>
+<pre><code class="language-javascript">attachPropertyListeners() {
+  this.querySelectorAll(&#039;[data-attr]&#039;).forEach(input =&gt; {
+    let eventType = input.type === &#039;checkbox&#039; ? &#039;change&#039; :
+                   input.tagName === &#039;TEXTAREA&#039; ? &#039;blur&#039; : &#039;input&#039;;
+
+    input.addEventListener(eventType, (e) =&gt; {
+      const attrName = e.target.dataset.attr;
+      const value = e.target.type === &#039;checkbox&#039; ?
+                   e.target.checked : e.target.value;
+
+      // Update element immediately
+      if (this.selectedElement) {
+        if (value === &#039;&#039;) {
+          this.selectedElement.removeAttribute(attrName);
+        } else {
+          this.selectedElement.setAttribute(attrName, value);
+        }
+      }
+
+      // Notify canvas
+      document.dispatchEvent(new CustomEvent(&#039;canvas-changed&#039;));
+    });
+  });
+}</code></pre>
+<h3>2. CSS Application</h3>
+<strong>Old Behavior:</strong>
+<ul><li>CSS changes didn't visually apply</li>
+<li>Unclear if styles were saved</li>
+</ul>
+<strong>New Behavior:</strong>
+<pre><code class="language-javascript">attachCSSListeners() {
+  applyBtn.addEventListener(&#039;click&#039;, () =&gt; {
+    const css = cssEditor.value;
+    const componentId = this.selectedElement.dataset.componentId;
+
+    // Store CSS
+    this.customCSS.set(componentId, css);
+
+    // Apply immediately via style attribute
+    this.selectedElement.style.cssText = css;
+
+    // Show success feedback
+    this.showFeedback(&#039;Styles applied!&#039;, &#039;success&#039;);
+  });
+}</code></pre>
+<strong>Visual Feedback:</strong>
+Toast notifications appear when styles are applied/cleared.
+<h3>3. Actions System</h3>
+<strong>Old Behavior:</strong>
+<ul><li>Actions system partially implemented</li>
+<li>No clear indication of active actions</li>
+</ul>
+<strong>New Behavior:</strong>
+<pre><code class="language-javascript">applyAction(action) {
+  this.selectedElement.addEventListener(action.event, (e) =&gt; {
+    switch (action.type) {
+      case &#039;publish&#039;:
+        // Publish to PAN bus
+        document.dispatchEvent(new CustomEvent(&#039;pan:publish&#039;, {
+          detail: {
+            topic: action.topic,
+            data: { source: this.componentMeta?.name }
+          }
+        }));
+        break;
+
+      case &#039;console&#039;:
+        console.log(`[${this.componentMeta?.displayName}]`, action.message);
+        break;
+
+      case &#039;alert&#039;:
+        alert(action.message);
+        break;
+    }
+  });
+}</code></pre>
+<p>Actions are immediately attached and work on next event trigger.</p>
+<h2>Example: Using All Three Modes</h2>
+<h3>Scenario: Creating a Dashboard</h3>
+<li><strong>Start in Gallery</strong>:</li>
+   - Find "Dashboard Layout" example
+   - Click "Open in Builder"
+<li><strong>Customize in Builder</strong>:</li>
+   - Example loads with pan-card, pan-table, pan-chart
+   - Select pan-card
+   - <strong>Properties Tab</strong>: Change header to "My Dashboard"
+   - <strong>CSS Tab</strong>: Apply gradient preset
+   - <strong>Actions Tab</strong>: Add click event that publishes to "card.clicked"
+<li><strong>Refine in Editor</strong>:</li>
+   - Switch to Editor mode
+   - Current state loads into HTML editor
+   - Add JavaScript to handle "card.clicked" event:
+     <pre><code class="language-javascript">document.addEventListener(&#039;pan:message&#039;, (e) =&gt; {
+       if (e.detail.topic === &#039;card.clicked&#039;) {
+         console.log(&#039;Card clicked!&#039;, e.detail);
+       }
+     });</code></pre>
+   - Add custom CSS animations
+   - Export as standalone HTML
+<li><strong>Test & Share</strong>:</li>
+   - Open PAN Monitor to see messages
+   - Test all interactions
+   - Export final HTML
+   - Deploy or share
+<h2>Best Practices</h2>
+<h3>Gallery Mode</h3>
+<ul><li>✅ Use search to find examples quickly</li>
+<li>✅ Preview examples before opening in Builder</li>
+<li>✅ Check component list to understand what's included</li>
+</ul>
+<h3>Builder Mode</h3>
+<ul><li>✅ Always check the Properties tab to see available attributes</li>
+<li>✅ Use CSS presets as starting points</li>
+<li>✅ Test actions with PAN Monitor open</li>
+<li>✅ Export code frequently to save progress</li>
+</ul>
+<h3>Editor Mode</h3>
+<ul><li>✅ Use HTML tab for structure</li>
+<li>✅ Use CSS tab for styling</li>
+<li>✅ Use JS tab for interactivity</li>
+<li>✅ Wait 1 second after typing for auto-run</li>
+<li>✅ Use "Format" button to clean up code</li>
+<li>✅ Export when satisfied with result</li>
+</ul>
+<h2>Troubleshooting</h2>
+<h3>Properties Not Updating</h3>
+<strong>Problem</strong>: Changes in Properties tab don't reflect in component
+<strong>Solutions</strong>:
+<li>For textareas (JSON/object fields): Click outside the textarea (blur event)</li>
+<li>For text inputs: Type and wait for auto-update</li>
+<li>For checkboxes/selects: Change fires immediately</li>
+<li>Check browser console for errors</li>
+<h3>CSS Not Applying</h3>
+<strong>Problem</strong>: CSS in CSS tab doesn't show visual changes
+<strong>Solutions</strong>:
+<li>Make sure to click "Apply Styles" button</li>
+<li>Check CSS syntax (use presets as reference)</li>
+<li>Verify component is still selected (blue outline)</li>
+<li>Try clearing styles and reapplying</li>
+<h3>Actions Not Firing</h3>
+<strong>Problem</strong>: Event handlers don't trigger
+<strong>Solutions</strong>:
+<li>Verify action was added (should appear in actions list)</li>
+<li>Open PAN Monitor to see if messages are published</li>
+<li>Check event type matches user interaction</li>
+<li>Refresh page and re-add action if needed</li>
+<h3>Editor Preview Not Updating</h3>
+<strong>Problem</strong>: Code changes don't show in preview
+<strong>Solutions</strong>:
+<li>Wait 1 second for debounced auto-run</li>
+<li>Click "▶ Run" button to force update</li>
+<li>Check for JavaScript errors in preview frame</li>
+<li>Verify LARC components are loading (check network tab)</li>
+<h2>Migration from Old Playground</h2>
+<p>If you want to keep both versions:</p>
+<pre><code class="language-bash"># Rename old playground
+mv index.html index-classic.html
+
+# Use new playground as default
+cp index-new.html index.html
+
+# Update links
+# index-classic.html = old drag-and-drop only
+# index.html = new unified system</code></pre>
+<h2>Technical Details</h2>
+<h3>Dependencies</h3>
+<ul><li><strong>@larcjs/core@3.0.1</strong> - Core PAN bus system</li>
+<li><strong>@larcjs/ui@3.0.1</strong> - UI components</li>
+<li>Existing pg-* components (palette, canvas, properties, etc.)</li>
+</ul>
+<h3>Browser Support</h3>
+<ul><li>Chrome 90+</li>
+<li>Firefox 88+</li>
+<li>Safari 14+</li>
+<li>Edge 90+</li>
+</ul>
+Requirements:
+<ul><li>ES Modules</li>
+<li>Custom Elements v1</li>
+<li>Shadow DOM</li>
+<li>CSS Grid</li>
+<li>Flexbox</li>
+</ul>
+<h3>Performance</h3>
+<ul><li>Gallery mode: Renders 20+ cards efficiently</li>
+<li>Builder mode: Handles 50+ components on canvas</li>
+<li>Editor mode: 1-second debounce for auto-run</li>
+<li>All modes: Minimal memory footprint</li>
+</ul>
+<h2>Future Enhancements</h2>
+<p>Potential improvements for future versions:</p>
+<ul><li>[ ] Syntax highlighting in editor (CodeMirror/Monaco)</li>
+<li>[ ] Component search in Builder palette</li>
+<li>[ ] Undo/redo in Builder</li>
+<li>[ ] Save examples to localStorage</li>
+<li>[ ] Share examples via URL</li>
+<li>[ ] Import/export Builder projects</li>
+<li>[ ] Template library expansion</li>
+<li>[ ] Mobile-optimized layout</li>
+<li>[ ] Collaborative editing</li>
+<li>[ ] Video tutorials integration</li>
+</ul>
+<h2>Support</h2>
+<p>For issues or questions:
+<ul><li>GitHub: https://github.com/larcjs/larc/issues</li>
+<li>Discord: https://discord.gg/zjUPsWTu</li>
+<li>Documentation: https://larcjs.com/docs/</li>
+</ul>
+<h2>Contributing</h2></p>
+<p>The playground is open source! Contributions welcome:
+<li>Fork the repository</li>
+<li>Make improvements</li>
+<li>Test all three modes</li>
+<li>Submit pull request</li></p>
+<p>See CONTRIBUTING.md for guidelines.</p>
+<hr>
+<strong>Built with LARC</strong> - Lightweight Asynchronous Relay Core
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/playground/README-UNIFIED.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

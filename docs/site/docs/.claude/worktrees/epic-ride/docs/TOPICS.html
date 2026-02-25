@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Topic Dictionary · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Topic Dictionary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">docs</a> / <span>TOPICS</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Topic Dictionary</h1>
+<blockquote>Auto-generated on 2026-02-06T05:43:25.585Z</blockquote>
+<h2>Statistics</h2>
+<ul><li><strong>Total Topics:</strong> 183</li>
+<li><strong>State Topics:</strong> 9</li>
+<li><strong>Command Topics:</strong> 22</li>
+<li><strong>Event Topics:</strong> 26</li>
+<li><strong>Request Topics:</strong> 14</li>
+</ul>
+<h2>Topics by Namespace</h2>
+<h3>data:updated</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>data:updated</code> | unknown | - |</p>
+<h3>auth</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>auth.check</code> | unknown | - |
+| <code>auth.internal.state</code> | state | - |
+| <code>auth.login</code> | unknown | - |
+| <code>auth.login.error</code> | event | - |
+| <code>auth.login.request</code> | request | - |
+| <code>auth.login.success</code> | event | - |
+| <code>auth.logout</code> | unknown | - |
+| <code>auth.logout.request</code> | request | - |
+| <code>auth.logout.success</code> | event | - |
+| <code>auth.refresh</code> | unknown | - |
+| <code>auth.refresh.error</code> | event | - |
+| <code>auth.refresh.success</code> | event | - |
+| <code>auth.setToken</code> | unknown | - |
+| <code>auth.state</code> | state | - |
+| <code>auth.state.get</code> | request | - |
+| <code>auth.token.expired</code> | unknown | - |
+| <code>auth.token.refresh</code> | unknown | - |
+| <code>auth.token.refreshed</code> | unknown | - |</p>
+<h3>users</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>users.*</code> | unknown | - |
+| <code>users.list.state</code> | state | - |
+| <code>users.updated</code> | event | - |</p>
+<h3>app</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>app.started</code> | unknown | - |
+| <code>app.state</code> | state | - |</p>
+<h3>user</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>user.*</code> | unknown | - |
+| <code>user.login</code> | unknown | - |
+| <code>user.updated</code> | event | - |</p>
+<h3>events</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>events.*</code> | unknown | - |</p>
+<h3>file</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>file.content-loaded</code> | unknown | - |
+| <code>file.create</code> | unknown | - |
+| <code>file.created</code> | event | - |
+| <code>file.delete</code> | command | - |
+| <code>file.deleted</code> | command | - |
+| <code>file.load</code> | unknown | - |
+| <code>file.renamed</code> | unknown | - |
+| <code>file.save</code> | command | - |
+| <code>file.selected</code> | unknown | - |</p>
+<h3>*</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>*</code> | unknown | - |
+| <code>*.item.delete</code> | command | - |
+| <code>*.item.get</code> | request | - |
+| <code>*.item.save</code> | command | - |
+| <code>*.item.select</code> | unknown | - |
+| <code>*.list.state</code> | state | - |</p>
+<h3>invoice</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>invoice.browser.show</code> | unknown | - |
+| <code>invoice.clear</code> | unknown | - |
+| <code>invoice.created</code> | event | (event) Invoice created, may have due date (subscribed) |
+| <code>invoice.current-changed</code> | unknown | - |
+| <code>invoice.data.export</code> | unknown | - |
+| <code>invoice.data.import</code> | unknown | - |
+| <code>invoice.delete</code> | command | - |
+| <code>invoice.error</code> | event | - |
+| <code>invoice.export</code> | unknown | - |
+| <code>invoice.export-all</code> | unknown | - |
+| <code>invoice.export.pdf</code> | unknown | - |
+| <code>invoice.header.changed</code> | unknown | (event) Invoice header field changed |
+| <code>invoice.import</code> | unknown | - |
+| <code>invoice.items.changed</code> | unknown | (event) Line items changed |
+| <code>invoice.items.clear</code> | unknown | - |
+| <code>invoice.items.load</code> | unknown | - |
+| <code>invoice.list-updated</code> | request | - |
+| <code>invoice.load</code> | unknown | (command) Load an invoice into the editor |
+| <code>invoice.load-by-id</code> | unknown | (command) Load a specific invoice by ID |
+| <code>invoice.load.latest</code> | unknown | (command) Load the most recent invoice |
+| <code>invoice.new</code> | unknown | (command) Create a new blank invoice |
+| <code>invoice.save</code> | command | (command) Save the current invoice |
+| <code>invoice.saved</code> | command | (event) Invoice was saved successfully |
+| <code>invoice.state</code> | state | (state) Current invoice data |
+| <code>invoice.total.calculated</code> | unknown | - |
+| <code>invoice.totals.changed</code> | unknown | - |
+| <code>invoice.totals.updated</code> | event | (event) Invoice totals recalculated |</p>
+<h3>contact</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>contact.data</code> | unknown | - |
+| <code>contact.data.get</code> | request | - |
+| <code>contact.schema.set</code> | unknown | - |
+| <code>contact.selected</code> | unknown | - |
+| <code>contact.submit</code> | unknown | - |</p>
+<h3>nav</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>nav.back</code> | unknown | - |
+| <code>nav.blocked</code> | unknown | - |
+| <code>nav.forward</code> | unknown | - |
+| <code>nav.goto</code> | unknown | - |
+| <code>nav.replace</code> | unknown | - |
+| <code>nav.state</code> | state | - |</p>
+<h3>markdown</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>markdown.changed</code> | unknown | - |
+| <code>markdown.content-response</code> | unknown | - |
+| <code>markdown.get-content</code> | request | - |
+| <code>markdown.render</code> | unknown | - |
+| <code>markdown.saved</code> | command | - |
+| <code>markdown.set-content</code> | unknown | - |</p>
+<h3>{storage}</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>{storage}.network.offline</code> | unknown | Network went offline |
+| <code>{storage}.network.online</code> | unknown | Network came online |
+| <code>{storage}.queue.add</code> | command | Queued a mutation |
+| <code>{storage}.queue.conflict</code> | unknown | Conflict detected |
+| <code>{storage}.queue.error</code> | event | Sync error occurred |
+| <code>{storage}.queue.success</code> | event | Mutation synced successfully |
+| <code>{storage}.queue.sync</code> | unknown | Sync started |</p>
+<h3>persist</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>persist.error</code> | event | Persistence error occurred |
+| <code>persist.hydrated</code> | unknown | All state has been hydrated |
+| <code>persist.saved</code> | command | State was persisted |</p>
+<h3>{topic}</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>{topic}.clear</code> | unknown | (event) Search was cleared |
+| <code>{topic}.invalid</code> | unknown | Message failed validation |
+| <code>{topic}.search</code> | unknown | (event) Search query changed with {query, filter} |
+| <code>{topic}.set</code> | unknown | (command) Set search query and/or filter programmatically |
+| <code>{topic}.valid</code> | unknown | Message passed validation |</p>
+<h3>{channel}</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>{channel}.clear</code> | unknown | Clear history |
+| <code>{channel}.redo</code> | unknown | Trigger redo |
+| <code>{channel}.snapshot</code> | unknown | Take manual snapshot |
+| <code>{channel}.state</code> | state | History state changes |
+| <code>{channel}.sync.conflict</code> | unknown | Conflict detected, resolution needed |
+| <code>{channel}.sync.leader-elected</code> | unknown | Notify when new leader elected |
+| <code>{channel}.sync.message</code> | unknown | Broadcast state changes to other tabs |
+| <code>{channel}.sync.request-state</code> | request | Request full state from leader |
+| <code>{channel}.undo</code> | unknown | Trigger undo |</p>
+<h3>theme</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>theme.changed</code> | unknown | - |</p>
+<h3>history</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>history.clear</code> | unknown | - |
+| <code>history.redo</code> | unknown | - |
+| <code>history.undo</code> | unknown | - |</p>
+<h3>ws</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>ws.connected</code> | unknown | - |
+| <code>ws.disconnected</code> | unknown | - |
+| <code>ws.error</code> | event | - |
+| <code>ws.message</code> | unknown | - |</p>
+<h3>pan:sys</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>pan:sys.error</code> | event | - |</p>
+<h3>todos</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>todos.change</code> | unknown | - |
+| <code>todos.remove</code> | unknown | - |
+| <code>todos.state</code> | state | - |
+| <code>todos.toggle</code> | unknown | - |</p>
+<h3>demo:click</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>demo:click</code> | unknown | - |</p>
+<h3>temp</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>temp.*</code> | unknown | - |</p>
+<h3>test</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>test.message</code> | unknown | - |</p>
+<h3>{store}</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>{store}.idb.add</code> | command | (command) Add a new item |
+| <code>{store}.idb.clear</code> | unknown | (command) Clear all items from store |
+| <code>{store}.idb.delete</code> | command | (command) Delete an item by key |
+| <code>{store}.idb.error</code> | event | (event) Operation failed with error |
+| <code>{store}.idb.get</code> | request | (command) Get an item by key |
+| <code>{store}.idb.list</code> | request | (command) List items with optional filters |
+| <code>{store}.idb.put</code> | command | (command) Update or insert an item |
+| <code>{store}.idb.query</code> | unknown | (command) Query items by index |
+| <code>{store}.idb.ready</code> | event | (event) IndexedDB store is ready |
+| <code>{store}.idb.result</code> | event | (event) Operation completed with result |</p>
+<h3>topic</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>topic.validation.error</code> | event | Topic validation failed |
+| <code>topic.validation.loaded</code> | unknown | Dictionary loaded successfully |
+| <code>topic.validation.warning</code> | unknown | Topic validation warning (unknown topic) |</p>
+<h3>modal</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>modal.demo.hide</code> | unknown | - |
+| <code>modal.demo.show</code> | unknown | - |
+| <code>modal.demo.toggle</code> | unknown | - |</p>
+<h3>blog</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>blog.draft.loaded</code> | unknown | - |
+| <code>blog.meta.changed</code> | unknown | - |
+| <code>blog.meta.set</code> | unknown | - |
+| <code>blog.mode.changed</code> | unknown | - |
+| <code>blog.mode.switch</code> | unknown | - |
+| <code>blog.preview.toggle</code> | unknown | - |
+| <code>blog.preview.update</code> | unknown | - |
+| <code>blog.save.request</code> | request | - |
+| <code>blog.source.changed</code> | unknown | - |
+| <code>blog.source.setContent</code> | unknown | - |
+| <code>blog.storage.load</code> | unknown | - |
+| <code>blog.storage.save</code> | command | - |
+| <code>blog.wysiwyg.changed</code> | unknown | - |
+| <code>blog.wysiwyg.setContent</code> | unknown | - |</p>
+<h3>features</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>features.action</code> | unknown | - |
+| <code>features.available</code> | unknown | - |
+| <code>features.register</code> | unknown | - |
+| <code>features.toggle</code> | unknown | - |</p>
+<h3>calendar</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>calendar.event.saved</code> | command | (event) Event was saved |
+| <code>calendar.events.add</code> | command | (command) Add a new event |
+| <code>calendar.events.delete</code> | command | (command) Delete an event |
+| <code>calendar.events.list</code> | request | (command) Request list of all events |
+| <code>calendar.events.put</code> | command | (command) Update an event |
+| <code>calendar.events.ready</code> | event | (event) IndexedDB store is ready |
+| <code>calendar.events.result</code> | event | (event) IndexedDB operation completed |</p>
+<h3>contacts</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>contacts.idb.add</code> | command | (command) Add a new contact |
+| <code>contacts.idb.delete</code> | command | (command) Delete a contact |
+| <code>contacts.idb.error</code> | event | (event) IndexedDB operation failed |
+| <code>contacts.idb.list</code> | request | (command) Request list of all contacts |
+| <code>contacts.idb.put</code> | command | (command) Update a contact |
+| <code>contacts.idb.ready</code> | event | (event) IndexedDB store is ready |
+| <code>contacts.idb.result</code> | event | (event) IndexedDB operation completed |
+| <code>contacts.list</code> | request | (state) Receive contacts from Contact Manager (subscribed) |
+| <code>contacts.manager.show</code> | unknown | (command) Show the contact manager modal |
+| <code>contacts.picker.show</code> | unknown | (command) Show the contact picker (alias) |
+| <code>contacts.search.search</code> | unknown | (event) Search query changed |
+| <code>contacts.selected</code> | unknown | (event) User selected a contact |
+| <code>contacts.updated</code> | event | (event) Contacts were modified (subscribed) |</p>
+<h3>resource</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>resource.select</code> | unknown | - |</p>
+<h3>ui</h3>
+<p>| Topic | Type | Description |
+|-------|------|-------------|
+| <code>ui.toast.show</code> | unknown | (command) Show a toast notification |</p>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/docs/TOPICS.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

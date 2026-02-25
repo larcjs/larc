@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dark Mode Site-Wide Fix Summary · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - Dark Mode Site-Wide Fix Summary">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">docs</a> / <a href="#">archive</a> / <a href="#">2025-work-artifacts</a> / <a href="#">root</a> / <span>DARK-MODE-SITE-WIDE-FIX-SUMMARY</span>
+      </div>
+      <article class="docs-content">
+        <h1>Dark Mode Site-Wide Fix Summary</h1>
+<h2>Overview</h2>
+Fixed dark mode support across the entire LARC website to properly honor system preferences and allow manual theme switching.
+<h2>Changes Made</h2>
+<h3>1. <strong>Home Page Links Updated</strong> (<code>/docs/site/index.html</code>)</h3>
+   - <strong>Navigation Menu:</strong>
+     - Docs: Changed from <code>/site/docs/index.html</code> → <code>/docs/</code> (better documentation explorer)
+     - Wiki: Changed from <code>/docs/</code> → <code>https://github.com/larcjs/larc/wiki</code> (external GitHub wiki)
+   - <strong>Footer:</strong>
+     - Updated "Documentation Explorer" link to <code>/docs/</code>
+     - Added "GitHub Wiki →" link to <code>https://github.com/larcjs/larc/wiki</code>
+<h3>2. <strong>Examples Page</strong> (<code>/docs/site/examples.html</code>)</h3>
+   - Fixed hardcoded <code>background: white</code> on <code>.example-card</code> → <code>background: var(--color-surface)</code>
+   - Now properly displays dark backgrounds in dark mode
+<h3>3. <strong>CSS Files with Dark Mode Fixes</strong></h3>
+<p>#### <code>/docs/site/assets/docs.css</code>
+   - <strong>Before:</strong> <code>@media (prefers-color-scheme: dark) { :root { ... } }</code>
+   - <strong>After:</strong> <code>@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }</code>
+   - Added proper specificity to allow manual light mode override</p>
+<p>#### <code>/docs/site/examples/assets/grail.css</code>
+   - <strong>Before:</strong> <code>@media (prefers-color-scheme: dark) { :root { ... } }</code>
+   - <strong>After:</strong> <code>@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { ... } }</code>
+   - Added <code>[data-theme="dark"]</code> and <code>[data-theme="light"]</code> manual override rules
+   - Ensures demo pages respect manual theme choices</p>
+<p>#### <code>/docs/index.html</code> (Wiki Explorer)
+   - Added comprehensive CSS custom properties for theming
+   - Changed header gradient from bright purple to subtle slate-gray
+   - Light mode: <code>#1e293b</code> → <code>#334155</code>
+   - Dark mode: <code>#0f172a</code> → <code>#1e293b</code>
+   - Added <code>pan-theme-provider</code> component for theme persistence
+   - Loaded <code>theme-init.js</code> before CSS to prevent flash</p>
+<p>#### <code>/docs/site/wiki-explorer.html</code> (Alternative Wiki Explorer)
+   - Same dark mode fixes as <code>/docs/index.html</code>
+   - Synchronized header colors with main wiki explorer</p>
+<h3>4. <strong>Header Color Changes</strong></h3>
+Changed from vibrant purple/blue gradients to professional slate-gray:
+   - <strong>Light Mode:</strong> <code>linear-gradient(135deg, #1e293b 0%, #334155 100%)</code>
+   - <strong>Dark Mode:</strong> <code>linear-gradient(135deg, #0f172a 0%, #1e293b 100%)</code>
+   - Applied to both wiki explorer pages
+<h2>How Dark Mode Works Now</h2>
+<h3>Theme Priority System</h3>
+<li><strong>Manual override</strong> (via theme toggle) takes highest priority</li>
+<li><strong>System preference</strong> (OS dark mode) is second</li>
+<li><strong>Default</strong> (light mode) is fallback</li>
+<h3>Technical Implementation</h3>
+<pre><code class="language-css">/* Default (light) */
+:root {
+  --color-bg: #f9fafb;
+  --color-text: #111827;
+}
+
+/* System preference (only if not manually overridden) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme=&quot;light&quot;]) {
+    --color-bg: #0f172a;
+    --color-text: #f1f5f9;
+  }
+}
+
+/* Manual dark mode override */
+[data-theme=&quot;dark&quot;] {
+  --color-bg: #0f172a;
+  --color-text: #f1f5f9;
+}
+
+/* Manual light mode override */
+[data-theme=&quot;light&quot;] {
+  --color-bg: #f9fafb;
+  --color-text: #111827;
+}</code></pre>
+<h3>Page Load Sequence</h3>
+<li><code>theme-init.js</code> runs <strong>before CSS</strong> (blocking script)</li>
+<li>Checks localStorage for saved theme preference</li>
+<li>Applies <code>data-theme</code> attribute immediately (no flash!)</li>
+<li>CSS loads and sees correct theme attribute</li>
+<li><code>pan-theme-provider</code> component hydrates and syncs state</li>
+<li>Theme changes persist across page loads</li>
+<h2>Files Modified</h2>
+<h3>HTML Files</h3>
+<ul><li><code>/docs/site/index.html</code> - Updated navigation links</li>
+<li><code>/docs/site/examples.html</code> - Fixed card backgrounds</li>
+<li><code>/docs/index.html</code> - Added complete dark mode support</li>
+<li><code>/docs/site/wiki-explorer.html</code> - Added complete dark mode support</li>
+</ul>
+<h3>CSS Files</h3>
+<ul><li><code>/docs/site/assets/docs.css</code> - Fixed theme specificity</li>
+<li><code>/docs/site/examples/assets/grail.css</code> - Added manual theme overrides</li>
+</ul>
+<h2>Verification Checklist</h2>
+<p>✅ System dark mode detection works
+✅ Manual theme toggle persists across pages
+✅ No flash of wrong colors on page load
+✅ Header colors are subtle and professional
+✅ All cards/panels adapt to dark mode
+✅ Text is readable in both modes
+✅ Links updated correctly (Docs → /docs/, Wiki → GitHub)</p>
+<h2>Pages with Dark Mode Support</h2>
+<h3>Fully Tested & Working</h3>
+<ul><li>✅ Home page (<code>/docs/site/index.html</code>)</li>
+<li>✅ Wiki Explorer (<code>/docs/index.html</code>)</li>
+<li>✅ Examples page (<code>/docs/site/examples.html</code>)</li>
+<li>✅ Apps page (<code>/docs/site/apps.html</code>)</li>
+<li>✅ Books page (<code>/docs/site/books.html</code>)</li>
+<li>✅ Gallery page (<code>/docs/site/gallery.html</code>)</li>
+<li>✅ Theme Demo (<code>/docs/site/theme-demo.html</code>)</li>
+<li>✅ Demo pages (<code>/docs/site/demo.html</code>, <code>/docs/site/demos.html</code>)</li>
+</ul>
+<h3>Using External CSS (Already Supported)</h3>
+<ul><li>✅ All pages using <code>docs.css</code></li>
+<li>✅ All pages using <code>grail.css</code></li>
+</ul>
+<h2>Browser Support</h2>
+<ul><li>✅ Chrome/Edge</li>
+<li>✅ Firefox</li>
+<li>✅ Safari</li>
+<li>✅ All browsers supporting <code>prefers-color-scheme</code></li>
+</ul>
+<h2>Maintenance Notes</h2>
+<h3>When Adding New Pages</h3>
+<li>Include <code>theme-init.js</code> in <code><head></code> (before CSS)</li>
+<li>Use CSS custom properties for all colors</li>
+<li>Add <code><pan-theme-provider></code> component to body</li>
+<li>Test with <code>data-theme="dark"</code> in DevTools</li>
+<h3>When Updating Styles</h3>
+<li>Always use <code>var(--color-*)</code> instead of hardcoded colors</li>
+<li>Test both light and dark modes</li>
+<li>Verify no flash on page load</li>
+<hr>
+<strong>Last Updated:</strong> 2026-01-12
+<strong>Status:</strong> ✅ Complete
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/docs/archive/2025-work-artifacts/root/DARK-MODE-SITE-WIDE-FIX-SUMMARY.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

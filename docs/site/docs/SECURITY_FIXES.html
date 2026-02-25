@@ -190,7 +190,7 @@ setcookie(&#039;jwt&#039;, $token, [
 <strong>Solution Implemented</strong>:
 <ul><li>✅ Created <code>pan-security.mjs</code> utility module</li>
 <li>✅ Safe HTML helpers: <code>safeSetHTML()</code>, <code>escapeHTML()</code>, <code>stripHTML()</code></li>
-<li>✅ DOMPurify integration support</li>
+<li>✅ Built-in allowlist sanitizer (dependency-free)</li>
 <li>✅ Safe element creation: <code>createElement()</code>, <code>createTextNode()</code></li>
 <li>✅ URL validation: <code>isSafeURL()</code>, <code>setSafeHref()</code></li>
 </ul>
@@ -198,7 +198,7 @@ setcookie(&#039;jwt&#039;, $token, [
 <pre><code class="language-javascript">import { safeSetHTML, escapeHTML, isSafeURL } from &#039../pan-security.mjs&#039;;
 
 // Safe HTML setting
-safeSetHTML(element, userInput); // Uses DOMPurify if available
+safeSetHTML(element, userInput); // Built-in allowlist sanitizer
 
 // Escape HTML
 const safe = escapeHTML(userInput);
@@ -412,7 +412,7 @@ client.subscribe(&#039;pan:sys.stats&#039;, (msg) =&gt; {
 <hr>
 <h2>Remaining Recommendations</h2>
 <h3>Short-term (Optional Enhancements)</h3>
-<li>Add DOMPurify library for robust HTML sanitization</li>
+<li>Use built-in allowlist sanitizer for robust HTML sanitization</li>
 <li>Implement audit logging for security events</li>
 <li>Add Subresource Integrity (SRI) to CDN resources</li>
 <li>Set up automated security scanning (npm audit, OWASP ZAP)</li>

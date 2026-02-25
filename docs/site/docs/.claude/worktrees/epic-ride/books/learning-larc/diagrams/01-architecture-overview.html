@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LARC Architecture Overview · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - LARC Architecture Overview">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>01-architecture-overview</span>
+      </div>
+      <article class="docs-content">
+        <h1>LARC Architecture Overview</h1>
+<h2>High-Level Architecture</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;primaryTextColor&#039;:&#039;#fff&#039;,&#039;primaryBorderColor&#039;:&#039;#5568d3&#039;,&#039;lineColor&#039;:&#039;#764ba2&#039;,&#039;secondaryColor&#039;:&#039;#48bb78&#039;,&#039;tertiaryColor&#039;:&#039;#ed8936&#039;}}}%%
+graph TB
+    subgraph Browser[&quot;🌐 Browser&quot;]
+        subgraph App[&quot;📦 LARC Application&quot;]
+            HTML[&quot;📄 HTML Document&quot;]
+            IM[&quot;🗺️ Import Map&quot;]
+
+            subgraph Components[&quot;🧩 Components Layer&quot;]
+                C1[&quot;⚙️ Component 1&quot;]
+                C2[&quot;⚙️ Component 2&quot;]
+                C3[&quot;⚙️ Component 3&quot;]
+                C4[&quot;⚙️ Component N...&quot;]
+            end
+
+            subgraph Comm[&quot;💬 Communication Layer&quot;]
+                PAN[&quot;🚌 PAN Bus&lt;br/&gt;Pub/Sub System&quot;]
+            end
+
+            subgraph State[&quot;💾 State Layer&quot;]
+                LS[&quot;📝 Local State&quot;]
+                SS[&quot;🔗 Shared State&quot;]
+                PS[&quot;💿 Persistent State&lt;br/&gt;localStorage/IndexedDB&quot;]
+            end
+
+            subgraph Router[&quot;🧭 Router Layer&quot;]
+                R[&quot;🗺️ pan-router&quot;]
+            end
+        end
+
+        subgraph APIs[&quot;🔧 Browser APIs&quot;]
+            CE[&quot;🏷️ Custom Elements&quot;]
+            SD[&quot;👁️ Shadow DOM&quot;]
+            ESM[&quot;📦 ES Modules&quot;]
+            F[&quot;🌐 Fetch API&quot;]
+            WS[&quot;🔌 WebSocket&quot;]
+        end
+    end
+
+    subgraph External[&quot;☁️ External Services&quot;]
+        CDN[&quot;🌍 CDN&lt;br/&gt;jsDelivr/unpkg&quot;]
+        API[&quot;🔌 REST API&quot;]
+        WSS[&quot;🔌 WebSocket Server&quot;]
+    end
+
+    HTML --&gt; IM
+    IM --&gt; C1 &amp; C2 &amp; C3 &amp; C4
+    C1 &amp; C2 &amp; C3 &amp; C4 &lt;--&gt; PAN
+    C1 &amp; C2 &amp; C3 &amp; C4 --&gt; LS
+    PAN &lt;--&gt; SS
+    SS &lt;--&gt; PS
+    C1 &amp; C2 &amp; C3 &amp; C4 --&gt; CE &amp; SD &amp; ESM
+    C1 &amp; C2 &amp; C3 &amp; C4 --&gt; R
+
+    IM -.loads from.-&gt; CDN
+    C1 &amp; C2 &amp; C3 &amp; C4 -.HTTP.-&gt; API
+    C1 &amp; C2 &amp; C3 &amp; C4 -.WebSocket.-&gt; WSS
+
+    classDef primary fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef secondary fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef success fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef warning fill:#ed8936,stroke:#dd6b20,stroke-width:3px,color:#fff,font-weight:bold
+    classDef info fill:#4299e1,stroke:#3182ce,stroke-width:3px,color:#fff,font-weight:bold
+
+    class HTML,IM,R primary
+    class PAN secondary
+    class SS,PS,CDN success
+    class API,WSS warning
+    class C1,C2,C3,C4 info</code></pre>
+<h2>Component Communication Flow</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;actorBkg&#039;:&#039;#667eea&#039;,&#039;actorBorder&#039;:&#039;#5568d3&#039;,&#039;actorTextColor&#039;:&#039;#fff&#039;,&#039;signalColor&#039;:&#039;#764ba2&#039;,&#039;signalTextColor&#039;:&#039;#2d3748&#039;,&#039;labelBoxBkgColor&#039;:&#039;#f7fafc&#039;,&#039;labelBoxBorderColor&#039;:&#039;#cbd5e0&#039;}}}%%
+sequenceDiagram
+    participant U as 👤 User
+    participant C1 as ⚙️ Component 1
+    participant PAN as 🚌 PAN Bus
+    participant C2 as ⚙️ Component 2
+    participant C3 as ⚙️ Component 3
+    participant API as 🔌 Backend API
+
+    U-&gt;&gt;+C1: 🖱️ Click Button
+    Note over C1: Handle user event
+    C1-&gt;&gt;+PAN: 📢 publish(&#039;user.action&#039;, data)
+    Note over PAN: Broadcast to subscribers
+
+    PAN--&gt;&gt;C2: 📬 notify subscriber
+    PAN--&gt;&gt;-C3: 📬 notify subscriber
+
+    Note over C2: Process event
+    C2-&gt;&gt;C2: 🎨 Update UI
+
+    Note over C3: Fetch data
+    C3-&gt;&gt;+API: 🌐 fetch(&#039;/api/data&#039;)
+    API--&gt;&gt;-C3: ✅ Response
+    C3-&gt;&gt;+PAN: 📢 publish(&#039;data.loaded&#039;, result)
+
+    PAN--&gt;&gt;C1: 📬 notify subscriber
+    PAN--&gt;&gt;-C2: 📬 notify subscriber
+
+    Note over C1,C2: Render updates
+    C1-&gt;&gt;-C1: 🎨 Update UI
+    C2-&gt;&gt;C2: 🎨 Update UI</code></pre>
+<h2>No-Build Architecture</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;primaryTextColor&#039;:&#039;#fff&#039;,&#039;secondaryColor&#039;:&#039;#f56565&#039;,&#039;tertiaryColor&#039;:&#039;#48bb78&#039;}}}%%
+graph LR
+    subgraph Traditional[&quot;⚙️ Traditional Framework&quot;]
+        S1[&quot;📝 Source Code&quot;]
+        T1[&quot;🔄 Transpile&lt;br/&gt;Babel&quot;]
+        B1[&quot;📦 Bundle&lt;br/&gt;Webpack&quot;]
+        M1[&quot;🗜️ Minify&quot;]
+        O1[&quot;📤 Output&quot;]
+
+        S1 --&gt; T1 --&gt; B1 --&gt; M1 --&gt; O1
+    end
+
+    subgraph LARC[&quot;⚡ LARC&quot;]
+        S2[&quot;📝 Source Code&quot;]
+        BR[&quot;🌐 Browser&quot;]
+
+        S2 -.⚡ directly loads.-&gt; BR
+    end
+
+    classDef source fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef browser fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef output fill:#f56565,stroke:#e53e3e,stroke-width:3px,color:#fff,font-weight:bold
+    classDef process fill:#ed8936,stroke:#dd6b20,stroke-width:2px,color:#fff
+
+    class S2,S1 source
+    class BR browser
+    class O1 output
+    class T1,B1,M1 process</code></pre>
+<h2>Module Loading with Import Maps</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#48bb78&#039;,&#039;tertiaryColor&#039;:&#039;#4299e1&#039;}}}%%
+graph TB
+    subgraph HTML[&quot;📄 index.html&quot;]
+        IM[&quot;🗺️ Import Map&lt;br/&gt;&amp;lt;script type=&#039;importmap&#039;&amp;gt;&lt;br/&gt;{&lt;br/&gt;  &#039;@larcjs/core&#039;: &#039;https://cdn...&#039;,&lt;br/&gt;  &#039;app/&#039;: &#039;/src/&#039;&lt;br/&gt;}&quot;]
+        SM[&quot;📜 Module Script&lt;br/&gt;&amp;lt;script type=&#039;module&#039;&amp;gt;&lt;br/&gt;import &#039;@larcjs/core&#039;&lt;br/&gt;import &#039;app/components/...&#039;&quot;]
+    end
+
+    subgraph Resolution[&quot;🔍 Resolution&quot;]
+        IM --&gt; R1[&quot;🔎 Resolve @larcjs/core&quot;]
+        IM --&gt; R2[&quot;🔎 Resolve app/&quot;]
+
+        R1 --&gt; CDN[&quot;🌍 Load from CDN&quot;]
+        R2 --&gt; Local[&quot;💾 Load from /src/&quot;]
+    end
+
+    subgraph Browser[&quot;🌐 Browser&quot;]
+        CDN --&gt; Cache1[&quot;⚡ Browser Cache&quot;]
+        Local --&gt; Cache2[&quot;⚡ Browser Cache&quot;]
+
+        Cache1 --&gt; Exec[&quot;▶️ Execute Modules&quot;]
+        Cache2 --&gt; Exec
+    end
+
+    classDef primary fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef success fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef info fill:#4299e1,stroke:#3182ce,stroke-width:3px,color:#fff,font-weight:bold
+
+    class IM,SM primary
+    class Exec success
+    class R1,R2,CDN,Local info</code></pre>
+<h2>Deployment Architecture</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#48bb78&#039;,&#039;tertiaryColor&#039;:&#039;#764ba2&#039;}}}%%
+graph TB
+    subgraph Dev[&quot;👨‍💻 Development&quot;]
+        Developer[&quot;👤 Developer&quot;]
+        Code[&quot;📝 Source Code&quot;]
+        Git[&quot;🗂️ Git Repository&quot;]
+
+        Developer --&gt;|✍️ writes| Code
+        Code --&gt;|📤 commits| Git
+    end
+
+    subgraph CICD[&quot;🔄 CI/CD Pipeline&quot;]
+        GH[&quot;⚙️ GitHub Actions&quot;]
+        Test[&quot;🧪 Run Tests&quot;]
+        Build[&quot;🏗️ Optional Build&lt;br/&gt;Minify&quot;]
+
+        Git --&gt;|⚡ triggers| GH
+        GH --&gt; Test
+        Test --&gt; Build
+    end
+
+    subgraph Prod[&quot;☁️ Production&quot;]
+        CDN[&quot;🌍 CDN&lt;br/&gt;CloudFlare/AWS&quot;]
+        Static[&quot;📦 Static Host&lt;br/&gt;Netlify/Vercel&quot;]
+
+        Build --&gt;|🚀 deploy assets| CDN
+        Build --&gt;|🚀 deploy app| Static
+    end
+
+    subgraph Users[&quot;👥 Users&quot;]
+        Browser[&quot;🌐 Browser&quot;]
+
+        Static --&gt;|📄 HTML| Browser
+        CDN --&gt;|📦 JS/CSS/Assets| Browser
+    end
+
+    classDef developer fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef production fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef user fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef cicd fill:#ed8936,stroke:#dd6b20,stroke-width:3px,color:#fff,font-weight:bold
+
+    class Code,Developer,Git developer
+    class Static,CDN production
+    class Browser user
+    class GH,Test,Build cicd</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/books/learning-larc/diagrams/01-architecture-overview.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

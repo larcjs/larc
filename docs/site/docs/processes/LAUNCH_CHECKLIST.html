@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
-  <script src="../../../../playground/theme-init.js"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Hacker News Launch Checklist · PAN Documentation</title>
   <meta name="description" content="PAN (Page Area Network) Documentation - Hacker News Launch Checklist">
@@ -62,13 +59,14 @@
 <h2>✅ 1 WEEK BEFORE LAUNCH</h2>
 <h3>Repository & Code</h3>
 <ul><li>[ ] All submodules updated to latest commits</li>
-<li>[ ] All tests passing in CI (261/261 core tests)</li>
+<li>[ ] All tests passing in CI (426 browser executions across core + UI)</li>
 <li>[ ] No critical or high-severity npm audit issues</li>
 <li>[ ] Latest versions published to npm:</li>
 </ul>  - [ ] @larcjs/core@3.0.1 ✅
-  - [ ] @larcjs/core@3.0.1 ✅
+  - [ ] @larcjs/core-lite@3.0.1 ✅
   - [ ] @larcjs/ui@3.0.1 ✅
-  - [ ] @larcjs/core@3.0.1 ✅
+  - [ ] @larcjs/core-types@3.0.1 ✅
+  - [ ] @larcjs/ui-types@3.0.1 ✅
 <ul><li>[ ] GitHub Actions workflows all green</li>
 <li>[ ] All TODO/FIXME comments resolved or documented</li>
 </ul>
@@ -209,7 +207,7 @@
 
   Try it: https://larcjs.com/playground/
 
-  Tech: 261 passing tests, TypeScript support, 5KB core, zero dependencies.
+  Tech: 426 browser executions, TypeScript support, 3.6KB core-lite, zero dependencies.
 
   Happy to answer questions!</code></pre>
 <ul><li>[ ] Save HN post URL</li>
@@ -355,7 +353,5 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
   <script src="../assets/docs.js"></script>
-  <pan-bus debug="false"></pan-bus>
-  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

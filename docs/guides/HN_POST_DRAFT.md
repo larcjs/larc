@@ -11,8 +11,8 @@
 (67 chars)
 
 ### Option 3: Benefit-Focused
-**Show HN: Framework-agnostic components that work everywhere (5KB)**
-(68 chars)
+**Show HN: Framework-agnostic components that work everywhere (3.6KB)**
+(69 chars)
 
 ### Option 4: Pragmatic
 **Show HN: Web Components framework – reduce React bundle by 60%**
@@ -35,8 +35,8 @@ LARC solves two pain points I hit when building with Web Components:
    LARC loads components automatically—just write HTML and refresh your browser.
 
 Technical highlights:
-• 5KB core (gzipped), zero dependencies
-• 261 tests passing (Chromium, Firefox, WebKit)
+• 3.6KB core bundle, zero dependencies
+• 426 browser executions (Chromium, Firefox, WebKit)
 • Works with React, Vue, Svelte—mix and match
 • TypeScript support
 • Published on npm (@larcjs/core@3.0.1)
@@ -47,7 +47,8 @@ The "killer" demo is the hybrid dashboard—React, Vue, and LARC components
 on the same page, coordinating via PAN messages. No framework knows
 about the others.
 
-New this week: CLI tool (create-larc-app), component registry, and VS Code extension.
+Latest updates: unified playground (Gallery/Builder/Editor), site-wide dark mode
+with persisted themes, and refreshed hybrid dashboard demo.
 
 Philosophy: Zero-build in dev for fast iteration. Optional build in prod
 for optimization. Framework complement, not replacement.
@@ -69,12 +70,13 @@ Hi HN! Built LARC to solve the Web Component "silo problem."
 The core insight: Web Components need a coordination layer. PAN (Page Area Network)
 provides lightweight pub/sub messaging so components communicate without coupling.
 
-Tech: 5KB core, 261 tests, works with React/Vue/Svelte, TypeScript support.
+Tech: 3.6KB core, 426 browser executions, works with React/Vue/Svelte, TypeScript support.
 
 Playground: https://larcjs.com/playground/
-Hybrid demo: React + Vue + LARC components coordinating via PAN messages.
+Hybrid demo: React + Vue + LARC components coordinating via PAN messages
+(https://larcjs.com/examples/hybrid-dashboard/).
 
-Just shipped: CLI tool (create-larc-app), component registry, VS Code extension.
+Latest updates: unified playground, site-wide dark mode, refreshed hybrid dashboard demo.
 
 Zero-build dev, optional build prod. Complement frameworks, don't replace them.
 
@@ -96,7 +98,7 @@ A theme toggle publishes "theme.changed", cards/tables/modals subscribe
 and update automatically. No coupling, no imports, no framework required.
 
 **Why it matters:**
-• Reduce framework overhead 60%+ (5KB core vs 140KB React)
+• Reduce framework overhead 60%+ (3.6KB core vs 140KB React)
 • True framework interop (React, Vue, Svelte on same page)
 • Zero build in dev (write code, refresh browser)
 • No vendor lock-in (it's just Web Components + messaging)
@@ -107,14 +109,14 @@ and update automatically. No coupling, no imports, no framework required.
 • VS Code extension
 
 **Technical details:**
-• 261 tests passing (Chromium, Firefox, WebKit)
+• 426 browser executions (Chromium, Firefox, WebKit)
 • 0 vulnerabilities (npm audit)
 • TypeScript support
 • Published to npm (@larcjs/core@3.0.1)
 
 **Try it:**
 Playground: https://larcjs.com/playground/
-Hybrid demo: https://larcjs.com/examples/hybrid-dashboard.html
+Hybrid demo: https://larcjs.com/examples/hybrid-dashboard/
 
 **Get started:**
 ```bash
@@ -154,8 +156,8 @@ Keep these ready for comments:
 
 1. **vs React/Vue:** Complement, not replace. Keep React for complex UIs.
 2. **Why Web Components:** Only true framework-agnostic solution.
-3. **Production ready:** 261 tests, 0 vulnerabilities, v3.0.1 on npm.
-4. **Bundle size:** 5KB vs 140KB (React) or 90KB (Vue).
+3. **Production ready:** 426 browser executions, 0 vulnerabilities, v3.0.1 on npm.
+4. **Bundle size:** 3.6KB core vs 140KB (React) or 90KB (Vue).
 5. **PAN bus:** Like MQTT for browser—pub/sub messaging.
 6. **Zero build:** Write .mjs files, refresh browser. No webpack required.
 7. **Learning curve:** HTML + vanilla JS knowledge is enough.

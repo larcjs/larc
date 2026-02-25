@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Theming System · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Theming System">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">ui</a> / <span>THEMING</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Theming System</h1>
+<h2>Problem</h2>
+Shadow DOM components are isolated from global styles, but CSS custom properties (variables) DO inherit through shadow boundaries. However, inconsistent variable naming across components meant each component needed manual dark mode support.
+<h2>Solution</h2>
+A centralized theme system with standardized CSS variable names that all components use.
+<h2>Setup (for HTML pages)</h2>
+<p>Include the global theme CSS in your <code><head></code>:</p>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;/packages/ui/theme.css&quot;&gt;</code></pre>
+<p>Or if you have custom styling, ensure your CSS defines these variables at <code>:root</code> level and responds to <code>[data-theme="dark"]</code> and <code>[data-theme="light"]</code> attributes.</p>
+<p>Add the theme provider to enable theme switching:</p>
+<pre><code class="language-html">&lt;pan-theme-provider&gt;&lt;/pan-theme-provider&gt;</code></pre>
+<p>That's it! All PAN components will now automatically respect dark mode.</p>
+<h2>Standard CSS Variables</h2>
+<p>All PAN components MUST use these variable names:</p>
+<h3>Backgrounds</h3>
+<ul><li><code>--color-bg</code> - Main page background</li>
+<li><code>--color-surface</code> - Component background (cards, panels)</li>
+<li><code>--color-surface-alt</code> - Alternate surface (headers, hover states)</li>
+</ul>
+<h3>Borders</h3>
+<ul><li><code>--color-border</code> - Standard borders</li>
+<li><code>--color-border-strong</code> - Emphasized borders</li>
+</ul>
+<h3>Text</h3>
+<ul><li><code>--color-text</code> - Primary text color</li>
+<li><code>--color-muted</code> - Secondary/muted text</li>
+</ul>
+<h3>Interactive</h3>
+<ul><li><code>--color-accent</code> - Primary interactive color (buttons, links, highlights)</li>
+<li><code>--color-accent-soft</code> - Soft accent background</li>
+</ul>
+<h3>Semantic</h3>
+<ul><li><code>--color-warning-light</code> - Warning background tint</li>
+<li><code>--color-code-bg</code> - Code block background</li>
+<li><code>--color-inspector-bg</code> - Inspector/debug background</li>
+</ul>
+<h2>Component Development</h2>
+<p>When creating a new PAN component, use these variables in your styles:</p>
+<pre><code class="language-javascript">render() {
+  this.shadowRoot.innerHTML = `
+    &lt;style&gt;
+      :host {
+        display: block;
+        background: var(--color-surface, white);
+        color: var(--color-text, #333);
+        border: 1px solid var(--color-border, #ddd);
+      }
+      button {
+        background: var(--color-accent, #2563eb);
+        color: white;
+      }
+    &lt;/style&gt;
+    &lt;div&gt;Your content&lt;/div&gt;
+  `;
+}</code></pre>
+<p>The variables will automatically inherit from the document's <code>:root</code> and update when the theme changes.</p>
+<h2>Legacy Variable Names (DEPRECATED)</h2>
+<p>These old variable names should be replaced:</p>
+<ul><li><code>--bg</code> → <code>--color-surface</code></li>
+<li><code>--fg</code> → <code>--color-text</code></li>
+<li><code>--border</code> → <code>--color-border</code></li>
+<li><code>--card</code> → <code>--color-surface-alt</code></li>
+<li><code>--accent</code> → <code>--color-accent</code></li>
+<li><code>--muted</code> → <code>--color-muted</code></li>
+<li><code>--primary</code> → <code>--color-accent</code></li>
+<li><code>--text-muted</code> → <code>--color-muted</code></li>
+</ul>
+<h2>Troubleshooting</h2>
+<strong>Q: My component doesn't respect dark mode</strong>
+<ul><li>Ensure <code>/packages/ui/theme.css</code> is loaded in your HTML</li>
+<li>Check that your component uses <code>var(--color-*)</code> variable names</li>
+<li>Verify <code><pan-theme-provider></code> is present on the page</li>
+</ul>
+<strong>Q: Can I override theme colors for a specific component?</strong>
+Yes! Set the CSS variable on the component itself:
+<pre><code class="language-html">&lt;pan-data-table style=&quot;--color-accent: red;&quot;&gt;&lt;/pan-data-table&gt;</code></pre>
+<strong>Q: Do I need to import anything in my component?</strong>
+No! CSS variables inherit automatically. Just use the standard variable names.
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/ui/THEMING.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>

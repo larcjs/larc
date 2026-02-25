@@ -1,7 +1,7 @@
 # LARC Hacker News Launch - Readiness Report
 
-**Date:** December 3, 2024
-**Status:** ✅ READY TO LAUNCH
+**Date:** February 25, 2026
+**Status:** ✅ READY TO LAUNCH (v3.0.1)
 
 ---
 
@@ -9,18 +9,19 @@
 
 ### 1. Repository & Code ✅
 
-- [x] **All tests passing:** 261/261 tests (Chromium, Firefox, WebKit)
+- [x] **All tests passing:** 426 browser executions (Chromium, Firefox, WebKit across core + UI)
 - [x] **Security audit:** 0 vulnerabilities (npm audit)
 - [x] **CI/CD green:** Latest GitHub Actions runs successful
 - [x] **TODO/FIXME:** No critical comments found
-- [x] **Bundle size:** Core 12KB (~5KB gzipped) ✅
+- [x] **Bundle size:** Core Lite 3.6KB minified (~1.5KB gzipped) ✅
 
 ### 2. NPM Packages ✅
 
-- [x] **@larcjs/core:** v1.1.1 published
-- [x] **@larcjs/ui:** v1.1.1 published
-- [x] **@larcjs/core-types:** v1.1.1 published
-- [x] **@larcjs/ui-types:** v1.0.2 published
+- [x] **@larcjs/core:** v3.0.1 published
+- [x] **@larcjs/core-lite:** v3.0.1 published
+- [x] **@larcjs/ui:** v3.0.1 published
+- [x] **@larcjs/core-types:** v3.0.1 published
+- [x] **@larcjs/ui-types:** v3.0.1 published
 
 ### 3. CDN Links ✅
 
@@ -57,12 +58,12 @@ All unpkg.com URLs tested and working:
 
 | Metric | Target | Actual | Status |
 |--------|--------|--------|--------|
-| Test Coverage | 100% core | 261/261 passing | ✅ |
+| Test Coverage | 100% core + UI | 426 Playwright executions | ✅ |
 | Security Vulnerabilities | 0 | 0 | ✅ |
-| Core Bundle Size (gzipped) | ~5KB | ~5KB | ✅ |
+| Core Bundle Size (gzipped) | ≤4KB | 3.6KB minified (~1.5KB gz) | ✅ |
 | Browser Support | Modern browsers | Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ | ✅ |
 | CI/CD | Green | All passing | ✅ |
-| npm Packages | Published | 4/4 published | ✅ |
+| npm Packages | Published | 5/5 published | ✅ |
 | CDN Availability | Working | All links working | ✅ |
 
 ---
@@ -77,7 +78,7 @@ Show HN: LARC – Web Components with zero-build dev and PAN messaging
 ### Recommended First Comment
 See `HN_POST_DRAFT.md` for full text. Key points:
 - Solves Web Component coordination problem
-- 5KB core, 261 tests, works with React/Vue/Svelte
+- 3.6KB core-lite, 426 tests, works with React/Vue/Svelte
 - New: CLI tool, component registry, VS Code extension
 - Zero-build dev, optional build prod
 - Complement frameworks, don't replace
@@ -144,10 +145,10 @@ See `HN_POST_DRAFT.md` for full text. Key points:
    > Pub/sub message bus (like MQTT for browser). Components coordinate without coupling
 
 4. **Production ready?**
-   > Yes: 261 tests, 0 vulnerabilities, v1.1 on npm. Young but stable.
+   > Yes: 426 Playwright executions, 0 vulnerabilities, v3.0.1 on npm. Young but stable.
 
 5. **Bundle size?**
-   > 5KB core vs 140KB (React) or 90KB (Vue). Per-component 2-5KB.
+   > 3.6KB core-lite vs 140KB (React) or 90KB (Vue). Per-component 2-5KB.
 
 6. **Browser support?**
    > Chrome 90+, Firefox 88+, Safari 14+, Edge 90+. Modern browsers only.
@@ -167,10 +168,10 @@ See `HN_POST_DRAFT.md` for full text. Key points:
 1. **Zero-build development** (write .mjs, refresh browser)
 2. **PAN messaging bus** (Web Component coordination solved)
 3. **Framework complement** (not replacement)
-4. **5KB core** (vs 140KB React)
+4. **3.6KB core** (vs 140KB React)
 5. **True interoperability** (React + Vue + LARC on same page)
 6. **No vendor lock-in** (just Web Components + messaging)
-7. **261 tests** (production-ready)
+7. **426 Playwright executions** (production-ready)
 8. **Complete ecosystem** (CLI + registry + VS Code extension)
 
 ---

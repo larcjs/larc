@@ -257,9 +257,10 @@ npm run serve
 
 ### Testing
 
-**Current Status:**
-- ✅ **@larcjs/core:** 261 tests passing (87 tests × 3 browsers)
-- ✅ **@larcjs/ui:** 165 tests passing (55 tests × 3 browsers)
+**Current Status (February 2026):**
+- ✅ **@larcjs/core:** 87 Playwright specs × Chromium, Firefox, WebKit = **261 executions**
+- ✅ **@larcjs/ui:** 55 component specs × Chromium, Firefox, WebKit = **165 executions**
+- ✅ **All workspaces:** **426 browser executions** on CI (Linux + macOS, Node 22)
 
 ```bash
 # Test everything
@@ -274,7 +275,14 @@ cd packages/core
 npm run test:coverage
 ```
 
-All UI components are tested end-to-end across Chromium, Firefox, and WebKit using Playwright.
+All UI components are tested end-to-end across Chromium, Firefox, and WebKit using Playwright, with artifacts uploaded from every CI run.
+
+### Recent Highlights
+
+- 🌗 **Site-wide dark mode + theme persistence** for docs, playground, and demos
+- 🧩 **Unified Playground** with Gallery/Builder/Editor modes at https://larcjs.com/playground/
+- 🛰️ **Hybrid dashboard demo refresh** (React + Vue + LARC) at https://larcjs.com/examples/hybrid-dashboard/
+- 🧪 **Expanded CI matrix** now publishes artifacts for 426 test executions across browsers
 
 ## 🤝 Contributing
 

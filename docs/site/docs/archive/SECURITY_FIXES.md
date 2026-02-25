@@ -198,7 +198,7 @@ setcookie('jwt', $token, [
 **Solution Implemented**:
 - ✅ Created `pan-security.mjs` utility module
 - ✅ Safe HTML helpers: `safeSetHTML()`, `escapeHTML()`, `stripHTML()`
-- ✅ DOMPurify integration support
+- ✅ Built-in allowlist sanitizer (dependency-free)
 - ✅ Safe element creation: `createElement()`, `createTextNode()`
 - ✅ URL validation: `isSafeURL()`, `setSafeHref()`
 
@@ -207,7 +207,7 @@ setcookie('jwt', $token, [
 import { safeSetHTML, escapeHTML, isSafeURL } from './pan/core/pan-security.mjs';
 
 // Safe HTML setting
-safeSetHTML(element, userInput); // Uses DOMPurify if available
+safeSetHTML(element, userInput); // Built-in allowlist sanitizer
 
 // Escape HTML
 const safe = escapeHTML(userInput);
@@ -503,7 +503,7 @@ client.subscribe('pan:sys.error', (msg) => {
 ## Remaining Recommendations
 
 ### Short-term (Optional Enhancements)
-1. Add DOMPurify library for robust HTML sanitization
+1. Use built-in allowlist sanitizer for robust HTML sanitization
 2. Implement audit logging for security events
 3. Add Subresource Integrity (SRI) to CDN resources
 4. Set up automated security scanning (npm audit, OWASP ZAP)

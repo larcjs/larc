@@ -2,9 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- CRITICAL: Load theme BEFORE CSS to prevent flash -->
-  <script src="../../../playground/theme-init.js"></script>
-
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Contributing to LARC · PAN Documentation</title>
   <meta name="description" content="PAN (Page Area Network) Documentation - Contributing to LARC">
@@ -65,7 +62,7 @@
 <hr>
 <h2>Getting Started</h2>
 <h3>Prerequisites</h3>
-<ul><li>Node.js 18.x or higher</li>
+<ul><li>Node.js 22.x or higher</li>
 <li>Git</li>
 <li>A modern web browser (Chrome, Firefox, Safari, or Edge)</li>
 </ul>
@@ -354,8 +351,8 @@ Example component test structure:
 </ul>
 <h3>Test Coverage</h3></p>
 <strong>Project Standards:</strong>
-<ul><li>✅ Core package: 335 tests passing, 80%+ code coverage</li>
-<li>✅ UI package: 165 tests passing across 3 browsers</li>
+<ul><li>✅ Core package: 261 tests passing (87 tests × 3 browsers), 80%+ code coverage</li>
+<li>✅ UI package: 165 tests passing (55 tests × 3 browsers)</li>
 <li>100% coverage for critical paths</li>
 <li>All public APIs must be tested</li>
 <li>Edge cases and error handling must be tested</li>
@@ -489,6 +486,5 @@ When suggesting features:
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
   <script src="../assets/docs.js"></script>
-  <pan-theme-provider></pan-theme-provider>
 </body>
 </html>

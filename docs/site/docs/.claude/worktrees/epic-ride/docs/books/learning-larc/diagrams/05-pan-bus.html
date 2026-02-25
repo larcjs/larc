@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PAN Bus Communication Patterns · PAN Documentation</title>
+  <meta name="description" content="PAN (Page Area Network) Documentation - PAN Bus Communication Patterns">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/theme.css">
+  <link rel="stylesheet" href="../assets/docs.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" integrity="sha384-wH75j6z1lH97ZOpMOInqhgKzFkAInZPPSPlZpYKYTOqsaizPvhQZmAtLcPKXpLyH" crossorigin="anonymous">
+</head>
+<body>
+  <header class="docs-header">
+    <div class="docs-header-content">
+      <a href="../index.html" class="logo">
+        <span>PAN</span>
+      </a>
+      <nav class="docs-nav">
+        <a href="../index.html">Home</a>
+        <a href="index.html" class="active">Docs</a>
+        <a href="../examples.html">Examples</a>
+        <a href="../apps.html">Apps</a>
+        <a href="https://github.com/chrisrobison/pan" target="_blank">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar-content">
+        <h3>Documentation</h3>
+        <nav class="docs-menu" id="docs-menu">
+          <!-- Will be populated by JavaScript -->
+        </nav>
+      </div>
+    </aside>
+
+    <main class="docs-main">
+      <div class="docs-breadcrumb">
+        <a href="../index.html">Home</a> / <a href="#">.claude</a> / <a href="#">worktrees</a> / <a href="#">epic-ride</a> / <a href="#">docs</a> / <a href="#">books</a> / <a href="#">learning-larc</a> / <a href="#">diagrams</a> / <span>05-pan-bus</span>
+      </div>
+      <article class="docs-content">
+        <h1>PAN Bus Communication Patterns</h1>
+<h2>Pub/Sub Architecture</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#764ba2&#039;,&#039;tertiaryColor&#039;:&#039;#48bb78&#039;}}}%%
+graph TB
+    subgraph Publishers[&quot;📤 Publishers&quot;]
+        P1[&quot;🔘 Login Button&quot;]
+        P2[&quot;🛒 Cart Component&quot;]
+        P3[&quot;🔌 API Service&quot;]
+    end
+
+    subgraph PAN[&quot;🚌 PAN Bus&quot;]
+        Router[&quot;📡 Topic Router&quot;]
+
+        subgraph Topics[&quot;📋 Topics&quot;]
+            T1[&quot;🔑 user.login&quot;]
+            T2[&quot;➕ cart.item.added&quot;]
+            T3[&quot;📦 data.loaded&quot;]
+        end
+    end
+
+    subgraph Subscribers[&quot;📥 Subscribers&quot;]
+        S1[&quot;👤 User Menu&quot;]
+        S2[&quot;📁 Sidebar&quot;]
+        S3[&quot;🔔 Notification&quot;]
+        S4[&quot;📊 Analytics&quot;]
+    end
+
+    P1 --&gt;|📢 publish| T1
+    P2 --&gt;|📢 publish| T2
+    P3 --&gt;|📢 publish| T3
+
+    T1 --&gt; Router
+    T2 --&gt; Router
+    T3 --&gt; Router
+
+    Router --&gt;|📬 notify| S1
+    Router --&gt;|📬 notify| S2
+    Router --&gt;|📬 notify| S3
+    Router --&gt;|📬 notify| S4
+
+    classDef publisher fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef pan fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef subscriber fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef topic fill:#4299e1,stroke:#3182ce,stroke-width:2px,color:#fff
+
+    class P1,P2,P3 publisher
+    class Router pan
+    class S1,S2,S3,S4 subscriber
+    class T1,T2,T3 topic</code></pre>
+<h2>Message Flow Sequence</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;actorBkg&#039;:&#039;#667eea&#039;,&#039;actorBorder&#039;:&#039;#5568d3&#039;,&#039;actorTextColor&#039;:&#039;#fff&#039;,&#039;signalColor&#039;:&#039;#764ba2&#039;,&#039;signalTextColor&#039;:&#039;#2d3748&#039;}}}%%
+sequenceDiagram
+    participant LoginBtn as 🔘 Login Button
+    participant PAN as 🚌 PAN Bus
+    participant UserMenu as 👤 User Menu
+    participant Sidebar as 📁 Sidebar
+    participant Analytics as 📊 Analytics
+    participant API as 🔌 Backend
+
+    Note over LoginBtn,Analytics: 🖱️ User clicks login button
+
+    LoginBtn-&gt;&gt;+PAN: 📢 publish(&#039;user.login.started&#039;)
+    PAN--&gt;&gt;UserMenu: 📬 notify
+    PAN--&gt;&gt;Sidebar: 📬 notify
+    Note over UserMenu: ⏳ Show loading state
+    UserMenu-&gt;&gt;UserMenu: 🎨 Update UI
+
+    LoginBtn-&gt;&gt;+API: 🌐 POST /api/login
+    API--&gt;&gt;-LoginBtn: ✅ {token, user}
+
+    LoginBtn-&gt;&gt;PAN: 📢 publish(&#039;user.login.success&#039;, {user})
+
+    PAN--&gt;&gt;UserMenu: 📬 notify
+    PAN--&gt;&gt;Sidebar: 📬 notify
+    PAN--&gt;&gt;-Analytics: 📬 notify
+
+    Note over UserMenu,Sidebar: 🎨 Update with user data
+    UserMenu-&gt;&gt;UserMenu: 👤 Update with user data
+    Sidebar-&gt;&gt;Sidebar: 📱 Show user panel
+    Analytics-&gt;&gt;API: 📊 Track event</code></pre>
+<h2>Topic Namespace Structure</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#48bb78&#039;,&#039;tertiaryColor&#039;:&#039;#4299e1&#039;}}}%%
+graph TB
+    Root[&quot;🌟 *&lt;br/&gt;All Events&quot;]
+
+    Root --&gt; User[&quot;👤 user.*&quot;]
+    Root --&gt; Cart[&quot;🛒 cart.*&quot;]
+    Root --&gt; App[&quot;📱 app.*&quot;]
+
+    User --&gt; UserAuth[&quot;🔐 user.auth.*&quot;]
+    User --&gt; UserProfile[&quot;📋 user.profile.*&quot;]
+
+    UserAuth --&gt; Login[&quot;🔑 user.auth.login&quot;]
+    UserAuth --&gt; Logout[&quot;🚪 user.auth.logout&quot;]
+    UserAuth --&gt; Refresh[&quot;🔄 user.auth.refresh&quot;]
+
+    UserProfile --&gt; ProfileUpdate[&quot;✏️ user.profile.update&quot;]
+    UserProfile --&gt; ProfileFetch[&quot;📥 user.profile.fetch&quot;]
+
+    Cart --&gt; CartItem[&quot;📦 cart.item.*&quot;]
+    Cart --&gt; CartCheckout[&quot;💳 cart.checkout&quot;]
+
+    CartItem --&gt; ItemAdd[&quot;➕ cart.item.add&quot;]
+    CartItem --&gt; ItemRemove[&quot;➖ cart.item.remove&quot;]
+    CartItem --&gt; ItemUpdate[&quot;🔄 cart.item.update&quot;]
+
+    App --&gt; AppTheme[&quot;🎨 app.theme.change&quot;]
+    App --&gt; AppRoute[&quot;🧭 app.route.change&quot;]
+    App --&gt; AppError[&quot;⚠️ app.error&quot;]
+
+    classDef root fill:#764ba2,stroke:#6a3f99,stroke-width:4px,color:#fff,font-weight:bold
+    classDef namespace fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef event fill:#48bb78,stroke:#38a169,stroke-width:2px,color:#fff
+
+    class Root root
+    class User,Cart,App,UserAuth,UserProfile,CartItem namespace
+    class Login,Logout,Refresh,ProfileUpdate,ProfileFetch,ItemAdd,ItemRemove,ItemUpdate,AppTheme,AppRoute,AppError,CartCheckout event</code></pre>
+<h2>Wildcard Subscription Matching</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#48bb78&#039;,&#039;tertiaryColor&#039;:&#039;#f56565&#039;}}}%%
+graph LR
+    subgraph Events[&quot;📡 Published Events&quot;]
+        E1[&quot;🔑 user.login&quot;]
+        E2[&quot;🚪 user.logout&quot;]
+        E3[&quot;✏️ user.profile.update&quot;]
+        E4[&quot;➕ cart.item.add&quot;]
+    end
+
+    subgraph Subs[&quot;📥 Subscriptions&quot;]
+        S1[&quot;🎯 subscribe(&#039;user.login&#039;)&quot;]
+        S2[&quot;👤 subscribe(&#039;user.*&#039;)&quot;]
+        S3[&quot;🔄 subscribe(&#039;*.update&#039;)&quot;]
+        S4[&quot;🌟 subscribe(&#039;*&#039;)&quot;]
+    end
+
+    E1 -.✅ matches.-&gt; S1
+    E1 -.✅ matches.-&gt; S2
+    E1 -.✅ matches.-&gt; S4
+
+    E2 -.✅ matches.-&gt; S2
+    E2 -.✅ matches.-&gt; S4
+
+    E3 -.✅ matches.-&gt; S2
+    E3 -.✅ matches.-&gt; S3
+    E3 -.✅ matches.-&gt; S4
+
+    E4 -.✅ matches.-&gt; S4
+
+    classDef event fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef specific fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef catchall fill:#f56565,stroke:#e53e3e,stroke-width:3px,color:#fff,font-weight:bold
+
+    class E1,E2,E3,E4 event
+    class S1,S2,S3 specific
+    class S4 catchall</code></pre>
+<h2>Request/Response Pattern</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;actorBkg&#039;:&#039;#667eea&#039;,&#039;actorBorder&#039;:&#039;#5568d3&#039;,&#039;actorTextColor&#039;:&#039;#fff&#039;,&#039;signalColor&#039;:&#039;#764ba2&#039;}}}%%
+sequenceDiagram
+    participant Requester as ⚙️ Component A
+    participant PAN as 🚌 PAN Bus
+    participant Responder as 🔐 Auth Service
+
+    Note over Responder: 📝 Registers responder
+    Responder-&gt;&gt;PAN: 🎯 respond(&#039;auth.token.get&#039;, handler)
+
+    Note over Requester: 🔑 Needs auth token
+    Requester-&gt;&gt;+PAN: ❓ request(&#039;auth.token.get&#039;)
+
+    PAN-&gt;&gt;PAN: 🆔 Generate response ID
+    PAN-&gt;&gt;+Responder: ▶️ Trigger handler
+
+    Note over Responder: 💾 Get token from storage
+    Responder-&gt;&gt;Responder: 🔍 Get token from storage
+    Responder-&gt;&gt;-PAN: 📤 publish response
+
+    PAN-&gt;&gt;-Requester: ✅ Return token
+
+    Note over Requester: 🌐 Uses token for API call
+    Requester-&gt;&gt;API: 🔌 GET /api/data&lt;br/&gt;Authorization: Bearer {token}</code></pre>
+<h2>Event Patterns Comparison</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#764ba2&#039;,&#039;tertiaryColor&#039;:&#039;#48bb78&#039;}}}%%
+graph TB
+    subgraph FF[&quot;📢 Fire and Forget&quot;]
+        FF1[&quot;📤 Publisher&quot;]
+        FF2[&quot;🚌 PAN Bus&quot;]
+        FF3[&quot;📥 Subscribers&quot;]
+
+        FF1 --&gt;|📢 publish| FF2
+        FF2 --&gt;|📬 notify all| FF3
+        FF1 -.-x|⚡ no wait| FF3
+    end
+
+    subgraph RR[&quot;❓ Request/Response&quot;]
+        RR1[&quot;❓ Requester&quot;]
+        RR2[&quot;🚌 PAN Bus&quot;]
+        RR3[&quot;💬 Responder&quot;]
+
+        RR1 --&gt;|❓ request| RR2
+        RR2 --&gt;|▶️ invoke| RR3
+        RR3 --&gt;|✅ respond| RR2
+        RR2 --&gt;|📦 return| RR1
+    end
+
+    subgraph CMD[&quot;⚙️ Command&quot;]
+        C1[&quot;👨‍💼 Commander&quot;]
+        C2[&quot;🚌 PAN Bus&quot;]
+        C3[&quot;⚙️ Handler&quot;]
+
+        C1 --&gt;|📋 command| C2
+        C2 --&gt;|▶️ execute| C3
+        C3 --&gt;|✅ acknowledge| C2
+        C2 -.💬 optional.-&gt; C1
+    end
+
+    classDef bus1 fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef bus2 fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef bus3 fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+
+    class FF2 bus1
+    class RR2 bus2
+    class C2 bus3</code></pre>
+<h2>PAN Bus Internal Architecture</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#764ba2&#039;,&#039;secondaryColor&#039;:&#039;#667eea&#039;,&#039;tertiaryColor&#039;:&#039;#48bb78&#039;}}}%%
+graph TB
+    subgraph Core[&quot;⚙️ PAN Bus Core&quot;]
+        Router[&quot;📡 Topic Router&quot;]
+
+        subgraph Registry[&quot;📚 Subscription Registry&quot;]
+            Exact[&quot;🎯 Exact Matches&lt;br/&gt;Map‹topic, Set‹handler››&quot;]
+            Wildcard[&quot;🌟 Wildcard Patterns&lt;br/&gt;Array of patterns and handlers&quot;]
+        end
+
+        subgraph Queue[&quot;📮 Message Queue&quot;]
+            EventQueue[&quot;📥 Event Queue&quot;]
+            Batch[&quot;📦 Batch Processor&quot;]
+        end
+
+        Router --&gt; Exact
+        Router --&gt; Wildcard
+        Router --&gt; EventQueue
+        EventQueue --&gt; Batch
+    end
+
+    subgraph API[&quot;🔧 API Methods&quot;]
+        Publish[&quot;📢 publish&quot;]
+        Subscribe[&quot;📥 subscribe&quot;]
+        Request[&quot;❓ request&quot;]
+        Respond[&quot;💬 respond&quot;]
+    end
+
+    Publish --&gt; Router
+    Subscribe --&gt; Exact &amp; Wildcard
+    Request --&gt; Router
+    Respond --&gt; Router
+
+    classDef router fill:#764ba2,stroke:#6a3f99,stroke-width:4px,color:#fff,font-weight:bold
+    classDef registry fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef queue fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef api fill:#4299e1,stroke:#3182ce,stroke-width:2px,color:#fff
+
+    class Router router
+    class Exact,Wildcard registry
+    class EventQueue,Batch queue
+    class Publish,Subscribe,Request,Respond api</code></pre>
+<h2>Debugging with Event Inspector</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#ed8936&#039;,&#039;tertiaryColor&#039;:&#039;#48bb78&#039;}}}%%
+graph TB
+    subgraph Application[&quot;📱 Application&quot;]
+        C1[&quot;⚙️ Component 1&quot;]
+        C2[&quot;⚙️ Component 2&quot;]
+        C3[&quot;⚙️ Component 3&quot;]
+    end
+
+    subgraph PAN[&quot;🚌 PAN Bus&quot;]
+        Router[&quot;📡 Message Router&quot;]
+    end
+
+    subgraph Inspector[&quot;🔍 Inspector&quot;]
+        Monitor[&quot;👀 subscribe(&#039;*&#039;)&quot;]
+        Log[&quot;📋 Event Log&quot;]
+        Filter[&quot;🔎 Filter Panel&quot;]
+        Viz[&quot;📊 Visualization&quot;]
+    end
+
+    C1 --&gt;|📢 publish| Router
+    C2 --&gt;|📢 publish| Router
+    C3 --&gt;|📢 publish| Router
+
+    Router --&gt;|📬 notify| C1
+    Router --&gt;|📬 notify| C2
+    Router --&gt;|📬 notify| C3
+
+    Router -.🔍 all events.-&gt; Monitor
+    Monitor --&gt; Log
+    Log --&gt; Filter
+    Log --&gt; Viz
+
+    classDef component fill:#667eea,stroke:#5568d3,stroke-width:3px,color:#fff,font-weight:bold
+    classDef pan fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef inspector fill:#ed8936,stroke:#dd6b20,stroke-width:3px,color:#fff,font-weight:bold
+    classDef viz fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+
+    class C1,C2,C3 component
+    class Router pan
+    class Monitor,Log,Filter inspector
+    class Viz viz</code></pre>
+<h2>Event Lifecycle</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;primaryTextColor&#039;:&#039;#fff&#039;,&#039;primaryBorderColor&#039;:&#039;#5568d3&#039;}}}%%
+stateDiagram-v2
+    [*] --&gt; Published: 📢 publish(topic, data)
+    Published --&gt; Routing: 🧭 Route to subscribers
+    Routing --&gt; MatchExact: 🎯 Check exact matches
+    Routing --&gt; MatchWildcard: 🌟 Check wildcards
+
+    MatchExact --&gt; Notify: ✅ Found subscribers
+    MatchWildcard --&gt; Notify: ✅ Found subscribers
+
+    MatchExact --&gt; Complete: ❌ No matches
+    MatchWildcard --&gt; Complete: ❌ No matches
+
+    Notify --&gt; HandleAsync: ⚡ Async handlers
+    Notify --&gt; HandleSync: 🔄 Sync handlers
+
+    HandleAsync --&gt; Complete: ✅
+    HandleSync --&gt; Complete: ✅
+
+    Complete --&gt; [*]
+
+    note right of Routing
+        📋 Look up topic in registry
+        🌟 Match wildcards
+        📥 Collect all handlers
+    end note
+
+    note right of Notify
+        📞 Call each handler
+        📦 Pass message data
+        ⚠️ Handle errors
+    end note</code></pre>
+<h2>Error Handling in PAN Bus</h2>
+<pre><code class="language-mermaid">%%{init: {&#039;theme&#039;:&#039;base&#039;, &#039;themeVariables&#039;: { &#039;primaryColor&#039;:&#039;#667eea&#039;,&#039;secondaryColor&#039;:&#039;#f56565&#039;,&#039;tertiaryColor&#039;:&#039;#48bb78&#039;}}}%%
+graph TB
+    Publisher[&quot;📤 Publisher&quot;]
+    PAN[&quot;🚌 PAN Bus&quot;]
+
+    Publisher --&gt;|📢 publish| PAN
+
+    PAN --&gt; S1[&quot;📥 Subscriber 1&quot;]
+    PAN --&gt; S2[&quot;📥 Subscriber 2&quot;]
+    PAN --&gt; S3[&quot;📥 Subscriber 3&quot;]
+
+    S1 --&gt;|✅ success| End1[&quot;✅&quot;]
+    S2 --&gt;|💥 throws error| Error[&quot;⚠️ Error Handler&quot;]
+    S3 --&gt;|✅ success| End3[&quot;✅&quot;]
+
+    Error --&gt;|📝 log error| Console[&quot;🖥️ Console&quot;]
+    Error --&gt;|📢 publish| ErrorTopic[&quot;❌ app.error&quot;]
+
+    ErrorTopic --&gt; ErrorHandler[&quot;⚠️ Error Component&quot;]
+
+    Error -.🔄 doesn&#039;t stop.-&gt; S3
+
+    classDef success fill:#48bb78,stroke:#38a169,stroke-width:3px,color:#fff,font-weight:bold
+    classDef error fill:#f56565,stroke:#e53e3e,stroke-width:3px,color:#fff,font-weight:bold
+    classDef pan fill:#764ba2,stroke:#6a3f99,stroke-width:3px,color:#fff,font-weight:bold
+    classDef neutral fill:#667eea,stroke:#5568d3,stroke-width:2px,color:#fff
+
+    class End1,End3 success
+    class Error,ErrorTopic,ErrorHandler error
+    class PAN pan
+    class Publisher,S1,S2,S3 neutral</code></pre>
+      </article>
+      <footer class="docs-footer">
+        <a href="https://github.com/chrisrobison/pan/edit/main/.claude/worktrees/epic-ride/docs/books/learning-larc/diagrams/05-pan-bus.md" target="_blank">
+          Edit this page on GitHub
+        </a>
+      </footer>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp" crossorigin="anonymous"></script>
+  <script src="../assets/docs.js"></script>
+</body>
+</html>
