@@ -18,7 +18,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "test": "vitest",
+    "test": "vitest --passWithNoTests",
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage"
   },

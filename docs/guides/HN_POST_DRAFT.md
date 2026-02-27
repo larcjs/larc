@@ -35,7 +35,7 @@ LARC solves two pain points I hit when building with Web Components:
    LARC loads components automatically—just write HTML and refresh your browser.
 
 Technical highlights:
-• 3.6KB core bundle, zero dependencies
+• 3.6KB autoloader entry (or ~9KB full core-lite runtime), zero dependencies
 • 426 browser executions (Chromium, Firefox, WebKit)
 • Works with React, Vue, Svelte—mix and match
 • TypeScript support
@@ -70,7 +70,7 @@ Hi HN! Built LARC to solve the Web Component "silo problem."
 The core insight: Web Components need a coordination layer. PAN (Page Area Network)
 provides lightweight pub/sub messaging so components communicate without coupling.
 
-Tech: 3.6KB core, 426 browser executions, works with React/Vue/Svelte, TypeScript support.
+Tech: 3.6KB autoloader entry (or ~9KB full core-lite runtime), 426 browser executions, works with React/Vue/Svelte, TypeScript support.
 
 Playground: https://larcjs.com/playground/
 Hybrid demo: React + Vue + LARC components coordinating via PAN messages
@@ -98,7 +98,7 @@ A theme toggle publishes "theme.changed", cards/tables/modals subscribe
 and update automatically. No coupling, no imports, no framework required.
 
 **Why it matters:**
-• Reduce framework overhead 60%+ (3.6KB core vs 140KB React)
+• Reduce framework overhead 60%+ (3.6KB autoloader entry or ~9KB full core-lite runtime vs ~140KB React)
 • True framework interop (React, Vue, Svelte on same page)
 • Zero build in dev (write code, refresh browser)
 • No vendor lock-in (it's just Web Components + messaging)
@@ -157,7 +157,7 @@ Keep these ready for comments:
 1. **vs React/Vue:** Complement, not replace. Keep React for complex UIs.
 2. **Why Web Components:** Only true framework-agnostic solution.
 3. **Production ready:** 426 browser executions, 0 vulnerabilities, v3.0.1 on npm.
-4. **Bundle size:** 3.6KB core vs 140KB (React) or 90KB (Vue).
+4. **Bundle size:** 3.6KB autoloader entry (or ~9KB full core-lite runtime) vs ~140KB (React) or ~90KB (Vue).
 5. **PAN bus:** Like MQTT for browser—pub/sub messaging.
 6. **Zero build:** Write .mjs files, refresh browser. No webpack required.
 7. **Learning curve:** HTML + vanilla JS knowledge is enough.
@@ -190,7 +190,7 @@ Keep these ready for comments:
 - Docs site: https://larcjs.com/
 - Examples: https://larcjs.com/examples/
 - npm: https://npmjs.com/package/@larcjs/core
-- Discussions: https://github.com/larcjs/core/discussions
+- Discussions: https://github.com/larcjs/larc/discussions
 
 ---
 

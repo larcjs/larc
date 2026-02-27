@@ -20,7 +20,7 @@ LARC complements React/Vue rather than replacing them. Use React for complex UIs
 **Bundle size comparison:**
 - React: ~140KB (React + ReactDOM + ecosystem)
 - Vue: ~90KB (core + ecosystem)
-- **LARC Core Lite:** 3.6KB minified (~1.5KB gzipped) ✅
+- **LARC Core Lite:** 3.6KB autoloader entry (`pan.min.mjs`) or ~9KB full lite runtime ✅
 - **LARC Core (full):** 40KB minified (~12KB gzipped)
 - **LARC Components:** ~7KB per component minified
 
@@ -219,7 +219,7 @@ npm install @larcjs/ui-types
 - 📚 **Main docs:** https://larcjs.com/
 - 🎮 **Interactive playground:** https://larcjs.com/playground/
 - 📖 **Guides:** https://github.com/larcjs/larc/tree/main/docs
-- 💬 **Discussions:** https://github.com/larcjs/core/discussions
+- 💬 **Discussions:** https://github.com/larcjs/larc/discussions
 - 📹 **Tutorial:** (Coming soon - video walkthrough)
 
 ---
@@ -305,14 +305,14 @@ Email: (use GitHub Security Advisories)
 
 **Metrics:**
 - ⚡ **First load:** <50ms (core-lite)
-- 📦 **Bundle size:** 3.6KB core-lite minified (~1.5KB gzipped) ✅
+- 📦 **Bundle size:** 3.6KB autoloader entry (`pan.min.mjs`) or ~9KB full core-lite runtime ✅
 - 🎯 **Per component:** ~7KB each minified (~2KB gzipped)
 - 🔄 **Autoload time:** <5ms per component
 
 **Compared to frameworks:**
 - **React:** ~140KB initial bundle
 - **Vue:** ~90KB initial bundle
-- **LARC Core Lite:** 3.6KB + components used (97% smaller than React!)
+- **LARC Core Lite:** 3.6KB autoloader entry (or ~9KB full lite runtime) + components used
 
 **Progressive loading:**
 Components load as they enter viewport (IntersectionObserver). Only pay for what you use.
@@ -398,7 +398,7 @@ class MyCard extends LitElement { ... }
 ### "How do I get help?"
 
 - 🗣️ **Discord:** https://discord.gg/zjUPsWTu
-- 💬 **GitHub Discussions:** https://github.com/larcjs/core/discussions
+- 💬 **GitHub Discussions:** https://github.com/larcjs/larc/discussions
 - 🐛 **Issues:** https://github.com/larcjs/core/issues
 - 📧 **Email:** (use GitHub issues for now)
 
@@ -412,7 +412,7 @@ We welcome contributions!
 4. **Examples:** Share your projects
 5. **Feedback:** Tell us what works/doesn't work
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+See [CONTRIBUTING.md](../../CONTRIBUTING.md) for guidelines.
 
 ---
 
@@ -428,7 +428,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
 > Yes: 426 browser executions (Playwright), 0 vulnerabilities, v3.0.1 on npm. Young ecosystem (2024), but stable core. Perfect for new projects and early adopters. We'd love your feedback!
 
 ### For "Performance?"
-> 9KB core-lite (~3KB gzipped) vs 140KB React - that's 94% smaller! Progressive loading—only pay for what you use. Test it: https://larcjs.com/playground/
+> 3.6KB autoloader entry (or ~9KB full core-lite runtime) vs ~140KB React. Progressive loading means you only pay for what you use. Test it: https://larcjs.com/playground/
 
 ### For "Learning curve?"
 > If you know HTML + vanilla JS, you're ready. No JSX, no new syntax. 5 min to use components, 1 hour to build custom ones.
