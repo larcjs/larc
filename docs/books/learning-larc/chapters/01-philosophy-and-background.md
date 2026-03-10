@@ -21,9 +21,9 @@ What happened?
 
 ### The Rise of Complexity
 
-![**Figure 1.1:** Development Workflow - Traditional vs LARC](../images/12-traditional-vs-larc-1.png)
+![Figure 1.1: Development Workflow - Traditional vs LARC](../images/12-traditional-vs-larc-1.png)
 
-***Figure 1.1:** Development Workflow - Traditional vs LARC*
+*Figure 1.1: Development Workflow - Traditional vs LARC*
 
 The web platform evolved, but it didn't evolve fast enough for ambitious developers. We wanted:
 
@@ -45,8 +45,8 @@ The irony? While we were busy building these elaborate toolchains, the web platf
 ### The Platform Has Caught Up
 
 ::: {.side-by-side}
-![**Figure 1.2:** LARC No-Build Architecture](../images/01-architecture-overview-3.png){width=48%}
-![**Figure 1.3:** Bundle Size Comparison](../images/12-traditional-vs-larc-3.png){width=48%}
+![Figure 1.2: LARC No-Build Architecture](../images/01-architecture-overview-3.png){width=48%}
+![Figure 1.3: Bundle Size Comparison](../images/12-traditional-vs-larc-3.png){width=48%}
 :::
 
 

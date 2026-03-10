@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-labelledby="title desc">
+  <title id="title">LARC Monorepo Architecture</title>
+  <desc id="desc">Layered architecture diagram for the LARC monorepo packages and ecosystem.</desc>
+
+  <defs>
+    <style>
+      .bg { fill: #f7fafc; }
+      .title { font: 700 36px 'Helvetica Neue', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Helvetica Neue', Arial, sans-serif; fill: #475569; }
+      .layer-title { font: 700 18px 'Helvetica Neue', Arial, sans-serif; fill: #0f172a; }
+      .node { rx: 14; ry: 14; stroke-width: 2; }
+      .label { font: 600 17px 'Helvetica Neue', Arial, sans-serif; fill: #0f172a; }
+      .small { font: 500 13px 'Helvetica Neue', Arial, sans-serif; fill: #334155; }
+      .arrow { stroke: #475569; stroke-width: 2.4; fill: none; }
+      .legend-text { font: 600 13px 'Helvetica Neue', Arial, sans-serif; fill: #1e293b; }
+      .frame { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 18; ry: 18; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#475569"/>
+    </marker>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M 32 0 L 0 0 0 32" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1000"/>
+  <rect x="0" y="0" width="1600" height="1000" fill="url(#grid)" opacity="0.55"/>
+
+  <text class="title" x="60" y="70">LARC Monorepo Architecture</text>
+  <text class="subtitle" x="60" y="100">Lightweight Asynchronous Relay Core • Package layers, integrations, and ecosystem</text>
+
+  <rect class="frame" x="50" y="140" width="1500" height="210"/>
+  <text class="layer-title" x="70" y="175">Core & Add-ons Layer</text>
+
+  <rect class="node" x="90" y="200" width="290" height="120" fill="#dbeafe" stroke="#2563eb"/>
+  <text class="label" x="115" y="248">packages/core</text>
+  <text class="small" x="115" y="275">PAN bus runtime</text>
+
+  <rect class="node" x="420" y="200" width="210" height="120" fill="#dbeafe" stroke="#3b82f6"/>
+  <text class="label" x="445" y="248">packages/core-lite</text>
+  <text class="small" x="445" y="275">lightweight runtime</text>
+
+  <rect class="node" x="660" y="200" width="240" height="120" fill="#dbeafe" stroke="#3b82f6"/>
+  <text class="label" x="685" y="248">packages/core-routing</text>
+  <text class="small" x="685" y="275">dynamic message routes</text>
+
+  <rect class="node" x="930" y="200" width="220" height="120" fill="#dbeafe" stroke="#3b82f6"/>
+  <text class="label" x="955" y="248">packages/core-debug</text>
+  <text class="small" x="955" y="275">tracing and debugging</text>
+
+  <rect class="node" x="1180" y="200" width="300" height="120" fill="#dcfce7" stroke="#16a34a"/>
+  <text class="label" x="1205" y="248">packages/ui</text>
+  <text class="small" x="1205" y="275">component library on top of core</text>
+
+  <rect class="frame" x="50" y="375" width="1500" height="180"/>
+  <text class="layer-title" x="70" y="410">Types & Integrations Layer</text>
+
+  <rect class="node" x="120" y="440" width="280" height="90" fill="#fef3c7" stroke="#d97706"/>
+  <text class="label" x="145" y="492">packages/core-types</text>
+
+  <rect class="node" x="430" y="440" width="330" height="90" fill="#fef3c7" stroke="#d97706"/>
+  <text class="label" x="455" y="492">packages/components-types</text>
+
+  <rect class="node" x="800" y="440" width="240" height="90" fill="#fef3c7" stroke="#d97706"/>
+  <text class="label" x="825" y="492">react-adapter</text>
+
+  <rect class="node" x="1080" y="440" width="220" height="90" fill="#fef3c7" stroke="#d97706"/>
+  <text class="label" x="1105" y="492">cli</text>
+
+  <rect class="frame" x="50" y="580" width="1500" height="160"/>
+  <text class="layer-title" x="70" y="615">Consumer Apps Layer</text>
+
+  <rect class="node" x="140" y="640" width="230" height="75" fill="#e2e8f0" stroke="#64748b"/>
+  <text class="label" x="165" y="686">apps</text>
+
+  <rect class="node" x="420" y="640" width="230" height="75" fill="#e2e8f0" stroke="#64748b"/>
+  <text class="label" x="445" y="686">examples</text>
+
+  <rect class="node" x="700" y="640" width="260" height="75" fill="#e2e8f0" stroke="#64748b"/>
+  <text class="label" x="725" y="686">playground</text>
+
+  <rect class="frame" x="50" y="765" width="1500" height="170"/>
+  <text class="layer-title" x="70" y="800">Ecosystem & Distribution Layer</text>
+
+  <rect class="node" x="110" y="825" width="230" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+  <text class="label" x="135" y="872">registry</text>
+
+  <rect class="node" x="390" y="825" width="230" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+  <text class="label" x="415" y="872">devtools</text>
+
+  <rect class="node" x="670" y="825" width="280" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+  <text class="label" x="695" y="872">vscode-extension</text>
+
+  <rect class="node" x="1000" y="825" width="220" height="80" fill="#ede9fe" stroke="#7c3aed"/>
+  <text class="label" x="1025" y="872">docs</text>
+
+  <rect class="node" x="1290" y="825" width="220" height="80" fill="#cffafe" stroke="#0891b2"/>
+  <text class="label" x="1315" y="872">npm packages</text>
+
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 380 260 L 420 260"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 380 280 C 500 355, 1160 355, 1180 260"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 630 260 L 660 260"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 900 260 L 930 260"/>
+
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 240 440 C 260 375, 250 320, 235 320"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 590 440 C 600 375, 1290 350, 1290 320"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 920 440 C 920 380, 260 360, 240 320"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 1190 440 C 1180 380, 1290 360, 1290 320"/>
+
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 1290 320 C 1290 470, 255 470, 255 640"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 1290 320 C 1290 500, 535 500, 535 640"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 1290 320 C 1290 520, 830 520, 830 640"/>
+
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 255 715 C 255 790, 225 790, 225 825"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 535 715 C 535 790, 505 790, 505 825"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 830 715 C 830 790, 810 790, 810 825"/>
+  <path class="arrow" marker-end="url(#arrowhead)" d="M 1110 865 L 1290 865"/>
+
+  <rect x="1180" y="30" width="360" height="90" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" rx="12"/>
+  <rect x="1200" y="48" width="16" height="10" fill="#dbeafe" stroke="#2563eb"/>
+  <text class="legend-text" x="1224" y="57">Core runtime/add-ons</text>
+  <rect x="1200" y="65" width="16" height="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text class="legend-text" x="1224" y="74">UI component layer</text>
+  <rect x="1200" y="82" width="16" height="10" fill="#fef3c7" stroke="#d97706"/>
+  <text class="legend-text" x="1224" y="91">Types and integrations</text>
+  <rect x="1200" y="99" width="16" height="10" fill="#ede9fe" stroke="#7c3aed"/>
+  <text class="legend-text" x="1224" y="108">Ecosystem tooling/docs</text>
+</svg>

@@ -688,3 +688,12 @@ These form the backbone of every LARC application.
 - UI components: Chapter 19
 - Message patterns: Appendix A
 - Configuration: Appendix C
+
+### Error Quick Lookup
+
+| Component | Primary Error Channel |
+|---|---|
+| `pan-bus` | `pan:sys.error` DOM event |
+| `pan-theme-provider` | thrown `TypeError` for invalid `setTheme()` values |
+| `pan-theme-toggle` | depends on `pan-theme-provider`; no provider means no-op toggles |
+| `pan-routes` | `onError()` callback with structured route error objects |

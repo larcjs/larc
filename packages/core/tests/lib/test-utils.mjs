@@ -18,9 +18,8 @@ const coreRoot = resolve(__dirname, '../..');
  * @returns {string} HTTP URL
  */
 export function fileUrl(relativePath) {
-  // Use HTTP URL for web server at localhost:8080
-  // The web server serves from the parent larc-repos directory, so we need to include 'core/'
-  return `http://localhost:8080/core/${relativePath}`;
+  const testBaseUrl = process.env.PLAYWRIGHT_BASE_URL || 'http://127.0.0.1:9323';
+  return `${testBaseUrl}/core/${relativePath}`;
 }
 
 /**

@@ -115,7 +115,16 @@ Use of the information and instructions contained in this work is at your own ri
 
 ### Part III: Building Applications {.unnumbered}
 
-**Chapter 8: Routing and Navigation**
+**Chapter 8: Business Logic Patterns**
+
+- Business Logic in Components
+- Domain Services and Orchestration
+- Command and Query Patterns
+- Error Recovery and Retries
+- Decoupled Workflows with PAN Topics
+- Best Practices for Maintainable Logic
+
+**Chapter 9: Routing and Navigation**
 
 - Client-Side Routing
 - The pan-router Component
@@ -124,7 +133,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Route Guards
 - History Management
 
-**Chapter 9: Forms and Validation**
+**Chapter 10: Forms and Validation**
 
 - Form Components
 - Two-Way Data Binding
@@ -133,7 +142,9 @@ Use of the information and instructions contained in this work is at your own ri
 - File Uploads
 - Form Submission
 
-**Chapter 10: Data Fetching and APIs**
+### Part IV: Advanced Topics {.unnumbered}
+
+**Chapter 11: Data Fetching and APIs**
 
 - The pan-fetch Component
 - REST API Integration
@@ -142,7 +153,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Server-Sent Events
 - Error Handling and Retry Logic
 
-**Chapter 11: Authentication and Security**
+**Chapter 12: Authentication and Security**
 
 - Authentication Patterns
 - The pan-auth Component
@@ -151,9 +162,7 @@ Use of the information and instructions contained in this work is at your own ri
 - CORS Considerations
 - Security Best Practices
 
-### Part IV: Advanced Topics {.unnumbered}
-
-**Chapter 12: Server Integration**
+**Chapter 13: Server Integration**
 
 - Backend Architecture
 - Node.js Integration
@@ -162,7 +171,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Database Patterns
 - Real-Time Communication
 
-**Chapter 13: Testing**
+**Chapter 14: Testing**
 
 - Unit Testing Components
 - Integration Testing
@@ -171,7 +180,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Performance Testing
 - Continuous Integration
 
-**Chapter 14: Performance and Optimization**
+**Chapter 15: Performance and Optimization**
 
 - Loading Strategies
 - Code Splitting
@@ -180,7 +189,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Bundle Size Optimization
 - Performance Monitoring
 
-**Chapter 15: Deployment**
+**Chapter 16: Deployment**
 
 - Static Hosting
 - CDN Configuration
@@ -191,7 +200,7 @@ Use of the information and instructions contained in this work is at your own ri
 
 ### Part V: Ecosystem {.unnumbered}
 
-**Chapter 16: Component Library**
+**Chapter 17: Component Library**
 
 - Using the Component Registry
 - Contributing Components
@@ -199,7 +208,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Documentation Strategies
 - Versioning and Releases
 
-**Chapter 17: Tooling**
+**Chapter 18: Tooling**
 
 - Development Tools
 - CLI Tools
@@ -207,7 +216,7 @@ Use of the information and instructions contained in this work is at your own ri
 - Browser DevTools
 - Debugging Techniques
 
-**Chapter 18: Real-World Applications**
+**Chapter 19: Real-World Applications**
 
 - Case Study: E-Commerce Platform
 - Case Study: Dashboard Application
@@ -242,7 +251,6 @@ Use of the information and instructions contained in this work is at your own ri
 - From React
 - From Vue
 - From Angular
-- From jQuery
 
 **Appendix E: Resources**
 
@@ -250,6 +258,42 @@ Use of the information and instructions contained in this work is at your own ri
 - Community Resources
 - Video Tutorials
 - Example Projects
+
+\pagebreak
+
+---
+
+## Cross-Book Chapter Map {.unnumbered}
+
+Use this table to jump between tutorial material in *Learning LARC* and reference material in *Building with LARC*.
+
+| Learning LARC | Building with LARC |
+|---|---|
+| Ch 8: Business Logic Patterns | Ch 15: Advanced Patterns |
+| Ch 9: Routing and Navigation | Ch 5: Routing and Navigation |
+| Ch 10: Forms and Validation | Ch 6: Forms and User Input |
+| Ch 11: Data Fetching and APIs | Ch 7: Data Fetching and APIs |
+| Ch 12: Authentication and Security | Ch 8: Authentication and Authorization |
+| Ch 13: Server Integration | Ch 20: Integration Components |
+| Ch 14: Testing | Ch 13: Testing Strategies |
+| Ch 15: Performance and Optimization | Ch 12: Performance Optimization |
+| Ch 16: Deployment | Ch 16: Deployment and Production |
+| Ch 17: Component Library | Ch 17-21: Component Reference |
+
+\pagebreak
+
+---
+
+## Browser Compatibility Matrix {.unnumbered}
+
+The examples in this book assume the browser supports Web Components and Import Maps natively.
+
+| Browser | Minimum Version | Required For |
+|---|---|---|
+| Chrome | 89+ | Import Maps + full LARC examples |
+| Edge | 89+ | Import Maps + full LARC examples |
+| Firefox | 108+ | Import Maps + full LARC examples |
+| Safari | 16.4+ | Import Maps + full LARC examples |
 
 ### Index {.unnumbered}
 

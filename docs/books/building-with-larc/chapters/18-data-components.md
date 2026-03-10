@@ -633,3 +633,10 @@ Use pan-store for reactive application state, pan-idb for persistent storage.
 - Message bus: Chapter 17
 - UI components: Chapter 19
 - State patterns: Appendix A
+
+### Error Quick Lookup
+
+| Component | Primary Error Channel |
+|---|---|
+| `pan-store` | `error` event + thrown `TypeError`/`RangeError` |
+| `pan-idb` | IndexedDB error events + thrown `DOMException`/`QuotaExceededError` |

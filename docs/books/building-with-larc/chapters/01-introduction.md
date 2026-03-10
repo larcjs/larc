@@ -14,6 +14,17 @@
 
 If you're new to LARC, start with *Learning LARC*. This reference assumes you already know how to build LARC applications and need API documentation or implementation details.
 
+### Browser Compatibility Matrix
+
+| Browser | Minimum Version | Why |
+|---|---|---|
+| Chrome | 89+ | Import Maps support required by examples |
+| Edge | 89+ | Import Maps support required by examples |
+| Firefox | 108+ | Import Maps support required by examples |
+| Safari | 16.4+ | Import Maps support required by examples |
+
+Required features: Custom Elements v1, Shadow DOM v1, ES Modules, and Import Maps.
+
 ## How to Use This Book
 
 ### As a Reference
@@ -131,6 +142,21 @@ TypeScript users: See `@larcjs/core-types` for official definitions.
 **Experienced?** This book is your primary resource.
 
 **Learning specific features?** Check *Learning LARC* for tutorials, then this book for complete details.
+
+### Chapter Mapping: Tutorial to Reference
+
+| Learning LARC | Building with LARC |
+|---|---|
+| Ch 8: Business Logic Patterns | Ch 15: Advanced Patterns |
+| Ch 9: Routing and Navigation | Ch 5: Routing and Navigation |
+| Ch 10: Forms and Validation | Ch 6: Forms and User Input |
+| Ch 11: Data Fetching and APIs | Ch 7: Data Fetching and APIs |
+| Ch 12: Authentication and Security | Ch 8: Authentication and Authorization |
+| Ch 13: Server Integration | Ch 20: Integration Components |
+| Ch 14: Testing | Ch 13: Testing Strategies |
+| Ch 15: Performance and Optimization | Ch 12: Performance Optimization |
+| Ch 16: Deployment | Ch 16: Deployment and Production |
+| Ch 17: Component Library | Ch 17-21: Component Reference |
 
 ## What's Next
 

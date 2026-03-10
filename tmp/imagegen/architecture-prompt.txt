@@ -1,0 +1,12 @@
+Use case: infographic-diagram
+Asset type: project documentation architecture diagram
+Primary request: Create a polished technical architecture infographic for the LARC monorepo (Lightweight Asynchronous Relay Core).
+Scene/background: Clean light background with subtle grid and soft blueprint accents.
+Subject: Monorepo architecture showing package layers and tooling relationships.
+Style/medium: Vector-style infographic, modern engineering diagram, sharp labels, publication-ready.
+Composition/framing: Wide 16:9 landscape; layered left-to-right flow; grouped containers with connectors and legends.
+Lighting/mood: Neutral, professional, precise.
+Color palette: Slate/charcoal text, blue for core runtime, green for UI library, amber for integrations, gray for tooling/docs.
+Text (verbatim): "LARC Monorepo Architecture", "packages/core", "packages/ui", "packages/core-lite", "packages/core-routing", "packages/core-debug", "packages/core-types", "packages/components-types", "react-adapter", "cli", "apps", "examples", "playground", "registry", "devtools", "vscode-extension", "docs", "npm packages".
+Constraints: Must clearly depict packages/core as the central message bus runtime, packages/ui as component layer built on core, add-on packages (core-lite/routing/debug) linked to core, type packages connected to core and ui, react-adapter and cli as integration/tooling layer, apps/examples/playground as consumer layer, registry/devtools/vscode-extension/docs as ecosystem layer, and an outward arrow to npm packages distribution. Keep labels legible and spelled exactly as listed. No fictional components.
+Avoid: photorealism, clutter, dark background, tiny unreadable text, logos, watermarks.

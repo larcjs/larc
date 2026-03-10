@@ -776,3 +776,11 @@ Use together for complete markdown applications or individually as needed.
 - Core components: Chapter 17
 - Data components: Chapter 18
 - Integration patterns: Chapter 20
+
+### Error Quick Lookup
+
+| Component | Primary Error Channel |
+|---|---|
+| `pan-files` | `error` DOM event + `file.error` PAN topic |
+| `pan-markdown-editor` | `error` DOM event + validation errors from malformed content |
+| `pan-markdown-renderer` | thrown `TypeError`/render parse errors |

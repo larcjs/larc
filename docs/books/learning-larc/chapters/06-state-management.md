@@ -1,8 +1,8 @@
 # State Management
 
-![**Figure 6.1:** State Management Hierarchy](../images/06-state-management-3.png)
+![Figure 6.1: State Management Hierarchy](../images/06-state-management-3.png)
 
-***Figure 6.1:** State Management Hierarchy*
+*Figure 6.1: State Management Hierarchy*
 
 
 State management is one of the most critical aspects of application development. Poor state management leads to bugs, performance issues, and maintenance nightmares. Good state management makes applications predictable, testable, and maintainable.
@@ -475,9 +475,9 @@ class UserMenu extends HTMLElement {
 
 ## The pan-store Component
 
-![**Figure 6.2:** pan-store Architecture](../images/06-state-management-9.png)
+![Figure 6.2: pan-store Architecture](../images/06-state-management-9.png)
 
-***Figure 6.2:** pan-store Architecture*
+*Figure 6.2: pan-store Architecture*
 
 
 LARC provides a built-in component for state management:

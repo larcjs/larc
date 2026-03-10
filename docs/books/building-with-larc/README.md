@@ -14,6 +14,23 @@ This book follows the O'Reilly programming book tradition—starting with philos
 
 **Companion Book**: [Learning LARC](../learning-larc/) - A narrative, tutorial-style introduction to LARC concepts.
 
+## Cross-Reference with Learning LARC
+
+Use this quick map when moving from tutorial learning to detailed reference:
+
+| Learning LARC | Building with LARC |
+|---|---|
+| Ch 8: Business Logic Patterns | Ch 15: Advanced Patterns |
+| Ch 9: Routing and Navigation | Ch 5: Routing and Navigation |
+| Ch 10: Forms and Validation | Ch 6: Forms and User Input |
+| Ch 11: Data Fetching and APIs | Ch 7: Data Fetching and APIs |
+| Ch 12: Authentication and Security | Ch 8: Authentication and Authorization |
+| Ch 13: Server Integration | Ch 20: Integration Components |
+| Ch 14: Testing | Ch 13: Testing Strategies |
+| Ch 15: Performance and Optimization | Ch 12: Performance Optimization |
+| Ch 16: Deployment | Ch 16: Deployment and Production |
+| Ch 17: Component Library | Ch 17-21: Component Reference |
+
 ## 📦 Building the Book
 
 This book can be built in multiple formats:

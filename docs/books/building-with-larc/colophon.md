@@ -24,7 +24,7 @@ The text typeface is Adobe Minion Pro, the display typeface is Myriad Pro, and t
 
 ## Production Notes
 
-This book was authored in Markdown using a modular structure with 25 chapters, 7 appendices, and a comprehensive index. The content was converted to multiple formats (HTML, PDF, and EPUB) using Pandoc. All code examples were tested against LARC version 3.x and validated for correctness.
+This book was authored in Markdown using a modular structure with 21 chapters, 7 appendices, and a comprehensive index. The content was converted to multiple formats (HTML, PDF, and EPUB) using Pandoc. All code examples were tested against LARC version 3.x and validated for correctness.
 
 The book follows O'Reilly's tradition of comprehensive technical documentation: starting with philosophy and context, moving through practical implementation, and concluding with exhaustive API reference material. The structure was inspired by classic programming references like *Programming Perl* and *Programming Python*, which balance narrative explanation with detailed technical specifications.
 

@@ -325,9 +325,9 @@ Build times (approximate):
 ## Version History
 
 - **v1.0.0** - Initial release (December 2025)
-  - 25 chapters
+  - 21 chapters
   - 7 appendices
-  - ~115,000 words
+  - ~82,000 words
   - 200+ code examples
 
 ## Support

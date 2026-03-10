@@ -1,5 +1,8 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const TEST_PORT = process.env.PLAYWRIGHT_PORT || '9323';
+const TEST_BASE_URL = process.env.PLAYWRIGHT_BASE_URL || `http://127.0.0.1:${TEST_PORT}`;
+
 /**
  * Playwright Test Configuration
  * @see https://playwright.dev/docs/test-configuration
@@ -29,7 +32,7 @@ export default defineConfig({
   // Shared settings for all the projects below
   use: {
     // Base URL to use in actions like \`await page.goto('/')\`
-    baseURL: 'http://localhost:8080',
+    baseURL: TEST_BASE_URL,
 
     // Collect trace when retrying the failed test
     trace: 'on-first-retry',
@@ -62,9 +65,9 @@ export default defineConfig({
   // Using Python's http.server which handles concurrent connections better
   // Serve from parent directory so tests can access /core/tests/...
   webServer: {
-    command: 'cd .. && python3 -m http.server 8080',
-    port: 8080,
+    command: `cd .. && python3 -m http.server ${TEST_PORT} --bind 127.0.0.1`,
+    port: Number(TEST_PORT),
     timeout: 120000,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
   },
 });

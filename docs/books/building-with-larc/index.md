@@ -1,5 +1,13 @@
 # Index
 
+## Quick Lookup
+
+**Cross-book chapter map**, Chapter 1  
+**Component error channels**, Chapters 17-21  
+**Browser compatibility matrix**, Chapter 1, Chapter 3  
+**Message topic conventions**, Appendix A  
+**Configuration options**, Appendix C
+
 ## A
 
 **addEventListener()**, Chapter 4, Chapter 7
