@@ -79,17 +79,17 @@
 - Forms flow diagrams (can be added)
 - Validation patterns (can be added)
 
-### Chapter 10: Data Fetching and APIs
+### Chapter 11: Data Fetching and APIs
 - API communication patterns (can be added)
 - Caching strategies (can be added)
 
-### Chapter 11: Authentication and Security
+### Chapter 12: Authentication and Security
 - **14-app-architecture.md**
   - Complete authentication flow
   - Token management
   - Protected routes
 
-### Chapter 18: Real-World Applications
+### Chapter 19: Real-World Applications
 - **14-app-architecture.md**
   - Complete e-commerce architecture
   - Component interaction flow

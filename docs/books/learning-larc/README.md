@@ -104,14 +104,21 @@ Mastering the art of creating reusable, maintainable Web Components.
 ### Part III: Building Applications
 Putting components together to build complete applications.
 
-**Chapter 8: Routing and Navigation** ✅
+**Chapter 8: Business Logic Patterns** ✅
+- Organizing business logic outside presentation components
+- Domain services and message-driven workflows
+- Command and query separation patterns
+- Reusable orchestration with PAN topics
+- Error and retry patterns for business operations
+
+**Chapter 9: Routing and Navigation** ✅
 - Client-side routing without page reloads
 - The pan-router component for declarative routing
 - Route parameters and nested routes
 - Route guards for protected pages
 - Browser history integration
 
-**Chapter 9: Forms and Validation** ✅
+**Chapter 10: Forms and Validation** ✅
 - Building accessible form components
 - Two-way data binding patterns
 - Validation strategies (native HTML5 and custom)
@@ -121,14 +128,6 @@ Putting components together to build complete applications.
 
 ### Part IV: Advanced Topics
 Deep dives into data integration, authentication, server integration, testing, performance, and deployment.
-
-**Chapter 10: Working with Forms and Validation** ✅
-- Building accessible form components
-- Two-way data binding patterns
-- Validation strategies (native HTML5 and custom)
-- Error handling and display
-- File uploads with progress tracking
-- Form submission with loading states
 
 **Chapter 11: Data Fetching and APIs** ✅
 - REST API integration with proper error handling
@@ -215,6 +214,23 @@ Leveraging the LARC ecosystem and building your own tools.
 - Migration guides (React/Vue → LARC)
 - Team practices and workflows
 
+### Cross-Reference with Building with LARC
+
+Use *Learning LARC* for guided tutorials and *Building with LARC* for deep API and implementation reference on the same topic:
+
+| Learning LARC Chapter | Building with LARC Chapter |
+|-----------------------|----------------------------|
+| Ch 8: Business Logic Patterns | Ch 15: Advanced Patterns |
+| Ch 9: Routing and Navigation | Ch 5: Routing and Navigation |
+| Ch 10: Forms and Validation | Ch 6: Forms and User Input |
+| Ch 11: Data Fetching and APIs | Ch 7: Data Fetching and APIs |
+| Ch 12: Authentication and Security | Ch 8: Authentication and Authorization |
+| Ch 13: Server Integration | Ch 20: Integration Components |
+| Ch 14: Testing | Ch 13: Testing Strategies |
+| Ch 15: Performance and Optimization | Ch 12: Performance Optimization |
+| Ch 16: Deployment | Ch 16: Deployment and Production |
+| Ch 17: Component Library | Ch 17-21: Component Reference |
+
 ### Appendices
 Quick reference guides and migration resources.
 
@@ -267,9 +283,9 @@ docs/books/learning-larc/
 │   ├── 05-the-pan-bus.md
 │   ├── 06-state-management.md
 │   ├── 07-advanced-component-patterns.md
-│   ├── 08-routing-and-navigation.md
-│   ├── 09-forms-and-validation.md
-│   ├── 10-forms-and-validation.md      # (note: appears to be duplicate?)
+│   ├── 08-business-logic-patterns.md
+│   ├── 09-routing-and-navigation.md
+│   ├── 10-forms-and-validation.md
 │   ├── 11-data-fetching-and-apis.md
 │   ├── 12-authentication-and-security.md
 │   ├── 13-server-integration.md

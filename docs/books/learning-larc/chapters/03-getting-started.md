@@ -20,6 +20,19 @@ One of LARC's strengths is minimal setup requirements. You don't need complex to
 - **Browser DevTools** familiarity for debugging
 - **Git** for version control
 
+### Browser Compatibility Matrix
+
+LARC relies on native browser platform features. Use these minimum versions for all examples in this book:
+
+| Browser | Minimum Version | Why |
+|---------|-----------------|-----|
+| Chrome | 89+ | Import Maps support |
+| Edge | 89+ | Chromium + Import Maps support |
+| Firefox | 108+ | Import Maps support |
+| Safari | 16.4+ | Import Maps support |
+
+Required features: Custom Elements v1, Shadow DOM v1, ES Modules, and Import Maps.
+
 ### Quick Start with create-larc-app
 
 The fastest way to start is using the LARC CLI:
@@ -516,9 +529,9 @@ Display component receives update and re-renders
 
 ## Project Structure
 
-![**Figure 3.1:** LARC Deployment Architecture](../images/01-architecture-overview-5.png)
+![Figure 3.1: LARC Deployment Architecture](../images/01-architecture-overview-5.png)
 
-***Figure 3.1:** LARC Deployment Architecture*
+*Figure 3.1: LARC Deployment Architecture*
 
 
 As your application grows, organization becomes important. Here's a recommended structure:
@@ -592,9 +605,9 @@ my-app/
 
 ## Import Maps Explained
 
-![**Figure 3.2:** Module Loading with Import Maps](../images/01-architecture-overview-4.png)
+![Figure 3.2: Module Loading with Import Maps](../images/01-architecture-overview-4.png)
 
-***Figure 3.2:** Module Loading with Import Maps*
+*Figure 3.2: Module Loading with Import Maps*
 
 
 Import Maps are a browser standard that replaces the need for bundlers to resolve module paths.

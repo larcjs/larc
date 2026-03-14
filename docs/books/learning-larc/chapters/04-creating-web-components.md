@@ -6,9 +6,9 @@ By the end of this chapter, you'll be able to build production-quality component
 
 ## Anatomy of a LARC Component
 
-![**Figure 4.1:** Component Lifecycle Flow](../images/02-component-structure-3.png)
+![Figure 4.1: Component Lifecycle Flow](../images/02-component-structure-3.png)
 
-***Figure 4.1:** Component Lifecycle Flow*
+*Figure 4.1: Component Lifecycle Flow*
 
 
 Let's dissect a well-structured LARC component to understand its parts:
@@ -396,9 +396,9 @@ export default UserCard;
 
 ## Shadow DOM Deep Dive
 
-![**Figure 4.2:** Slots and Content Projection](../images/02-component-structure-6.png)
+![Figure 4.2: Slots and Content Projection](../images/02-component-structure-6.png)
 
-***Figure 4.2:** Slots and Content Projection*
+*Figure 4.2: Slots and Content Projection*
 
 
 Shadow DOM is one of the most powerful features of Web Components. It provides true encapsulation for both markup and styles.
@@ -746,9 +746,9 @@ this.removeAttribute('disabled');
 
 ## Component Styling
 
-![**Figure 4.3:** CSS Encapsulation with Shadow DOM](../images/02-component-structure-7.png)
+![Figure 4.3: CSS Encapsulation with Shadow DOM](../images/02-component-structure-7.png)
 
-***Figure 4.3:** CSS Encapsulation with Shadow DOM*
+*Figure 4.3: CSS Encapsulation with Shadow DOM*
 
 
 ### Internal Styles

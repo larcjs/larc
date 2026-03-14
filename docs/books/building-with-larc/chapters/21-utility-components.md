@@ -895,3 +895,10 @@ These components provide observability and extensibility without modifying core 
 - Core components: Chapter 17
 - Integration patterns: Chapter 20
 - Debugging guide: Appendix D
+
+### Error Quick Lookup
+
+| Component | Primary Error Channel |
+|---|---|
+| `pan-debug` | thrown runtime errors from tracing/query/export operations |
+| `pan-forwarder` | `forwarder.error` PAN topic (non-throwing transport failures) |

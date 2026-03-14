@@ -1,5 +1,13 @@
 # Index
 
+## Quick Lookup
+
+**Cross-book chapter map**, Front matter  
+**Browser compatibility matrix**, Front matter, Ch 3  
+**PAN bus deep dive**, Ch 5  
+**State management patterns**, Ch 6  
+**API integration patterns**, Ch 11
+
 ## A
 
 **Abstraction layers**, drawbacks of, Ch 1

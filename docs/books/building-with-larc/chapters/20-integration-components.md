@@ -1109,3 +1109,12 @@ All components transform external protocols into PAN bus messages, maintaining a
 - Core components: Chapter 17
 - Data components: Chapter 18
 - Authentication patterns: Appendix B
+
+### Error Quick Lookup
+
+| Component | Primary Error Channel |
+|---|---|
+| `pan-data-connector` | `${resource}.error` PAN topic |
+| `pan-graphql-connector` | `graphql.error` PAN topic |
+| `pan-websocket` | `ws.error` PAN topic + close/error socket events |
+| `pan-sse` | `sse.error` PAN topic + EventSource `error` events |

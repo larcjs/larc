@@ -86,6 +86,7 @@ setup_directories() {
     mkdir -p "${OUTPUT_DIR}/docx"
     mkdir -p "${IMAGES_DIR}"
     mkdir -p "${TEMP_DIR}"
+    mkdir -p "${TEMP_DIR}/images"
     mkdir -p "${OUTPUT_DIR}/html/images"
     echo -e "${GREEN}✓ Directories ready${NC}"
 }
@@ -219,9 +220,10 @@ create_combined_markdown() {
         cat "${BOOK_DIR}/back-cover.md" >> "$COMBINED_MD"
     fi
 
-    # Copy images to output
+    # Copy images to output and temp build dir
     if [ -d "${IMAGES_DIR}" ]; then
         cp -r "${IMAGES_DIR}"/* "${OUTPUT_DIR}/html/images/" 2>/dev/null || true
+        cp -r "${IMAGES_DIR}"/* "${TEMP_DIR}/images/" 2>/dev/null || true
     fi
 
     # Fix image paths in combined markdown
