@@ -42,7 +42,7 @@
     "build:minify": "node scripts/build-minified.js"
   },
   "devDependencies": {
-    "esbuild": "^0.27.1"
+    "esbuild": "^0.28.1"
   },
   "engines": {
     "node": ">=22.0.0"
