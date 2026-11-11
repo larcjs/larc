@@ -11,18 +11,18 @@
 import { test, expect } from '@playwright/test';
 import { fileUrl } from '../lib/test-utils.mjs';
 
+// `key` selects the matching entry in tests/fixtures/pan-delivery-test.html
 const VARIANTS = [
-  { name: 'index.js (unified)',      bus: '/core/index.js',                                  client: '/core/index.js' },
-  { name: 'pan-bus.mjs (enhanced)',  bus: '/core/pan-bus.mjs',                               client: '/core/pan-client.mjs' },
-  { name: 'pan-bus-lite.mjs',        bus: '/core/pan-bus-lite.mjs',                          client: '/core/pan-client.mjs' },
-  { name: 'components/pan-bus-enhanced', bus: '/core/components/pan-bus-enhanced.mjs', tag: 'pan-bus-enhanced', client: '/core/components/pan-client.mjs' },
-  { name: 'components/pan-bus-legacy',   bus: '/core/components/pan-bus-legacy.mjs',   client: '/core/components/pan-client.mjs' },
-  { name: 'core-lite',               bus: '/core-lite/src/components/pan-bus.mjs',           client: '/core-lite/src/components/pan-client.mjs' },
+  { name: 'index.js (unified)',          key: 'index' },
+  { name: 'pan-bus.mjs (enhanced)',      key: 'enhanced' },
+  { name: 'pan-bus-lite.mjs',            key: 'lite' },
+  { name: 'components/pan-bus-enhanced', key: 'components-enhanced' },
+  { name: 'components/pan-bus-legacy',   key: 'components-legacy' },
+  { name: 'core-lite',                   key: 'core-lite' },
 ];
 
 function fixture(v) {
-  const q = new URLSearchParams({ bus: v.bus, client: v.client, tag: v.tag || 'pan-bus' });
-  return `${fileUrl('tests/fixtures/pan-delivery-test.html')}?${q}`;
+  return `${fileUrl('tests/fixtures/pan-delivery-test.html')}?variant=${v.key}`;
 }
 
 for (const v of VARIANTS) {

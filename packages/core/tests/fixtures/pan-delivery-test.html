@@ -4,16 +4,24 @@
   <meta charset="UTF-8">
   <title>PAN delivery/lifecycle regression fixture</title>
   <script type="module">
-    // ?bus=<module url>&client=<module url>&tag=<bus element tag>
-    // Loads one bus/client variant so the same regression tests can run against all of them.
-    const q = new URLSearchParams(location.search);
-    const busUrl = q.get('bus');
-    const clientUrl = q.get('client') || busUrl;
-    const tag = q.get('tag') || 'pan-bus';
-    await import(busUrl);
-    const mod = await import(clientUrl);
+    // ?variant=<key> selects one of the fixed bus/client variants below, so the same regression
+    // tests run against all of them. Module URLs are never taken from the query string.
+    const VARIANTS = {
+      'index':    { bus: '/core/index.js',                                client: '/core/index.js',                  tag: 'pan-bus' },
+      'enhanced': { bus: '/core/pan-bus.mjs',                             client: '/core/pan-client.mjs',            tag: 'pan-bus' },
+      'lite':     { bus: '/core/pan-bus-lite.mjs',                        client: '/core/pan-client.mjs',            tag: 'pan-bus' },
+      'components-enhanced': { bus: '/core/components/pan-bus-enhanced.mjs', client: '/core/components/pan-client.mjs', tag: 'pan-bus-enhanced' },
+      'components-legacy':   { bus: '/core/components/pan-bus-legacy.mjs',   client: '/core/components/pan-client.mjs', tag: 'pan-bus' },
+      'core-lite': { bus: '/core-lite/src/components/pan-bus.mjs',        client: '/core-lite/src/components/pan-client.mjs', tag: 'pan-bus' },
+    };
+    const v = Object.hasOwn(VARIANTS, new URLSearchParams(location.search).get('variant'))
+      ? VARIANTS[new URLSearchParams(location.search).get('variant')]
+      : null;
+    if (!v) throw new Error('unknown variant');
+    await import(v.bus);
+    const mod = await import(v.client);
     window.PanClient = mod.PanClient || mod.default;
-    const bus = document.createElement(tag);
+    const bus = document.createElement(v.tag);
     bus.id = 'test-bus';
     document.body.prepend(bus);
     window.__bus = bus;
