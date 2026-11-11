@@ -46,6 +46,7 @@ class PanBusLite extends HTMLElement {
     document.addEventListener('pan:subscribe', this.onSubscribe, true);
     document.addEventListener('pan:unsubscribe', this.onUnsubscribe, true);
     document.addEventListener('pan:hello', this.onHello, true);
+    document.addEventListener('pan:bye', this.onBye, true);
 
     // Announce readiness
     window.__panReady = true;
@@ -72,6 +73,7 @@ class PanBusLite extends HTMLElement {
     document.removeEventListener('pan:subscribe', this.onSubscribe, true);
     document.removeEventListener('pan:unsubscribe', this.onUnsubscribe, true);
     document.removeEventListener('pan:hello', this.onHello, true);
+    document.removeEventListener('pan:bye', this.onBye, true);
 
     // Clean up global API
     if (typeof window !== 'undefined' && window.pan) {
@@ -86,30 +88,43 @@ class PanBusLite extends HTMLElement {
     }
   };
 
+  /**
+   * Handle client teardown (PanClient.dispose): forget the client and every subscription it owns
+   * @param {CustomEvent} e - Event whose detail is `{ id: clientId }`
+   */
+  onBye = (e) => {
+    const id = (e.detail || {}).id;
+    if (!id) return;
+    this.clients.delete(id);
+    this.subs = this.subs.filter((s) => s.clientId !== id);
+  };
+
   onSubscribe = (e) => {
-    const { topics = [], options = {}, clientId } = e.detail || {};
+    const { topics = [], options = {}, clientId, subId } = e.detail || {};
     const el = this._et(e);
 
     // Add subscriptions
     for (const pattern of topics) {
-      this.subs.push({ pattern, el, clientId });
+      this.subs.push({ pattern, el, clientId, subId });
     }
 
     // Deliver retained messages if requested
     if (options.retained) {
       for (const [topic, msg] of this.retained) {
         if (topics.some((p) => PanBusLite.matches(topic, p))) {
-          this._deliver(el, msg);
+          this._deliver(el, msg, subId);
         }
       }
     }
   };
 
   onUnsubscribe = (e) => {
-    const { topics = [], clientId } = e.detail || {};
+    const { topics = [], clientId, subId } = e.detail || {};
     const el = this._et(e);
 
     this.subs = this.subs.filter((s) => {
+      if (subId) return s.subId !== subId; // exact: only that subscription
+      // no subId (older client): legacy behaviour, match by client (or element) and pattern
       const sameClient = clientId ? s.clientId === clientId : s.el === el;
       return !(sameClient && topics.includes(s.pattern));
     });
@@ -131,38 +146,64 @@ class PanBusLite extends HTMLElement {
     }
 
     // Deliver to matching subscribers
-    for (const s of this.subs) {
-      if (PanBusLite.matches(msg.topic, s.pattern)) {
-        this._deliver(s.el, msg);
-      }
-    }
+    this._route(msg);
   };
 
   onReply = (e) => {
     const msg = e.detail || {};
 
     // Deliver to matching subscribers
-    for (const s of this.subs) {
-      if (PanBusLite.matches(msg.topic, s.pattern)) {
-        this._deliver(s.el, msg);
-      }
-    }
+    this._route(msg);
   };
+
+  /**
+   * Deliver a message to every matching subscription, once per subscription: a subscription that
+   * lists several matching patterns still gets a single delivery. Entries without a subId
+   * (older clients) keep the legacy one-delivery-per-matching-pattern behaviour.
+   * @param {Object} msg - Message to route
+   * @returns {number} Number of deliveries made
+   * @private
+   */
+  _route(msg) {
+    this._prune();
+    const sent = new Set();
+    let delivered = 0;
+    for (const s of this.subs) {
+      if (!PanBusLite.matches(msg.topic, s.pattern)) continue;
+      if (s.subId) { if (sent.has(s.subId)) continue; sent.add(s.subId); }
+      if (this._deliver(s.el, msg, s.subId) !== false) delivered++;
+    }
+    return delivered;
+  }
+
+  /**
+   * Drop subscriptions and clients whose host element has been removed from the DOM.
+   *
+   * Runs at delivery time only (never on a timer or on disconnect), so an element that is
+   * detached and re-attached within one task (a DOM move) keeps its subscriptions. The trade-off:
+   * if a message is published while a host is detached (e.g. mid-move, from another handler),
+   * that host's subscriptions are dropped and it must subscribe again. `document` and
+   * non-Element targets are never considered disconnected.
+   * @private
+   */
+  _prune() {
+    const dead = (el) => el && el.nodeType === 1 && el.isConnected === false;
+    if (this.subs.some((s) => dead(s.el))) this.subs = this.subs.filter((s) => !dead(s.el));
+    for (const [id, c] of this.clients) if (dead(c.el)) this.clients.delete(id);
+  }
 
   /**
    * Deliver message to target element
    * @private
    */
-  _deliver(target, msg) {
+  _deliver(target, msg, subId) {
     try {
       // Simplified check - just verify element exists
       if (!target || !target.dispatchEvent) return false;
 
-      target.dispatchEvent(new CustomEvent('pan:deliver', {
-        detail: msg,
-        bubbles: true,
-        composed: true
-      }));
+      const ev = new CustomEvent('pan:deliver', { detail: msg, bubbles: true, composed: true });
+      if (subId) ev.panSubId = subId;
+      target.dispatchEvent(ev);
       return true;
     } catch (err) {
       return false;
@@ -218,23 +259,23 @@ class PanBusLite extends HTMLElement {
   subscribe(topics, handler) {
     topics = Array.isArray(topics) ? topics : [topics];
     const clientId = `bus-direct-${crypto.randomUUID()}`;
+    const subId = `${clientId}/1`;
 
     // Listen for deliveries
     const onDeliver = (ev) => {
       const m = ev.detail;
       if (!m || !m.topic) return;
 
-      // Check if message matches any of our topic patterns
-      if (topics.some((t) => PanBusLite.matches(m.topic, t))) {
-        handler(m);
-      }
+      // Tagged delivery: only ours. Untagged (older bus / hand-made event): filter by our patterns.
+      if (ev.panSubId !== undefined ? ev.panSubId !== subId : !topics.some((t) => PanBusLite.matches(m.topic, t))) return;
+      handler(m);
     };
 
     document.addEventListener('pan:deliver', onDeliver);
 
     // Subscribe on bus
     document.dispatchEvent(new CustomEvent('pan:subscribe', {
-      detail: { clientId, topics, options: {} },
+      detail: { clientId, subId, topics, options: {} },
       bubbles: true,
       composed: true
     }));
@@ -243,7 +284,7 @@ class PanBusLite extends HTMLElement {
     return () => {
       document.removeEventListener('pan:deliver', onDeliver);
       document.dispatchEvent(new CustomEvent('pan:unsubscribe', {
-        detail: { clientId, topics },
+        detail: { clientId, subId, topics },
         bubbles: true,
         composed: true
       }));
