@@ -468,10 +468,10 @@ console.log('Editor ready! 🚀');`;
   <title>${example.name} - LARC Example</title>
   <script type="module">
     window.panAutoload = {
-      paths: ['https://unpkg.com/@larcjs/ui@3.0.1/']
+      paths: ['https://unpkg.com/@larcjs/ui@3.0.2/']
     };
   </script>
-  <script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/pan.mjs"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@3.0.2/pan.mjs"></script>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -531,10 +531,10 @@ ${componentsHTML}
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script type="module">
     window.panAutoload = {
-      paths: ['https://unpkg.com/@larcjs/ui@3.0.1/', '/packages/ui/']
+      paths: ['https://unpkg.com/@larcjs/ui@3.0.2/', '/packages/ui/']
     };
   </script>
-  <script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/pan.mjs"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@3.0.2/pan.mjs"></script>
   <style>
     body {
       margin: 0;
@@ -624,12 +624,12 @@ ${componentsHTML}
   <!-- Configure LARC autoloader -->
   <script type="module">
     window.panAutoload = {
-      paths: ['https://unpkg.com/@larcjs/ui@3.0.1/']
+      paths: ['https://unpkg.com/@larcjs/ui@3.0.2/']
     };
   </script>
 
   <!-- Load LARC core -->
-  <script type="module" src="https://unpkg.com/@larcjs/core@3.0.1/pan.mjs"></script>
+  <script type="module" src="https://unpkg.com/@larcjs/core@3.0.2/pan.mjs"></script>
 
   <style>
     body {
