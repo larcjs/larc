@@ -138,6 +138,13 @@ export class PanClient {
   ): Promise<PanMessage<TRes>>;
 
   /**
+   * Tears the client down: unsubscribes every subscription it made and sends `pan:bye` so the bus
+   * forgets the client. Safe to call more than once. After `dispose()`, `subscribe()` returns a no-op
+   * unsubscribe function. Call it (or the returned unsubscribe functions) from `disconnectedCallback`.
+   */
+  dispose(): void;
+
+  /**
    * Checks if a topic matches a pattern
    * @param topic - Topic to test
    * @param pattern - Pattern to match against (supports wildcards)

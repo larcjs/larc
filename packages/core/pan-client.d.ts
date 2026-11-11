@@ -28,6 +28,8 @@ export type MessageHandler<T = unknown> = (message: PanMessage<T>) => void;
 export class PanClient {
   constructor(host?: HTMLElement | Document, busSelector?: string);
 
+  readonly clientId: string;
+
   ready(): Promise<void>;
 
   publish<T = unknown>(message: PanMessage<T>): void;
@@ -43,6 +45,14 @@ export class PanClient {
     data: TReq,
     options?: RequestOptions
   ): Promise<PanMessage<TRes>>;
+
+
+  /**
+   * Tears the client down: unsubscribes every subscription it made and sends `pan:bye` so the bus
+   * forgets the client. Safe to call more than once. After `dispose()`, `subscribe()` returns a no-op
+   * unsubscribe function. Call it (or the returned unsubscribe functions) from `disconnectedCallback`.
+   */
+  dispose(): void;
 
   static matches(topic: string, pattern: string): boolean;
 }

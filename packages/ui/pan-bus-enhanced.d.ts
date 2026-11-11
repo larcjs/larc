@@ -40,6 +40,11 @@ export interface PanBusStats {
 export class PanBusEnhanced extends HTMLElement {
   constructor();
 
+  /** One entry per subscribed pattern; `subId` is absent for subscriptions made by older clients */
+  subs: Array<{ pattern: string; el: Element | Document; clientId?: string; subId?: string; retained?: boolean }>;
+  /** Registered clients, removed on `pan:bye` or when their host element is disconnected */
+  clients: Map<string, { el: Element | Document; caps: string[] }>;
+
   static get observedAttributes(): string[];
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null): void;
