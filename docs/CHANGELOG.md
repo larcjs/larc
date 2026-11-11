@@ -21,6 +21,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Updated links that previously pointed to `hybrid-dashboard.html` so they no longer 404 when shared on HN/Reddit
 
+## [3.0.2] - 2026-11-10
+
+Patch release fixing two delivery/lifecycle bugs in the PAN bus and client. **No breaking changes.**
+Fixed in every shipped bus/client variant: `@larcjs/core` (`index.js`, `pan-bus.mjs`, `pan-bus-lite.mjs`,
+`pan-client.mjs`, `components/pan-bus-enhanced.mjs`, `components/pan-bus-legacy.mjs`),
+`@larcjs/core-lite`, and the `@larcjs/core-types` / enhanced-bus type definitions.
+
+### Fixed
+- **Messages leaked between subscriptions that share a host element.** Every `pan:deliver` listener on a
+  host used to receive every delivery for that host, so with N matching subscriptions each handler ran N
+  times per message, and retained replay for one subscription also ran the handlers of the others.
+  Each subscription now has a unique id (`subId`, sent in `pan:subscribe`); the bus tags deliveries with it
+  (`event.panSubId`, `event.detail` unchanged) and `PanClient` ignores other subscriptions' deliveries.
+  - Each subscription gets each matching message exactly once, including when one subscription lists
+    several matching patterns.
+  - Retained replay goes only to the new subscription.
+  - `pan:unsubscribe` with a `subId` removes only that subscription (two subscriptions from one client to
+    the same pattern no longer remove each other).
+  - Apps no longer need a hidden element per subscription as a workaround.
+- **The bus's client list grew forever, and subscriptions on removed elements were never pruned.**
+  - New `PanClient.dispose()`: unsubscribes everything and sends a new `pan:bye` event (`{ id }`); the bus
+    drops the client and all of its subscriptions. Safe to call twice. Web components should call it
+    in `disconnectedCallback`.
+  - The bus now prunes subscriptions and clients whose host `Element` is disconnected. This runs at
+    delivery time only, so an element moved within the DOM in the same task keeps its subscriptions
+    (trade-off: a message published while a host is detached drops that host's subscriptions).
+    `document` is never pruned.
+  - `pan:hello` re-sent with an existing client id updates the entry in place.
+
+### Added
+- `PanClient.dispose()`, the `pan:bye` event, the `subId` field on `pan:subscribe` / `pan:unsubscribe`, and
+  `event.panSubId` on `pan:deliver`, with TypeScript definitions (`PanSubscribeDetail`, `PanByeDetail`,
+  `PanDeliverEvent`, `Subscription.subId`, `PanBus.subs` / `clients`).
+
+### Compatibility
+- A `pan:subscribe` event **without** a `subId` (older clients, hand-written events) behaves exactly as before.
+- A new client on an older bus keeps working: deliveries without `panSubId` fall back to the previous
+  pattern filtering (an older bus still sends duplicates; upgrade the bus to get exactly-once delivery).
+- Topic matching is unchanged (`*` matches one dot-segment; a bare `*` matches everything).
+- Minified size impact: `@larcjs/core` `index.js` +983 B (4337 → 5320 B; gzip +363 B);
+  `@larcjs/core-lite` bus + client +1092 B (5041 → 6133 B; gzip +418 B).
+
+### Testing
+- 54 new regression tests (9 scenarios × 6 bus/client variants) in `packages/core/tests/regression/`.
+
 ## [3.0.1] - 2025-01-05
 
 ### Changed
@@ -167,13 +212,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Version History
 
 - **Unreleased / v3.1.0** (2026-02-25) - Unified playground, dark mode, refreshed launch collateral
+- **3.0.2** (2026-11-10) - Fix delivery leaks between subscriptions sharing a host; add `dispose()` / `pan:bye` and pruning
 - **3.0.1** (2025-01-05) - Version synchronization + CodeQL fixes (this repo)
 - **3.0.0** (2024-12-01) - Ecosystem expansion (CLI, Registry, VS Code extension)
 - **1.1.1** (2024-11-28) - Bug fixes and stability improvements
 - **1.1.0** (2024-11-20) - State management enhancements
 - **1.0.0** (2024-11-01) - Initial release
 
-[Unreleased]: https://github.com/larcjs/larc/compare/v3.0.1...HEAD
+[Unreleased]: https://github.com/larcjs/larc/compare/v3.0.2...HEAD
+[3.0.2]: https://github.com/larcjs/larc/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/larcjs/larc/compare/v3.0.0...v3.0.1
 [3.0.0]: https://github.com/larcjs/larc/compare/v1.1.1...v3.0.0
 [1.1.1]: https://github.com/larcjs/larc/compare/v1.1.0...v1.1.1

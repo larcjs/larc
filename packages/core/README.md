@@ -197,6 +197,44 @@ bus.subscribe('app.state', (msg) => {
 });
 ```
 
+### Delivery Guarantee
+
+Each subscription receives each matching message **exactly once**, even when several subscriptions share
+the same host element (the default host is `document`) or one subscription lists several patterns that
+match the same topic. **Retained replay goes only to the new subscriber**, so subscribing again never
+re-runs your existing handlers. Two subscriptions to the same pattern are independent: unsubscribing one
+leaves the other working.
+
+Under the hood each subscription has a unique id (`subId`); the bus tags every `pan:deliver` event with
+it as `event.panSubId` and `PanClient` ignores deliveries tagged for another subscription. You no longer
+need a hidden element per subscription as a workaround. Hand-written `pan:subscribe` events without a
+`subId`, and older clients, keep working exactly as before.
+
+### Cleaning Up: `dispose()`
+
+Every `new PanClient()` registers with the bus. Call `client.dispose()` to unsubscribe everything and
+tell the bus (via a `pan:bye` event) to forget the client. It is safe to call twice. **Web components
+should call `client.dispose()` (or the unsubscribe functions `subscribe()` returned) in
+`disconnectedCallback`:**
+
+```javascript
+class MyWidget extends HTMLElement {
+  connectedCallback() {
+    this.client = new PanClient(this);
+    this.client.subscribe('data.*', (msg) => this.render(msg.data));
+  }
+
+  disconnectedCallback() {
+    this.client.dispose();
+  }
+}
+```
+
+As a safety net the bus also prunes subscriptions and clients whose host element has been removed from
+the DOM. It does this at delivery time only (never on disconnect), so an element moved within the DOM in
+the same task keeps its subscriptions. The trade-off: a message published *while* a host is detached
+drops that host's subscriptions, so explicit `dispose()` is the reliable approach.
+
 ## Topic Conventions
 
 LARC uses hierarchical topic naming:

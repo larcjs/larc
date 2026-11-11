@@ -27,6 +27,30 @@ export interface PanSubscribeOptions {
 export type PanMessageHandler = (message: PanMessage) => void;
 export type UnsubscribeFunction = () => void;
 
+/** Detail of the `pan:subscribe` event. `subId` is absent for subscriptions made by older clients. */
+export interface PanSubscribeDetail {
+  clientId?: string;
+  /** Unique id of this subscription; the bus tags deliveries for it as `PanDeliverEvent.panSubId`. */
+  subId?: string;
+  topics: string[];
+  options?: { retained?: boolean };
+}
+
+/** Detail of the `pan:bye` event sent by `PanClient.dispose()`. */
+export interface PanByeDetail {
+  /** The disposing client's id. */
+  id: string;
+}
+
+/**
+ * The `pan:deliver` event. `detail` is the message (never modified); `panSubId` names the subscription
+ * the delivery is for. It is absent when delivered by an older bus or to an untagged subscription,
+ * in which case listeners filter by their own topic patterns.
+ */
+export interface PanDeliverEvent extends CustomEvent<PanMessage> {
+  panSubId?: string;
+}
+
 // ============================================================================
 // PAN Bus Element
 // ============================================================================
@@ -36,6 +60,8 @@ export class PanBus extends HTMLElement {
     pattern: string;
     el: HTMLElement | Document;
     clientId: string;
+    /** Unique subscription id (absent for subscriptions made by older clients) */
+    subId?: string;
     retained?: boolean;
   }>;
   retained: Map<string, PanMessage>;
@@ -62,6 +88,13 @@ export class PanClient {
    * Wait for the bus to be ready
    */
   ready(): Promise<void>;
+
+  /**
+   * Tears the client down: unsubscribes every subscription it made and sends `pan:bye` so the bus
+   * forgets the client. Safe to call more than once. After `dispose()`, `subscribe()` returns a no-op
+   * unsubscribe function. Call it (or the returned unsubscribe functions) from `disconnectedCallback`.
+   */
+  dispose(): void;
 
   /**
    * Publish a message to a topic

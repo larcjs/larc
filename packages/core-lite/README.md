@@ -126,6 +126,19 @@ Simplifies publishing and subscribing.
 </script>
 ```
 
+### Cleaning up with `dispose()`
+
+When you use the `PanClient` class directly, each subscription receives each matching message exactly once
+(even when subscriptions share a host element), and retained replay goes only to the new subscriber.
+Call `client.dispose()` to unsubscribe everything and let the bus forget the client (it sends a `pan:bye`
+event; safe to call twice). Web components should do this in `disconnectedCallback`:
+
+```javascript
+disconnectedCallback() {
+  this.client.dispose();
+}
+```
+
 ## Message Patterns
 
 ### Publish/Subscribe

@@ -1,6 +1,6 @@
 {
   "name": "@larcjs/core",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "LARC Core - Lightweight Asynchronous Relay Core: The PAN (Page Area Network) messaging bus implementation",
   "type": "module",
   "main": "./index.js",

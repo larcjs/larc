@@ -17,3 +17,6 @@ docs/books/backup/
 
 # Temporary files
 .tmp
+
+# Claude Code worktrees (local only)
+.claude/worktrees/

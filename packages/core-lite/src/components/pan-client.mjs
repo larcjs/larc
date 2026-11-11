@@ -132,6 +132,27 @@ export class PanClient {
     this._pendingOps = [];
 
     /**
+     * Unsubscribe functions of live subscriptions (used by dispose)
+     * @type {Set<Function>}
+     * @private
+     */
+    this._subs = new Set();
+
+    /**
+     * Per-client counter used to build unique subscription ids
+     * @type {number}
+     * @private
+     */
+    this._subSeq = 0;
+
+    /**
+     * True once dispose() has been called
+     * @type {boolean}
+     * @private
+     */
+    this._disposed = false;
+
+    /**
      * Whether the bus is ready
      * @type {boolean}
      * @private
@@ -157,8 +178,8 @@ export class PanClient {
     }).then(() => {
       this._isReady = true;
 
-      // Announce presence to bus
-      this._dispatchImmediate('pan:hello', { id: this.clientId, caps: ['client'] });
+      // Announce presence to bus (not if the client was disposed before the bus became ready)
+      if (!this._disposed) this._dispatchImmediate('pan:hello', { id: this.clientId, caps: ['client'] });
 
       // Flush any pending operations
       const ops = this._pendingOps.slice();
@@ -191,7 +212,11 @@ export class PanClient {
    * @private
    */
   _dispatchImmediate(type, detail) {
-    this.host.dispatchEvent(
+    const host = this.host;
+    // Teardown events must reach the bus even when the host already left the DOM
+    // (e.g. dispose() called from disconnectedCallback); a detached host's events never bubble to document.
+    const target = (type === 'pan:unsubscribe' || type === 'pan:bye') && host.isConnected === false ? document : host;
+    target.dispatchEvent(
       new CustomEvent(type, { detail, bubbles: true, composed: true })
     );
   }
@@ -274,20 +299,31 @@ export class PanClient {
    * const controller = new AbortController();
    * client.subscribe('events.*', handler, { signal: controller.signal });
    * // Later: controller.abort(); // Unsubscribes automatically
+   *
+   * Delivery guarantee: each subscription receives each matching message exactly once, even when
+   * several subscriptions share a host element or one subscription lists several matching patterns.
+   * Retained replay goes only to the subscription that asked for it.
    */
   subscribe(topics, handler, opts = {}) {
+    // A disposed client no longer subscribes
+    if (this._disposed) return () => {};
+
     // Normalize to array
     topics = Array.isArray(topics) ? topics : [topics];
+
+    // Unique id for this subscription. The bus tags each delivery with it (event.panSubId) so
+    // sibling listeners on the same host can tell whose delivery it is.
+    const subId = `${this.clientId}/${++this._subSeq}`;
 
     // Create delivery handler
     const onDeliver = (ev) => {
       const m = ev.detail;
       if (!m || !m.topic) return;
 
-      // Check if message matches any of our topic patterns
-      if (topics.some((t) => PanClient.matches(m.topic, t))) {
-        handler(m);
-      }
+      // Tagged delivery: only the subscription it was made for. Untagged delivery (an older bus,
+      // or a hand-made event): fall back to filtering by our own patterns.
+      if (ev.panSubId !== undefined ? ev.panSubId !== subId : !topics.some((t) => PanClient.matches(m.topic, t))) return;
+      handler(m);
     };
 
     // Listen for deliveries
@@ -296,15 +332,21 @@ export class PanClient {
     // Subscribe on bus
     this._dispatch('pan:subscribe', {
       clientId: this.clientId,
+      subId,
       topics,
       options: { retained: !!opts.retained }
     });
 
-    // Create unsubscribe function
+    // Create unsubscribe function (idempotent)
+    let done = false;
     const off = () => {
+      if (done) return;
+      done = true;
+      this._subs.delete(off);
       this.host.removeEventListener('pan:deliver', onDeliver);
-      this._dispatch('pan:unsubscribe', { clientId: this.clientId, topics });
+      this._dispatch('pan:unsubscribe', { clientId: this.clientId, subId, topics });
     };
+    this._subs.add(off);
 
     // Handle AbortSignal if provided
     if (opts.signal) {
@@ -316,6 +358,24 @@ export class PanClient {
     }
 
     return off;
+  }
+
+  /**
+   * Tears this client down: unsubscribes every subscription it made and tells the bus to forget
+   * it (`pan:bye`), so the bus's client list does not grow as components mount and unmount.
+   * Safe to call more than once. After dispose(), subscribe() returns a no-op unsubscribe.
+   * Components should call this (or the unsubscribe functions they hold) in disconnectedCallback.
+   *
+   * @example
+   * disconnectedCallback() {
+   *   this.client.dispose();
+   * }
+   */
+  dispose() {
+    if (this._disposed) return;
+    this._disposed = true;
+    for (const off of [...this._subs]) off();
+    this._dispatch('pan:bye', { id: this.clientId });
   }
 
   /**

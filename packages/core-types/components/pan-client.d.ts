@@ -113,6 +113,13 @@ export class PanClient {
   ): UnsubscribeFunction;
 
   /**
+   * Tears the client down: unsubscribes every subscription it made and sends `pan:bye` so the bus
+   * forgets the client. Safe to call more than once. After `dispose()`, `subscribe()` returns a no-op
+   * unsubscribe function. Call it (or the returned unsubscribe functions) from `disconnectedCallback`.
+   */
+  dispose(): void;
+
+  /**
    * Sends a request and waits for a reply
    * Implements request/reply pattern with automatic correlation and timeout
    *
