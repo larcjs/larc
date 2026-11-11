@@ -91,6 +91,7 @@ class PanBus extends HTMLElement {
     document.addEventListener('pan:subscribe', this.onSubscribe, true);
     document.addEventListener('pan:unsubscribe', this.onUnsubscribe, true);
     document.addEventListener('pan:hello', this.onHello, true);
+    document.addEventListener('pan:bye', this.onBye, true);
 
     // announce readiness
     window.__panReady = true;
@@ -109,6 +110,7 @@ class PanBus extends HTMLElement {
     document.removeEventListener('pan:subscribe', this.onSubscribe, true);
     document.removeEventListener('pan:unsubscribe', this.onUnsubscribe, true);
     document.removeEventListener('pan:hello', this.onHello, true);
+    document.removeEventListener('pan:bye', this.onBye, true);
   }
 
   /**
@@ -124,6 +126,17 @@ class PanBus extends HTMLElement {
   };
 
   /**
+   * Handle client teardown (PanClient.dispose): forget the client and every subscription it owns
+   * @param {CustomEvent} e - Event whose detail is `{ id: clientId }`
+   */
+  onBye = (e) => {
+    const id = (e.detail || {}).id;
+    if (!id) return;
+    this.clients.delete(id);
+    this.subs = this.subs.filter((s) => s.clientId !== id);
+  };
+
+  /**
    * Handles subscription requests (pan:subscribe events)
    * Adds subscriptions and optionally delivers retained messages
    *
@@ -135,19 +148,19 @@ class PanBus extends HTMLElement {
    * @private
    */
   onSubscribe = (e) => {
-    const { topics = [], options = {}, clientId } = e.detail || {};
+    const { topics = [], options = {}, clientId, subId } = e.detail || {};
     const el = this._et(e);
 
     // Add subscriptions
     for (const pattern of topics) {
-      this.subs.push({ pattern, el, clientId, retained: !!options.retained });
+      this.subs.push({ pattern, el, clientId, subId, retained: !!options.retained });
     }
 
     // Deliver retained snapshots if requested
     if (options.retained) {
       for (const [topic, msg] of this.retained) {
         if (topics.some((p) => PanBus.matches(topic, p))) {
-          this._deliver(el, msg);
+          this._deliver(el, msg, subId);
         }
       }
     }
@@ -163,10 +176,12 @@ class PanBus extends HTMLElement {
    * @private
    */
   onUnsubscribe = (e) => {
-    const { topics = [], clientId } = e.detail || {};
+    const { topics = [], clientId, subId } = e.detail || {};
     const el = this._et(e);
 
     this.subs = this.subs.filter((s) => {
+      if (subId) return s.subId !== subId; // exact: only that subscription
+      // no subId (older client): legacy behaviour, match by client (or element) and pattern
       const sameClient = clientId ? s.clientId === clientId : s.el === el;
       return !(sameClient && topics.includes(s.pattern));
     });
@@ -197,11 +212,7 @@ class PanBus extends HTMLElement {
     }
 
     // Deliver to matching subscribers
-    for (const s of this.subs) {
-      if (PanBus.matches(msg.topic, s.pattern)) {
-        this._deliver(s.el, msg);
-      }
-    }
+    this._route(msg);
   };
 
   /**
@@ -218,12 +229,44 @@ class PanBus extends HTMLElement {
     const msg = e.detail || {};
 
     // Deliver to matching subscribers
-    for (const s of this.subs) {
-      if (PanBus.matches(msg.topic, s.pattern)) {
-        this._deliver(s.el, msg);
-      }
-    }
+    this._route(msg);
   };
+
+  /**
+   * Deliver a message to every matching subscription, once per subscription: a subscription that
+   * lists several matching patterns still gets a single delivery. Entries without a subId
+   * (older clients) keep the legacy one-delivery-per-matching-pattern behaviour.
+   * @param {Object} msg - Message to route
+   * @returns {number} Number of deliveries made
+   * @private
+   */
+  _route(msg) {
+    this._prune();
+    const sent = new Set();
+    let delivered = 0;
+    for (const s of this.subs) {
+      if (!PanBus.matches(msg.topic, s.pattern)) continue;
+      if (s.subId) { if (sent.has(s.subId)) continue; sent.add(s.subId); }
+      if (this._deliver(s.el, msg, s.subId) !== false) delivered++;
+    }
+    return delivered;
+  }
+
+  /**
+   * Drop subscriptions and clients whose host element has been removed from the DOM.
+   *
+   * Runs at delivery time only (never on a timer or on disconnect), so an element that is
+   * detached and re-attached within one task (a DOM move) keeps its subscriptions. The trade-off:
+   * if a message is published while a host is detached (e.g. mid-move, from another handler),
+   * that host's subscriptions are dropped and it must subscribe again. `document` and
+   * non-Element targets are never considered disconnected.
+   * @private
+   */
+  _prune() {
+    const dead = (el) => el && el.nodeType === 1 && el.isConnected === false;
+    if (this.subs.some((s) => dead(s.el))) this.subs = this.subs.filter((s) => !dead(s.el));
+    for (const [id, c] of this.clients) if (dead(c.el)) this.clients.delete(id);
+  }
 
   /**
    * Delivers a message to a target element
@@ -233,9 +276,11 @@ class PanBus extends HTMLElement {
    * @param {PanMessage} msg - Message to deliver
    * @private
    */
-  _deliver(target, msg) {
+  _deliver(target, msg, subId) {
     try {
-      target.dispatchEvent(new CustomEvent('pan:deliver', { detail: msg }));
+      const ev = new CustomEvent('pan:deliver', { detail: msg });
+      if (subId) ev.panSubId = subId;
+      target.dispatchEvent(ev);
     } catch (_) {
       // Ignore delivery errors (element may have been removed)
     }
