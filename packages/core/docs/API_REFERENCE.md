@@ -354,11 +354,40 @@ class MyComponent extends HTMLElement {
   }
 
   disconnectedCallback() {
-    // Clean up subscription
+    // Clean up subscription (or call this.client.dispose() to clean up everything)
     this.unsub();
   }
 }
 ```
+
+**Dispose the whole client:**
+```javascript
+class MyComponent extends HTMLElement {
+  connectedCallback() {
+    this.client = new PanClient(this);
+    this.client.subscribe('data.*', (msg) => this.handleData(msg.data));
+    this.client.subscribe('user.*', (msg) => this.handleUser(msg.data));
+  }
+
+  disconnectedCallback() {
+    // Unsubscribes every subscription and tells the bus to forget this client
+    this.client.dispose();
+  }
+}
+```
+
+#### Delivery Guarantee
+
+**Delivery guarantee:** each subscription receives each matching message **exactly once**.
+This holds even when several subscriptions share one host element (the default host is `document`)
+and when one subscription lists several patterns that match the same topic. Retained replay
+(`{ retained: true }`) goes **only** to the subscription that asked for it, so subscribing a second
+time never re-runs the handlers of your existing subscriptions. Two subscriptions to the same pattern
+are independent: calling one's unsubscribe function leaves the other working.
+
+Each subscription gets a unique id (`subId`), sent with `pan:subscribe`. The bus tags every delivery
+with it as `event.panSubId` (`event.detail` stays the untouched message). Hosts no longer need a
+hidden element per subscription as a workaround.
 
 **Automatic cleanup:**
 ```javascript
@@ -489,6 +518,53 @@ client.subscribe('users.item.get', async (msg) => {
   });
 });
 ```
+
+---
+
+### dispose()
+
+Tears the client down. Unsubscribes **every** subscription the client made, then sends a
+`pan:bye` event so the bus forgets the client.
+
+```javascript
+client.dispose(): void
+```
+
+#### Behavior
+
+- Unsubscribes all of the client's live subscriptions (the functions returned by `subscribe()` become no-ops).
+- Dispatches `pan:bye` with detail `{ id: client.clientId }`. The bus removes the client entry and
+  every subscription owned by that client.
+- Safe to call more than once; later calls do nothing.
+- After `dispose()`, `subscribe()` returns a no-op unsubscribe function and does not re-register the client.
+- Works from `disconnectedCallback`: teardown events are sent on `document` when the host element has
+  already left the DOM.
+
+#### Why it matters
+
+Each `new PanClient()` registers an entry on the bus. Components that mount and unmount repeatedly
+(lists, routed views, modals) would otherwise leave one entry behind per instance.
+
+**Recommendation:** web components should call `client.dispose()` (or the unsubscribe functions
+`subscribe()` returned) in `disconnectedCallback`.
+
+```javascript
+disconnectedCallback() {
+  this.client.dispose();
+}
+```
+
+#### Automatic pruning (safety net)
+
+As a safety net the bus drops subscriptions and client entries whose host element is an `Element`
+with `isConnected === false`. This happens **at delivery time only** (when a message is published),
+never on a timer or on disconnect. `document` is never considered disconnected.
+
+*Trade-off:* an element that is detached and re-attached within the same task (a DOM move) keeps its
+subscriptions, because nothing is delivered in between. But if a message is published **while** a host
+is detached (for example from another handler during a move), that host's subscriptions are dropped
+and it has to subscribe again. Explicit `dispose()` is the reliable way to clean up; pruning only
+catches components that forgot to.
 
 ---
 
