@@ -9,7 +9,7 @@ test.describe('PAN Routes - Route Management', () => {
 
   test.beforeEach(async ({ page: p }) => {
     page = p;
-    await page.goto('http://localhost:8080/core/tests/fixtures/pan-routes-test.html');
+    await page.goto('/core/tests/fixtures/pan-routes-test.html');
     await page.waitForFunction(() => window.__testReady === true);
     await page.waitForFunction(() => window.__panReady === true);
   });
@@ -125,7 +125,7 @@ test.describe('PAN Routes - Message Matching', () => {
 
   test.beforeEach(async ({ page: p }) => {
     page = p;
-    await page.goto('http://localhost:8080/core/tests/fixtures/pan-routes-test.html');
+    await page.goto('/core/tests/fixtures/pan-routes-test.html');
     await page.waitForFunction(() => window.__testReady === true);
     await page.waitForFunction(() => window.__panReady === true);
   });
@@ -283,7 +283,7 @@ test.describe('PAN Routes - Actions', () => {
 
   test.beforeEach(async ({ page: p }) => {
     page = p;
-    await page.goto('http://localhost:8080/core/tests/fixtures/pan-routes-test.html');
+    await page.goto('/core/tests/fixtures/pan-routes-test.html');
     await page.waitForFunction(() => window.__testReady === true);
     await page.waitForFunction(() => window.__panReady === true);
   });
@@ -386,7 +386,7 @@ test.describe('PAN Routes - Control Messages', () => {
 
   test.beforeEach(async ({ page: p }) => {
     page = p;
-    await page.goto('http://localhost:8080/core/tests/fixtures/pan-routes-test.html');
+    await page.goto('/core/tests/fixtures/pan-routes-test.html');
     await page.waitForFunction(() => window.__testReady === true);
     await page.waitForFunction(() => window.__panReady === true);
   });
@@ -458,7 +458,7 @@ test.describe('PAN Routes - Statistics', () => {
 
   test.beforeEach(async ({ page: p }) => {
     page = p;
-    await page.goto('http://localhost:8080/core/tests/fixtures/pan-routes-test.html');
+    await page.goto('/core/tests/fixtures/pan-routes-test.html');
     await page.waitForFunction(() => window.__testReady === true);
     await page.waitForFunction(() => window.__panReady === true);
   });
@@ -488,7 +488,7 @@ test.describe('PAN Routes - Integration', () => {
 
   test.beforeEach(async ({ page: p }) => {
     page = p;
-    await page.goto('http://localhost:8080/core/tests/fixtures/pan-routes-test.html');
+    await page.goto('/core/tests/fixtures/pan-routes-test.html');
     await page.waitForFunction(() => window.__testReady === true);
     await page.waitForFunction(() => window.__panReady === true);
   });
